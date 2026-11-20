@@ -42,7 +42,19 @@ jobs:
       - name: Race detection
         env:
           CGO_ENABLED: '1'
-        run: go test -race -count=1 -shuffle=on ./...
+          MSTEAMS_CONTRACT_REVISION: ${{ github.sha }}
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/go-test-artifacts"
+          go test -race -count=1 -shuffle=on -artifacts -outputdir "$RUNNER_TEMP/go-test-artifacts" ./...
+      - name: Retain sanitized offline contract evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: offline-contracts-${{ matrix.os }}
+          path: ${{ runner.temp }}/go-test-artifacts/**/core-primitives.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Run credential-free example
         run: go run ./examples/baseline
   vulnerabilities:
