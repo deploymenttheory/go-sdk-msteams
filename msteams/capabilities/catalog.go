@@ -1,4 +1,6 @@
-package auth
+// Package capabilities reports pinned command metadata and dated operation-mode
+// restrictions. It performs no authentication or tenant capability discovery.
+package capabilities
 
 import (
 	_ "embed"
@@ -6,12 +8,18 @@ import (
 	"errors"
 	"slices"
 	"strings"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
 //go:embed capabilities_8_1_0.json
 var capabilityData []byte
 
-var ErrUnknownCommand = errors.New("command is absent from the pinned capability inventory")
+var (
+	ErrUnknownCommand = errors.New("command is absent from the pinned capability inventory")
+	ErrInvalidMode    = errors.New("capability assessment requires a single authentication mode")
+	ErrUnknownProfile = errors.New("unknown capability documentation profile")
+)
 
 // ModeSupport reports evidence, not operation authorization or implementation.
 type ModeSupport string
@@ -29,7 +37,7 @@ type OperationCapability struct {
 	BaselineVersion       string
 	Disposition           string
 	ParameterSets         []string
-	Mode                  Mode
+	Mode                  auth.Mode
 	Cloud                 string
 	Support               ModeSupport
 	RestrictionIDs        []string
@@ -59,20 +67,20 @@ type capabilityMatrix struct {
 	Records               []capabilityRecord `json:"records"`
 }
 
-// CapabilityCatalog is an immutable, offline snapshot of the 8.1.0 candidate
+// Catalog is an immutable, offline snapshot of the 8.1.0 candidate
 // inventory and separately dated documentation restrictions. It grants no access,
 // discovers no tenant features, and does not enable sovereign-cloud routing.
-type CapabilityCatalog struct {
+type Catalog struct {
 	matrix  capabilityMatrix
 	records map[string]capabilityRecord
 	rules   map[string]capabilityRule
 }
 
-// NewCapabilityCatalog loads embedded public evidence without credentials or I/O.
-func NewCapabilityCatalog() (*CapabilityCatalog, error) {
-	c := &CapabilityCatalog{}
+// NewCatalog loads embedded public evidence without credentials or I/O.
+func NewCatalog() (*Catalog, error) {
+	c := &Catalog{}
 	if err := json.Unmarshal(capabilityData, &c.matrix); err != nil {
-		return nil, errors.New("invalid embedded authentication capability evidence")
+		return nil, errors.New("invalid embedded capability evidence")
 	}
 	c.records = make(map[string]capabilityRecord, len(c.matrix.Records))
 	for _, record := range c.matrix.Records {
@@ -88,16 +96,16 @@ func NewCapabilityCatalog() (*CapabilityCatalog, error) {
 // Assess returns copied evidence for one command/mode/cloud. Cloud names here are
 // documentation labels: commercial, gcc, gcch and dod. An absent restriction never
 // means support. Application restrictions also apply to managed/workload identities
-// and supplied tokens whose caller-declared mode is Application.
-func (c *CapabilityCatalog) Assess(command string, mode Mode, cloud string) (OperationCapability, error) {
+// and supplied tokens whose caller-declared mode is auth.Application.
+func (c *Catalog) Assess(command string, mode auth.Mode, cloud string) (OperationCapability, error) {
 	if c == nil || c.records == nil {
 		return OperationCapability{}, ErrUnknownCommand
 	}
-	if mode != Delegated && mode != Application {
-		return OperationCapability{}, ErrInvalidBinding
+	if mode != auth.Delegated && mode != auth.Application {
+		return OperationCapability{}, ErrInvalidMode
 	}
 	if !slices.Contains([]string{"commercial", "gcc", "gcch", "dod"}, cloud) {
-		return OperationCapability{}, &ConfigError{Field: "cloud", Reason: "unknown capability documentation profile"}
+		return OperationCapability{}, ErrUnknownProfile
 	}
 	record, ok := c.records[strings.ToLower(command)]
 	if !ok {
@@ -110,7 +118,7 @@ func (c *CapabilityCatalog) Assess(command string, mode Mode, cloud string) (Ope
 		DocumentationURL:      c.matrix.DocumentationURL,
 		DocumentationReviewed: c.matrix.DocumentationReviewed,
 	}
-	if mode == Application {
+	if mode == auth.Application {
 		for _, id := range record.Restrictions {
 			if slices.Contains(c.rules[id].Clouds, cloud) {
 				report.Support = ModeDocumentedUnsupported

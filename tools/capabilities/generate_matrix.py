@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerate the dated auth documentation overlay on the pinned command union."""
+"""Regenerate the dated operation-mode documentation overlay on the pinned command union."""
 
 import argparse
 import fnmatch
@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TARGET = ROOT / "msteams/auth/capabilities_8_1_0.json"
+TARGET = ROOT / "msteams/capabilities/capabilities_8_1_0.json"
 ALL_CLOUDS = ["commercial", "gcc", "gcch", "dod"]
 
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     content = json.dumps(build(), indent=2, ensure_ascii=False) + "\n"
     if args.check:
         if TARGET.read_text(encoding="utf-8") != content:
-            parser.error("authentication matrix differs from pinned inventory/documentation overlay")
+            parser.error("capability matrix differs from pinned inventory/documentation overlay")
     else:
         TARGET.write_text(content, encoding="utf-8")
-    print("Authentication matrix: 8.1.0 inventory and dated documentation overlay verified")
+    print("Capability matrix: 8.1.0 inventory and dated documentation overlay verified")

@@ -23,10 +23,10 @@ certificate flows have lab evidence. Delegated and Azure managed identity live
 qualification remain outstanding; GitHub federation setup awaits explicit approval.
 
 Successful token acquisition does not establish operation authorization. Use the
-offline catalog for dated documentation observations:
+offline `msteams/capabilities` catalog for dated documentation observations:
 
 ```go
-catalog, err := auth.NewCapabilityCatalog()
+catalog, err := capabilities.NewCatalog()
 if err != nil {
     return err
 }
