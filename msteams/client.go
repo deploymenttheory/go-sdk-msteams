@@ -32,6 +32,23 @@ type Client struct {
 	tracer        trace.TracerProvider
 }
 
+// SessionInfo returns credential-free local configuration. It does not establish
+// authentication, discover tenant capabilities or promise operation authorization.
+func (c *Client) SessionInfo() (client.SessionInfo, error) {
+	if c == nil || c.session == nil {
+		return client.SessionInfo{}, client.ErrClosed
+	}
+	return c.session.Info()
+}
+
+// Environment returns a copy of the selected local endpoint profile without I/O.
+func (c *Client) Environment() (auth.Environment, error) {
+	if c == nil || c.session == nil {
+		return auth.Environment{}, client.ErrClosed
+	}
+	return c.session.Environment()
+}
+
 // ErrInvalidOption identifies an invalid client option without exposing its value.
 var ErrInvalidOption = errors.New("invalid msteams client option")
 

@@ -26,17 +26,18 @@ func (m DeviceCodeMessage) GoString() string { return m.String() }
 // DelegatedProvider owns one MSAL account/cache and the selected explicit login
 // method. It never switches between browser, device and password modes on failure.
 type DelegatedProvider struct {
-	mu        sync.RWMutex
-	config    *Config
-	binding   Binding
-	msal      *public.Client
-	authority *delegatedHTTP
-	account   public.Account
-	gate      chan struct{}
-	refresh   *RefreshProvider
+	mu          sync.RWMutex
+	config      *Config
+	binding     Binding
+	environment Environment
+	msal        *public.Client
+	authority   *delegatedHTTP
+	account     public.Account
+	gate        chan struct{}
+	refresh     *RefreshProvider
 }
 
-// NewDelegatedProvider validates and wires a commercial delegated session without
+// NewDelegatedProvider validates and wires an explicitly configured session without
 // network calls, browser launch or callback execution. Callbacks must honor their
 // context. LoginTimeout bounds shared acquisition (default 15 minutes); individual
 // callers retain their own cancellation while waiting for that acquisition.
@@ -48,8 +49,9 @@ func NewDelegatedProvider(cfg *Config, httpClient *http.Client) (*DelegatedProvi
 		return nil, &ConfigError{Field: "method", Reason: "requires browser, device-code or password"}
 	}
 	binding := cfg.TokenBinding()
-	if binding.Cloud != "commercial" {
-		return nil, ErrUnsupportedCloud
+	environment, err := ResolveEnvironment(cfg.Cloud, cfg.Endpoints)
+	if err != nil {
+		return nil, err
 	}
 	if !validApplicationTenant(cfg.TenantID) {
 		return nil, &ConfigError{Field: "tenant_id", Reason: "requires a tenant GUID or DNS domain"}
@@ -59,14 +61,15 @@ func NewDelegatedProvider(cfg *Config, httpClient *http.Client) (*DelegatedProvi
 	}
 	clonedHTTP := *httpClient
 	authority := newDelegatedHTTP(&clonedHTTP, strings.ToLower(cfg.TenantID), cfg.Username)
+	authority.base.authority = environment.Endpoints.Authority
 	if err := authority.trustFederation(cfg.FederationEndpoints); err != nil {
 		return nil, err
 	}
-	msal, err := public.New(cfg.ClientID, public.WithAuthority("https://login.microsoftonline.com/"+strings.ToLower(cfg.TenantID)), public.WithHTTPClient(authority))
+	msal, err := public.New(cfg.ClientID, public.WithAuthority(environment.Endpoints.Authority+"/"+strings.ToLower(cfg.TenantID)), public.WithHTTPClient(authority), public.WithInstanceDiscovery(false))
 	if err != nil {
 		return nil, ErrDelegatedAuthentication
 	}
-	p := &DelegatedProvider{config: cfg.Clone(), binding: binding, msal: &msal, authority: authority, gate: make(chan struct{}, 1)}
+	p := &DelegatedProvider{config: cfg.Clone(), binding: binding, environment: environment, msal: &msal, authority: authority, gate: make(chan struct{}, 1)}
 	// MSAL owns refresh tokens and its silent-acquisition cache. This outer cache
 	// coalesces exact-audience requests without repeatedly returning a near-expiry
 	// MSAL access token into a conflicting proactive refresh window.
@@ -88,7 +91,7 @@ func (p *DelegatedProvider) AcquireToken(ctx context.Context, request TokenReque
 	if p.refresh == nil {
 		return Token{}, ErrProviderClosed
 	}
-	if request.Audience != GraphAudience && request.Audience != TeamsAdminAudience {
+	if !p.environment.supportsAudience(request.Audience) {
 		return Token{}, ErrUnsupportedAudience
 	}
 	token, err := p.refresh.AcquireToken(ctx, request)
@@ -203,7 +206,7 @@ func (p *DelegatedProvider) deviceToken(ctx context.Context, msal public.Client,
 	if err != nil {
 		return public.AuthResult{}, err
 	}
-	if !validDeviceVerificationURL(code.Result.VerificationURL) {
+	if !p.authority.validDeviceVerificationURL(code.Result.VerificationURL) {
 		return public.AuthResult{}, ErrAuthorityDestination
 	}
 	if code.Result.UserCode == "" || !code.Result.ExpiresOn.After(time.Now()) {

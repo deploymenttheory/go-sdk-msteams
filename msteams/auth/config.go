@@ -53,7 +53,8 @@ type AssertionSource func(context.Context) (string, error)
 type Config struct {
 	Method              Method
 	TenantID            string
-	Cloud               string // isolation profile; empty selects commercial, not endpoint discovery
+	Cloud               string     // named environment; empty selects commercial
+	Endpoints           *Endpoints // optional trusted endpoint overrides, copied at construction
 	ClientID            string
 	ClientSecret        string
 	Username            string
@@ -96,6 +97,10 @@ func (c *Config) Clone() *Config {
 		return nil
 	}
 	cloned := *c
+	if c.Endpoints != nil {
+		endpoints := *c.Endpoints
+		cloned.Endpoints = &endpoints
+	}
 	cloned.Certificate = slices.Clone(c.Certificate)
 	cloned.PrivateKey = slices.Clone(c.PrivateKey)
 	cloned.PFX = slices.Clone(c.PFX)
@@ -119,6 +124,9 @@ func (c *Config) Validate() error {
 	}
 	if strings.TrimSpace(c.TenantID) == "" {
 		return &ConfigError{Field: "tenant_id", Reason: "is required"}
+	}
+	if _, err := ResolveEnvironment(c.Cloud, c.Endpoints); err != nil {
+		return err
 	}
 	allowed := map[string]bool{}
 	required := map[string]bool{}
@@ -208,8 +216,8 @@ func (c *Config) Validate() error {
 // tokens. Cloud labels are isolation keys; accepting one does not enable its routes.
 func (c *Config) TokenBinding() Binding {
 	cloud := c.Cloud
-	if cloud == "" {
-		cloud = "commercial"
+	if environment, err := ResolveEnvironment(c.Cloud, c.Endpoints); err == nil {
+		cloud = environment.BindingCloud
 	}
 	if c.Method == Certificate || c.Method == ClientSecret || c.Method == WorkloadIdentity {
 		return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: c.ClientID, Mode: Application}

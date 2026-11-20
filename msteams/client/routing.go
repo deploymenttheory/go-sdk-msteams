@@ -6,8 +6,6 @@ import (
 	"net/url"
 	"strings"
 	"unicode"
-
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
 // ErrDestination means a route is not approved for this backend and cloud.
@@ -19,6 +17,7 @@ var ErrRequest = errors.New("invalid backend request")
 type routeProfile struct {
 	host     string
 	audience string
+	graph    bool
 }
 
 func (s *Scope) profile() (routeProfile, error) {
@@ -27,14 +26,12 @@ func (s *Scope) profile() (routeProfile, error) {
 	if s.session.closed || s.session.auth == nil {
 		return routeProfile{}, ErrClosed
 	}
-	if s.session.binding.Cloud != "commercial" {
-		return routeProfile{}, ErrDestination
-	}
+	environment := s.session.environment
 	switch s.backend {
 	case Graph:
-		return routeProfile{"graph.microsoft.com", auth.GraphAudience}, nil
+		return routeProfile{host: strings.TrimPrefix(environment.Endpoints.Graph, "https://"), audience: environment.Endpoints.Graph, graph: true}, nil
 	case TeamsAdmin:
-		return routeProfile{"api.interfaces.records.teams.microsoft.com", auth.TeamsAdminAudience}, nil
+		return routeProfile{host: strings.TrimPrefix(environment.Endpoints.TeamsAdmin, "https://"), audience: environment.Endpoints.TeamsAdminResource}, nil
 	default:
 		return routeProfile{}, ErrDestination
 	}
@@ -88,7 +85,7 @@ func (p routeProfile) allows(u *url.URL) bool {
 			return false
 		}
 	}
-	if p.audience == auth.GraphAudience {
+	if p.graph {
 		first := strings.Split(strings.TrimPrefix(u.EscapedPath(), "/"), "/")[0]
 		if first != "v1.0" && first != "beta" {
 			return false

@@ -54,7 +54,7 @@ for their intended concurrent use. The SDK does not shut them down.
 |---|---|
 | `MSTEAMS_AUTH_METHOD` | Explicit method string from `auth.Method` |
 | `MSTEAMS_TENANT_ID` | Tenant binding |
-| `MSTEAMS_CLOUD` | Token isolation profile, defaults to `commercial`; does not enable or discover cloud endpoints |
+| `MSTEAMS_CLOUD` | Named endpoint profile, defaults to `commercial`; see [environment mapping](../implementation/auth/session-evidence.md) |
 | `MSTEAMS_CLIENT_ID` | Application or user-assigned managed identity client ID |
 | `MSTEAMS_CLIENT_SECRET` | Client-secret material |
 | `MSTEAMS_USERNAME`, `MSTEAMS_PASSWORD` | Password-flow material |
@@ -84,8 +84,8 @@ audiences. Construction still performs no authentication, discovery or managemen
 
 Use `client.Request.Path` for unescaped segments (including Graph's explicit `v1.0` or
 `beta` prefix) and `Query` for query values. `URL` instead accepts an absolute approved
-continuation/discovery destination and cannot be combined with Path/Query. Other hosts,
-cloud profiles and ambiguous destinations fail before credentials are acquired. Resource
+continuation/discovery destination and cannot be combined with Path/Query. Hosts outside the selected profile,
+unknown cloud profiles and ambiguous destinations fail before credentials are acquired. Resource
 services remain responsible for evidenced API paths and payloads.
 
 `Do` applies the bounded request policy to explicitly replay-safe operations and never
@@ -166,7 +166,7 @@ commands fully implemented or live-tested. No lab tenant was contacted.
 
 ## Application authentication
 
-`auth.ClientSecret` and `auth.Certificate` now acquire commercial-cloud tokens through MSAL
+`auth.ClientSecret` and `auth.Certificate` acquire tokens for the selected environment through MSAL
 Go. Set a specific tenant GUID or DNS domain and the application/client ID. Application
 identity/mode are derived from that client ID; supplying delegated-mode or unrelated credential
 fields is rejected. Constructors remain local and defer certificate parsing until acquisition.

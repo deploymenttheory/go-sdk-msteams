@@ -52,7 +52,7 @@ func (a *delegatedHTTP) Do(request *http.Request) (*http.Response, error) {
 			return a.sendFederation(request, target)
 		}
 	}
-	if request == nil || !commercialAuthorityURL(request.URL) || request.Host != "" && request.Host != "login.microsoftonline.com" {
+	if request == nil || !a.base.allowsURL(request.URL) || request.Host != "" && request.Host != a.base.host() {
 		return rejectAuthorityRequest(request)
 	}
 	u := request.URL
@@ -177,11 +177,11 @@ func waitForLogin(ctx context.Context, duration time.Duration) error {
 	}
 }
 
-func validDeviceVerificationURL(value string) bool {
-	return value == "https://microsoft.com/devicelogin" || value == "https://www.microsoft.com/devicelogin" || value == "https://login.microsoftonline.com/common/oauth2/deviceauth"
+func (a *delegatedHTTP) validDeviceVerificationURL(value string) bool {
+	return value == "https://microsoft.com/devicelogin" || value == "https://www.microsoft.com/devicelogin" || value == "https://"+a.base.host()+"/common/oauth2/deviceauth"
 }
 
 func (a *delegatedHTTP) validAuthorizationURL(u *url.URL) bool {
 	path := a.tokenPath()
-	return commercialAuthorityURL(u) && path != "" && u.Path == strings.TrimSuffix(path, "token")+"authorize"
+	return a.base.allowsURL(u) && path != "" && u.Path == strings.TrimSuffix(path, "token")+"authorize"
 }

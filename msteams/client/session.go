@@ -31,6 +31,7 @@ type Session struct {
 	cleanup       func()
 	provider      auth.Provider
 	binding       auth.Binding
+	environment   auth.Environment
 	closeProvider func()
 	requests      *requestController
 }
@@ -39,6 +40,10 @@ type Session struct {
 // closes; callers must not transfer cleanup ownership of borrowed resources.
 func NewSession(cfg *auth.Config, httpClient *http.Client, cleanup func(), options ...SessionOption) (*Session, error) {
 	if err := cfg.Validate(); err != nil {
+		return nil, err
+	}
+	environment, err := auth.ResolveEnvironment(cfg.Cloud, cfg.Endpoints)
+	if err != nil {
 		return nil, err
 	}
 	if httpClient == nil {
@@ -85,7 +90,21 @@ func NewSession(cfg *auth.Config, httpClient *http.Client, cleanup func(), optio
 	}
 	lifetime, cancel := context.WithCancel(context.Background())
 	return &Session{auth: cfg.Clone(), http: *httpClient, lifetime: lifetime, cancel: cancel, cleanup: cleanup,
-		provider: provider, binding: binding, closeProvider: closeProvider, requests: requests}, nil
+		provider: provider, binding: binding, environment: environment, closeProvider: closeProvider, requests: requests}, nil
+}
+
+// Environment returns a copy of the resolved endpoint/audience tuple without I/O.
+// Callers must explicitly inspect endpoints; ordinary formatting is redacted.
+func (s *Session) Environment() (auth.Environment, error) {
+	if s == nil {
+		return auth.Environment{}, ErrClosed
+	}
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	if s.closed || s.auth == nil {
+		return auth.Environment{}, ErrClosed
+	}
+	return s.environment, nil
 }
 
 // AcquireToken obtains the exact audience requested by a backend adapter. The

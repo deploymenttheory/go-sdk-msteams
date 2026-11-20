@@ -51,7 +51,7 @@ func TestTransportGuardClosesRejectedRequestBodies(t *testing.T) {
 			if tc.cancel {
 				cancel()
 			}
-			transport := &authenticatedTransport{base: forbiddenTransport{t}, profile: routeProfile{"graph.microsoft.com", auth.GraphAudience}, token: tc.token}
+			transport := &authenticatedTransport{base: forbiddenTransport{t}, profile: routeProfile{host: "graph.microsoft.com", audience: auth.GraphAudience, graph: true}, token: tc.token}
 			response, err := transport.RoundTrip(request)
 			if response != nil && response.Body != nil {
 				_ = response.Body.Close()
