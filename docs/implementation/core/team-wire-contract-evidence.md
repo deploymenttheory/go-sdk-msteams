@@ -39,11 +39,11 @@ shape or completeness.
 | GraphAPI.Teams | DeleteByID | DELETE `/v1.0/groups/{id}` deletes the backing group and team. Pinned `RemoveTeam.ProcessRecord`; document this full resource lifecycle. |
 | GraphAPI.Teams | List | GET `/v1.0/teams`; paged basic team properties. [Graph list](https://learn.microsoft.com/en-us/graph/api/teams-list?view=graph-rest-1.0); supporting native SDK operation, not the enriched Get-Team sequence. |
 | GraphAPI.Groups | Create/GetByID/UpdateByID/DeleteByID/List | POST/GET/PATCH/DELETE `/v1.0/groups[/{id}]`; evidenced by `NewTeam`, `SetTeam`, `RemoveTeam`, `TeamsCmdlet` and group-list helpers. This supporting service provides the group operations required by compositions; group creation and team creation are distinct. |
-| GraphAPI.TeamMembers | Create/List/DeleteByID | Membership/ownership reference operations described below. Directory user ID identifies the backing-group membership; do not replace it with a Graph conversation-member ID. |
-| GraphAPI.TeamMembers | GetByID/UpdateByID | Canonical read and role-change operations must be composed from the evidenced list/reference operations or a separately verified direct endpoint. Updating a role is not deleting the member. |
+| GraphAPI.TeamMembers | Create/GetByID/UpdateByID/DeleteByID/List | Native conversation-member CRUD with opaque membership IDs; separate from the pinned backing-group workflow. See the [settled resource boundary](membership-resource-contract.md). |
+| GraphAPI.GroupMembers / GroupOwners | AddReference/List/RemoveReference | Membership/ownership reference operations described below, keyed by directory object ID. `TeamUserManagement` composes these for the pinned commands. |
 
 Additional team operations are `CreateFromGroup`, `Archive`, `Unarchive` and
-`UploadPicture`; member operations include `PromoteOwner` and `DemoteOwner`.
+`UploadPicture`; native member operations include `PromoteOwner` and `DemoteOwner`.
 Explicit compositions/recipes provide `New-Team` group-then-team creation,
 enriched team reads/lists, combined group/team updates and UPN-to-ID resolution.
 They expose partial results and created IDs, and retain the existing shared replay,
@@ -221,3 +221,9 @@ the documented search/serialization compatibility decisions. Record each field's
 presence semantics and each command composition in the ledger mapping. No lab
 permission, mutation, app-only or sovereign-cloud support is inferred from these
 offline observations.
+
+The [versioned composition scenarios](../../../contracts/endpoints/8.1.0/fixtures/core-team-compositions.json)
+now bind representative request/failure segments to all nine commands and their
+runtime sets. They are source-derived fixtures, not executions. Their explicit
+native compatibility choices and remaining coverage gates are recorded in
+[composition evidence](core-composition-evidence.md).
