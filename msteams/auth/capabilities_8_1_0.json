@@ -1,0 +1,6454 @@
+{
+  "baseline_version": "8.1.0",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "documentation_url": "https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication",
+  "documentation_reviewed": "2026-11-20",
+  "rules": [
+    {
+      "id": "app-exception-01",
+      "pattern": "New-Team",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-02",
+      "pattern": "Set-CsOnlineApplicationInstance",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-03",
+      "pattern": "*PolicyPackage*",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-04",
+      "pattern": "*-CsTeamsShiftsConnection*",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-05",
+      "pattern": "*-CsBatchTeamsDeployment*",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-06",
+      "pattern": "Get-MultiGeoRegion",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-07",
+      "pattern": "Get-AllM365TeamsApps",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-08",
+      "pattern": "Get-M365TeamsApp",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-09",
+      "pattern": "Update-M365TeamsApp",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-10",
+      "pattern": "Get-M365UnifiedCustomPendingApps",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-11",
+      "pattern": "Get-M365UnifiedTenantSettings",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-12",
+      "pattern": "Update-M365UnifiedTenantSettings",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "app-exception-13",
+      "pattern": "Update-M365UnifiedCustomPendingApp",
+      "clouds": [
+        "commercial",
+        "gcc",
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "sovereign-application-instance-get",
+      "pattern": "Get-CsOnlineApplicationInstance",
+      "clouds": [
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "sovereign-application-instance-new",
+      "pattern": "New-CsOnlineApplicationInstance",
+      "clouds": [
+        "gcch",
+        "dod"
+      ]
+    },
+    {
+      "id": "sovereign-application-instance-sync",
+      "pattern": "Sync-CsOnlineApplicationInstance",
+      "clouds": [
+        "gcch",
+        "dod"
+      ]
+    }
+  ],
+  "records": [
+    {
+      "name": "Add-TeamChannelUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Add-TeamsAppInstallation",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Add-TeamUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Clear-CsCacheOperation",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Clear-CsOCEContext",
+      "disposition": "session-equivalent",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Clear-CsOnlineTelephoneNumberOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Clear-CsRegionContext",
+      "disposition": "session-equivalent",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Clear-TeamsEnvironmentConfig",
+      "disposition": "session-equivalent",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Complete-CsOnlineTelephoneNumberOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Connect-MicrosoftTeams",
+      "disposition": "session-equivalent",
+      "parameter_sets": [
+        "AccessToken",
+        "ManagedServiceLogin",
+        "ServicePrincipalCertificate",
+        "UserCredential"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Disable-CsOnlineSipDomain",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Disconnect-MicrosoftTeams",
+      "disposition": "session-equivalent",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Enable-CsOnlineSipDomain",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Export-CsAcquiredPhoneNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Export"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Export-CsAutoAttendantHolidays",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Export-CsOnlineAudioFile",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Find-CsGroup",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Find-CsOnlineApplicationInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-AIGeneratedKnowledgeContainer",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-AllM365TeamsApps",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "app-exception-07"
+      ]
+    },
+    {
+      "name": "Get-AssociatedTeam",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAadTenant",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAadUser",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAgent",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAiAgents",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsApplicationAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsApplicationMeetingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAutoAttendant",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GetAllParamSet",
+        "GetSpecificParamSet"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAutoAttendantHolidays",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAutoAttendantStatus",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAutoAttendantSupportedLanguage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAutoAttendantSupportedTimeZone",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAutoAttendantTenantInformation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsAutoRecordingTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsBatchOperationDefinition",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsBatchOperationStatus",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsBatchPolicyAssignmentOperation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "Get1"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsBatchTeamsDeploymentStatus",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-05"
+      ]
+    },
+    {
+      "name": "Get-CsBusinessVoiceDirectoryDiagnosticData",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsCallingLineIdentity",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsCallQueue",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsCloudCallDataConnection",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsCloudTenant",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsCloudUser",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsComplianceRecordingForCallQueueTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsConfiguration",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsConversationRole",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsConversationRolesSetting",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsEffectiveTenantDialPlan",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsExportAcquiredPhoneNumberStatus",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsExternalAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsGroupPolicyAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "Get1",
+        "Get2"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsGroupPolicyAssignments",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsHostingProvider",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsHybridTelephoneNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "Get1",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsInboundBlockedNumberPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsInboundExemptNumberPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsLocationPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsLoginInfo",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMainlineAttendantAppointmentBookingFlow",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMainlineAttendantFlow",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMainlineAttendantQuestionAnswerFlow",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMainlineAttendantSpamDetectionTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMainlineAttendantSupportedLanguages",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMainlineAttendantSupportedVoices",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMainlineAttendantTenantInformation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMasObjectChangelog",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMasVersionedSchemaData",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMeetingMigrationStatus",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMeetingMigrationTransactionHistory",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsMoveTenantServiceInstanceTaskStatus",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineApplicationInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "sovereign-application-instance-get"
+      ]
+    },
+    {
+      "name": "Get-CsOnlineApplicationInstanceAssociation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineApplicationInstanceAssociationStatus",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineAudioConferencingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineAudioFile",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineDialInConferencingBridge",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "Get1"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineDialInConferencingLanguagesSupported",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineDialinConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineDialInConferencingServiceNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "FiltersParams",
+        "TenantDomainParams",
+        "TenantIdParams",
+        "UniqueBridgeParams",
+        "UniqueNumberParams"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineDialinConferencingTenantConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineDialInConferencingTenantSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineDialInConferencingUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineDialOutPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineDirectoryTenant",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineEnhancedEmergencyServiceDisclaimer",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineLisCivicAddress",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineLisLocation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GetByLocationID",
+        "UseCivicAddressId",
+        "UseLocation",
+        "UseLocationId"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineLisPort",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineLisSubnet",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineLisSwitch",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineLisWirelessAccessPoint",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlinePSTNGateway",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlinePstnUsage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineSchedule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineSipDomain",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineTelephoneNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineTelephoneNumberCountry",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineTelephoneNumberOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Generic",
+        "Search"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineTelephoneNumberType",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineVoicemailPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineVoicemailUserSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineVoicemailValidationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineVoiceRoute",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineVoiceRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsOnlineVoiceUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsPersonalAttendantSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsPhoneNumberAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsPhoneNumberPolicyAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsPhoneNumberTag",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsPhoneNumberTenantConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsPolicyPackage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "Get1",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-03"
+      ]
+    },
+    {
+      "name": "Get-CsPrivacyConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsRegionContext",
+      "disposition": "session-equivalent",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsSDGBulkSignInRequestsSummary",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsSdgBulkSignInRequestStatus",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsSharedCallHistoryTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsSharedCallQueueHistoryTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsSharedVoicemailTriageSettingsTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTagsTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsAcsFederationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsAIPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsAppPermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsAppPolicyConfiguration",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsAppSetupPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsAudioConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsBYODAndDesksPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsCallHoldPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsCallParkPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsCarrierEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsChannelsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsClientConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsComplianceRecordingApplication",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsComplianceRecordingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsCortanaPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsCustomBannerText",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsEducationAssignmentsAppPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsEducationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsEmergencyCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsEnhancedEncryptionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsEventsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsExternalAccessConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsFeedbackPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsFilesPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsGuestCallingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsGuestMeetingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsGuestMessagingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsIPPhonePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMediaConnectivityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMediaLoggingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMeetingBrandingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMeetingBroadcastConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMeetingBroadcastPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMeetingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMeetingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMeetingTemplateConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMeetingTemplatePermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMessagingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMessagingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMigrationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMobilityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsNetworkRoamingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsNotificationAndFeedsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsPersonalAttendantPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsRecordingAndTranscriptionCustomMessage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsRecordingRollOutPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsRemoteLogCollectionConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsRemoteLogCollectionDevice",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsRoomVideoTeleConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsSettingsCustomApp",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsSharedCallingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsShiftsAppPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsShiftsConnection",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "Get1",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsShiftsConnectionConnector",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsShiftsConnectionErrorReport",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "Get1",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsShiftsConnectionInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "Get1",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsShiftsConnectionOperation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsShiftsConnectionSyncResult",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsShiftsConnectionTeamMap",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsShiftsConnectionWfmTeam",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "Get1",
+        "GetViaIdentity",
+        "GetViaIdentity1"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsShiftsConnectionWfmUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsShiftsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsSipDevicesConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsSurvivableBranchAppliance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsSurvivableBranchAppliancePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsTargetingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsTemplatePermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsTenantAbuseConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsTranslationRule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsUnassignedNumberTreatment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsUpdateManagementPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsUpgradeConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsUpgradePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsVdiPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsVideoInteropServicePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsVirtualAppointmentsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsVoiceApplicationsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsWorkLoadPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamsWorkLocationDetectionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTeamTemplateList",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "DefaultLocaleOverride"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenant",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantBlockedCallingNumbers",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantConfiguration",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantDialPlan",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantFederationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantLicensingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantMigrationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantNetworkConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantNetworkRegion",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantNetworkSite",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity",
+        "QueryParameter"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantNetworkSubnet",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsTenantTrustedIPAddress",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsUserCallingSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsUserPolicyAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get",
+        "GetViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsUserPolicyPackage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": [
+        "app-exception-03"
+      ]
+    },
+    {
+      "name": "Get-CsUserPolicyPackageRecommendation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Get"
+      ],
+      "current_restrictions": [
+        "app-exception-03"
+      ]
+    },
+    {
+      "name": "Get-CsUserProvHistory",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsUssUserSettings",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-CsVideoInteropServiceProvider",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-DirectToGroupAssignmentsMigrationStatus",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-GPAGroupMembers",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-GPAUserMembership",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-GroupAssignmentRecommendationsPerPolicyName",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-GroupAssignmentRecommendationsPerPolicyType",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-GroupPolicyAssignmentConflict",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-LicenseReportForChangeNotificationSubscription",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-M365TeamsApp",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "app-exception-08"
+      ]
+    },
+    {
+      "name": "Get-M365UnifiedCustomPendingApps",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "app-exception-10"
+      ]
+    },
+    {
+      "name": "Get-M365UnifiedTenantSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "app-exception-11"
+      ]
+    },
+    {
+      "name": "Get-MultiGeoRegion",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": [
+        "app-exception-06"
+      ]
+    },
+    {
+      "name": "Get-NgtProvInstanceFailOverStatus",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-Operation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-SharedWithTeam",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-SharedWithTeamUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-Team",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Filters",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TeamAllChannel",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TeamChannel",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TeamChannelUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TeamIncomingChannel",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TeamsApp",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TeamsAppInstallation",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TeamsArtifacts",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TeamTargetingHierarchyStatus",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TeamUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Get-TenantPrivateChannelMigrationStatus",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsApplicationAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsCallingLineIdentity",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsDialoutPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsExternalAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsGroupPolicyPackageAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "RequiredPolicyList"
+      ],
+      "current_restrictions": [
+        "app-exception-03"
+      ]
+    },
+    {
+      "name": "Grant-CsOnlineAudioConferencingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsOnlineVoicemailPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsOnlineVoiceRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsAIPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsAppPermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsAppSetupPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsAudioConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsBYODAndDesksPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsCallHoldPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsCallParkPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsCarrierEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsChannelsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsComplianceRecordingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsCortanaPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsEmergencyCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsEnhancedEncryptionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsEventsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsFeedbackPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsFilesPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsIPPhonePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsMediaConnectivityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsMediaLoggingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsMeetingBrandingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsMeetingBroadcastPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsMeetingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsMeetingTemplatePermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsMessagingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsMobilityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsPersonalAttendantPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsRecordingRollOutPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsRoomVideoTeleConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsSharedCallingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsShiftsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsSurvivableBranchAppliancePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsUpdateManagementPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsUpgradePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsVdiPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsVideoInteropServicePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsVirtualAppointmentsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsVoiceApplicationsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsWorkLoadPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTeamsWorkLocationDetectionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "GrantToUser",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsTenantDialPlan",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantToGroup",
+        "GrantToTenant",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Grant-CsUserPolicyPackage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "GrantExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-03"
+      ]
+    },
+    {
+      "name": "Import-CsAutoAttendantHolidays",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Import-CsOnlineAudioFile",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-ClearDirectToGroupAssignmentMigration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsCustomHandlerCallBackNgtprov",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsCustomHandlerNgtprov",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsDirectObjectSync",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsDirectoryObjectSync",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsGenericNgtProvCommand",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsInternalPSTelemetry",
+      "disposition": "excluded-module-telemetry",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsMsodsSync",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsRefreshGroupUsers",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsRehomeuser",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsReprocessBatchOperation",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-CsReprocessGroupPolicyAssignment",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Invoke-StartDirectToGroupAssignmentMigration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Move-CsAvsTenantPartition",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Move-CsInternalHelper",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "BeginAndCompleteMove",
+        "MoveResourcedata",
+        "Rehome",
+        "Validate"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Move-CsTenantCrossRegion",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Move-CsTenantServiceInstance",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Move-NgtProvInstance",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAgent",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsApplicationAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAutoAttendant",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAutoAttendantCallableEntity",
+      "disposition": "local-builder-candidate",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAutoAttendantCallFlow",
+      "disposition": "local-builder-candidate",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAutoAttendantCallHandlingAssociation",
+      "disposition": "local-builder-candidate",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAutoAttendantDialScope",
+      "disposition": "local-builder-candidate",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAutoAttendantMenu",
+      "disposition": "local-builder-candidate",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAutoAttendantMenuOption",
+      "disposition": "local-builder-candidate",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAutoAttendantPrompt",
+      "disposition": "local-builder-candidate",
+      "parameter_sets": [
+        "AudioFileParamSet",
+        "DualParamSet",
+        "TextToSpeechParamSet"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsAutoRecordingTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsBatchPolicyAssignmentOperation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "NewExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsBatchPolicyPackageAssignmentOperation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "NewExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-03"
+      ]
+    },
+    {
+      "name": "New-CsBatchTeamsDeployment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "app-exception-05"
+      ]
+    },
+    {
+      "name": "New-CsCallingLineIdentity",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsCallQueue",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsCloudCallDataConnection",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsComplianceRecordingForCallQueueTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsConfiguration",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsConversationRole",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsCustomPolicyPackage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "RequiredPolicyList"
+      ],
+      "current_restrictions": [
+        "app-exception-03"
+      ]
+    },
+    {
+      "name": "New-CsCustomPrompt",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsCustomPromptPackage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsEdgeAllowAllKnownDomains",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsEdgeAllowList",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsEdgeDomainPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsExternalAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsGroupPolicyAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "NewExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsHybridTelephoneNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsInboundBlockedNumberPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsInboundExemptNumberPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsLocationPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsMainlineAttendantAppointmentBookingFlow",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsMainlineAttendantQuestionAnswerFlow",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsMainlineAttendantSpamDetectionTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineApplicationInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "sovereign-application-instance-new"
+      ]
+    },
+    {
+      "name": "New-CsOnlineApplicationInstanceAssociation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineAudioConferencingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineDateTimeRange",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineDirectRoutingTelephoneNumberUploadOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "InputByFile",
+        "InputByList",
+        "InputByRange"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineLisCivicAddress",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineLisLocation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "CreateCivicAddress",
+        "ExistingCivicAddress"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlinePSTNGateway",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineSchedule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "FixedScheduleParamSet",
+        "UnresolvedParamSet",
+        "WeeklyRecurrentScheduleParamSet"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineTelephoneNumberOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Create",
+        "CreateExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineTelephoneNumberReleaseOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "InputByFile",
+        "InputByList",
+        "InputByRange"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineTimeRange",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineVoicemailPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineVoiceRoute",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsOnlineVoiceRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsPhoneNumberBulkUpdateDrNumberAcquiredCapabilitiesOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsPhoneNumberBulkUpdateLocationIdOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsPhoneNumberBulkUpdateNetworkSiteIdOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsPhoneNumberBulkUpdateReverseNumberLookupOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsPhoneNumberBulkUpdateTagsOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsPhoneNumberUsageChangeOrder",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsSdgBulkSignInRequest",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsSdgDeviceTaggingRequest",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsSDGDeviceTransferRequest",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsSharedCallHistoryTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsSharedCallQueueHistoryTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsSharedVoicemailTriageSettingsTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTag",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTagsTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsAIPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsAppPermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsAppSetupPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsAudioConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsBYODAndDesksPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsCallHoldPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsCallParkPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsCarrierEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsChannelsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsComplianceRecordingApplication",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsComplianceRecordingPairedApplication",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsComplianceRecordingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsCortanaPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsCustomBannerText",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsEmergencyCallingExtendedNotification",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsEmergencyCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsEmergencyNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsEnhancedEncryptionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsEventsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsFeedbackPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsFilesPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsHiddenMeetingTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsHiddenTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsIPPhonePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsMediaConnectivityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsMeetingBackgroundImage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsMeetingBrandingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsMeetingBrandingTheme",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsMeetingBroadcastPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsMeetingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsMeetingTemplatePermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsMessagingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsMobilityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsNdiAssuranceSlate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsNetworkRoamingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsPersonalAttendantPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsRecordingAndTranscriptionCustomMessage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsRecordingAndTranscriptionLocalizationCustomMessage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsRecordingRollOutPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsRemoteLogCollectionDevice",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsRoomVideoTeleConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsSharedCallingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsShiftsConnection",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "New-CsTeamsShiftsConnectionBatchTeamMap",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Create",
+        "CreateExpanded",
+        "CreateViaIdentity",
+        "CreateViaIdentityExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "New-CsTeamsShiftsConnectionInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "New-CsTeamsShiftsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsSurvivableBranchAppliance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsSurvivableBranchAppliancePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsTemplatePermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsTranslationRule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsUnassignedNumberTreatment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsUpdateManagementPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsVdiPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsVirtualAppointmentsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsVoiceApplicationsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsWorkLoadPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamsWorkLocationDetectionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTeamTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "New",
+        "NewExpanded",
+        "NewViaIdentity",
+        "NewViaIdentityExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTenantDialPlan",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTenantNetworkRegion",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTenantNetworkSite",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTenantNetworkSubnet",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsTenantTrustedIPAddress",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsUserCallingDelegate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsVideoInteropServiceProvider",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-CsVoiceNormalizationRule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-Team",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "CreateTeam",
+        "MigrateGroup"
+      ],
+      "current_restrictions": [
+        "app-exception-01"
+      ]
+    },
+    {
+      "name": "New-TeamChannel",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "New-TeamsApp",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Register-CsOnlineDialInConferencingServiceNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "InstanceParams",
+        "UniqueNumberParams"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-AIGeneratedKnowledge",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsAgent",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsApplicationAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsAutoAttendant",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsAutoRecordingTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsCallingLineIdentity",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsCallQueue",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsComplianceRecordingForCallQueueTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsConfiguration",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsConversationRole",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsCustomPolicyPackage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove",
+        "RemoveViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-03"
+      ]
+    },
+    {
+      "name": "Remove-CsExternalAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsGroupPolicyAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsHybridTelephoneNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove",
+        "RemoveViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsInboundBlockedNumberPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsInboundExemptNumberPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsLocationPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsMainlineAttendantAppointmentBookingFlow",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsMainlineAttendantQuestionAnswerFlow",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsMainlineAttendantSpamDetectionTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineApplicationInstanceAssociation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineAudioConferencingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineAudioFile",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineDialInConferencingTenantSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineLisCivicAddress",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineLisLocation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineLisPort",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineLisSubnet",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineLisSwitch",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineLisWirelessAccessPoint",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlinePSTNGateway",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineSchedule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineTelephoneNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineVoicemailPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineVoiceRoute",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsOnlineVoiceRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsPhoneNumberAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "RemoveAll",
+        "RemoveSome"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsPhoneNumberAssignmentBlock",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsPhoneNumberSmsActivation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove",
+        "RemoveExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsPhoneNumberTag",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsPhoneNumberTenantConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsSharedCallHistoryTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsSharedCallQueueHistoryTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsSharedVoicemailTriageSettingsTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTagsTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsAIPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsAppPermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsAppSetupPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsAudioConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsBYODAndDesksPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsCallHoldPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsCallParkPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsCarrierEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsChannelsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsComplianceRecordingApplication",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsComplianceRecordingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsCortanaPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsCustomBannerText",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsEmergencyCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsEnhancedEncryptionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsEventsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsFeedbackPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsFilesPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsIPPhonePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsMediaConnectivityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsMeetingBrandingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsMeetingBroadcastPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsMeetingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsMeetingTemplatePermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsMessagingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsMobilityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsNetworkRoamingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsNotificationAndFeedsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsPersonalAttendantPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsRecordingAndTranscriptionCustomMessage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsRecordingRollOutPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsRemoteLogCollectionDevice",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsRoomVideoTeleConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsSharedCallingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsShiftsConnection",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove",
+        "RemoveViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Remove-CsTeamsShiftsConnectionInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove",
+        "RemoveViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Remove-CsTeamsShiftsConnectionTeamMap",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove",
+        "RemoveViaIdentity"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Remove-CsTeamsShiftsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsShiftsScheduleRecord",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove",
+        "RemoveExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsSurvivableBranchAppliance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsSurvivableBranchAppliancePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsTargetingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsTemplatePermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsTranslationRule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsUnassignedNumberTreatment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsUpdateManagementPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsVdiPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsVirtualAppointmentsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsVoiceApplicationsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsWorkLoadPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamsWorkLocationDetectionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTeamTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Delete",
+        "DeleteViaIdentity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTenantDialPlan",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTenantNetworkRegion",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTenantNetworkSite",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTenantNetworkSubnet",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsTenantTrustedIPAddress",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsUserCallingDelegate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsUserLicenseGracePeriod",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Remove",
+        "RemoveExpanded",
+        "RemoveViaIdentity",
+        "RemoveViaIdentityExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-CsVideoInteropServiceProvider",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-SharedWithTeam",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-Team",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-TeamChannel",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-TeamChannelUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-TeamsApp",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-TeamsAppInstallation",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-TeamTargetingHierarchy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Remove-TeamUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsAgent",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsApplicationAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsApplicationMeetingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsAutoAttendant",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsAutoRecordingTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "Instance"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsCallingLineIdentity",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsCallQueue",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsComplianceRecordingForCallQueueTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsConfiguration",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsConversationRole",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsConversationRolesSetting",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsExternalAccessPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsInboundBlockedNumberPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsInboundExemptNumberPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsLocationPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsMainlineAttendantAppointmentBookingFlow",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsMainlineAttendantQuestionAnswerFlow",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsMainlineAttendantSpamDetectionTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsNotifyCache",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOCEContext",
+      "disposition": "session-equivalent",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineApplicationInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "app-exception-02"
+      ]
+    },
+    {
+      "name": "Set-CsOnlineAudioConferencingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineDialInConferencingBridge",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineDialInConferencingServiceNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "InstanceParams",
+        "UniqueNumberParams"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineDialInConferencingTenantSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineDialInConferencingUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineDialInConferencingUserDefaultNumber",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineEnhancedEmergencyServiceDisclaimer",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineLisCivicAddress",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineLisLocation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "UseCivicAddressId",
+        "UseLocationId"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineLisPort",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineLisSubnet",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineLisSwitch",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineLisWirelessAccessPoint",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlinePSTNGateway",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlinePstnUsage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineSchedule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineVoiceApplicationInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineVoicemailPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineVoicemailUserSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineVoicemailValidationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineVoiceRoute",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineVoiceRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsOnlineVoiceUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsPersonalAttendantSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "PersonalAttendant",
+        "PersonalAttendantOnOff"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsPhoneNumberAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Assignment",
+        "Attribute",
+        "LocationUpdate",
+        "NetworkSiteUpdate",
+        "ReverseNumberLookupUpdate"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsPhoneNumberAssignmentBlock",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Set",
+        "SetExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsPhoneNumberPolicyAssignment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Set"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsPhoneNumberSmsActivation",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Set",
+        "SetExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsPhoneNumberTag",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Set"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsPhoneNumberTenantConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsPrivacyConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsPublishPolicySchemaDefaults",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsRegionContext",
+      "disposition": "session-equivalent",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsSharedCallHistoryTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsSharedCallQueueHistoryTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsSharedVoicemailTriageSettingsTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTagsTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsAcsFederationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsAIPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsAppPermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsAppPolicyConfiguration",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsAppSetupPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsAudioConferencingCustomPromptsConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsAudioConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsBYODAndDesksPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsCallHoldPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsCallParkPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsCarrierEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsChannelsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsClientConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsComplianceRecordingApplication",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsComplianceRecordingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsCortanaPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsCustomBannerText",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsEducationAssignmentsAppPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsEducationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsEmergencyCallingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsEmergencyCallRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsEventsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsExternalAccessConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsFeedbackPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsFilesPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsGuestCallingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsGuestMeetingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsGuestMessagingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsIPPhonePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMediaConnectivityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMeetingBrandingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMeetingBroadcastConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMeetingBroadcastPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMeetingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMeetingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMeetingTemplatePermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMessagingConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMessagingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMigrationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMobilityPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsMultiTenantOrganizationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsNetworkRoamingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsNotificationAndFeedsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsPersonalAttendantPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsRecordingAndTranscriptionCustomMessage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsRecordingRollOutPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsRemoteLogCollectionDevice",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity",
+        "ParentAndRelativeKey"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsRoomVideoTeleConferencingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsSettingsCustomApp",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsSharedCallingRoutingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsShiftsAppPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsShiftsConnection",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Set",
+        "SetExpanded",
+        "SetViaIdentity",
+        "SetViaIdentityExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Set-CsTeamsShiftsConnectionInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Set",
+        "SetExpanded",
+        "SetViaIdentity",
+        "SetViaIdentityExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Set-CsTeamsShiftsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsSipDevicesConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsSurvivableBranchAppliance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsSurvivableBranchAppliancePolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsTargetingPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsTemplatePermissionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsTenantAbuseConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsTranslationRule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsUnassignedNumberTreatment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsUpdateManagementPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsUpgradeConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsVdiPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsVirtualAppointmentsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsVoiceApplicationsPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsWorkLoadPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTeamsWorkLocationDetectionPolicy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantBlockedCallingNumbers",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantConfiguration",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantDialPlan",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantFederationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantMigrationConfiguration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantNetworkRegion",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantNetworkSite",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantNetworkSubnet",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantTrustedIPAddress",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsTenantUserBackfill",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsUser",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsUserCallingDelegate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsUserCallingSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "BusyOnBusy",
+        "CallGroup",
+        "CallGroupMembership",
+        "CallGroupNotification",
+        "Forwarding",
+        "ForwardingOnOff",
+        "Identity",
+        "MaximumConcurrentCalls",
+        "Unanswered",
+        "UnansweredOnOff"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsUssUserSettings",
+      "disposition": "management-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-CsVideoInteropServiceProvider",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-Team",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-TeamArchivedState",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-TeamChannel",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-TeamPicture",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-TeamsApp",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-TeamsEnvironmentConfig",
+      "disposition": "session-equivalent",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Set-TeamTargetingHierarchy",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Start-CsExMeetingMigration",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "UserId"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Sync-CsOnlineApplicationInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "sovereign-application-instance-sync"
+      ]
+    },
+    {
+      "name": "Test-CsEffectiveTenantDialPlan",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "EffectiveTDPName",
+        "Identity"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Test-CsInboundBlockedNumberPattern",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Test-CsTeamsShiftsConnectionValidate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Test",
+        "TestExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Test-CsTeamsTranslationRule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Test"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Test-CsTeamsUnassignedNumberTreatment",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Test"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Test-CsVoiceNormalizationRule",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Unregister-CsOnlineDialInConferencingServiceNumber",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "InstanceParams",
+        "UniqueNumberParams"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Update-CsAutoAttendant",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Update-CsCustomPolicyPackage",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "RequiredPolicyList"
+      ],
+      "current_restrictions": [
+        "app-exception-03"
+      ]
+    },
+    {
+      "name": "Update-CsPhoneNumberTag",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Update"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Update-CsTeamsShiftsConnection",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Update",
+        "UpdateExpanded",
+        "UpdateViaIdentity",
+        "UpdateViaIdentityExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Update-CsTeamsShiftsConnectionInstance",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Update",
+        "UpdateExpanded",
+        "UpdateViaIdentity",
+        "UpdateViaIdentityExpanded"
+      ],
+      "current_restrictions": [
+        "app-exception-04"
+      ]
+    },
+    {
+      "name": "Update-CsTeamTemplate",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "Update",
+        "UpdateExpanded",
+        "UpdateViaIdentity",
+        "UpdateViaIdentityExpanded"
+      ],
+      "current_restrictions": []
+    },
+    {
+      "name": "Update-M365TeamsApp",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "app-exception-09"
+      ]
+    },
+    {
+      "name": "Update-M365UnifiedCustomPendingApp",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "app-exception-13"
+      ]
+    },
+    {
+      "name": "Update-M365UnifiedTenantSettings",
+      "disposition": "observed-management-export",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "current_restrictions": [
+        "app-exception-12"
+      ]
+    },
+    {
+      "name": "Update-TeamsAppInstallation",
+      "disposition": "research-candidate",
+      "parameter_sets": [],
+      "current_restrictions": []
+    }
+  ]
+}
