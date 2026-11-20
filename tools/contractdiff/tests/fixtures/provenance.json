@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "authenticated": false,
+  "snapshots": {
+    "8.0.0": {
+      "package_url": "https://www.powershellgallery.com/api/v2/package/MicrosoftTeams/8.0.0",
+      "package_sha256": "6aa426d37913dee78628ad36dfc26e40161702018479f110f396712e896f2882",
+      "package_sha512_base64": "996hvaid+3CTSlKdL2YtWd9R8DqbEx08J5ar5/Hsoy+BIwS5yxCT3cq3ObsTzmxn6XDkmC/Ktz/rTMCxjBmVxw==",
+      "runtime_environment": {
+        "authenticated": false,
+        "module_version": "8.0.0",
+        "platform": "macOS 27.0.1",
+        "powershell_version": "7.6.6"
+      },
+      "original_snapshot_sha256": "cbcf29fa6e01bd6753e775e601b127698c09d15d915a24f70b6f9b25c9e3ee5c",
+      "release_notes_sha256": "fe421ef147926ec4fd3904a94761ef6766a9822d5196b36c33b1a9395f29586c",
+      "runtime_commands": 679,
+      "fixture_uncompressed_sha256": "d57b90c4b458a9416fc09dc816d8da96cd6f0b0c1a6ae824aeedf8185c50ec43"
+    },
+    "8.1.0": {
+      "package_url": "https://www.powershellgallery.com/api/v2/package/MicrosoftTeams/8.1.0",
+      "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+      "package_sha512_base64": "842LJvX0gC9ZmIqN9YOrKWPqh9hVk+BPanw4okt3+bJ5EmknnKHvO1ioRllgLZG4j+h06c1s9y9bs/xIxPrMPQ==",
+      "runtime_environment": {
+        "authenticated": false,
+        "module_version": "8.1.0",
+        "platform": "macOS 27.0.1",
+        "powershell_version": "7.6.6"
+      },
+      "original_snapshot_sha256": "530c4acaacdf4cab742e632ed3b79c29fecdcd1056304baafec2bfd66ddedd5c",
+      "release_notes_sha256": "a42d24553183ee4b6385744b1f5644955f05bb1b0b1c240f36dac3f5bc09b3ae",
+      "runtime_commands": 680,
+      "fixture_uncompressed_sha256": "73bd6a5820540e4f08d64e45facb474a515e25a3aaf9261a0c313053181e61cb"
+    }
+  },
+  "limitations": [
+    "Full runtime/source metadata is retained; release-note prose is replaced by its SHA256 digest in fixtures.",
+    "The Statistics projection below is derived from the 8.1.0 release note, not a tenant observation."
+  ],
+  "documented_changes": [
+    {
+      "command": "Get-CsCallQueue",
+      "field": "Statistics",
+      "change": "removed output field",
+      "source": "https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0",
+      "source_kind": "release-note",
+      "live_observed": false
+    }
+  ]
+}
