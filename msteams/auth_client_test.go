@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	msteams "github.com/deploymenttheory/go-sdk-msteams"
+	msteams "github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )

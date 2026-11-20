@@ -20,8 +20,9 @@ The first supported release requires complete implementation and contract-test c
 
 ## Development
 
-Requires the pinned Go version in [go.mod](go.mod) (currently 1.27.4). The root module
-is `github.com/deploymenttheory/go-sdk-msteams` and imports as `msteams`.
+Requires the pinned Go version in [go.mod](go.mod) (currently 1.27.4). The module is
+`github.com/deploymenttheory/go-sdk-msteams`; import the SDK entry point as
+`github.com/deploymenttheory/go-sdk-msteams/msteams`.
 
 ```sh
 go build ./...
@@ -40,8 +41,9 @@ package ownership. CI runs on Linux, macOS and Windows without tenant secrets.
 Planned layout, following the agreed Jamf composition:
 
 ```text
-go.mod, doc.go            root package and client composition
-msteams/                 shared foundation and resource packages
+go.mod, go.sum           module metadata only; no Go source at repository root
+msteams/                 SDK entry point, client composition and package tests
+  client.go, doc.go       public client and package documentation
   client/                request boundary and shared transport
   auth/                  portable audience-aware providers
   config/, constants/    validated configuration and cloud definitions

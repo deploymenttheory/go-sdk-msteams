@@ -8,7 +8,7 @@ MicrosoftTeams 8.1.0 exposes management operations through multiple backend fami
 
 ## Decision
 
-The module is `github.com/deploymenttheory/go-sdk-msteams`. The root `msteams` package owns construction and service wiring. It exposes `NewClient(authConfig, options...)` and `NewClientFromEnv(options...)`, returning a concrete client and error. Options validate configuration; construction does not authenticate or perform network discovery. Environment loading occurs only in the explicit environment constructor. Explicit options are applied after loaded configuration and validated together.
+The module is `github.com/deploymenttheory/go-sdk-msteams`. The public `msteams` package lives in `msteams/` (import `github.com/deploymenttheory/go-sdk-msteams/msteams`) and owns construction and service wiring. Go source and its package tests belong under that directory, not the repository root. It exposes `NewClient(authConfig, options...)` and `NewClientFromEnv(options...)`, returning a concrete client and error. Options validate configuration; construction does not authenticate or perform network discovery. Environment loading occurs only in the explicit environment constructor. Explicit options are applied after loaded configuration and validated together.
 
 The root has `GraphAPI` and `TeamsAdminAPI` service collections. The collections group typed resource services; they do not contain transport implementations. Resource packages follow `msteams/graph_api/<resource>` and `msteams/teams_admin_api/<resource>`, with models, methods, tests, mocks and `api_docs.md`. Package identifiers use ordinary Go naming; established directory names preserve the requested Jamf layout.
 

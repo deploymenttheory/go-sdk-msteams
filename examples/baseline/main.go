@@ -4,7 +4,7 @@ package main
 import (
 	"fmt"
 
-	msteams "github.com/deploymenttheory/go-sdk-msteams"
+	msteams "github.com/deploymenttheory/go-sdk-msteams/msteams"
 )
 
 func main() {

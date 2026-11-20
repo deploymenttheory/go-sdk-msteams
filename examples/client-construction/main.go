@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	msteams "github.com/deploymenttheory/go-sdk-msteams"
+	msteams "github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 

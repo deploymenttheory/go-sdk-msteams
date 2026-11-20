@@ -139,7 +139,7 @@ ignores cancellation cannot be forcibly stopped by Go. All clients sharing a pro
 must use the same binding. Use separate providers for different identities or modes.
 
 AUTH-01 evidence: `msteams/auth/provider_test.go`, `refresh_test.go`, `bound_test.go` and
-`auth_client_test.go` cover audience/binding isolation, expiry, refresh races, cancellation,
+`msteams/auth_client_test.go` cover audience/binding isolation, expiry, refresh races, cancellation,
 redaction and ownership using synthetic tokens. These support the connection/session
 foundation (`Connect-MicrosoftTeams`/`Disconnect-MicrosoftTeams`); they do not mark those
 commands fully implemented or live-tested. No lab tenant was contacted.
