@@ -117,3 +117,27 @@ func TestConfigurationDiagnosticsRedactSecrets(t *testing.T) {
 		}
 	}
 }
+
+func TestPFXConfigurationIsExclusiveAndCopied(t *testing.T) {
+	t.Parallel()
+	cfg := &auth.Config{Method: auth.Certificate, TenantID: "tenant", ClientID: "client", PFX: []byte("pfx"), PFXPassword: []byte("password")}
+	if err := cfg.Validate(); err != nil {
+		t.Fatal(err)
+	}
+	copied := cfg.Clone()
+	cfg.PFX[0] = 'X'
+	cfg.PFXPassword[0] = 'X'
+	if string(copied.PFX) != "pfx" || string(copied.PFXPassword) != "password" {
+		t.Fatal("PFX material shared with caller")
+	}
+	cfg.Certificate = []byte("pem")
+	if !errors.Is(cfg.Validate(), auth.ErrInvalidConfig) {
+		t.Fatal("mixed PEM/PFX accepted")
+	}
+	cfg.Certificate = nil
+	cfg.Method = auth.ClientSecret
+	cfg.ClientSecret = "secret"
+	if !errors.Is(cfg.Validate(), auth.ErrInvalidConfig) {
+		t.Fatal("PFX mixed with client-secret accepted")
+	}
+}

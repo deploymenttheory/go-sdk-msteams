@@ -10,7 +10,8 @@ Construction validates authentication selection, required credential presence, i
 credential combinations and HTTP settings. It does not authenticate, call assertion
 callbacks, read assertion files, parse certificate/key material, validate token signatures
 or check token expiry. Supplied-token and injected-provider acquisition now check expiry
-when an operation requests a token; built-in Entra flow adapters remain separate AUTH tickets.
+when an operation requests a token; certificate/client-secret acquisition is implemented; delegated, managed-identity and workload
+identity adapters remain separate AUTH tickets.
 A successfully constructed client is not proof that credentials work or an operation is
 supported. Resource methods are added with their research and implementation tickets.
 
@@ -142,3 +143,43 @@ AUTH-01 evidence: `msteams/auth/provider_test.go`, `refresh_test.go`, `bound_tes
 redaction and ownership using synthetic tokens. These support the connection/session
 foundation (`Connect-MicrosoftTeams`/`Disconnect-MicrosoftTeams`); they do not mark those
 commands fully implemented or live-tested. No lab tenant was contacted.
+
+## Application authentication
+
+`auth.ClientSecret` and `auth.Certificate` now acquire commercial-cloud tokens through MSAL
+Go. Set a specific tenant GUID or DNS domain and the application/client ID. Application
+identity/mode are derived from that client ID; supplying delegated-mode or unrelated credential
+fields is rejected. Constructors remain local and defer certificate parsing until acquisition.
+The provider accepts `auth.GraphAudience` and `auth.TeamsAdminAudience` independently.
+
+For certificate configuration, choose either `Certificate` plus `PrivateKey` (unencrypted
+certificate-chain PEM and one RSA PKCS#1/PKCS#8 key) or `PFX` plus optional `PFXPassword` bytes.
+The choices are exclusive. Callers can load files with `os.ReadFile` and pass the bytes; the
+SDK never accesses Windows stores or discovers credentials. PFX supports the pinned Microsoft
+parser's SHA1-MAC subset; SHA256-MAC PFX and encrypted PEM keys are rejected. These limitations
+are documented/tested, not a recommendation to downgrade production encryption. Callers can
+supply equivalent unencrypted PEM material through their existing secret-management process.
+Mutable input is copied. Certificate/key mismatches, ambiguous signing certificates and validity
+failures are rejected before contacting the token service. Certificate validity is checked on
+credential exchange; already issued cached access tokens retain their own expiration.
+
+```go
+cfg := &auth.Config{
+    Method: auth.Certificate,
+    TenantID: tenantID,
+    ClientID: applicationID,
+    PFX: pfxBytes,
+    PFXPassword: passwordBytes,
+}
+sdk, err := msteams.NewClient(cfg)
+// Handle err, use implemented service operations, and close sdk when finished.
+```
+
+The session owns its application provider and clears its copied credential/cache references on
+close. It does not revoke tokens or close an injected transport. The default refresh window is
+two minutes. Token-service errors match `auth.ErrTokenService`; library response bodies and
+credential diagnostics are not exposed, including through unwrapping. Certificate errors match
+`ErrInvalidCertificate`, `ErrCertificateExpired` or `ErrCertificateNotYetValid` in package auth.
+The standalone [provider example](../../msteams/auth/application_example_test.go) demonstrates
+ownership without authenticating. See [AUTH-02 evidence and prerequisites](../implementation/auth/client-credentials-evidence.md)
+for app registration/consent, role categories, tested contracts and remaining live qualification.

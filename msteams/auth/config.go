@@ -60,6 +60,8 @@ type Config struct {
 	Password      string
 	Certificate   []byte
 	PrivateKey    []byte
+	PFX           []byte // alternative to Certificate and PrivateKey PEM
+	PFXPassword   []byte
 	AccessTokens  map[string]Token // audience -> token; never positional
 	TokenMode     Mode             // required for supplied tokens and external providers
 	IdentityID    string           // required for token cache isolation
@@ -91,6 +93,8 @@ func (c *Config) Clone() *Config {
 	cloned := *c
 	cloned.Certificate = slices.Clone(c.Certificate)
 	cloned.PrivateKey = slices.Clone(c.PrivateKey)
+	cloned.PFX = slices.Clone(c.PFX)
+	cloned.PFXPassword = slices.Clone(c.PFXPassword)
 	cloned.AccessTokens = maps.Clone(c.AccessTokens)
 	return &cloned
 }
@@ -122,9 +126,13 @@ func (c *Config) Validate() error {
 		allowed["username"], allowed["password"] = true, true
 	case Certificate:
 		required["client_id"] = strings.TrimSpace(c.ClientID) != ""
-		required["certificate"] = len(c.Certificate) > 0
-		required["private_key"] = len(c.PrivateKey) > 0
-		allowed["certificate"], allowed["private_key"] = true, true
+		if len(c.PFX) > 0 {
+			allowed["pfx"], allowed["pfx_password"] = true, true
+		} else {
+			required["certificate"] = len(c.Certificate) > 0
+			required["private_key"] = len(c.PrivateKey) > 0
+			allowed["certificate"], allowed["private_key"] = true, true
+		}
 	case ClientSecret:
 		required["client_id"] = strings.TrimSpace(c.ClientID) != ""
 		required["client_secret"] = c.ClientSecret != ""
@@ -143,7 +151,7 @@ func (c *Config) Validate() error {
 	case ExternalProvider:
 		required["identity_id"] = strings.TrimSpace(c.IdentityID) != ""
 		required["token_mode"] = c.TokenMode == Delegated || c.TokenMode == Application
-		required["provider"] = !nilProvider(c.Provider)
+		required["provider"] = !nilDependency(c.Provider)
 		allowed["provider"], allowed["identity_id"], allowed["token_mode"] = true, true, true
 	case ManagedIdentity:
 		// An empty client ID selects the environment's system-assigned identity.
@@ -164,6 +172,7 @@ func (c *Config) Validate() error {
 	present := map[string]bool{
 		"client_secret": c.ClientSecret != "", "username": c.Username != "", "password": c.Password != "",
 		"certificate": len(c.Certificate) > 0, "private_key": len(c.PrivateKey) > 0,
+		"pfx": len(c.PFX) > 0, "pfx_password": len(c.PFXPassword) > 0,
 		"access_tokens": len(c.AccessTokens) > 0, "identity_id": c.IdentityID != "", "token_mode": c.TokenMode != "",
 		"assertion_file": c.AssertionFile != "", "assertion": c.Assertion != nil,
 		"provider": c.Provider != nil,
@@ -183,10 +192,13 @@ func (c *Config) TokenBinding() Binding {
 	if cloud == "" {
 		cloud = "commercial"
 	}
+	if c.Method == Certificate || c.Method == ClientSecret {
+		return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: c.ClientID, Mode: Application}
+	}
 	return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: c.IdentityID, Mode: c.TokenMode}
 }
 
-func nilProvider(provider Provider) bool {
+func nilDependency(provider any) bool {
 	if provider == nil {
 		return true
 	}
