@@ -6,7 +6,7 @@ establish that any management command is authorized or implemented.
 
 ## Evidence layers
 
-`msteams/auth/capabilities_8_1_0.json` retains all 745 reconciliation candidates,
+`msteams/capabilities/capabilities_8_1_0.json` retains all 745 reconciliation candidates,
 their dispositions and exact parameter-set names. Its version and package SHA are
 checked against the immutable 8.1.0 evidence by Go tests. The catalog includes
 conditional/research candidates and the approved telemetry exclusion without
@@ -25,17 +25,25 @@ The exception overlay is from Microsoft's
 reviewed 2026-11-20. Its 16 rules expand over the pinned names, including wildcard
 suffixes and three GCCH/DoD-only application-instance exceptions. These are
 **current documentation observations**, not extracted 8.1.0 behavior or live results.
-`tools/auth/generate_matrix.py --check` verifies deterministic regeneration.
+`tools/capabilities/generate_matrix.py --check` verifies deterministic regeneration.
 Changing the overlay requires reviewing the source and its review date; it does
 not revise the baseline inventory.
 
-Construct an `auth.CapabilityCatalog` with `auth.NewCapabilityCatalog` and handle
+Construct a `capabilities.Catalog` with `capabilities.NewCatalog` and handle
 its error. The catalog's `Assess` method returns `documented-unsupported` for a matching application restriction and
 `unqualified` otherwise. The latter means unknown, including delegated mode.
 It never returns “authorized” or “supported.” Unknown names/modes/cloud labels
-return errors. Documentation labels for sovereign clouds do not enable SDK routing;
-the implemented providers and transports remain commercial-only. Returned slices
-are copies and a catalog can be shared between readers.
+return catalog-owned errors. Documentation labels do not configure SDK routing;
+AUTH-06 supplies explicit environment profiles independently. Returned slices are
+copies and a catalog can be shared between readers.
+
+The catalog, embedded evidence and tests live in `msteams/capabilities`, with its
+generator in `tools/capabilities`. It imports `auth.Mode` to describe delegated or
+application access; `auth` never imports the catalog. Credential acquisition and
+token lifecycle therefore do not own the PowerShell command inventory. The pre-release
+API is `capabilities.NewCatalog` rather than the earlier `auth.NewCapabilityCatalog`.
+Invalid assessment inputs use `capabilities.ErrInvalidMode` / `ErrUnknownProfile`,
+not token-binding or authentication-configuration errors.
 
 ## Permissions and roles
 

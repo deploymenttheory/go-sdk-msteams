@@ -1,4 +1,4 @@
-package auth
+package capabilities
 
 import (
 	"context"
@@ -11,6 +11,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
 func TestCapabilityMatrixCoversPinnedInventory(t *testing.T) {
@@ -31,7 +33,7 @@ func TestCapabilityMatrixCoversPinnedInventory(t *testing.T) {
 	if err := json.Unmarshal(data, &baseline); err != nil {
 		t.Fatal(err)
 	}
-	catalog, err := NewCapabilityCatalog()
+	catalog, err := NewCatalog()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,7 +42,7 @@ func TestCapabilityMatrixCoversPinnedInventory(t *testing.T) {
 		t.Fatal("matrix must exactly cover the pinned candidate union without duplicates")
 	}
 	for _, record := range baseline.Records {
-		report, err := catalog.Assess(record.Name, Delegated, "commercial")
+		report, err := catalog.Assess(record.Name, auth.Delegated, "commercial")
 		if err != nil || report.Disposition != record.Disposition || !reflect.DeepEqual(report.ParameterSets, record.Sets) {
 			t.Fatalf("pinned metadata drift for %s: %v", record.Name, err)
 		}
@@ -52,7 +54,7 @@ func TestCapabilityMatrixCoversPinnedInventory(t *testing.T) {
 
 func TestEveryDocumentedRestrictionAndCloud(t *testing.T) {
 	t.Parallel()
-	catalog, err := NewCapabilityCatalog()
+	catalog, err := NewCatalog()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -85,12 +87,12 @@ func TestEveryDocumentedRestrictionAndCloud(t *testing.T) {
 				expected = true
 				matched[record.Name] = true
 			}
-			for _, mode := range []Mode{Delegated, Application} {
+			for _, mode := range []auth.Mode{auth.Delegated, auth.Application} {
 				report, err := catalog.Assess(strings.ToLower(record.Name), mode, cloud)
 				if err != nil {
 					t.Fatal(err)
 				}
-				if (report.Support == ModeDocumentedUnsupported) != (expected && mode == Application) {
+				if (report.Support == ModeDocumentedUnsupported) != (expected && mode == auth.Application) {
 					t.Fatalf("wrong restriction: %s/%s/%s", record.Name, mode, cloud)
 				}
 				if report.Support == ModeDocumentedUnsupported && len(report.RestrictionIDs) == 0 {
@@ -108,13 +110,13 @@ func TestEveryDocumentedRestrictionAndCloud(t *testing.T) {
 
 func TestCapabilityReportingDoesNotInferAuthorization(t *testing.T) {
 	t.Parallel()
-	catalog, err := NewCapabilityCatalog()
+	catalog, err := NewCatalog()
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, mode := range []Mode{Application, Delegated} {
-		binding := Binding{TenantID: "fixture", Cloud: "commercial", IdentityID: "fixture", Mode: mode}
-		provider, err := NewSuppliedTokenProvider(binding, map[string]Token{
+	for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
+		binding := auth.Binding{TenantID: "fixture", Cloud: "commercial", IdentityID: "fixture", Mode: mode}
+		provider, err := auth.NewSuppliedTokenProvider(binding, map[string]auth.Token{
 			"graph": {AccessToken: "fixture-graph", ExpiresAt: time.Now().Add(time.Hour)},
 			"teams": {AccessToken: "fixture-teams", ExpiresAt: time.Now().Add(time.Hour)},
 		})
@@ -127,12 +129,12 @@ func TestCapabilityReportingDoesNotInferAuthorization(t *testing.T) {
 				t.Fatal(err)
 			}
 			request := binding.Request(audience)
-			if mode == Application {
-				request.Mode = Delegated
+			if mode == auth.Application {
+				request.Mode = auth.Delegated
 			} else {
-				request.Mode = Application
+				request.Mode = auth.Application
 			}
-			if _, err := provider.AcquireToken(context.Background(), request); !errors.Is(err, ErrBindingMismatch) {
+			if _, err := provider.AcquireToken(context.Background(), request); !errors.Is(err, auth.ErrBindingMismatch) {
 				t.Fatal("same-type dual-token binding was bypassed")
 			}
 		}
@@ -141,23 +143,23 @@ func TestCapabilityReportingDoesNotInferAuthorization(t *testing.T) {
 			t.Fatal("tokens inferred operation authorization")
 		}
 	}
-	first, err := catalog.Assess("New-Team", Application, "commercial")
+	first, err := catalog.Assess("New-Team", auth.Application, "commercial")
 	if err != nil {
 		t.Fatal(err)
 	}
 	first.RestrictionIDs[0] = "modified"
 	first.ParameterSets[0] = "modified"
-	second, err := catalog.Assess("New-Team", Application, "commercial")
+	second, err := catalog.Assess("New-Team", auth.Application, "commercial")
 	if err != nil || second.RestrictionIDs[0] == "modified" || second.ParameterSets[0] == "modified" {
 		t.Fatal("caller changed catalog evidence")
 	}
-	if _, err := catalog.Assess("Invented-Command", Application, "commercial"); !errors.Is(err, ErrUnknownCommand) {
+	if _, err := catalog.Assess("Invented-Command", auth.Application, "commercial"); !errors.Is(err, ErrUnknownCommand) {
 		t.Fatal("unknown command gained a capability report")
 	}
-	if _, err := catalog.Assess("Get-Team", "mixed", "commercial"); !errors.Is(err, ErrInvalidBinding) {
+	if _, err := catalog.Assess("Get-Team", "mixed", "commercial"); !errors.Is(err, ErrInvalidMode) {
 		t.Fatal("mixed mode accepted")
 	}
-	if _, err := catalog.Assess("Get-Team", Application, "unknown"); !errors.Is(err, ErrInvalidConfig) {
+	if _, err := catalog.Assess("Get-Team", auth.Application, "unknown"); !errors.Is(err, ErrUnknownProfile) {
 		t.Fatal("unknown cloud accepted")
 	}
 }
