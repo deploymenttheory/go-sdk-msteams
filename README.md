@@ -2,7 +2,7 @@
 
 A native Go SDK project targeting the management behaviour of MicrosoftTeams PowerShell **8.1.0**, with Linux, macOS and Windows support and portable CI/CD authentication.
 
-**Status:** baseline discovery and the Go module foundation are implemented; the SDK client and resource services are not implemented yet.
+**Status:** baseline discovery and the Go module foundation are implemented; local client construction and session ownership are implemented. Authentication providers and resource operations are still under development.
 
 - [Agreed implementation plan](docs/implementation/plan.md)
 - [Published GitHub backlog](https://github.com/deploymenttheory/go-sdk-msteams/issues/6)
@@ -27,18 +27,19 @@ go vet ./...
 go test -race -count=1 -shuffle=on ./...
 go tool govulncheck -test ./...
 go run ./examples/baseline
+go run ./examples/client-construction
 ```
 
-The baseline example needs no credentials. It prints the target contract version;
+Both examples need no credentials. The client example constructs and closes a local session without signing in. The baseline example prints the target contract version;
 it does not demonstrate an implemented Teams operation. See the
-[foundation guide](docs/guides/development.md) for pinned dependencies, CI gates and
+[foundation guide](docs/guides/development.md) and [client configuration guide](docs/guides/client-configuration.md) for pinned dependencies, CI gates and
 package ownership. CI runs on Linux, macOS and Windows without tenant secrets.
 
 Planned layout, following the agreed Jamf composition:
 
 ```text
-go.mod, doc.go            root package; client wiring follows in FND-02
-msteams/                 packages introduced with their implementation tickets
+go.mod, doc.go            root package and client composition
+msteams/                 shared foundation and resource packages
   client/                request boundary and shared transport
   auth/                  portable audience-aware providers
   config/, constants/    validated configuration and cloud definitions

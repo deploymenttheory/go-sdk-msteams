@@ -37,8 +37,8 @@ const (
 // Token is opaque access-token material with an explicit expiry.
 // Decoding a JWT is not a substitute for server-side token validation.
 type Token struct {
-	AccessToken string
-	ExpiresAt   time.Time
+	AccessToken string    `json:"access_token"`
+	ExpiresAt   time.Time `json:"expires_at"`
 }
 
 // AssertionSource supplies a workload assertion under the requesting operation's context.
