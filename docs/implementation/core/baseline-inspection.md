@@ -16,7 +16,9 @@ following the [user's architecture amendment](../plan-amendments.md).
 | Hierarchy upload/status/delete and migration reads | 5 | [Hierarchy/migration contracts](hierarchy-migration-contract-evidence.md) |
 
 [Versioned serializer fixtures](../../../contracts/endpoints/README.md) now capture
-21 team/channel/template/policy cases with repeatable offline oracles. The
+38 team/channel/template/policy and response cases with repeatable offline oracles.
+The [response-model investigation](response-model-evidence.md) records parser,
+error-envelope, additional-field and status-projection behavior. The
 [machine-readable inventory](../../../contracts/endpoints/8.1.0/core.json) maps
 all 40 commands and their exact parameter sets to 60 wire primitives while retaining
 their unresolved questions. Complete accepted endpoint contracts,
