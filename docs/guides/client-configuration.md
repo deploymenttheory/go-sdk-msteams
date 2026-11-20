@@ -325,3 +325,19 @@ network activity. The manual `Workload authentication lab` GitHub workflow exerc
 both assertion sources on Linux, macOS and Windows after explicitly configuring lab
 federation. It uses ephemeral OIDC assertions and a read-only Graph request. See
 [AUTH-04 evidence and limits](../implementation/auth/machine-identity-evidence.md).
+
+## Page-wise and aggregate lists
+
+`graphapi.NewPager[T](scope, request, options)` reads Graph `value` / `@odata.nextLink`
+collections. `teamsadminapi.NewTokenPager[T]` takes an explicit array/token/query-key
+mapping; `NewOffsetPager[T]` takes the array field and offset query key. Resource services
+must select the mapping from their evidenced contract. A Teams field named `@nextLink`
+can contain a query token, so it is never automatically treated as a Graph URL.
+
+Use `pager.Next(ctx)` for page-wise processing, or `pager.Collect(ctx)` for an aggregate.
+Always check the returned error before treating an aggregate as complete: failures
+preserve the collected prefix and last HTTP response. Defaults bound traversal to 1,000
+pages and aggregation to 100,000 items. Consume each pager serially; separate pagers may
+run concurrently. Original query/header/body values are copied during construction.
+See [pagination evidence](../implementation/http/pagination-evidence.md) for protocol
+mappings, limit behavior and tests.
