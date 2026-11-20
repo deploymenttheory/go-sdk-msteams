@@ -33,7 +33,7 @@ Current Microsoft documentation, reviewed 2026-11-20, supplies additional semant
   retries. The target location remains opaque metadata.
 - [Create team responses](https://learn.microsoft.com/en-us/graph/api/team-post?view=graph-rest-1.0)
   include unversioned `/teams(...)/operations(...)` locations. The Graph adapter
-  anchors these to the commercial v1.0 origin; absolute locations still pass the
+  anchors these to the selected Graph v1.0 origin; absolute locations still pass the
   shared destination guard. Scheme-relative and foreign-host locations are rejected
   before authentication. `Content-Location` is not substituted for the operation.
 - [Batch policy status](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/get-csbatchpolicyassignmentoperation?view=teams-ps)
