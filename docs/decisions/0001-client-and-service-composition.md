@@ -28,6 +28,44 @@ local builders -> local model and validation types
 
 ## Public interface conventions
 
+The user clarified on 2026-11-20 that this is a **resource CRUD SDK** (recorded in
+the [plan amendments](../implementation/plan-amendments.md)). Resource
+services expose `Create`, `GetByID`, `UpdateByID`, `DeleteByID` and `List` where
+those operations are supported by the evidenced service. Identity-based resources
+use `GetByIdentity`, `UpdateByIdentity` and `DeleteByIdentity`; singleton resources
+use `Get` and `Update`. A list returns a collection/page and remains distinct from
+reading one identified resource. Methods take typed inputs and return typed results,
+Resty response metadata and errors under the conventions below.
+
+Specific actions remain explicit methods: for example `Archive`, `Unarchive`,
+`CreateFromGroup`, `UploadPicture`, `PromoteOwner` or `DemoteOwner`. Model membership
+as a resource with its own supported create/read/update/delete/list operations.
+An action is not automatically a CRUD update merely because it uses POST or PATCH.
+Local builders remain pure constructors rather than remote create operations.
+
+PowerShell parity is a **mapping to one or more SDK operations**, not a requirement
+to expose one SDK method per cmdlet. Each contract records primitive CRUD/action
+operations separately from the compositions needed to reproduce a command's
+behavior. For example, `New-Team` may compose group creation, team creation from
+that group and reads; `Set-Team` may compose group and team updates. These sequences
+are not atomic: compositions retain partial results, affected resource/operation
+identities and errors so callers can recover. Any compensation has an explicit
+ownership boundary and must not delete an existing caller-supplied resource.
+
+Resource contracts and implementation tickets must include a CRUD/list/action
+matrix with evidence, typed models, identities, success/error shapes and command
+composition mappings. Supporting operations needed for these compositions are in
+scope even when no same-named PowerShell command exists. Missing command names do
+not prove an API operation is unavailable. Conversely, no route, mutation or
+unsupported stub is invented merely to fill every CRUD cell: document the actual
+read-only, singleton, action-only or other evidenced service constraint.
+
+The coverage ledger remains command/parameter-set based and links every constituent
+SDK symbol and test. Contract tests cover both individual operations and composed
+workflows, including partial failure, explicit false/empty values, list traversal,
+cancellation and mutation replay safety. PowerShell method naming and pipeline
+shape do not determine the Go service API.
+
 Illustrative shapes below establish signatures, not unverified endpoint routes or complete resource schemas:
 
 ```go
@@ -38,6 +76,10 @@ func NewClientFromEnv(options ...ClientOption) (*Client, error)
 // A Graph resource service.
 func (s *Teams) GetByID(ctx context.Context, id string) (*ResourceTeam, *resty.Response, error)
 func (s *Teams) Create(ctx context.Context, request *RequestTeam) (*Operation, *resty.Response, error)
+func (s *Teams) UpdateByID(ctx context.Context, id string, request *RequestTeamUpdate) (*resty.Response, error)
+func (s *Teams) DeleteByID(ctx context.Context, id string) (*resty.Response, error)
+func (s *Teams) List(ctx context.Context, request *RequestTeamList) (*ResourceTeamPage, *resty.Response, error)
+func (s *Teams) Archive(ctx context.Context, id string, request *RequestTeamArchive) (*Operation, *resty.Response, error)
 
 // A Teams administration resource service.
 func (s *MessagingPolicies) GetByIdentity(ctx context.Context, identity string) (*ResourcePolicy, *resty.Response, error)
