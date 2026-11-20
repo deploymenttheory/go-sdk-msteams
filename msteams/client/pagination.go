@@ -20,6 +20,7 @@ var (
 	ErrContinuationLoop = errors.New("pagination continuation repeated")
 	ErrPageLimit        = errors.New("pagination page limit exceeded")
 	ErrItemLimit        = errors.New("pagination aggregate item limit exceeded")
+	ErrPageStatus       = errors.New("collection returned an unexpected successful HTTP status")
 )
 
 // PagingStyle distinguishes opaque full URLs from opaque query tokens and numeric
@@ -41,6 +42,10 @@ type PagingOptions struct {
 	Parameter string
 	MaxPages  int
 	MaxItems  int
+	// ExpectedStatus requires this successful HTTP status before decoding each
+	// page. Zero retains the generic any-2xx behavior. Resource services should
+	// select the status established by their collection's backend contract.
+	ExpectedStatus int
 }
 
 // PageContent is the decoder's normalized view of one evidenced backend envelope.
@@ -102,6 +107,9 @@ func NewPager[T any](scope *Scope, request Request, decoder PageDecoder[T], opti
 		options.MaxItems = 100000
 	}
 	if options.MaxPages < 1 || options.MaxItems < 1 {
+		return nil, ErrPagination
+	}
+	if options.ExpectedStatus != 0 && (options.ExpectedStatus < 200 || options.ExpectedStatus > 299) {
 		return nil, ErrPagination
 	}
 	switch options.Style {
@@ -198,6 +206,9 @@ func (p *Pager[T]) Next(ctx context.Context) (Page[T], bool, error) {
 	}
 	if err != nil {
 		return p.fail(err)
+	}
+	if p.options.ExpectedStatus != 0 && response.StatusCode() != p.options.ExpectedStatus {
+		return p.fail(ErrPageStatus)
 	}
 	content, err := p.decoder(response.Body())
 	if err != nil {
