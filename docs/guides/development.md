@@ -69,3 +69,7 @@ Release Please now uses the Go release type. Tag/release publication remains dis
 with `skip-github-release` until QUAL establishes complete coverage and release readiness;
 release-note PRs can still be prepared. This is independent of upstream PowerShell
 versioning. No first-supported-release claim follows from these foundation checks.
+
+The SDK entry point is `github.com/deploymenttheory/go-sdk-msteams/msteams`. Keep public
+client code and its tests in `msteams/`; repository-root files are project metadata and
+configuration. Examples import the SDK subpackage.

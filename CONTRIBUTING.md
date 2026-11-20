@@ -2,6 +2,9 @@
 
 Use the [implementation backlog](https://github.com/deploymenttheory/go-sdk-msteams/issues/6) to select work whose direct prerequisites are satisfied. Read the ticket, its source contracts and the [implementation baseline](docs/implementation/plan.md) before changing an interface.
 
+Keep SDK Go source and package tests under `msteams/`, with examples under `examples/`.
+The repository root contains project metadata and configuration, not Go packages.
+
 ## Architecture and services
 
 Follow the [service development guide](docs/guides/service-development.md) and numbered [client](docs/decisions/0001-client-and-service-composition.md), [authentication](docs/decisions/0002-portable-authentication.md) and [backend](docs/decisions/0003-backend-contracts-and-compatibility.md) decisions. Match the agreed Jamf-style structure and public conventions. Research unknown Teams routes and payloads before implementing them.
