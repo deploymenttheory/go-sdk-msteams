@@ -56,6 +56,13 @@ func WithAuthConfig(cfg *AuthConfig) ClientOption {
 	}
 }
 
+// WithTokenProvider replaces authentication with a provider borrowed from the
+// caller and one explicit identity binding. Client Close never closes the provider.
+func WithTokenProvider(binding auth.Binding, provider auth.Provider) ClientOption {
+	return WithAuthConfig(&AuthConfig{Method: auth.ExternalProvider, TenantID: binding.TenantID,
+		Cloud: binding.Cloud, IdentityID: binding.IdentityID, TokenMode: binding.Mode, Provider: provider})
+}
+
 // WithHTTPTimeout sets a positive total HTTP request timeout.
 func WithHTTPTimeout(timeout time.Duration) ClientOption {
 	return func(o *options) error {

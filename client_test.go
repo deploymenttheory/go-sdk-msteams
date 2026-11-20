@@ -95,6 +95,7 @@ func TestSuppliedTokensFromEnvironment(t *testing.T) {
 	t.Setenv("MSTEAMS_AUTH_METHOD", "supplied-tokens")
 	t.Setenv("MSTEAMS_TENANT_ID", "tenant")
 	t.Setenv("MSTEAMS_IDENTITY_ID", "identity")
+	t.Setenv("MSTEAMS_CLOUD", "commercial")
 	t.Setenv("MSTEAMS_TOKEN_MODE", "application")
 	t.Setenv("MSTEAMS_ACCESS_TOKENS", `{"audience":{"access_token":"test-token","expires_at":"2099-01-01T00:00:00Z"}}`)
 	c, err := msteams.NewClientFromEnv()
@@ -103,7 +104,7 @@ func TestSuppliedTokensFromEnvironment(t *testing.T) {
 	}
 	closeClient(t, c)
 	cfg, err := c.GraphAPI.Scope().Session().AuthSnapshot()
-	if err != nil || cfg.AccessTokens["audience"].AccessToken != "test-token" {
+	if err != nil || cfg.AccessTokens["audience"].AccessToken != "test-token" || cfg.Cloud != "commercial" {
 		t.Fatalf("audience tokens did not load: %v", err)
 	}
 }

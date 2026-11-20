@@ -39,9 +39,10 @@ var (
 	ErrInvalidRequest  = errors.New("token request requires a context and audience")
 	ErrBindingMismatch = errors.New("token request does not match provider binding")
 	ErrTokenMissing    = errors.New("no supplied token for the requested audience")
-	ErrTokenExpired    = errors.New("supplied token has expired")
+	ErrTokenExpired    = errors.New("access token has expired")
 	ErrProviderClosed  = errors.New("authentication provider is closed")
 	ErrInvalidToken    = errors.New("token requires an opaque value and explicit expiration")
+	ErrInvalidProvider = errors.New("token provider is required")
 )
 
 // Validate checks identity presence and rejects mixed/unspecified authentication mode.
@@ -131,6 +132,12 @@ func (p *SuppliedTokenProvider) Close() {
 	clear(p.tokens)
 	p.closed = true
 }
+
+// String redacts owned token material from formatted diagnostics.
+func (*SuppliedTokenProvider) String() string { return "msteams supplied token provider (redacted)" }
+
+// GoString redacts Go-syntax formatted diagnostics.
+func (p *SuppliedTokenProvider) GoString() string { return p.String() }
 
 // String prevents ordinary formatted diagnostics from printing token material.
 func (Token) String() string { return "msteams token (redacted)" }
