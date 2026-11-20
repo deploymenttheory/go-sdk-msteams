@@ -4,11 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"mime"
 	"net/http"
 	"net/url"
 	"strings"
 	"sync"
+	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -31,6 +35,11 @@ type Request struct {
 	URL    string
 	Header http.Header
 	Body   any
+	Replay ReplaySafety
+	// RefreshOnUnauthorized permits one noninteractive token replacement and replay
+	// on 401. It also requires ReplaySafe and a capable provider. Claims challenges
+	// and interactive consent are left to the caller.
+	RefreshOnUnauthorized bool
 }
 
 // MaxResponseBytes bounds buffered API responses, including decompressed JSON.
@@ -44,7 +53,7 @@ var (
 
 var _ Client = (*Scope)(nil)
 
-// Do sends one request without automatic retries or redirect following. It closes
+// Do applies the shared request policy to explicitly replay-safe operations. It closes
 // the response body and returns buffered Resty metadata even for HTTP failures.
 // result, when non-nil, receives JSON from nonempty successful responses. Raw
 // responses may contain tenant data; callers must not log them indiscriminately.
@@ -58,6 +67,13 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 		return nil, err
 	}
 	defer cancel()
+	controls := s.session.requests
+	operation, stop := context.WithTimeout(operation, controls.policy.Timeout)
+	defer stop()
+	expires := controls.now().Add(controls.policy.Timeout)
+	if request.Replay != ReplayNever && request.Replay != ReplaySafe {
+		return nil, ErrRequest
+	}
 	profile, err := s.profile()
 	if err != nil {
 		return nil, err
@@ -77,6 +93,9 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 	}
 	var body []byte
 	if request.Body != nil {
+		if _, stream := request.Body.(io.Reader); stream {
+			return nil, ErrRequest
+		}
 		if request.Method == http.MethodHead || request.Method == http.MethodOptions {
 			return nil, ErrRequest
 		}
@@ -95,11 +114,95 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 			}
 		}
 	}
-	httpClient, err := s.session.HTTPClient()
+
+	token, err := s.session.AcquireToken(operation, profile.audience)
 	if err != nil {
 		return nil, err
 	}
-	token, err := s.session.AcquireToken(operation, profile.audience)
+	var response *resty.Response
+	refreshed := false
+	for attempt := 1; ; attempt++ {
+		if err = operation.Err(); err != nil {
+			return response, err
+		}
+		if !controls.now().Before(expires) {
+			return response, ErrRetryBudget
+		}
+		for {
+			if err = controls.acquire(operation); err != nil {
+				return response, err
+			}
+			if token.ExpiresAt.After(time.Now()) {
+				break
+			}
+			controls.release()
+			token, err = s.session.AcquireToken(operation, profile.audience)
+			if err != nil {
+				return response, err
+			}
+		}
+		response, err = s.attempt(operation, profile, request.Method, destination.String(), headers, body, request.Body != nil, token.AccessToken)
+		controls.release()
+		if operation.Err() != nil {
+			return response, operation.Err()
+		}
+		if err == nil {
+			if result != nil && len(response.Body()) != 0 {
+				if json.Unmarshal(response.Body(), result) != nil {
+					return response, ErrDecode
+				}
+				response.Request.Result = result
+			}
+			return response, nil
+		}
+		if request.Replay != ReplaySafe {
+			return response, err
+		}
+		unauthorized := response != nil && response.StatusCode() == http.StatusUnauthorized && request.RefreshOnUnauthorized && !refreshed
+		transient := errors.Is(err, ErrTransport) || response != nil && retryableStatus(response.StatusCode()) && !errors.Is(err, ErrResponseTooLarge)
+		if !unauthorized && !transient {
+			return response, err
+		}
+		if attempt >= controls.policy.MaxAttempts {
+			return response, errors.Join(ErrRetryBudget, err)
+		}
+		if unauthorized {
+			refreshed = true
+			replacement, refreshErr := s.session.RefreshAfterRejection(operation, profile.audience, token)
+			if refreshErr != nil {
+				if errors.Is(refreshErr, auth.ErrRefreshUnsupported) {
+					return response, err
+				}
+				return response, refreshErr
+			}
+			if replacement.AccessToken == token.AccessToken {
+				return response, err
+			}
+			token = replacement
+			continue
+		}
+		retryAfter := ""
+		if response != nil {
+			retryAfter = response.Header().Get("Retry-After")
+		}
+		delay := controls.delay(retryAfter, attempt)
+		remaining := expires.Sub(controls.now())
+		if deadline, ok := operation.Deadline(); ok {
+			remaining = min(remaining, time.Until(deadline))
+		}
+		if delay >= remaining {
+			return response, errors.Join(ErrRetryBudget, err)
+		}
+		if waitErr := controls.sleep(operation, delay); waitErr != nil {
+			return response, waitErr
+		}
+	}
+}
+
+// attempt owns a fresh Resty request and closes/buffers its response before the
+// concurrency permit is released. The JSON body was serialized once before retry.
+func (s *Scope) attempt(operation context.Context, profile routeProfile, method, destination string, headers http.Header, body []byte, hasBody bool, token string) (*resty.Response, error) {
+	httpClient, err := s.session.HTTPClient()
 	if err != nil {
 		return nil, err
 	}
@@ -107,21 +210,19 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 	if base == nil {
 		base = http.DefaultTransport
 	}
-	transport := &authenticatedTransport{base: base, profile: profile, token: token.AccessToken}
+	transport := &authenticatedTransport{base: base, profile: profile, token: token}
 	defer transport.clearToken()
 	httpClient.Transport = transport
 	httpClient.Jar = nil
 	httpClient.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
-	// Per-operation Resty state prevents headers, payloads and result pointers from
-	// leaking between concurrent calls. The underlying connection pool is shared.
 	restyClient := resty.NewWithClient(&httpClient).SetLogger(quietLogger{}).
 		SetRetryCount(0).SetResponseBodyLimit(MaxResponseBytes).SetAllowGetMethodPayload(true)
 	r := restyClient.R().SetContext(operation)
-	r.Header = headers
-	if request.Body != nil {
+	r.Header = headers.Clone()
+	if hasBody {
 		r.SetBody(body)
 	}
-	response, err := r.Execute(request.Method, destination.String())
+	response, err := r.Execute(method, destination)
 	if operation.Err() != nil {
 		return response, operation.Err()
 	}
@@ -129,10 +230,8 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 		if errors.Is(err, resty.ErrResponseBodyTooLarge) {
 			return response, ErrResponseTooLarge
 		}
-		// net/http errors embed the URL and may embed an arbitrary transport's
-		// diagnostic text. Do not retain those errors as printable or unwrap causes.
 		if errors.Is(err, context.DeadlineExceeded) {
-			return response, context.DeadlineExceeded
+			return response, errors.Join(ErrTransport, context.DeadlineExceeded)
 		}
 		if errors.Is(err, context.Canceled) {
 			return response, context.Canceled
@@ -141,12 +240,6 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 	}
 	if !response.IsSuccess() {
 		return response, normalizeError(s.backend, response)
-	}
-	if result != nil && len(response.Body()) != 0 {
-		if err := json.Unmarshal(response.Body(), result); err != nil {
-			return response, ErrDecode
-		}
-		r.Result = result
 	}
 	return response, nil
 }
@@ -176,6 +269,9 @@ func (t *authenticatedTransport) RoundTrip(request *http.Request) (*http.Respons
 		return nil, err
 	}
 	private := request.Clone(request.Context())
+	// SDK retries create fresh buffered requests. Do not let the standard HTTP
+	// transport independently rewind a bodied operation after an ambiguous failure.
+	private.GetBody = nil
 	t.mu.Lock()
 	token := t.token
 	t.mu.Unlock()
