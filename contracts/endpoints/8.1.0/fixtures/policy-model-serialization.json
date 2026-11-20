@@ -1,0 +1,432 @@
+{
+  "assemblies": [
+    {
+      "path": "bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll",
+      "sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll",
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+    }
+  ],
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-20",
+  "cases": [
+    {
+      "name": "appids-omitted",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "appids-scalar",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "AppIds": [
+          "fixture-app"
+        ],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "appids-replacement",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "AppIds": [
+          "fixture-a",
+          "fixture-b"
+        ],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "appids-empty-replacement",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "AppIds": [],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "appids-null-replacement",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "AppIds": [],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "appids-operators",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "AppIds": {
+          "Add": [
+            "fixture-a"
+          ],
+          "Remove": [
+            "fixture-b"
+          ]
+        },
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "appids-empty-operators",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "AppIds": {},
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "appids-replace-operator-rejected",
+      "rejected": true,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": null
+    },
+    {
+      "name": "appids-numeric-item-rejected",
+      "rejected": true,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": null
+    },
+    {
+      "name": "appids-ps-list-modifier-rejected",
+      "rejected": true,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": null
+    },
+    {
+      "name": "migration-request-field-casing",
+      "source": "GPA.Models.DirectToGroupAssignmentMigration.JsonProperty",
+      "wire": {
+        "authority": "Tenant",
+        "groupid": "00000000-0000-4000-8000-000000000001",
+        "policyname": "Fixture",
+        "policytype": "FixturePolicy"
+      }
+    },
+    {
+      "input": "{\"migrationEventId\":\"00000000-0000-4000-8000-000000000002\",\"groupId\":\"00000000-0000-4000-8000-000000000001\",\"state\":\"NotStarted\",\"directAssignmentsProcessed\":0,\"startTime\":\"2026-01-01T00:00:00Z\"}",
+      "name": "migration-state-NotStarted",
+      "source": "DirectToGroupAssignmentMigrationResponseModel; DirectToGroupAssignmentMigrationState",
+      "wire": {
+        "completionTime": "0001-01-01T00:00:00",
+        "directAssignmentsProcessed": 0,
+        "groupId": "00000000-0000-4000-8000-000000000001",
+        "groupName": null,
+        "migrationEventId": "00000000-0000-4000-8000-000000000002",
+        "policyInstance": null,
+        "policyType": null,
+        "startTime": "2026-01-01T00:00:00Z",
+        "state": "NotStarted",
+        "tenantId": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "input": "{\"migrationEventId\":\"00000000-0000-4000-8000-000000000002\",\"groupId\":\"00000000-0000-4000-8000-000000000001\",\"state\":\"PopulationInProgress\",\"directAssignmentsProcessed\":0,\"startTime\":\"2026-01-01T00:00:00Z\"}",
+      "name": "migration-state-PopulationInProgress",
+      "source": "DirectToGroupAssignmentMigrationResponseModel; DirectToGroupAssignmentMigrationState",
+      "wire": {
+        "completionTime": "0001-01-01T00:00:00",
+        "directAssignmentsProcessed": 0,
+        "groupId": "00000000-0000-4000-8000-000000000001",
+        "groupName": null,
+        "migrationEventId": "00000000-0000-4000-8000-000000000002",
+        "policyInstance": null,
+        "policyType": null,
+        "startTime": "2026-01-01T00:00:00Z",
+        "state": "PopulationInProgress",
+        "tenantId": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "input": "{\"migrationEventId\":\"00000000-0000-4000-8000-000000000002\",\"groupId\":\"00000000-0000-4000-8000-000000000001\",\"state\":\"GpaCreationInProgress\",\"directAssignmentsProcessed\":0,\"startTime\":\"2026-01-01T00:00:00Z\"}",
+      "name": "migration-state-GpaCreationInProgress",
+      "source": "DirectToGroupAssignmentMigrationResponseModel; DirectToGroupAssignmentMigrationState",
+      "wire": {
+        "completionTime": "0001-01-01T00:00:00",
+        "directAssignmentsProcessed": 0,
+        "groupId": "00000000-0000-4000-8000-000000000001",
+        "groupName": null,
+        "migrationEventId": "00000000-0000-4000-8000-000000000002",
+        "policyInstance": null,
+        "policyType": null,
+        "startTime": "2026-01-01T00:00:00Z",
+        "state": "GpaCreationInProgress",
+        "tenantId": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "input": "{\"migrationEventId\":\"00000000-0000-4000-8000-000000000002\",\"groupId\":\"00000000-0000-4000-8000-000000000001\",\"state\":\"WaitingForGpaProcessed\",\"directAssignmentsProcessed\":0,\"startTime\":\"2026-01-01T00:00:00Z\"}",
+      "name": "migration-state-WaitingForGpaProcessed",
+      "source": "DirectToGroupAssignmentMigrationResponseModel; DirectToGroupAssignmentMigrationState",
+      "wire": {
+        "completionTime": "0001-01-01T00:00:00",
+        "directAssignmentsProcessed": 0,
+        "groupId": "00000000-0000-4000-8000-000000000001",
+        "groupName": null,
+        "migrationEventId": "00000000-0000-4000-8000-000000000002",
+        "policyInstance": null,
+        "policyType": null,
+        "startTime": "2026-01-01T00:00:00Z",
+        "state": "WaitingForGpaProcessed",
+        "tenantId": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "input": "{\"migrationEventId\":\"00000000-0000-4000-8000-000000000002\",\"groupId\":\"00000000-0000-4000-8000-000000000001\",\"state\":\"CleanUpInProgress\",\"directAssignmentsProcessed\":0,\"startTime\":\"2026-01-01T00:00:00Z\"}",
+      "name": "migration-state-CleanUpInProgress",
+      "source": "DirectToGroupAssignmentMigrationResponseModel; DirectToGroupAssignmentMigrationState",
+      "wire": {
+        "completionTime": "0001-01-01T00:00:00",
+        "directAssignmentsProcessed": 0,
+        "groupId": "00000000-0000-4000-8000-000000000001",
+        "groupName": null,
+        "migrationEventId": "00000000-0000-4000-8000-000000000002",
+        "policyInstance": null,
+        "policyType": null,
+        "startTime": "2026-01-01T00:00:00Z",
+        "state": "CleanUpInProgress",
+        "tenantId": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "input": "{\"migrationEventId\":\"00000000-0000-4000-8000-000000000002\",\"groupId\":\"00000000-0000-4000-8000-000000000001\",\"state\":\"Completed\",\"directAssignmentsProcessed\":0,\"startTime\":\"2026-01-01T00:00:00Z\"}",
+      "name": "migration-state-Completed",
+      "source": "DirectToGroupAssignmentMigrationResponseModel; DirectToGroupAssignmentMigrationState",
+      "wire": {
+        "completionTime": "0001-01-01T00:00:00",
+        "directAssignmentsProcessed": 0,
+        "groupId": "00000000-0000-4000-8000-000000000001",
+        "groupName": null,
+        "migrationEventId": "00000000-0000-4000-8000-000000000002",
+        "policyInstance": null,
+        "policyType": null,
+        "startTime": "2026-01-01T00:00:00Z",
+        "state": "Completed",
+        "tenantId": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "input": "{\"migrationEventId\":\"00000000-0000-4000-8000-000000000002\",\"groupId\":\"00000000-0000-4000-8000-000000000001\",\"state\":\"Failed\",\"directAssignmentsProcessed\":0,\"startTime\":\"2026-01-01T00:00:00Z\"}",
+      "name": "migration-state-Failed",
+      "source": "DirectToGroupAssignmentMigrationResponseModel; DirectToGroupAssignmentMigrationState",
+      "wire": {
+        "completionTime": "0001-01-01T00:00:00",
+        "directAssignmentsProcessed": 0,
+        "groupId": "00000000-0000-4000-8000-000000000001",
+        "groupName": null,
+        "migrationEventId": "00000000-0000-4000-8000-000000000002",
+        "policyInstance": null,
+        "policyType": null,
+        "startTime": "2026-01-01T00:00:00Z",
+        "state": "Failed",
+        "tenantId": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "input": "{\"migrationEventId\":\"00000000-0000-4000-8000-000000000002\",\"groupId\":\"00000000-0000-4000-8000-000000000001\",\"state\":\"ConnectionLost\",\"directAssignmentsProcessed\":0,\"startTime\":\"2026-01-01T00:00:00Z\"}",
+      "name": "migration-state-ConnectionLost",
+      "source": "DirectToGroupAssignmentMigrationResponseModel; DirectToGroupAssignmentMigrationState",
+      "wire": {
+        "completionTime": "0001-01-01T00:00:00",
+        "directAssignmentsProcessed": 0,
+        "groupId": "00000000-0000-4000-8000-000000000001",
+        "groupName": null,
+        "migrationEventId": "00000000-0000-4000-8000-000000000002",
+        "policyInstance": null,
+        "policyType": null,
+        "startTime": "2026-01-01T00:00:00Z",
+        "state": "ConnectionLost",
+        "tenantId": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "name": "provider-bound-omitted",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "provider-bound-empty-and-false",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "Description": "",
+        "EnableFederationAccess": false,
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "provider-external-enum-OrganizationDefault",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "CommunicationWithExternalOrgs": 0,
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "provider-external-enum-AllowAllExternalDomains",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "CommunicationWithExternalOrgs": 1,
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "provider-external-enum-AllowSpecificExternalDomains",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "CommunicationWithExternalOrgs": 2,
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "provider-external-enum-BlockSpecificExternalDomains",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "CommunicationWithExternalOrgs": 3,
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "provider-external-enum-BlockAllExternalDomains",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "CommunicationWithExternalOrgs": 4,
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "provider-voicemail-timespan",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "Identity": "tag:Fixture",
+        "MaximumRecordingLength": "00:01:30"
+      }
+    },
+    {
+      "name": "provider-voicemail-explicit-null",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "Identity": "tag:Fixture",
+        "MaximumRecordingLength": null
+      }
+    },
+    {
+      "name": "provider-branding-empty-lists",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "Identity": "tag:Fixture",
+        "MeetingBackgroundImages": [],
+        "MeetingBrandingThemes": [],
+        "NdiAssuranceSlateImages": []
+      }
+    },
+    {
+      "name": "provider-branding-nested-lists",
+      "source": "HttpRequestHelper.GetNestedBoundParameters; BoundParametersContractResolver",
+      "wire": {
+        "Identity": "tag:Fixture",
+        "MeetingBackgroundImages": [
+          {
+            "Id": "fixture-image",
+            "Identity": null,
+            "ImageUri": "https://example.invalid/background.png",
+            "IsHidden": null,
+            "IsRequired": false,
+            "Name": "Fixture",
+            "Order": 0
+          }
+        ],
+        "MeetingBrandingThemes": [
+          {
+            "BackgroundImageDarkPreAuthUri": null,
+            "BackgroundImageDarkUri": null,
+            "BackgroundImageLightPreAuthUri": null,
+            "BackgroundImageLightUri": null,
+            "BrandAccentColor": null,
+            "ChatBackgroundImageAlignment": null,
+            "ChatBackgroundImageDarkUri": null,
+            "ChatBackgroundImageLightUri": null,
+            "DisableOriginalReactions": null,
+            "DisplayName": null,
+            "EnableChatBackground": null,
+            "Enabled": false,
+            "Identity": "fixture-theme",
+            "LogoImageDarkPreAuthUri": null,
+            "LogoImageDarkUri": null,
+            "LogoImageLightPreAuthUri": null,
+            "LogoImageLightUri": null,
+            "MeetingInviteLogoImageDarkPreAuthUri": null,
+            "MeetingInviteLogoImageLightPreAuthUri": null,
+            "MeetingReactions": []
+          }
+        ],
+        "NdiAssuranceSlateImages": [
+          {
+            "Id": "fixture-slate",
+            "Identity": null,
+            "IsDefault": false,
+            "Name": "Fixture",
+            "NdiImageUri": "https://example.invalid/slate.png"
+          }
+        ]
+      }
+    },
+    {
+      "name": "provider-user-clear",
+      "source": "Provider grant DTO; JsonConvert.SerializeObject",
+      "wire": {
+        "additionalParameters": null,
+        "policyName": null
+      }
+    },
+    {
+      "name": "provider-tenant-clear",
+      "source": "Provider grant DTO; JsonConvert.SerializeObject",
+      "wire": {
+        "PolicyName": null,
+        "additionalParameters": null,
+        "forceSwitchPresent": false
+      }
+    },
+    {
+      "name": "provider-group-clear-zero-rank",
+      "source": "Provider grant DTO; JsonConvert.SerializeObject",
+      "wire": {
+        "policyName": null,
+        "priority": 0
+      }
+    },
+    {
+      "input": "tag:Fixture / Policy",
+      "name": "provider-identity-tagged",
+      "source": "HttpRequestHelper.EscapeIdentityForUri",
+      "wire": "tag%3AFixture%20/%20Policy"
+    },
+    {
+      "input": "parent/Fixture / Child",
+      "name": "provider-identity-nested",
+      "source": "HttpRequestHelper.EscapeIdentityForUri",
+      "wire": "parent/Fixture%20%2F%20Child"
+    }
+  ],
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "purpose": "Synthetic pure helper/model observations, not tenant response captures or server acceptance.",
+  "qualification": "offline-policy-helper-and-model",
+  "schema_version": 1
+}
