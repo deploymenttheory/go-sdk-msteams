@@ -20,6 +20,7 @@ func FromEnv() Environment {
 	return Environment{
 		Auth: &auth.Config{
 			Method: auth.Method(os.Getenv("MSTEAMS_AUTH_METHOD")), TenantID: os.Getenv("MSTEAMS_TENANT_ID"),
+			Cloud:    os.Getenv("MSTEAMS_CLOUD"),
 			ClientID: os.Getenv("MSTEAMS_CLIENT_ID"), ClientSecret: os.Getenv("MSTEAMS_CLIENT_SECRET"),
 			Username: os.Getenv("MSTEAMS_USERNAME"), Password: os.Getenv("MSTEAMS_PASSWORD"),
 			Certificate: []byte(os.Getenv("MSTEAMS_CERTIFICATE_PEM")), PrivateKey: []byte(os.Getenv("MSTEAMS_PRIVATE_KEY_PEM")),

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"maps"
+	"reflect"
 	"slices"
 	"strings"
 	"time"
@@ -22,6 +23,7 @@ const (
 	Certificate      Method = "certificate"
 	ClientSecret     Method = "client-secret"
 	SuppliedTokens   Method = "supplied-tokens"
+	ExternalProvider Method = "provider"
 	ManagedIdentity  Method = "managed-identity"
 	WorkloadIdentity Method = "workload-identity"
 )
@@ -51,6 +53,7 @@ type AssertionSource func(context.Context) (string, error)
 type Config struct {
 	Method        Method
 	TenantID      string
+	Cloud         string // isolation profile; empty selects commercial, not endpoint discovery
 	ClientID      string
 	ClientSecret  string
 	Username      string
@@ -58,8 +61,9 @@ type Config struct {
 	Certificate   []byte
 	PrivateKey    []byte
 	AccessTokens  map[string]Token // audience -> token; never positional
-	TokenMode     Mode             // required only for SuppliedTokens
-	IdentityID    string           // required for supplied-token cache isolation
+	TokenMode     Mode             // required for supplied tokens and external providers
+	IdentityID    string           // required for token cache isolation
+	Provider      Provider         // borrowed; only for ExternalProvider
 	AssertionFile string
 	Assertion     AssertionSource
 }
@@ -136,6 +140,11 @@ func (c *Config) Validate() error {
 				return &ConfigError{Field: "access_tokens", Reason: "each token requires an audience, value and expiry"}
 			}
 		}
+	case ExternalProvider:
+		required["identity_id"] = strings.TrimSpace(c.IdentityID) != ""
+		required["token_mode"] = c.TokenMode == Delegated || c.TokenMode == Application
+		required["provider"] = !nilProvider(c.Provider)
+		allowed["provider"], allowed["identity_id"], allowed["token_mode"] = true, true, true
 	case ManagedIdentity:
 		// An empty client ID selects the environment's system-assigned identity.
 	case WorkloadIdentity:
@@ -157,6 +166,7 @@ func (c *Config) Validate() error {
 		"certificate": len(c.Certificate) > 0, "private_key": len(c.PrivateKey) > 0,
 		"access_tokens": len(c.AccessTokens) > 0, "identity_id": c.IdentityID != "", "token_mode": c.TokenMode != "",
 		"assertion_file": c.AssertionFile != "", "assertion": c.Assertion != nil,
+		"provider": c.Provider != nil,
 	}
 	for _, field := range slices.Sorted(maps.Keys(present)) {
 		if present[field] && !allowed[field] {
@@ -164,4 +174,27 @@ func (c *Config) Validate() error {
 		}
 	}
 	return nil
+}
+
+// TokenBinding returns the configured identity for supplied or externally acquired
+// tokens. Cloud labels are isolation keys; accepting one does not enable its routes.
+func (c *Config) TokenBinding() Binding {
+	cloud := c.Cloud
+	if cloud == "" {
+		cloud = "commercial"
+	}
+	return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: c.IdentityID, Mode: c.TokenMode}
+}
+
+func nilProvider(provider Provider) bool {
+	if provider == nil {
+		return true
+	}
+	value := reflect.ValueOf(provider)
+	switch value.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Pointer, reflect.Slice:
+		return value.IsNil()
+	default:
+		return false
+	}
 }

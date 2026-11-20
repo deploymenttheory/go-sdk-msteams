@@ -16,16 +16,22 @@ var ErrClosed = errors.New("msteams client is closed")
 // ErrNilContext identifies missing operation cancellation context.
 var ErrNilContext = errors.New("operation context is required")
 
+// ErrProviderUnavailable means this configuration's acquisition adapter is not installed.
+var ErrProviderUnavailable = errors.New("authentication acquisition adapter is unavailable")
+
 // Session owns copied credentials and cancellation for one client. The lifetime
 // context represents the session itself; operation contexts are never stored here.
 type Session struct {
-	mu       sync.RWMutex
-	auth     *auth.Config
-	http     http.Client
-	closed   bool
-	lifetime context.Context
-	cancel   context.CancelFunc
-	cleanup  func()
+	mu            sync.RWMutex
+	auth          *auth.Config
+	http          http.Client
+	closed        bool
+	lifetime      context.Context
+	cancel        context.CancelFunc
+	cleanup       func()
+	provider      auth.Provider
+	binding       auth.Binding
+	closeProvider func()
 }
 
 // NewSession copies configuration. cleanup is called once when this owned session
@@ -37,8 +43,57 @@ func NewSession(cfg *auth.Config, httpClient *http.Client, cleanup func()) (*Ses
 	if httpClient == nil {
 		return nil, errors.New("http client is required")
 	}
+	var provider auth.Provider
+	var closeProvider func()
+	binding := cfg.TokenBinding()
+	switch cfg.Method {
+	case auth.SuppliedTokens:
+		supplied, err := auth.NewSuppliedTokenProvider(binding, cfg.AccessTokens)
+		if err != nil {
+			return nil, err
+		}
+		provider, closeProvider = supplied, supplied.Close
+	case auth.ExternalProvider:
+		borrowed, err := auth.NewBoundProvider(binding, cfg.Provider)
+		if err != nil {
+			return nil, err
+		}
+		provider = borrowed
+	}
 	lifetime, cancel := context.WithCancel(context.Background())
-	return &Session{auth: cfg.Clone(), http: *httpClient, lifetime: lifetime, cancel: cancel, cleanup: cleanup}, nil
+	return &Session{auth: cfg.Clone(), http: *httpClient, lifetime: lifetime, cancel: cancel, cleanup: cleanup,
+		provider: provider, binding: binding, closeProvider: closeProvider}, nil
+}
+
+// AcquireToken obtains the exact audience requested by a backend adapter. The
+// session supplies immutable identity fields and cancellation; it never substitutes
+// a token from another audience. Endpoint-to-audience routing belongs to transport.
+func (s *Session) AcquireToken(ctx context.Context, audience string) (auth.Token, error) {
+	operation, cancel, err := s.Begin(ctx)
+	if err != nil {
+		return auth.Token{}, err
+	}
+	defer cancel()
+	s.mu.RLock()
+	provider, binding, closed := s.provider, s.binding, s.closed
+	s.mu.RUnlock()
+	if closed {
+		return auth.Token{}, ErrClosed
+	}
+	if provider == nil {
+		return auth.Token{}, ErrProviderUnavailable
+	}
+	token, err := provider.AcquireToken(operation, binding.Request(audience))
+	s.mu.RLock()
+	closed = s.closed
+	s.mu.RUnlock()
+	if closed {
+		return auth.Token{}, ErrClosed
+	}
+	if operation.Err() != nil {
+		return auth.Token{}, operation.Err()
+	}
+	return token, err
 }
 
 // AuthSnapshot returns independently mutable credential material to an adapter.
@@ -98,9 +153,15 @@ func (s *Session) Close() {
 	clear(s.auth.PrivateKey)
 	clear(s.auth.AccessTokens)
 	s.auth = nil
+	s.provider = nil
+	closeProvider := s.closeProvider
+	s.closeProvider = nil
 	cleanup := s.cleanup
 	s.cleanup = nil
 	s.mu.Unlock()
+	if closeProvider != nil {
+		closeProvider()
+	}
 	if cleanup != nil {
 		cleanup()
 	}
