@@ -11,6 +11,7 @@ A native Go SDK project targeting the management behaviour of MicrosoftTeams Pow
 - [Command coverage and ownership](docs/implementation/backlog/coverage.md)
 - [Pinned PowerShell discovery evidence](contracts/powershell/8.1.0/README.md)
 - [Reproduce the pinned baseline](tools/baseline/README.md)
+- [Compare upstream contract changes](tools/contractdiff/README.md)
 
 The architecture follows the [Jamf Pro Go SDK](https://github.com/deploymenttheory/go-sdk-jamfpro-v2): a root client, shared transport, resource-specific services, typed models, examples and acceptance tests. PowerShell is a discovery and comparison tool, not a planned runtime dependency.
 
