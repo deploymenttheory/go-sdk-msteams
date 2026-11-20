@@ -37,11 +37,11 @@ var (
 )
 
 // SessionOption configures immutable shared request controls at construction.
-type SessionOption func(*RequestPolicy) error
+type SessionOption func(*sessionOptions) error
 
 // WithRequestPolicy configures request controls without performing any I/O.
 func WithRequestPolicy(policy RequestPolicy) SessionOption {
-	return func(p *RequestPolicy) error { *p = policy; return nil }
+	return func(o *sessionOptions) error { o.policy = policy; return nil }
 }
 
 func normalizePolicy(p RequestPolicy) (RequestPolicy, error) {
@@ -67,28 +67,29 @@ func normalizePolicy(p RequestPolicy) (RequestPolicy, error) {
 }
 
 type requestController struct {
-	policy RequestPolicy
-	slots  chan struct{}
-	now    func() time.Time
-	sleep  func(context.Context, time.Duration) error
-	jitter func(time.Duration) time.Duration
+	settings sessionOptions
+	policy   RequestPolicy
+	slots    chan struct{}
+	now      func() time.Time
+	sleep    func(context.Context, time.Duration) error
+	jitter   func(time.Duration) time.Duration
 }
 
 func newRequestController(options []SessionOption) (*requestController, error) {
-	var p RequestPolicy
+	o := defaultSessionOptions()
 	for _, option := range options {
 		if option == nil {
 			return nil, ErrRequestPolicy
 		}
-		if err := option(&p); err != nil {
+		if err := option(&o); err != nil {
 			return nil, err
 		}
 	}
-	p, err := normalizePolicy(p)
+	p, err := normalizePolicy(o.policy)
 	if err != nil {
 		return nil, err
 	}
-	return &requestController{policy: p, slots: make(chan struct{}, p.MaxConcurrent), now: time.Now, sleep: waitForRetry,
+	return &requestController{settings: o, policy: p, slots: make(chan struct{}, p.MaxConcurrent), now: time.Now, sleep: waitForRetry,
 		//nolint:gosec // G404: retry timing jitter carries no cryptographic or security-sensitive randomness.
 		jitter: func(cap time.Duration) time.Duration { return time.Duration(rand.Int64N(int64(cap))) }}, nil
 }

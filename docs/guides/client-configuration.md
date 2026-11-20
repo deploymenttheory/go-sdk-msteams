@@ -349,3 +349,23 @@ mappings, limit behavior and tests.
 See the [portable authentication guide](authentication.md) for all flow inputs,
 current command restrictions, permission boundaries and operation error categories.
 An acquired token is not a claim that a management operation is authorized.
+
+## Network options and sanitized diagnostics
+
+Use WithTransport to borrow a RoundTripper, or WithProxy and WithTLSClientConfig to
+configure an owned clone of a standard HTTP transport. Opaque custom transports cannot
+be combined with those cloning options. TLS keeps server verification enabled; supply
+RootCAs for custom trust. WithMaxConcurrentRequests sets the shared backend limit.
+
+WithGlobalHeaders / WithGlobalHeader and WithUserAgent set copied management-request
+defaults. Individual requests override them, and protected credential/cookie/host
+headers are rejected. These defaults never apply to identity exchanges.
+
+WithLogger emits sanitized completion events; WithDebug adds sanitized attempt events
+if the logger enables Debug. WithTracerProvider opts into client spans. All modes omit
+URLs, headers, bodies, credentials, tenant identifiers and untrusted error text. Explicit
+response inspection remains available to callers. The SDK never shuts down borrowed
+logging/tracing dependencies or configures a global provider.
+
+See [observability evidence](../implementation/http/observability-evidence.md) for the
+configuration ownership contract, redaction fields and executable test mapping.

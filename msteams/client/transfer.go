@@ -38,6 +38,8 @@ var _ TransferClient = (*Scope)(nil)
 // are followed, even for seekable sources. Request.Body must be nil, Replay must be
 // ReplayNever, and RefreshOnUnauthorized must be false. result decodes buffered JSON.
 func (s *Scope) Upload(ctx context.Context, request Request, source io.ReadCloser, contentType string, maxBytes int64, result any) (response *resty.Response, err error) {
+	ctx, observed := s.observe(ctx, request.Method)
+	defer func() { observed.finish(response, err) }()
 	if nilStream(source) {
 		return nil, ErrRequest
 	}
@@ -63,7 +65,7 @@ func (s *Scope) Upload(ctx context.Context, request Request, source io.ReadClose
 	headers.Set("Content-Type", contentType)
 	request.Header = headers
 	bounded := &uploadReader{source: owned, remaining: maxBytes}
-	response, _, err = s.transfer(ctx, request, bounded, owned, nil, 0)
+	response, _, err = s.transfer(ctx, request, bounded, owned, nil, 0, observed)
 	_ = owned.Close() // Wait for in-flight source reads before inspecting their result.
 	if sourceErr := bounded.failure(); sourceErr != nil {
 		err = errors.Join(err, sourceErr)
@@ -84,17 +86,19 @@ func (s *Scope) Upload(ctx context.Context, request Request, source io.ReadClose
 // bodies are buffered for APIError classification, never written to destination.
 // Request must be a GET without Body, ReplaySafe or RefreshOnUnauthorized.
 // Destination.Write must return promptly; arbitrary blocked writers cannot be canceled.
-func (s *Scope) Download(ctx context.Context, request Request, destination io.Writer, maxBytes int64) (*resty.Response, int64, error) {
+func (s *Scope) Download(ctx context.Context, request Request, destination io.Writer, maxBytes int64) (response *resty.Response, count int64, err error) {
+	ctx, observed := s.observe(ctx, request.Method)
+	defer func() { observed.finish(response, err) }()
 	if nilStream(destination) || maxBytes <= 0 || request.Method != http.MethodGet || request.Body != nil || request.Replay != ReplayNever || request.RefreshOnUnauthorized {
 		return nil, 0, ErrRequest
 	}
-	return s.transfer(ctx, request, nil, nil, destination, maxBytes)
+	return s.transfer(ctx, request, nil, nil, destination, maxBytes, observed)
 }
 
 // transfer uses net/http for stream bodies: the pinned Resty middleware otherwise
 // materializes io.Reader into GetBody. Responses retain the SDK's Resty metadata
 // shape. The same destination guard, deadline and concurrency budget still apply.
-func (s *Scope) transfer(ctx context.Context, request Request, body io.Reader, source io.Closer, sink io.Writer, maxBytes int64) (*resty.Response, int64, error) {
+func (s *Scope) transfer(ctx context.Context, request Request, body io.Reader, source io.Closer, sink io.Writer, maxBytes int64, observed *observation) (response *resty.Response, count int64, err error) {
 	if s == nil || s.session == nil {
 		return nil, 0, ErrClosed
 	}
@@ -121,7 +125,7 @@ func (s *Scope) transfer(ctx context.Context, request Request, body io.Reader, s
 	if err != nil {
 		return nil, 0, err
 	}
-	headers, err := requestHeaders(request.Header)
+	headers, err := s.session.requestHeaders(request.Header)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -162,6 +166,7 @@ func (s *Scope) transfer(ctx context.Context, request Request, body io.Reader, s
 	}
 	rawRequest.Header = headers
 	rawRequest.GetBody = nil
+	defer func() { observed.attempt(response, err) }()
 	raw, err := httpClient.Do(rawRequest)
 	if err != nil {
 		if operation.Err() != nil {
@@ -172,8 +177,7 @@ func (s *Scope) transfer(ctx context.Context, request Request, body io.Reader, s
 		}
 		return nil, 0, ErrTransport
 	}
-	response := &resty.Response{RawResponse: raw, Request: &resty.Request{Method: request.Method, URL: destination.String(), Header: headers.Clone(), RawRequest: rawRequest}}
-	var count int64
+	response = &resty.Response{RawResponse: raw, Request: &resty.Request{Method: request.Method, URL: destination.String(), Header: headers.Clone(), RawRequest: rawRequest}}
 	if response.IsSuccess() && sink != nil {
 		count, err = copyDownload(operation, sink, raw.Body, maxBytes)
 	} else {

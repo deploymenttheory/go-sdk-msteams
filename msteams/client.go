@@ -1,10 +1,12 @@
 package msteams
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"reflect"
 	"time"
 
@@ -60,6 +62,10 @@ type options struct {
 	logger        *zap.Logger
 	tracer        trace.TracerProvider
 	requestPolicy client.RequestPolicy
+	proxy         *url.URL
+	tlsConfig     *tls.Config
+	headers       http.Header
+	debug         bool
 }
 
 // ClientOption changes constructor configuration before local validation.
@@ -189,11 +195,36 @@ func newClient(o options, opts []ClientOption) (*Client, error) {
 		o.http.Transport = transport
 		cleanup = transport.CloseIdleConnections
 	}
+	if o.proxy != nil || o.tlsConfig != nil {
+		transport, ok := o.http.Transport.(*http.Transport)
+		if !ok || transport == nil {
+			if cleanup != nil {
+				cleanup()
+			}
+			return nil, fmt.Errorf("proxy and TLS options require an HTTP transport: %w", ErrInvalidOption)
+		}
+		cloned := transport.Clone()
+		if o.proxy != nil {
+			proxy := *o.proxy
+			cloned.Proxy = http.ProxyURL(&proxy)
+		}
+		if o.tlsConfig != nil {
+			cloned.TLSClientConfig = cloneTLSConfig(o.tlsConfig)
+		}
+		if cleanup != nil {
+			cleanup()
+		}
+		o.http.Transport = cloned
+		cleanup = cloned.CloseIdleConnections
+	}
 	o.http.Timeout = timeout
-	session, err := client.NewSession(o.auth, o.http, cleanup, client.WithRequestPolicy(o.requestPolicy))
+	session, err := client.NewSession(o.auth, o.http, cleanup, client.WithRequestPolicy(o.requestPolicy), client.WithDiagnostics(o.logger, o.tracer, o.debug), client.WithDefaultHeaders(o.headers))
 	if err != nil {
 		if cleanup != nil {
 			cleanup()
+		}
+		if errors.Is(err, client.ErrSessionOption) {
+			return nil, errors.Join(ErrInvalidOption, err)
 		}
 		return nil, err
 	}
