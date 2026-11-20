@@ -2,6 +2,25 @@
 
 Status: research in progress for [CORE-01](https://github.com/deploymenttheory/go-sdk-msteams/issues/27). No endpoint contract is accepted by this note and no coverage status changes.
 
+## Detailed investigation
+
+Subsequent method/serializer inspection covers all 40 assignments. These notes
+separate pinned command compositions from native resource CRUD/list operations,
+following the [user's architecture amendment](../plan-amendments.md).
+
+| Assigned subset | Commands | Detailed evidence |
+| --- | ---: | --- |
+| Teams and team members | 9 | [Wire/control-flow evidence](team-wire-contract-evidence.md), [current documentation](teams-documentation-evidence.md) |
+| Channels, channel members, sharing and operations | 14 | [Channel contracts](channel-contract-evidence.md) |
+| Templates, targeting policies, batch deployment and local builders | 12 | [Template/policy/deployment contracts](template-policy-deployment-evidence.md) |
+| Hierarchy upload/status/delete and migration reads | 5 | [Hierarchy/migration contracts](hierarchy-migration-contract-evidence.md) |
+
+[Versioned serializer fixtures](../../../contracts/endpoints/README.md) now capture
+eight team cases with a repeatable offline oracle. Complete endpoint manifests,
+remaining fixtures and the explicit closure gates in the notes are still required;
+CORE-01 remains open. The initial findings below are investigation history, and the
+detailed notes settle some of the questions they identify.
+
 ## Sources and procedure
 
 Inspected on 2026-11-20 with the pinned MicrosoftTeams 8.1.0 package. Package SHA256: `78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7`. The [normalized runtime](../../../contracts/powershell/8.1.0/runtime.json) remains the parameter-set source.
