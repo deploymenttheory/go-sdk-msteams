@@ -14,8 +14,8 @@ import (
 func TestExplicitMethodsValidateWithoutAuthentication(t *testing.T) {
 	t.Parallel()
 	cases := []*auth.Config{
-		{Method: auth.Browser, ClientID: "client"},
-		{Method: auth.DeviceCode, ClientID: "client"},
+		{Method: auth.Browser, ClientID: "client", OpenBrowser: func(context.Context, string) error { return nil }},
+		{Method: auth.DeviceCode, ClientID: "client", DevicePrompt: func(context.Context, auth.DeviceCodeMessage) error { return nil }},
 		{Method: auth.Password, ClientID: "client", Username: "user", Password: "secret"},
 		{Method: auth.Certificate, ClientID: "client", Certificate: []byte("certificate"), PrivateKey: []byte("key")},
 		{Method: auth.ClientSecret, ClientID: "client", ClientSecret: "secret"},

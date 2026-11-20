@@ -1,8 +1,8 @@
 # AUTH-03 delegated authentication evidence
 
-Status: implementation in progress. HTTP-01 is merged. The Azure credential adapter is
-implemented and tested locally; built-in delegated providers and their qualification are
-still required before closing AUTH-03. No delegated tenant sign-in has been performed.
+Status: AUTH-03 implemented with offline qualification. The Azure credential adapter and
+built-in delegated providers are wired into SDK sessions. No delegated tenant sign-in has
+been performed; full Connect-MicrosoftTeams coverage remains with AUTH-06 and lab work.
 
 ## Entra and Graph Go SDK references
 
@@ -48,26 +48,73 @@ switch to a different authentication mode. Browser/device alternatives are expli
 Portable browser authentication replaces Windows broker assumptions; certificate files
 already replace platform-specific certificate-store lookup in AUTH-02.
 
-## Remaining implementation checks
+## Delivered delegated provider
 
-- Add built-in provider wiring for browser, device and password modes without network
-  activity in constructors. Use explicit callback configuration and bounded operation
-  contexts, and clear provider-owned account/cache references on close.
-- Pin the selected delegated account for both audiences. Serialize account selection with
-  a context-aware gate; an ordinary mutex around an interactive wait can delay cancelled
-  callers. Separate tenants/clients retain independent sessions.
-- Extend the authority guard using actual MSAL request paths. Browser authorization URLs
-  need validation before invoking a caller's browser callback. Password realm discovery
-  can branch to federation; never forward passwords to an unreviewed metadata endpoint.
-- Exercise the pinned MSAL device poller, which currently starts at 50 ms and caps its
-  internal delay at five seconds. Verify/enforce the service-provided interval and
-  `slow_down` handling at the adapter boundary. The [device protocol](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-device-code)
-  defines the interval, expiry and terminal errors; importing a library does not replace
-  those behavior checks.
-- Preserve actionable denial/MFA/conditional-access classifications while discarding raw
-  OAuth descriptions, device codes and callback URLs from formatted errors. MSAL's device
-  error inspection consumes response bodies, so capture safe classification before that
-  inspection rather than assuming the body remains readable afterwards.
-- Test browser denial/cancellation and PKCE callback handling, device pending/slow-down,
-  expiry, password denial, concurrent audience acquisition and session closure. Lab reads
-  remain separate from offline qualification; no command coverage state is advanced here.
+`NewDelegatedProvider` uses MSAL Go's public client for account/cache management, silent
+refresh, device-code acquisition, password acquisition and authorization-code redemption.
+The root session owns this provider for `Browser`, `DeviceCode` and `Password`. All
+constructors remain free of network, browser, callback and credential-store activity.
+
+`Config.OpenBrowser(ctx, URL)` and `Config.DevicePrompt(ctx, DeviceCodeMessage)` are explicit
+required callbacks for their respective methods. Callbacks must cooperate with context.
+`LoginTimeout` defaults to 15 minutes; caller cancellation and session closure also cancel
+acquisition. A context-aware gate serializes account selection across resource audiences.
+AUTH-01 coalesces requests per audience; cancelling one waiter does not abort other waiters.
+The selected MSAL account is pinned for both audiences. Silent refresh responses without
+an ID token retain the account used for that refresh. A different returned account fails.
+Silent transport failures return errors without launching a fresh sign-in prompt.
+
+The SDK loopback browser receiver uses MSAL to build the authorization URL and exchange
+the code, adding random state and S256 PKCE. It validates state on both success and error
+callbacks, limits POST bodies, does not reflect untrusted values, and forcibly closes
+active connections on cancellation. This ownership is deliberate: the pinned MSAL
+`AcquireTokenInteractive` receiver calls `Shutdown(context.Background())`, which can wait
+on an active slow POST. The SDK's tests include that stalled-body scenario. It invokes
+only the caller's browser callback after validating the authorization authority/path.
+Register the portable `http://localhost` redirect URI on the public client application.
+
+Device instructions expose only the user code, verification URL, message and expiry;
+the private device code stays inside MSAL. Verification URLs are explicitly checked.
+The adapter enforces the service poll interval and increases it by five seconds on
+`slow_down`, compensating for the pinned library's internal 50 ms to five-second poller.
+Callbacks and polling stop on expiry/cancellation. No fallback to another login method
+occurs. Error bodies are captured before MSAL consumes them; only recognized OAuth error
+values and numeric Entra diagnostic codes survive. The [Entra error guidance](https://learn.microsoft.com/en-us/entra/identity-platform/reference-error-codes)
+identifies OAuth values as the control-flow contract and numeric codes as diagnostics.
+MFA/conditional-access failures preserve those codes without retaining descriptions.
+
+Password authentication supports managed accounts and the library's WS-Trust 1.3 federated
+exchange. Federation requires exact HTTPS MEX and password URLs in
+`Config.FederationEndpoints`, copied at construction. Metadata cannot expand this list,
+redirects and cookies are disabled, and response buffers are bounded. Without explicit
+endpoint trust, federation fails before a password is forwarded. The synthetic MEX/SAML
+fixture follows the pinned MSAL XML models and verifies the complete SOAP-to-Entra grant.
+MSAL does not implement WS-Trust 2005; this is an explicit library limitation, not a claim
+of qualified support for every tenant federation deployment.
+
+Owned Close cancels workers and drops configuration/account/cache references. Wait allows
+callers to await cooperative callback exit. Borrowed Azure credentials retain their own
+lifecycle. Standard formatted errors never include password, callback URL, device code,
+server description or token. Explicit callback data is for the signing-in user's UI.
+
+## Verification map
+
+| Tests | Contract checked |
+|---|---|
+| `TestAzureCredentialAdapter*`, `ExampleNewAzureTokenProvider` | Graph-compatible borrowed TokenCredential, exact tenant/scopes, cancellation and lifecycle boundary |
+| `TestSessionOwnsDelegatedProvidersWithoutStartingLogin` | Root/session wiring, constructor purity and owned close for all three methods |
+| `TestDelegatedPasswordAndSilentSecondAudience` | Password first grant; second audience silently uses the selected account |
+| `TestDelegatedOAuthFailuresPreserveDiagnosticsWithoutFallback` | MFA, conditional access, consent, denial and expiry fixtures preserve codes without retry/downgrade |
+| `TestDelegatedDeviceFlowAndCallback`, `TestDevicePollingHonorsIntervalAndSlowDown` | Prompt/poll behavior, pending state, interval and slow-down |
+| `TestDelegatedDeviceRejections`, `TestDeviceCodeExpiresWhilePromptWaits`, `TestDevicePromptCanCancelWithoutLeakingCallbackError` | Verification authority, expiry and explicit callback cancellation |
+| `TestBrowserPKCEAndConcurrentAudiencesShareAccount` | Real local callback, state/PKCE redemption and concurrent audience reuse |
+| `TestBrowserDenialCallbackErrorAndUntrustedAuthority`, `TestBrowserCallbackRequiresStateBeforeErrorOrCode` | Denial, callback failure, hostile authority, state/host/body checks |
+| `TestBrowserCancellationClosesSlowCallbackConnection` | Cancellation closes an active incomplete form POST and worker exits |
+| `TestDelegatedAccountCannotChangeBetweenAudiences`, `TestDelegatedSilentRefreshWithoutIDTokenKeepsSelectedAccount` | Account consistency and normal ID-token omission |
+| `TestDelegatedSilentTransportFailureDoesNotPrompt`, `TestDelegatedCancellationWhileWaitingAndClose` | No new login on transport failure; cancelled waiters/close release work |
+| `TestTrustedFederationPasswordUsesMicrosoftWSExchange`, `TestFederationEndpointValidation`, `TestDelegatedFederationDoesNotForwardPassword` | MSAL federation interoperability and endpoint trust |
+
+Fixtures use synthetic unsigned ID-token representations only inside the fake trusted
+identity transport, to exercise MSAL account extraction. They are not tenant credentials
+or evidence of live authentication. Access tokens remain opaque. No ledger command is
+promoted to live-tested or complete by this foundation alone.

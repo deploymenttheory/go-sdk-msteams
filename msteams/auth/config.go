@@ -51,23 +51,28 @@ type AssertionSource func(context.Context) (string, error)
 // mutable byte slices and maps. Referenced callbacks remain caller-owned.
 // Provider-specific credential parsing and token exchange belong to the provider.
 type Config struct {
-	Method        Method
-	TenantID      string
-	Cloud         string // isolation profile; empty selects commercial, not endpoint discovery
-	ClientID      string
-	ClientSecret  string
-	Username      string
-	Password      string
-	Certificate   []byte
-	PrivateKey    []byte
-	PFX           []byte // alternative to Certificate and PrivateKey PEM
-	PFXPassword   []byte
-	AccessTokens  map[string]Token // audience -> token; never positional
-	TokenMode     Mode             // required for supplied tokens and external providers
-	IdentityID    string           // required for token cache isolation
-	Provider      Provider         // borrowed; only for ExternalProvider
-	AssertionFile string
-	Assertion     AssertionSource
+	Method              Method
+	TenantID            string
+	Cloud               string // isolation profile; empty selects commercial, not endpoint discovery
+	ClientID            string
+	ClientSecret        string
+	Username            string
+	Password            string
+	Certificate         []byte
+	PrivateKey          []byte
+	PFX                 []byte // alternative to Certificate and PrivateKey PEM
+	PFXPassword         []byte
+	AccessTokens        map[string]Token // audience -> token; never positional
+	TokenMode           Mode             // required for supplied tokens and external providers
+	IdentityID          string           // required for token cache isolation
+	Provider            Provider         // borrowed; only for ExternalProvider
+	AssertionFile       string
+	Assertion           AssertionSource
+	OpenBrowser         func(context.Context, string) error            // required for Browser; must honor context
+	DevicePrompt        func(context.Context, DeviceCodeMessage) error // required for DeviceCode
+	LoginHint           string                                         // optional Browser account hint, not an identity assertion
+	LoginTimeout        time.Duration                                  // delegated acquisition bound; zero selects 15 minutes
+	FederationEndpoints []string                                       // exact trusted HTTPS MEX and password endpoints; Password only
 }
 
 // ErrInvalidConfig identifies local authentication configuration failures.
@@ -96,6 +101,7 @@ func (c *Config) Clone() *Config {
 	cloned.PFX = slices.Clone(c.PFX)
 	cloned.PFXPassword = slices.Clone(c.PFXPassword)
 	cloned.AccessTokens = maps.Clone(c.AccessTokens)
+	cloned.FederationEndpoints = slices.Clone(c.FederationEndpoints)
 	return &cloned
 }
 
@@ -117,13 +123,20 @@ func (c *Config) Validate() error {
 	allowed := map[string]bool{}
 	required := map[string]bool{}
 	switch c.Method {
-	case Browser, DeviceCode:
+	case Browser:
 		required["client_id"] = strings.TrimSpace(c.ClientID) != ""
+		required["open_browser"] = c.OpenBrowser != nil
+		allowed["open_browser"], allowed["login_hint"], allowed["login_timeout"] = true, true, true
+	case DeviceCode:
+		required["client_id"] = strings.TrimSpace(c.ClientID) != ""
+		required["device_prompt"] = c.DevicePrompt != nil
+		allowed["device_prompt"], allowed["login_timeout"] = true, true
 	case Password:
 		required["client_id"] = strings.TrimSpace(c.ClientID) != ""
 		required["username"] = strings.TrimSpace(c.Username) != ""
 		required["password"] = c.Password != ""
-		allowed["username"], allowed["password"] = true, true
+		allowed["username"], allowed["password"], allowed["federation_endpoints"] = true, true, true
+		allowed["login_timeout"] = true
 	case Certificate:
 		required["client_id"] = strings.TrimSpace(c.ClientID) != ""
 		if len(c.PFX) > 0 {
@@ -175,12 +188,18 @@ func (c *Config) Validate() error {
 		"pfx": len(c.PFX) > 0, "pfx_password": len(c.PFXPassword) > 0,
 		"access_tokens": len(c.AccessTokens) > 0, "identity_id": c.IdentityID != "", "token_mode": c.TokenMode != "",
 		"assertion_file": c.AssertionFile != "", "assertion": c.Assertion != nil,
-		"provider": c.Provider != nil,
+		"provider":     c.Provider != nil,
+		"open_browser": c.OpenBrowser != nil, "device_prompt": c.DevicePrompt != nil,
+		"login_hint": c.LoginHint != "", "login_timeout": c.LoginTimeout != 0,
+		"federation_endpoints": len(c.FederationEndpoints) > 0,
 	}
 	for _, field := range slices.Sorted(maps.Keys(present)) {
 		if present[field] && !allowed[field] {
 			return &ConfigError{Field: field, Reason: "is incompatible with the selected method"}
 		}
+	}
+	if c.LoginTimeout < 0 {
+		return &ConfigError{Field: "login_timeout", Reason: "must be positive when specified"}
 	}
 	return nil
 }
@@ -194,6 +213,9 @@ func (c *Config) TokenBinding() Binding {
 	}
 	if c.Method == Certificate || c.Method == ClientSecret {
 		return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: c.ClientID, Mode: Application}
+	}
+	if c.Method == Browser || c.Method == DeviceCode || c.Method == Password {
+		return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: c.ClientID, Mode: Delegated}
 	}
 	return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: c.IdentityID, Mode: c.TokenMode}
 }
