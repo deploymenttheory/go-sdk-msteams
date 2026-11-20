@@ -7,6 +7,19 @@ PowerShell compositions and successful tenant acceptance remain required.
 This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81)
 or promote its command coverage.
 
+Supporting group models are now started under `graph_api/group`: separate native
+read/create/update inputs, a local standard Unified-group constructor, nullable
+read fields and retained future extension data. Group update serialization is
+checked against the actual pinned omitted/explicit-empty captures. The native
+constructor does not inject the PowerShell Private default, user references or
+undocumented provisioning flags. No Groups root service or management methods
+are exposed yet; group CRUD and the source-derived compositions remain required.
+Primary [create](https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-1.0),
+[get](https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-1.0),
+[update](https://learn.microsoft.com/en-us/graph/api/group-update?view=graph-rest-1.0)
+and [list](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-1.0)
+documentation was reviewed on 2026-11-20. No group tenant operations were made.
+
 Native settings preserve omitted versus non-nil empty containers and explicit
 false values. A caller can construct the five empty containers observed in the
 module without forcing that behavior into every native update. Tests compare
