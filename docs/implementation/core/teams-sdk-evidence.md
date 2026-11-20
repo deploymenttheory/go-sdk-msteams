@@ -2,23 +2,31 @@
 
 Status: in progress. Native team create/read/settings-update/delete/list,
 create-from-group, archive/unarchive, picture upload and resumable operation
-handling are implemented under `sdk.GraphAPI.Teams`. Supporting group CRUD,
-PowerShell compositions and successful tenant acceptance remain required.
+handling are implemented under `sdk.GraphAPI.Teams`. Supporting group CRUD is
+implemented under `sdk.GraphAPI.Groups`; PowerShell compositions and successful
+tenant acceptance remain required.
 This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81)
 or promote its command coverage.
 
-Supporting group models are now started under `graph_api/group`: separate native
-read/create/update inputs, a local standard Unified-group constructor, nullable
-read fields and retained future extension data. Group update serialization is
-checked against the actual pinned omitted/explicit-empty captures. The native
-constructor does not inject the PowerShell Private default, user references or
-undocumented provisioning flags. No Groups root service or management methods
-are exposed yet; group CRUD and the source-derived compositions remain required.
+Supporting groups now expose native create/get/update/delete, one-page list and
+explicit bounded traversal, including an explicitly selected beta collection for
+the pinned tenant-search path. Separate read/create/update inputs retain nullable
+read fields and future extension data. Create and update tests compare the actual
+pinned ordinary-create and omitted/explicit-empty captures. The local standard
+Unified-group constructor does not inject the PowerShell Private default, user
+references or undocumented provisioning flags. Supplied directory extensions
+cannot overwrite ordinary fields. The [group API notes](../../../msteams/graph_api/group/api_docs.md)
+describe lifecycle, query and access boundaries. Source-derived compositions,
+their service evidence reports and successful journalled tenant acceptance remain
+required; no group command qualification is inferred from these primitives.
 Primary [create](https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-1.0),
 [get](https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-1.0),
 [update](https://learn.microsoft.com/en-us/graph/api/group-update?view=graph-rest-1.0)
 and [list](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-1.0)
-documentation was reviewed on 2026-11-20. No group tenant operations were made.
+documentation was reviewed on 2026-11-20. Read-only first-page group-list probes
+using the dedicated lab SPN returned typed Graph HTTP 403 with both secret and
+certificate authentication. No group mutations or permission changes were made;
+this establishes denial handling, not successful group CRUD or least privilege.
 
 Native settings preserve omitted versus non-nil empty containers and explicit
 false values. A caller can construct the five empty containers observed in the

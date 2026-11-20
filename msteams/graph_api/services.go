@@ -3,14 +3,16 @@ package graphapi
 
 import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team"
 )
 
 // Services is the typed Graph service collection. Resource fields are added with
 // their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
-	scope *client.Scope
-	Teams *team.Service
+	scope  *client.Scope
+	Teams  *team.Service
+	Groups *group.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -19,7 +21,7 @@ func NewServices(session *client.Session) (*Services, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Services{scope: scope, Teams: team.NewService(scope)}, nil
+	return &Services{scope: scope, Teams: team.NewService(scope), Groups: group.NewService(scope)}, nil
 }
 
 // Scope returns the backend dependency shared by this collection's resources.
