@@ -27,7 +27,7 @@ def validate(manifest, coverage):
         require(len(issue['title']) <= 256, 'Title too long: ' + key)
         require(set(issue['labels']) <= labels, 'Unknown label: ' + key)
         require(issue['milestone'] in milestones, 'Unknown milestone: ' + key)
-        body = (ROOT / issue['body_file']).read_text()
+        body = (ROOT / issue['body_file']).read_text(encoding="utf-8")
         bodies[key] = body
         require(len(body) <= 65536, 'Body too long: ' + key)
         require(hashlib.sha256(body.encode()).hexdigest() == issue['body_sha256'], 'Body hash mismatch: ' + key)
@@ -71,7 +71,7 @@ def validate(manifest, coverage):
         visited.add(key)
     for key in issues:
         visit(key)
-    baseline = json.loads((ROOT / 'contracts/powershell/8.1.0/commands.json').read_text())
+    baseline = json.loads((ROOT / 'contracts/powershell/8.1.0/commands.json').read_text(encoding="utf-8"))
     require(Counter(c['command'].casefold() for c in coverage)==Counter(c['name'].casefold() for c in baseline), 'Missing or duplicate command coverage')
     for row in coverage:
         require(row['research'] in issues, 'Missing research owner: ' + row['command'])
@@ -94,4 +94,4 @@ def validate(manifest, coverage):
 
 
 if __name__ == '__main__':
-    print(json.dumps({'result':'passed',**validate(json.loads((OUT/'manifest.json').read_text()),json.loads((OUT/'coverage.json').read_text()))},indent=2))
+    print(json.dumps({'result':'passed',**validate(json.loads((OUT/'manifest.json').read_text(encoding="utf-8")),json.loads((OUT/'coverage.json').read_text(encoding="utf-8")))},indent=2))

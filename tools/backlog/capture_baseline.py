@@ -19,7 +19,7 @@ def main():
     if target.exists():
         raise ValueError("Output directory already exists; choose a new candidate path")
     target.mkdir(parents=True)
-    gallery = json.loads((source / "gallery.json").read_text())
+    gallery = json.loads((source / "gallery.json").read_text(encoding="utf-8"))
     archive = (source / "module.zip").read_bytes()
     digest = base64.b64encode(hashlib.sha512(archive).digest()).decode()
     if digest != gallery["sha512"]:
@@ -60,11 +60,11 @@ def main():
                                 "Runtime metadata does not establish wire contracts, default values, server behaviour or complete output schemas.",
                                 "Validation extraction covers named public properties; custom validators require source/behaviour research."],
                 "source_files": files, "release_notes": gallery["release_notes"]}
-    (target / "provenance.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    (target / "commands.json").write_text(json.dumps(commands, indent=2) + "\n")
+    (target / "provenance.json").write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8", newline="\n")
+    (target / "commands.json").write_text(json.dumps(commands, indent=2) + "\n", encoding="utf-8", newline="\n")
     # One command per line keeps the full parameter-set evidence reviewable without
     # repeating indentation across hundreds of common PowerShell parameters.
-    (target / "runtime.json").write_text('{"environment":' + json.dumps(metadata["runtime_environment"]) + ',"commands":[\n' + ',\n'.join(json.dumps(c, separators=(",", ":")) for c in runtime["commands"]) + '\n]}\n')
+    (target / "runtime.json").write_text('{"environment":' + json.dumps(metadata["runtime_environment"]) + ',"commands":[\n' + ',\n'.join(json.dumps(c, separators=(",", ":")) for c in runtime["commands"]) + '\n]}\n', encoding="utf-8", newline="\n")
     print(f"Normalized {len(commands)} candidates; {len(observed)} runtime exports")
 
 

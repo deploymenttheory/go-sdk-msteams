@@ -19,7 +19,7 @@ APPROVED_HASH = '9c04a10526600ab33ab9abd484057c665ac420e3823eff5add416776d516f78
 
 def save(path, data):
     tmp = path.with_suffix(path.suffix + '.tmp')
-    tmp.write_text(json.dumps(data, indent=2) + '\n')
+    tmp.write_text(json.dumps(data, indent=2) + '\n', encoding="utf-8", newline="\n")
     tmp.replace(path)
 
 
@@ -81,7 +81,7 @@ def main():
     if hashlib.sha256(manifest_bytes).hexdigest()!=APPROVED_HASH:
         raise ValueError('The preview differs from the approved manifest')
     manifest=json.loads(manifest_bytes)
-    validate(manifest,json.loads((OUT/'coverage.json').read_text()))
+    validate(manifest,json.loads((OUT/'coverage.json').read_text(encoding="utf-8")))
     STATE.mkdir(exist_ok=True)
     save(STATE/'approval.json',dict(manifest_sha256=APPROVED_HASH,authorization='User: approved. raise the tickets on gh',repository=manifest['repository']))
     api=API(manifest['repository'])
@@ -145,7 +145,7 @@ def main():
             for index,key in enumerate(order,1):
                 wanted=desired[key]
                 if key not in mapping:
-                    payload=dict(title=wanted['title'],body=(ROOT/wanted['body_file']).read_text(),labels=wanted['labels'],milestone=milestones[wanted['milestone']]['number'])
+                    payload=dict(title=wanted['title'],body=(ROOT/wanted['body_file']).read_text(encoding="utf-8"),labels=wanted['labels'],milestone=milestones[wanted['milestone']]['number'])
                     try:
                         created=api.call('issues','POST',payload)
                     except RuntimeError:
@@ -164,7 +164,7 @@ def main():
             if set(mapping)!=set(desired):
                 raise ValueError('All identities must exist before resolving links')
             for index,(key,wanted) in enumerate(desired.items(),1):
-                original=(ROOT/wanted['body_file']).read_text()
+                original=(ROOT/wanted['body_file']).read_text(encoding="utf-8")
                 def substitute(match):
                     target=match[1]
                     if target not in mapping:
@@ -238,7 +238,7 @@ def main():
             ready=[];parent_count=0;edge_count=0
             for index,(key,wanted) in enumerate(desired.items(),1):
                 actual=fresh[key]
-                original=(ROOT/wanted['body_file']).read_text()
+                original=(ROOT/wanted['body_file']).read_text(encoding="utf-8")
                 expected=re.sub(r'\(([A-Z]+(?:-[A-Z0-9]+)?)\.md\)',lambda m:'('+fresh[m[1]]['html_url']+')',original)
                 if actual['body']!=expected or actual['title']!=wanted['title']:raise ValueError('Content audit mismatch '+key)
                 if set(l['name'] for l in actual['labels'])!=set(wanted['labels']):raise ValueError('Issue labels mismatch '+key)

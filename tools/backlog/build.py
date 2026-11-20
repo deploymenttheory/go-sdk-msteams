@@ -13,9 +13,9 @@ OUT = ROOT / 'docs/implementation/backlog'
 NAMESPACE = 'msteams-powershell-parity'
 SOURCE = 'https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0'
 TASKS = {}
-BASE = json.loads((ROOT / 'contracts/powershell/8.1.0/commands.json').read_text())
-PROVENANCE = json.loads((ROOT / 'contracts/powershell/8.1.0/provenance.json').read_text())
-RUNTIME = {c['name'].casefold(): c for c in json.loads((ROOT / 'contracts/powershell/8.1.0/runtime.json').read_text())['commands']}
+BASE = json.loads((ROOT / 'contracts/powershell/8.1.0/commands.json').read_text(encoding="utf-8"))
+PROVENANCE = json.loads((ROOT / 'contracts/powershell/8.1.0/provenance.json').read_text(encoding="utf-8"))
+RUNTIME = {c['name'].casefold(): c for c in json.loads((ROOT / 'contracts/powershell/8.1.0/runtime.json').read_text(encoding="utf-8"))['commands']}
 
 
 def ref(key):
@@ -270,7 +270,7 @@ def render():
         areas[area].append(task)
         body = task_body(task)
         path = OUT / 'issues' / (key + '.md')
-        path.write_text(body)
+        path.write_text(body, encoding="utf-8", newline="\n")
         issues.append({'id':key, 'title':task['title'], 'type':'task', 'parent':'EPIC-' + area,
                        'milestone':MILESTONES[task['milestone']][0],
                        'labels':['type:task','priority:P1' if task.get('family') else 'priority:P0','area:' + area.lower(),'component:' + task['component']],
@@ -310,7 +310,7 @@ Source rationale: agreed implementation plan at starting revision `60aaa442defd7
 {ALIGN}
 '''
         path = OUT / 'issues' / ('EPIC-' + area + '.md')
-        path.write_text(body)
+        path.write_text(body, encoding="utf-8", newline="\n")
         issues.append({'id':'EPIC-'+area,'title':f'[Epic {area}] {title}', 'type':'epic', 'parent':None,
                        'milestone':MILESTONES[milestone][0], 'labels':['type:epic','priority:P1' if area in ['CORE','POL','VOICE','CALL','EXT'] else 'priority:P0','area:'+area.lower()],
                        'blocked_by':[], 'children':[t['id'] for t in children], 'body_file':str(path.relative_to(ROOT)), 'body_sha256':hashlib.sha256(body.encode()).hexdigest()})
@@ -321,8 +321,8 @@ Source rationale: agreed implementation plan at starting revision `60aaa442defd7
     coverage += [dict(command=c['name'],disposition='session-equivalent',family='sessions',research='BASE-02',implementation='AUTH-06',runtime_observed=c['runtime_observed']) for c in sessions]
     coverage += [dict(command=c['name'],disposition='excluded-module-telemetry',family='telemetry',research='BASE-02',implementation=None,runtime_observed=c['runtime_observed']) for c in exclusions]
     coverage.sort(key=lambda x:x['command'].casefold())
-    (OUT/'coverage.json').write_text(json.dumps(coverage,indent=2)+'\n')
-    (OUT/'coverage.md').write_text('# Command coverage and ownership\n\nCandidate ownership is not proof of runtime availability or implemented parity. BASE-02 resolves conditional/public status; no candidate is silently discarded.\n\n| Command | Disposition | Contract owner | Implementation owner | Runtime observed |\n| --- | --- | --- | --- | --- |\n' + '\n'.join(f'| `{c["command"]}` | {c["disposition"]} | [{c["research"]}](issues/{c["research"]}.md) | '+(f'[{c["implementation"]}](issues/{c["implementation"]}.md)' if c['implementation'] else 'Excluded: module telemetry only')+f' | {c["runtime_observed"]} |' for c in coverage)+'\n')
+    (OUT/'coverage.json').write_text(json.dumps(coverage,indent=2)+'\n', encoding="utf-8", newline="\n")
+    (OUT/'coverage.md').write_text('# Command coverage and ownership\n\nCandidate ownership is not proof of runtime availability or implemented parity. BASE-02 resolves conditional/public status; no candidate is silently discarded.\n\n| Command | Disposition | Contract owner | Implementation owner | Runtime observed |\n| --- | --- | --- | --- | --- |\n' + '\n'.join(f'| `{c["command"]}` | {c["disposition"]} | [{c["research"]}](issues/{c["research"]}.md) | '+(f'[{c["implementation"]}](issues/{c["implementation"]}.md)' if c['implementation'] else 'Excluded: module telemetry only')+f' | {c["runtime_observed"]} |' for c in coverage)+'\n', encoding="utf-8", newline="\n")
     labels = [dict(name='type:'+n,color='5319e7',description=d) for n,d in [('backlog','Compatibility baseline index'),('epic','Integrated behaviour and child work'),('task','Bounded implementation or research outcome')]]
     labels += [dict(name='priority:'+n,color=c,description=d) for n,c,d in [('P0','b60205','Foundation, contract integrity or release gate'),('P1','fbca04','Required release capability')]]
     labels += [dict(name='area:'+a.lower(),color='0052cc',description=t) for a,(t,m,x) in EPICS.items()]
@@ -341,7 +341,7 @@ Source rationale: agreed implementation plan at starting revision `60aaa442defd7
         ('8.2.0/new release and server change detection',['EPIC-DELTA']),
         ('Complete first supported release and consumer documentation',['EPIC-QUAL']),
     ]
-    plan = (ROOT/'docs/implementation/plan.md').read_text()
+    plan = (ROOT/'docs/implementation/plan.md').read_text(encoding="utf-8")
     # Inline shared decisions: published tickets remain usable before repository docs land.
     baseline_body = f'<!-- weave-backlog:{NAMESPACE}:v1:INDEX -->\nBacklog ID: `INDEX` · Source: agreed implementation plan; repository start `60aaa442defd7b3d5a2f7a11faac62c23a5bcfbb`\n\n## Purpose and scope\n\nNative Go SDK with complete MicrosoftTeams 8.1.0 management parity. This backlog implements the agreed plan; SDK work is not yet delivered.\n\n'
     baseline_body += '## Product baseline\n\n' + plan.split('## Product rules\n\n')[1].split('## Architecture decisions')[0]
@@ -351,7 +351,7 @@ Source rationale: agreed implementation plan at starting revision `60aaa442defd7
     baseline_body += '\n\n## Requirement coverage\n\n| Requirement | Owners |\n| --- | --- |\n' + '\n'.join('| '+r+' | '+', '.join(ref(x) for x in ids)+' |' for r,ids in requirements)
     baseline_body += f'\n\nAll {len(BASE)} candidate commands are enumerated in their research/implementation task bodies. {len(exclusions)} telemetry command is explicitly excluded; {len(sessions)} helpers map to AUTH-06. The initial {PROVENANCE["runtime_count"]} exports are unauthenticated macOS evidence, not the final cross-platform surface. BASE-02 reconciles the other candidates without dropping them. Package SHA256: `{PROVENANCE["package_sha256"]}`.\n'
     baseline_body += '\n## Execution conventions\n\nType, priority, area and component labels are orthogonal. P0 denotes foundation/integrity/release gates; P1 denotes required release capabilities. Native task parents and direct blockers are required; supporting links do not add blocker edges. Milestones have no invented due dates. Research settles unknown wire contracts before dependent implementation. All tasks are initially open; metadata discovery is not SDK delivery. Existing dependency-update PRs are unrelated.\n\nSource links: '+SOURCE+'; https://github.com/deploymenttheory/go-sdk-jamfpro-v2/tree/25714da557956da9e317f725ca3d22e8818ec77e. Baseline snapshots and the local plan must accompany implementation handoff.\n'
-    path=OUT/'issues/INDEX.md';path.write_text(baseline_body)
+    path=OUT/'issues/INDEX.md';path.write_text(baseline_body, encoding="utf-8", newline="\n")
     issues.append(dict(id='INDEX',title='Microsoft Teams SDK: implementation backlog and product baseline',type='backlog',parent=None,milestone=MILESTONES[5][0],labels=['type:backlog','priority:P0'],blocked_by=[],body_file=str(path.relative_to(ROOT)),body_sha256=hashlib.sha256(baseline_body.encode()).hexdigest()))
     manifest = dict(schema_version=1,repository='deploymenttheory/go-sdk-msteams',namespace=NAMESPACE,
                     source_revision='60aaa442defd7b3d5a2f7a11faac62c23a5bcfbb',plan_sha256=hashlib.sha256(plan.encode()).hexdigest(),
@@ -359,7 +359,7 @@ Source rationale: agreed implementation plan at starting revision `60aaa442defd7
                     metadata_policy='Create listed labels and milestones; leave existing standard labels and dependency PRs unchanged.',
                     relationship_capability='Native relationship writes are not yet exercised; publication must verify actual API support and permissions.',
                     labels=labels,milestones=[dict(title=t,description=d) for t,d in MILESTONES],issues=sorted(issues,key=lambda x:x['id']))
-    (OUT/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+    (OUT/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n', encoding="utf-8", newline="\n")
     ready = sorted(k for k,t in TASKS.items() if not t['blocked_by'])
     preview = f'''# Microsoft Teams SDK backlog publication preview
 
@@ -392,7 +392,7 @@ All labels below are new orthogonal dimensions; existing `enhancement`, `documen
             preview += f'| [{t["title"]}](issues/{t["id"]}.md) | M{t["milestone"]} | '+(', '.join(t['blocked_by']) or 'None; ready')+' |\n'
         preview += '\n'
     preview += '## Local validation\n\nRun `python3 tools/backlog/build.py` to deterministically render the preview and `python3 tools/backlog/validate.py` to audit bodies, hashes, coverage, parent membership, references, cycles and milestone ordering. These checks verify planning artifacts, not SDK behaviour.\n'
-    (OUT/'README.md').write_text(preview)
+    (OUT/'README.md').write_text(preview, encoding="utf-8", newline="\n")
     print(f'Rendered {len(issues)} issues, {len(TASKS)} tasks, {len(groups)} resource families; ready: {ready}')
 
 
