@@ -1,0 +1,57 @@
+name: Go quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GOFLAGS: -mod=readonly
+  GOTOOLCHAIN: local
+
+jobs:
+  platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5
+        with:
+          go-version-file: go.mod
+      - name: Verify dependency integrity and tidy state
+        shell: bash
+        run: |
+          go mod download
+          go mod verify
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
+      - name: Build SDK and examples
+        run: go build ./...
+      - name: Vet SDK and examples
+        run: go vet ./...
+      - name: Offline unit tests
+        run: go test -count=1 -shuffle=on ./...
+      - name: Race detection
+        env:
+          CGO_ENABLED: '1'
+        run: go test -race -count=1 -shuffle=on ./...
+      - name: Run credential-free example
+        run: go run ./examples/baseline
+  vulnerabilities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5
+        with:
+          go-version-file: go.mod
+      - name: Check reachable vulnerabilities (including tests)
+        run: go tool govulncheck -test ./...
