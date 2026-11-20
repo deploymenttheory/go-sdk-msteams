@@ -11,12 +11,18 @@ class ResourceEvidenceTests(unittest.TestCase):
     def test_crud_actions_and_parameter_sets_bind_to_actual_request_captures(self):
         value = resources.evidence.read(resources.CONTRACT)
         self.assertEqual(resources.validate(value), (5, 8, 8))
+
+        def swap_assignment_scopes(changed):
+            sets = next(c for c in changed['commands'] if c['name'] == 'Grant-CsApplicationAccessPolicy')['parameter_sets']
+            sets[0]['operation_refs'], sets[2]['operation_refs'] = sets[2]['operation_refs'], sets[0]['operation_refs']
+
         mutations = [
             lambda v: v.update(status='accepted'),
             lambda v: v['open_questions'].clear(),
             lambda v: v['commands'].pop(),
             lambda v: v['commands'][0]['parameter_sets'].clear(),
             lambda v: v['commands'][0]['parameter_sets'][0].update(operation_refs=['missing']),
+            swap_assignment_scopes,
             lambda v: v['service_surface'].update(get_by_identity='list'),
             lambda v: v['operations'][3].update(method='PATCH'),
             lambda v: v['operations'][3].update(replay_safe=True),

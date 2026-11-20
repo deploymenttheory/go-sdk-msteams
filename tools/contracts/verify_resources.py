@@ -7,6 +7,13 @@ from urllib.parse import urlsplit
 import verify_models as evidence
 
 CONTRACT = evidence.ROOT / 'contracts/endpoints/8.1.0/application-access-policies.json'
+SET_OPERATIONS = {
+    'Get-CsApplicationAccessPolicy': {'Filter': ['list'], 'Identity': ['get', 'list']},
+    'New-CsApplicationAccessPolicy': {'Identity': ['create', 'get']},
+    'Set-CsApplicationAccessPolicy': {'Identity': ['update']},
+    'Remove-CsApplicationAccessPolicy': {'Identity': ['delete']},
+    'Grant-CsApplicationAccessPolicy': {'Identity': ['assign-user'], 'GrantToTenant': ['assign-tenant'], 'GrantToGroup': ['assign-group']},
+}
 
 
 def fixture(reference):
@@ -15,6 +22,7 @@ def fixture(reference):
     matches = [case for case in value['cases'] if case['name'] == reference['case']]
     evidence.require(len(matches) == 1, 'Resource fixture case is missing or ambiguous')
     evidence.require(value['baseline_version'] == '8.1.0', 'Resource fixture baseline differs')
+    evidence.require(value['package_sha256'] == evidence.read(evidence.CONTRACT)['package_sha256'], 'Resource fixture package differs')
     return matches[0]
 
 
@@ -54,6 +62,7 @@ def validate(value):
         for parameter_set in command['parameter_sets']:
             names = parameter_set['operation_refs']
             require(names and all(name in operations for name in names), 'Missing resource operation binding')
+            require(names == SET_OPERATIONS[name][parameter_set['name']], 'Parameter set is bound to the wrong operation/scope')
             referenced.update(names)
         sets += len(expected)
     require(referenced == set(operations), 'Resource operation is unbound')
