@@ -35,7 +35,7 @@ complete authentication configuration, including environment token material.
 There is no implicit credential chain or fallback to browser login. Availability and
 operation-specific permissions remain provider/contract qualification concerns.
 
-Every method requires a tenant ID. Browser/device-code require a client ID; password
+Every method requires a tenant ID. Browser/device-code require a client ID and an explicit callback; password
 also requires username/password; certificate requires supplied certificate/private-key
 bytes; client-secret requires a secret. Managed identity accepts an optional client ID
 for a user-assigned identity. Workload identity requires a client ID and exactly one
@@ -201,3 +201,73 @@ credential diagnostics are not exposed, including through unwrapping. Certificat
 The standalone [provider example](../../msteams/auth/application_example_test.go) demonstrates
 ownership without authenticating. See [AUTH-02 evidence and prerequisites](../implementation/auth/client-credentials-evidence.md)
 for app registration/consent, role categories, tested contracts and remaining live qualification.
+
+## Reusing an Azure Identity credential
+
+`auth.NewAzureTokenProvider` accepts the `azcore.TokenCredential` interface used by
+Microsoft Graph's Go authentication provider. It enables reuse of an explicitly chosen
+Azure Identity credential through `msteams.WithTokenProvider(binding, provider)`:
+
+```go
+binding := auth.Binding{
+    TenantID: tenantID,
+    Cloud: "commercial",
+    IdentityID: accountIdentity,
+    Mode: auth.Delegated,
+}
+provider, err := auth.NewAzureTokenProvider(binding, credential)
+if err != nil {
+    return err
+}
+sdk, err := msteams.NewClient(nil, msteams.WithTokenProvider(binding, provider))
+if err != nil {
+    return err
+}
+defer sdk.Close()
+```
+
+The caller configures `credential` for the stated tenant, identity, cloud and mode;
+application credentials use `auth.Application`. The adapter requests explicit Graph or
+Teams `/.default` scopes and forwards the tenant and context to `GetToken`. It leaves
+caching and credential lifetime with the caller. Closing the SDK does not close or clear
+the borrowed credential. The SDK does not add an implicit default credential chain or
+change the credential's interactive behavior. Configure that behavior explicitly when
+constructing Azure Identity browser or device credentials.
+
+
+## Built-in delegated sign-in
+
+The `Browser`, `DeviceCode` and `Password` methods now create client-owned MSAL Go
+providers. Use a tenant GUID or DNS name and your public application's client ID.
+Configure delegated permissions and consent for both Graph and Teams resources.
+
+| Method | Explicit configuration |
+|---|---|
+| `auth.Browser` | `OpenBrowser(ctx, authorizationURL)` callback; optional `LoginHint`; register `http://localhost` as the application's redirect URI |
+| `auth.DeviceCode` | `DevicePrompt(ctx, message)` callback presenting `VerificationURL` and `UserCode` to the signing-in user |
+| `auth.Password` | `Username` and `Password`; Entra must permit this flow for that account and policy |
+
+Callbacks must respect their context and must not log callback URLs, codes or credentials.
+`LoginTimeout` bounds acquisition (15 minutes by default); caller cancellation and SDK
+close also cancel pending sign-in. Construction never invokes callbacks or authenticates.
+Browser reception validates state and S256 PKCE and closes active local connections on
+cancellation. Device polling honors interval, slow-down and code expiry. The SDK pins the
+first selected account across Graph and Teams and attempts silent refresh for later tokens.
+A failed password grant never falls back to browser/device or enters a retry loop.
+
+Use `errors.As(err, &delegatedError)` with `*auth.DelegatedError` to inspect the recognized
+OAuth code and numeric Entra diagnostic codes. `errors.Is` distinguishes
+`auth.ErrAuthenticationRequired`, `auth.ErrAuthenticationDenied`, `auth.ErrDeviceCodeExpired`
+and context cancellation/deadline errors. Numeric Entra codes help investigate MFA and
+conditional-access denials; they do not trigger automatic authentication changes. Raw
+server descriptions and callback errors are excluded from formatted errors.
+
+For a federated password flow, `FederationEndpoints` must list the exact trusted HTTPS
+MEX and password endpoints. A discovered MEX document cannot grant trust to another URL.
+The library's WS-Trust 1.3 exchange is covered by synthetic tests; MSAL Go does not support
+WS-Trust 2005. Browser/device methods and a caller-configured Azure credential remain
+explicit alternatives. Windows WAM is not required by these portable browser/device flows.
+
+The provider owns its account/cache and copied configuration. SDK close releases these
+references; it does not revoke server tokens. [AUTH-03 evidence](../implementation/auth/delegated-evidence.md)
+distinguishes offline verification from pending tenant qualification.

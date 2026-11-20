@@ -25,7 +25,7 @@ const (
 
 var (
 	ErrUnsupportedCloud     = errors.New("authentication cloud profile is not supported")
-	ErrUnsupportedAudience  = errors.New("application token audience is not supported")
+	ErrUnsupportedAudience  = errors.New("token audience is not supported")
 	ErrTokenService         = errors.New("microsoft application token acquisition failed")
 	ErrAuthorityDestination = errors.New("authentication destination is not allowed")
 	tenantGUID              = regexp.MustCompile(`^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$`)
@@ -233,10 +233,14 @@ func (a *authorityHTTP) Do(request *http.Request) (*http.Response, error) {
 	if path == "" {
 		return rejectAuthorityRequest(request)
 	}
+	return a.send(request, path, metadataRequest)
+}
+
+func (a *authorityHTTP) send(request *http.Request, path string, metadataRequest bool) (*http.Response, error) {
 	// Send a reconstructed destination rather than forwarding any alternative URL
 	// representation supplied by discovery. Preserve the library's headers/body.
 	trusted := request.Clone(request.Context())
-	trusted.URL = &url.URL{Scheme: "https", Host: "login.microsoftonline.com", Path: path, RawQuery: u.RawQuery}
+	trusted.URL = &url.URL{Scheme: "https", Host: "login.microsoftonline.com", Path: path, RawQuery: request.URL.RawQuery}
 	trusted.Host = "login.microsoftonline.com"
 	httpClient := *a.client
 	httpClient.CheckRedirect = func(*http.Request, []*http.Request) error { return ErrAuthorityDestination }

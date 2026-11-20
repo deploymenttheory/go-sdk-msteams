@@ -3,6 +3,7 @@ module github.com/deploymenttheory/go-sdk-msteams
 go 1.27.4
 
 require (
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.23.3
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.15.0
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.10.1
 	github.com/go-resty/resty/v2 v2.17.2
@@ -12,7 +13,6 @@ require (
 )
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.23.3 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.13.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect

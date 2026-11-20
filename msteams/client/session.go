@@ -47,6 +47,12 @@ func NewSession(cfg *auth.Config, httpClient *http.Client, cleanup func()) (*Ses
 	var closeProvider func()
 	binding := cfg.TokenBinding()
 	switch cfg.Method {
+	case auth.Browser, auth.DeviceCode, auth.Password:
+		delegated, err := auth.NewDelegatedProvider(cfg, httpClient)
+		if err != nil {
+			return nil, err
+		}
+		provider, closeProvider = delegated, delegated.Close
 	case auth.Certificate, auth.ClientSecret:
 		application, err := auth.NewApplicationProvider(cfg, httpClient)
 		if err != nil {
