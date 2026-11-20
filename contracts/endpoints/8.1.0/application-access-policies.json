@@ -1,0 +1,489 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "resource": "application_access_policy",
+  "status": "in-progress",
+  "qualification": "pinned-modern-client-contract; legacy coverage and wrapper binding remain conditional",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assembly": {
+    "path": "bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll",
+    "sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+  },
+  "evidence": "docs/implementation/policies/application-access-contract-evidence.md",
+  "service_surface": {
+    "create": "create",
+    "get_by_identity": "get",
+    "update_by_identity": "update",
+    "delete_by_identity": "delete",
+    "list": "list",
+    "additional_operations": [
+      "assign-user",
+      "assign-tenant",
+      "assign-group"
+    ]
+  },
+  "profile": {
+    "name": "config-api-generated",
+    "audience": "48ac35b8-9aa8-4d74-927d-1f4a14a0b239",
+    "authority": "selected cloud tuple",
+    "origin": "selected ConfigAPI endpoint",
+    "discovery": {
+      "method": "GET",
+      "path": "/Teams.Tenant/serviceDiscovery",
+      "endpoint_field": "Endpoints.AdminServiceEndpoint",
+      "request_header": "X-MS-Target-Uri",
+      "cross_origin_send": false
+    },
+    "selection": "command-specific modern flight/override; no automatic TRPS retry after modern failure",
+    "evidence": "docs/implementation/core/policy-routing-evidence.md"
+  },
+  "input_contract": {
+    "identity": {
+      "type": "string",
+      "native_by_identity": "required, nonblank; escaped as one route segment",
+      "create": "required; sent as Identity in body"
+    },
+    "description": {
+      "type": "string",
+      "omitted": "absent",
+      "explicit_empty": "empty string",
+      "pinned_explicit_null": "PowerShell string binding produces empty string"
+    },
+    "app_ids": {
+      "type": "string-list replacement or Add/Remove operators; explicit legacy JSON-item variant",
+      "omitted": "absent",
+      "explicit_null": "[]",
+      "empty_replacement": "[]",
+      "empty_operators": "{}",
+      "replace_operator": "rejected",
+      "ps_list_modifier_object": "rejected",
+      "legacy_PSObject_items": "converted to property dictionaries with serialization metadata removed, even with string itemType; preserve via explicit JSON compatibility input rather than silently stringify/drop",
+      "legacy_service_acceptance": "not established by helper acceptance",
+      "cases": [
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-omitted"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-scalar"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-replacement"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-empty-replacement"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-null-replacement"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-operators"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-empty-operators"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-legacy-object-replacement"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-legacy-object-operators"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-replace-operator-rejected"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-numeric-item-rejected"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json",
+          "case": "appids-ps-list-modifier-rejected"
+        }
+      ]
+    },
+    "property_bag": "XdsConfiguration keeps open fields; dictionary conversion drops null-valued top-level entries; preserve false, empty string, arrays and nested maps"
+  },
+  "response_contract": {
+    "model": "XdsConfiguration",
+    "identity": "known string property",
+    "additional_fields": "retain raw/unknown JSON; do not infer service defaults from model defaults",
+    "closed_AppIds_response_schema": false,
+    "errors": "all undeclared statuses use generated ErrorResponse; native errors retain HTTP status/headers/raw body; malformed JSON is failure, not absence",
+    "pagination": "no client continuation contract/loop; expose one bare-array response without claiming unlimited completeness",
+    "async": "group 202 returns OperationId; separate job-read route exists but correlation/state grammar remains unqualified; do not equate 202 or propagation with completion",
+    "consistency": "no proven ETag, atomic Add/Remove, idempotency or immediate convergence guarantee"
+  },
+  "shared_cases": [
+    {
+      "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+      "case": "policy-forbidden"
+    },
+    {
+      "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+      "case": "policy-malformed-error"
+    },
+    {
+      "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+      "case": "policy-pre-canceled"
+    }
+  ],
+  "operations": [
+    {
+      "id": "list",
+      "kind": "list",
+      "method": "GET",
+      "path": "/Skype.Policy/configurations/ApplicationAccessPolicy",
+      "profile": "config-api-generated",
+      "path_encoding": "none",
+      "request": {
+        "body": "none",
+        "query": []
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "shape": "bare-array",
+        "model": "XdsConfiguration[]"
+      },
+      "replay_safe": true,
+      "request_cases": [
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "policy-list"
+        }
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "id": "get",
+      "kind": "read",
+      "method": "GET",
+      "path": "/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/{identity}",
+      "profile": "config-api-generated",
+      "path_encoding": "whole-segment",
+      "request": {
+        "body": "none",
+        "query": []
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "shape": "object",
+        "model": "XdsConfiguration"
+      },
+      "replay_safe": true,
+      "request_cases": [
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "policy-read-escaped"
+        }
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "id": "create",
+      "kind": "create",
+      "method": "POST",
+      "path": "/Skype.Policy/configurations/ApplicationAccessPolicy",
+      "profile": "config-api-generated",
+      "path_encoding": "none",
+      "request": {
+        "body": "configuration-property-bag",
+        "query": []
+      },
+      "response": {
+        "statuses": [
+          201
+        ],
+        "shape": "no-body-consumed"
+      },
+      "replay_safe": false,
+      "request_cases": [
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "policy-create"
+        }
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "id": "update",
+      "kind": "update",
+      "method": "PUT",
+      "path": "/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/{identity}",
+      "profile": "config-api-generated",
+      "path_encoding": "whole-segment",
+      "request": {
+        "body": "sparse-configuration-property-bag-including-Identity",
+        "query": []
+      },
+      "response": {
+        "statuses": [
+          204
+        ],
+        "shape": "no-body-consumed"
+      },
+      "replay_safe": false,
+      "request_cases": [
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "policy-update-put"
+        }
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "id": "delete",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/{identity}",
+      "profile": "config-api-generated",
+      "path_encoding": "whole-segment",
+      "request": {
+        "body": "none",
+        "query": []
+      },
+      "response": {
+        "statuses": [
+          204
+        ],
+        "shape": "no-body-consumed"
+      },
+      "replay_safe": false,
+      "request_cases": [
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "policy-delete"
+        }
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "id": "assign-user",
+      "kind": "action",
+      "method": "PATCH",
+      "path": "/Skype.Policy/users/{user}/policies/ApplicationAccessPolicy",
+      "profile": "config-api-generated",
+      "path_encoding": "whole-segment",
+      "request": {
+        "body": {
+          "policyName": "Fixture"
+        },
+        "clear_body": {
+          "policyName": ""
+        }
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "shape": "no-body-consumed"
+      },
+      "replay_safe": false,
+      "request_cases": [
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "user-assignment"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "user-clear-empty-policy"
+        }
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "id": "assign-tenant",
+      "kind": "action",
+      "method": "PATCH",
+      "path": "/Skype.Policy/tenants/policies/ApplicationAccessPolicy",
+      "profile": "config-api-generated",
+      "path_encoding": "none",
+      "request": {
+        "body": {
+          "policyName": "Fixture",
+          "forceSwitchPresent": false
+        }
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "shape": "no-body-consumed"
+      },
+      "replay_safe": false,
+      "request_cases": [
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "tenant-assignment"
+        }
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "id": "assign-group",
+      "kind": "action",
+      "method": "POST",
+      "path": "/Skype.Policy/groupPolicyAssignments/{group}/policyTypes/ApplicationAccessPolicy",
+      "profile": "config-api-generated",
+      "path_encoding": "whole-segment",
+      "request": {
+        "body": {
+          "policyName": "Fixture",
+          "priority": 2
+        },
+        "priority_presence": "only when Rank forwarded; omitted/zero/null are not forwarded by pinned adapter"
+      },
+      "response": {
+        "statuses": [
+          202,
+          204
+        ],
+        "shape": {
+          "202": {
+            "OperationId": "opaque identifier"
+          },
+          "204": "no-body"
+        },
+        "automatic_poll": false
+      },
+      "replay_safe": false,
+      "request_cases": [
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "group-assignment-accepted"
+        },
+        {
+          "artifact": "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json",
+          "case": "group-assignment-no-content"
+        }
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    }
+  ],
+  "commands": [
+    {
+      "name": "Get-CsApplicationAccessPolicy",
+      "parameter_sets": [
+        {
+          "name": "Filter",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/19/parameter_sets/0",
+          "operation_refs": [
+            "list"
+          ]
+        },
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/19/parameter_sets/1",
+          "operation_refs": [
+            "get",
+            "list"
+          ]
+        }
+      ],
+      "composition": [
+        "optional local Filter; item only for non-whitespace Identity"
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "name": "Grant-CsApplicationAccessPolicy",
+      "parameter_sets": [
+        {
+          "name": "GrantToGroup",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/221/parameter_sets/0",
+          "operation_refs": [
+            "assign-group"
+          ]
+        },
+        {
+          "name": "GrantToTenant",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/221/parameter_sets/1",
+          "operation_refs": [
+            "assign-tenant"
+          ]
+        },
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/221/parameter_sets/2",
+          "operation_refs": [
+            "assign-user"
+          ]
+        }
+      ],
+      "composition": [
+        "group branch first; otherwise require bound PolicyName plus user Identity or Global=true",
+        "PassThru binding mismatch remains unresolved; no success output guarantee"
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "name": "New-CsApplicationAccessPolicy",
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/279/parameter_sets/0",
+          "operation_refs": [
+            "create",
+            "get"
+          ]
+        }
+      ],
+      "composition": [
+        "POST then GET readback; expose created identity/partial outcome if readback fails"
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "name": "Remove-CsApplicationAccessPolicy",
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/412/parameter_sets/0",
+          "operation_refs": [
+            "delete"
+          ]
+        }
+      ],
+      "composition": [
+        "no readback; no returned policy"
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    },
+    {
+      "name": "Set-CsApplicationAccessPolicy",
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/523/parameter_sets/0",
+          "operation_refs": [
+            "update"
+          ]
+        }
+      ],
+      "composition": [
+        "composition inserts Global only when Identity key is absent; native UpdateByIdentity requires explicit identity"
+      ],
+      "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
+    }
+  ],
+  "open_questions": [
+    "command-level wrapper binding and full New POST/readback fixtures",
+    "legacy/native coverage for unselected commands",
+    "server identity/Global/clear/rank/default/atomicity semantics not observed",
+    "least-privilege role, administrative units and per-cloud feature qualification",
+    "additional response/error/operation fixtures"
+  ],
+  "live_qualification": "not-run; no permission grants or tenant mutations"
+}

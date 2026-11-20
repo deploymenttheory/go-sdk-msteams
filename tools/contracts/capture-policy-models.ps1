@@ -26,6 +26,8 @@ foreach($inputCase in @(
     @{name='null-replacement';bound=$true;value=$null},
     @{name='operators';bound=$true;value=@{Add=@('fixture-a');Remove=@('fixture-b')}},
     @{name='empty-operators';bound=$true;value=@{Add=@();Remove=@()}},
+    @{name='legacy-object-replacement';bound=$true;value=@([pscustomobject]@{AppId='fixture-app';DataSource='fixture-source';Key='fixture-key';Enabled=$false})},
+    @{name='legacy-object-operators';bound=$true;value=@{Add=@([pscustomobject]@{AppId='fixture-app';DataSource='fixture-source';Key='fixture-key';Enabled=$false})}},
     @{name='replace-operator-rejected';bound=$true;value=@{Replace=@('fixture-a')}},
     @{name='numeric-item-rejected';bound=$true;value=@(123)},
     @{name='ps-list-modifier-rejected';bound=$true;value=[Management.Automation.PSListModifier]::new([object]@('fixture-app'))}

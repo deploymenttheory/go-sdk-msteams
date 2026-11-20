@@ -37,6 +37,7 @@ jobs:
       - name: Validate resource contract evidence inventory
         run: |
           python tools/contracts/verify_models.py
+          python tools/contracts/verify_resources.py
           python -m unittest discover -s tools/contracts/tests -v
   pinned-package:
     strategy:
