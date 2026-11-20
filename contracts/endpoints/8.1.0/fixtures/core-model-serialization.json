@@ -496,6 +496,133 @@
         "rejected": false,
         "returnedNull": true
       }
+    },
+    {
+      "input": "{\"displayName\":\"Root\",\"teamDefinition\":{\"displayName\":\"Definition\",\"shortDescription\":\"Definition summary\"},\"extendedProperties\":{\"displayName\":\"Extended\",\"shortDescription\":\"Extended summary\",\"description\":\"Extended description\"}}",
+      "name": "template-json-root-precedence",
+      "source": "Models.TeamTemplate.BeforeFromJson; JsonObjectExtensions.Merge; ToJson",
+      "wire": {
+        "description": "Extended description",
+        "discoverySettings": {
+          "showInTeamsSearchAndSuggestions": false
+        },
+        "displayName": "Root",
+        "funSettings": {
+          "allowCustomMemes": false,
+          "allowGiphy": false,
+          "allowStickersAndMemes": false
+        },
+        "guestSettings": {
+          "allowCreateUpdateChannels": false,
+          "allowDeleteChannels": false
+        },
+        "memberSettings": {
+          "allowAddRemoveApps": false,
+          "allowCreatePrivateChannels": false,
+          "allowCreateUpdateChannels": false,
+          "allowCreateUpdateRemoveConnectors": false,
+          "allowCreateUpdateRemoveTabs": false,
+          "allowDeleteChannels": false,
+          "uploadCustomApp": false
+        },
+        "messagingSettings": {
+          "allowChannelMentions": false,
+          "allowOwnerDeleteMessages": false,
+          "allowTeamMentions": false,
+          "allowUserDeleteMessages": false,
+          "allowUserEditMessages": false
+        },
+        "shortDescription": "Definition summary"
+      }
+    },
+    {
+      "input": "{\"displayName\":null,\"teamDefinition\":{\"displayName\":\"Definition\"},\"extendedProperties\":{\"displayName\":\"Extended\"}}",
+      "name": "template-json-root-null-masks-nested",
+      "source": "Models.TeamTemplate.BeforeFromJson; JsonObjectExtensions.Merge; ToJson",
+      "wire": {
+        "discoverySettings": {
+          "showInTeamsSearchAndSuggestions": false
+        },
+        "funSettings": {
+          "allowCustomMemes": false,
+          "allowGiphy": false,
+          "allowStickersAndMemes": false
+        },
+        "guestSettings": {
+          "allowCreateUpdateChannels": false,
+          "allowDeleteChannels": false
+        },
+        "memberSettings": {
+          "allowAddRemoveApps": false,
+          "allowCreatePrivateChannels": false,
+          "allowCreateUpdateChannels": false,
+          "allowCreateUpdateRemoveConnectors": false,
+          "allowCreateUpdateRemoveTabs": false,
+          "allowDeleteChannels": false,
+          "uploadCustomApp": false
+        },
+        "messagingSettings": {
+          "allowChannelMentions": false,
+          "allowOwnerDeleteMessages": false,
+          "allowTeamMentions": false,
+          "allowUserDeleteMessages": false,
+          "allowUserEditMessages": false
+        }
+      }
+    },
+    {
+      "input": "{\"apps\":[null,{\"id\":\"fixture-app\"},null],\"categories\":[\"first\",null,\"last\"],\"channels\":[null,{\"displayName\":\"General\",\"tabs\":[null,{\"name\":\"Fixture tab\"}]}]}",
+      "name": "template-json-null-array-items",
+      "source": "Models.TeamTemplate.FromJsonString/ToJson; nested model serializers",
+      "wire": {
+        "apps": [
+          {
+            "id": "fixture-app"
+          }
+        ],
+        "categories": [
+          "first",
+          "last"
+        ],
+        "channels": [
+          {
+            "displayName": "General",
+            "tabs": [
+              {
+                "name": "Fixture tab"
+              }
+            ]
+          }
+        ],
+        "discoverySettings": {
+          "showInTeamsSearchAndSuggestions": false
+        },
+        "funSettings": {
+          "allowCustomMemes": false,
+          "allowGiphy": false,
+          "allowStickersAndMemes": false
+        },
+        "guestSettings": {
+          "allowCreateUpdateChannels": false,
+          "allowDeleteChannels": false
+        },
+        "memberSettings": {
+          "allowAddRemoveApps": false,
+          "allowCreatePrivateChannels": false,
+          "allowCreateUpdateChannels": false,
+          "allowCreateUpdateRemoveConnectors": false,
+          "allowCreateUpdateRemoveTabs": false,
+          "allowDeleteChannels": false,
+          "uploadCustomApp": false
+        },
+        "messagingSettings": {
+          "allowChannelMentions": false,
+          "allowOwnerDeleteMessages": false,
+          "allowTeamMentions": false,
+          "allowUserDeleteMessages": false,
+          "allowUserEditMessages": false
+        }
+      }
     }
   ],
   "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",

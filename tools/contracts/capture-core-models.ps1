@@ -114,6 +114,17 @@ $rejected, $returnedNull = $false, $false
 try { $returnedNull = $null -eq [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplateErrorResponse]::FromJsonString('') } catch { $rejected = $true }
 $cases.Add(@{name='template-empty-text-parser';source='Models.TeamTemplateErrorResponse.FromJsonString';input='';wire=@{rejected=$rejected;returnedNull=$returnedNull}})
 
+# Append CORE-27 regressions so existing fixture JSON pointers stay stable.
+$jsonInput = '{"displayName":"Root","teamDefinition":{"displayName":"Definition","shortDescription":"Definition summary"},"extendedProperties":{"displayName":"Extended","shortDescription":"Extended summary","description":"Extended description"}}'
+$parsed = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplate]::FromJsonString($jsonInput)
+Add-Observed 'template-json-root-precedence' 'Models.TeamTemplate.BeforeFromJson; JsonObjectExtensions.Merge; ToJson' $jsonInput $parsed.ToJsonString()
+$jsonInput = '{"displayName":null,"teamDefinition":{"displayName":"Definition"},"extendedProperties":{"displayName":"Extended"}}'
+$parsed = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplate]::FromJsonString($jsonInput)
+Add-Observed 'template-json-root-null-masks-nested' 'Models.TeamTemplate.BeforeFromJson; JsonObjectExtensions.Merge; ToJson' $jsonInput $parsed.ToJsonString()
+$jsonInput = '{"apps":[null,{"id":"fixture-app"},null],"categories":["first",null,"last"],"channels":[null,{"displayName":"General","tabs":[null,{"name":"Fixture tab"}]}]}'
+$parsed = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplate]::FromJsonString($jsonInput)
+Add-Observed 'template-json-null-array-items' 'Models.TeamTemplate.FromJsonString/ToJson; nested model serializers' $jsonInput $parsed.ToJsonString()
+
 $artifact = [ordered]@{
     schema_version=1
     baseline_version='8.1.0'
