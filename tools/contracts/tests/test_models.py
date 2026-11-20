@@ -10,6 +10,30 @@ SPEC.loader.exec_module(models)
 
 
 class ModelEvidenceTests(unittest.TestCase):
+    def test_compositions_bind_runtime_sets_and_reject_broken_evidence(self):
+        value = models.read(models.COMPOSITIONS)
+        inventory = models.read(models.CONTRACT)
+        self.assertEqual(models.validate_compositions(value, inventory), (9, 29))
+        mutations = [
+            lambda v: v.update(captured=True),
+            lambda v: v['commands'].pop(),
+            lambda v: v['commands'][0]['parameter_sets'].clear(),
+            lambda v: v['commands'][0]['case_refs'].append('missing'),
+            lambda v: v['cases'].append(copy.deepcopy(v['cases'][0])),
+            lambda v: v['cases'][0].update(parameter_sets=['not-a-runtime-set']),
+            lambda v: v['cases'][0]['input'].update(NotAParameter=True),
+            lambda v: v['cases'][0]['steps'][0].update(operation='missing'),
+            lambda v: v['cases'][0]['steps'][0].update(method='DELETE'),
+            lambda v: v['cases'][0]['steps'][0].update(path='https://foreign.invalid/v1.0/groups/fixture'),
+            lambda v: v['cases'][0]['steps'][0].update(body={'kind': 'json'}),
+            lambda v: v['cases'][0]['steps'][0].update(query={'$search': 'loses repeated keys'}),
+        ]
+        for mutate in mutations:
+            changed = copy.deepcopy(value)
+            mutate(changed)
+            with self.assertRaises(ValueError):
+                models.validate_compositions(changed, inventory)
+
     def test_inventory_retains_complete_assignment_and_unresolved_state(self):
         value = models.read(models.CONTRACT)
         self.assertEqual(models.validate_inventory(value), (40, 60))

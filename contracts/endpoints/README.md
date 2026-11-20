@@ -84,3 +84,19 @@ strings and the three compiled assignment DTOs' distinct casing/null behavior.
 The current totals are 73 model/helper observations and 24 generated request/dispatch
 observations. All are synthetic development evidence; the same verifier recaptures
 them after pinned acquisition on the three CI platforms.
+
+## Source-derived compositions
+
+`fixtures/core-team-compositions.json` contains 29 authored scenarios for nine
+team/member commands and all eleven assigned runtime parameter sets. Cases bind
+source-known request segments and explicit native choices to operation IDs,
+positive/validation/authorization/failure dimensions and expected partial results.
+Ordered query pairs retain the pinned repeated-search discrepancy; body kinds
+distinguish no body, JSON null/string/object and raw picture bytes.
+
+These are **source-derived scenarios**, not oracle observations. The verifier
+checks provenance/references, command/set/input bindings, method/path/profile,
+case ownership and request shape. Passing that structural check does not prove
+PowerShell or SDK execution. They are kept outside the recapture case totals and
+remain explicitly in progress. See [composition choices and limits](../../docs/implementation/core/core-composition-evidence.md)
+and the [native membership resource boundary](../../docs/implementation/core/membership-resource-contract.md).
