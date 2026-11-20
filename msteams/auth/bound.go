@@ -31,6 +31,10 @@ func (p *boundProvider) AcquireToken(ctx context.Context, request TokenRequest) 
 		return Token{}, err
 	}
 	token, err := p.source.AcquireToken(ctx, request)
+	return validateBorrowedToken(ctx, token, err)
+}
+
+func validateBorrowedToken(ctx context.Context, token Token, err error) (Token, error) {
 	if ctx.Err() != nil {
 		return Token{}, ctx.Err()
 	}

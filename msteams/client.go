@@ -36,12 +36,13 @@ type Client struct {
 var ErrInvalidOption = errors.New("invalid msteams client option")
 
 type options struct {
-	auth       *auth.Config
-	tokensJSON string
-	timeout    string
-	http       *http.Client
-	logger     *zap.Logger
-	tracer     trace.TracerProvider
+	auth          *auth.Config
+	tokensJSON    string
+	timeout       string
+	http          *http.Client
+	logger        *zap.Logger
+	tracer        trace.TracerProvider
+	requestPolicy client.RequestPolicy
 }
 
 // ClientOption changes constructor configuration before local validation.
@@ -69,6 +70,12 @@ func WithHTTPTimeout(timeout time.Duration) ClientOption {
 		o.timeout = timeout.String()
 		return nil
 	}
+}
+
+// WithRequestPolicy sets bounded retries and shared concurrency controls. Services
+// still have to declare each operation replay-safe before it can be retried.
+func WithRequestPolicy(policy client.RequestPolicy) ClientOption {
+	return func(o *options) error { o.requestPolicy = policy; return nil }
 }
 
 // WithHTTPClient borrows a round tripper but copies the client value. The SDK does
@@ -166,7 +173,7 @@ func newClient(o options, opts []ClientOption) (*Client, error) {
 		cleanup = transport.CloseIdleConnections
 	}
 	o.http.Timeout = timeout
-	session, err := client.NewSession(o.auth, o.http, cleanup)
+	session, err := client.NewSession(o.auth, o.http, cleanup, client.WithRequestPolicy(o.requestPolicy))
 	if err != nil {
 		if cleanup != nil {
 			cleanup()

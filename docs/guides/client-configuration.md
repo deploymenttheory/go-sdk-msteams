@@ -271,3 +271,17 @@ explicit alternatives. Windows WAM is not required by these portable browser/dev
 The provider owns its account/cache and copied configuration. SDK close releases these
 references; it does not revoke server tokens. [AUTH-03 evidence](../implementation/auth/delegated-evidence.md)
 distinguishes offline verification from pending tenant qualification.
+
+## Request budgets and retries
+
+Use `msteams.WithRequestPolicy(client.RequestPolicy{MaxAttempts: 3, Timeout: 2 * time.Minute,
+MaxConcurrent: 16})` to configure logical operation limits. Zero fields select defaults;
+`MaxAttempts: 1` disables retries. `WithHTTPTimeout` continues to set the per-attempt
+HTTP timeout. Set the total operation timeout long enough for any interactive sign-in.
+
+Each service operation must explicitly declare `client.ReplaySafe`; the default never
+retries an operation based on its HTTP method alone. Safe retries honor `Retry-After`,
+use bounded jittered backoff and retain cancellation. A valid server delay exceeding
+the remaining budget returns an error rather than retrying early. Token replacement
+on 401 additionally requires operation opt-in and a provider with noninteractive refresh
+support. See [request execution evidence](../implementation/http-retry-evidence.md).

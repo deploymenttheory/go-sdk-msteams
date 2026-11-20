@@ -32,16 +32,21 @@ type Session struct {
 	provider      auth.Provider
 	binding       auth.Binding
 	closeProvider func()
+	requests      *requestController
 }
 
 // NewSession copies configuration. cleanup is called once when this owned session
 // closes; callers must not transfer cleanup ownership of borrowed resources.
-func NewSession(cfg *auth.Config, httpClient *http.Client, cleanup func()) (*Session, error) {
+func NewSession(cfg *auth.Config, httpClient *http.Client, cleanup func(), options ...SessionOption) (*Session, error) {
 	if err := cfg.Validate(); err != nil {
 		return nil, err
 	}
 	if httpClient == nil {
 		return nil, errors.New("http client is required")
+	}
+	requests, err := newRequestController(options)
+	if err != nil {
+		return nil, err
 	}
 	var provider auth.Provider
 	var closeProvider func()
@@ -74,7 +79,7 @@ func NewSession(cfg *auth.Config, httpClient *http.Client, cleanup func()) (*Ses
 	}
 	lifetime, cancel := context.WithCancel(context.Background())
 	return &Session{auth: cfg.Clone(), http: *httpClient, lifetime: lifetime, cancel: cancel, cleanup: cleanup,
-		provider: provider, binding: binding, closeProvider: closeProvider}, nil
+		provider: provider, binding: binding, closeProvider: closeProvider, requests: requests}, nil
 }
 
 // AcquireToken obtains the exact audience requested by a backend adapter. The
@@ -102,6 +107,28 @@ func (s *Session) AcquireToken(ctx context.Context, audience string) (auth.Token
 	if closed {
 		return auth.Token{}, ErrClosed
 	}
+	if operation.Err() != nil {
+		return auth.Token{}, operation.Err()
+	}
+	return token, err
+}
+
+// RefreshAfterRejection asks only providers with an explicit noninteractive
+// refresh capability to replace a rejected token for the same audience.
+func (s *Session) RefreshAfterRejection(ctx context.Context, audience string, rejected auth.Token) (auth.Token, error) {
+	operation, cancel, err := s.Begin(ctx)
+	if err != nil {
+		return auth.Token{}, err
+	}
+	defer cancel()
+	s.mu.RLock()
+	provider, binding := s.provider, s.binding
+	s.mu.RUnlock()
+	refresher, ok := provider.(auth.RejectionRefresher)
+	if !ok {
+		return auth.Token{}, auth.ErrRefreshUnsupported
+	}
+	token, err := refresher.RefreshAfterRejection(operation, binding.Request(audience), rejected)
 	if operation.Err() != nil {
 		return auth.Token{}, operation.Err()
 	}
