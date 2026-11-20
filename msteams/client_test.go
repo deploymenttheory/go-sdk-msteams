@@ -40,7 +40,7 @@ func TestExplicitClientIgnoresEnvironmentAndBorrowsTransport(t *testing.T) {
 	t.Setenv("MSTEAMS_HTTP_TIMEOUT", "invalid")
 	transport := &recordingTransport{}
 	httpClient := &http.Client{Transport: transport, Timeout: time.Minute}
-	c, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "tenant"},
+	c, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"},
 		msteams.WithHTTPClient(httpClient), msteams.WithHTTPTimeout(2*time.Second))
 	if err != nil {
 		t.Fatal(err)
@@ -73,14 +73,14 @@ func TestEnvironmentLoadsThenExplicitOptionsOverride(t *testing.T) {
 	t.Setenv("MSTEAMS_ACCESS_TOKENS", "malformed JSON")
 	t.Setenv("MSTEAMS_HTTP_TIMEOUT", "invalid duration")
 	c, err := msteams.NewClientFromEnv(
-		msteams.WithAuthConfig(&auth.Config{Method: auth.ManagedIdentity, TenantID: "explicit-tenant"}),
+		msteams.WithAuthConfig(&auth.Config{Method: auth.ManagedIdentity, TenantID: "explicit.example"}),
 		msteams.WithHTTPTimeout(time.Second))
 	if err != nil {
 		t.Fatal(err)
 	}
 	closeClient(t, c)
 	cfg, err := c.GraphAPI.Scope().Session().AuthSnapshot()
-	if err != nil || cfg.TenantID != "explicit-tenant" {
+	if err != nil || cfg.TenantID != "explicit.example" {
 		t.Fatalf("explicit configuration did not win: %v", err)
 	}
 	if _, err := msteams.NewClientFromEnv(); err == nil {
@@ -112,7 +112,7 @@ func TestSuppliedTokensFromEnvironment(t *testing.T) {
 func TestInvalidClientOptions(t *testing.T) {
 	t.Parallel()
 	for _, option := range []msteams.ClientOption{nil, msteams.WithHTTPTimeout(0), msteams.WithHTTPTimeout(-time.Second), msteams.WithHTTPClient(nil), msteams.WithLogger(nil), msteams.WithTracerProvider(nil), msteams.WithHTTPClient(&http.Client{Transport: (*recordingTransport)(nil)}), msteams.WithHTTPClient(&http.Client{Timeout: -time.Second})} {
-		_, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "tenant"}, option)
+		_, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"}, option)
 		if !errors.Is(err, msteams.ErrInvalidOption) {
 			t.Fatalf("expected invalid option, got %v", err)
 		}
@@ -160,7 +160,7 @@ func TestConcurrentClientsAndSnapshotsAreIndependent(t *testing.T) {
 
 func TestSessionCancellationAndClose(t *testing.T) {
 	t.Parallel()
-	c, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "tenant"})
+	c, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"})
 	if err != nil {
 		t.Fatal(err)
 	}

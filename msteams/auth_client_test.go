@@ -157,14 +157,14 @@ func TestExternalProviderRejectsInvalidConfigurationAndRedactsErrors(t *testing.
 	}
 }
 
-func TestSessionDoesNotPretendUnimplementedProviderCanAcquire(t *testing.T) {
+func TestManagedIdentitySessionRejectsUnknownAudience(t *testing.T) {
 	t.Parallel()
-	sdk, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "tenant"})
+	sdk, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"})
 	if err != nil {
 		t.Fatal(err)
 	}
 	closeClient(t, sdk)
-	if _, err := sdk.GraphAPI.Scope().Session().AcquireToken(t.Context(), "graph"); !errors.Is(err, client.ErrProviderUnavailable) {
+	if _, err := sdk.GraphAPI.Scope().Session().AcquireToken(t.Context(), "graph"); !errors.Is(err, auth.ErrUnsupportedAudience) {
 		t.Fatalf("adapter status: %v", err)
 	}
 }

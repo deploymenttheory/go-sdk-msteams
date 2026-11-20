@@ -10,8 +10,8 @@ Construction validates authentication selection, required credential presence, i
 credential combinations and HTTP settings. It does not authenticate, call assertion
 callbacks, read assertion files, parse certificate/key material, validate token signatures
 or check token expiry. Supplied-token and injected-provider acquisition now check expiry
-when an operation requests a token; certificate/client-secret acquisition is implemented; delegated, managed-identity and workload
-identity adapters remain separate AUTH tickets.
+when an operation requests a token. Explicit application, delegated, managed-identity and
+workload-identity providers are implemented; their live qualification varies by flow.
 A successfully constructed client is not proof that credentials work or an operation is
 supported. Resource methods are added with their research and implementation tickets.
 
@@ -59,7 +59,7 @@ for their intended concurrent use. The SDK does not shut them down.
 | `MSTEAMS_CLIENT_SECRET` | Client-secret material |
 | `MSTEAMS_USERNAME`, `MSTEAMS_PASSWORD` | Password-flow material |
 | `MSTEAMS_CERTIFICATE_PEM`, `MSTEAMS_PRIVATE_KEY_PEM` | Supplied certificate/key bytes |
-| `MSTEAMS_ASSERTION_FILE` | Workload assertion file path (read by the future provider) |
+| `MSTEAMS_ASSERTION_FILE` | Workload assertion file path (read on fresh acquisition, never construction) |
 | `MSTEAMS_ACCESS_TOKENS` | JSON object keyed by audience; values have `access_token` and RFC3339 `expires_at` |
 | `MSTEAMS_TOKEN_MODE` | `delegated` or `application`, for supplied tokens |
 | `MSTEAMS_IDENTITY_ID` | Supplied-token identity binding |
@@ -88,14 +88,16 @@ continuation/discovery destination and cannot be combined with Path/Query. Other
 cloud profiles and ambiguous destinations fail before credentials are acquired. Resource
 services remain responsible for evidenced API paths and payloads.
 
-`Do` sends one attempt and never follows redirects. It returns buffered Resty response
+`Do` applies the bounded request policy to explicitly replay-safe operations and never
+follows redirects. It returns buffered Resty response
 metadata with closed bodies, caps responses at `client.MaxResponseBytes` (8 MiB), and
 decodes nonempty successful JSON into the supplied result. Nil result preserves raw
 response access. Non-2xx responses return `*client.APIError` with status, service codes
 and diagnostic IDs; standard error formatting omits untrusted server values. Raw response
 headers/bodies, explicit diagnostic fields and request payloads may contain tenant data.
 Transport/decode failures use safe sentinel errors and context cancellation is preserved.
-Automatic retries, paging, binary uploads and downloads are separate HTTP tickets.
+Retry controls are described below; paging, binary uploads and downloads remain separate
+HTTP tickets.
 See [HTTP-01 evidence and tests](../implementation/http/routing-evidence.md).
 
 HTTP timeout defaults to 30 seconds. An injected client's positive timeout is retained
@@ -285,3 +287,41 @@ use bounded jittered backoff and retain cancellation. A valid server delay excee
 the remaining budget returns an error rather than retrying early. Token replacement
 on 401 additionally requires operation opt-in and a provider with noninteractive refresh
 support. See [request execution evidence](../implementation/http-retry-evidence.md).
+
+## Managed identity and workload federation
+
+For managed identity, set `Method: auth.ManagedIdentity` and the hosting identity's
+home tenant. An optional GUID `ClientID` selects a user-assigned identity where the
+platform supports it. Azure Identity selects the platform endpoint at acquisition;
+there is no developer credential chain. The SDK snapshots the platform environment
+at construction, rejects later changes and confines requests to that endpoint.
+Standalone acquisitions have a 30-second bound. Missing endpoints produce
+`auth.ErrManagedIdentityUnavailable`; rejected identities/resources produce
+`auth.ErrManagedIdentityRejected`. A configured tenant is a binding, not a request
+to move a managed identity to another tenant.
+
+For CI or Kubernetes workload federation:
+
+```go
+sdk, err := msteams.NewClient(&auth.Config{
+    Method:        auth.WorkloadIdentity,
+    TenantID:      tenantID,
+    ClientID:      applicationID,
+    AssertionFile: assertionPath,
+})
+```
+
+The alternative `Assertion: func(context.Context) (string, error)` callback obtains
+an assertion from the caller's issuer integration. Select exactly one source. The
+source must match an Entra federated identity credential's issuer, subject and audience;
+Entra validates it. Each fresh resource exchange reloads the source, while valid access
+tokens remain cached per audience. Files/callback values are limited to 1 MiB, never
+printed, and never read or called during construction. Missing, empty or oversized
+sources return `auth.ErrAssertionUnavailable`. Issuer/Entra rejection is a safe token
+service error; no secret or interactive fallback occurs.
+
+The compiled [provider examples](../../msteams/auth/workload_example_test.go) perform no
+network activity. The manual `Workload authentication lab` GitHub workflow exercises
+both assertion sources on Linux, macOS and Windows after explicitly configuring lab
+federation. It uses ephemeral OIDC assertions and a read-only Graph request. See
+[AUTH-04 evidence and limits](../implementation/auth/machine-identity-evidence.md).
