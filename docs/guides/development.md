@@ -29,8 +29,7 @@ compile gates, not authentication behaviour tests. They do not construct credent
 start browser sign-in, read tenant environment variables or contact Microsoft services.
 As adapters are implemented, their meaningful tests replace this temporary compile gate.
 
-Do not interpret a pinned dependency as an implemented provider. The root currently
-exports only the target baseline constant. FND-02 owns client construction; AUTH and HTTP
+Do not interpret a pinned dependency as an implemented provider. The root provides local client construction and session lifecycle. AUTH and HTTP
 tickets own provider and transport behaviour. Resource packages are created with their
 implementations, without placeholder methods that pretend to support operations.
 
