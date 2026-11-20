@@ -31,3 +31,7 @@ Command reconciliation is implemented by `reconcile.py`. See
 [the 8.1.0 evidence report](../../contracts/powershell/8.1.0/reconciliation.md)
 for conditional exports, nested candidates, unresolved names and reproduction steps.
 It preserves all candidates; metadata findings never imply implementation or live coverage.
+
+Current implementation and verification states are maintained separately in the
+[capability ledger](../../contracts/coverage/README.md); discovery never marks a
+capability implemented or tested.
