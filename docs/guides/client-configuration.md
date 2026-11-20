@@ -201,3 +201,35 @@ credential diagnostics are not exposed, including through unwrapping. Certificat
 The standalone [provider example](../../msteams/auth/application_example_test.go) demonstrates
 ownership without authenticating. See [AUTH-02 evidence and prerequisites](../implementation/auth/client-credentials-evidence.md)
 for app registration/consent, role categories, tested contracts and remaining live qualification.
+
+## Reusing an Azure Identity credential
+
+`auth.NewAzureTokenProvider` accepts the `azcore.TokenCredential` interface used by
+Microsoft Graph's Go authentication provider. It enables reuse of an explicitly chosen
+Azure Identity credential through `msteams.WithTokenProvider(binding, provider)`:
+
+```go
+binding := auth.Binding{
+    TenantID: tenantID,
+    Cloud: "commercial",
+    IdentityID: accountIdentity,
+    Mode: auth.Delegated,
+}
+provider, err := auth.NewAzureTokenProvider(binding, credential)
+if err != nil {
+    return err
+}
+sdk, err := msteams.NewClient(nil, msteams.WithTokenProvider(binding, provider))
+if err != nil {
+    return err
+}
+defer sdk.Close()
+```
+
+The caller configures `credential` for the stated tenant, identity, cloud and mode;
+application credentials use `auth.Application`. The adapter requests explicit Graph or
+Teams `/.default` scopes and forwards the tenant and context to `GetToken`. It leaves
+caching and credential lifetime with the caller. Closing the SDK does not close or clear
+the borrowed credential. The SDK does not add an implicit default credential chain or
+change the credential's interactive behavior. Configure that behavior explicitly when
+constructing Azure Identity browser or device credentials.
