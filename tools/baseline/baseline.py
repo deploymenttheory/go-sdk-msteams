@@ -116,6 +116,8 @@ def run_runtime(module, output, version, pwsh='pwsh'):
 def canonical_runtime(runtime, version):
     if runtime.get('module_version') != version or runtime.get('authenticated') is not False:
         raise DiscoveryError('Runtime version/authentication provenance mismatch')
+    if not runtime.get('powershell_version') or not runtime.get('platform'):
+        raise DiscoveryError('Runtime environment provenance is missing')
     commands = runtime.get('commands')
     if not isinstance(commands, list) or not commands:
         raise DiscoveryError('Empty runtime inventory')
@@ -127,15 +129,21 @@ def canonical_runtime(runtime, version):
             raise DiscoveryError('Invalid or duplicate runtime command')
         seen.add(name.casefold())
         sets = command.get('parameter_sets')
-        if not isinstance(sets, list) or not sets or not command.get('command_type'):
+        if not isinstance(sets, list) or not sets or not command.get('command_type') or not isinstance(command.get('output_types'), list):
             raise DiscoveryError('Incomplete runtime command metadata: ' + name)
         for group in sets:
-            if not group.get('name') or not isinstance(group.get('parameters'), list):
+            if not group.get('name') or not isinstance(group.get('parameters'), list) or not isinstance(group.get('is_default'), bool):
                 raise DiscoveryError('Incomplete parameter set: ' + name)
             for param in group['parameters']:
                 if not param.get('name') or not param.get('type') or not isinstance(param.get('mandatory'), bool):
                     raise DiscoveryError('Incomplete parameter metadata: ' + name)
-                param['aliases'] = sorted(param.get('aliases', []))
+                if (not isinstance(param.get('position'), int)
+                        or not isinstance(param.get('aliases'), list)
+                        or not isinstance(param.get('validation'), list)
+                        or not isinstance(param.get('pipeline_input'), bool)
+                        or not isinstance(param.get('pipeline_by_property'), bool)):
+                    raise DiscoveryError('Incomplete parameter attributes: ' + name)
+                param['aliases'] = sorted(param['aliases'])
             group['parameters'].sort(key=lambda p: p['name'].casefold())
         command['parameter_sets'] = sorted(sets, key=lambda s: s['name'])
         command['output_types'] = sorted(command.get('output_types', []))

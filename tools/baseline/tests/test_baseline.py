@@ -21,9 +21,10 @@ class BaselineTests(unittest.TestCase):
         self.addCleanup(self.work.cleanup)
         self.root = pathlib.Path(self.work.name)
         self.archive = self.root/'module.zip'
-        self.runtime = dict(module_version='8.1.0', authenticated=False, commands=[dict(
+        self.runtime = dict(module_version='8.1.0', authenticated=False, powershell_version='7.6.6', platform='test', commands=[dict(
             name='Get-Team',command_type='Cmdlet',output_types=['Team'],parameter_sets=[dict(
-                name='Default',parameters=[dict(name='GroupId',type='System.String',mandatory=False)])])])
+                name='Default',is_default=True,parameters=[dict(name='GroupId',type='System.String',mandatory=False,
+                    position=0,aliases=[],validation=[],pipeline_input=False,pipeline_by_property=False)])])])
         with zipfile.ZipFile(self.archive,'w') as archive:
             archive.writestr('MicrosoftTeams.psd1', "@{ ModuleVersion = '8.1.0'; CmdletsToExport = @('Get-Team') }")
             archive.writestr('en-US/MicrosoftTeams-help.xml','<helpItems><command><details><name>Get-Team</name></details></command></helpItems>')
@@ -76,6 +77,8 @@ class BaselineTests(unittest.TestCase):
         cases=[dict(self.runtime,commands=[]),dict(self.runtime,module_version='8.2.0'),dict(self.runtime,authenticated=True)]
         incomplete=copy.deepcopy(self.runtime);incomplete['commands'][0]['parameter_sets']=[];cases.append(incomplete)
         duplicate=copy.deepcopy(self.runtime);duplicate['commands']*=2;cases.append(duplicate)
+        attributes=copy.deepcopy(self.runtime);del attributes['commands'][0]['parameter_sets'][0]['parameters'][0]['validation'];cases.append(attributes)
+        output_types=copy.deepcopy(self.runtime);del output_types['commands'][0]['output_types'];cases.append(output_types)
         for value in cases:
             with self.subTest(value=value),self.assertRaises(baseline.DiscoveryError):
                 baseline.canonical_runtime(value,'8.1.0')
