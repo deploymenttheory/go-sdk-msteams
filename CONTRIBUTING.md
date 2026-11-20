@@ -1,17 +1,15 @@
-# Contribution
+# Contributing
 
-Thanks for considering contributing to this project! We are really glad you are reading this, because we need volunteer developers to help this project come to fruition.
+Use the [implementation backlog](https://github.com/deploymenttheory/go-sdk-msteams/issues/6) to select work whose direct prerequisites are satisfied. Read the ticket, its source contracts and the [implementation baseline](docs/implementation/plan.md) before changing an interface.
 
-Please note we have a code of conduct, please follow it in all your interactions with the project.
+## Architecture and services
 
-## Issues
+Follow the [service development guide](docs/guides/service-development.md) and numbered [client](docs/decisions/0001-client-and-service-composition.md), [authentication](docs/decisions/0002-portable-authentication.md) and [backend](docs/decisions/0003-backend-contracts-and-compatibility.md) decisions. Match the agreed Jamf-style structure and public conventions. Research unknown Teams routes and payloads before implementing them.
 
-If you find any bugs, please file an issue in the [GitHub issues][GitHubIssues] page. Please fill out the provided template with the appropriate information.
+## Evidence and verification
 
-If you are taking the time to mention a problem, even a seemingly minor one, it is greatly appreciated, and a totally valid contribution to this project. Thank you!
+Reproduce metadata with the [baseline tool](tools/baseline/README.md). Run its offline tests and backlog validator for discovery changes. Go build, lint, unit/race and example checks are introduced by FND-01; service work must use those gates once available. Keep contract-tested and live-tested evidence separate, and never commit tenant credentials or raw tenant captures.
 
-<!-- References -->
+Pull requests should name the ticket and concrete behaviour, include verification results, and explain compatibility impacts. Wait for green CI before merging. Fix a failing existing PR before accumulating more unfinished work. Do not close an epic solely because its children are closed; verify its integrated acceptance conditions.
 
-<!-- Local -->
-[GitHubIssues]: <https://github.com/segraef/Template/issues>
-[Contributing]: CONTRIBUTING.md
+Report bugs through [GitHub issues](https://github.com/deploymenttheory/go-sdk-msteams/issues). Follow the [code of conduct](CODE_OF_CONDUCT.md).
