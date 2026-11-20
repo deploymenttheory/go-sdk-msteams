@@ -37,6 +37,11 @@ bindings are checked for application and delegated configuration across all
 seven built-in routing profiles. These are routing checks, not cloud/mode
 eligibility or live support claims.
 
+Native list traversal selects the shared HTTP 200 expectation. Tests reject
+collection-shaped 202/206 responses before accepting items or completion, while
+preserving their response metadata. The optional shared guard was independently
+verified and merged through [PR #236](https://github.com/deploymenttheory/go-sdk-msteams/pull/236).
+
 Operation tests retain accepted response metadata on invalid handles, reject
 foreign/unrelated/wrong-team status routes, and check known/unknown/failed states
 and opaque target metadata. Virtual time verifies the 31-second cadence,

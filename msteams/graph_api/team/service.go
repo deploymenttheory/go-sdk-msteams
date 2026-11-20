@@ -169,7 +169,7 @@ func (s *Service) NewPager(options ListOptions) (*client.Pager[Team], error) {
 	req := request(http.MethodGet, "teams")
 	req.Query, req.Replay = query, client.ReplaySafe
 	return client.NewPager(s.scope, req, decodePage,
-		client.PagingOptions{Style: client.LinkPaging, MaxPages: options.MaxPages, MaxItems: options.MaxItems})
+		client.PagingOptions{Style: client.LinkPaging, MaxPages: options.MaxPages, MaxItems: options.MaxItems, ExpectedStatus: http.StatusOK})
 }
 
 // List collects all native pages within the supplied bounds. On error its
