@@ -1,8 +1,9 @@
 # AUTH-02 client credential evidence and implementation notes
 
-Status: implemented with isolated token-service contract tests. No tenant credentials
-have been supplied and no app-only live result is claimed. Management resource coverage
-and Connect/Disconnect completeness remain separate capability-ledger states.
+Status: implemented with isolated token-service contract tests. Subsequent
+[lab qualification](live-application-validation.md) verifies secret and PEM certificate
+authentication with both resource audiences. Management resource coverage and
+Connect/Disconnect completeness remain separate capability-ledger states.
 
 ## Evidence boundary
 

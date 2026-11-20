@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -22,6 +23,17 @@ type APIError struct {
 	OperationIDs       []string
 	DiagnosticCodes    []int
 	DiagnosticSubCodes []int
+}
+
+// Is classifies HTTP credential rejection and forbidden access. A 403 does not
+// prove a missing role: consent, policy and resource access can also forbid a call.
+// Other status codes never imply an unsupported mode or absent tenant feature.
+func (e *APIError) Is(target error) bool {
+	if e == nil {
+		return false
+	}
+	return (target == auth.ErrUnauthenticated && e.StatusCode == http.StatusUnauthorized) ||
+		(target == auth.ErrForbidden && e.StatusCode == http.StatusForbidden)
 }
 
 func (e *APIError) Error() string {

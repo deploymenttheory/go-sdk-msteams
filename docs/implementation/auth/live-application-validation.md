@@ -28,5 +28,8 @@ secret-free report and repeatable validator are stored with the private lab setu
 
 This qualifies those application-token and transport paths only. It does not qualify
 Teams management authorization, resource command parity, tenant policy mutations,
-delegated sign-in, managed identity or workload federation. AUTH-04 remains in progress;
-resource services and their command ledger entries retain their existing status.
+delegated sign-in, managed identity or workload federation. AUTH-04 subsequently added
+machine identity providers with offline contracts; live GitHub federation setup awaits
+explicit approval. Resource services and their command ledger entries retain their
+existing status. AUTH-05's [access qualification](capability-evidence.md) adds explicit
+permitted/forbidden/unauthenticated checks without extending the lab app's grants.

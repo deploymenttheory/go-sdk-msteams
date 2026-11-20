@@ -341,3 +341,9 @@ pages and aggregation to 100,000 items. Consume each pager serially; separate pa
 run concurrently. Original query/header/body values are copied during construction.
 See [pagination evidence](../implementation/http/pagination-evidence.md) for protocol
 mappings, limit behavior and tests.
+
+## Authentication capability reporting
+
+See the [portable authentication guide](authentication.md) for all flow inputs,
+current command restrictions, permission boundaries and operation error categories.
+An acquired token is not a claim that a management operation is authorized.
