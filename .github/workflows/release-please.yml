@@ -9,6 +9,12 @@ permissions:
 
 name: release-please
 
+# Every run updates the same release PR branch. Finish an active update before
+# processing the newest queued main revision; concurrent ref writes can race.
+concurrency:
+  group: release-please-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   release-please:
     name: '🔖 Release Please'
