@@ -24,6 +24,11 @@ remaining fixtures and the explicit closure gates in the notes are still require
 CORE-01 remains open. The initial findings below are investigation history, and the
 detailed notes settle some of the questions they identify.
 
+The [policy routing investigation](policy-routing-evidence.md) additionally traces
+same-origin forest discovery, bootstrap flight parsing and target headers; source
+inspection does not establish universal modern-endpoint acceptance for unflighted
+tenants.
+
 ## Sources and procedure
 
 Inspected on 2026-11-20 with the pinned MicrosoftTeams 8.1.0 package. Package SHA256: `78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7`. The [normalized runtime](../../../contracts/powershell/8.1.0/runtime.json) remains the parameter-set source.

@@ -21,6 +21,11 @@ Confidence is **high for static serialization/dispatch behavior**, **conditional
 
 ## Shared transport and authentication boundary
 
+The follow-up [routing investigation](policy-routing-evidence.md) settles the
+native discovery request and flight-list bootstrap, including the target-URI
+header and local-only override source. It retains the unflighted-tenant service
+acceptance question explicitly.
+
 All remote routes in this note use the Config API profile. Generated template/policy requests initially contain `https://api.interfaces.records.teams.microsoft.com`; generated deployment requests initially contain `https://skypeanalyticsapi-dev.trafficmanager.net`. **The latter is not the actual selected production authority.** `Module.CreatePipeline` appends `Module.SendAsync`, which invokes `SendAsyncCallback.AddSessionInfoToHttpRequest`; that callback replaces the host and port with `sessionInfo.ConfigApiEndpoint` before sending. It adds `Authorization: Bearer <session access token>`, `X-MS-CmdletName`, `X-MS-Correlation-Id`, module user-agent, and `Accept-Encoding: br, gzip, deflate`. It discovers the RPS forest when necessary and adds its HTTPS origin as `X-MS-Target-Uri`. Tenant-ID headers are conditional (Torus/internal context, HostedMigration, or Teams.Mms), not unconditional for these families. [P: `Generated.Module.SendAsync/CreatePipeline`; `SendAsyncCallback.AddSessionInfoToHttpRequest/AttachTargetUriHeaderToAutoRestCmdlets/AttachTenantIdHeaderToAutoRestCmdlets`.]
 
 Use the shared audience `48ac35b8-9aa8-4d74-927d-1f4a14a0b239` and evidenced cloud/session origins in [session evidence](../auth/session-evidence.md) and [routing evidence](../http/routing-evidence.md). Do not authenticate these routes with Graph tokens or expose the generated development origin as a service profile. Sovereign profile existence does not demonstrate that every operation is deployed in that cloud. Exact least-privilege roles, application-permission eligibility, and per-cloud availability remain unqualified for these commands.
