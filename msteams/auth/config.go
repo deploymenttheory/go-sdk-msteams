@@ -211,8 +211,15 @@ func (c *Config) TokenBinding() Binding {
 	if cloud == "" {
 		cloud = "commercial"
 	}
-	if c.Method == Certificate || c.Method == ClientSecret {
+	if c.Method == Certificate || c.Method == ClientSecret || c.Method == WorkloadIdentity {
 		return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: c.ClientID, Mode: Application}
+	}
+	if c.Method == ManagedIdentity {
+		identity := c.ClientID
+		if identity == "" {
+			identity = "system-assigned"
+		}
+		return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: identity, Mode: Application}
 	}
 	if c.Method == Browser || c.Method == DeviceCode || c.Method == Password {
 		return Binding{TenantID: c.TenantID, Cloud: cloud, IdentityID: c.ClientID, Mode: Delegated}

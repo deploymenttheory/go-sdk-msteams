@@ -58,12 +58,18 @@ func NewSession(cfg *auth.Config, httpClient *http.Client, cleanup func(), optio
 			return nil, err
 		}
 		provider, closeProvider = delegated, delegated.Close
-	case auth.Certificate, auth.ClientSecret:
+	case auth.Certificate, auth.ClientSecret, auth.WorkloadIdentity:
 		application, err := auth.NewApplicationProvider(cfg, httpClient)
 		if err != nil {
 			return nil, err
 		}
 		provider, closeProvider = application, application.Close
+	case auth.ManagedIdentity:
+		managed, err := auth.NewManagedIdentityProvider(cfg, httpClient)
+		if err != nil {
+			return nil, err
+		}
+		provider, closeProvider = managed, managed.Close
 	case auth.SuppliedTokens:
 		supplied, err := auth.NewSuppliedTokenProvider(binding, cfg.AccessTokens)
 		if err != nil {

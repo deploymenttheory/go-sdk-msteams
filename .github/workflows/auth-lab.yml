@@ -1,0 +1,40 @@
+name: Workload authentication lab
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GOFLAGS: -mod=readonly
+  GOTOOLCHAIN: local
+
+jobs:
+  workload:
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      MSTEAMS_LIVE_AUTH: '1'
+      MSTEAMS_TENANT_ID: ${{ secrets.MSTEAMS_LAB_TENANT_ID }}
+      MSTEAMS_CLIENT_ID: ${{ secrets.MSTEAMS_LAB_CLIENT_ID }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5
+        with:
+          go-version-file: go.mod
+      - name: Prepare ephemeral workload assertion
+        run: python3 tools/lab/github_oidc.py
+      - name: Verify SDK assertion sources and both resource audiences
+        run: go test -count=1 -v -timeout 5m ./tests/integration/auth
+      - name: Remove ephemeral assertion
+        if: always()
+        run: python3 tools/lab/github_oidc.py --cleanup

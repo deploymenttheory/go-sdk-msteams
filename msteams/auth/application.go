@@ -32,7 +32,7 @@ var (
 	tenantLabel             = regexp.MustCompile(`^[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?$`)
 )
 
-// ApplicationProvider acquires client-secret or certificate tokens using MSAL Go.
+// ApplicationProvider acquires secret, certificate or workload tokens using MSAL Go.
 // It owns copied credentials and an audience-isolated refresh cache. Constructors
 // perform no network calls, certificate parsing, file reads or store lookups.
 type ApplicationProvider struct {
@@ -50,8 +50,8 @@ func NewApplicationProvider(cfg *Config, httpClient *http.Client) (*ApplicationP
 	if err := cfg.Validate(); err != nil {
 		return nil, err
 	}
-	if cfg.Method != Certificate && cfg.Method != ClientSecret {
-		return nil, &ConfigError{Field: "method", Reason: "requires certificate or client-secret"}
+	if cfg.Method != Certificate && cfg.Method != ClientSecret && cfg.Method != WorkloadIdentity {
+		return nil, &ConfigError{Field: "method", Reason: "requires certificate, client-secret or workload-identity"}
 	}
 	binding := cfg.TokenBinding()
 	if binding.Cloud != "commercial" {
@@ -107,7 +107,7 @@ func (p *ApplicationProvider) acquire(ctx context.Context, request TokenRequest)
 	if err := ctx.Err(); err != nil {
 		return Token{}, err
 	}
-	credential, err := applicationCredential(cfg, time.Now())
+	credential, err := applicationCredential(ctx, cfg, time.Now())
 	if err != nil {
 		return Token{}, err
 	}
@@ -133,7 +133,16 @@ func (p *ApplicationProvider) acquire(ctx context.Context, request TokenRequest)
 	return Token{AccessToken: result.AccessToken, ExpiresAt: result.ExpiresOn}, nil
 }
 
-func applicationCredential(cfg *Config, now time.Time) (confidential.Credential, error) {
+func applicationCredential(ctx context.Context, cfg *Config, now time.Time) (confidential.Credential, error) {
+	if cfg.Method == WorkloadIdentity {
+		assertion, err := workloadAssertion(ctx, cfg)
+		if err != nil {
+			return confidential.Credential{}, err
+		}
+		return confidential.NewCredFromAssertionCallback(func(ctx context.Context, _ confidential.AssertionRequestOptions) (string, error) {
+			return assertion, ctx.Err()
+		}), nil
+	}
 	if cfg.Method == ClientSecret {
 		cred, err := confidential.NewCredFromSecret(cfg.ClientSecret)
 		if err != nil {
@@ -163,6 +172,8 @@ func clearApplicationMaterial(cfg *Config) {
 	clear(cfg.PFX)
 	clear(cfg.PFXPassword)
 	cfg.ClientSecret = ""
+	cfg.Assertion = nil
+	cfg.AssertionFile = ""
 }
 
 // Close cancels refreshes and clears owned credential/cache references. It does not

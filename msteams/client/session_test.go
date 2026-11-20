@@ -16,7 +16,7 @@ import (
 func TestConcurrentCloseCleansOwnedResourcesOnce(t *testing.T) {
 	t.Parallel()
 	var cleaned atomic.Int32
-	session, err := client.NewSession(&auth.Config{Method: auth.ManagedIdentity, TenantID: "tenant"},
+	session, err := client.NewSession(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"},
 		&http.Client{}, func() { cleaned.Add(1) })
 	if err != nil {
 		t.Fatal(err)
@@ -36,7 +36,7 @@ func TestConcurrentCloseCleansOwnedResourcesOnce(t *testing.T) {
 
 func TestOperationContextPreservesDeadlineAndRejectsInvalidState(t *testing.T) {
 	t.Parallel()
-	session, err := client.NewSession(&auth.Config{Method: auth.ManagedIdentity, TenantID: "tenant"}, &http.Client{}, nil)
+	session, err := client.NewSession(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"}, &http.Client{}, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
