@@ -116,3 +116,25 @@ methods/routes/statuses. CI runs it on all three platforms. String AppIds and
 explicit legacy object-item shapes have separate helper cases: object conversion
 retains data properties and removes serialization metadata, even though the
 helper is called with string item type. Helper acceptance is not server acceptance.
+
+## Special service profiles
+
+`8.1.0/special-service-profiles.json` binds four additional origin/audience/scope
+profiles to eleven hierarchy/region/private-channel-migration primitives and five
+commands. It retains exact cloud path prefixes, isolated helper rejections and missing
+qualification separately. Native profile/token/cache support remains pending.
+
+`capture-special-profiles.ps1` checks both pinned assemblies and reads their static
+environment map directly, bypassing the override-file getter. It runs selectors
+on cloned environments and the pure private base-URI selector, then restores the
+static selection. Seven cloud observations are checked in
+`fixtures/special-profile-selection.json`. GCC's name mapper rejection and its
+separate AzureCloud-based targeting selection remain distinct observations.
+Default GCC login also retains AzureCloud's region tuple; the isolated region
+helper rejecting TeamsGCC does not establish a full-command/service rejection.
+
+The normal verifier recaptures these cases with tenant credentials excluded and
+counts them separately as `recaptured_profile_cases`. Contract validation rejects
+origin/audience substitution, loss of Region.Read.All, changed sovereign prefixes,
+scope/profile mismatches and mutation replay. These checks establish source-map
+agreement, not authentication, service availability or implementation readiness.

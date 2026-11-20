@@ -10,6 +10,29 @@ SPEC.loader.exec_module(models)
 
 
 class ModelEvidenceTests(unittest.TestCase):
+    def test_special_profiles_keep_origin_audience_scope_and_cloud_prefix_distinct(self):
+        value = models.read(models.SPECIAL_PROFILES)
+        inventory = models.read(models.CONTRACT)
+        self.assertEqual(models.validate_special_profiles(value, inventory), (4, 11, 5))
+        mutations = [
+            lambda v: v.update(status='accepted'),
+            lambda v: v['profiles'].pop(),
+            lambda v: v['profiles'][0].update(audience='https://retailservices.gcc.teams.microsoft.com'),
+            lambda v: v['profiles'][1]['cloud_routes']['commercial'].update(origin='https://chatsvcagg.teams.microsoft.com'),
+            lambda v: v['profiles'][2].update(delegated_scope='https://migrationsvc.teams.microsoft.com/.default'),
+            lambda v: v['profiles'][3]['cloud_routes']['gcch'].update(prefix='/fabric/templates/api'),
+            lambda v: v['profiles'][3]['audiences_by_cloud'].update(gcch='https://templates.teams.microsoft.com'),
+            lambda v: v['profiles'][0].update(isolated_selector_rejects=[]),
+            lambda v: v['operations'][0].update(profile='regions'),
+            lambda v: v['operations'][0].update(replay_safe=True),
+            lambda v: v['commands'][0]['parameter_sets'].clear(),
+        ]
+        for mutate in mutations:
+            changed = copy.deepcopy(value)
+            mutate(changed)
+            with self.assertRaises(ValueError):
+                models.validate_special_profiles(changed, inventory)
+
     def test_compositions_bind_runtime_sets_and_reject_broken_evidence(self):
         value = models.read(models.COMPOSITIONS)
         inventory = models.read(models.CONTRACT)
