@@ -42,8 +42,13 @@ empty arrays/false, sparse policy input and deployment wire-field casing. The
 deployment Base64 value is synthetic and is not a valid deployment archive. This
 is model serialization evidence, not a tenant request fixture.
 
+Response/error round trips additionally cover template envelopes, deployment IDs,
+policy additional fields, hierarchy status projection, known Graph operation
+states, lost operation-error information and unknown-enum rejection. See
+[response evidence](../../docs/implementation/core/response-model-evidence.md).
+
 Run `python tools/contracts/verify_models.py` for inventory checks, or add
-`--module /path/to/verified/module` to reproduce all 21 model cases. `--acquire`
+`--module /path/to/verified/module` to reproduce all 38 model cases. `--acquire`
 downloads the pinned archive, verifies its exact SHA512, safely extracts it and
 runs both captures in temporary paths with tenant/CI credentials excluded from
 the child environment. CI exercises that mode on Linux, macOS and Windows.

@@ -284,6 +284,218 @@
         "DeploymentCsvs": "Rml4dHVyZQ==",
         "UsersToNotify": "fixture@example.invalid"
       }
+    },
+    {
+      "input": "{\"operationId\":\"fixture-operation\",\"errors\":[{\"code\":\"FixtureFailure\",\"message\":\"Fixture message\",\"action\":\"Fixture action\"}],\"futureField\":true}",
+      "name": "template-error-envelope",
+      "source": "Models.TeamTemplateErrorResponse.FromJsonString/ToJsonString",
+      "wire": {
+        "errors": [
+          {
+            "action": "Fixture action",
+            "code": "FixtureFailure",
+            "message": "Fixture message"
+          }
+        ],
+        "operationId": "fixture-operation"
+      }
+    },
+    {
+      "input": "{\"errors\":[]}",
+      "name": "template-error-empty-errors",
+      "source": "Models.TeamTemplateErrorResponse.FromJsonString/ToJsonString",
+      "wire": {
+        "errors": []
+      }
+    },
+    {
+      "input": "{\"value\":[{\"id\":\"fixture\",\"name\":\"Fixture\",\"channelCount\":1,\"appCount\":0,\"locale\":\"en-US\",\"@odata.id\":\"/api/teamtemplates/v1.0/fixture/Tenant/en-US\"}]}",
+      "name": "template-list-response",
+      "source": "Models.GetTemplatesResponse.FromJsonString/ToJsonString",
+      "wire": {
+        "value": [
+          {
+            "@odata.id": "/api/teamtemplates/v1.0/fixture/Tenant/en-US",
+            "appCount": 0,
+            "channelCount": 1,
+            "id": "fixture",
+            "locale": "en-US",
+            "name": "Fixture"
+          }
+        ]
+      }
+    },
+    {
+      "input": "{\"value\":{\"teamDefinition\":{\"displayName\":\"Fixture\",\"channels\":[]},\"extendedProperties\":{\"shortDescription\":\"Summary\"}}}",
+      "name": "template-detail-response",
+      "source": "Models.GetTemplateDetailResponse.FromJsonString/ToJsonString",
+      "wire": {
+        "value": {
+          "channels": [],
+          "discoverySettings": {
+            "showInTeamsSearchAndSuggestions": false
+          },
+          "displayName": "Fixture",
+          "funSettings": {
+            "allowCustomMemes": false,
+            "allowGiphy": false,
+            "allowStickersAndMemes": false
+          },
+          "guestSettings": {
+            "allowCreateUpdateChannels": false,
+            "allowDeleteChannels": false
+          },
+          "memberSettings": {
+            "allowAddRemoveApps": false,
+            "allowCreatePrivateChannels": false,
+            "allowCreateUpdateChannels": false,
+            "allowCreateUpdateRemoveConnectors": false,
+            "allowCreateUpdateRemoveTabs": false,
+            "allowDeleteChannels": false,
+            "uploadCustomApp": false
+          },
+          "messagingSettings": {
+            "allowChannelMentions": false,
+            "allowOwnerDeleteMessages": false,
+            "allowTeamMentions": false,
+            "allowUserDeleteMessages": false,
+            "allowUserEditMessages": false
+          },
+          "shortDescription": "Summary"
+        }
+      }
+    },
+    {
+      "input": "{\"instanceId\":\"fixture-instance\",\"executionId\":\"fixture-execution\"}",
+      "name": "deployment-accepted-response",
+      "source": "Models.FlwoServiceModelsFlwosBatchRequestResponse.FromJsonString/ToJsonString",
+      "wire": {
+        "executionId": "fixture-execution",
+        "instanceId": "fixture-instance"
+      }
+    },
+    {
+      "input": "{\"code\":\"FixtureFailure\",\"message\":\"Fixture message\",\"action\":\"Fixture action\",\"futureField\":true}",
+      "name": "policy-error-envelope",
+      "source": "Models.ErrorResponse.FromJsonString/ToJsonString",
+      "wire": {
+        "action": "Fixture action",
+        "code": "FixtureFailure",
+        "message": "Fixture message"
+      }
+    },
+    {
+      "input": "{\"Identity\":\"Global\",\"FutureFlag\":false,\"FutureValues\":[]}",
+      "name": "policy-unknown-fields-preserved",
+      "source": "Models.XdsConfiguration.FromJsonString/ToJsonString",
+      "wire": {
+        "FutureFlag": false,
+        "FutureValues": [],
+        "Identity": "Global"
+      }
+    },
+    {
+      "input": "{}",
+      "name": "template-error-empty-object",
+      "source": "Models.TeamTemplateErrorResponse.FromJsonString/ToJsonString",
+      "wire": {}
+    },
+    {
+      "input": "{\"id\":\"fixture-operation\",\"status\":\"NotStarted\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}",
+      "name": "hierarchy-status-projection-NotStarted",
+      "source": "GetTeamTargetingHierarchyStatus.Result(HierarchyServiceOperation)",
+      "wire": {
+        "fileName": "fixture.csv",
+        "id": "fixture-operation",
+        "lastUpdatedAt": "2026-01-01T00:00:00Z",
+        "status": "Starting"
+      }
+    },
+    {
+      "input": "{\"id\":\"fixture-operation\",\"status\":\"Running\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}",
+      "name": "hierarchy-status-projection-Running",
+      "source": "GetTeamTargetingHierarchyStatus.Result(HierarchyServiceOperation)",
+      "wire": {
+        "fileName": "fixture.csv",
+        "id": "fixture-operation",
+        "lastUpdatedAt": "2026-01-01T00:00:00Z",
+        "status": "Ingesting"
+      }
+    },
+    {
+      "input": "{\"id\":\"fixture-operation\",\"status\":\"Succeeded\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}",
+      "name": "hierarchy-status-projection-Succeeded",
+      "source": "GetTeamTargetingHierarchyStatus.Result(HierarchyServiceOperation)",
+      "wire": {
+        "fileName": "fixture.csv",
+        "id": "fixture-operation",
+        "lastUpdatedAt": "2026-01-01T00:00:00Z",
+        "status": "Successful"
+      }
+    },
+    {
+      "input": "{\"id\":\"fixture-operation\",\"status\":\"Failed\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}",
+      "name": "hierarchy-status-projection-Failed",
+      "source": "GetTeamTargetingHierarchyStatus.Result(HierarchyServiceOperation)",
+      "wire": {
+        "fileName": "fixture.csv",
+        "id": "fixture-operation",
+        "lastUpdatedAt": "2026-01-01T00:00:00Z",
+        "status": "Failed"
+      }
+    },
+    {
+      "input": "{\"id\":\"fixture-operation\",\"status\":\"UnknownFutureValue\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}",
+      "name": "hierarchy-status-projection-UnknownFutureValue",
+      "source": "GetTeamTargetingHierarchyStatus.Result(HierarchyServiceOperation)",
+      "wire": {
+        "fileName": "fixture.csv",
+        "id": "fixture-operation",
+        "lastUpdatedAt": "2026-01-01T00:00:00Z",
+        "status": "Unknown"
+      }
+    },
+    {
+      "input": "{\"id\":\"fixture-operation\",\"status\":\"FutureStatus\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}",
+      "name": "hierarchy-status-projection-FutureStatus",
+      "source": "GetTeamTargetingHierarchyStatus.Result(HierarchyServiceOperation)",
+      "wire": {
+        "fileName": "fixture.csv",
+        "id": "fixture-operation",
+        "lastUpdatedAt": "2026-01-01T00:00:00Z",
+        "status": "FutureStatus"
+      }
+    },
+    {
+      "input": "{\"id\":\"fixture-operation\",\"status\":\"failed\",\"operationType\":\"createTeam\",\"attemptsCount\":1,\"createdDateTime\":\"2026-01-01T00:00:00Z\",\"lastActionDateTime\":\"2026-01-01T00:00:01Z\",\"targetResourceId\":\"fixture-team\",\"error\":{\"code\":\"FixtureFailure\",\"message\":\"Fixture message\"}}",
+      "name": "team-operation-known-status-error-projection",
+      "source": "Model.TeamsAsyncOperation; HttpUtilities.JsonSerializerSettings",
+      "wire": {
+        "attemptsCount": 1,
+        "createdDateTime": "2026-01-01T00:00:00+00:00",
+        "id": "fixture-operation",
+        "lastActionDateTime": "2026-01-01T00:00:01+00:00",
+        "operationType": "CreateTeam",
+        "status": "Failed",
+        "targetResourceId": "fixture-team"
+      }
+    },
+    {
+      "input": "{\"id\":\"fixture-operation\",\"status\":\"futureStatus\",\"operationType\":\"createTeam\"}",
+      "name": "team-operation-unknown-status",
+      "source": "Model.TeamsAsyncOperation.StringEnumConverter",
+      "wire": {
+        "rejected": true
+      }
+    },
+    {
+      "input": "",
+      "name": "template-empty-text-parser",
+      "source": "Models.TeamTemplateErrorResponse.FromJsonString",
+      "wire": {
+        "rejected": false,
+        "returnedNull": true
+      }
     }
   ],
   "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",

@@ -80,6 +80,40 @@ $batch.DeploymentCsv = 'Rml4dHVyZQ=='
 $batch.UsersToNotify = 'fixture@example.invalid'
 Add-Observed 'deployment-wire-field-casing' 'Models.FlwoServiceModelsFlwosBatchRequest.ToJson' @{DeploymentCsvs='Rml4dHVyZQ==';UsersToNotify='fixture@example.invalid'} $batch.ToJsonString()
 
+# Synthetic responses are decoded and reserialized through the shipped models.
+# This records model behavior, not a server response or HTTP error classification.
+$generated = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplate].Assembly
+foreach ($response in @(
+    @{name='template-error-envelope';type='TeamTemplateErrorResponse';json='{"operationId":"fixture-operation","errors":[{"code":"FixtureFailure","message":"Fixture message","action":"Fixture action"}],"futureField":true}'},
+    @{name='template-error-empty-errors';type='TeamTemplateErrorResponse';json='{"errors":[]}'},
+    @{name='template-list-response';type='GetTemplatesResponse';json='{"value":[{"id":"fixture","name":"Fixture","channelCount":1,"appCount":0,"locale":"en-US","@odata.id":"/api/teamtemplates/v1.0/fixture/Tenant/en-US"}]}'},
+    @{name='template-detail-response';type='GetTemplateDetailResponse';json='{"value":{"teamDefinition":{"displayName":"Fixture","channels":[]},"extendedProperties":{"shortDescription":"Summary"}}}'},
+    @{name='deployment-accepted-response';type='FlwoServiceModelsFlwosBatchRequestResponse';json='{"instanceId":"fixture-instance","executionId":"fixture-execution"}'},
+    @{name='policy-error-envelope';type='ErrorResponse';json='{"code":"FixtureFailure","message":"Fixture message","action":"Fixture action","futureField":true}'},
+    @{name='policy-unknown-fields-preserved';type='XdsConfiguration';json='{"Identity":"Global","FutureFlag":false,"FutureValues":[]}'},
+    @{name='template-error-empty-object';type='TeamTemplateErrorResponse';json='{}'}
+)) {
+    $type = $generated.GetType('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.' + $response.type, $true)
+    $decoded = $type.GetMethod('FromJsonString').Invoke($null,[object[]]@($response.json))
+    Add-Observed $response.name ('Models.' + $response.type + '.FromJsonString/ToJsonString') $response.json $decoded.ToJsonString()
+}
+foreach ($status in @('NotStarted','Running','Succeeded','Failed','UnknownFutureValue','FutureStatus')) {
+    $jsonInput = '{"id":"fixture-operation","status":"' + $status + '","lastActionDateTime":"2026-01-01T00:00:00Z","fileName":"fixture.csv"}'
+    $decoded = [Newtonsoft.Json.JsonConvert]::DeserializeObject($jsonInput,[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.HierarchyServiceOperation])
+    $projection = [Microsoft.Teams.PowerShell.TeamsCmdlets.GetTeamTargetingHierarchyStatus+Result]::new($decoded)
+    Add-Observed ('hierarchy-status-projection-' + $status) 'GetTeamTargetingHierarchyStatus.Result(HierarchyServiceOperation)' $jsonInput (Serialize-Graph $projection)
+}
+$jsonInput = '{"id":"fixture-operation","status":"failed","operationType":"createTeam","attemptsCount":1,"createdDateTime":"2026-01-01T00:00:00Z","lastActionDateTime":"2026-01-01T00:00:01Z","targetResourceId":"fixture-team","error":{"code":"FixtureFailure","message":"Fixture message"}}'
+$decoded = [Newtonsoft.Json.JsonConvert]::DeserializeObject($jsonInput,[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.TeamsAsyncOperation])
+Add-Observed 'team-operation-known-status-error-projection' 'Model.TeamsAsyncOperation; HttpUtilities.JsonSerializerSettings' $jsonInput (Serialize-Graph $decoded)
+$jsonInput = '{"id":"fixture-operation","status":"futureStatus","operationType":"createTeam"}'
+$rejected = $false
+try { $null = [Newtonsoft.Json.JsonConvert]::DeserializeObject($jsonInput,[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.TeamsAsyncOperation]) } catch { $rejected = $true }
+$cases.Add(@{name='team-operation-unknown-status';source='Model.TeamsAsyncOperation.StringEnumConverter';input=$jsonInput;wire=@{rejected=$rejected}})
+$rejected, $returnedNull = $false, $false
+try { $returnedNull = $null -eq [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplateErrorResponse]::FromJsonString('') } catch { $rejected = $true }
+$cases.Add(@{name='template-empty-text-parser';source='Models.TeamTemplateErrorResponse.FromJsonString';input='';wire=@{rejected=$rejected;returnedNull=$returnedNull}})
+
 $artifact = [ordered]@{
     schema_version=1
     baseline_version='8.1.0'
