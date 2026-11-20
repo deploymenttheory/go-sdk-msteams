@@ -3,8 +3,9 @@
 Status: in progress. Native conversation-membership CRUD/list and owner
 promotion/demotion are implemented through `sdk.GraphAPI.TeamMembers`, with
 separate read/write models, one-page list and explicit bounded traversal.
-Group member/owner reference primitives, PowerShell compositions and journalled
-lab acceptance remain required. This does not close
+Backing-group member/owner reference primitives are also implemented through
+separate services. PowerShell compositions and journalled lab acceptance remain
+required. This does not close
 [CORE-26 / #182](https://github.com/deploymenttheory/go-sdk-msteams/issues/182)
 or promote any command coverage.
 
@@ -53,3 +54,23 @@ Primary sources verified on 2026-11-20:
 [create](https://learn.microsoft.com/en-us/graph/api/team-post-members?view=graph-rest-1.0),
 [update team member](https://learn.microsoft.com/en-us/graph/api/team-update-members?view=graph-rest-1.0),
 [list and opaque identities](https://learn.microsoft.com/en-us/graph/api/team-list-members?view=graph-rest-1.0).
+
+The added `GroupMembers` and `GroupOwners` services expose AddReference, List,
+RemoveReference and explicit bounded traversal. They share internal request
+mechanics while retaining separate public types. Tests use the real root client
+and shared offline runner to verify default selected-cloud bindings, explicit
+directory-object/user/service-principal references, exact 204 responses and the
+fixed `/$ref` delete suffix. They also cover null/limited directory data, opaque
+paging/header snapshots, partial results, status guards, local validation and
+received 400/403/404/412/429/503 outcomes without mutation replay or false duplicate
+success. Configured mode/cloud checks remain routing evidence only.
+
+These primitives do not preflight, resolve names, add a second relationship,
+enforce a client-side last-owner rule, wait for synchronization or compose the
+pinned Add/Get/Remove-TeamUser commands. Actual server errors remain distinct
+from the pinned local synthetic 412 branch. Explicit owner directoryObjects
+binding is retained separately from the native default users binding. Native
+endpoint service-principal omissions and limited data remain documented limits;
+they are not converted into absence or a fabricated user role. No reference
+tenant calls or mutations were made. See the
+[reference API notes](../../../msteams/graph_api/group_relationship/api_docs.md).
