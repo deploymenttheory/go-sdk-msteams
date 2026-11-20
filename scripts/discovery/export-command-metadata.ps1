@@ -6,7 +6,10 @@ param(
 $ErrorActionPreference = 'Stop'
 Import-Module $ModulePath -ErrorAction Stop
 $module = Get-Module MicrosoftTeams
-if ($module.Version.ToString() -ne $ExpectedVersion) { throw "Expected MicrosoftTeams $ExpectedVersion" }
+$observedVersion = $module.Version.ToString()
+$prerelease = $module.PrivateData.PSData.Prerelease
+if ($prerelease) { $observedVersion += '-' + $prerelease.TrimStart('-') }
+if ($observedVersion -ne $ExpectedVersion) { throw "Expected MicrosoftTeams $ExpectedVersion" }
 $commands = @(Get-Command -Module MicrosoftTeams | Sort-Object Name | ForEach-Object {
     $command = $_
     [ordered]@{
@@ -44,7 +47,7 @@ $commands = @(Get-Command -Module MicrosoftTeams | Sort-Object Name | ForEach-Ob
 })
 if ($commands.Count -eq 0) { throw 'Module import exposed no commands' }
 [ordered]@{
-    module_version = $module.Version.ToString()
+    module_version = $observedVersion
     powershell_version = $PSVersionTable.PSVersion.ToString()
     platform = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription
     authenticated = $false
