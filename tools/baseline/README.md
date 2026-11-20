@@ -26,3 +26,8 @@ python3 tools/baseline/baseline.py \
 The saved runtime must identify version 8.1.0, unauthenticated discovery and a nonempty, structurally complete command inventory. It is metadata evidence, not proof of wire behaviour or live tenant parity. Failed downloads/imports, empty/incomplete metadata, checksum mismatches and invalid archives fail visibly without publishing an output.
 
 To investigate another version, supply both `--version` and an independently verified `--expected-sha512`; the accepted baseline is not promoted. CI runs offline negative cases on Linux/macOS/Windows and two independent fresh 8.1.0 extractions on Linux. The fresh extraction job may fail on Gallery availability and intentionally reports that failure rather than an empty successful inventory.
+
+Command reconciliation is implemented by `reconcile.py`. See
+[the 8.1.0 evidence report](../../contracts/powershell/8.1.0/reconciliation.md)
+for conditional exports, nested candidates, unresolved names and reproduction steps.
+It preserves all candidates; metadata findings never imply implementation or live coverage.
