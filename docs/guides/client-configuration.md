@@ -96,8 +96,10 @@ response access. Non-2xx responses return `*client.APIError` with status, servic
 and diagnostic IDs; standard error formatting omits untrusted server values. Raw response
 headers/bodies, explicit diagnostic fields and request payloads may contain tenant data.
 Transport/decode failures use safe sentinel errors and context cancellation is preserved.
-Retry controls are described below; paging, binary uploads and downloads remain separate
-HTTP tickets.
+Retry controls are described below. Scope.Upload and Scope.Download provide explicit
+bounded stream transfers; Scope.UploadMultipart handles ordered form-data parts. Stream
+operations consume their sources once and reject automatic replay. See the
+[payload contract](../implementation/http/payload-evidence.md) for ownership and batch results.
 See [HTTP-01 evidence and tests](../implementation/http/routing-evidence.md).
 
 HTTP timeout defaults to 30 seconds. An injected client's positive timeout is retained

@@ -14,6 +14,29 @@ var ErrDestination = errors.New("destination is not allowed for this backend and
 // ErrRequest means local request construction failed. Its text never includes input.
 var ErrRequest = errors.New("invalid backend request")
 
+// ValidateRequest checks a request's method, destination and headers without
+// acquiring credentials or sending it. Batch adapters use the same route boundary
+// for their nested operations. It does not serialize or validate resource bodies.
+func (s *Scope) ValidateRequest(request Request) error {
+	if s == nil || s.session == nil {
+		return ErrClosed
+	}
+	profile, err := s.profile()
+	if err != nil {
+		return err
+	}
+	if _, err = profile.destination(request); err != nil {
+		return err
+	}
+	switch request.Method {
+	case http.MethodGet, http.MethodHead, http.MethodPost, http.MethodPut, http.MethodPatch, http.MethodDelete, http.MethodOptions:
+	default:
+		return ErrRequest
+	}
+	_, err = requestHeaders(request.Header)
+	return err
+}
+
 type routeProfile struct {
 	host     string
 	audience string
