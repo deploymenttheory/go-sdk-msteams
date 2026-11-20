@@ -299,3 +299,16 @@ func TestMutationFailuresAreNotReplayed(t *testing.T) {
 		})
 	}
 }
+
+func TestListRejectsUnexpectedSuccessfulPageStatus(t *testing.T) {
+	t.Parallel()
+	for _, status := range []int{202, 206} {
+		t.Run(http.StatusText(status), func(t *testing.T) {
+			sdk, _, calls := fixture(t, "commercial", auth.Application, exchange{method: "GET", path: "/v1.0/teams", status: status, body: `{"value":[{"id":"` + teamID + `"}]}`})
+			result, err := sdk.GraphAPI.Teams.List(t.Context(), team.ListOptions{})
+			if !errors.Is(err, client.ErrPageStatus) || len(result.Items) != 0 || result.Pages != 0 || result.Response == nil || result.Response.StatusCode() != status || *calls != 1 {
+				t.Fatal("unexpected status became a complete native teams page")
+			}
+		})
+	}
+}

@@ -42,6 +42,9 @@ or page size is rejected locally. Zero traversal bounds use the shared defaults
 of 1,000 pages and 100,000 items. A failed or bounded traversal returns its
 partial items and last response with an error. Treat that result as incomplete.
 The next-link query remains opaque; the shared scope rejects foreign origins.
+Every native collection page must return HTTP 200 before decoding; an unexpected
+successful status returns `client.ErrPageStatus` with prior items and the last
+response, rather than a complete result.
 
 All mutations use `ReplayNever`, including create-from-group propagation
 failures and failed uploads. Native methods do not perform compensation. In
