@@ -1,9 +1,11 @@
 # CORE-28 SDK progress
 
-Status: in progress. Only the native settings models are implemented in this
-first slice. Team/group CRUD, paging, asynchronous creation, archive/picture
-operations, PowerShell compositions, root wiring and tenant acceptance remain
-required. This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81).
+Status: in progress. Native team create/read/settings-update/delete/list,
+create-from-group, archive/unarchive, picture upload and resumable operation
+handling are implemented under `sdk.GraphAPI.Teams`. Supporting group CRUD,
+PowerShell compositions and successful tenant acceptance remain required.
+This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81)
+or promote its command coverage.
 
 Native settings preserve omitted versus non-nil empty containers and explicit
 false values. A caller can construct the five empty containers observed in the
@@ -23,6 +25,39 @@ Verified primary sources on 2026-11-20:
 [create](https://learn.microsoft.com/en-us/graph/api/team-post?view=graph-rest-1.0),
 [list](https://learn.microsoft.com/en-us/graph/api/teams-list?view=graph-rest-1.0).
 Create is asynchronous; a 202 is not completion. Native list's basic projections
-must remain distinct from the enriched Get-Team composition. These contracts
-will guide the remaining service implementation; they are not delivered methods
-or live qualification in this first slice.
+remain distinct from the enriched Get-Team composition. The resource methods
+and remaining scope are described in the [API notes](../../../msteams/graph_api/team/api_docs.md).
+
+Offline tests exercise the actual root client through an injected HTTP transport
+that cannot open sockets or fall back to any other endpoint. They check CRUD
+routes, sparse settings, unknown read fields, native list projections,
+continuation queries and partial results, mutation non-replay, typed failures,
+malformed envelopes, input validation and cancellation. Native template/user
+bindings are checked for application and delegated configuration across all
+seven built-in routing profiles. These are routing checks, not cloud/mode
+eligibility or live support claims.
+
+Operation tests retain accepted response metadata on invalid handles, reject
+foreign/unrelated/wrong-team status routes, and check known/unknown/failed states
+and opaque target metadata. Virtual time verifies the 31-second cadence,
+Retry-After, terminal stickiness and timeout recovery without wall-clock sleeps.
+Picture tests check original bytes, the group-photo route, JPEG content type,
+four-MB bound, non-replay and immediate stream ownership on local failures.
+The existing public Graph operation decoder delegates to this resource decoder;
+its behavior is unchanged.
+
+Actual read-only lab probes on 2026-11-20 used the existing dedicated lab SPN
+with both client-secret and certificate authentication. A native first-page
+`GET /v1.0/teams?$top=1` returned HTTP 403 in both cases, classified by the
+shared typed Graph API error. No resource, role or permission changes were made.
+No response bodies, tenant identifiers, tokens or credentials were recorded in
+the repository. This verifies denial handling; it does not validate successful
+team CRUD, operation completion, provisioning, archive transitions or photos.
+
+Before CORE-28 can close, implement the group-first and enriched PowerShell
+compositions from the [existing decision record](core-composition-evidence.md),
+including directory owner resolution, education-group constants, bounded group
+propagation/reconciliation, group-plus-settings update outcomes, archive-state
+checks, owned-resource recovery and partial hydration/list behavior. Add the
+service contract reports and journalled tenant acceptance for those paths.
+Successful lab validation and least-privilege access setup remain outstanding.
