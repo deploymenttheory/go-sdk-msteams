@@ -20,7 +20,7 @@ func NewBoundProvider(binding Binding, source Provider) (Provider, error) {
 	if err := binding.Validate(); err != nil {
 		return nil, err
 	}
-	if nilProvider(source) {
+	if nilDependency(source) {
 		return nil, ErrInvalidProvider
 	}
 	return &boundProvider{binding: binding, source: source}, nil

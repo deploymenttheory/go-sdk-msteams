@@ -1,8 +1,8 @@
 # AUTH-02 client credential evidence and implementation notes
 
-Status: implementation in progress. Certificate parsing helpers are local work; token
-acquisition and root-session integration are not yet delivered by AUTH-02. No tenant
-credentials have been supplied and no app-only live result is claimed.
+Status: implemented with isolated token-service contract tests. No tenant credentials
+have been supplied and no app-only live result is claimed. Management resource coverage
+and Connect/Disconnect completeness remain separate capability-ledger states.
 
 ## Evidence boundary
 
@@ -11,7 +11,7 @@ separate Graph and Teams Admin resource tokens for app-only sessions, with clien
 examples using the client credentials flow and certificate-based Connect examples.
 Graph uses `https://graph.microsoft.com/.default`; the commercial Teams Admin resource
 uses `48ac35b8-9aa8-4d74-927d-1f4a14a0b239/.default`. These scopes identify resources, not
-management API routes. The native provider must acquire each independently and retain
+management API routes. The native provider acquires each independently and retains
 AUTH-01's tenant/cloud/application identity binding.
 
 App registration, consent for the selected Graph operations and suitable Teams directory
@@ -28,7 +28,7 @@ succeeded or that later documentation changes alter the pinned baseline.
 
 The [Microsoft identity client credentials protocol](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-client-creds-grant-flow)
 uses one resource's `.default` scope per token request. Microsoft authentication libraries
-will construct/sign assertions and perform exchanges; the SDK will not implement its own
+construct/sign assertions and perform exchanges; the SDK does not implement its own
 token protocol or silently fall back to delegated login.
 
 ## Pinned library findings
@@ -48,26 +48,50 @@ Inspected source already pinned in `go.mod`:
 Library references: [MSAL confidential source](https://github.com/AzureAD/microsoft-authentication-library-for-go/blob/v1.10.1/apps/confidential/confidential.go),
 [Azure Identity certificate source](https://github.com/Azure/azure-sdk-for-go/blob/sdk/azidentity/v1.15.0/sdk/azidentity/client_certificate_credential.go).
 
-## Remaining AUTH-02 work
+## Implementation and verification
 
-Integrate explicit PEM/PFX configuration and lazy Microsoft-library client-credentials
-providers with root sessions, preserving construction without authentication. Validate
-certificate matching and validity before signing. Keep the commercial authority fixed
-until trusted cloud profiles are implemented; do not accept arbitrary token authorities
-from environment strings. Preserve context, redacted errors, resource-specific caches
-and owned-provider cleanup. Ensure the Microsoft library's own token cache does not
-undermine the outer refresh window or leak identity between instances.
-
-PEM ownership, PKCS#1/PKCS#8 matching, validity boundaries, strict format selection,
-supported PFX success/password failure and unsupported SHA256 MAC rejection already
-have synthetic tests. Next test both credential modes through isolated Microsoft-library
-HTTP fixtures, independent audience scopes, invalid/expired credentials,
-service errors and cancellation. Extend compiled examples and configuration documentation;
-run race/lint/platform CI before opening the implementation PR. Live qualification remains
-pending the lab tenant and its app roles/consent.
+`ApplicationProvider` integrates with root sessions for explicit certificate or client-secret
+configuration. It accepts a tenant GUID or DNS domain and currently implements the commercial
+cloud profile. GUIDs remain bound to that GUID. Domain discovery may resolve a canonical GUID
+only through the exact configured domain's same-authority OIDC response, with matching issuer
+and token endpoint. Redirects, alternate hosts, encoded paths and tenant changes are rejected.
+Metadata/token responses are capped at 1 MiB and bodies are closed. The injected transport is
+borrowed; cookies and custom redirect callbacks are not used for credential exchanges.
 
 MSAL `AcquireTokenByCredential` checks its internal cache before exchanging credentials.
-The provider must account for this when layering AUTH-01 refresh skew; simply reusing a
-long-lived MSAL client can return the same near-expiry token. A fresh MSAL client per
-coordinated refresh is a possible implementation because client credentials have no
-refresh token. Validate this choice with token-service request counts before adopting it.
+The SDK constructs a fresh MSAL client for each coordinated refresh, while AUTH-01 caches
+and serializes tokens per full identity/audience key. Request-count tests prove that entering
+the two-minute refresh window results in another credential exchange. MSAL's implicit region
+environment setting is explicitly disabled. Library errors are replaced with a stable sentinel;
+raw token-service request/response diagnostics are not retained as unwrap causes.
+
+`application_test.go` runs the pinned MSAL library against an isolated HTTP transport. It checks
+client secrets, PEM and supported PFX, PS256 assertion signatures, one resource per request,
+concurrent Graph/Teams caching, refresh, expired certificates, service failures, domain discovery,
+unsafe destinations, redirects, response limits and cancellation. MSAL appends its standard OIDC
+scopes to the requested resource scope; this is observed library behavior, not delegated fallback.
+`certificate_test.go` and `certificate_pfx_test.go` cover matching, validity, strict formats,
+PKCS#1/PKCS#8, copying, PFX passwords and unsupported SHA256 MAC. Root tests verify lazy parsing,
+owned provider wiring and borrowed transport lifecycle. The godoc example is executable without
+credentials. Race tests, vet/build and lint are required before merge.
+
+## Operation prerequisite examples
+
+These are documentation-based prerequisites for planning, not tenant qualification or a complete
+least-privilege permission matrix. Register the app/service principal, attach its certificate or
+secret, and grant admin consent for the Graph application permissions selected for its operations.
+Token acquisition itself does not establish Teams role authorization.
+
+| Operation category | Teams directory-role prerequisite from published role guidance |
+|---|---|
+| Meeting policy/configuration administration | Teams Administrator or Teams Communications Administrator |
+| Calling policy/phone-number administration | Teams Administrator, Teams Communications Administrator or Teams Telephony Administrator, according to the operation |
+| Messaging policy administration | Teams Administrator |
+| Resource-account creation/management | Applicable Teams administrator role plus User Administrator; app-only cmdlet/cloud exclusions still apply |
+
+Source: [Teams administrator role capabilities](https://learn.microsoft.com/en-us/microsoftteams/using-admin-roles).
+The application-authentication source above supplies the Graph onboarding requirements and
+app-only exclusions. Each resource implementation must attach its exact endpoint permission,
+role and cloud evidence; these broad role categories do not override cmdlet exclusions or imply
+that every listed role is sufficient for every method. Lab conformance will record actual grants
+and outcomes separately. No tenant role assignments or consent were changed by this implementation.

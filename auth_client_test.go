@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -165,5 +166,48 @@ func TestSessionDoesNotPretendUnimplementedProviderCanAcquire(t *testing.T) {
 	closeClient(t, sdk)
 	if _, err := sdk.GraphAPI.Scope().Session().AcquireToken(t.Context(), "graph"); !errors.Is(err, client.ErrProviderUnavailable) {
 		t.Fatalf("adapter status: %v", err)
+	}
+}
+
+func TestApplicationSessionUsesOwnedProviderWithoutConstructorAuthentication(t *testing.T) {
+	t.Parallel()
+	transport := &recordingTransport{}
+	cfg := &auth.Config{Method: auth.ClientSecret, TenantID: "11111111-1111-4111-8111-111111111111", ClientID: "22222222-2222-4222-8222-222222222222", ClientSecret: "synthetic-secret"}
+	sdk, err := msteams.NewClient(cfg, msteams.WithHTTPClient(&http.Client{Transport: transport}))
+	if err != nil {
+		t.Fatal(err)
+	}
+	closeClient(t, sdk)
+	if transport.requests.Load() != 0 {
+		t.Fatal("construction contacted token service")
+	}
+	session := sdk.GraphAPI.Scope().Session()
+	if _, err := session.AcquireToken(t.Context(), "unknown-resource"); !errors.Is(err, auth.ErrUnsupportedAudience) {
+		t.Fatalf("provider not wired: %v", err)
+	}
+	if err := sdk.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := session.AcquireToken(t.Context(), auth.GraphAudience); !errors.Is(err, client.ErrClosed) {
+		t.Fatalf("session close: %v", err)
+	}
+	if transport.requests.Load() != 0 || transport.closes.Load() != 0 {
+		t.Fatal("provider used or closed caller transport unexpectedly")
+	}
+}
+
+func TestCertificateParsingRemainsLazyAndErrorsStayLocal(t *testing.T) {
+	t.Parallel()
+	transport := &recordingTransport{}
+	sdk, err := msteams.NewClient(&auth.Config{Method: auth.Certificate, TenantID: "11111111-1111-4111-8111-111111111111", ClientID: "22222222-2222-4222-8222-222222222222", PFX: []byte("invalid-pfx")}, msteams.WithHTTPClient(&http.Client{Transport: transport}))
+	if err != nil {
+		t.Fatal(err)
+	}
+	closeClient(t, sdk)
+	if _, err := sdk.TeamsAdminAPI.Scope().Session().AcquireToken(t.Context(), auth.TeamsAdminAudience); !errors.Is(err, auth.ErrInvalidCertificate) {
+		t.Fatalf("certificate parsing: %v", err)
+	}
+	if transport.requests.Load() != 0 {
+		t.Fatal("invalid certificate reached network")
 	}
 }

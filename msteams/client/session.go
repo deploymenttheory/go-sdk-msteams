@@ -47,6 +47,12 @@ func NewSession(cfg *auth.Config, httpClient *http.Client, cleanup func()) (*Ses
 	var closeProvider func()
 	binding := cfg.TokenBinding()
 	switch cfg.Method {
+	case auth.Certificate, auth.ClientSecret:
+		application, err := auth.NewApplicationProvider(cfg, httpClient)
+		if err != nil {
+			return nil, err
+		}
+		provider, closeProvider = application, application.Close
 	case auth.SuppliedTokens:
 		supplied, err := auth.NewSuppliedTokenProvider(binding, cfg.AccessTokens)
 		if err != nil {
@@ -151,6 +157,8 @@ func (s *Session) Close() {
 	}
 	clear(s.auth.Certificate)
 	clear(s.auth.PrivateKey)
+	clear(s.auth.PFX)
+	clear(s.auth.PFXPassword)
 	clear(s.auth.AccessTokens)
 	s.auth = nil
 	s.provider = nil
