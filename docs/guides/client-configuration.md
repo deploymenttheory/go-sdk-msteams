@@ -77,8 +77,26 @@ formatted authentication diagnostics are redacted.
 same per-client session and its own backend identity. They currently expose the dependency
 scope for future resource constructors; no placeholder REST management methods exist.
 Scopes are immutable. Different root clients receive separate sessions and default
-transports. Route discovery, cloud profiles, audience routing, retries and authenticated
-HTTP execution belong to HTTP/AUTH tickets; construction invents no endpoint routes.
+transports. Each scope implements `client.Client.Do(ctx, request, result)` for authenticated
+JSON requests. The commercial profile maps Graph to `graph.microsoft.com` and Teams
+ConfigAPI to `api.interfaces.records.teams.microsoft.com`, selecting distinct token
+audiences. Construction still performs no authentication, discovery or management request.
+
+Use `client.Request.Path` for unescaped segments (including Graph's explicit `v1.0` or
+`beta` prefix) and `Query` for query values. `URL` instead accepts an absolute approved
+continuation/discovery destination and cannot be combined with Path/Query. Other hosts,
+cloud profiles and ambiguous destinations fail before credentials are acquired. Resource
+services remain responsible for evidenced API paths and payloads.
+
+`Do` sends one attempt and never follows redirects. It returns buffered Resty response
+metadata with closed bodies, caps responses at `client.MaxResponseBytes` (8 MiB), and
+decodes nonempty successful JSON into the supplied result. Nil result preserves raw
+response access. Non-2xx responses return `*client.APIError` with status, service codes
+and diagnostic IDs; standard error formatting omits untrusted server values. Raw response
+headers/bodies, explicit diagnostic fields and request payloads may contain tenant data.
+Transport/decode failures use safe sentinel errors and context cancellation is preserved.
+Automatic retries, paging, binary uploads and downloads are separate HTTP tickets.
+See [HTTP-01 evidence and tests](../implementation/http/routing-evidence.md).
 
 HTTP timeout defaults to 30 seconds. An injected client's positive timeout is retained
 unless explicitly overridden. Negative injected timeouts are rejected unless replaced
