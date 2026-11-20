@@ -49,6 +49,7 @@ func TestNewHiddenMeetingTemplate(t *testing.T) {
 
 func TestHiddenBuildersHaveNoManagementOrAuthIO(t *testing.T) {
 	t.Parallel()
+	evidence := collectServiceEvidence(t, "New-CsTeamsHiddenTemplate", "New-CsTeamsHiddenMeetingTemplate")
 	for _, tc := range []struct {
 		name, command, source string
 		invoke                func(context.Context, *msteams.Client) contracttest.Observation
@@ -68,16 +69,18 @@ func TestHiddenBuildersHaveNoManagementOrAuthIO(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			result, err := contracttest.Run(t.Context(), contracttest.Case{Name: tc.name,
+			c := contracttest.Case{Name: tc.name,
 				Family: "team_templates", Scope: "local", Source: tc.source,
 				Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "Identity"}},
-				Invoke:   tc.invoke, Want: contracttest.Expected{JSON: json.RawMessage(`{"ID":"fixture-template"}`)}})
+				Invoke:   tc.invoke, Want: contracttest.Expected{JSON: json.RawMessage(`{"ID":"fixture-template"}`)}}
+			result, err := contracttest.Run(t.Context(), c)
 			if err != nil {
 				t.Fatal(err)
 			}
 			if !result.Passed() {
 				t.Fatalf("local builder contract differed: %+v", result.Differences())
 			}
+			evidence.add(c, result)
 		})
 	}
 }

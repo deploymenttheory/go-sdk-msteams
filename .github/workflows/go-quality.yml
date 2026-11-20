@@ -52,7 +52,9 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: offline-contracts-${{ matrix.os }}
-          path: ${{ runner.temp }}/go-test-artifacts/**/core-primitives.json
+          path: |
+            ${{ runner.temp }}/go-test-artifacts/**/core-primitives.json
+            ${{ runner.temp }}/go-test-artifacts/**/team-template-service.json
           if-no-files-found: error
           retention-days: 14
       - name: Run credential-free example

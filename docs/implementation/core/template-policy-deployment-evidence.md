@@ -70,6 +70,14 @@ Create and update expanded sets share these fields; body sets accept `ITeamTempl
 
 Top-level null references are omitted; empty strings serialize as empty strings; null arrays are omitted while non-null empty arrays serialize `[]`; null elements are skipped. An omitted membership switch leaves nullable Boolean unset/omitted; explicitly false serializes false. There is no explicit JSON-null emission for these known fields. Model objects contain no additional-properties bag, so unknown body keys are not preserved as a general JSON passthrough. Parameter-level required checks on expanded sets must not be confused with a server schema validation of arbitrary Body JSON. [P: `Models.TeamTemplate` constructors and `ToJson`; generated expanded setters.]
 
+The appended CORE-27 observations also establish that empty serialized model
+objects are dropped from app/channel/tab arrays. An explicitly empty tab
+configuration can therefore leave an empty tab object, which is dropped while
+the channel retains `tabs: []`. Known properties of a different JSON type are
+ignored by the generated typed readers; absent/null settings still initialize
+the five false-default settings objects. These are actual model executions, not
+claims about server validation or tenant update retention.
+
 Creation adds a General channel if no supplied channel has `displayName` equal to `General` under PowerShell's case-insensitive equality. The inserted object has `id: "General"`, `displayName: "General"`, `isFavoriteByDefault: true`. This applies both to Body and expanded inputs, including an empty array. Update does **not** run this custom insertion. Implement create normalization on a copy to avoid mutating caller-owned Go input. [C: `New-CsTeamTemplate`, lines 3100–3140.]
 
 Nested models are not uniformly sparse:

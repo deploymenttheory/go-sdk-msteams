@@ -88,7 +88,9 @@ modern/legacy compositions and tenant acceptance.
 
 Ordinary `go test ./...` runs all these offline checks. CI passes the exact
 checked-out revision in `MSTEAMS_CONTRACT_REVISION` during its existing race run,
-uses Go's `-artifacts -outputdir` support, and uploads only `core-primitives.json`.
+uses Go's `-artifacts -outputdir` support, and uploads an explicit report-file
+allowlist. CORE-15 supplies `core-primitives.json`; CORE-27 adds
+`team-template-service.json` for real resource/local-builder callbacks.
 Local artifact generation should use a clean committed implementation revision:
 
 ```sh

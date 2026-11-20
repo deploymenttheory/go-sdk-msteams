@@ -124,6 +124,18 @@ Add-Observed 'template-json-root-null-masks-nested' 'Models.TeamTemplate.BeforeF
 $jsonInput = '{"apps":[null,{"id":"fixture-app"},null],"categories":["first",null,"last"],"channels":[null,{"displayName":"General","tabs":[null,{"name":"Fixture tab"}]}]}'
 $parsed = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplate]::FromJsonString($jsonInput)
 Add-Observed 'template-json-null-array-items' 'Models.TeamTemplate.FromJsonString/ToJson; nested model serializers' $jsonInput $parsed.ToJsonString()
+$jsonInput = '{"channels":[{"tabs":[{"configuration":{}}]}]}'
+$parsed = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplate]::FromJsonString($jsonInput)
+Add-Observed 'template-json-empty-tab-configuration' 'Models.TeamTemplate.FromJsonString/ToJson; TeamsTabConfiguration' $jsonInput $parsed.ToJsonString()
+$jsonInput = '{"displayName":7,"description":false,"isMembershipLimitedToOwners":"false","apps":[7,{"id":7}],"categories":[null,5,"last"],"channels":[4,{"displayName":7,"isFavoriteByDefault":"false","tabs":[false,{"name":7,"configuration":{"entityId":7}}]}],"funSettings":{"allowGiphy":"true","giphyContentRating":7}}'
+$parsed = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplate]::FromJsonString($jsonInput)
+Add-Observed 'template-json-other-property-types' 'Models.TeamTemplate.FromJsonString/ToJson; typed PropertyT readers' $jsonInput $parsed.ToJsonString()
+$jsonInput = '{"discoverySettings":null,"funSettings":null,"guestSettings":null,"memberSettings":null,"messagingSettings":null}'
+$parsed = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplate]::FromJsonString($jsonInput)
+Add-Observed 'template-json-null-settings' 'Models.TeamTemplate.FromJsonString/ToJson; settings defaults' $jsonInput $parsed.ToJsonString()
+$jsonInput = '{"templateId":"fixture-id","classification":"fixture-classification","displayName":"Fixture","description":"","ownerUserObjectId":"fixture-owner","specialization":"fixture-specialization","visibility":"Private","channels":[{"id":"fixture-channel","displayName":"General","description":"","isFavoriteByDefault":false,"tabs":[{"id":"fixture-tab","teamsAppId":"fixture-app","name":"Tab","sortOrderIndex":"0","messageId":"fixture-message","webUrl":"https://example.invalid/tab","key":"fixture-key","configuration":{"entityId":"fixture-entity","contentUrl":"https://example.invalid/content","removeUrl":"","websiteUrl":"https://example.invalid/site"}}]}],"memberSettings":{"allowCreateUpdateChannels":true,"allowAddRemoveApps":true,"uploadCustomApp":true,"allowCreateUpdateRemoveTabs":true,"allowCreateUpdateRemoveConnectors":true,"allowCreatePrivateChannels":true},"guestSettings":{"allowCreateUpdateChannels":true},"messagingSettings":{"allowUserEditMessages":true,"allowOwnerDeleteMessages":true,"allowTeamMentions":true},"funSettings":{"allowGiphy":true,"allowCustomMemes":true,"giphyContentRating":"strict"},"discoverySettings":{"showInTeamsSearchAndSuggestions":true},"isMembershipLimitedToOwners":false,"apps":[{"id":"fixture-app"}],"icon":"fixture-icon","shortDescription":"Summary","categories":["fixture-category"],"publishedBy":"fixture-publisher","uri":"fixture-uri","futureField":false}'
+$parsed = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.TeamTemplate]::FromJsonString($jsonInput)
+Add-Observed 'template-json-full-definition' 'Models.TeamTemplate.FromJsonString/ToJson; nested model serializers' $jsonInput $parsed.ToJsonString()
 
 $artifact = [ordered]@{
     schema_version=1
