@@ -3,6 +3,7 @@ package graphapi
 
 import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
 	grouprelationship "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group_relationship"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team"
 	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
@@ -13,6 +14,7 @@ import (
 type Services struct {
 	scope        *client.Scope
 	Teams        *team.Service
+	Groups       *group.Service
 	TeamMembers  *teammember.Service
 	GroupMembers *grouprelationship.MemberService
 	GroupOwners  *grouprelationship.OwnerService
@@ -24,8 +26,11 @@ func NewServices(session *client.Session) (*Services, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Services{scope: scope, Teams: team.NewService(scope), TeamMembers: teammember.NewService(scope),
-		GroupMembers: grouprelationship.NewMemberService(scope), GroupOwners: grouprelationship.NewOwnerService(scope)}, nil
+	return &Services{
+		scope: scope, Teams: team.NewService(scope), Groups: group.NewService(scope),
+		TeamMembers: teammember.NewService(scope), GroupMembers: grouprelationship.NewMemberService(scope),
+		GroupOwners: grouprelationship.NewOwnerService(scope),
+	}, nil
 }
 
 // Scope returns the backend dependency shared by this collection's resources.

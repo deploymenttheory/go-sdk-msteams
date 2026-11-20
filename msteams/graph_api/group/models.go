@@ -73,6 +73,9 @@ type CreateRequest struct {
 	MemberIDs               []string
 	CreationOptions         *[]string
 	ResourceBehaviorOptions *[]string
+	// Extensions contains explicitly supplied directory-extension properties,
+	// including the captured education marker. Read snapshots are not resent.
+	Extensions map[string]json.RawMessage
 }
 
 // NewMicrosoft365Group constructs the standard native Unified-group inputs
