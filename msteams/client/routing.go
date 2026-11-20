@@ -143,8 +143,5 @@ func requestHeaders(headers http.Header) (http.Header, error) {
 			result.Add(name, value)
 		}
 	}
-	if result.Get("Accept") == "" {
-		result.Set("Accept", "application/json")
-	}
 	return result, nil
 }

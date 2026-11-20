@@ -1,8 +1,7 @@
 # HTTP-06 observability and transport configuration investigation
 
-Status: in progress for [HTTP-06](https://github.com/deploymenttheory/go-sdk-msteams/issues/58).
-This document records the implementation boundary and remaining work. It is not a
-claim that request logging/tracing or the additional transport options are delivered.
+Status: implementation and fixture evidence for
+[HTTP-06](https://github.com/deploymenttheory/go-sdk-msteams/issues/58).
 
 ## Reference and existing implementation
 
@@ -15,41 +14,106 @@ explicitly enables Resty request/response debug logging. That behavior requires 
 redaction boundary before adoption in this SDK; auth tokens and tenant bodies cannot
 be passed to Resty's ordinary debug logger.
 
-The current Teams root already accepts a borrowed HTTP client, timeout, request
-policy, Zap logger and optional tracer provider. Logger/tracer accessors currently
-return configured dependencies; they are not yet request instrumentation. Backend
-requests use a quiet Resty logger. HTTP-05 stream transfers use a separate net/http
-execution path with shared auth, route, deadline and concurrency guards. Both paths
-must receive equivalent sanitized instrumentation.
+## Implemented configuration
 
-SessionOption currently configures only RequestPolicy. Extending constructor wiring
-must preserve later-option precedence and lazy construction, with no global logger,
-tracer provider, HTTP transport or credential chain mutation.
+The root retains WithHTTPClient, WithHTTPTimeout, WithRequestPolicy, WithLogger and
+WithTracerProvider. It adds WithTransport, WithProxy, WithTLSClientConfig,
+WithGlobalHeader(s), WithUserAgent, WithDebug and WithMaxConcurrentRequests. Later
+transport selections replace earlier selections; a later full request policy replaces
+an earlier concurrency-only setting. Constructors validate and copy configuration
+without token exchange, browser launch or network discovery.
 
-## Implementation sequence
+An opaque RoundTripper remains borrowed. Proxy/TLS settings require *http.Transport
+and operate on an owned clone; incompatible opaque combinations fail locally. Explicit
+HTTP/HTTPS/SOCKS5 proxy URLs are parsed without exposing their values in errors. No
+ambient proxy is discovered by the default SDK transport. Both identity and management
+requests use the selected network transport, while generic management headers and
+user agents apply only at the backend boundary.
 
-1. Add immutable per-session diagnostics/default-header configuration and root options.
-   Keep injected logger/tracer lifecycles borrowed. Validate generic headers before
-   credentials; reject Authorization, cookies, Host and other existing reserved fields.
-   Scope default backend headers to management requests, not identity exchanges.
-2. Add Jamf-style transport, proxy, TLS and user-agent options using copied transports
-   and TLS configuration. Do not mutate a caller-owned transport. Explicitly define
-   composition with an injected opaque RoundTripper and reject impossible combinations.
-   Proxy addresses/credentials and TLS key material must never enter error text/logs.
-3. Instrument logical requests and attempts using a small field allowlist: backend,
-   validated method, attempt/status, elapsed time and safe error category. Never emit
-   raw URLs/queries, headers, bodies, tenant/identity IDs, service messages or unwrapped
-   provider errors. Debug mode remains sanitized. Trace opt-in must not enable global
-   telemetry or attach baggage containing credentials to service calls.
-4. Apply the same controls to JSON requests, streaming and batch outer requests;
-   preserve auth/routing, retry and cancellation behavior. Polling remains explicit.
-5. Capture Zap logs and OTel spans with secret fixtures across success, HTTP failures,
-   authentication failures, retries and cancellation. Test custom transports, TLS
-   trust, proxies, protected headers, copy isolation and caller lifecycle ownership.
-   Then run all platform checks and attach exact evidence before closing HTTP-06.
+TLS configuration is copied, including CA pools, certificate DER/metadata, parsed
+leaf certificates and ECH configuration/key byte slices. TLS callbacks, private-key
+signers and session caches remain borrowed and must be safe for concurrent use.
+WithTLSClientConfig requires certificate verification and TLS 1.2 or newer (TLS 1.3
+for ECH); key logging is rejected. Callers configure custom trust with RootCAs.
+The SDK does not add an insecure-skip-verification convenience option.
 
-## Qualification limits
+SessionOption now configures private session settings; use WithRequestPolicy,
+WithDiagnostics and WithDefaultHeaders rather than custom functions mutating a
+RequestPolicy. This is a pre-release option-type change. Authentication and resource
+interfaces are unchanged.
 
-No logging/tracing changes are implemented by this investigation. No proxy/TLS live
-infrastructure or tenant writes have been exercised. The catalog package correction
-is independently merged and is not a prerequisite for request instrumentation.
+## Diagnostic boundary
+
+The selected Zap logger receives one Info completion event per logical request.
+WithDebug additionally enables Debug attempt events when the caller logger allows
+Debug level. The SDK never enables Resty's request/response debug logger. Both JSON
+and stream paths emit the same bounded fields: backend, recognized HTTP method,
+status, attempt count, elapsed time and a fixed outcome category. Invalid methods
+become unknown. No error object is formatted or passed to the logger.
+
+WithTracerProvider enables one client span per logical request. The context reaches
+auth acquisition, queueing and HTTP attempts; request attempts add sanitized events.
+Spans end on success, API errors, local validation errors, auth errors and cancellation.
+Status descriptions use the same fixed outcome category, never raw provider/service
+messages. Parent context is honored, but no global provider/propagator is initialized,
+no baggage or trace headers are automatically injected, and no caller provider is
+shut down. The package uses the pinned OTel 1.47.0 interfaces, inspected in the local
+module source. No telemetry dependency or exporter is added.
+
+URLs, query strings, bodies, request/response headers, tokens, assertions, passwords,
+certificate keys, tenant IDs, service codes and diagnostic IDs are excluded from
+SDK-generated events. Explicit Resty response metadata and returned errors retain
+existing inspection/error-matching behavior. A caller-supplied logger may already
+have its own fields, and custom transports/providers/exporters may produce their own
+output; that caller-owned behavior is outside the SDK-generated diagnostic contract.
+
+Batch logs describe the outer HTTP request. An outer 200 is not a claim that every
+item succeeded; callers continue to inspect the typed per-item results from HTTP-05.
+Polling produces one observed request for each actual poll; it starts no telemetry
+background worker. There is no global logging/metrics/profiling server or RUM tracking.
+
+## Header and lifecycle behavior
+
+Default headers are copied and validated before token acquisition. Request headers
+replace defaults case-insensitively; only after merging does an absent Accept become
+application/json. That ordering applies to uploads, downloads, pagers and operation
+polling, which previously validated headers before execution. Credential/cookie/host/
+framing reserved headers remain rejected. Caller mutation cannot redirect requests
+or mutate the saved defaults through returned request metadata.
+
+The client closes only its owned transport or transport clone. Borrowed transports,
+loggers, tracing providers, TLS signers/callbacks and caches keep caller ownership.
+Existing shared concurrency, total deadlines, queue cancellation, token isolation,
+redirect rejection and explicit replay rules still apply.
+
+## Verification
+
+- TestRequestDiagnosticsExcludeSecretsAcrossOutcomes captures rendered Zap fields
+  and span names/attributes/events/statuses for JSON success, forbidden responses,
+  provider/transport failure, retry, upload/download, cancellation and invalid methods.
+  It asserts no fixture secrets/tenant identifiers enter diagnostics and every created
+  span ends exactly once. The actual trace context reaches auth and HTTP.
+- TestDiagnosticsRemainOptInAndBorrowed checks Debug is not implicitly enabled and
+  the caller logger remains usable after Close.
+- TestDefaultHeadersPreservePrecedenceAcrossRequestKinds covers JSON, upload,
+  download, pager and operation paths, lower-case explicit Accept and caller mutation.
+- TestManagementHeadersNeverReachIdentityExchange checks native MSAL metadata/token
+  requests do not receive management defaults while the Graph request does.
+- TestTLSAndProxyOptionsReachVerifiedBackendWithoutMutatingTransport uses a real local
+  CONNECT proxy and TLS server, with explicit trust and bearer/proxy header isolation.
+- TestTLSOptionSnapshotsCertificateAndECHData verifies nested TLS copying.
+- TestTransportOptionsRejectUnsafeOrIncompatibleConfiguration covers reserved headers,
+  malformed proxy/TLS values, duplicates, typed-nil transports and opaque proxy conflicts.
+- TestZeroSessionDiagnosticsReturnClosed protects zero-value session behavior on all
+  request paths rather than allowing observation to panic before local validation.
+
+Validation on 2026-11-20 passed: `go test -race -count=1 -shuffle=on ./...`,
+`go build ./...`, `go vet ./...`, `golangci-lint run ./...`, formatter diff, coverage
+ledger, backlog validation and capability matrix verification. The opt-in
+`TestApplicationAccessLab` passed client-secret, certificate and invalid supplied-token
+cases against the existing commercial lab identity. These are read-only authentication/
+access regressions, not live proxy/TLS or telemetry qualification.
+
+Fixture proxy/TLS servers are local only. No tenant configuration or credential
+permissions are changed, and no resource command is promoted to release-ready parity
+by this foundation.

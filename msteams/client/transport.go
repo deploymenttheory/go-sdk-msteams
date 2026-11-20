@@ -61,7 +61,9 @@ var _ Client = (*Scope)(nil)
 // result, when non-nil, receives JSON from nonempty successful responses. Raw
 // responses may contain tenant data; callers must not log them indiscriminately.
 // Errors deliberately omit response messages, URLs, bodies and credentials.
-func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Response, error) {
+func (s *Scope) Do(ctx context.Context, request Request, result any) (response *resty.Response, err error) {
+	ctx, observed := s.observe(ctx, request.Method)
+	defer func() { observed.finish(response, err) }()
 	if s == nil || s.session == nil {
 		return nil, ErrClosed
 	}
@@ -90,7 +92,7 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 	default:
 		return nil, ErrRequest
 	}
-	headers, err := requestHeaders(request.Header)
+	headers, err := s.session.requestHeaders(request.Header)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +124,6 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 	if err != nil {
 		return nil, err
 	}
-	var response *resty.Response
 	refreshed := false
 	for attempt := 1; ; attempt++ {
 		if err = operation.Err(); err != nil {
@@ -146,6 +147,7 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 		}
 		response, err = s.attempt(operation, profile, request.Method, destination.String(), headers, body, request.Body != nil, token.AccessToken)
 		controls.release()
+		observed.attempt(response, err)
 		if operation.Err() != nil {
 			return response, operation.Err()
 		}
