@@ -18,6 +18,20 @@ ILSpy 11.2.0.10050 reconstructed these methods locally; no management method or
 tenant authentication was invoked. [Runtime metadata](../../../contracts/powershell/8.1.0/runtime.json)
 remains authoritative for exported parameters.
 
+The follow-up [versioned profile contract](../../../contracts/endpoints/8.1.0/special-service-profiles.json)
+binds all five commands and eleven wire primitives to four distinct profiles.
+Seven [offline cloud observations](../../../contracts/endpoints/8.1.0/fixtures/special-profile-selection.json)
+come from the pinned raw static environment map, cloned endpoint selectors and
+the pure private migration-base selector. No token, session discovery or request
+method is invoked; the override-file getter is bypassed. The
+[capture script](../../../tools/contracts/capture-special-profiles.ps1) restores
+the static environment name after observation.
+
+The independent [source audit](special-profile-source-audit.md) verifies caller
+ordering and the limits of isolated selector observations, including GCC's
+inherited region tuple and the targeting discovery task that is not awaited to
+completion by the inspected Connect call site.
+
 ## Service and authentication profiles
 
 These are Teams administration resources, with distinct backend profiles behind
@@ -39,6 +53,11 @@ must not be silently rewritten to `.default`. Cache isolation must include any
 scope distinction introduced by that extension. Application mode uses its own
 evidenced eligibility; a delegated scope is not an application permission.
 
+GCC's `GetAzureEnvironmentName("TeamsGCC")` itself rejects that name. The targeting
+selector separately accepts TeamsGCC on the existing AzureCloud tuple after
+commercial login/GCC detection. The fixture records both stages; a successful
+targeting selector is not evidence that every name-to-Azure mapper accepts GCC.
+
 The pinned targeting endpoint selector supports commercial and GCC; GCC changes
 the request origin to `https://retailservices.gcc.teams.microsoft.com` while the
 AzureCloud targeting token resource remains the commercial retail audience. The
@@ -52,6 +71,13 @@ constants but no equivalent sovereign map; deployment availability is unqualifie
 [application-authentication guide](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
 lists Get-MultiGeoRegion as unsupported for application authentication; retain
 that restriction independently from token acquisition success.
+
+The isolated selector observation confirms rejection for GCC, GCCH, DoD, China,
+France and Germany. This does not establish a full-command or service denial.
+Normal omitted-name GCC login loads AzureCloud's migration tuple before the
+later targeting detection, which changes neither migration key. The profile
+contract records that inherited GCC route separately from helper-input rejection;
+actual GCC service availability remains unqualified.
 
 Private-channel migration uses these exact base paths before its fixed status path:
 

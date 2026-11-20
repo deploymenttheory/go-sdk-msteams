@@ -15,11 +15,13 @@ import baseline  # noqa: E402
 
 CONTRACT = ROOT / 'contracts/endpoints/8.1.0/core.json'
 COMPOSITIONS = ROOT / 'contracts/endpoints/8.1.0/fixtures/core-team-compositions.json'
+SPECIAL_PROFILES = ROOT / 'contracts/endpoints/8.1.0/special-service-profiles.json'
 FIXTURES = {
     'core-team-serialization.json': 'capture-team-serialization.ps1',
     'core-model-serialization.json': 'capture-core-models.ps1',
     'policy-model-serialization.json': 'capture-policy-models.ps1',
     'generated-request-dispatch.json': 'capture-generated-requests.ps1',
+    'special-profile-selection.json': 'capture-special-profiles.ps1',
 }
 
 
@@ -136,6 +138,66 @@ def validate_compositions(value, inventory):
     return len(commands), len(cases)
 
 
+def validate_special_profiles(value, inventory):
+    require(value['schema_version'] == 1 and value['baseline_version'] == '8.1.0', 'Wrong special-profile schema/baseline')
+    require(value['status'] == 'in-progress' and value['open_questions'], 'Special profiles must retain implementation/qualification gates')
+    require(value['package_sha256'] == inventory['package_sha256'], 'Special-profile package differs')
+    reference(value['evidence'])
+    reference(value['source_audit'])
+    reference(value['profile_observations'])
+    observation = read(ROOT / value['profile_observations'])
+    source_ids = {source['path']: source['sha256'] for source in value['sources']}
+    observed_ids = {source['path']: source['sha256'] for source in observation['assemblies']}
+    require(observation['package_sha256'] == value['package_sha256'] and source_ids == observed_ids
+            and len(source_ids) == len(value['sources']), 'Profile source identities differ')
+    cases = {case['name']: case for case in observation['cases']}
+    profiles = {profile['id']: profile for profile in value['profiles']}
+    require(set(profiles) == {'targeting-v1', 'hierarchy-v2', 'regions', 'private-channel-migration'} and len(value['profiles']) == 4, 'Special-profile assignment differs')
+    endpoints = {
+        'targeting-v1': ('targeting', 'TeamsTargetingTokenResourceId', None),
+        'hierarchy-v2': (None, 'TeamsHierarchyTokenResourceId', 'TeamsHierarchyEndpointResourceId'),
+        'regions': ('regions', 'TeamsMigrationTokenResourceId', None),
+    }
+    claimed = set()
+    for name, profile in profiles.items():
+        reference(profile['evidence'])
+        routes, rejected, unqualified = set(profile['cloud_routes']), set(profile['isolated_selector_rejects']), set(profile['unqualified_clouds'])
+        require(not routes & unqualified and routes | unqualified == set(cases)
+                and rejected <= set(cases), 'Cloud route/qualification partition differs')
+        if name in endpoints:
+            selector, token_key, origin_key = endpoints[name]
+            expected_rejections = {cloud for cloud, case in cases.items() if selector and case['selectors'][selector]['rejected']}
+            require(rejected == expected_rejections, 'Pinned selector rejection differs')
+            suffix = '/Region.Read.All' if name == 'regions' else '/.default'
+            require(profile['delegated_scope'] == profile['audience'] + suffix, 'Special delegated scope differs')
+            for cloud, route in profile['cloud_routes'].items():
+                case = cases[cloud]
+                origin = case['selectors'][selector]['origin_after_attempt'] if selector else case['base_endpoints'][origin_key]
+                require(route == dict(origin=origin, prefix='') and profile['audience'] == case['base_endpoints'][token_key], 'Special origin/audience differs from pinned map')
+        else:
+            require(not rejected and profile['delegated_scope_suffix'] == '/.default', 'Private migration selector/scope differs')
+            require(set(profile['audiences_by_cloud']) == routes, 'Private migration audience mapping differs')
+            for cloud, route in profile['cloud_routes'].items():
+                case = cases[cloud]
+                require(route['origin'] + route['prefix'] == case['private_channel_base_uri'], 'Private migration fixed prefix differs')
+                audience = case['base_endpoints']['TeamsAndChannelsServiceResourceId']
+                require(audience and profile['audiences_by_cloud'][cloud] == audience, 'Private migration audience differs from pinned map')
+        require(profile['operation_ids'] and not claimed.intersection(profile['operation_ids']), 'Duplicate/missing special profile operations')
+        claimed.update(profile['operation_ids'])
+    source_operations = {operation['id']: operation for operation in inventory['operations']}
+    operations = {operation['id']: operation for operation in value['operations']}
+    require(claimed == set(operations) and len(operations) == len(value['operations']), 'Special operation assignment differs')
+    for name, operation in operations.items():
+        require(name in source_operations and all(operation[key] == source_operations[name][key] for key in ('method', 'path', 'kind', 'evidence')), 'Special operation differs from core inventory')
+        require(operation['profile'] in profiles and name in profiles[operation['profile']]['operation_ids'], 'Operation bound to wrong special profile')
+        require(operation['replay_safe'] is (operation['method'] == 'GET'), 'Special mutation cannot be replay-safe')
+    assigned = {command['name']: command for command in inventory['commands'] if set(command['operation_refs']) & claimed}
+    require(len(value['commands']) == len(assigned) and {command['name'] for command in value['commands']} == set(assigned), 'Special command assignment differs')
+    for command in value['commands']:
+        require(command['parameter_sets'] == assigned[command['name']]['parameter_sets'] and command['operation_refs'] == assigned[command['name']]['operation_refs'], 'Special command/runtime binding differs')
+    return len(profiles), len(operations), len(assigned)
+
+
 def differences(expected, actual, path=''):
     """Return structural paths only; never print values from a capture."""
     if type(expected) is not type(actual):
@@ -164,7 +226,7 @@ def capture(module, directory, pwsh):
     # The development oracle must not inherit tenant or CI cloud credentials.
     allowed = {'PATH', 'SystemRoot', 'WINDIR', 'TEMP', 'TMP', 'TMPDIR', 'DOTNET_ROOT', 'LANG'}
     environment = {k: v for k, v in os.environ.items() if k in allowed}
-    counts = dict(models=0, requests=0)
+    counts = dict(models=0, requests=0, profiles=0)
     for fixture, script in FIXTURES.items():
         output = directory / fixture
         result = subprocess.run([pwsh, '-NoLogo', '-NoProfile', '-NonInteractive', '-File',
@@ -175,7 +237,7 @@ def capture(module, directory, pwsh):
         expected = read(ROOT / 'contracts/endpoints/8.1.0/fixtures' / fixture)
         delta = compare(expected, read(output))
         require(not delta, f'Model observation differs: {fixture}; paths: {", ".join(delta[:12])}')
-        category = 'requests' if expected['qualification'] == 'offline-generated-request-and-dispatch' else 'models'
+        category = {'offline-generated-request-and-dispatch': 'requests', 'offline-profile-map-and-selection': 'profiles'}.get(expected['qualification'], 'models')
         counts[category] += len(expected['cases'])
     return counts
 
@@ -190,7 +252,8 @@ def main():
     try:
         commands, operations = validate_inventory(read(CONTRACT))
         composition_commands, composition_cases = validate_compositions(read(COMPOSITIONS), read(CONTRACT))
-        counts = dict(models=0, requests=0)
+        special_profiles, special_operations, special_commands = validate_special_profiles(read(SPECIAL_PROFILES), read(CONTRACT))
+        counts = dict(models=0, requests=0, profiles=0)
         if args.acquire or args.module:
             with tempfile.TemporaryDirectory(prefix='msteams-contracts-') as directory:
                 work = pathlib.Path(directory)
@@ -203,7 +266,9 @@ def main():
                 counts = capture(module, work, args.pwsh)
         print(json.dumps(dict(result='passed', commands=commands, operations=operations,
                               composition_commands=composition_commands, source_derived_scenarios=composition_cases,
-                              recaptured_model_cases=counts['models'], recaptured_request_cases=counts['requests'], contract_status='in-progress')))
+                              special_profiles=special_profiles, special_operations=special_operations, special_commands=special_commands,
+                              recaptured_model_cases=counts['models'], recaptured_request_cases=counts['requests'],
+                              recaptured_profile_cases=counts['profiles'], contract_status='in-progress')))
     except (ValueError, OSError, subprocess.TimeoutExpired) as exc:
         parser.exit(1, f'Contract evidence verification failed: {exc}\n')
 
