@@ -71,3 +71,8 @@ Compiled names omit `Microsoft.Teams.Policy.Administration.Cmdlets.Core.` below.
 
 Shared [Config API discovery/dispatch evidence](../core/policy-routing-evidence.md) supplies a traced reference but does not prove every compiled policy type uses the same provider route. No command coverage state changes here.
 
+Detailed work has begun for the five [application-access-policy commands](application-access-contract-evidence.md)
+and six [assignment-migration commands](assignment-migration-evidence.md). These
+notes retain conditional routing, role/service qualification and fixture gaps;
+the full 40-command POL-01 contract remains open.
+
