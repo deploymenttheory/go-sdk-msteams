@@ -36,6 +36,9 @@ type Request struct {
 	Header http.Header
 	Body   any
 	Replay ReplaySafety
+	// MinimumRetryDelay is an operation-specific floor between retry attempts.
+	// It can only increase shared backoff/Retry-After delays. Zero adds no floor.
+	MinimumRetryDelay time.Duration
 	// RefreshOnUnauthorized permits one noninteractive token replacement and replay
 	// on 401. It also requires ReplaySafe and a capable provider. Claims challenges
 	// and interactive consent are left to the caller.
@@ -71,7 +74,7 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 	operation, stop := context.WithTimeout(operation, controls.policy.Timeout)
 	defer stop()
 	expires := controls.now().Add(controls.policy.Timeout)
-	if request.Replay != ReplayNever && request.Replay != ReplaySafe {
+	if (request.Replay != ReplayNever && request.Replay != ReplaySafe) || request.MinimumRetryDelay < 0 {
 		return nil, ErrRequest
 	}
 	profile, err := s.profile()
@@ -179,13 +182,21 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (*resty.Res
 				return response, err
 			}
 			token = replacement
-			continue
 		}
-		retryAfter := ""
+		retryHeader := ""
 		if response != nil {
-			retryAfter = response.Header().Get("Retry-After")
+			retryHeader = response.Header().Get("Retry-After")
 		}
-		delay := controls.delay(retryAfter, attempt)
+		delay := controls.delay(retryHeader, attempt)
+		if unauthorized {
+			// Token replacement has no ordinary transient backoff, but still
+			// respects this operation's floor and an explicit server delay.
+			delay = 0
+			if server, valid := retryAfter(retryHeader, controls.now()); valid {
+				delay = server
+			}
+		}
+		delay = max(delay, request.MinimumRetryDelay)
 		remaining := expires.Sub(controls.now())
 		if deadline, ok := operation.Deadline(); ok {
 			remaining = min(remaining, time.Until(deadline))
