@@ -124,7 +124,8 @@ EDU_Class rejects explicitly supplied nonblank visibility, forces HiddenMembersh
 uses creationOptions `ExchangeProvisioningFlags:461` and `classAssignments`, the
 education extension value `Section`, and five evidenced resourceBehaviorOptions.
 EDU_PLC uses creationOptions `PLC` and two resourceBehaviorOptions. Those full
-template constants still need their own contract fixture before implementation.
+template constants are captured by the EDU cases in
+[the model fixtures](../../../contracts/endpoints/8.1.0/fixtures/core-model-serialization.json).
 
 Both paths probe GET `/v1.0/groups/{id}` then PUT `/v1.0/groups/{id}/team` with nested
 settings. Each stage attempts at most five times for 404 propagation, separated by

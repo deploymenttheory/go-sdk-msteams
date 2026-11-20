@@ -1,0 +1,293 @@
+{
+  "assemblies": [
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.PowerShell.TeamsCmdlets.dll",
+      "sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24"
+    },
+    {
+      "path": "bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll",
+      "sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+    }
+  ],
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-20",
+  "cases": [
+    {
+      "input": {
+        "DisplayName": "Fixture"
+      },
+      "name": "channel-create-default",
+      "source": "NewTeamChannel.ChannelModelForCreation; HttpUtilities.JsonSerializerSettings",
+      "wire": {
+        "displayName": "Fixture",
+        "membershipType": "Standard"
+      }
+    },
+    {
+      "input": {
+        "Description": "",
+        "DisplayName": "Fixture",
+        "MembershipType": "Private",
+        "Owner": "00000000-0000-4000-8000-000000000001"
+      },
+      "name": "channel-create-private-owner",
+      "source": "NewTeamChannel.ChannelModelForCreation; AadUserModelForAdd",
+      "wire": {
+        "description": "",
+        "displayName": "Fixture",
+        "members": [
+          {
+            "@odata.type": "#microsoft.graph.aadUserConversationMember",
+            "roles": [
+              "owner"
+            ],
+            "user@odata.bind": "https://graph.microsoft.com/beta/users('00000000-0000-4000-8000-000000000001')"
+          }
+        ],
+        "membershipType": "Private"
+      }
+    },
+    {
+      "input": {},
+      "name": "channel-patch-omitted",
+      "source": "SetTeamChannel.TeamChannelModelForPatch",
+      "wire": {}
+    },
+    {
+      "input": {
+        "Description": ""
+      },
+      "name": "channel-patch-empty-description",
+      "source": "SetTeamChannel.TeamChannelModelForPatch",
+      "wire": {
+        "description": ""
+      }
+    },
+    {
+      "input": {
+        "Template": "EDU_Class",
+        "Visibility": "Private"
+      },
+      "name": "group-template-EDU_Class",
+      "source": "NewTeam.SetGroupPropertiesBasedOnTemplate; Model.Group",
+      "wire": {
+        "creationOptions": [
+          "ExchangeProvisioningFlags:461",
+          "classAssignments"
+        ],
+        "extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType": "Section",
+        "resourceBehaviorOptions": [
+          "appRoleForSite:8f348934-64be-4bb2-bc16-c54c96789f43:fullcontrol",
+          "appRoleForSite:2d4d3d8e-2be3-4bef-9f87-7875a61c29de:fullcontrol",
+          "appRoleForSite:13291f5a-59ac-4c59-b0fa-d1632e8f3292:fullcontrol",
+          "appRoleForSite:c9a559d2-7aab-4f13-a6ed-e7e9c52aec87:fullcontrol",
+          "appRoleForSite:22d27567-b3f0-4dc2-9ec2-46ed368ba538:fullcontrol"
+        ],
+        "visibility": "HiddenMembership"
+      }
+    },
+    {
+      "input": {
+        "Template": "EDU_PLC",
+        "Visibility": "Private"
+      },
+      "name": "group-template-EDU_PLC",
+      "source": "NewTeam.SetGroupPropertiesBasedOnTemplate; Model.Group",
+      "wire": {
+        "creationOptions": [
+          "PLC"
+        ],
+        "resourceBehaviorOptions": [
+          "appRoleForSite:13291f5a-59ac-4c59-b0fa-d1632e8f3292:fullcontrol",
+          "appRoleForSite:2d4d3d8e-2be3-4bef-9f87-7875a61c29de:fullcontrol"
+        ],
+        "visibility": "Private"
+      }
+    },
+    {
+      "input": {
+        "DisplayName": "Fixture",
+        "ShortDescription": "Fixture summary"
+      },
+      "name": "template-expanded-sparse",
+      "source": "Models.TeamTemplate.ToJson",
+      "wire": {
+        "displayName": "Fixture",
+        "shortDescription": "Fixture summary"
+      }
+    },
+    {
+      "input": {
+        "App": [],
+        "Category": [],
+        "Channel": [],
+        "DisplayName": "Fixture",
+        "IsMembershipLimitedToOwner": false,
+        "ShortDescription": "Fixture summary"
+      },
+      "name": "template-expanded-empty-arrays-false",
+      "source": "Models.TeamTemplate.ToJson",
+      "wire": {
+        "apps": [],
+        "categories": [],
+        "channels": [],
+        "displayName": "Fixture",
+        "isMembershipLimitedToOwners": false,
+        "shortDescription": "Fixture summary"
+      }
+    },
+    {
+      "input": "{\"displayName\":\"Fixture\",\"shortDescription\":\"Fixture summary\"}",
+      "name": "template-json-body-default-settings",
+      "source": "Models.TeamTemplate.FromJsonString/ToJson",
+      "wire": {
+        "discoverySettings": {
+          "showInTeamsSearchAndSuggestions": false
+        },
+        "displayName": "Fixture",
+        "funSettings": {
+          "allowCustomMemes": false,
+          "allowGiphy": false,
+          "allowStickersAndMemes": false
+        },
+        "guestSettings": {
+          "allowCreateUpdateChannels": false,
+          "allowDeleteChannels": false
+        },
+        "memberSettings": {
+          "allowAddRemoveApps": false,
+          "allowCreatePrivateChannels": false,
+          "allowCreateUpdateChannels": false,
+          "allowCreateUpdateRemoveConnectors": false,
+          "allowCreateUpdateRemoveTabs": false,
+          "allowDeleteChannels": false,
+          "uploadCustomApp": false
+        },
+        "messagingSettings": {
+          "allowChannelMentions": false,
+          "allowOwnerDeleteMessages": false,
+          "allowTeamMentions": false,
+          "allowUserDeleteMessages": false,
+          "allowUserEditMessages": false
+        },
+        "shortDescription": "Fixture summary"
+      }
+    },
+    {
+      "input": "{\"teamDefinition\":{\"displayName\":\"Definition\",\"channels\":[]},\"extendedProperties\":{\"displayName\":\"Extended\",\"shortDescription\":\"Summary\"}}",
+      "name": "template-json-flattened-precedence",
+      "source": "Models.TeamTemplate.BeforeFromJson/ToJson",
+      "wire": {
+        "channels": [],
+        "discoverySettings": {
+          "showInTeamsSearchAndSuggestions": false
+        },
+        "displayName": "Definition",
+        "funSettings": {
+          "allowCustomMemes": false,
+          "allowGiphy": false,
+          "allowStickersAndMemes": false
+        },
+        "guestSettings": {
+          "allowCreateUpdateChannels": false,
+          "allowDeleteChannels": false
+        },
+        "memberSettings": {
+          "allowAddRemoveApps": false,
+          "allowCreatePrivateChannels": false,
+          "allowCreateUpdateChannels": false,
+          "allowCreateUpdateRemoveConnectors": false,
+          "allowCreateUpdateRemoveTabs": false,
+          "allowDeleteChannels": false,
+          "uploadCustomApp": false
+        },
+        "messagingSettings": {
+          "allowChannelMentions": false,
+          "allowOwnerDeleteMessages": false,
+          "allowTeamMentions": false,
+          "allowUserDeleteMessages": false,
+          "allowUserEditMessages": false
+        },
+        "shortDescription": "Summary"
+      }
+    },
+    {
+      "input": "{\"displayName\":\"Fixture\",\"shortDescription\":\"Summary\",\"channels\":[{\"displayName\":\"General\",\"tabs\":[{\"name\":\"Fixture tab\"}]}]}",
+      "name": "template-json-tab-configuration-omitted",
+      "source": "Models.TeamTemplate.FromJsonString; ChannelTabTemplate",
+      "wire": {
+        "channels": [
+          {
+            "displayName": "General",
+            "tabs": [
+              {
+                "name": "Fixture tab"
+              }
+            ]
+          }
+        ],
+        "discoverySettings": {
+          "showInTeamsSearchAndSuggestions": false
+        },
+        "displayName": "Fixture",
+        "funSettings": {
+          "allowCustomMemes": false,
+          "allowGiphy": false,
+          "allowStickersAndMemes": false
+        },
+        "guestSettings": {
+          "allowCreateUpdateChannels": false,
+          "allowDeleteChannels": false
+        },
+        "memberSettings": {
+          "allowAddRemoveApps": false,
+          "allowCreatePrivateChannels": false,
+          "allowCreateUpdateChannels": false,
+          "allowCreateUpdateRemoveConnectors": false,
+          "allowCreateUpdateRemoveTabs": false,
+          "allowDeleteChannels": false,
+          "uploadCustomApp": false
+        },
+        "messagingSettings": {
+          "allowChannelMentions": false,
+          "allowOwnerDeleteMessages": false,
+          "allowTeamMentions": false,
+          "allowUserDeleteMessages": false,
+          "allowUserEditMessages": false
+        },
+        "shortDescription": "Summary"
+      }
+    },
+    {
+      "input": {
+        "CustomTagsMode": "Enabled",
+        "Description": "",
+        "Identity": "Global",
+        "SuggestedPresetTags": null
+      },
+      "name": "targeting-policy-sparse-empty-null",
+      "source": "Models.XdsConfiguration.DeserializeFromDictionary/ToJson",
+      "wire": {
+        "CustomTagsMode": "Enabled",
+        "Description": "",
+        "Identity": "Global"
+      }
+    },
+    {
+      "input": {
+        "DeploymentCsvs": "Rml4dHVyZQ==",
+        "UsersToNotify": "fixture@example.invalid"
+      },
+      "name": "deployment-wire-field-casing",
+      "source": "Models.FlwoServiceModelsFlwosBatchRequest.ToJson",
+      "wire": {
+        "DeploymentCsvs": "Rml4dHVyZQ==",
+        "UsersToNotify": "fixture@example.invalid"
+      }
+    }
+  ],
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "purpose": "Synthetic model observations; deployment Base64 is a field-casing fixture, not a valid ZIP or service acceptance claim.",
+  "qualification": "offline-model-serialization",
+  "schema_version": 1
+}

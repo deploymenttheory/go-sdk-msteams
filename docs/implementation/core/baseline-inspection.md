@@ -16,7 +16,10 @@ following the [user's architecture amendment](../plan-amendments.md).
 | Hierarchy upload/status/delete and migration reads | 5 | [Hierarchy/migration contracts](hierarchy-migration-contract-evidence.md) |
 
 [Versioned serializer fixtures](../../../contracts/endpoints/README.md) now capture
-eight team cases with a repeatable offline oracle. Complete endpoint manifests,
+21 team/channel/template/policy cases with repeatable offline oracles. The
+[machine-readable inventory](../../../contracts/endpoints/8.1.0/core.json) maps
+all 40 commands and their exact parameter sets to 60 wire primitives while retaining
+their unresolved questions. Complete accepted endpoint contracts,
 remaining fixtures and the explicit closure gates in the notes are still required;
 CORE-01 remains open. The initial findings below are investigation history, and the
 detailed notes settle some of the questions they identify.
