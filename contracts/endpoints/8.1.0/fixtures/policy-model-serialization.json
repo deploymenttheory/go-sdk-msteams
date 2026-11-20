@@ -91,6 +91,36 @@
       }
     },
     {
+      "name": "appids-legacy-object-replacement",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "AppIds": [
+          {
+            "AppId": "fixture-app",
+            "Enabled": false
+          }
+        ],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "appids-legacy-object-operators",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "AppIds": {
+          "Add": [
+            {
+              "AppId": "fixture-app",
+              "Enabled": false
+            }
+          ]
+        },
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
       "name": "appids-replace-operator-rejected",
       "rejected": true,
       "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",

@@ -81,7 +81,7 @@ have separate cases. Pure private helpers capture bound-field selection, nested
 branding lists and first-slash identity escaping; no HTTP helper is invoked.
 Other cases preserve numeric external-communication enums, voicemail TimeSpan
 strings and the three compiled assignment DTOs' distinct casing/null behavior.
-The current totals are 73 model/helper observations and 24 generated request/dispatch
+The current totals are 75 model/helper observations and 24 generated request/dispatch
 observations. All are synthetic development evidence; the same verifier recaptures
 them after pinned acquisition on the three CI platforms.
 
@@ -100,3 +100,19 @@ case ownership and request shape. Passing that structural check does not prove
 PowerShell or SDK execution. They are kept outside the recapture case totals and
 remain explicitly in progress. See [composition choices and limits](../../docs/implementation/core/core-composition-evidence.md)
 and the [native membership resource boundary](../../docs/implementation/core/membership-resource-contract.md).
+
+## Versioned resource contracts
+
+`8.1.0/application-access-policies.json` defines five CRUD/list primitives plus
+three explicit assignment actions, their generated ConfigAPI profile, request
+presence, responses, replay rules and exact bindings for five commands/eight
+runtime sets. Each primitive links actual pinned request/dispatch cases. The
+contract remains in progress with wrapper, legacy-coverage and qualification
+questions recorded; a primitive capture is not a completed command composition.
+
+Run `python tools/contracts/verify_resources.py` to check resource/command scope,
+all CRUD/action bindings, audience, runtime metadata references and fixture-linked
+methods/routes/statuses. CI runs it on all three platforms. String AppIds and
+explicit legacy object-item shapes have separate helper cases: object conversion
+retains data properties and removes serialization metadata, even though the
+helper is called with string item type. Helper acceptance is not server acceptance.

@@ -243,6 +243,7 @@ Its exact modern representations are:
 | Empty direct collection | `"AppIds":[]` |
 | Hashtable with Add/Remove | `"AppIds":{"Add":["app-a"],"Remove":["app-b"]}`; omit an operator whose collection is empty |
 | Hashtable with both operator collections empty | `"AppIds":{}` |
+| Legacy PSObject/PSCustomObject elements | Property dictionaries inside the replacement/Add/Remove arrays; legacy serialization fields such as DataSource/Key are removed |
 | Hashtable containing Replace | Client-side ArgumentException; use the direct replacement list |
 | A PSListModifier object itself | Client-side ArgumentException; legacy type metadata is not permission to pass that object |
 
@@ -253,6 +254,13 @@ than emulating them with an unqualified read/modify/write race. [P
 `Custom.PolicyUtils.ValidateAndUpdatePsListModifier/ConvertToJsonConversionFriendly`;
 `Generated.Models.XdsConfiguration.CopyFrom/ToJson`;
 `Generated.Runtime.JsonSerializable.ToJson/ToJsonValue`.]
+
+The item-type argument does not enforce string-only content on the helper's
+legacy PSObject branch. Two isolated cases reproduce object replacement and
+Add with metadata removal while retaining false. Preserve that input through
+an explicit JSON compatibility variant; do not silently stringify or discard
+it. The helper accepting a dictionary-shaped item does not prove the backend
+accepts it as a valid application ID.
 
 The [offline policy observations](../../../contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json)
 reproduce these modern input shapes with the pinned helper and model. The
@@ -426,3 +434,9 @@ separation; and no mutation replay after ambiguous submission. Keep source
 contract tests and live qualification states separate. This note introduces no
 endpoint manifest, fixtures, SDK code, coverage claims or backlog closure;
 the rest of POL-01 remains outstanding.
+
+The follow-up [versioned resource contract](../../../contracts/endpoints/8.1.0/application-access-policies.json)
+now records eight primitives, all five command/eight parameter-set bindings and
+their actual pinned case references. Its verifier checks those links and
+method/route/status agreement. It retains the open questions above and does
+not promote the full command compositions or live qualification.
