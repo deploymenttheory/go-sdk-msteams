@@ -1,0 +1,35 @@
+{
+  "status": "complete",
+  "repository": "deploymenttheory/go-sdk-msteams",
+  "approved_manifest_sha256": "9c04a10526600ab33ab9abd484057c665ac420e3823eff5add416776d516f78f",
+  "issues": 193,
+  "epics": 13,
+  "tasks": 179,
+  "labels": 25,
+  "milestones": 6,
+  "parent_relationships": 179,
+  "blocker_relationships": 456,
+  "ready": [
+    "BASE-01"
+  ],
+  "index_url": "https://github.com/deploymenttheory/go-sdk-msteams/issues/6",
+  "epic_urls": {
+    "EPIC-VOICE": "https://github.com/deploymenttheory/go-sdk-msteams/issues/19",
+    "EPIC-QUAL": "https://github.com/deploymenttheory/go-sdk-msteams/issues/18",
+    "EPIC-POL": "https://github.com/deploymenttheory/go-sdk-msteams/issues/17",
+    "EPIC-LAB": "https://github.com/deploymenttheory/go-sdk-msteams/issues/16",
+    "EPIC-HTTP": "https://github.com/deploymenttheory/go-sdk-msteams/issues/15",
+    "EPIC-FND": "https://github.com/deploymenttheory/go-sdk-msteams/issues/14",
+    "EPIC-EXT": "https://github.com/deploymenttheory/go-sdk-msteams/issues/13",
+    "EPIC-DELTA": "https://github.com/deploymenttheory/go-sdk-msteams/issues/12",
+    "EPIC-CORE": "https://github.com/deploymenttheory/go-sdk-msteams/issues/11",
+    "EPIC-CALL": "https://github.com/deploymenttheory/go-sdk-msteams/issues/10",
+    "EPIC-BASE": "https://github.com/deploymenttheory/go-sdk-msteams/issues/9",
+    "EPIC-AUTH": "https://github.com/deploymenttheory/go-sdk-msteams/issues/8",
+    "EPIC-ARCH": "https://github.com/deploymenttheory/go-sdk-msteams/issues/7"
+  },
+  "ready_urls": {
+    "BASE-01": "https://github.com/deploymenttheory/go-sdk-msteams/issues/20"
+  },
+  "verified_at": "2026-11-20T11:25:30.788524+00:00"
+}

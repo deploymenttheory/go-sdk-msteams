@@ -1,0 +1,46 @@
+name: Baseline discovery
+
+on:
+  pull_request:
+    paths:
+      - 'tools/**'
+      - 'scripts/discovery/**'
+      - 'contracts/**'
+      - 'docs/implementation/**'
+      - '.github/workflows/baseline.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/**'
+      - 'scripts/discovery/**'
+      - 'contracts/**'
+      - 'docs/implementation/**'
+      - '.github/workflows/baseline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contracts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: Test acquisition and failure boundaries
+        run: python -m unittest discover -s tools/baseline/tests -v
+      - name: Validate approved backlog artifacts
+        run: python tools/backlog/validate.py
+  pinned-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: Extract pinned package twice without tenant credentials
+        shell: bash
+        run: |
+          python3 tools/baseline/baseline.py --output "$RUNNER_TEMP/first.json"
+          python3 tools/baseline/baseline.py --output "$RUNNER_TEMP/second.json"
+          cmp "$RUNNER_TEMP/first.json" "$RUNNER_TEMP/second.json"

@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "module_version": "8.1.0",
+  "package_url": "https://www.powershellgallery.com/api/v2/package/MicrosoftTeams/8.1.0",
+  "package_sha512_base64": "842LJvX0gC9ZmIqN9YOrKWPqh9hVk+BPanw4okt3+bJ5EmknnKHvO1ioRllgLZG4j+h06c1s9y9bs/xIxPrMPQ==",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "gallery_count": 730,
+  "runtime_count": 680,
+  "candidate_count": 730,
+  "runtime_environment": {
+    "module_version": "8.1.0",
+    "powershell_version": "7.6.6",
+    "platform": "macOS 27.0.1",
+    "authenticated": false
+  },
+  "limitations": [
+    "Unauthenticated macOS observation only; conditional/platform exports require reconciliation.",
+    "Manifest candidates use lexical extraction, not authoritative PowerShell export evaluation.",
+    "Runtime metadata does not establish wire contracts, default values, server behaviour or complete output schemas.",
+    "Validation extraction covers named public properties; custom validators require source/behaviour research."
+  ],
+  "source_files": [
+    {
+      "path": "Microsoft.Teams.ConfigAPI.Cmdlets.psd1",
+      "sha256": "83b3992f715f30ce1edee9b81fe013716f6bdae99b9611cb838ff74e81c2e151"
+    },
+    {
+      "path": "Microsoft.Teams.ConfigAPI.Cmdlets.psm1",
+      "sha256": "1569b3511f349eb6924fe6369ddfbeddd74c1aac3faaf7dc528c4e852f63a961"
+    },
+    {
+      "path": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1",
+      "sha256": "87c8aeeeda6b44144e45eb54ec3fb89ef868961ce64d91d99de829c2fa6f7be4"
+    },
+    {
+      "path": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.preview.psd1",
+      "sha256": "7b4a1c25cac323b8fdd0371e64e3db7c324b34f97cc4d7f09c819c2a1b3ebbee"
+    },
+    {
+      "path": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.psd1",
+      "sha256": "e038d72a7ed3480ec06ee2ebbc7d9e5c8f629286c95480436e2c47f6818e0136"
+    },
+    {
+      "path": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.psm1",
+      "sha256": "7f31f860519bff130d21bd36daaf76153564fbc179c4fc1d54d2bd41525c90d2"
+    },
+    {
+      "path": "Microsoft.Teams.Policy.Administration.psd1",
+      "sha256": "4afe047e9a6c477107af090779974711acf941e54adbdb84c2a6c3ad18495c13"
+    },
+    {
+      "path": "Microsoft.Teams.Policy.Administration.psm1",
+      "sha256": "7f0edc6b9932296710a4f22146fc28a2e264d2809d23e8cd3fb6d090892b322b"
+    },
+    {
+      "path": "Microsoft.Teams.PowerShell.TeamsCmdlets.dll-Help.xml",
+      "sha256": "45436033258db265663a1248e0e3eb4e9cbbabd5f9491ca74841b969af55f91a"
+    },
+    {
+      "path": "Microsoft.Teams.PowerShell.TeamsCmdlets.psd1",
+      "sha256": "852b302ca881867198858d0aa6a476c0aa2834d817099519406ef32c8c1188b9"
+    },
+    {
+      "path": "Microsoft.Teams.PowerShell.TeamsCmdlets.psm1",
+      "sha256": "cd535b488473a08dd2258cead8fd82a9d5ef51b766f62deeac46f64f01d861e3"
+    },
+    {
+      "path": "MicrosoftTeams.psd1",
+      "sha256": "3a563674a6482c4fa2f8cb982085574e01be726949a8058178564193f11ffa2e"
+    },
+    {
+      "path": "MicrosoftTeams.psm1",
+      "sha256": "f2fc41164c72da25065dc28543eec89afda0a761d58ab44eb1fdc8a3f82cf990"
+    },
+    {
+      "path": "SetMSTeamsReleaseEnvironment.ps1",
+      "sha256": "e93d12dfc9076eac2b76f9583df9538e627101f3b8e7a74f6a702858b3a59061"
+    },
+    {
+      "path": "custom/CmdletConfig.json",
+      "sha256": "754d149c1a5904158e9f01eb55ba44d15c17b7e66f7556385ea894f4ff84d906"
+    },
+    {
+      "path": "custom/Merged_custom_PsExt.ps1",
+      "sha256": "03dbc3a85e12c98dd1807d604782c6a90d0656569541cd9540738825a7fcb255"
+    },
+    {
+      "path": "custom/Microsoft.Teams.ConfigAPI.Cmdlets.custom.psm1",
+      "sha256": "ba01d68a75835682c0a21ba08c90d00fe688a97505a1a6d61eb98c6ec9e67c0b"
+    },
+    {
+      "path": "en-US/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll-Help.xml",
+      "sha256": "bfb1ae1dd574add1357fd31ae96510e6668708a3352b5e620e951738985cb8a3"
+    },
+    {
+      "path": "en-US/Microsoft.Teams.PowerShell.TeamsCmdlets.dll-Help.xml",
+      "sha256": "58f3a0a5ae5af0efadbe88877a3eef6cf4ce0c31bf06b05b40fbd5e8bd448d53"
+    },
+    {
+      "path": "en-US/Microsoft.TeamsCmdlets.PowerShell.Connect.dll-Help.xml",
+      "sha256": "1fc87439f1bfdbf53e836458d46d2b4144e0fb65975c5bcaa73ec8040f1ee8ff"
+    },
+    {
+      "path": "en-US/MicrosoftTeams-help.xml",
+      "sha256": "6829e6302742ebe986572c1e25b5d4796d2cdde0d87b67217ecac908906e1b44"
+    },
+    {
+      "path": "exports/ProxyCmdletDefinitionsWithHelp.ps1",
+      "sha256": "5a8a5a50081b1c6986b93d5b15723e966a2d22b64459a9c300cb2a1bf69bb3b5"
+    },
+    {
+      "path": "internal/Merged_internal.ps1",
+      "sha256": "6ff95158174bab031dc1fc24112a2bc6ae81cf1e2f59db4ecb58afbefc8c2bd9"
+    },
+    {
+      "path": "internal/Microsoft.Teams.ConfigAPI.Cmdlets.internal.psm1",
+      "sha256": "b46065cf1725dc1344a73b8b9e0aace66b879b74d97102d178d81287ef4f761f"
+    },
+    {
+      "path": "net472/CmdletSettings.json",
+      "sha256": "c0549eba3a249ef431b0d0c61ee232c815b74fe0cfa1b41b0860a8531f33e6dd"
+    },
+    {
+      "path": "netcoreapp3.1/CmdletSettings.json",
+      "sha256": "c0549eba3a249ef431b0d0c61ee232c815b74fe0cfa1b41b0860a8531f33e6dd"
+    }
+  ],
+  "release_notes": " **8.1.0-GA** (The project - MicrosoftTeams contains changes till this release)\r\n- Removes the deprecated Statistics attribute from the output of Get-CsCallQueue cmdlet.\r\n- Improves sign-in troubleshooting with additional details in verbose output.\r\n- Adds FileTypeBlockList and FileTypeCustomizationSetting parameters to [Get|Set]-CsTeamsMessagingConfiguration cmdlets.\r\n- Adds KnowledgeGenerationMeetingTypes, TranscriptionWithMeetingAI and MeetingAI parameters to [New|Set]-CsTeamsMeetingPolicy cmdlets.\r\n- Adds BrandedDisplayName, EnableChatBackground, ChatBackgroundImageLightUri, ChatBackgroundImageDarkUri, ChatBackgroundImageAlignment, DisableOriginalReactions and EnableMeetingOptionsBrandedReactionsOverride parameters to [New|Set]-CsTeamsMeetingBrandingPolicy cmdlets.\r\n- Adds the InviteWithReplaces parameter to [New|Set]-CsOnlinePSTNGateway cmdlets. The configured value is available in Get-CsOnlinePSTNGateway output. Administrators can follow the Session Border Controller's advertised support, always enable support, or disable support for call transfer scenarios that use SIP INVITE requests containing a Replaces header.\r\n- Adds EnableWorkIQTranscriptAccess parameter to Set-CsTeamsMeetingConfiguration cmdlet.\r\n- Releases New-CsPhoneNumberUsageChangeOrder cmdlet.\r\n\r\n- The complete release notes can be found in the below link:\r\nhttps://docs.microsoft.com/MicrosoftTeams/teams-powershell-release-notes"
+}
