@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"testing"
+	"testing/synctest"
 	"time"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
@@ -94,15 +95,19 @@ func TestPreflightDisabledCanceledAndTypedNilNeverSend(t *testing.T) {
 }
 
 func TestPreflightDeadlineStopsInFlightProbe(t *testing.T) {
-	t.Parallel()
-	calls := 0
-	probe := fakeProbe(func(ctx context.Context, _ client.Request, _ any) (*resty.Response, error) {
-		calls++
-		<-ctx.Done()
-		return nil, ctx.Err()
+	synctest.Test(t, func(t *testing.T) {
+		calls := 0
+		probe := fakeProbe(func(ctx context.Context, _ client.Request, _ any) (*resty.Response, error) {
+			calls++
+			<-ctx.Done()
+			return nil, ctx.Err()
+		})
+		// Virtual time advances only once the first probe blocks on Done, so
+		// runner scheduling cannot expire the deadline before the probe starts.
+		start := time.Now()
+		result, err := lab.Preflight(t.Context(), lab.Config{ReadOnly: true, Timeout: time.Millisecond}, probe)
+		if !errors.Is(err, context.DeadlineExceeded) || calls != 1 || len(result) != 0 || time.Since(start) != time.Millisecond {
+			t.Fatal("probe deadline failed to stop traversal")
+		}
 	})
-	result, err := lab.Preflight(t.Context(), lab.Config{ReadOnly: true, Timeout: time.Millisecond}, probe)
-	if !errors.Is(err, context.DeadlineExceeded) || calls != 1 || len(result) != 0 {
-		t.Fatal("probe deadline failed to stop traversal")
-	}
 }
