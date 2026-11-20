@@ -19,15 +19,15 @@ func ExampleUpdateRequest() {
 // This compile-only example performs no authentication or tenant operations in
 // ordinary tests. The application supplies an already configured client.
 func ExampleService_Create() {
-	addAndPromote := func(ctx context.Context, sdk *msteams.Client, teamID string, userID teammember.DirectoryUserID) error {
+	addAndPromote := func(ctx context.Context, sdk *msteams.Client, teamID string, userID teammember.DirectoryUserID) (teammember.MembershipID, error) {
 		member, _, err := sdk.GraphAPI.TeamMembers.Create(ctx, teamID, teammember.CreateRequest{UserID: userID})
 		if err != nil {
-			return err
+			return "", err
 		}
 		// Preserve member.ID for recovery. It is the returned opaque membership
 		// identity, not userID. Promotion is a separate, non-atomic stage.
 		_, _, err = sdk.GraphAPI.TeamMembers.PromoteOwner(ctx, teamID, member.ID)
-		return err
+		return member.ID, err
 	}
 	_ = addAndPromote
 }
