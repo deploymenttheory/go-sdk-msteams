@@ -37,6 +37,7 @@ __pycache__/
 *$py.class
 *.pyo
 .pytest_cache/
+docs/implementation/backlog/publication/journal.jsonl
 *.egg-info/
 
 # AI instructions
