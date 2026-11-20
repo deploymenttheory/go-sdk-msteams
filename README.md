@@ -5,6 +5,7 @@ A native Go SDK project targeting the management behaviour of MicrosoftTeams Pow
 **Status:** baseline discovery and the Go module foundation are implemented; local client construction and session ownership are implemented. Authentication providers and resource operations are still under development.
 
 - [Agreed implementation plan](docs/implementation/plan.md)
+- [Plan amendments and resource CRUD contract](docs/implementation/plan-amendments.md)
 - [Published GitHub backlog](https://github.com/deploymenttheory/go-sdk-msteams/issues/6)
 - [Approved backlog preview](docs/implementation/backlog/README.md)
 - [Publication verification](docs/implementation/backlog/publication/README.md)
