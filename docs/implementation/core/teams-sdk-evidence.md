@@ -8,6 +8,15 @@ tenant acceptance remain required.
 This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81)
 or promote its command coverage.
 
+Supporting `UserResolver` reads are implemented for explicit directory IDs,
+UPNs, optional delegated current user and direct-404-only canonical mail fallback.
+All-page uniqueness, OData escaping, pending reads and authorization failures are
+distinct. Tests exercise the actual root client through the shared offline
+runner, including later-page ambiguity, bounded/foreign continuations and zero-I/O
+UUID selection. This corrects the pinned alias/first-result behavior explicitly;
+it is not a claim of identical wire traffic or live user-resolution qualification.
+See the [resolver notes](../../../msteams/graph_api/directory_user/api_docs.md).
+
 Supporting groups now expose native create/get/update/delete, one-page list and
 explicit bounded traversal, including an explicitly selected beta collection for
 the pinned tenant-search path. Separate read/create/update inputs retain nullable
