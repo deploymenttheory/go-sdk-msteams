@@ -36,14 +36,15 @@ var (
 // It owns copied credentials and an audience-isolated refresh cache. Constructors
 // perform no network calls, certificate parsing, file reads or store lookups.
 type ApplicationProvider struct {
-	mu      sync.RWMutex
-	config  *Config
-	binding Binding
-	http    http.Client
-	refresh *RefreshProvider
+	mu          sync.RWMutex
+	config      *Config
+	binding     Binding
+	environment Environment
+	http        http.Client
+	refresh     *RefreshProvider
 }
 
-// NewApplicationProvider creates a commercial-cloud application session. The HTTP
+// NewApplicationProvider creates an explicitly configured application session. The HTTP
 // client value is copied and its transport is borrowed. No fallback login occurs.
 // Call Close when finished; Wait can then await pending acquisitions.
 func NewApplicationProvider(cfg *Config, httpClient *http.Client) (*ApplicationProvider, error) {
@@ -54,8 +55,9 @@ func NewApplicationProvider(cfg *Config, httpClient *http.Client) (*ApplicationP
 		return nil, &ConfigError{Field: "method", Reason: "requires certificate, client-secret or workload-identity"}
 	}
 	binding := cfg.TokenBinding()
-	if binding.Cloud != "commercial" {
-		return nil, ErrUnsupportedCloud
+	environment, err := ResolveEnvironment(cfg.Cloud, cfg.Endpoints)
+	if err != nil {
+		return nil, err
 	}
 	if !validApplicationTenant(binding.TenantID) {
 		return nil, &ConfigError{Field: "tenant_id", Reason: "requires a tenant GUID or DNS domain"}
@@ -63,7 +65,7 @@ func NewApplicationProvider(cfg *Config, httpClient *http.Client) (*ApplicationP
 	if httpClient == nil || (httpClient.Transport != nil && nilDependency(httpClient.Transport)) {
 		return nil, &ConfigError{Field: "http_client", Reason: "requires a non-nil client and transport value"}
 	}
-	p := &ApplicationProvider{config: cfg.Clone(), binding: binding, http: *httpClient}
+	p := &ApplicationProvider{config: cfg.Clone(), binding: binding, environment: environment, http: *httpClient}
 	// Token-bearing redirects are not delegated to an injected redirect callback.
 	p.http.CheckRedirect = func(*http.Request, []*http.Request) error { return ErrAuthorityDestination }
 	p.http.Jar = nil
@@ -90,7 +92,7 @@ func (p *ApplicationProvider) AcquireToken(ctx context.Context, request TokenReq
 	if p.refresh == nil {
 		return Token{}, ErrProviderClosed
 	}
-	if request.Audience != GraphAudience && request.Audience != TeamsAdminAudience {
+	if !p.environment.supportsAudience(request.Audience) {
 		return Token{}, ErrUnsupportedAudience
 	}
 	return p.refresh.AcquireToken(ctx, request)
@@ -115,8 +117,9 @@ func (p *ApplicationProvider) acquire(ctx context.Context, request TokenRequest)
 	// after our refresh cache has intentionally requested new credentials. The outer
 	// provider still serializes each audience, so concurrent callers share one exchange.
 	tenant := strings.ToLower(cfg.TenantID)
-	msal, err := confidential.New("https://login.microsoftonline.com/"+tenant, cfg.ClientID, credential,
-		confidential.WithHTTPClient(&authorityHTTP{client: &p.http, tenant: tenant}),
+	msal, err := confidential.New(p.environment.Endpoints.Authority+"/"+tenant, cfg.ClientID, credential,
+		confidential.WithHTTPClient(&authorityHTTP{client: &p.http, tenant: tenant, authority: p.environment.Endpoints.Authority}),
+		confidential.WithInstanceDiscovery(false),
 		confidential.WithAzureRegion("DisableMsalForceRegion"))
 	if err != nil {
 		return Token{}, ErrTokenService
@@ -197,12 +200,13 @@ func (p *ApplicationProvider) Wait() {
 	}
 }
 
-// authorityHTTP confines library metadata and token calls to the explicit commercial
+// authorityHTTP confines library metadata and token calls to the explicit configured
 // authority and tenant. A malicious metadata token endpoint cannot receive a secret.
 type authorityHTTP struct {
-	client *http.Client
-	tenant string
-	mu     sync.RWMutex
+	client    *http.Client
+	tenant    string
+	authority string
+	mu        sync.RWMutex
 	// canonicalTokenPath is learned only from this tenant's same-authority OIDC response.
 	canonicalTokenPath string
 }
@@ -215,10 +219,10 @@ func (a *authorityHTTP) Do(request *http.Request) (*http.Response, error) {
 		return rejectAuthorityRequest(request)
 	}
 	u := request.URL
-	if !commercialAuthorityURL(u) {
+	if !a.allowsURL(u) {
 		return rejectAuthorityRequest(request)
 	}
-	if request.Host != "" && request.Host != "login.microsoftonline.com" {
+	if request.Host != "" && request.Host != a.host() {
 		return rejectAuthorityRequest(request)
 	}
 	var path string
@@ -251,8 +255,8 @@ func (a *authorityHTTP) send(request *http.Request, path string, metadataRequest
 	// Send a reconstructed destination rather than forwarding any alternative URL
 	// representation supplied by discovery. Preserve the library's headers/body.
 	trusted := request.Clone(request.Context())
-	trusted.URL = &url.URL{Scheme: "https", Host: "login.microsoftonline.com", Path: path, RawQuery: request.URL.RawQuery}
-	trusted.Host = "login.microsoftonline.com"
+	trusted.URL = &url.URL{Scheme: "https", Host: a.host(), Path: path, RawQuery: request.URL.RawQuery}
+	trusted.Host = a.host()
 	httpClient := *a.client
 	httpClient.CheckRedirect = func(*http.Request, []*http.Request) error { return ErrAuthorityDestination }
 	httpClient.Jar = nil
@@ -285,8 +289,15 @@ func rejectAuthorityRequest(request *http.Request) (*http.Response, error) {
 	return nil, ErrAuthorityDestination
 }
 
-func commercialAuthorityURL(u *url.URL) bool {
-	return u != nil && u.Scheme == "https" && u.Host == "login.microsoftonline.com" &&
+func (a *authorityHTTP) host() string {
+	if a.authority == "" {
+		return "login.microsoftonline.com"
+	}
+	return strings.TrimPrefix(a.authority, "https://")
+}
+
+func (a *authorityHTTP) allowsURL(u *url.URL) bool {
+	return u != nil && u.Scheme == "https" && u.Host == a.host() &&
 		u.User == nil && u.Fragment == "" && u.RawPath == "" && u.Opaque == ""
 }
 
@@ -315,7 +326,7 @@ func (a *authorityHTTP) bindCanonicalTenant(content []byte) error {
 	}
 	issuer, issuerErr := url.Parse(metadata.Issuer)
 	endpoint, endpointErr := url.Parse(metadata.TokenEndpoint)
-	if issuerErr != nil || endpointErr != nil || !commercialAuthorityURL(issuer) || !commercialAuthorityURL(endpoint) {
+	if issuerErr != nil || endpointErr != nil || !a.allowsURL(issuer) || !a.allowsURL(endpoint) {
 		return ErrAuthorityDestination
 	}
 	if issuer.RawQuery != "" || issuer.ForceQuery || endpoint.RawQuery != "" || endpoint.ForceQuery {

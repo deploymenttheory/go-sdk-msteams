@@ -188,8 +188,10 @@ func TestRejectedDestinationsAndRequestsNeverAcquireCredentials(t *testing.T) {
 	if len(provider.requests) != 0 {
 		t.Fatal("invalid request acquired credentials")
 	}
+	if _, err := client.NewSession(&auth.Config{Method: auth.ExternalProvider, TenantID: "fixture", Cloud: "government", IdentityID: "fixture", TokenMode: auth.Application, Provider: provider}, &http.Client{}, nil); !errors.Is(err, auth.ErrUnsupportedCloud) {
+		t.Fatal("unknown cloud must fail before creating a session")
+	}
 	for _, tc := range []struct{ cloud, destination string }{
-		{"government", "https://graph.microsoft.com/v1.0/teams"},
 		{"commercial", "https://msit.api.interfaces.records.teams.microsoft.com/fixture"},
 		{"commercial", "https://dev.api.interfaces.records.teams.microsoft.com/fixture"},
 		{"commercial", "https://api.interfaces.records.gov.teams.microsoft.us/fixture"},

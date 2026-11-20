@@ -12,7 +12,7 @@ import (
 
 // NewTeamOperation interprets the Location from a Graph Teams 202 response. Graph
 // documents both absolute locations and unversioned /teams(...) locations. Relative
-// locations are anchored to the commercial v1.0 endpoint, never a response-supplied
+// locations are anchored to the selected Graph v1.0 endpoint, never a response-supplied
 // authority. Construction validates the resulting route before token acquisition.
 // Polling respects Graph's documented interval of more than 30 seconds.
 func NewTeamOperation(scope *client.Scope, accepted *resty.Response) (*client.Operation, error) {
@@ -23,10 +23,14 @@ func NewTeamOperation(scope *client.Scope, accepted *resty.Response) (*client.Op
 	if location == "" {
 		return nil, client.ErrOperation
 	}
+	environment, err := scope.Session().Environment()
+	if err != nil {
+		return nil, err
+	}
 	if strings.HasPrefix(location, "/teams(") || strings.HasPrefix(location, "/teams/") {
-		location = "https://graph.microsoft.com/v1.0" + location
+		location = environment.Endpoints.Graph + "/v1.0" + location
 	} else if strings.HasPrefix(location, "/v1.0/") {
-		location = "https://graph.microsoft.com" + location
+		location = environment.Endpoints.Graph + location
 	}
 	return client.NewOperation(scope, client.Request{Method: http.MethodGet, URL: location, Replay: client.ReplaySafe}, "", DecodeTeamOperation, 31*time.Second, accepted)
 }

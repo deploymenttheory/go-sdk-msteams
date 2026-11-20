@@ -48,3 +48,23 @@ The [capability evidence](../implementation/auth/capability-evidence.md) explain
 source dates, permission/role boundaries and the test mapping. Resource research
 tickets own exact least-privilege requirements; callers should not grant a broad
 permission bundle just because authentication succeeded.
+
+
+## Environments and local sessions
+
+Set Config.Cloud to commercial (default), gcc, gcch, dod, china, france or germany.
+Pinned Teams environment names are accepted too. Config.Endpoints can explicitly
+override HTTPS origins and the Teams token audience; Cloud custom requires all four
+fields. Graph's selected origin is also its token audience. Treat overrides as trusted
+configuration and keep credentials matched to the selected authority.
+
+Client.Environment and Client.SessionInfo return copies without network access.
+Close clears only this client's owned state; changing environment means constructing
+a new client. WithAuthConfig replaces environment-loaded defaults. No machine-global
+PowerShell settings or internal support-region headers are reproduced.
+
+[Session evidence](../implementation/auth/session-evidence.md) maps every assigned
+helper and Connect parameter, records pinned endpoint sources, and separates fixture
+coverage from live qualification. Sovereign profiles are fixture-tested only. Managed
+identity remains commercial-only, and the capability catalog covers only its dated
+commercial/GCC/GCCH/DoD documentation.

@@ -44,7 +44,7 @@ func (p *ApplicationProvider) RefreshAfterRejection(ctx context.Context, request
 	if p.refresh == nil {
 		return Token{}, ErrProviderClosed
 	}
-	if request.Audience != GraphAudience && request.Audience != TeamsAdminAudience {
+	if !p.environment.supportsAudience(request.Audience) {
 		return Token{}, ErrUnsupportedAudience
 	}
 	return p.refresh.RefreshAfterRejection(ctx, request, rejected)

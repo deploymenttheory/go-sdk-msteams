@@ -24,6 +24,47 @@ func azureBinding() auth.Binding {
 	return auth.Binding{TenantID: "fixture.onmicrosoft.com", Cloud: "commercial", IdentityID: "fixture-user", Mode: auth.Delegated}
 }
 
+func TestAzureCredentialCustomEnvironmentBinding(t *testing.T) {
+	t.Parallel()
+	endpoints := &auth.Endpoints{Authority: "https://identity.example.test", Graph: "https://graph.example.test", TeamsAdmin: "https://teams.example.test", TeamsAdminResource: "api://teams.example.test"}
+	binding := azureBinding()
+	binding.Cloud = "custom"
+	calls := 0
+	credential := azureCredentialFunc(func(_ context.Context, options policy.TokenRequestOptions) (azcore.AccessToken, error) {
+		calls++
+		if len(options.Scopes) != 1 || options.Scopes[0] != "https://graph.example.test/.default" {
+			t.Error("custom resource scope changed")
+		}
+		return azcore.AccessToken{Token: "fixture", ExpiresOn: time.Now().Add(time.Hour)}, nil
+	})
+	provider, err := auth.NewAzureTokenProviderWithEndpoints(binding, credential, endpoints)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cfg := &auth.Config{Cloud: "custom", Endpoints: endpoints, Method: auth.ExternalProvider, TenantID: binding.TenantID, IdentityID: binding.IdentityID, TokenMode: binding.Mode, Provider: provider}
+	request := cfg.TokenBinding().Request(endpoints.Graph)
+	composed, err := auth.NewAzureTokenProviderWithEndpoints(cfg.TokenBinding(), credential, endpoints)
+	if err != nil {
+		t.Fatalf("adapter rejected Config.TokenBinding: %v", err)
+	}
+	if _, err := composed.AcquireToken(t.Context(), request); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := provider.AcquireToken(t.Context(), request); err != nil {
+		t.Fatal(err)
+	}
+	endpoints.Authority = "https://other.example.test"
+	if _, err := auth.NewAzureTokenProviderWithEndpoints(auth.Binding{TenantID: request.TenantID, Cloud: request.Cloud, IdentityID: request.IdentityID, Mode: request.Mode}, credential, endpoints); !errors.Is(err, auth.ErrBindingMismatch) {
+		t.Fatal("adapter accepted a fingerprint from different endpoints")
+	}
+	if _, err := provider.AcquireToken(t.Context(), cfg.TokenBinding().Request(request.Audience)); !errors.Is(err, auth.ErrBindingMismatch) {
+		t.Fatalf("different authority shared adapter: %v", err)
+	}
+	if calls != 2 {
+		t.Fatal("unbound request reached credential")
+	}
+}
+
 func TestAzureCredentialAdapterBindsTenantAndResourceScopes(t *testing.T) {
 	t.Parallel()
 	binding := azureBinding()
