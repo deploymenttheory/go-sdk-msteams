@@ -102,6 +102,12 @@ values, not observed server-state transitions. A Go model should preserve unknow
 future states and avoid inferring full tenant convergence from a local DTO.
 Representative decode/error/state fixtures remain required.
 
+The [offline policy model observations](../../../contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json)
+now reproduce request-key casing and response round trips for all eight states.
+They use synthetic input and the pinned DTOs. HTTP request/status handling,
+unknown-state preservation in the native SDK and command-level negative examples
+remain separate obligations; these are not tenant response captures.
+
 Start checks success status before decoding. Its 404 emits a group-not-found
 message; 401/403 emits a token-invalid message; 409/502 emits a group-already-in-use
 message. Those are client presentation choices and do not prove that every 502

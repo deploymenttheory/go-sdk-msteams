@@ -254,6 +254,13 @@ than emulating them with an unqualified read/modify/write race. [P
 `Generated.Models.XdsConfiguration.CopyFrom/ToJson`;
 `Generated.Runtime.JsonSerializable.ToJson/ToJsonValue`.]
 
+The [offline policy observations](../../../contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json)
+reproduce these modern input shapes with the pinned helper and model. The
+[generated request observations](../../../contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json)
+separately exercise CRUD/list, escaped Identity, assignment status dispatch,
+malformed errors and pre-send cancellation. These isolated primitives do not
+execute the exported New POST/readback or flight/discovery compositions.
+
 `XdsConfiguration` owns only string `Identity` plus arbitrary additional
 properties. Its dictionary conversion drops null-valued properties, and
 `ToJson` omits null Identity. Empty strings and empty arrays survive. In public

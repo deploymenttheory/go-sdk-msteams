@@ -1,4 +1,4 @@
-"""Validate CORE-01 inventory and reproduce pinned model observations offline."""
+"""Validate CORE-01 inventory and reproduce pinned model/request observations offline."""
 import argparse
 import copy
 import json
@@ -16,6 +16,8 @@ CONTRACT = ROOT / 'contracts/endpoints/8.1.0/core.json'
 FIXTURES = {
     'core-team-serialization.json': 'capture-team-serialization.ps1',
     'core-model-serialization.json': 'capture-core-models.ps1',
+    'policy-model-serialization.json': 'capture-policy-models.ps1',
+    'generated-request-dispatch.json': 'capture-generated-requests.ps1',
 }
 
 
@@ -95,7 +97,7 @@ def capture(module, directory, pwsh):
     # The development oracle must not inherit tenant or CI cloud credentials.
     allowed = {'PATH', 'SystemRoot', 'WINDIR', 'TEMP', 'TMP', 'TMPDIR', 'DOTNET_ROOT', 'LANG'}
     environment = {k: v for k, v in os.environ.items() if k in allowed}
-    count = 0
+    counts = dict(models=0, requests=0)
     for fixture, script in FIXTURES.items():
         output = directory / fixture
         result = subprocess.run([pwsh, '-NoLogo', '-NoProfile', '-NonInteractive', '-File',
@@ -106,8 +108,9 @@ def capture(module, directory, pwsh):
         expected = read(ROOT / 'contracts/endpoints/8.1.0/fixtures' / fixture)
         delta = compare(expected, read(output))
         require(not delta, f'Model observation differs: {fixture}; paths: {", ".join(delta[:12])}')
-        count += len(expected['cases'])
-    return count
+        category = 'requests' if expected['qualification'] == 'offline-generated-request-and-dispatch' else 'models'
+        counts[category] += len(expected['cases'])
+    return counts
 
 
 def main():
@@ -119,7 +122,7 @@ def main():
     args = parser.parse_args()
     try:
         commands, operations = validate_inventory(read(CONTRACT))
-        count = 0
+        counts = dict(models=0, requests=0)
         if args.acquire or args.module:
             with tempfile.TemporaryDirectory(prefix='msteams-contracts-') as directory:
                 work = pathlib.Path(directory)
@@ -129,9 +132,9 @@ def main():
                     baseline.fetch(f'{baseline.GALLERY}/api/v2/package/MicrosoftTeams/{baseline.VERSION}', archive)
                     baseline.verify_archive(archive, {'sha512': baseline.PIN}, baseline.PIN)
                     baseline.extract_archive(archive, module)
-                count = capture(module, work, args.pwsh)
+                counts = capture(module, work, args.pwsh)
         print(json.dumps(dict(result='passed', commands=commands, operations=operations,
-                              recaptured_model_cases=count, contract_status='in-progress')))
+                              recaptured_model_cases=counts['models'], recaptured_request_cases=counts['requests'], contract_status='in-progress')))
     except (ValueError, OSError, subprocess.TimeoutExpired) as exc:
         parser.exit(1, f'Contract evidence verification failed: {exc}\n')
 
