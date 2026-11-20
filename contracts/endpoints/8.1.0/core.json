@@ -1,0 +1,1450 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "research_ticket": "CORE-01",
+  "status": "in-progress",
+  "qualification": "offline-package-and-dated-documentation",
+  "usage": "Operation references include branches and compensation, not an executable sequence. This inventory is not an accepted contract or SDK coverage claim. Detailed notes own inputs, query/default/presence rules and compatibility decisions.",
+  "path_rules": "Each brace parameter is one escaped segment; opaque template OData ID includes escaped slashes. Query fields and conditional cloud prefixes are documented in evidence.",
+  "operations": [
+    {
+      "id": "groups.create",
+      "backend": "graph",
+      "kind": "create",
+      "method": "POST",
+      "path": "/v1.0/groups",
+      "result": "Group",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "groups.get",
+      "backend": "graph",
+      "kind": "read",
+      "method": "GET",
+      "path": "/v1.0/groups/{groupID}",
+      "result": "Group",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "groups.list",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/groups",
+      "result": "Page<Group>; Team provisioning filter and optional search",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "groups.update",
+      "backend": "graph",
+      "kind": "update",
+      "method": "PATCH",
+      "path": "/v1.0/groups/{groupID}",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "groups.delete",
+      "backend": "graph",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/v1.0/groups/{groupID}",
+      "result": "Empty success; deletes backing team",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "teams.create-from-group",
+      "backend": "graph",
+      "kind": "action",
+      "method": "PUT",
+      "path": "/v1.0/groups/{groupID}/team",
+      "result": "Team",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "teams.get",
+      "backend": "graph",
+      "kind": "read",
+      "method": "GET",
+      "path": "/v1.0/teams/{teamID}",
+      "result": "Team",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "teams.update",
+      "backend": "graph",
+      "kind": "update",
+      "method": "PATCH",
+      "path": "/v1.0/teams/{teamID}",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "teams.joined",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/v1.0/users/{userID}/joinedTeams",
+      "result": "Page<Team>",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "teams.hydrate",
+      "backend": "graph",
+      "kind": "action",
+      "method": "POST",
+      "path": "/v1.0/$batch",
+      "result": "Per-item team results and failures",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "teams.archive",
+      "backend": "graph",
+      "kind": "action",
+      "method": "POST",
+      "path": "/v1.0/teams/{teamID}/archive",
+      "result": "Accepted operation; pinned command immediately reads back",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "teams.unarchive",
+      "backend": "graph",
+      "kind": "action",
+      "method": "POST",
+      "path": "/v1.0/teams/{teamID}/unarchive",
+      "result": "Accepted operation; pinned command immediately reads back",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "teams.picture",
+      "backend": "graph",
+      "kind": "action",
+      "method": "PUT",
+      "path": "/v1.0/groups/{groupID}/photo/$value",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "users.resolve",
+      "backend": "graph",
+      "kind": "read",
+      "method": "GET",
+      "path": "/v1.0/users/{user}",
+      "result": "AadUser; 404 mail-filter fallback documented in evidence",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "users.current",
+      "backend": "graph",
+      "kind": "read",
+      "method": "GET",
+      "path": "/v1.0/me",
+      "result": "AadUser selected id",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "group-members.list",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/v1.0/groups/{groupID}/members",
+      "result": "Page<AadUser>",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "group-owners.list",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/v1.0/groups/{groupID}/owners",
+      "result": "Page<AadUser>",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "group-members.create",
+      "backend": "graph",
+      "kind": "create",
+      "method": "POST",
+      "path": "/v1.0/groups/{groupID}/members/$ref",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "group-owners.create",
+      "backend": "graph",
+      "kind": "action",
+      "method": "POST",
+      "path": "/v1.0/groups/{groupID}/owners/$ref",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "group-members.delete",
+      "backend": "graph",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/v1.0/groups/{groupID}/members/{userID}/$ref",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "group-owners.delete",
+      "backend": "graph",
+      "kind": "action",
+      "method": "DELETE",
+      "path": "/v1.0/groups/{groupID}/owners/{userID}/$ref",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md"
+    },
+    {
+      "id": "channels.list",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/channels",
+      "result": "Page<Channel>",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "channels.all",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/allChannels",
+      "result": "Page<ChannelEnhancedInfo>",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "channels.incoming",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/incomingChannels",
+      "result": "Page<ChannelEnhancedInfo>",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "channels.create",
+      "backend": "graph",
+      "kind": "create",
+      "method": "POST",
+      "path": "/beta/teams/{teamID}/channels",
+      "result": "Channel or shared-channel operation Location",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "channels.update",
+      "backend": "graph",
+      "kind": "update",
+      "method": "PATCH",
+      "path": "/beta/teams/{teamID}/channels/{channelID}",
+      "result": "Empty pinned output",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "channels.delete",
+      "backend": "graph",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/beta/teams/{teamID}/channels/{channelID}",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "channel-members.list",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/channels/{channelID}/members",
+      "result": "Page<ConversationMember>",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "channel-members.create",
+      "backend": "graph",
+      "kind": "create",
+      "method": "POST",
+      "path": "/beta/teams/{teamID}/channels/{channelID}/members",
+      "result": "ConversationMember; pinned command discards output",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "channel-members.update",
+      "backend": "graph",
+      "kind": "update",
+      "method": "PATCH",
+      "path": "/beta/teams/{teamID}/channels/{channelID}/members/{memberID}",
+      "result": "ConversationMember; pinned command discards output",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "channel-members.delete",
+      "backend": "graph",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/beta/teams/{teamID}/channels/{channelID}/members/{memberID}",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "shares.list",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/channels/{channelID}/sharedWithTeams",
+      "result": "Page<SharedWithTeamInfo>",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "shares.get",
+      "backend": "graph",
+      "kind": "read",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/channels/{channelID}/sharedWithTeams/{sharedTeamID}",
+      "result": "SharedWithTeamInfo",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "shares.allowed-members",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/channels/{channelID}/sharedWithTeams/{sharedTeamID}/allowedMembers",
+      "result": "Page<ConversationMember>",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "shares.delete",
+      "backend": "graph",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/beta/teams/{teamID}/channels/{channelID}/sharedWithTeams/{sharedTeamID}",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "associated.mine",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/me/teamwork/associatedTeams",
+      "result": "Page<AssociatedTeamInfo>",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "associated.user",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/users/{userID}/teamwork/associatedTeams",
+      "result": "Page<AssociatedTeamInfo>",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "team-operations.get",
+      "backend": "graph",
+      "kind": "read",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/operations/{operationID}",
+      "result": "TeamsAsyncOperation",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md"
+    },
+    {
+      "id": "templates.list",
+      "backend": "config-api",
+      "kind": "list",
+      "method": "GET",
+      "path": "/Teams.Templates/api/TeamTemplates/v1.0/{locale}",
+      "result": "GetTemplatesResponse.value[] with incomplete-list diagnostics",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "templates.get",
+      "backend": "config-api",
+      "kind": "read",
+      "method": "GET",
+      "path": "/Teams.Templates/{odataID}",
+      "result": "GetTemplateDetailResponse.value",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "templates.create",
+      "backend": "config-api",
+      "kind": "create",
+      "method": "POST",
+      "path": "/Teams.Templates/api/TeamTemplates/v1.0/Tenant/{locale}",
+      "result": "CreateTemplateResponse",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "templates.update",
+      "backend": "config-api",
+      "kind": "update",
+      "method": "PUT",
+      "path": "/Teams.Templates/{odataID}",
+      "result": "CreateTemplateResponse",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "templates.delete",
+      "backend": "config-api",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/Teams.Templates/{odataID}",
+      "result": "Any or empty success",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "deployment.create",
+      "backend": "config-api",
+      "kind": "create",
+      "method": "POST",
+      "path": "/Teams.FLWOrchestrator/orchestration/v1.0/batchflwdeployment",
+      "result": "202 instanceId and executionId",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "deployment.get",
+      "backend": "config-api",
+      "kind": "read",
+      "method": "GET",
+      "path": "/Teams.FLWOrchestrator/orchestration/v1.0/scenarios/{orchestrationID}",
+      "result": "Raw status string; terminal grammar unresolved",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "targeting-policies.list",
+      "backend": "config-api",
+      "kind": "list",
+      "method": "GET",
+      "path": "/Skype.Policy/configurations/TeamsTargetingPolicy",
+      "result": "XdsConfiguration[]",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "targeting-policies.get",
+      "backend": "config-api",
+      "kind": "read",
+      "method": "GET",
+      "path": "/Skype.Policy/configurations/TeamsTargetingPolicy/configuration/{identity}",
+      "result": "XdsConfiguration",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "targeting-policies.update",
+      "backend": "config-api",
+      "kind": "update",
+      "method": "PUT",
+      "path": "/Skype.Policy/configurations/TeamsTargetingPolicy/configuration/{identity}",
+      "result": "204",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "targeting-policies.delete",
+      "backend": "config-api",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/Skype.Policy/configurations/TeamsTargetingPolicy/configuration/{identity}",
+      "result": "204; Global reset behavior remains server-side",
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md"
+    },
+    {
+      "id": "hierarchy-v1.import",
+      "backend": "targeting-v1",
+      "kind": "action",
+      "method": "POST",
+      "path": "/api/rest/v1/nodes/upload",
+      "result": "String map containing requestId",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "hierarchy-v1.status",
+      "backend": "targeting-v1",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/rest/v1/nodes/upload/status",
+      "result": "RetailServiceOperation; optional requestId query",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "hierarchy-v1.delete",
+      "backend": "targeting-v1",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/api/rest/v1/nodes/hierarchy",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "hierarchy-v2.get",
+      "backend": "hierarchy-v2",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/hierarchies/{tenantID}",
+      "result": "Full response model unresolved; upload checks status",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "hierarchy-v2.create",
+      "backend": "hierarchy-v2",
+      "kind": "create",
+      "method": "POST",
+      "path": "/api/v1/hierarchies",
+      "result": "Full response model unresolved; upload checks status",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "hierarchy-v2.import",
+      "backend": "hierarchy-v2",
+      "kind": "action",
+      "method": "POST",
+      "path": "/api/v1/hierarchies/{tenantID}/importCsv",
+      "result": "id projected to requestId",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "hierarchy-v2.status",
+      "backend": "hierarchy-v2",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/hierarchies/{tenantID}/operations/{operationID}",
+      "result": "HierarchyServiceOperation; latest when ID omitted",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "hierarchy-v2.delete",
+      "backend": "hierarchy-v2",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/api/v1/hierarchies/{tenantID}",
+      "result": "Empty success",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "regions.user",
+      "backend": "migration",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/tms/prod/users/{entityID}/region",
+      "result": "GetMultiGeoRegionResponse",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "regions.group",
+      "backend": "migration",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/tms/prod/groups/{entityID}/region",
+      "result": "GetMultiGeoRegionResponse",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "private-channel-migration.get",
+      "backend": "templates-service",
+      "kind": "read",
+      "method": "GET",
+      "path": "/fabric/templates/api/channels/privateChannelMigrationStatus",
+      "result": "PrivateChannelMigrationStatusResponse; cloud base path varies",
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    }
+  ],
+  "open_questions": {
+    "graph-compatibility": "Settle native documented vs pinned enum/role/member-ID/search payload differences and fixtures; see detailed notes.",
+    "config-routing": "Settle forest discovery, X-MS-Target-Uri and policy flighting eligibility before tenant-independent routing claims.",
+    "additional-profiles": "Extend shared exact-origin/audience/scope boundary for hierarchy, retail, migration and templates resources; preserve cloud restrictions.",
+    "hierarchy-models": "Capture complete hierarchy Create/Get response shape before exposing full typed resource CRUD.",
+    "deployment-status": "Preserve raw status and do not infer terminal success from Completed; structured status grammar needs stronger evidence.",
+    "fixture-coverage": "Model fixtures cover selected serialization paths; complete request/response/validation/error fixtures remain required.",
+    "operation-auth": "Pinned team-operation status permission contract lacks a current team-specific REST permission table; do not borrow chat permissions."
+  },
+  "commands": [
+    {
+      "name": "Add-TeamChannelUser",
+      "family": "channel_members",
+      "implementation_owner": "CORE-20",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/0/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "channels.list",
+        "users.resolve",
+        "channel-members.list",
+        "channel-members.create",
+        "channel-members.update"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Add-TeamUser",
+      "family": "team_members",
+      "implementation_owner": "CORE-26",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/1/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "users.resolve",
+        "group-members.list",
+        "group-owners.list",
+        "group-members.create",
+        "group-owners.create"
+      ],
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-AssociatedTeam",
+      "family": "shared_channels",
+      "implementation_owner": "CORE-24",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/16/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "associated.mine",
+        "users.resolve",
+        "associated.user"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-CsBatchTeamsDeploymentStatus",
+      "family": "deployment_migration",
+      "implementation_owner": "CORE-22",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "Get",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/29/parameter_sets/0"
+        },
+        {
+          "name": "GetViaIdentity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/29/parameter_sets/1"
+        }
+      ],
+      "operation_refs": [
+        "deployment.get"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing",
+        "deployment-status"
+      ]
+    },
+    {
+      "name": "Get-CsTeamsTargetingPolicy",
+      "family": "targeting",
+      "implementation_owner": "CORE-25",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "Filter",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/168/parameter_sets/0"
+        },
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/168/parameter_sets/1"
+        }
+      ],
+      "operation_refs": [
+        "targeting-policies.list",
+        "targeting-policies.get"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing"
+      ]
+    },
+    {
+      "name": "Get-CsTeamTemplate",
+      "family": "team_templates",
+      "implementation_owner": "CORE-27",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "Get",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/182/parameter_sets/0"
+        },
+        {
+          "name": "GetViaIdentity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/182/parameter_sets/1"
+        }
+      ],
+      "operation_refs": [
+        "templates.get"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing"
+      ]
+    },
+    {
+      "name": "Get-CsTeamTemplateList",
+      "family": "team_templates",
+      "implementation_owner": "CORE-27",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "DefaultLocaleOverride",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/183/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "templates.list"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing"
+      ]
+    },
+    {
+      "name": "Get-MultiGeoRegion",
+      "family": "deployment_migration",
+      "implementation_owner": "CORE-22",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/207/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "regions.user",
+        "regions.group"
+      ],
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "additional-profiles"
+      ]
+    },
+    {
+      "name": "Get-Operation",
+      "family": "operations",
+      "implementation_owner": "CORE-23",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/208/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "team-operations.get"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "operation-auth"
+      ]
+    },
+    {
+      "name": "Get-SharedWithTeam",
+      "family": "shared_channels",
+      "implementation_owner": "CORE-24",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/209/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "shares.list",
+        "shares.get"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-SharedWithTeamUser",
+      "family": "shared_channels",
+      "implementation_owner": "CORE-24",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/210/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "shares.allowed-members"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-Team",
+      "family": "teams",
+      "implementation_owner": "CORE-28",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "Filters",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/211/parameter_sets/0"
+        },
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/211/parameter_sets/1"
+        }
+      ],
+      "operation_refs": [
+        "groups.get",
+        "teams.get",
+        "groups.list",
+        "teams.joined",
+        "teams.hydrate",
+        "users.resolve"
+      ],
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-TeamAllChannel",
+      "family": "channels",
+      "implementation_owner": "CORE-21",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/212/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "channels.all"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-TeamChannel",
+      "family": "channels",
+      "implementation_owner": "CORE-21",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/213/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "channels.list"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-TeamChannelUser",
+      "family": "channel_members",
+      "implementation_owner": "CORE-20",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/214/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "channels.list",
+        "channel-members.list"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-TeamIncomingChannel",
+      "family": "channels",
+      "implementation_owner": "CORE-21",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/215/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "channels.incoming"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-TeamTargetingHierarchyStatus",
+      "family": "targeting",
+      "implementation_owner": "CORE-25",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/218/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "hierarchy-v1.status",
+        "hierarchy-v2.status"
+      ],
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "additional-profiles"
+      ]
+    },
+    {
+      "name": "Get-TeamUser",
+      "family": "team_members",
+      "implementation_owner": "CORE-26",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/219/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "group-owners.list",
+        "group-members.list"
+      ],
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Get-TenantPrivateChannelMigrationStatus",
+      "family": "deployment_migration",
+      "implementation_owner": "CORE-22",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/220/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "private-channel-migration.get"
+      ],
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "additional-profiles"
+      ]
+    },
+    {
+      "name": "New-CsBatchTeamsDeployment",
+      "family": "deployment_migration",
+      "implementation_owner": "CORE-22",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/291/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "deployment.create"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing"
+      ]
+    },
+    {
+      "name": "New-CsTeamsHiddenMeetingTemplate",
+      "family": "team_templates",
+      "implementation_owner": "CORE-27",
+      "disposition": "settled-local-builder",
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/361/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": []
+    },
+    {
+      "name": "New-CsTeamsHiddenTemplate",
+      "family": "team_templates",
+      "implementation_owner": "CORE-27",
+      "disposition": "settled-local-builder",
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/362/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": []
+    },
+    {
+      "name": "New-CsTeamTemplate",
+      "family": "team_templates",
+      "implementation_owner": "CORE-27",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "New",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/397/parameter_sets/0"
+        },
+        {
+          "name": "NewExpanded",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/397/parameter_sets/1"
+        },
+        {
+          "name": "NewViaIdentity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/397/parameter_sets/2"
+        },
+        {
+          "name": "NewViaIdentityExpanded",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/397/parameter_sets/3"
+        }
+      ],
+      "operation_refs": [
+        "templates.create"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing"
+      ]
+    },
+    {
+      "name": "New-Team",
+      "family": "teams",
+      "implementation_owner": "CORE-28",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "CreateTeam",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/406/parameter_sets/0"
+        },
+        {
+          "name": "MigrateGroup",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/406/parameter_sets/1"
+        }
+      ],
+      "operation_refs": [
+        "users.current",
+        "users.resolve",
+        "groups.create",
+        "groups.get",
+        "teams.create-from-group",
+        "teams.get",
+        "groups.delete"
+      ],
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "New-TeamChannel",
+      "family": "channels",
+      "implementation_owner": "CORE-21",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/407/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "users.resolve",
+        "channels.create"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Remove-CsTeamsTargetingPolicy",
+      "family": "targeting",
+      "implementation_owner": "CORE-25",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/496/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "targeting-policies.delete"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing"
+      ]
+    },
+    {
+      "name": "Remove-CsTeamTemplate",
+      "family": "team_templates",
+      "implementation_owner": "CORE-27",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "Delete",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/506/parameter_sets/0"
+        },
+        {
+          "name": "DeleteViaIdentity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/506/parameter_sets/1"
+        }
+      ],
+      "operation_refs": [
+        "templates.delete"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing"
+      ]
+    },
+    {
+      "name": "Remove-SharedWithTeam",
+      "family": "shared_channels",
+      "implementation_owner": "CORE-24",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/515/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "shares.delete"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Remove-Team",
+      "family": "teams",
+      "implementation_owner": "CORE-28",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/516/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "groups.delete"
+      ],
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Remove-TeamChannel",
+      "family": "channels",
+      "implementation_owner": "CORE-21",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/517/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "channels.list",
+        "channels.delete"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Remove-TeamChannelUser",
+      "family": "channel_members",
+      "implementation_owner": "CORE-20",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/518/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "channels.list",
+        "users.resolve",
+        "channel-members.list",
+        "channel-members.update",
+        "channel-members.delete"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Remove-TeamTargetingHierarchy",
+      "family": "targeting",
+      "implementation_owner": "CORE-25",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/520/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "hierarchy-v1.delete",
+        "hierarchy-v2.delete"
+      ],
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "additional-profiles"
+      ]
+    },
+    {
+      "name": "Remove-TeamUser",
+      "family": "team_members",
+      "implementation_owner": "CORE-26",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/521/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "users.resolve",
+        "group-owners.list",
+        "group-owners.delete",
+        "group-members.delete"
+      ],
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Set-CsTeamsTargetingPolicy",
+      "family": "targeting",
+      "implementation_owner": "CORE-25",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/631/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "targeting-policies.update"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing"
+      ]
+    },
+    {
+      "name": "Set-Team",
+      "family": "teams",
+      "implementation_owner": "CORE-28",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/655/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "groups.update",
+        "teams.update",
+        "groups.get",
+        "teams.get"
+      ],
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Set-TeamArchivedState",
+      "family": "teams",
+      "implementation_owner": "CORE-28",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/656/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "groups.get",
+        "teams.get",
+        "teams.archive",
+        "teams.unarchive"
+      ],
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Set-TeamChannel",
+      "family": "channels",
+      "implementation_owner": "CORE-21",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/657/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "channels.list",
+        "channels.update"
+      ],
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Set-TeamPicture",
+      "family": "teams",
+      "implementation_owner": "CORE-28",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/658/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "teams.picture"
+      ],
+      "evidence": "docs/implementation/core/team-wire-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "graph-compatibility"
+      ]
+    },
+    {
+      "name": "Set-TeamTargetingHierarchy",
+      "family": "targeting",
+      "implementation_owner": "CORE-25",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/661/parameter_sets/0"
+        }
+      ],
+      "operation_refs": [
+        "hierarchy-v1.import",
+        "hierarchy-v2.get",
+        "hierarchy-v2.create",
+        "hierarchy-v2.import"
+      ],
+      "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "additional-profiles",
+        "hierarchy-models"
+      ]
+    },
+    {
+      "name": "Update-CsTeamTemplate",
+      "family": "team_templates",
+      "implementation_owner": "CORE-27",
+      "disposition": "static-evidence-in-progress",
+      "parameter_sets": [
+        {
+          "name": "Update",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/676/parameter_sets/0"
+        },
+        {
+          "name": "UpdateExpanded",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/676/parameter_sets/1"
+        },
+        {
+          "name": "UpdateViaIdentity",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/676/parameter_sets/2"
+        },
+        {
+          "name": "UpdateViaIdentityExpanded",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/676/parameter_sets/3"
+        }
+      ],
+      "operation_refs": [
+        "templates.update"
+      ],
+      "evidence": "docs/implementation/core/template-policy-deployment-evidence.md",
+      "open_questions": [
+        "fixture-coverage",
+        "config-routing"
+      ]
+    }
+  ]
+}
