@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "isolated-call-park-public-parameter-binding",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "sources": [
+    {
+      "sha256": "5a8a5a50081b1c6986b93d5b15723e966a2d22b64459a9c300cb2a1bf69bb3b5",
+      "path": "exports/ProxyCmdletDefinitionsWithHelp.ps1"
+    },
+    {
+      "sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+      "path": "bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Unmodified exported New/Set parameter declarations and attributes in a renamed function with a synthetic body returning bound arguments; actual pure XdsConfiguration dictionary serialization. No export Begin/Process/End, runtime custom-attribute processing, TRPS/flight selection, command lifecycle, credentials or network.",
+  "cases": [
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "Identity": "Fixture"
+      },
+      "name": "omitted-settings"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "AllowCallPark": false,
+        "ParkTimeoutSeconds": 0,
+        "PickupRangeStart": 0,
+        "PickupRangeEnd": 0,
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "Identity": "Fixture",
+        "AllowCallPark": false,
+        "ParkTimeoutSeconds": 0,
+        "PickupRangeStart": 0,
+        "PickupRangeEnd": 0,
+        "Description": ""
+      },
+      "name": "false-zero-empty"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "PickupRangeEnd": 9223372036854775807,
+        "AllowCallPark": true,
+        "ParkTimeoutSeconds": -9223372036854775808,
+        "PickupRangeStart": 9007199254740993,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "PickupRangeEnd": 9223372036854775807,
+        "AllowCallPark": true,
+        "Identity": "Fixture",
+        "ParkTimeoutSeconds": -9223372036854775808,
+        "PickupRangeStart": 9007199254740993
+      },
+      "name": "signed-and-large"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": "System.Management.Automation.PSInvalidCastException",
+      "wire": null,
+      "bound": null,
+      "name": "bound-null-fields"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "PickupRangeStart": 9007199254740993,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "PickupRangeStart": 9007199254740993,
+        "Identity": "Fixture"
+      },
+      "name": "numeric-string"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": "System.OverflowException",
+      "wire": null,
+      "bound": null,
+      "name": "overflow"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "name": "null-Description"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": "System.Management.Automation.PSInvalidCastException",
+      "wire": null,
+      "bound": null,
+      "name": "null-AllowCallPark"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "ParkTimeoutSeconds": 0,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "ParkTimeoutSeconds": 0,
+        "Identity": "Fixture"
+      },
+      "name": "null-ParkTimeoutSeconds"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "PickupRangeStart": 0,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "PickupRangeStart": 0,
+        "Identity": "Fixture"
+      },
+      "name": "null-PickupRangeStart"
+    },
+    {
+      "command": "New-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "PickupRangeEnd": 0,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "PickupRangeEnd": 0,
+        "Identity": "Fixture"
+      },
+      "name": "null-PickupRangeEnd"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "Identity": "Fixture"
+      },
+      "name": "omitted-settings"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "AllowCallPark": false,
+        "ParkTimeoutSeconds": 0,
+        "PickupRangeStart": 0,
+        "PickupRangeEnd": 0,
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "Identity": "Fixture",
+        "AllowCallPark": false,
+        "ParkTimeoutSeconds": 0,
+        "PickupRangeStart": 0,
+        "PickupRangeEnd": 0,
+        "Description": ""
+      },
+      "name": "false-zero-empty"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "PickupRangeEnd": 9223372036854775807,
+        "AllowCallPark": true,
+        "ParkTimeoutSeconds": -9223372036854775808,
+        "PickupRangeStart": 9007199254740993,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "PickupRangeEnd": 9223372036854775807,
+        "AllowCallPark": true,
+        "Identity": "Fixture",
+        "ParkTimeoutSeconds": -9223372036854775808,
+        "PickupRangeStart": 9007199254740993
+      },
+      "name": "signed-and-large"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": "System.Management.Automation.PSInvalidCastException",
+      "wire": null,
+      "bound": null,
+      "name": "bound-null-fields"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "PickupRangeStart": 9007199254740993,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "PickupRangeStart": 9007199254740993,
+        "Identity": "Fixture"
+      },
+      "name": "numeric-string"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": "System.OverflowException",
+      "wire": null,
+      "bound": null,
+      "name": "overflow"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "name": "null-Description"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": "System.Management.Automation.PSInvalidCastException",
+      "wire": null,
+      "bound": null,
+      "name": "null-AllowCallPark"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "ParkTimeoutSeconds": 0,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "ParkTimeoutSeconds": 0,
+        "Identity": "Fixture"
+      },
+      "name": "null-ParkTimeoutSeconds"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "PickupRangeStart": 0,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "PickupRangeStart": 0,
+        "Identity": "Fixture"
+      },
+      "name": "null-PickupRangeStart"
+    },
+    {
+      "command": "Set-CsTeamsCallParkPolicy",
+      "failure_type": null,
+      "wire": {
+        "PickupRangeEnd": 0,
+        "Identity": "Fixture"
+      },
+      "bound": {
+        "PickupRangeEnd": 0,
+        "Identity": "Fixture"
+      },
+      "name": "null-PickupRangeEnd"
+    }
+  ]
+}
