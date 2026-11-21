@@ -5,8 +5,9 @@ package applicationmeetingconfiguration
 import (
 	"encoding/json"
 	"errors"
-	"slices"
 	"strings"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/listchange"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
@@ -54,99 +55,45 @@ func (v Configuration) MarshalJSON() ([]byte, error) {
 func (Configuration) String() string     { return "application meeting configuration (redacted)" }
 func (v Configuration) GoString() string { return v.String() }
 
-// AppIDChange is a replacement or Add/Remove delta. Constructors copy inputs.
-// The zero value is invalid; a nil *AppIDChange omits the setting entirely.
-type AppIDChange struct {
-	replacement any
-	add         any
-	remove      any
-	delta       bool
-	valid       bool
-}
+// AppIDChange describes replacement or an Add/Remove delta. Constructors copy input.
+// The zero value is invalid; nil omits the setting entirely.
+type AppIDChange struct{ change *listchange.Change }
 
-// ReplaceAppIDs emits an array. Nil and empty inputs both explicitly clear it.
+// ReplaceAppIDs replaces the list; nil/empty emits an explicit [].
 func ReplaceAppIDs(ids []string) *AppIDChange {
-	return &AppIDChange{replacement: append([]string{}, ids...), valid: true}
+	return &AppIDChange{change: listchange.ReplaceStrings(ids)}
 }
 
-// ChangeAppIDs emits capitalized operators; empty operators are omitted.
-// Both empty produces {}, distinct from clearing the list with [].
+// ChangeAppIDs emits Add/Remove arrays, omitting empty operators. Both empty emits {}.
 func ChangeAppIDs(add, remove []string) *AppIDChange {
-	v := &AppIDChange{delta: true, valid: true}
-	if len(add) > 0 {
-		v.add = slices.Clone(add)
-	}
-	if len(remove) > 0 {
-		v.remove = slices.Clone(remove)
-	}
-	return v
+	return &AppIDChange{change: listchange.DeltaStrings(add, remove)}
 }
 
-// LegacyAppIDs models the pinned helper's PSObject compatibility branch. Each
-// item must be an object; legacy serialization metadata is removed. This does
-// not establish backend acceptance of an object as an application identifier.
+// LegacyAppIDs preserves object-item compatibility after removing legacy metadata.
+// It does not establish backend acceptance of an object as an application ID.
 func LegacyAppIDs(items []json.RawMessage) (*AppIDChange, error) {
-	values, err := legacyItems(items)
+	change, err := listchange.ReplaceObjects(items)
 	if err != nil {
-		return nil, err
-	}
-	return &AppIDChange{replacement: values, valid: true}, nil
-}
-
-// ChangeLegacyAppIDs retains object-item Add/Remove shapes without legacy metadata.
-func ChangeLegacyAppIDs(add, remove []json.RawMessage) (*AppIDChange, error) {
-	a, err := legacyItems(add)
-	if err != nil {
-		return nil, err
-	}
-	r, err := legacyItems(remove)
-	if err != nil {
-		return nil, err
-	}
-	v := &AppIDChange{delta: true, valid: true}
-	if len(a) > 0 {
-		v.add = a
-	}
-	if len(r) > 0 {
-		v.remove = r
-	}
-	return v, nil
-}
-
-func legacyItems(items []json.RawMessage) ([]json.RawMessage, error) {
-	values := make([]json.RawMessage, 0, len(items))
-	for _, item := range items {
-		var fields map[string]json.RawMessage
-		if json.Unmarshal(item, &fields) != nil || fields == nil {
-			return nil, ErrInput
-		}
-		for _, name := range []string{"XsAnyElements", "XsAnyAttributes", "DataSource", "Key", "ScopeClass", "Anchor", "Element", "TypedIdentity"} {
-			delete(fields, name)
-		}
-		value, err := json.Marshal(fields)
-		if err != nil {
-			return nil, ErrInput
-		}
-		values = append(values, value)
-	}
-	return values, nil
-}
-
-func (v AppIDChange) MarshalJSON() ([]byte, error) {
-	if !v.valid {
 		return nil, ErrInput
 	}
-	if !v.delta {
-		return json.Marshal(v.replacement)
+	return &AppIDChange{change: change}, nil
+}
+
+// ChangeLegacyAppIDs emits object-item Add/Remove deltas without legacy metadata.
+func ChangeLegacyAppIDs(add, remove []json.RawMessage) (*AppIDChange, error) {
+	change, err := listchange.DeltaObjects(add, remove)
+	if err != nil {
+		return nil, ErrInput
 	}
-	fields := map[string]any{}
-	if v.add != nil {
-		fields["Add"] = v.add
+	return &AppIDChange{change: change}, nil
+}
+
+// MarshalJSON retains replacement/delta and empty/omitted distinctions.
+func (v AppIDChange) MarshalJSON() ([]byte, error) {
+	if v.change == nil {
+		return nil, ErrInput
 	}
-	if v.remove != nil {
-		fields["Remove"] = v.remove
-	}
-	return json.Marshal(fields)
+	return v.change.MarshalJSON()
 }
 
 // UpdateRequest contains only bound settings. Nil omits the property rather

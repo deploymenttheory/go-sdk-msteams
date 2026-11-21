@@ -1954,31 +1954,90 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/36/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
+              "name": "TestExternalAccessPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/filter_test.go",
+              "name": "TestProviderFilteringIsLocalAndGlobalOrderIsExact"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/federation_test.go",
+              "name": "TestLabFederationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/36/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
+              "name": "TestExternalAccessPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/filter_test.go",
+              "name": "TestProviderFilteringIsLocalAndGlobalOrderIsExact"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/federation_test.go",
+              "name": "TestLabFederationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Both dedicated-SPN secret/certificate read-only attempts returned resource HTTP 403; filtered-list/PowerShell comparison and full command qualification remain unavailable. No mode/feature restriction is inferred.",
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "exclusion": null
     },
@@ -4393,31 +4452,90 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/99/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/service_test.go",
+              "name": "TestPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/filter_test.go",
+              "name": "TestProviderFilteringIsLocalAndGlobalOrderIsExact"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/federation_test.go",
+              "name": "TestLabFederationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/99/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/service_test.go",
+              "name": "TestPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/filter_test.go",
+              "name": "TestProviderFilteringIsLocalAndGlobalOrderIsExact"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/federation_test.go",
+              "name": "TestLabFederationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Both dedicated-SPN secret/certificate read-only attempts returned resource HTTP 403; filtered-list/PowerShell comparison and full command qualification remain unavailable. No mode/feature restriction is inferred.",
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "exclusion": null
     },
@@ -5328,31 +5446,90 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/122/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/service_test.go",
+              "name": "TestPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/filter_test.go",
+              "name": "TestProviderFilteringIsLocalAndGlobalOrderIsExact"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/federation_test.go",
+              "name": "TestLabFederationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/122/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/service_test.go",
+              "name": "TestPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/filter_test.go",
+              "name": "TestProviderFilteringIsLocalAndGlobalOrderIsExact"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/federation_test.go",
+              "name": "TestLabFederationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Both dedicated-SPN secret/certificate read-only attempts returned resource HTTP 403; filtered-list/PowerShell comparison and full command qualification remain unavailable. No mode/feature restriction is inferred.",
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "exclusion": null
     },
@@ -8024,31 +8201,90 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/187/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/filter.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service_test.go",
+              "name": "TestTenantFederationPinnedDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service_test.go",
+              "name": "TestTenantListFilteringAndRawChoices"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/federation_test.go",
+              "name": "TestLabFederationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/187/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service_test.go",
+              "name": "TestTenantFederationPinnedDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service_test.go",
+              "name": "TestTenantListFilteringAndRawChoices"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/federation_test.go",
+              "name": "TestLabFederationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_federation_configuration/filter.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_federation_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_federation_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Both dedicated-SPN secret/certificate read-only attempts returned resource HTTP 403; filtered-list/PowerShell comparison and full command qualification remain unavailable. No mode/feature restriction is inferred.",
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "exclusion": null
     },
@@ -10105,40 +10341,115 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/224/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
+              "name": "TestExternalAccessPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
+              "name": "TestAssignmentsAndMutationsRejectInvalidInputBeforeTokens"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/224/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
+              "name": "TestExternalAccessPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
+              "name": "TestAssignmentsAndMutationsRejectInvalidInputBeforeTokens"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/224/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
+              "name": "TestExternalAccessPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
+              "name": "TestAssignmentsAndMutationsRejectInvalidInputBeforeTokens"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/224/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
+              "name": "TestExternalAccessPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
+              "name": "TestAssignmentsAndMutationsRejectInvalidInputBeforeTokens"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/assignment.go",
+            "name": "Service.AssignUser"
+          },
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/assignment.go",
+            "name": "Service.Assign"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -13869,7 +14180,7 @@
       "contract": {
         "status": "metadata-only",
         "evidence": [
-          "docs/implementation/policies/federation-sdk-progress.md"
+          "docs/implementation/policies/federation-sdk-evidence.md"
         ]
       },
       "live": {
@@ -13922,7 +14233,7 @@
       "contract": {
         "status": "metadata-only",
         "evidence": [
-          "docs/implementation/policies/federation-sdk-progress.md"
+          "docs/implementation/policies/federation-sdk-evidence.md"
         ]
       },
       "live": {
@@ -13975,7 +14286,7 @@
       "contract": {
         "status": "metadata-only",
         "evidence": [
-          "docs/implementation/policies/federation-sdk-progress.md"
+          "docs/implementation/policies/federation-sdk-evidence.md"
         ]
       },
       "live": {
@@ -13996,19 +14307,53 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/302/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/create_delete.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/create_delete.go",
+              "name": "Service.CreateWithGlobalComparison"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
+              "name": "TestExternalAccessPinnedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
+              "name": "TestCreateComparisonIsExplicitAndDoesNotCloneGlobal"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/external_access_policy_test.go",
+              "name": "TestLabExternalAccessPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/create_delete.go",
+            "name": "Service.Create"
+          },
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/create_delete.go",
+            "name": "Service.CreateWithGlobalComparison"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -18535,19 +18880,41 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/419/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/create_delete.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
+              "name": "TestExternalAccessPinnedProviderDispatch"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/external_access_policy_test.go",
+              "name": "TestLabExternalAccessPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/create_delete.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -22765,19 +23132,53 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/530/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
+              "name": "TestExternalAccessComposedUpdate"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
+              "name": "TestUpdateFailurePreservesPreparationAndNeverReplays"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/external_access_policy_test.go",
+              "name": "TestLabExternalAccessPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/external_access_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -24299,19 +24700,44 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/572/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/service_test.go",
+              "name": "TestComposedUpdatePreservesReadIdentityAndSparseFields"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/acs_federation_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -25073,19 +25499,44 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/595/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/service_test.go",
+              "name": "TestComposedUpdatePreservesReadIdentityAndSparseFields"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_external_access_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -26782,19 +27233,48 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/645/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service_test.go",
+              "name": "TestTenantUpdateMatchesPinnedNormalization"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service_test.go",
+              "name": "TestTenantInvalidInputsDoNotAcquireCredentials"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_federation_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_federation_configuration/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",

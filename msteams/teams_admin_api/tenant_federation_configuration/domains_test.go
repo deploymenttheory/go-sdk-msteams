@@ -14,6 +14,7 @@ import (
 
 func TestDomainConstructorsAreLocal(t *testing.T) {
 	t.Parallel()
+	var results []contracttest.Result
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/federation-domain-models.json")
 	if err != nil {
 		t.Fatal(err)
@@ -52,7 +53,9 @@ func TestDomainConstructorsAreLocal(t *testing.T) {
 		if err != nil || !r.Passed() {
 			t.Fatalf("local builder differs: %v %+v", err, r.Differences())
 		}
+		results = append(results, r)
 	}
+	evidence(t, results)
 }
 
 func TestAllowListOwnsOriginalOrderAndRejectsInvalidZeroChoice(t *testing.T) {

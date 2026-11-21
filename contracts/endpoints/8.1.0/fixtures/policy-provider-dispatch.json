@@ -1,0 +1,671 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-compiled-provider-request-and-dispatch",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll",
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll",
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af"
+    }
+  ],
+  "stage": "Direct HttpRequestHelper methods; synthetic InvocationInfo/bound parameters; fake host refuses tokens; cached module version and private HTTP client replaced/restored; only in-memory handler. MPACmdlet default header is inserted by adapter from factory source. No command processing, connection, discovery or network.",
+  "cases": [
+    {
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalAccessPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "read"
+    },
+    {
+      "response": "[]",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalAccessPolicy, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "list"
+    },
+    {
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Description\": \"\",\n  \"EnableFederationAccess\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalAccessPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "create"
+    },
+    {
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"EnableFederationAccess\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "update"
+    },
+    {
+      "response": "",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "delete"
+    },
+    {
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/ExternalAccessPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"additionalParameters\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalAccessPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "user"
+    },
+    {
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/ExternalAccessPolicy",
+        "Body": "{\n  \"PolicyName\": \"\",\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalAccessPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "tenant"
+    },
+    {
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/ExternalAccessPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalAccessPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "group"
+    },
+    {
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAcsFederationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAcsFederationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAcsFederationConfiguration",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "acs-read"
+    },
+    {
+      "response": "[]",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAcsFederationConfiguration",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAcsFederationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAcsFederationConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "acs-list"
+    },
+    {
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAcsFederationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"AllowedAcsResources\": [],\n  \"EnableAcsUsers\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsAcsFederationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "acs-update"
+    },
+    {
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsExternalAccessConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsExternalAccessConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsExternalAccessConfiguration",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "external-read"
+    },
+    {
+      "response": "[]",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsExternalAccessConfiguration",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsExternalAccessConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsExternalAccessConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "external-list"
+    },
+    {
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsExternalAccessConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"BlockedUsers\": [],\n  \"BlockExternalUserAccess\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsExternalAccessConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "external-update"
+    },
+    {
+      "response": "",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "delete-force-false"
+    },
+    {
+      "response": "",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "read-no-content"
+    },
+    {
+      "response": "{\"OperationId\":\"fixture-operation\"}",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/ExternalAccessPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalAccessPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 202,
+      "name": "group-accepted-opaque"
+    },
+    {
+      "response": "{\"value\":[]}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "status": 200,
+      "name": "list-envelope"
+    },
+    {
+      "response": "{\"Identity\":\"tag:Fixture / Policy\"}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/tag%3AFixture%20/%20Policy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalAccessPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "read-tagged"
+    },
+    {
+      "response": "{\"Identity\":\"Global\",\"CommunicationWithExternalOrgs\":7}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalAccessPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "read-future-enum"
+    },
+    {
+      "response": "{\"Identity\":\"Global\",\"AllowedExternalDomains\":null}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "status": 200,
+      "name": "read-null-domain-list"
+    },
+    {
+      "response": "{\"Identity\":\"Global\",\"AllowedAcsResources\":null}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAcsFederationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAcsFederationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAcsFederationConfiguration",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "acs-null-list"
+    },
+    {
+      "response": "{\"Identity\":\"Global\",\"BlockedUsers\":null}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsExternalAccessConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsExternalAccessConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "status": 200,
+      "name": "external-null-list"
+    },
+    {
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsExternalAccessPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      },
+      "status": 403,
+      "name": "delete-denied"
+    }
+  ],
+  "lists": [
+    {
+      "name": "null",
+      "observation": {
+        "is_empty": true,
+        "values": []
+      }
+    },
+    {
+      "name": "empty-operators",
+      "observation": {
+        "is_empty": true,
+        "values": []
+      }
+    },
+    {
+      "name": "replacement",
+      "observation": {
+        "is_empty": false,
+        "values": [
+          "b",
+          "b",
+          ""
+        ]
+      }
+    },
+    {
+      "name": "remove-one",
+      "observation": {
+        "is_empty": false,
+        "values": [
+          "a",
+          "A",
+          "b"
+        ]
+      }
+    },
+    {
+      "name": "remove-missing",
+      "observation": {
+        "is_empty": false,
+        "values": [
+          "a",
+          "a",
+          "A",
+          "b"
+        ]
+      }
+    },
+    {
+      "name": "add-existing",
+      "observation": {
+        "is_empty": false,
+        "values": [
+          "a",
+          "a",
+          "A",
+          "b",
+          "a",
+          "c",
+          "c"
+        ]
+      }
+    },
+    {
+      "name": "remove-and-add",
+      "observation": {
+        "is_empty": false,
+        "values": [
+          "a",
+          "A",
+          "b",
+          "a"
+        ]
+      }
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "sma_assembly_version": "7.6.0.500"
+}
