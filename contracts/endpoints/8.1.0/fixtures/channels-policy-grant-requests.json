@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-channels-policy-grant-generated-requests",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assembly": {
+    "sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+    "path": "bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll"
+  },
+  "stage": "Actual pinned generated service helper before session host/header rewrite; injected memory sender, no HttpClient/credentials, flighting, discovery or production pipeline.",
+  "cases": [
+    {
+      "sends": 1,
+      "generated_url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/TeamsChannelsPolicy",
+      "decoder_failure": null,
+      "name": "user-assignment",
+      "decoded_null": null,
+      "response_status": 200,
+      "method": "PATCH",
+      "selected_handler": "onOk",
+      "body": {
+        "policyName": "Fixture"
+      },
+      "canceled": false,
+      "decoded_type": null,
+      "content_type": "application/json",
+      "response_body": "",
+      "operation": "UserGrantPolicy"
+    },
+    {
+      "sends": 1,
+      "generated_url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/TeamsChannelsPolicy",
+      "decoder_failure": null,
+      "name": "user-clear-empty-policy",
+      "decoded_null": null,
+      "response_status": 200,
+      "method": "PATCH",
+      "selected_handler": "onOk",
+      "body": {
+        "policyName": ""
+      },
+      "canceled": false,
+      "decoded_type": null,
+      "content_type": "application/json",
+      "response_body": "",
+      "operation": "UserGrantPolicy"
+    },
+    {
+      "sends": 1,
+      "generated_url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsChannelsPolicy",
+      "decoder_failure": null,
+      "name": "tenant-assignment",
+      "decoded_null": null,
+      "response_status": 200,
+      "method": "PATCH",
+      "selected_handler": "onOk",
+      "body": {
+        "policyName": "Fixture",
+        "forceSwitchPresent": false
+      },
+      "canceled": false,
+      "decoded_type": null,
+      "content_type": "application/json",
+      "response_body": "",
+      "operation": "TenantGrantPolicy"
+    },
+    {
+      "sends": 1,
+      "generated_url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsChannelsPolicy",
+      "decoder_failure": null,
+      "name": "group-assignment-accepted",
+      "decoded_null": false,
+      "response_status": 202,
+      "method": "POST",
+      "selected_handler": "onAccepted",
+      "body": {
+        "policyName": "Fixture",
+        "priority": 2
+      },
+      "canceled": false,
+      "decoded_type": "IBatchOperationId",
+      "content_type": "application/json",
+      "response_body": "{\"OperationId\":\"fixture-operation\"}",
+      "operation": "GroupGrantPolicyAssignment"
+    },
+    {
+      "sends": 1,
+      "generated_url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsChannelsPolicy",
+      "decoder_failure": null,
+      "name": "group-assignment-no-content",
+      "decoded_null": null,
+      "response_status": 204,
+      "method": "POST",
+      "selected_handler": "onNoContent",
+      "body": {
+        "policyName": "Fixture",
+        "priority": 2
+      },
+      "canceled": false,
+      "decoded_type": null,
+      "content_type": "application/json",
+      "response_body": "",
+      "operation": "GroupGrantPolicyAssignment"
+    },
+    {
+      "sends": 1,
+      "generated_url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsChannelsPolicy",
+      "decoder_failure": null,
+      "name": "group-assignment-zero-priority",
+      "decoded_null": false,
+      "response_status": 202,
+      "method": "POST",
+      "selected_handler": "onAccepted",
+      "body": {
+        "policyName": "Fixture",
+        "priority": 0
+      },
+      "canceled": false,
+      "decoded_type": "IBatchOperationId",
+      "content_type": "application/json",
+      "response_body": "{\"OperationId\":\"fixture-operation\"}",
+      "operation": "GroupGrantPolicyAssignment"
+    },
+    {
+      "sends": 1,
+      "generated_url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsChannelsPolicy",
+      "decoder_failure": null,
+      "name": "group-clear-without-priority",
+      "decoded_null": null,
+      "response_status": 204,
+      "method": "POST",
+      "selected_handler": "onNoContent",
+      "body": {
+        "policyName": ""
+      },
+      "canceled": false,
+      "decoded_type": null,
+      "content_type": "application/json",
+      "response_body": "",
+      "operation": "GroupGrantPolicyAssignment"
+    }
+  ]
+}

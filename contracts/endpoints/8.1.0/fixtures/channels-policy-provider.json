@@ -1,0 +1,2454 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-channels-policy-provider-and-models",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll",
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll",
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Actual pinned direct HttpRequestHelper with synthetic InvocationInfo, credential-refusing host and memory sender. Client/version/host restored. MPACmdlet factory default supplied. Actual model constructors/setters/Newtonsoft projections for all 20 settings. No command constructor/lifecycle, public parameter binder, credentials, discovery or network. Compiled CRUD only; exported modern Grant is captured separately.",
+  "cases": [
+    {
+      "name": "read",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsChannelsPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "operation": "read",
+      "input": "{}",
+      "response": "{\"Identity\":\"Global\",\"Future\":false,\"Description\":\"Future-Description\",\"AllowOrgWideTeamCreation\":false,\"EnablePrivateTeamDiscovery\":false,\"AllowPrivateChannelCreation\":false,\"AllowSharedChannelCreation\":false,\"AllowChannelSharingToExternalUser\":false,\"AllowUserToParticipateInExternalSharedChannel\":false,\"ThreadedChannelCreation\":\"Future-ThreadedChannelCreation\",\"AllowCreateChannel\":\"Future-AllowCreateChannel\",\"AllowCreateClassicChannel\":\"Future-AllowCreateClassicChannel\",\"AllowCreatePrivateChannel\":\"Future-AllowCreatePrivateChannel\",\"AllowCreateSharedChannel\":\"Future-AllowCreateSharedChannel\",\"CreateSharedChannelsByDefault\":\"Future-CreateSharedChannelsByDefault\",\"AllowUsersFromOutsideTeam\":\"Future-AllowUsersFromOutsideTeam\",\"AllowGuestsFromOutsideTeam\":\"Future-AllowGuestsFromOutsideTeam\",\"AllowUsersFromOutsideTeamInPrivateChannel\":\"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\"AllowGuestsFromOutsideTeamInPrivateChannel\":\"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\"AllowSharingWithTeamInOrg\":\"Future-AllowSharingWithTeamInOrg\",\"AllowSharingPrivateChannelWithTeamInOrg\":\"Future-AllowSharingPrivateChannelWithTeamInOrg\",\"DefaultChannelTypeOnCreation\":\"Future-DefaultChannelTypeOnCreation\"}",
+      "force_mode": -1
+    },
+    {
+      "name": "list-empty",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsChannelsPolicy, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "operation": "list",
+      "input": "{}",
+      "response": "[]",
+      "force_mode": -1
+    },
+    {
+      "name": "create-all",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Description\": \"Future-Description\",\n  \"AllowOrgWideTeamCreation\": false,\n  \"EnablePrivateTeamDiscovery\": false,\n  \"AllowPrivateChannelCreation\": false,\n  \"AllowSharedChannelCreation\": false,\n  \"AllowChannelSharingToExternalUser\": false,\n  \"AllowUserToParticipateInExternalSharedChannel\": false,\n  \"ThreadedChannelCreation\": \"Future-ThreadedChannelCreation\",\n  \"AllowCreateChannel\": \"Future-AllowCreateChannel\",\n  \"AllowCreateClassicChannel\": \"Future-AllowCreateClassicChannel\",\n  \"AllowCreatePrivateChannel\": \"Future-AllowCreatePrivateChannel\",\n  \"AllowCreateSharedChannel\": \"Future-AllowCreateSharedChannel\",\n  \"CreateSharedChannelsByDefault\": \"Future-CreateSharedChannelsByDefault\",\n  \"AllowUsersFromOutsideTeam\": \"Future-AllowUsersFromOutsideTeam\",\n  \"AllowGuestsFromOutsideTeam\": \"Future-AllowGuestsFromOutsideTeam\",\n  \"AllowUsersFromOutsideTeamInPrivateChannel\": \"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\n  \"AllowGuestsFromOutsideTeamInPrivateChannel\": \"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\n  \"AllowSharingWithTeamInOrg\": \"Future-AllowSharingWithTeamInOrg\",\n  \"AllowSharingPrivateChannelWithTeamInOrg\": \"Future-AllowSharingPrivateChannelWithTeamInOrg\",\n  \"DefaultChannelTypeOnCreation\": \"Future-DefaultChannelTypeOnCreation\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsChannelsPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 201,
+      "operation": "create",
+      "input": "{\"Description\":\"Future-Description\",\"AllowOrgWideTeamCreation\":false,\"EnablePrivateTeamDiscovery\":false,\"AllowPrivateChannelCreation\":false,\"AllowSharedChannelCreation\":false,\"AllowChannelSharingToExternalUser\":false,\"AllowUserToParticipateInExternalSharedChannel\":false,\"ThreadedChannelCreation\":\"Future-ThreadedChannelCreation\",\"AllowCreateChannel\":\"Future-AllowCreateChannel\",\"AllowCreateClassicChannel\":\"Future-AllowCreateClassicChannel\",\"AllowCreatePrivateChannel\":\"Future-AllowCreatePrivateChannel\",\"AllowCreateSharedChannel\":\"Future-AllowCreateSharedChannel\",\"CreateSharedChannelsByDefault\":\"Future-CreateSharedChannelsByDefault\",\"AllowUsersFromOutsideTeam\":\"Future-AllowUsersFromOutsideTeam\",\"AllowGuestsFromOutsideTeam\":\"Future-AllowGuestsFromOutsideTeam\",\"AllowUsersFromOutsideTeamInPrivateChannel\":\"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\"AllowGuestsFromOutsideTeamInPrivateChannel\":\"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\"AllowSharingWithTeamInOrg\":\"Future-AllowSharingWithTeamInOrg\",\"AllowSharingPrivateChannelWithTeamInOrg\":\"Future-AllowSharingPrivateChannelWithTeamInOrg\",\"DefaultChannelTypeOnCreation\":\"Future-DefaultChannelTypeOnCreation\"}",
+      "response": "{}",
+      "force_mode": -1
+    },
+    {
+      "name": "create-empty",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "operation": "create",
+      "input": "{}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "name": "patch-all",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"Future-Description\",\n  \"AllowOrgWideTeamCreation\": false,\n  \"EnablePrivateTeamDiscovery\": false,\n  \"AllowPrivateChannelCreation\": false,\n  \"AllowSharedChannelCreation\": false,\n  \"AllowChannelSharingToExternalUser\": false,\n  \"AllowUserToParticipateInExternalSharedChannel\": false,\n  \"ThreadedChannelCreation\": \"Future-ThreadedChannelCreation\",\n  \"AllowCreateChannel\": \"Future-AllowCreateChannel\",\n  \"AllowCreateClassicChannel\": \"Future-AllowCreateClassicChannel\",\n  \"AllowCreatePrivateChannel\": \"Future-AllowCreatePrivateChannel\",\n  \"AllowCreateSharedChannel\": \"Future-AllowCreateSharedChannel\",\n  \"CreateSharedChannelsByDefault\": \"Future-CreateSharedChannelsByDefault\",\n  \"AllowUsersFromOutsideTeam\": \"Future-AllowUsersFromOutsideTeam\",\n  \"AllowGuestsFromOutsideTeam\": \"Future-AllowGuestsFromOutsideTeam\",\n  \"AllowUsersFromOutsideTeamInPrivateChannel\": \"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\n  \"AllowGuestsFromOutsideTeamInPrivateChannel\": \"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\n  \"AllowSharingWithTeamInOrg\": \"Future-AllowSharingWithTeamInOrg\",\n  \"AllowSharingPrivateChannelWithTeamInOrg\": \"Future-AllowSharingPrivateChannelWithTeamInOrg\",\n  \"DefaultChannelTypeOnCreation\": \"Future-DefaultChannelTypeOnCreation\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "operation": "patch",
+      "input": "{\"Description\":\"Future-Description\",\"AllowOrgWideTeamCreation\":false,\"EnablePrivateTeamDiscovery\":false,\"AllowPrivateChannelCreation\":false,\"AllowSharedChannelCreation\":false,\"AllowChannelSharingToExternalUser\":false,\"AllowUserToParticipateInExternalSharedChannel\":false,\"ThreadedChannelCreation\":\"Future-ThreadedChannelCreation\",\"AllowCreateChannel\":\"Future-AllowCreateChannel\",\"AllowCreateClassicChannel\":\"Future-AllowCreateClassicChannel\",\"AllowCreatePrivateChannel\":\"Future-AllowCreatePrivateChannel\",\"AllowCreateSharedChannel\":\"Future-AllowCreateSharedChannel\",\"CreateSharedChannelsByDefault\":\"Future-CreateSharedChannelsByDefault\",\"AllowUsersFromOutsideTeam\":\"Future-AllowUsersFromOutsideTeam\",\"AllowGuestsFromOutsideTeam\":\"Future-AllowGuestsFromOutsideTeam\",\"AllowUsersFromOutsideTeamInPrivateChannel\":\"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\"AllowGuestsFromOutsideTeamInPrivateChannel\":\"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\"AllowSharingWithTeamInOrg\":\"Future-AllowSharingWithTeamInOrg\",\"AllowSharingPrivateChannelWithTeamInOrg\":\"Future-AllowSharingPrivateChannelWithTeamInOrg\",\"DefaultChannelTypeOnCreation\":\"Future-DefaultChannelTypeOnCreation\"}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "name": "patch-null",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": null,\n  \"AllowPrivateChannelCreation\": null,\n  \"AllowCreatePrivateChannel\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "operation": "patch",
+      "input": "{\"Description\":null,\"AllowPrivateChannelCreation\":null,\"AllowCreatePrivateChannel\":null}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "name": "patch-empty",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"AllowCreatePrivateChannel\": \"\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "operation": "patch",
+      "input": "{\"Description\":\"\",\"AllowCreatePrivateChannel\":\"\"}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "name": "patch-force-false",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "operation": "patch",
+      "input": "{\"Description\":\"\"}",
+      "response": "",
+      "force_mode": 0
+    },
+    {
+      "name": "patch-force-true",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"Force\": \"True\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "operation": "patch",
+      "input": "{\"Description\":\"\"}",
+      "response": "",
+      "force_mode": 1
+    },
+    {
+      "name": "delete",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "operation": "delete",
+      "input": "{}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "name": "delete-force-false",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "operation": "delete",
+      "input": "{}",
+      "response": "",
+      "force_mode": 0
+    },
+    {
+      "name": "read-empty",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "operation": "read",
+      "input": "{}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "name": "read-null",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "operation": "read",
+      "input": "{}",
+      "response": "null",
+      "force_mode": -1
+    },
+    {
+      "name": "list-envelope",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "status": 200,
+      "operation": "list",
+      "input": "{}",
+      "response": "{\"value\":[]}",
+      "force_mode": -1
+    },
+    {
+      "name": "read-denied",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsChannelsPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      },
+      "status": 403,
+      "operation": "read",
+      "input": "{}",
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "force_mode": -1
+    }
+  ],
+  "models": [
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "constructor",
+      "name": "constructor"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{}",
+      "name": "empty-object"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": "Future-Description",
+          "AllowOrgWideTeamCreation": false,
+          "EnablePrivateTeamDiscovery": false,
+          "AllowPrivateChannelCreation": false,
+          "AllowSharedChannelCreation": false,
+          "AllowChannelSharingToExternalUser": false,
+          "AllowUserToParticipateInExternalSharedChannel": false,
+          "ThreadedChannelCreation": "Future-ThreadedChannelCreation",
+          "AllowCreateChannel": "Future-AllowCreateChannel",
+          "AllowCreateClassicChannel": "Future-AllowCreateClassicChannel",
+          "AllowCreatePrivateChannel": "Future-AllowCreatePrivateChannel",
+          "AllowCreateSharedChannel": "Future-AllowCreateSharedChannel",
+          "CreateSharedChannelsByDefault": "Future-CreateSharedChannelsByDefault",
+          "AllowUsersFromOutsideTeam": "Future-AllowUsersFromOutsideTeam",
+          "AllowGuestsFromOutsideTeam": "Future-AllowGuestsFromOutsideTeam",
+          "AllowUsersFromOutsideTeamInPrivateChannel": "Future-AllowUsersFromOutsideTeamInPrivateChannel",
+          "AllowGuestsFromOutsideTeamInPrivateChannel": "Future-AllowGuestsFromOutsideTeamInPrivateChannel",
+          "AllowSharingWithTeamInOrg": "Future-AllowSharingWithTeamInOrg",
+          "AllowSharingPrivateChannelWithTeamInOrg": "Future-AllowSharingPrivateChannelWithTeamInOrg",
+          "DefaultChannelTypeOnCreation": "Future-DefaultChannelTypeOnCreation"
+        }
+      },
+      "input": "{\"Description\":\"Future-Description\",\"AllowOrgWideTeamCreation\":false,\"EnablePrivateTeamDiscovery\":false,\"AllowPrivateChannelCreation\":false,\"AllowSharedChannelCreation\":false,\"AllowChannelSharingToExternalUser\":false,\"AllowUserToParticipateInExternalSharedChannel\":false,\"ThreadedChannelCreation\":\"Future-ThreadedChannelCreation\",\"AllowCreateChannel\":\"Future-AllowCreateChannel\",\"AllowCreateClassicChannel\":\"Future-AllowCreateClassicChannel\",\"AllowCreatePrivateChannel\":\"Future-AllowCreatePrivateChannel\",\"AllowCreateSharedChannel\":\"Future-AllowCreateSharedChannel\",\"CreateSharedChannelsByDefault\":\"Future-CreateSharedChannelsByDefault\",\"AllowUsersFromOutsideTeam\":\"Future-AllowUsersFromOutsideTeam\",\"AllowGuestsFromOutsideTeam\":\"Future-AllowGuestsFromOutsideTeam\",\"AllowUsersFromOutsideTeamInPrivateChannel\":\"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\"AllowGuestsFromOutsideTeamInPrivateChannel\":\"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\"AllowSharingWithTeamInOrg\":\"Future-AllowSharingWithTeamInOrg\",\"AllowSharingPrivateChannelWithTeamInOrg\":\"Future-AllowSharingPrivateChannelWithTeamInOrg\",\"DefaultChannelTypeOnCreation\":\"Future-DefaultChannelTypeOnCreation\"}",
+      "name": "all-settings"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"Description\":null}",
+      "name": "Description-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": "",
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"Description\":\"\"}",
+      "name": "Description-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": "Future-Description",
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"Description\":\"Future-Description\"}",
+      "name": "Description-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowOrgWideTeamCreation\":null}",
+      "name": "AllowOrgWideTeamCreation-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": false,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowOrgWideTeamCreation\":false}",
+      "name": "AllowOrgWideTeamCreation-false"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": true,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowOrgWideTeamCreation\":true}",
+      "name": "AllowOrgWideTeamCreation-true"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"EnablePrivateTeamDiscovery\":null}",
+      "name": "EnablePrivateTeamDiscovery-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": false,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"EnablePrivateTeamDiscovery\":false}",
+      "name": "EnablePrivateTeamDiscovery-false"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": true,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"EnablePrivateTeamDiscovery\":true}",
+      "name": "EnablePrivateTeamDiscovery-true"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowPrivateChannelCreation\":null}",
+      "name": "AllowPrivateChannelCreation-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": false,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowPrivateChannelCreation\":false}",
+      "name": "AllowPrivateChannelCreation-false"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": true,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowPrivateChannelCreation\":true}",
+      "name": "AllowPrivateChannelCreation-true"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowSharedChannelCreation\":null}",
+      "name": "AllowSharedChannelCreation-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": false,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowSharedChannelCreation\":false}",
+      "name": "AllowSharedChannelCreation-false"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": true,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowSharedChannelCreation\":true}",
+      "name": "AllowSharedChannelCreation-true"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowChannelSharingToExternalUser\":null}",
+      "name": "AllowChannelSharingToExternalUser-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": false,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowChannelSharingToExternalUser\":false}",
+      "name": "AllowChannelSharingToExternalUser-false"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": true,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowChannelSharingToExternalUser\":true}",
+      "name": "AllowChannelSharingToExternalUser-true"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowUserToParticipateInExternalSharedChannel\":null}",
+      "name": "AllowUserToParticipateInExternalSharedChannel-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": false,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowUserToParticipateInExternalSharedChannel\":false}",
+      "name": "AllowUserToParticipateInExternalSharedChannel-false"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": true,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowUserToParticipateInExternalSharedChannel\":true}",
+      "name": "AllowUserToParticipateInExternalSharedChannel-true"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"ThreadedChannelCreation\":null}",
+      "name": "ThreadedChannelCreation-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": "",
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"ThreadedChannelCreation\":\"\"}",
+      "name": "ThreadedChannelCreation-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": "Future-ThreadedChannelCreation",
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"ThreadedChannelCreation\":\"Future-ThreadedChannelCreation\"}",
+      "name": "ThreadedChannelCreation-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreateChannel\":null}",
+      "name": "AllowCreateChannel-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": "",
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreateChannel\":\"\"}",
+      "name": "AllowCreateChannel-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": "Future-AllowCreateChannel",
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreateChannel\":\"Future-AllowCreateChannel\"}",
+      "name": "AllowCreateChannel-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreateClassicChannel\":null}",
+      "name": "AllowCreateClassicChannel-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": "",
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreateClassicChannel\":\"\"}",
+      "name": "AllowCreateClassicChannel-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": "Future-AllowCreateClassicChannel",
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreateClassicChannel\":\"Future-AllowCreateClassicChannel\"}",
+      "name": "AllowCreateClassicChannel-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreatePrivateChannel\":null}",
+      "name": "AllowCreatePrivateChannel-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": "",
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreatePrivateChannel\":\"\"}",
+      "name": "AllowCreatePrivateChannel-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": "Future-AllowCreatePrivateChannel",
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreatePrivateChannel\":\"Future-AllowCreatePrivateChannel\"}",
+      "name": "AllowCreatePrivateChannel-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreateSharedChannel\":null}",
+      "name": "AllowCreateSharedChannel-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": "",
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreateSharedChannel\":\"\"}",
+      "name": "AllowCreateSharedChannel-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": "Future-AllowCreateSharedChannel",
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowCreateSharedChannel\":\"Future-AllowCreateSharedChannel\"}",
+      "name": "AllowCreateSharedChannel-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"CreateSharedChannelsByDefault\":null}",
+      "name": "CreateSharedChannelsByDefault-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": "",
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"CreateSharedChannelsByDefault\":\"\"}",
+      "name": "CreateSharedChannelsByDefault-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": "Future-CreateSharedChannelsByDefault",
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"CreateSharedChannelsByDefault\":\"Future-CreateSharedChannelsByDefault\"}",
+      "name": "CreateSharedChannelsByDefault-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowUsersFromOutsideTeam\":null}",
+      "name": "AllowUsersFromOutsideTeam-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": "",
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowUsersFromOutsideTeam\":\"\"}",
+      "name": "AllowUsersFromOutsideTeam-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": "Future-AllowUsersFromOutsideTeam",
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowUsersFromOutsideTeam\":\"Future-AllowUsersFromOutsideTeam\"}",
+      "name": "AllowUsersFromOutsideTeam-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowGuestsFromOutsideTeam\":null}",
+      "name": "AllowGuestsFromOutsideTeam-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": "",
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowGuestsFromOutsideTeam\":\"\"}",
+      "name": "AllowGuestsFromOutsideTeam-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": "Future-AllowGuestsFromOutsideTeam",
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowGuestsFromOutsideTeam\":\"Future-AllowGuestsFromOutsideTeam\"}",
+      "name": "AllowGuestsFromOutsideTeam-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowUsersFromOutsideTeamInPrivateChannel\":null}",
+      "name": "AllowUsersFromOutsideTeamInPrivateChannel-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": "",
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowUsersFromOutsideTeamInPrivateChannel\":\"\"}",
+      "name": "AllowUsersFromOutsideTeamInPrivateChannel-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": "Future-AllowUsersFromOutsideTeamInPrivateChannel",
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowUsersFromOutsideTeamInPrivateChannel\":\"Future-AllowUsersFromOutsideTeamInPrivateChannel\"}",
+      "name": "AllowUsersFromOutsideTeamInPrivateChannel-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowGuestsFromOutsideTeamInPrivateChannel\":null}",
+      "name": "AllowGuestsFromOutsideTeamInPrivateChannel-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": "",
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowGuestsFromOutsideTeamInPrivateChannel\":\"\"}",
+      "name": "AllowGuestsFromOutsideTeamInPrivateChannel-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": "Future-AllowGuestsFromOutsideTeamInPrivateChannel",
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowGuestsFromOutsideTeamInPrivateChannel\":\"Future-AllowGuestsFromOutsideTeamInPrivateChannel\"}",
+      "name": "AllowGuestsFromOutsideTeamInPrivateChannel-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowSharingWithTeamInOrg\":null}",
+      "name": "AllowSharingWithTeamInOrg-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": "",
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowSharingWithTeamInOrg\":\"\"}",
+      "name": "AllowSharingWithTeamInOrg-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": "Future-AllowSharingWithTeamInOrg",
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowSharingWithTeamInOrg\":\"Future-AllowSharingWithTeamInOrg\"}",
+      "name": "AllowSharingWithTeamInOrg-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowSharingPrivateChannelWithTeamInOrg\":null}",
+      "name": "AllowSharingPrivateChannelWithTeamInOrg-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": "",
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowSharingPrivateChannelWithTeamInOrg\":\"\"}",
+      "name": "AllowSharingPrivateChannelWithTeamInOrg-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": "Future-AllowSharingPrivateChannelWithTeamInOrg",
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowSharingPrivateChannelWithTeamInOrg\":\"Future-AllowSharingPrivateChannelWithTeamInOrg\"}",
+      "name": "AllowSharingPrivateChannelWithTeamInOrg-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"DefaultChannelTypeOnCreation\":null}",
+      "name": "DefaultChannelTypeOnCreation-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": ""
+        }
+      },
+      "input": "{\"DefaultChannelTypeOnCreation\":\"\"}",
+      "name": "DefaultChannelTypeOnCreation-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": "Future-DefaultChannelTypeOnCreation"
+        }
+      },
+      "input": "{\"DefaultChannelTypeOnCreation\":\"Future-DefaultChannelTypeOnCreation\"}",
+      "name": "DefaultChannelTypeOnCreation-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"Description\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+      "name": "long-description"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": "second",
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"Description\":\"first\",\"description\":\"second\"}",
+      "name": "case-duplicate"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": null,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": null,
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowPrivateChannelCreation\":true,\"AllowPrivateChannelCreation\":null}",
+      "name": "duplicate-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Description": null,
+          "AllowOrgWideTeamCreation": null,
+          "EnablePrivateTeamDiscovery": null,
+          "AllowPrivateChannelCreation": false,
+          "AllowSharedChannelCreation": null,
+          "AllowChannelSharingToExternalUser": null,
+          "AllowUserToParticipateInExternalSharedChannel": null,
+          "ThreadedChannelCreation": null,
+          "AllowCreateChannel": null,
+          "AllowCreateClassicChannel": null,
+          "AllowCreatePrivateChannel": "FutureMode",
+          "AllowCreateSharedChannel": null,
+          "CreateSharedChannelsByDefault": null,
+          "AllowUsersFromOutsideTeam": null,
+          "AllowGuestsFromOutsideTeam": null,
+          "AllowUsersFromOutsideTeamInPrivateChannel": null,
+          "AllowGuestsFromOutsideTeamInPrivateChannel": null,
+          "AllowSharingWithTeamInOrg": null,
+          "AllowSharingPrivateChannelWithTeamInOrg": null,
+          "DefaultChannelTypeOnCreation": null
+        }
+      },
+      "input": "{\"AllowPrivateChannelCreation\":false,\"AllowCreatePrivateChannel\":\"FutureMode\"}",
+      "name": "distinct-legacy-boolean-and-string-mode"
+    },
+    {
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonReaderException",
+        "value": null
+      },
+      "input": "{\"AllowPrivateChannelCreation\":{}}",
+      "name": "invalid-boolean-object"
+    },
+    {
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonReaderException",
+        "value": null
+      },
+      "input": "{\"AllowCreatePrivateChannel\":{}}",
+      "name": "invalid-string-object"
+    }
+  ]
+}
