@@ -22,11 +22,12 @@ var errTeamOracle = errors.New("pinned PowerShell team read could not be verifie
 const maxTeamOracleBytes = 64 << 10
 
 type teamOracleRequest struct {
-	Kind    string `json:"kind"`
-	ID      string `json:"id"`
-	Fixture string `json:"fixture"`
-	Owner   string `json:"owner,omitempty"`
-	Channel string `json:"channel,omitempty"`
+	Kind        string `json:"kind"`
+	ID          string `json:"id"`
+	Fixture     string `json:"fixture"`
+	Owner       string `json:"owner,omitempty"`
+	Channel     string `json:"channel,omitempty"`
+	OperationID string `json:"operation_id,omitempty"`
 }
 
 type teamOracleProjection struct {
@@ -48,12 +49,13 @@ type teamOracleUser struct {
 }
 
 type teamOracleResponse struct {
-	Success bool                  `json:"success"`
-	Stage   string                `json:"stage"`
-	Team    *teamOracleProjection `json:"team"`
-	Tenant  *teamOracleProjection `json:"tenant"`
-	User    *teamOracleProjection `json:"user"`
-	Users   []teamOracleUser      `json:"users"`
+	Success   bool                  `json:"success"`
+	Stage     string                `json:"stage"`
+	Team      *teamOracleProjection `json:"team"`
+	Tenant    *teamOracleProjection `json:"tenant"`
+	User      *teamOracleProjection `json:"user"`
+	Users     []teamOracleUser      `json:"users"`
+	Operation *teamOracleOperation  `json:"operation"`
 }
 
 // Child stdout is private transient data. No command output, errors, identifiers
@@ -93,7 +95,7 @@ func teamOracleEnabled(t *testing.T) bool {
 
 func decodeTeamOracle(raw []byte, kind string) (teamOracleResponse, error) {
 	var value teamOracleResponse
-	if len(raw) > maxTeamOracleBytes || (kind != "team" && kind != "users" && kind != "channel-users") {
+	if len(raw) > maxTeamOracleBytes || (kind != "team" && kind != "users" && kind != "channel-users" && kind != "operation") {
 		return value, errTeamOracle
 	}
 	decoder := json.NewDecoder(bytes.NewReader(raw))
@@ -106,10 +108,14 @@ func decodeTeamOracle(raw []byte, kind string) (teamOracleResponse, error) {
 		return teamOracleResponse{}, errTeamOracle
 	}
 	if kind == "team" {
-		if value.Team == nil || value.Tenant == nil || value.User == nil || value.Users != nil {
+		if value.Team == nil || value.Tenant == nil || value.User == nil || value.Users != nil || value.Operation != nil {
 			return teamOracleResponse{}, errTeamOracle
 		}
-	} else if value.Team != nil || value.Tenant != nil || value.User != nil || value.Users == nil {
+	} else if kind == "operation" {
+		if value.Operation == nil || value.Operation.ID == "" || value.Team != nil || value.Tenant != nil || value.User != nil || value.Users != nil {
+			return teamOracleResponse{}, errTeamOracle
+		}
+	} else if value.Team != nil || value.Tenant != nil || value.User != nil || value.Users == nil || value.Operation != nil {
 		return teamOracleResponse{}, errTeamOracle
 	}
 	return value, nil

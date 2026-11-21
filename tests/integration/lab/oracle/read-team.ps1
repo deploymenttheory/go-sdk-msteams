@@ -14,8 +14,10 @@ try {
     if ($raw.Length -gt 8192) { throw 'Invalid selectors.' }
     $request = $raw | ConvertFrom-Json
     $uuid = '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
-    if ($request.id -notmatch $uuid -or $request.fixture -notmatch '^msteams-sdk-[a-z2-7]{26,64}-(team|migration|membership)$') { throw 'Owned fixture required.' }
-    if ($request.kind -notin @('team','users','channel-users')) { throw 'Unknown oracle.' }
+    if ($request.id -notmatch $uuid) { throw 'Explicit team required.' }
+    if ($request.kind -notin @('team','users','channel-users','operation')) { throw 'Unknown oracle.' }
+    if ($request.kind -ne 'operation' -and $request.fixture -notmatch '^msteams-sdk-[a-z2-7]{26,64}-(team|migration|membership)$') { throw 'Owned fixture required.' }
+    if ($request.kind -eq 'operation' -and [string]::IsNullOrWhiteSpace([string]$request.operation_id)) { throw 'Explicit operation required.' }
     if ($request.kind -eq 'team' -and $request.owner -notmatch $uuid) { throw 'Explicit owner required.' }
     if ($request.kind -eq 'channel-users' -and [string]::IsNullOrWhiteSpace([string]$request.channel)) { throw 'Explicit channel required.' }
     $report.stage = 'module'
@@ -31,8 +33,25 @@ try {
     Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $identity.tenant_id -ErrorAction Stop -WarningAction SilentlyContinue -InformationAction SilentlyContinue | Out-Null
     $connected = $true
     $report.stage = 'read'
-    $values = @(Get-Team -GroupId $request.id -ErrorAction Stop)
-    if ($values.Count -ne 1 -or [string]$values[0].GroupId -ine $request.id -or [string]$values[0].DisplayName -cne $request.fixture) { throw 'Expected one owned fixture.' }
+    if ($request.kind -ne 'operation') {
+        $values = @(Get-Team -GroupId $request.id -ErrorAction Stop)
+        if ($values.Count -ne 1 -or [string]$values[0].GroupId -ine $request.id -or [string]$values[0].DisplayName -cne $request.fixture) { throw 'Expected one owned fixture.' }
+    }
+    function Convert-OperationObservation($value) {
+        foreach ($property in @('OperationId','AsyncOperationType','AsyncOperationStatus','CreatedDateTime','LastUpdateDateTimeUtc','AttemptsCount','TargetResourceId','TargetResourceLocation')) {
+            if ($null -eq $value.PSObject.Properties[$property]) { throw 'Incomplete operation projection.' }
+        }
+        return @{
+            id=[string]$value.OperationId
+            type=([string]$value.AsyncOperationType).ToLowerInvariant()
+            status=([string]$value.AsyncOperationStatus).ToLowerInvariant()
+            created=$value.CreatedDateTime.ToUniversalTime().ToString('O')
+            updated=$value.LastUpdateDateTimeUtc.ToUniversalTime().ToString('O')
+            attempts=$value.AttemptsCount
+            target_id=$value.TargetResourceId
+            target_location=$value.TargetResourceLocation
+        }
+    }
     function Convert-TeamObservation($value) {
         foreach ($property in @('GroupId','DisplayName','Description','Visibility','MailNickName','Classification','Archived','AllowGiphy')) {
             if ($null -eq $value.PSObject.Properties[$property]) { throw 'Incomplete team projection.' }
@@ -51,7 +70,11 @@ try {
         return @{id=[string]$value.UserId; user=$value.User; name=$value.Name; role=([string]$value.Role).ToLowerInvariant()}
     }
     $report.stage = 'projection'
-    if ($request.kind -eq 'team') {
+    if ($request.kind -eq 'operation') {
+        $operations = @(Get-Operation -GroupId $request.id -OperationId $request.operation_id -ErrorAction Stop)
+        if ($operations.Count -ne 1 -or [string]$operations[0].OperationId -cne $request.operation_id) { throw 'Expected one selected operation.' }
+        $report = @{success=$true; stage='complete'; operation=(Convert-OperationObservation $operations[0])}
+    } elseif ($request.kind -eq 'team') {
         $team = Convert-TeamObservation $values[0]
         $tenant = @(Get-Team -DisplayName $request.fixture -ErrorAction Stop)
         $user = @(Get-Team -User $request.owner -DisplayName $request.fixture -ErrorAction Stop)
