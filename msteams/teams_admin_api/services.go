@@ -11,6 +11,7 @@ import (
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
 	meetingbranding "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
+	onlinevoicemailpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
 	privatechannelmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/private_channel_migration"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
@@ -23,6 +24,7 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	OnlineVoicemailPolicies           *onlinevoicemailpolicy.Service
 	MeetingBrandingPolicies           *meetingbranding.Service
 	AssignmentMigrations              *assignmentmigration.Service
 	TeamsExternalAccessConfigurations *teamsexternalaccessconfiguration.Service
@@ -61,6 +63,7 @@ func NewServices(session *client.Session) (*Services, error) {
 	}
 	return &Services{
 		scope:                             scope,
+		OnlineVoicemailPolicies:           onlinevoicemailpolicy.NewService(scope),
 		MeetingBrandingPolicies:           meetingbranding.NewService(scope),
 		AssignmentMigrations:              assignmentmigration.NewService(scope),
 		TeamsExternalAccessConfigurations: teamsexternalaccessconfiguration.NewService(scope),
