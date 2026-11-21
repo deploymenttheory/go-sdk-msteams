@@ -39,7 +39,7 @@ func TestWildcardSemanticsMatchPowerShellStringCases(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			actual, err := matchesPattern(t.Context(), tokens, test.value)
+			actual, err := tokens.Match(t.Context(), test.value)
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -89,7 +89,7 @@ func (s *Scope) observe(ctx context.Context, method string) (context.Context, *o
 	}
 	settings := s.session.requests.settings
 	backend := "unknown"
-	if s.backend == Graph || s.backend == TeamsAdmin {
+	if knownBackend(s.backend) {
 		backend = string(s.backend)
 	}
 	switch method {

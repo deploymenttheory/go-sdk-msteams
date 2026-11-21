@@ -1,12 +1,15 @@
 package contracttest
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"io"
+	"mime"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"path"
@@ -32,6 +35,7 @@ var (
 	label      = regexp.MustCompile(`^[a-z][a-z0-9_-]{0,95}$`)
 	command    = regexp.MustCompile(`^[A-Za-z]+-[A-Za-z][A-Za-z0-9]*$`)
 	setName    = regexp.MustCompile(`^[A-Za-z_][A-Za-z0-9_]{0,95}$`)
+	tenantGUID = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
 )
 
 // Mapping is an exact PowerShell command and observed parameter-set name.
@@ -44,15 +48,26 @@ type Mapping struct {
 // WireRequest keeps the fully escaped path and repeated query values exact.
 // Headers are explicit assertions; transport-owned headers can remain unspecified.
 // A nil JSON body means no body, which differs from JSON null, {}, or [].
-// Binary asserts exact bytes instead of JSON structure. JSON and Binary are
-// mutually exclusive; nil for both requires an absent or zero-length body.
+// Binary asserts exact bytes; Multipart asserts ordered fields/bytes independently
+// of a random boundary. JSON, Binary and Multipart are mutually exclusive; nil
+// for all three requires an absent or zero-length body.
 type WireRequest struct {
-	Method   string
-	URL      string
-	Audience string
-	Headers  http.Header
-	JSON     json.RawMessage
-	Binary   []byte
+	Method    string
+	URL       string
+	Audience  string
+	Headers   http.Header
+	JSON      json.RawMessage
+	Binary    []byte
+	Multipart []MultipartField
+}
+
+// MultipartField is a synthetic expected form-data part. Its content is compared
+// in memory and never retained in evidence reports, just like JSON/Binary bodies.
+type MultipartField struct {
+	Name        string
+	Filename    string
+	ContentType string
+	Body        []byte
 }
 
 // Reply is a synthetic HTTP response. Bodies may deliberately be malformed.
@@ -104,6 +119,10 @@ type Case struct {
 	Mappings []Mapping
 	Cloud    string
 	Mode     auth.Mode
+	// TenantID optionally selects a synthetic UUID binding for tenant-scoped
+	// resources. Empty preserves the existing fixture-tenant binding. It is not
+	// retained in structural reports and is never loaded from credentials/env.
+	TenantID string
 	Steps    []Exchange
 	Invoke   func(context.Context, *msteams.Client) Observation
 	Want     Expected
@@ -183,8 +202,12 @@ func Run(ctx context.Context, c Case) (Result, error) {
 	if mode == "" {
 		mode = auth.Application
 	}
+	tenant := "fixture-tenant"
+	if c.TenantID != "" {
+		tenant = c.TenantID
+	}
 	h := &harness{steps: c.Steps, differences: []Difference{},
-		binding: auth.Binding{TenantID: "fixture-tenant", IdentityID: "fixture-identity", Cloud: environment.BindingCloud, Mode: mode}}
+		binding: auth.Binding{TenantID: tenant, IdentityID: "fixture-identity", Cloud: environment.BindingCloud, Mode: mode}}
 	sdk, err := msteams.NewClient(&auth.Config{Method: auth.ExternalProvider,
 		TenantID: h.binding.TenantID, IdentityID: h.binding.IdentityID, Cloud: c.Cloud,
 		TokenMode: h.binding.Mode, Provider: h}, msteams.WithHTTPClient(&http.Client{Transport: h}))
@@ -220,6 +243,9 @@ func validCase(c Case) bool {
 	if c.Mode != "" && c.Mode != auth.Application && c.Mode != auth.Delegated {
 		return false
 	}
+	if c.TenantID != "" && !tenantGUID.MatchString(c.TenantID) {
+		return false
+	}
 	if c.Scope == "local" && len(c.Steps) != 0 {
 		return false
 	}
@@ -229,8 +255,28 @@ func validCase(c Case) bool {
 		}
 	}
 	for _, step := range c.Steps {
-		if step.Request.JSON != nil && step.Request.Binary != nil {
+		kinds := 0
+		if step.Request.JSON != nil {
+			kinds++
+		}
+		if step.Request.Binary != nil {
+			kinds++
+		}
+		if step.Request.Multipart != nil {
+			kinds++
+		}
+		if kinds > 1 {
 			return false
+		}
+		if step.Request.Multipart != nil {
+			if len(step.Request.Multipart) == 0 || len(step.Request.Multipart) > 100 {
+				return false
+			}
+			for _, part := range step.Request.Multipart {
+				if part.Name == "" {
+					return false
+				}
+			}
 		}
 		u, err := url.Parse(step.Request.URL)
 		if err != nil || u.Scheme != "https" || u.Host == "" || u.User != nil || u.Fragment != "" {
@@ -352,6 +398,9 @@ func compareRequest(want WireRequest, got *http.Request, prefix string) []Differ
 		}
 		return differences
 	}
+	if want.Multipart != nil {
+		return append(differences, compareMultipart(want.Multipart, got.Header.Get("Content-Type"), raw, prefix+".body")...)
+	}
 	if want.JSON == nil {
 		if len(raw) != 0 {
 			differences = append(differences, Difference{Path: prefix + ".body", Kind: "unexpected-body"})
@@ -359,6 +408,34 @@ func compareRequest(want WireRequest, got *http.Request, prefix string) []Differ
 		return differences
 	}
 	return append(differences, compareJSON(want.JSON, raw, prefix+".body")...)
+}
+
+func compareMultipart(want []MultipartField, contentType string, raw []byte, prefix string) []Difference {
+	mediaType, params, err := mime.ParseMediaType(contentType)
+	if err != nil || mediaType != "multipart/form-data" || params["boundary"] == "" {
+		return []Difference{{Path: prefix, Kind: "invalid-multipart"}}
+	}
+	reader := multipart.NewReader(bytes.NewReader(raw), params["boundary"])
+	differences := []Difference{}
+	for i, expected := range want {
+		part, err := reader.NextPart()
+		if err != nil {
+			return append(differences, Difference{Path: prefix, Kind: "missing-multipart-part"})
+		}
+		body, err := io.ReadAll(part)
+		if err != nil {
+			return append(differences, Difference{Path: prefix, Kind: "invalid-multipart"})
+		}
+		label := prefix + "[" + strconv.Itoa(i) + "]"
+		disposition, attributes, headerErr := mime.ParseMediaType(part.Header.Get("Content-Disposition"))
+		if headerErr != nil || disposition != "form-data" || attributes["name"] != expected.Name || attributes["filename"] != expected.Filename || part.Header.Get("Content-Type") != expected.ContentType || !slices.Equal(body, expected.Body) {
+			differences = append(differences, Difference{Path: label, Kind: "different-value"})
+		}
+	}
+	if _, err := reader.NextPart(); err != io.EOF {
+		differences = append(differences, Difference{Path: prefix, Kind: "unexpected-multipart-part"})
+	}
+	return differences
 }
 
 func compareHeaders(want, got http.Header, prefix string) []Difference {

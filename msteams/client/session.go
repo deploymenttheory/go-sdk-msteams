@@ -239,6 +239,8 @@ type Backend string
 const (
 	Graph      Backend = "graph"
 	TeamsAdmin Backend = "teams-admin"
+	Targeting  Backend = "targeting"
+	Hierarchy  Backend = "hierarchy"
 )
 
 // Scope binds a backend service collection to its owning session.
@@ -249,10 +251,14 @@ type Scope struct {
 
 // NewScope binds service dependencies; no authentication or discovery occurs.
 func NewScope(backend Backend, session *Session) (*Scope, error) {
-	if session == nil || (backend != Graph && backend != TeamsAdmin) {
+	if session == nil || !knownBackend(backend) {
 		return nil, errors.New("valid backend and session are required")
 	}
 	return &Scope{backend: backend, session: session}, nil
+}
+
+func knownBackend(backend Backend) bool {
+	return backend == Graph || backend == TeamsAdmin || backend == Targeting || backend == Hierarchy
 }
 
 // Backend returns the immutable service family.
