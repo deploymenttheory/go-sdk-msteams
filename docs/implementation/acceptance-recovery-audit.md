@@ -76,6 +76,11 @@ records this limited result. It does not qualify assignments, every parameter se
 other authentication flows/clouds or the complete resource ticket. No resource
 ticket closes on this subset of acceptance.
 
+The subsequent naming migration calls this test
+`TestAccApplicationAccessPolicyCRUD`. The historical receipt retains the actual
+name at its recorded revision. Current tests use `TestUnit` for offline/unit cases
+and `TestAcc` for tenant cases; CI and active ledger references use those names.
+
 The initial live failures also exposed two defects: the channels oracle used the
 nonexistent `read-channels-policy-policy.ps1` filename, and external-access-policy
 responses contain a named `CommunicationWithExternalOrgs` value that the numeric-only

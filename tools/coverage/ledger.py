@@ -90,7 +90,7 @@ def resolve_reference(root, reference, cache=None):
     return value
 
 
-def validate_symbol(root, ref, test=False):
+def validate_symbol(root, ref, test=False, acceptance=False):
     if not isinstance(ref, dict) or set(ref) != {'file','name'}:
         raise ValueError('symbol requires exactly file and name')
     path = resolve_reference(root, ref['file'])
@@ -108,8 +108,9 @@ def validate_symbol(root, ref, test=False):
         pattern = r'(?m)^(?:func|type)\s+'+re.escape(name)+r'\b'
     if not re.search(pattern, source):
         raise ValueError('stale Go symbol: '+name)
-    if test and (not path.name.endswith('_test.go') or not name.startswith(('Test','Example'))):
-        raise ValueError('test reference must identify a Go test/example')
+    prefixes = ('TestAcc',) if acceptance else ('TestUnit', 'Example')
+    if test and (not path.name.endswith('_test.go') or not name.startswith(prefixes)):
+        raise ValueError('test reference must identify the correct TestUnit/TestAcc category')
 
 
 def validate_shape(value, schema, definitions, path='$'):
@@ -231,8 +232,10 @@ def validate(ledger, reconciliation, runtime, known_tickets, root=ROOT, require_
                     fail(name,'parameter-set evidence is missing or mismatched')
                 for symbol in group['symbols']:
                     validate_symbol(root,symbol)
-                for test in group['contract_tests']+group['live_tests']:
+                for test in group['contract_tests']:
                     validate_symbol(root,test,test=True)
+                for test in group['live_tests']:
+                    validate_symbol(root,test,test=True,acceptance=True)
             for ref in contract['evidence']+live['evidence']:
                 resolve(ref)
             if contract['status']=='passed':
