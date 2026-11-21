@@ -47,7 +47,10 @@ func TestCompiledCallsUseFreshCorrelationAndNoForestBootstrap(t *testing.T) {
 	if _, _, err := sdk.TeamsAdminAPI.TeamsExternalAccessConfigurations.GetByIdentity(t.Context(), "Global"); err != nil {
 		t.Fatal(err)
 	}
-	if calls != 3 || len(seen) != 3 {
+	if _, _, err := sdk.TeamsAdminAPI.AssignmentMigrations.GetByID(t.Context(), "fixture-job"); err != nil {
+		t.Fatal(err)
+	}
+	if calls != 4 || len(seen) != 4 {
 		t.Fatal("unexpected compiled request count")
 	}
 }

@@ -5,17 +5,15 @@ package policyrp
 import (
 	"bytes"
 	"context"
-	"crypto/rand"
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"net/url"
 	"slices"
 	"strings"
 	"unicode"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policyfilter"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policytransport"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	"github.com/go-resty/resty/v2"
 )
@@ -81,30 +79,7 @@ func (s *Resource[T]) Do(ctx context.Context, command, method string, path []str
 	if err := s.Ready(ctx); err != nil {
 		return nil, err
 	}
-	var id [16]byte
-	if _, err := rand.Read(id[:]); err != nil {
-		return nil, client.ErrRequest
-	}
-	id[6] = id[6]&0x0f | 0x40
-	id[8] = id[8]&0x3f | 0x80
-	correlation := fmt.Sprintf("%x-%x-%x-%x-%x", id[0:4], id[4:6], id[6:8], id[8:10], id[10:16])
-	h := http.Header{"MPACmdlet": {"true"}, "X-MS-CmdletName": {command}, "X-MS-Correlation-Id": {correlation}}
-	if body != nil {
-		h.Set("Content-Type", "application/json; charset=utf-8")
-	}
-	environment, err := s.scope.Session().Environment()
-	if err != nil {
-		return nil, err
-	}
-	segments := make([]string, len(path))
-	for i, segment := range path {
-		// Uri.EscapeDataString uses the unreserved set. QueryEscape plus this
-		// space conversion preserves that contract for colon/plus/at as well
-		// as escaped slashes, unlike net/url's more permissive PathEscape.
-		segments[i] = strings.ReplaceAll(url.QueryEscape(segment), "+", "%20")
-	}
-	destination := environment.Endpoints.TeamsAdmin + "/" + strings.Join(segments, "/")
-	return s.scope.Do(ctx, client.Request{Method: method, URL: destination, Header: h, Body: body, Replay: replay}, nil)
+	return policytransport.New(s.scope).Do(ctx, command, method, path, nil, body, replay)
 }
 
 func Decode[T any](response *resty.Response) (*T, error) {
