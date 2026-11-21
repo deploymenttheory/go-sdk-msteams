@@ -133,7 +133,7 @@ func TestResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
 			if tc.second {
 				steps = append(steps, wire(auth.GraphAudience, "/v1.0/users?$skiptoken=opaque%2B%2F%3D", 200, tc.lastBody))
 			}
-			var snapshot string = "null"
+			snapshot := "null"
 			if tc.id != "" {
 				snapshot = `{"id":"` + tc.id + `"}`
 			}
@@ -192,7 +192,7 @@ func TestResolverConfiguredCloudRoutes(t *testing.T) {
 func TestResolverValidationAndCurrentModeAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, action := range []string{"missing", "whitespace", "control", "backslash", "dot", "negative-pages", "app-current", "cancelled", "closed", "wrong-backend", "nil-resolver", "bad-select"} {
-		var want error = client.ErrRequest
+		want := client.ErrRequest
 		switch action {
 		case "app-current":
 			want = directoryuser.ErrCurrentUser

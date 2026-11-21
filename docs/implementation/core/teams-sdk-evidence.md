@@ -3,8 +3,9 @@
 Status: in progress. Native team create/read/settings-update/delete/list,
 create-from-group, archive/unarchive, picture upload and resumable operation
 handling are implemented under `sdk.GraphAPI.Teams`. Supporting group CRUD is
-implemented under `sdk.GraphAPI.Groups`; PowerShell compositions and successful
-tenant acceptance remain required.
+implemented under `sdk.GraphAPI.Groups`. Paired Get-Team identity and Set-Team
+compositions are implemented under `sdk.GraphAPI.TeamManagement`; remaining
+compositions and successful tenant acceptance are required.
 This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81)
 or promote its command coverage.
 
@@ -41,6 +42,18 @@ Native settings preserve omitted versus non-nil empty containers and explicit
 false values. A caller can construct the five empty containers observed in the
 module without forcing that behavior into every native update. Tests compare
 those containers and explicit flags against the actual pinned serializer cases.
+
+The paired management service verifies both returned IDs, projects group-owned
+properties and retains both native snapshots. Update patches group properties,
+then all five settings containers, then reads group/team state. Later failures
+retain completed stages, the known ID and latest response without rollback or
+replay. Three source-derived workflow cases emit `team-get-service.json` and
+`team-update-service.json` through the actual root SDK and shared runner, mapped
+only to Get-Team/Identity and Set-Team/__AllParameterSets. Additional tests check
+the actual empty-container capture, denied stages, mismatched IDs, cancellation,
+closed clients and local validation. These are synthetic SDK executions, not
+runtime cmdlet captures. Reports retain `coverage_claim: false` and live
+qualification `not-run`. See the [paired management notes](../../../msteams/graph_api/team_management/api_docs.md).
 
 The primary native Giphy payload uses the documented string enum. A test first
 requires the pinned artifact to retain its observed numeric 1, then records the
@@ -91,8 +104,8 @@ team CRUD, operation completion, provisioning, archive transitions or photos.
 
 Before CORE-28 can close, implement the group-first and enriched PowerShell
 compositions from the [existing decision record](core-composition-evidence.md),
-including directory owner resolution, education-group constants, bounded group
-propagation/reconciliation, group-plus-settings update outcomes, archive-state
+including owner selection, education-group constants, bounded group
+propagation/reconciliation, archive-state
 checks, owned-resource recovery and partial hydration/list behavior. Add the
 service contract reports and journalled tenant acceptance for those paths.
 Successful lab validation and least-privilege access setup remain outstanding.

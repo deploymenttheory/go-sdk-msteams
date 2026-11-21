@@ -58,6 +58,8 @@ jobs:
             ${{ runner.temp }}/go-test-artifacts/**/team-user-add-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-user-list-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-user-remove-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/team-get-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/team-update-service.json
           if-no-files-found: error
           retention-days: 14
       - name: Run credential-free example

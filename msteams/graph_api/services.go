@@ -7,6 +7,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
 	grouprelationship "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group_relationship"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team"
+	teammanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_management"
 	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
 	teamusermanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_user_management"
 )
@@ -22,6 +23,7 @@ type Services struct {
 	GroupOwners        *grouprelationship.OwnerService
 	UserResolver       *directoryuser.Resolver
 	TeamUserManagement *teamusermanagement.Service
+	TeamManagement     *teammanagement.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -35,6 +37,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamMembers: teammember.NewService(scope), GroupMembers: grouprelationship.NewMemberService(scope),
 		GroupOwners: grouprelationship.NewOwnerService(scope), UserResolver: directoryuser.NewResolver(scope),
 		TeamUserManagement: teamusermanagement.NewService(scope),
+		TeamManagement:     teammanagement.NewService(scope),
 	}, nil
 }
 
