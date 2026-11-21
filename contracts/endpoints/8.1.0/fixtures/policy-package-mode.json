@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "qualification": "documentation-observation",
+  "documentation_url": "https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication",
+  "documentation_reviewed": "2026-11-21",
+  "catalog_reference": "msteams/capabilities/capabilities_8_1_0.json#/rules/2",
+  "rule_id": "app-exception-03",
+  "pattern": "*PolicyPackage*",
+  "unsupported_mode": "application",
+  "clouds": ["commercial", "gcc", "gcch", "dod"],
+  "limitation": "Separately dated documentation restriction; not an authenticated probe or proof that unlisted clouds/modes are supported."
+}
