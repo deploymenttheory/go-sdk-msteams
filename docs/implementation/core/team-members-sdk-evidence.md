@@ -4,8 +4,9 @@ Status: in progress. Native conversation-membership CRUD/list and owner
 promotion/demotion are implemented through `sdk.GraphAPI.TeamMembers`, with
 separate read/write models, one-page list and explicit bounded traversal.
 Backing-group member/owner reference primitives are also implemented through
-separate services. PowerShell compositions and journalled lab acceptance remain
-required. This does not close
+separate services. Add/Get/Remove-TeamUser compositions are implemented through
+`sdk.GraphAPI.TeamUserManagement`; journalled lab acceptance remains required.
+This does not close
 [CORE-26 / #182](https://github.com/deploymenttheory/go-sdk-msteams/issues/182)
 or promote any command coverage.
 
@@ -74,3 +75,24 @@ endpoint service-principal omissions and limited data remain documented limits;
 they are not converted into absence or a fabricated user role. No reference
 tenant calls or mutations were made. See the
 [reference API notes](../../../msteams/graph_api/group_relationship/api_docs.md).
+
+The new compositions use the same-scope resolver and native reference services.
+Add traverses preflight collections before inferring absence, then ensures
+membership before ownership. A successful empty list permits creation,
+explicitly correcting the pinned status-only no-op. Denied/incomplete reads
+cannot trigger a write. Remove traverses all owners before the local last-owner
+guard and removes ownership first; an Owner-only request preserves membership.
+The local `ErrLastOwner` is not a fabricated HTTP 412 or a concurrency guarantee.
+Later failures retain completed stages and the resolved ID without compensation,
+replay or convergence waits. List preserves owner precedence, role filtering,
+nullable fields and partial projections. See the [composition notes](../../../msteams/graph_api/team_user_management/api_docs.md).
+
+Sixteen source-derived offline cases emit `team-user-add-service.json`,
+`team-user-list-service.json` and `team-user-remove-service.json` through the
+shared runner and actual root client. They map the three command parameter sets
+after checking the pinned runtime metadata. Additional tests cover later-page
+presence, incomplete-preflight rejection, directory resolution, invalid inputs,
+cancellation and partial reads. These are synthetic SDK executions, not runtime
+captures of PowerShell commands. Reports retain `coverage_claim: false` and
+live qualification `not-run`; no command ledger promotion or tenant writes
+were made. Successful journalled lab qualification remains outstanding.
