@@ -55,16 +55,23 @@ func (e APIError) String() string { return (&e).Error() }
 func (e APIError) GoString() string { return (&e).Error() }
 
 func normalizeError(backend Backend, response *resty.Response) *APIError {
-	err := &APIError{Backend: backend, StatusCode: response.StatusCode()}
-	collectHeaderIDs(err, response.Header())
+	return NewAPIError(backend, response.StatusCode(), response.Header(), response.Body())
+}
+
+// NewAPIError normalizes a received HTTP or batch-item error without retaining
+// headers/body or printing service messages. Backend should be Graph or
+// TeamsAdmin. Codes and identifiers remain untrusted data for explicit inspection.
+func NewAPIError(backend Backend, status int, headers http.Header, body []byte) *APIError {
+	err := &APIError{Backend: backend, StatusCode: status}
+	collectHeaderIDs(err, headers)
 	var envelope map[string]json.RawMessage
-	if json.Unmarshal(response.Body(), &envelope) != nil {
+	if json.Unmarshal(body, &envelope) != nil {
 		return err
 	}
 	if backend == Graph {
 		collectErrorObject(err, envelope["error"], 0)
 	} else {
-		collectErrorObject(err, response.Body(), 0)
+		collectErrorObject(err, body, 0)
 		// ConfigAPI's TeamMiddletierErrorResponse.Error property serializes as "errors".
 		var objects []json.RawMessage
 		if json.Unmarshal(envelope["errors"], &objects) == nil {

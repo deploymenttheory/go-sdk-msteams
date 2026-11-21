@@ -50,6 +50,16 @@ Teams token formats explicitly specify array field, token field and query key. O
 formats specify an array field (empty for a bare array) and exact offset query key.
 This preserves wire differences without naming every future resource in shared code.
 
+`PagingOptions.ExpectedStatus` optionally selects the successful status required
+by a particular collection contract before any page decoder runs. For example,
+the [native team-members collection](https://learn.microsoft.com/en-us/graph/api/team-list-members?view=graph-rest-1.0)
+documents HTTP 200. A collection-shaped 202/206 response cannot establish a
+complete page under that contract. A mismatch returns `ErrPageStatus`, retains
+the earlier collected items and last response, and makes traversal terminal.
+HTTP failures keep their existing typed errors. Zero preserves the generic
+any-2xx behavior; a configured expectation outside 200–299 is rejected locally
+without credentials. Resource adapters select their evidenced status explicitly.
+
 Construction snapshots headers, encoded path/query and serialized JSON body without
 network or authentication. Traversal accepts only explicit replay-safe GET/POST reads;
 the Graph helper classifies its GET collection read. Other operations require the
@@ -91,6 +101,10 @@ that omitted page. Separate pagers are independent; one pager is consumed serial
 | `TestDecodeCollectionRequiresArrayEvenForBytes` | Non-array/null/missing envelope rejection, including Go's special []byte JSON behavior |
 | `TestPaginationConfigurationAndOffsetOverflow` | Ambiguous/negative offsets, unsafe operations, constructor purity and numeric overflow |
 | `TestIndependentPagersDoNotShareTraversalState` | Concurrent independent traversals under the race detector |
+| `TestPagerExpectedStatusRejectsUnexpectedPageBeforeDecode` | Configured HTTP 200 rejects 201/202/204/206 before decoding and cannot resume after failure |
+| `TestPagerExpectedStatusRetainsEarlierItemsAndLastResponse` | An unexpected later successful status retains the prior prefix and raw response |
+| `TestPagerStatusOptionPreservesGenericAndHTTPFailureBehavior` | Default any-2xx and explicitly selected success remain compatible; a 403 remains a typed forbidden error |
+| `TestPagerExpectedStatusValidationIsCredentialFree` | Invalid non-success expectations acquire no token and send no HTTP |
 
 These checks qualify traversal mechanics and the listed envelope/key mappings. They do
 not qualify resource-specific consistency guarantees, total-result limits, additional
