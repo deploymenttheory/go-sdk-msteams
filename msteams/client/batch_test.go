@@ -1,6 +1,7 @@
 package client_test
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"io"
@@ -10,7 +11,9 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	graphapi "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api"
+	graphbatch "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/batch"
 	teamsadminapi "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api"
+	"github.com/go-resty/resty/v2"
 )
 
 func TestTeamsBatchDetailsSurviveAggregateFailure(t *testing.T) {
@@ -28,31 +31,41 @@ func TestTeamsBatchDetailsSurviveAggregateFailure(t *testing.T) {
 
 func TestGraphBatchRetainsMixedOutcomesWithoutReplay(t *testing.T) {
 	t.Parallel()
-	calls := 0
-	scope, _, _ := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) {
-		calls++
-		if r.Method != http.MethodPost || r.URL.Path != "/v1.0/$batch" {
-			t.Fatal("wrong batch route")
-		}
-		var envelope struct {
-			Requests []graphapi.BatchRequest `json:"requests"`
-		}
-		if json.NewDecoder(r.Body).Decode(&envelope) != nil || len(envelope.Requests) != 3 || string(envelope.Requests[0].Body) != `{"displayName":"fixture"}` {
-			t.Fatal("batch request changed")
-		}
-		return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(`{"responses":[{"id":"B","status":429,"headers":{"Retry-After":"30"},"body":{"error":{"code":"TooManyRequests"}}},{"id":"a","status":201,"body":{"id":"created"}},{"id":"c","status":424,"body":{"error":{"code":"FailedDependency"}}}]}`)), Request: r}, nil
-	})}, "")
-	requests := []graphapi.BatchRequest{
-		{ID: "a", Method: http.MethodPost, URL: "/teams", Headers: map[string]string{"Content-Type": "application/json"}, Body: json.RawMessage(`{"displayName":"fixture"}`)},
-		{ID: "b", Method: http.MethodGet, URL: "/teams/fixture"},
-		{ID: "c", Method: http.MethodGet, URL: "/teams/fixture/channels", DependsOn: []string{"b"}},
-	}
-	items, response, err := graphapi.ExecuteBatch(t.Context(), scope, "v1.0", requests)
-	if !errors.Is(err, graphapi.ErrBatchItems) || response.StatusCode() != 200 || calls != 1 || len(items) != 3 {
-		t.Fatalf("mixed outcomes lost: %v", err)
-	}
-	if items[0].Headers["Retry-After"] != "30" || items[1].Status != 201 || string(items[1].Body) != `{"id":"created"}` || items[2].Status != 424 {
-		t.Fatal("item data/order/correlation lost")
+	for _, tc := range []struct {
+		name    string
+		execute func(context.Context, *client.Scope, string, []graphapi.BatchRequest) ([]graphapi.BatchResponse, *resty.Response, error)
+	}{
+		{"compatibility-api", graphapi.ExecuteBatch},
+		{"leaf-api", graphbatch.Execute},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			calls := 0
+			scope, _, _ := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) {
+				calls++
+				if r.Method != http.MethodPost || r.URL.Path != "/v1.0/$batch" {
+					t.Fatal("wrong batch route")
+				}
+				var envelope struct {
+					Requests []graphapi.BatchRequest `json:"requests"`
+				}
+				if json.NewDecoder(r.Body).Decode(&envelope) != nil || len(envelope.Requests) != 3 || string(envelope.Requests[0].Body) != `{"displayName":"fixture"}` {
+					t.Fatal("batch request changed")
+				}
+				return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(`{"responses":[{"id":"B","status":429,"headers":{"Retry-After":"30"},"body":{"error":{"code":"TooManyRequests"}}},{"id":"a","status":201,"body":{"id":"created"}},{"id":"c","status":424,"body":{"error":{"code":"FailedDependency"}}}]}`)), Request: r}, nil
+			})}, "")
+			requests := []graphapi.BatchRequest{
+				{ID: "a", Method: http.MethodPost, URL: "/teams", Headers: map[string]string{"Content-Type": "application/json"}, Body: json.RawMessage(`{"displayName":"fixture"}`)},
+				{ID: "b", Method: http.MethodGet, URL: "/teams/fixture"},
+				{ID: "c", Method: http.MethodGet, URL: "/teams/fixture/channels", DependsOn: []string{"b"}},
+			}
+			items, response, err := tc.execute(t.Context(), scope, "v1.0", requests)
+			if !errors.Is(err, graphapi.ErrBatchItems) || response.StatusCode() != 200 || calls != 1 || len(items) != 3 {
+				t.Fatalf("mixed outcomes lost: %v", err)
+			}
+			if items[0].Headers["Retry-After"] != "30" || items[1].Status != 201 || string(items[1].Body) != `{"id":"created"}` || items[2].Status != 424 {
+				t.Fatal("item data/order/correlation lost")
+			}
+		})
 	}
 }
 

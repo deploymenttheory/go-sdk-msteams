@@ -86,15 +86,87 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/1/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_user_management/service.go",
+              "name": "Service.Add"
+            },
+            {
+              "file": "msteams/graph_api/directory_user/resolver.go",
+              "name": "Resolver.Resolve"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.AddReference"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.ListAll"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.AddReference"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.ListAll"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestAddCompositionStagesAndCorrectedPreflight"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestAddCompletePreflightAndResolvedIdentity"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestCompositionInvalidInputAndCancellationAreLocal"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestCompositionMappingsExistInPinnedRuntime"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_membership_test.go",
+              "name": "TestLabTeamMembershipCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_user_management/service.go",
+            "name": "Service.Add"
+          },
+          {
+            "file": "msteams/graph_api/directory_user/resolver.go",
+            "name": "Resolver.Resolve"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.AddReference"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.ListAll"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.AddReference"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.ListAll"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -102,7 +174,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Prepared opt-in journalled acceptance has not run. Dedicated identity prerequisite discovery was forbidden; native membership and reference mutations remain unqualified.",
         "evidence": []
       },
       "exclusion": null
@@ -8538,22 +8610,137 @@
         {
           "name": "Filters",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/211/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_management/list.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/graph_api/group/pagination.go",
+              "name": "Service.NewPager"
+            },
+            {
+              "file": "msteams/graph_api/team/joined.go",
+              "name": "Service.ListJoined"
+            },
+            {
+              "file": "msteams/graph_api/directory_user/resolver.go",
+              "name": "Resolver.Resolve"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_management/list_test.go",
+              "name": "TestListSourceDerivedTenantUserAndPartialBatch"
+            },
+            {
+              "file": "msteams/graph_api/team_management/list_test.go",
+              "name": "TestIncompleteDiscoveryCannotEstablishIntersectionOrHydrate"
+            },
+            {
+              "file": "msteams/graph_api/team_management/list_test.go",
+              "name": "TestHydrationRetriesOnlyThrottledItemsAndPreservesOrdering"
+            },
+            {
+              "file": "msteams/graph_api/team_management/list_test.go",
+              "name": "TestUserFiltersUsePairedStateAndKnownNonmatches"
+            },
+            {
+              "file": "msteams/graph_api/team_management/list_test.go",
+              "name": "TestListingLocalValidationAndCurrentUserMode"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/211/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_management/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_management/service_test.go",
+              "name": "TestGetIdentityEnrichesFromSourceDerivedPairedRead"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service_test.go",
+              "name": "TestFailuresStopLaterStagesWithoutReplayingOrRollingBack"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service_test.go",
+              "name": "TestInvalidInputAndCancellationPerformNoIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_management/list.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/graph_api/group/pagination.go",
+            "name": "Service.NewPager"
+          },
+          {
+            "file": "msteams/graph_api/team/joined.go",
+            "name": "Service.ListJoined"
+          },
+          {
+            "file": "msteams/graph_api/directory_user/resolver.go",
+            "name": "Resolver.Resolve"
+          },
+          {
+            "file": "msteams/graph_api/team_management/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/group/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/team/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8561,7 +8748,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Successful tenant qualification has not run. Dedicated lab identity authentication succeeds, but team/group prerequisite reads returned HTTP 403; no mutation acceptance is claimed.",
         "evidence": []
       },
       "exclusion": null
@@ -8825,15 +9012,59 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/219/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_user_management/list.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.ListAll"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.ListAll"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestListCompositionOwnerPrecedenceProjectionAndFilters"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestListCompositionPreservesOwnerPrefixOnMemberReadFailure"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestCompositionMappingsExistInPinnedRuntime"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_membership_test.go",
+              "name": "TestLabTeamMembershipCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_user_management/list.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.ListAll"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.ListAll"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8841,7 +9072,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Prepared opt-in journalled acceptance has not run. Dedicated identity prerequisite discovery was forbidden; native membership and reference mutations remain unqualified.",
         "evidence": []
       },
       "exclusion": null
@@ -16382,22 +16613,173 @@
         {
           "name": "CreateTeam",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/406/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_management/creation.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/graph_api/directory_user/resolver.go",
+              "name": "Resolver.Resolve"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.DeleteByID"
+            },
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.CreateFromGroup"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_management/creation_test.go",
+              "name": "TestCreationAndMigrationUsePinnedSourceDerivedSequences"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_test.go",
+              "name": "TestEducationPresetsMatchActualPinnedModelCaptures"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_test.go",
+              "name": "TestOwnerResolutionPrecedesAnyGroupWrite"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_test.go",
+              "name": "TestCreationTimeoutRetainsIDAndUsesBoundedFreshCleanupContext"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_alias_test.go",
+              "name": "TestGeneratedAliasRequiresCompleteSuccessfulAvailabilityRead"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_alias_test.go",
+              "name": "TestLostCreationResponsesNeverReplayOrBlindlyCompensate"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_settings_test.go",
+              "name": "TestSettingsInputsCoverBothPinnedApplicationParameterSets"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_settings_test.go",
+              "name": "TestCreationAndUpdatePreserveEveryPinnedSettingsField"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         },
         {
           "name": "MigrateGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/406/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_management/creation.go",
+              "name": "Service.MigrateGroup"
+            },
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.CreateFromGroup"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_management/creation_test.go",
+              "name": "TestCreationAndMigrationUsePinnedSourceDerivedSequences"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_test.go",
+              "name": "TestCreationPropagationIsBoundedAndOnlyRetriesReceived404"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_test.go",
+              "name": "TestCreationValidationPrecedesCredentialsAndWrites"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_management/creation.go",
+            "name": "Service.Create"
+          },
+          {
+            "file": "msteams/graph_api/directory_user/resolver.go",
+            "name": "Resolver.Resolve"
+          },
+          {
+            "file": "msteams/graph_api/group/service.go",
+            "name": "Service.Create"
+          },
+          {
+            "file": "msteams/graph_api/group/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/group/service.go",
+            "name": "Service.DeleteByID"
+          },
+          {
+            "file": "msteams/graph_api/team/service.go",
+            "name": "Service.CreateFromGroup"
+          },
+          {
+            "file": "msteams/graph_api/team_management/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/team/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/team_management/creation.go",
+            "name": "Service.MigrateGroup"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -16405,7 +16787,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Successful tenant qualification has not run. Dedicated lab identity authentication succeeds, but team/group prerequisite reads returned HTTP 403; no mutation acceptance is claimed.",
         "evidence": []
       },
       "exclusion": null
@@ -20076,15 +20458,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/516/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team/service_test.go",
+              "name": "TestNativeCRUDAndRootWiring"
+            },
+            {
+              "file": "msteams/graph_api/team/service_test.go",
+              "name": "TestMutationFailuresAreNotReplayed"
+            },
+            {
+              "file": "msteams/graph_api/team/service_test.go",
+              "name": "TestLocalValidationAndCancellationPerformNoIO"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service_test.go",
+              "name": "TestDeleteAndPictureUseSourceDerivedPrimitiveMappings"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20092,7 +20506,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Successful tenant qualification has not run. Dedicated lab identity authentication succeeds, but team/group prerequisite reads returned HTTP 403; no mutation acceptance is claimed.",
         "evidence": []
       },
       "exclusion": null
@@ -20260,15 +20674,87 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/521/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_user_management/service.go",
+              "name": "Service.Remove"
+            },
+            {
+              "file": "msteams/graph_api/directory_user/resolver.go",
+              "name": "Resolver.Resolve"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.RemoveReference"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.ListAll"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.RemoveReference"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.ListAll"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestRemoveCompositionPreservesLastOwnerAndPartialWrites"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestRemoveReadsAllOwnersBeforeLastOwnerGuard"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestCompositionInvalidInputAndCancellationAreLocal"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestCompositionMappingsExistInPinnedRuntime"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_membership_test.go",
+              "name": "TestLabTeamMembershipCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_user_management/service.go",
+            "name": "Service.Remove"
+          },
+          {
+            "file": "msteams/graph_api/directory_user/resolver.go",
+            "name": "Resolver.Resolve"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.RemoveReference"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.ListAll"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.RemoveReference"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.ListAll"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20276,7 +20762,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Prepared opt-in journalled acceptance has not run. Dedicated identity prerequisite discovery was forbidden; native membership and reference mutations remain unqualified.",
         "evidence": []
       },
       "exclusion": null
@@ -25046,15 +25532,91 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/655/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_management/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_management/service_test.go",
+              "name": "TestUpdateOrdersWritesAndPreservesPartialOutcomes"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service_test.go",
+              "name": "TestEmptyUpdateUsesActualPinnedSettingsContainers"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service_test.go",
+              "name": "TestFailuresStopLaterStagesWithoutReplayingOrRollingBack"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_settings_test.go",
+              "name": "TestSettingsInputsCoverBothPinnedApplicationParameterSets"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_settings_test.go",
+              "name": "TestCreationAndUpdatePreserveEveryPinnedSettingsField"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_management/service.go",
+            "name": "Service.UpdateByID"
+          },
+          {
+            "file": "msteams/graph_api/group/service.go",
+            "name": "Service.UpdateByID"
+          },
+          {
+            "file": "msteams/graph_api/team/service.go",
+            "name": "Service.UpdateByID"
+          },
+          {
+            "file": "msteams/graph_api/team_management/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/group/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/team/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25062,7 +25624,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Successful tenant qualification has not run. Dedicated lab identity authentication succeeds, but team/group prerequisite reads returned HTTP 403; no mutation acceptance is claimed.",
         "evidence": []
       },
       "exclusion": null
@@ -25078,15 +25640,95 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/656/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_management/archive.go",
+              "name": "Service.SetArchivedState"
+            },
+            {
+              "file": "msteams/graph_api/team/operations.go",
+              "name": "Service.Archive"
+            },
+            {
+              "file": "msteams/graph_api/team/operations.go",
+              "name": "Service.Unarchive"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/group/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/team/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_management/archive_test.go",
+              "name": "TestArchivedStateWaitsAndConfirmsReadback"
+            },
+            {
+              "file": "msteams/graph_api/team_management/archive_test.go",
+              "name": "TestArchivePrechecksRejectUnchangedOrUnknownState"
+            },
+            {
+              "file": "msteams/graph_api/team_management/archive_test.go",
+              "name": "TestArchiveTimeoutAndFailureRetainRemoteOperation"
+            },
+            {
+              "file": "msteams/graph_api/team_management/archive_test.go",
+              "name": "TestArchiveWaitCanResumeUnderNewContextWithoutRepeatingAction"
+            },
+            {
+              "file": "msteams/graph_api/team_management/archive_test.go",
+              "name": "TestSuccessfulOperationDoesNotFabricateArchiveReadback"
+            },
+            {
+              "file": "msteams/graph_api/team_management/archive_test.go",
+              "name": "TestArchiveValidationStopsBeforeAnyReadOrWrite"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_management/archive.go",
+            "name": "Service.SetArchivedState"
+          },
+          {
+            "file": "msteams/graph_api/team/operations.go",
+            "name": "Service.Archive"
+          },
+          {
+            "file": "msteams/graph_api/team/operations.go",
+            "name": "Service.Unarchive"
+          },
+          {
+            "file": "msteams/graph_api/team_management/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/group/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/team/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25094,7 +25736,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Successful tenant qualification has not run. Dedicated lab identity authentication succeeds, but team/group prerequisite reads returned HTTP 403; no mutation acceptance is claimed.",
         "evidence": []
       },
       "exclusion": null
@@ -25142,15 +25784,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/658/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team/picture.go",
+              "name": "Service.UploadPicture"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team/picture_test.go",
+              "name": "TestUploadPictureUsesGroupPhotoRouteAndOriginalBytes"
+            },
+            {
+              "file": "msteams/graph_api/team/picture_test.go",
+              "name": "TestUploadPictureValidationClosesSourcesWithoutIO"
+            },
+            {
+              "file": "msteams/graph_api/team/picture_test.go",
+              "name": "TestUploadPictureEnforcesGraphSizeLimit"
+            },
+            {
+              "file": "msteams/graph_api/team_management/service_test.go",
+              "name": "TestDeleteAndPictureUseSourceDerivedPrimitiveMappings"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team/picture.go",
+            "name": "Service.UploadPicture"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25158,7 +25832,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Successful tenant qualification has not run. Dedicated lab identity authentication succeeds, but team/group prerequisite reads returned HTTP 403; no mutation acceptance is claimed.",
         "evidence": []
       },
       "exclusion": null

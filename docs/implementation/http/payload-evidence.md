@@ -86,6 +86,11 @@ No size cap is inferred from Content-Length; actual bytes are counted.
 
 ## Batch behavior
 
+The reusable engine lives in `msteams/graph_api/batch` (`graphbatch`) so resource
+packages can call it without importing the root Graph service collection. The
+existing `graphapi` types and errors are compatibility aliases, and its
+`ExecuteBatch` function forwards to the same engine.
+
 `graphapi.ExecuteBatch` validates every nested destination/method/header before
 credentials, disallows foreign authorities, path traversal, version switching and
 nested batches, checks unique IDs and acyclic existing dependencies, then performs

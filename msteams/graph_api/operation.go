@@ -1,12 +1,12 @@
 package graphapi
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -39,26 +39,5 @@ func NewTeamOperation(scope *client.Scope, accepted *resty.Response) (*client.Op
 // statuses fail explicitly instead of being treated as completion. The target
 // resource location is returned as opaque metadata and is never followed here.
 func DecodeTeamOperation(body []byte) (client.OperationStatus, error) {
-	var wire struct {
-		ID     string `json:"id"`
-		Status string `json:"status"`
-		Target string `json:"targetResourceLocation"`
-	}
-	if json.Unmarshal(body, &wire) != nil || wire.ID == "" {
-		return client.OperationStatus{}, client.ErrDecode
-	}
-	status := client.OperationStatus{ID: wire.ID, TargetLocation: wire.Target}
-	switch wire.Status {
-	case "notStarted":
-		status.State = client.OperationAccepted
-	case "inProgress":
-		status.State = client.OperationRunning
-	case "succeeded":
-		status.State = client.OperationSucceeded
-	case "failed":
-		status.State = client.OperationFailed
-	default:
-		return client.OperationStatus{}, client.ErrOperationState
-	}
-	return status, nil
+	return team.DecodeOperation(body)
 }
