@@ -44,6 +44,19 @@ false values. A caller can construct the five empty containers observed in the
 module without forcing that behavior into every native update. Tests compare
 those containers and explicit flags against the actual pinned serializer cases.
 
+The additional [field capture](../../../contracts/endpoints/8.1.0/fixtures/core-team-settings-fields.json)
+contains 36 actual isolated model observations: false/true for all 17 boolean
+settings and both Giphy ratings. Its guarded [offline generator](../../../tools/contracts/capture-team-settings-fields.ps1)
+checks the pinned assembly hash before import and invokes no management command.
+Seventy-two real-root create/update executions compare every field with those
+observations, including five-container placement and typed non-default readback.
+Two reports, `team-create-settings-service.json` and
+`team-update-settings-service.json`, retain the tested revision and exact set
+mappings. The parameter audit checks both settings-bearing runtime sets so no
+application settings parameter can disappear unnoticed. Numeric Giphy captures
+remain immutable; only the test's native comparison uses the reviewed strings.
+These executions qualify the offline field mapping, not tenant acceptance.
+
 The paired management service verifies both returned IDs, projects group-owned
 properties and retains both native snapshots. Update patches group properties,
 then all five settings containers, then reads group/team state. Later failures
@@ -133,9 +146,11 @@ for disposable group-first and migration fixtures. They skip before credential
 loading without all three lab flags, require a private same-tenant owner fixture,
 and use a bound recovery journal with positive paired ownership checks before
 deletion. Offline tests constrain denied/incomplete/ambiguous discovery and
-cleanup. These Go-only scenarios cover lifecycle readbacks, archive transitions
-and valid photo transfer/readback when explicitly run; they are not PowerShell
-comparisons and have not run against the tenant. See the
+cleanup. These scenarios cover lifecycle readbacks, archive transitions and valid photo
+transfer/readback when explicitly run. An additional oracle flag now enables
+pinned PowerShell identity/tenant/user-list reads of selected resulting fields.
+The oracle never performs writes; its syntax, disabled guard and pinned-model
+projection were checked offline. No scenario or oracle has run against the tenant. See the
 [acceptance procedure](team-lifecycle-lab-acceptance.md) for exact scope and limits.
 
 The primary native Giphy payload uses the documented string enum. A test first

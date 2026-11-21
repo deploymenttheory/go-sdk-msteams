@@ -27,7 +27,10 @@ const (
 
 func runCase(t *testing.T, command string, c contracttest.Case) contracttest.Result {
 	t.Helper()
-	c.Family, c.Source = "team_management", source
+	c.Family = "team_management"
+	if c.Source == "" {
+		c.Source = source
+	}
 	if c.Mode == "" {
 		c.Mode = auth.Delegated
 	}
