@@ -6255,11 +6255,20 @@
           ],
           "contract_tests": [
             {
-              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service_test.go",
-              "name": "TestEducationAssignmentsCompiledFilterDoesNotUseModernWhitespaceRules"
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/binding_test.go",
+              "name": "TestEducationAssignmentsCapturedFilters"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/binding_test.go",
+              "name": "TestEducationAssignmentsCapturedBindingValues"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/education_assignments_test.go",
+              "name": "TestLabEducationAssignmentsReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
@@ -6278,9 +6287,18 @@
             {
               "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service_test.go",
               "name": "TestEducationAssignmentsPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/binding_test.go",
+              "name": "TestEducationAssignmentsCapturedBindingValues"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/education_assignments_test.go",
+              "name": "TestLabEducationAssignmentsReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
@@ -6306,8 +6324,8 @@
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled TeamsEducationAssignmentsAppPolicy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, assignment app setting, role, consent or privilege changed. Successful authorization, updates/read-back/restoration, cloud/server availability and effective behavior remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -28859,6 +28877,10 @@
             {
               "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/composition_test.go",
               "name": "TestEducationAssignmentsSetKeepsPreparationAndAcceptance"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/binding_test.go",
+              "name": "TestEducationAssignmentsCapturedBindingValues"
             }
           ],
           "live_tests": []
@@ -28883,8 +28905,8 @@
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled TeamsEducationAssignmentsAppPolicy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, assignment app setting, role, consent or privilege changed. Successful authorization, updates/read-back/restoration, cloud/server availability and effective behavior remain open.",
         "evidence": []
       },
       "exclusion": null

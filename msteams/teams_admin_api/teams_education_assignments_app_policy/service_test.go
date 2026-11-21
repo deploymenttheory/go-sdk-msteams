@@ -3,7 +3,6 @@ package teamseducationassignmentsapppolicy_test
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"strings"
 	"testing"
 
@@ -65,48 +64,6 @@ func TestEducationAssignmentsPinnedCompiledCRUD(t *testing.T) {
 			}
 			results = append(results, run(t, c))
 		}
-	}
-	evidence(t, results)
-}
-
-func TestEducationAssignmentsCompiledFilterDoesNotUseModernWhitespaceRules(t *testing.T) {
-	t.Parallel()
-	var results []contracttest.Result
-	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`
-	for _, pattern := range []string{"", "Fixture*", " "} {
-		name, set, want := "list", "Identity", "Global,global,Tag:Fixture, "
-		if pattern == "Fixture*" {
-			name, set, want = "filter-tag", "Filter", "Tag:Fixture"
-		}
-		if pattern == " " {
-			name, set, want = "filter-whitespace", "Filter", " "
-		}
-		results = append(results, run(t, contracttest.Case{Name: name, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, getCommand, nil, 200, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			s := sdk.TeamsAdminAPI.TeamsEducationAssignmentsAppPolicies
-			var v []*resource.Policy
-			var o contracttest.Observation
-			if pattern == "" {
-				x, r, e := s.List(ctx)
-				v = x
-				o = contracttest.Observation{Response: r, Err: e}
-			} else {
-				x, r, e := s.ListFiltered(ctx, pattern)
-				v = x
-				o = contracttest.Observation{Response: r, Err: e}
-			}
-			var ids []string
-			for _, x := range v {
-				if x == nil || x.Identity == nil {
-					ids = append(ids, "missing")
-				} else {
-					ids = append(ids, *x.Identity)
-				}
-			}
-			if o.Err == nil && strings.Join(ids, ",") != want {
-				o.Err = errors.New("compiled filter/global ordering changed")
-			}
-			return o
-		}}))
 	}
 	evidence(t, results)
 }

@@ -54,7 +54,7 @@ predicate rejects Identity-only and Force-only calls and accepts a bound null
 setting. Get bound empty Identity/Filter and Set empty Identity reject. These
 binder observations are separate from model validation and server constraints.
 
-## Native implementation checkpoint and remaining qualification
+## Native implementation and remaining qualification
 
 TeamsEducationAssignmentsAppPolicies now has native Get/List/Filter, sparse PATCH
 and explicit Set read/PATCH composition. Typed settings preserve presence, models
@@ -66,12 +66,18 @@ Targeted race tests pass for actual provider requests in synthetic application
 and delegated modes, all model observations, local filtering, composed partial
 updates, denial/throttling/non-replay, redaction and context/input guards.
 
-Before the implementation PR, finish compiling examples and API docs, source
-binder/filter comparisons, sanitized exact-revision artifacts, gated read-only
-lab/source projection comparison and full repository checks. Ledger mappings
-remain in-progress/metadata-only; no successful tenant coverage is inferred.
+Source binder/filter comparisons, a compiling example, API documentation and a
+gated read-only lab/source comparison are included. The binder comparison consumes
+actual typed bound values, keeping shell numeric coercion distinct from native
+typed inputs, and checks the independently observed URL setter failures. Filter
+comparisons derive expected selections from the actual protected source helper,
+then apply original Get's exact Global-first presentation. Ledger mappings remain
+in-progress/metadata-only; sanitized artifacts do not infer successful tenant
+coverage or complete public command lifecycle parity.
 
-No tenant read or write has run for this family. Successful authorization, server
-validation, updates/read-back/restoration, cloud coverage and effective assignment
-app behavior remain unqualified. Issue #115 stays open. Microsoft binaries and
-decompiled source remain private.
+Actual opt-in Global lab reads returned HTTP 403 in client-secret and certificate
+modes on 2026-11-21. No tenant writes, role or consent changes ran. Successful
+authorization, server validation, updates/read-back/restoration, cloud coverage
+and effective assignment app behavior remain unqualified. See the
+[lab acceptance record](education-assignments-lab-acceptance.md). Issue #115 stays
+open. Microsoft binaries and decompiled source remain private.
