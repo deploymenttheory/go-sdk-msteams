@@ -15,6 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team"
 	teammanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_management"
 	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
+	teamoperation "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_operation"
 	teamusermanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_user_management"
 )
 
@@ -26,6 +27,7 @@ type Services struct {
 	Channels                *channel.Service
 	Groups                  *group.Service
 	TeamMembers             *teammember.Service
+	TeamOperations          *teamoperation.Service
 	ChannelMembers          *channelmember.Service
 	ChannelUserManagement   *channelusermanagement.Service
 	ChannelShares           *sharedchannel.Service
@@ -47,6 +49,7 @@ func NewServices(session *client.Session) (*Services, error) {
 	return &Services{
 		scope: scope, Teams: team.NewService(scope), Groups: group.NewService(scope),
 		Channels: channel.NewService(scope), ChannelMembers: channelmember.NewService(scope),
+		TeamOperations:        teamoperation.NewService(scope),
 		ChannelUserManagement: channelusermanagement.NewService(scope),
 		ChannelShares:         sharedchannel.NewService(scope), AssociatedTeams: associatedteam.NewService(scope),
 		SharedChannelManagement: sharedchannelmanagement.NewService(scope),

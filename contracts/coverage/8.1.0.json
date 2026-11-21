@@ -8718,19 +8718,65 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/208/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_operation/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/team_operation/service.go",
+              "name": "Service.ResumeByID"
+            },
+            {
+              "file": "msteams/graph_api/team_operation/service.go",
+              "name": "Service.WaitByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_operation/service_test.go",
+              "name": "TestGetOperationPreservesNativeStatesAndFutureData"
+            },
+            {
+              "file": "msteams/graph_api/team_operation/service_test.go",
+              "name": "TestGetRejectsMalformedAndUnexpectedResponses"
+            },
+            {
+              "file": "msteams/graph_api/team_operation/service_test.go",
+              "name": "TestResumedWaitUsesBetaCadenceAndRetainsFailure"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_operation_test.go",
+              "name": "TestLabTeamOperationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_operation/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/team_operation/service.go",
+            "name": "Service.ResumeByID"
+          },
+          {
+            "file": "msteams/graph_api/team_operation/service.go",
+            "name": "Service.WaitByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/team-operation-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
