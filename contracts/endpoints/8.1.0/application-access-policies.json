@@ -424,7 +424,7 @@
       ],
       "composition": [
         "group branch first; otherwise require bound PolicyName plus user Identity or Global=true",
-        "PassThru binding mismatch remains unresolved; no success output guarantee"
+        "mapped Grant-CsTeamsPolicy rejects explicitly bound PassThru in isolated execution; exported forwarding remains static evidence; native actions return typed metadata without a console-output switch"
       ],
       "evidence": "docs/implementation/policies/application-access-contract-evidence.md"
     },
@@ -479,7 +479,7 @@
     }
   ],
   "open_questions": [
-    "command-level wrapper binding and full New POST/readback fixtures",
+    "exported TrpsPSCmdlet forwarding/flight selection; mapped-function binding and New POST/readback now observed under declared offline stubs",
     "legacy/native coverage for unselected commands",
     "server identity/Global/clear/rank/default/atomicity semantics not observed",
     "least-privilege role, administrative units and per-cloud feature qualification",
