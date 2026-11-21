@@ -40,6 +40,12 @@ are covered. Shared wildcard tests qualify portable UTF-16/case behavior without
 claiming all locale-specific PowerShell collation. Retained resource reports
 contain structural data only and keep coverage_claim:false/live:not-run.
 
+Local full race/shuffle tests, build, vet and lint passed after integrating the
+CORE-22 main revision. Ledger/model/resource validators and all sixteen Python
+validator tests passed. Both new PowerShell scripts parse; the disabled live
+oracle rejects before loading a module or credentials. The PR records the
+candidate revision and subsequent platform CI evidence.
+
 The [API documentation](../../../msteams/teams_admin_api/application_meeting_configuration/api_docs.md)
 records the operations and absent Create/Delete contract. The documented
 Global-only instance and the helper's open identity forwarding are distinguished;
