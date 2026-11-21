@@ -146,9 +146,11 @@ for disposable group-first and migration fixtures. They skip before credential
 loading without all three lab flags, require a private same-tenant owner fixture,
 and use a bound recovery journal with positive paired ownership checks before
 deletion. Offline tests constrain denied/incomplete/ambiguous discovery and
-cleanup. These Go-only scenarios cover lifecycle readbacks, archive transitions
-and valid photo transfer/readback when explicitly run; they are not PowerShell
-comparisons and have not run against the tenant. See the
+cleanup. These scenarios cover lifecycle readbacks, archive transitions and valid photo
+transfer/readback when explicitly run. An additional oracle flag now enables
+pinned PowerShell identity/tenant/user-list reads of selected resulting fields.
+The oracle never performs writes; its syntax, disabled guard and pinned-model
+projection were checked offline. No scenario or oracle has run against the tenant. See the
 [acceptance procedure](team-lifecycle-lab-acceptance.md) for exact scope and limits.
 
 The primary native Giphy payload uses the documented string enum. A test first

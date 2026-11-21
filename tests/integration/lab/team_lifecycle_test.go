@@ -150,6 +150,7 @@ func lifecycleJournal(t *testing.T, cfg lab.Config, sdk *msteams.Client, binding
 // resource IDs are never accepted as mutation targets. No tenant roles are set.
 func TestLabTeamLifecycle(t *testing.T) {
 	cfg := lifecycleLabConfig(t)
+	_ = teamOracleEnabled(t) // Validate the optional oracle before fixture writes.
 	sdk, binding, _ := labSDKClient(t)
 	owner, err := loadLifecycleOwner(os.Getenv("MSTEAMS_LAB_TEAM_OWNER_FILE"), binding)
 	if err != nil {
@@ -202,7 +203,7 @@ func TestLabTeamLifecycle(t *testing.T) {
 			if err := lifecycleObserveAbsent(deleteCtx, sdk, result.ID); err != nil {
 				t.Fatal("team/group readback did not confirm deletion")
 			}
-			t.Log("team lifecycle observations passed; education, delegated and PowerShell comparison remain separate")
+			t.Log("team lifecycle observations passed; education and delegated qualification remain separate")
 		})
 	}
 }
@@ -215,6 +216,7 @@ func checkLifecycleTeam(t *testing.T, cfg lab.Config, sdk *msteams.Client, id, f
 	if err != nil || paired.Value == nil || paired.Value.DisplayName == nil || *paired.Value.DisplayName != fixture {
 		t.Fatal("paired read did not confirm creation")
 	}
+	comparePowerShellTeam(t, ctx, paired.Value, fixture, ownerID)
 	for _, user := range []*string{nil, &ownerID} {
 		listed, err := sdk.GraphAPI.TeamManagement.List(ctx, management.ListOptions{User: user, DisplayName: fixture, Traversal: client.PagingOptions{MaxPages: 16}, Timeout: cfg.Timeout})
 		if err != nil || !listed.Complete {
@@ -236,14 +238,17 @@ func checkLifecycleTeam(t *testing.T, cfg lab.Config, sdk *msteams.Client, id, f
 		updated.Value.TeamSnapshot.FunSettings == nil || updated.Value.TeamSnapshot.FunSettings.AllowGiphy == nil || *updated.Value.TeamSnapshot.FunSettings.AllowGiphy {
 		t.Fatal("paired readback did not confirm group/settings update")
 	}
+	comparePowerShellTeam(t, ctx, updated.Value, fixture, ownerID)
 	cancel()
 	for _, archived := range []bool{true, false} {
 		actionCtx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 		result, err := sdk.GraphAPI.TeamManagement.SetArchivedState(actionCtx, id, archived, management.ArchiveStateOptions{Wait: client.WaitOptions{Timeout: cfg.Timeout}})
-		stop()
 		if err != nil || !result.Confirmed {
+			stop()
 			t.Fatal("archive transition was not confirmed; do not resubmit")
 		}
+		comparePowerShellTeam(t, actionCtx, result.After, fixture, ownerID)
+		stop()
 	}
 	photoCtx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()

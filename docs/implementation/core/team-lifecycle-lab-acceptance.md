@@ -78,7 +78,8 @@ never publish its contents, tenant IDs, tokens, credentials or response bodies.
 The tests currently check direct readbacks strictly; replication-related failures
 are failures to investigate, not permission to repeat a mutation or declare parity.
 
-These Go-only smoke scenarios are not pinned PowerShell comparisons. A successful
+Without the additional oracle flag, these Go-only smoke scenarios do not run
+PowerShell comparisons. A successful
 future run must retain its actual tested revision and sanitized outcomes; it must
 not promote unexecuted education, delegated, cloud or PowerShell scenarios.
 Ledger links identify prepared entry points, while live status remains `not-run`.
@@ -93,3 +94,33 @@ and [update](https://learn.microsoft.com/en-us/graph/api/profilephoto-update?vie
 documentation reviewed on 2026-11-21 supports the separate group-photo readback
 route and permissions. See [SDK evidence](teams-sdk-evidence.md) for
 native/composed contract scope and observed lab limits.
+
+## Optional pinned PowerShell read comparison
+
+Add `MSTEAMS_LAB_POWERSHELL_ORACLE=1` and an absolute
+`MSTEAMS_LAB_MODULE_PATH` pointing to the extracted 8.1.0 module to the same live
+command. PowerShell must be installed. The helper validates this optional
+configuration before fixture writes; the script verifies module version and the
+pinned TeamsCmdlets assembly hash before connecting. Its certificate connection
+uses the same explicit tenant/application identity, including when Go uses that
+identity's secret. The identity file must therefore retain certificate/key paths.
+No ambient signed-in user or browser identity is substituted.
+
+After creation, update and each confirmed archive transition, PowerShell only
+runs `Get-Team`: identity lookup, the unique fixture display-name search, and
+that owner's filtered joined-team list. It compares selected IDs, names,
+description, alias, classification, visibility, archive state and AllowGiphy
+against the paired Go read. Nullable values stay distinct. The Go test drives
+all writes and journalled cleanup. This is a resulting-state comparison; it does
+not execute PowerShell's creation/update/archive/picture/delete commands or prove
+their mutation sequences equivalent.
+
+Selectors travel through stdin to a fixed script, never interpolated command
+text. Child stderr is discarded, stdout is bounded to 64 KiB, and unexpected,
+partial or mixed output fails strict decoding. Only fixed outcome text is logged;
+returned projections remain private transient data. No read-oracle output is a CI
+artifact. Ordinary Go CI neither launches PowerShell nor reads credentials.
+The script was syntax-checked, its disabled guard was executed, and its selected
+projection was checked against the pinned CLR model offline. These checks do not
+establish successful tenant reads. A denied or mismatched oracle fails the live
+scenario; it never becomes a skipped/pass result or a reason to repeat a write.
