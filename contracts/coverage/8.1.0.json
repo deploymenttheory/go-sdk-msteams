@@ -805,19 +805,62 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/16/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/shared_channel_management/service.go",
+              "name": "Service.ListAssociatedTeams"
+            },
+            {
+              "file": "msteams/graph_api/associated_team/service.go",
+              "name": "Service.ListMine"
+            },
+            {
+              "file": "msteams/graph_api/associated_team/service.go",
+              "name": "Service.ListForUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/shared_channel_management/service_test.go",
+              "name": "TestAssociatedTeamsSelectionAndResolution"
+            },
+            {
+              "file": "msteams/graph_api/shared_channel_management/service_test.go",
+              "name": "TestCompositionsRejectOptionsAndCancellationBeforeCredentials"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shared_channel_test.go",
+              "name": "TestLabSharedChannelReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/shared_channel_management/service.go",
+            "name": "Service.ListAssociatedTeams"
+          },
+          {
+            "file": "msteams/graph_api/associated_team/service.go",
+            "name": "Service.ListMine"
+          },
+          {
+            "file": "msteams/graph_api/associated_team/service.go",
+            "name": "Service.ListForUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/shared-channel-sdk-evidence.md",
+          "docs/implementation/core/shared-channel-mutation-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -8796,19 +8839,58 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/209/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/shared_channel_management/service.go",
+              "name": "Service.ListSharedWithTeams"
+            },
+            {
+              "file": "msteams/graph_api/shared_channel/service.go",
+              "name": "Service.GetByID"
+            },
+            {
+              "file": "msteams/graph_api/shared_channel/service.go",
+              "name": "Service.ListAll"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/shared_channel_management/service_test.go",
+              "name": "TestSharedTeamOptionalSelectorAndUnshare"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shared_channel_test.go",
+              "name": "TestLabSharedChannelReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/shared_channel_management/service.go",
+            "name": "Service.ListSharedWithTeams"
+          },
+          {
+            "file": "msteams/graph_api/shared_channel/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/graph_api/shared_channel/service.go",
+            "name": "Service.ListAll"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/shared-channel-sdk-evidence.md",
+          "docs/implementation/core/shared-channel-mutation-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -8828,19 +8910,66 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/210/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/shared_channel_management/service.go",
+              "name": "Service.ListAllowedUsers"
+            },
+            {
+              "file": "msteams/graph_api/shared_channel/service.go",
+              "name": "Service.ListAllowedMembers"
+            },
+            {
+              "file": "msteams/graph_api/directory_user/principal_names.go",
+              "name": "Resolver.LookupPrincipalNames"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/shared_channel_management/service_test.go",
+              "name": "TestAllowedUsersProjectionFilterAndNullableEnrichment"
+            },
+            {
+              "file": "msteams/graph_api/shared_channel_management/service_test.go",
+              "name": "TestAllowedUserFailuresRetainNativeState"
+            },
+            {
+              "file": "msteams/graph_api/shared_channel_management/service_test.go",
+              "name": "TestCompositionsRejectOptionsAndCancellationBeforeCredentials"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shared_channel_test.go",
+              "name": "TestLabSharedChannelReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/shared_channel_management/service.go",
+            "name": "Service.ListAllowedUsers"
+          },
+          {
+            "file": "msteams/graph_api/shared_channel/service.go",
+            "name": "Service.ListAllowedMembers"
+          },
+          {
+            "file": "msteams/graph_api/directory_user/principal_names.go",
+            "name": "Resolver.LookupPrincipalNames"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/shared-channel-sdk-evidence.md",
+          "docs/implementation/core/shared-channel-mutation-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -21255,19 +21384,49 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/515/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/graph_api/shared_channel_management/service.go",
+              "name": "Service.UnshareWithTeam"
+            },
+            {
+              "file": "msteams/graph_api/shared_channel/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/shared_channel_management/service_test.go",
+              "name": "TestSharedTeamOptionalSelectorAndUnshare"
+            },
+            {
+              "file": "msteams/graph_api/shared_channel/service_test.go",
+              "name": "TestUnshareFailureIsNotReplayed"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/shared_channel_management/service.go",
+            "name": "Service.UnshareWithTeam"
+          },
+          {
+            "file": "msteams/graph_api/shared_channel/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/shared-channel-sdk-evidence.md",
+          "docs/implementation/core/shared-channel-mutation-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",

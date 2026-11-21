@@ -15,11 +15,15 @@ try {
     $request = $raw | ConvertFrom-Json
     $uuid = '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
     if ($request.id -notmatch $uuid) { throw 'Explicit team required.' }
-    if ($request.kind -notin @('team','users','channel-users','operation')) { throw 'Unknown oracle.' }
-    if ($request.kind -ne 'operation' -and $request.fixture -notmatch '^msteams-sdk-[a-z2-7]{26,64}-(team|migration|membership)$') { throw 'Owned fixture required.' }
+    if ($request.kind -notin @('team','users','channel-users','operation','shared-teams','associated-teams','shared-users')) { throw 'Unknown oracle.' }
+    $ownedRead = $request.kind -in @('team','users','channel-users')
+    if ($ownedRead -and $request.fixture -notmatch '^msteams-sdk-[a-z2-7]{26,64}-(team|migration|membership)$') { throw 'Owned fixture required.' }
     if ($request.kind -eq 'operation' -and [string]::IsNullOrWhiteSpace([string]$request.operation_id)) { throw 'Explicit operation required.' }
     if ($request.kind -eq 'team' -and $request.owner -notmatch $uuid) { throw 'Explicit owner required.' }
     if ($request.kind -eq 'channel-users' -and [string]::IsNullOrWhiteSpace([string]$request.channel)) { throw 'Explicit channel required.' }
+    if ($request.kind -in @('shared-teams','shared-users') -and [string]::IsNullOrWhiteSpace([string]$request.channel)) { throw 'Explicit shared channel required.' }
+    if ($request.kind -eq 'shared-users' -and $request.shared_team_id -notmatch $uuid) { throw 'Explicit shared-with team required.' }
+    if ($request.kind -eq 'shared-teams' -and -not [string]::IsNullOrEmpty([string]$request.shared_team_id) -and $request.shared_team_id -notmatch $uuid) { throw 'Invalid shared-with team.' }
     $report.stage = 'module'
     $module = $env:MSTEAMS_LAB_MODULE_PATH
     $manifest = Join-Path $module 'MicrosoftTeams.psd1'
@@ -33,7 +37,7 @@ try {
     Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $identity.tenant_id -ErrorAction Stop -WarningAction SilentlyContinue -InformationAction SilentlyContinue | Out-Null
     $connected = $true
     $report.stage = 'read'
-    if ($request.kind -ne 'operation') {
+    if ($ownedRead) {
         $values = @(Get-Team -GroupId $request.id -ErrorAction Stop)
         if ($values.Count -ne 1 -or [string]$values[0].GroupId -ine $request.id -or [string]$values[0].DisplayName -cne $request.fixture) { throw 'Expected one owned fixture.' }
     }
@@ -69,11 +73,36 @@ try {
         }
         return @{id=[string]$value.UserId; user=$value.User; name=$value.Name; role=([string]$value.Role).ToLowerInvariant()}
     }
+    function Convert-SharedTeamObservation($value, [bool]$includeHost) {
+        foreach ($property in @('GroupId','DisplayName','TenantId')) {
+            if ($null -eq $value.PSObject.Properties[$property]) { throw 'Incomplete associated/shared team projection.' }
+        }
+        $result = @{id=[string]$value.GroupId; display_name=$value.DisplayName; tenant_id=$value.TenantId; is_host=$null}
+        if ($includeHost) {
+            if ($null -eq $value.PSObject.Properties['IsHostTeam']) { throw 'Incomplete sharing projection.' }
+            $result.is_host = $value.IsHostTeam
+        }
+        return $result
+    }
     $report.stage = 'projection'
     if ($request.kind -eq 'operation') {
         $operations = @(Get-Operation -GroupId $request.id -OperationId $request.operation_id -ErrorAction Stop)
         if ($operations.Count -ne 1 -or [string]$operations[0].OperationId -cne $request.operation_id) { throw 'Expected one selected operation.' }
         $report = @{success=$true; stage='complete'; operation=(Convert-OperationObservation $operations[0])}
+    } elseif ($request.kind -in @('shared-teams','associated-teams')) {
+        $rows = @()
+        $selected = @(
+            if ($request.kind -eq 'associated-teams') {
+                Get-AssociatedTeam -User $request.id -ErrorAction Stop
+            } elseif ([string]::IsNullOrEmpty([string]$request.shared_team_id)) {
+                Get-SharedWithTeam -HostTeamId $request.id -ChannelId $request.channel -ErrorAction Stop
+            } else {
+                Get-SharedWithTeam -HostTeamId $request.id -ChannelId $request.channel -SharedWithTeamId $request.shared_team_id -ErrorAction Stop
+            }
+        )
+        foreach ($value in $selected) { $rows += Convert-SharedTeamObservation $value ($request.kind -eq 'shared-teams') }
+        if ($request.kind -eq 'shared-teams') { $report = @{success=$true; stage='complete'; shared_teams=@($rows)} }
+        else { $report = @{success=$true; stage='complete'; associated_teams=@($rows)} }
     } elseif ($request.kind -eq 'team') {
         $team = Convert-TeamObservation $values[0]
         $tenant = @(Get-Team -DisplayName $request.fixture -ErrorAction Stop)
@@ -83,14 +112,21 @@ try {
     } else {
         $users = @()
         $members = @(
-            if ($request.kind -eq 'channel-users') {
+            if ($request.kind -eq 'shared-users') {
+                Get-SharedWithTeamUser -HostTeamId $request.id -ChannelId $request.channel -SharedWithTeamId $request.shared_team_id -ErrorAction Stop
+            } elseif ($request.kind -eq 'channel-users') {
                 Get-TeamChannelUser -GroupId $request.id -DisplayName $request.channel -ErrorAction Stop
             } else {
                 Get-TeamUser -GroupId $request.id -ErrorAction Stop
             }
         )
         foreach ($value in $members) {
-            $users += Convert-TeamUserObservation $value
+            $row = Convert-TeamUserObservation $value
+            if ($request.kind -eq 'shared-users') {
+                if ($null -eq $value.PSObject.Properties['TenantId']) { throw 'Incomplete shared user projection.' }
+                $row.tenant_id = $value.TenantId
+            }
+            $users += $row
         }
         $report = @{success=$true; stage='complete'; users=@($users)}
     }
