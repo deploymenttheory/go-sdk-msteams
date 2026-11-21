@@ -43,6 +43,7 @@ type tokenService struct {
 	ttl          int
 	block        chan struct{}
 	entered      chan struct{}
+	extraScopes  map[string]bool
 }
 
 func (s *tokenService) RoundTrip(r *http.Request) (*http.Response, error) {
@@ -102,7 +103,7 @@ func (s *tokenService) RoundTrip(r *http.Request) (*http.Response, error) {
 		if r.Form.Get("grant_type") != "client_credentials" || r.Form.Get("client_id") != appID {
 			s.t.Error("incorrect credential grant identity")
 		}
-		if scope != GraphAudience+"/.default" && scope != TeamsAdminAudience+"/.default" {
+		if scope != GraphAudience+"/.default" && scope != TeamsAdminAudience+"/.default" && !s.extraScopes[scope] {
 			s.t.Errorf("incorrect resource scope: %q", scope)
 		}
 		if s.public == nil {
@@ -220,6 +221,8 @@ func TestApplicationMSALCredentialModesAndAudiences(t *testing.T) {
 		t.Run(fmt.Sprint(i), func(t *testing.T) {
 			t.Parallel()
 			service := newTokenService(t)
+			audiences := []string{GraphAudience, TeamsAdminAudience, "https://retailservices.teams.microsoft.com", "https://chatsvcagg.teams.microsoft.com"}
+			service.extraScopes = map[string]bool{"https://retailservices.teams.microsoft.com/.default": true, "https://chatsvcagg.teams.microsoft.com/.default": true}
 			if cfg.Method == Certificate {
 				service.public = certs[0].PublicKey.(*rsa.PublicKey)
 			}
@@ -229,7 +232,7 @@ func TestApplicationMSALCredentialModesAndAudiences(t *testing.T) {
 				t.Fatal("constructor authenticated")
 			}
 			var group sync.WaitGroup
-			for _, audience := range []string{GraphAudience, TeamsAdminAudience} {
+			for _, audience := range audiences {
 				for range 8 {
 					group.Go(func() {
 						token, err := p.AcquireToken(t.Context(), p.Binding().Request(audience))
@@ -240,8 +243,10 @@ func TestApplicationMSALCredentialModesAndAudiences(t *testing.T) {
 				}
 			}
 			group.Wait()
-			if service.count(GraphAudience) != 1 || service.count(TeamsAdminAudience) != 1 {
-				t.Fatal("audiences were not independently cached and serialized")
+			for _, audience := range audiences {
+				if service.count(audience) != 1 {
+					t.Fatal("audiences were not independently cached and serialized")
+				}
 			}
 		})
 	}

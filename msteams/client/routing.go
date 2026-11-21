@@ -6,6 +6,8 @@ import (
 	"net/url"
 	"strings"
 	"unicode"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/internal/serviceprofile"
 )
 
 // ErrDestination means a route is not approved for this backend and cloud.
@@ -41,6 +43,7 @@ type routeProfile struct {
 	host     string
 	audience string
 	graph    bool
+	prefix   string
 }
 
 func (s *Scope) profile() (routeProfile, error) {
@@ -55,6 +58,16 @@ func (s *Scope) profile() (routeProfile, error) {
 		return routeProfile{host: strings.TrimPrefix(environment.Endpoints.Graph, "https://"), audience: environment.Endpoints.Graph, graph: true}, nil
 	case TeamsAdmin:
 		return routeProfile{host: strings.TrimPrefix(environment.Endpoints.TeamsAdmin, "https://"), audience: environment.Endpoints.TeamsAdminResource}, nil
+	case Targeting, Hierarchy:
+		service := serviceprofile.Targeting
+		if s.backend == Hierarchy {
+			service = serviceprofile.Hierarchy
+		}
+		profile, ok := serviceprofile.Resolve(service, environment.Name)
+		if !ok {
+			return routeProfile{}, ErrDestination
+		}
+		return routeProfile{host: strings.TrimPrefix(profile.Origin, "https://"), audience: profile.Audience, prefix: profile.PathPrefix}, nil
 	default:
 		return routeProfile{}, ErrDestination
 	}
@@ -101,6 +114,9 @@ func (p routeProfile) allows(u *url.URL) bool {
 		return false
 	}
 	if !strings.HasPrefix(u.Path, "/") || strings.HasPrefix(u.Path, "//") {
+		return false
+	}
+	if p.prefix != "" && u.Path != p.prefix && !strings.HasPrefix(u.Path, p.prefix+"/") {
 		return false
 	}
 	for _, part := range strings.Split(u.Path, "/") {

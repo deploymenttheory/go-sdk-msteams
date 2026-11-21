@@ -27,7 +27,7 @@ proven upsert. Global deletion/reset/default assignment effects require lab
 observation before destructive acceptance.
 
 Remaining implementation: v1/v2 hierarchy native operations and typed status
-projections, explicit profile/audience support, source-informed multipart upload
+projections, source-informed multipart upload
 composition and partial outcomes, examples/API documentation, complete command
 ledger mapping, retained structural fixtures and gated lab acceptance. This
 progress checkpoint does not update ledger rows as complete.
@@ -38,9 +38,26 @@ GCC changes only the request origin to
 `https://retailservices.gcc.teams.microsoft.com`. Hierarchy v2 uses request origin
 `https://hierarchy.teams.microsoft.com` and audience
 `https://chatsvcagg.teams.microsoft.com`. Other clouds lack settled v2 mappings.
-Current native profiles/providers only support Graph and ConfigAPI. Extend exact
-origin/audience isolation before hierarchy calls; never override the ConfigAPI
-origin while reusing its token. No generic audience allow-list widening or cloud
-fallback is an acceptable substitute. The complete versioned source contract is
+The candidate now extends the closed native profile catalog with these exact
+pairs, and native providers accept only their evidenced resource audiences in
+the selected cloud. Graph/ConfigAPI endpoint overrides retain their existing
+meaning; the new special-service profiles have no custom override or fallback.
+Targeting scope is restricted to `/api/rest/v1/nodes`; hierarchy scope to
+`/api/v1/hierarchies`. Unsupported maps and foreign paths fail before token
+acquisition. ConfigAPI tokens are never substituted. The complete source contract is
 [hierarchy evidence](hierarchy-migration-contract-evidence.md) and
 `contracts/endpoints/8.1.0/special-service-profiles.json`.
+
+Offline checks exercise these pairs against that manifest, fixed namespace and
+cloud rejection, typed/redacted backend errors, secret/PFX/PEM MSAL token/cache
+isolation for all four current audiences, and delegated acquisition with one
+selected account and separate resource tokens. This extends the existing
+`audience + /.default` contract only. Other services with explicit delegated
+scopes such as Region.Read.All still require a scope-aware token/cache extension;
+they are not accepted by this change. None of these synthetic checks establishes
+tenant grants, application eligibility, regional service deployment or live
+hierarchy behavior.
+
+Checkpoint verification after integrating main: full build, vet, shuffled race
+suite and repository-wide lint passed with all tenant lab flags unset. These are
+local offline results; no CORE-25 PR or cross-platform qualification is claimed.
