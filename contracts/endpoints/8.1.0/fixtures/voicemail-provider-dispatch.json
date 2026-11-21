@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-voicemail-compiled-provider",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Pinned HttpRequestHelper direct CRUD with synthetic InvocationInfo. Host refuses credentials; private client/version/host replaced/restored; memory-only sender. MPACmdlet supplied from factory source. No command constructor/ProcessRecord, auth, discovery, audio-file access/upload or network.",
+  "cases": [
+    {
+      "duration": "normal",
+      "status": 200,
+      "response": "{\"Identity\":\"fixture-response\",\"MaximumRecordingLength\":\"00:01:30\",\"Future\":false}",
+      "force": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "read",
+      "name": "read"
+    },
+    {
+      "duration": "normal",
+      "status": 200,
+      "response": "[]",
+      "force": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailPolicy, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "list",
+      "name": "list"
+    },
+    {
+      "duration": "normal",
+      "status": 200,
+      "response": "{\"Identity\":\"fixture-response\",\"MaximumRecordingLength\":\"00:01:30\",\"Future\":false}",
+      "force": false,
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Description\": \"\",\n  \"EnableTranscription\": false,\n  \"ShareData\": \"FutureValue\",\n  \"EnableTranscriptionProfanityMasking\": false,\n  \"EnableEditingCallAnswerRulesSetting\": false,\n  \"MaximumRecordingLength\": \"00:01:30\",\n  \"EnableTranscriptionTranslation\": false,\n  \"PrimarySystemPromptLanguage\": \"FuturePrimary\",\n  \"SecondarySystemPromptLanguage\": \"FutureSecondary\",\n  \"PreambleAudioFile\": \"fixture-audio-reference\",\n  \"PostambleAudioFile\": \"\",\n  \"PreamblePostambleMandatory\": false,\n  \"EnableVoicemailTriage\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "create",
+      "name": "create"
+    },
+    {
+      "duration": "normal",
+      "status": 204,
+      "response": "",
+      "force": false,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"EnableTranscription\": false,\n  \"ShareData\": \"FutureValue\",\n  \"EnableTranscriptionProfanityMasking\": false,\n  \"EnableEditingCallAnswerRulesSetting\": false,\n  \"MaximumRecordingLength\": \"00:01:30\",\n  \"EnableTranscriptionTranslation\": false,\n  \"PrimarySystemPromptLanguage\": \"FuturePrimary\",\n  \"SecondarySystemPromptLanguage\": \"FutureSecondary\",\n  \"PreambleAudioFile\": \"fixture-audio-reference\",\n  \"PostambleAudioFile\": \"\",\n  \"PreamblePostambleMandatory\": false,\n  \"EnableVoicemailTriage\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "patch",
+      "name": "patch"
+    },
+    {
+      "duration": "normal",
+      "status": 204,
+      "response": "",
+      "force": false,
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "delete",
+      "name": "delete"
+    },
+    {
+      "duration": "null",
+      "status": 204,
+      "response": "",
+      "force": false,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"EnableTranscription\": false,\n  \"ShareData\": \"FutureValue\",\n  \"EnableTranscriptionProfanityMasking\": false,\n  \"EnableEditingCallAnswerRulesSetting\": false,\n  \"MaximumRecordingLength\": null,\n  \"EnableTranscriptionTranslation\": false,\n  \"PrimarySystemPromptLanguage\": \"FuturePrimary\",\n  \"SecondarySystemPromptLanguage\": \"FutureSecondary\",\n  \"PreambleAudioFile\": \"fixture-audio-reference\",\n  \"PostambleAudioFile\": \"\",\n  \"PreamblePostambleMandatory\": false,\n  \"EnableVoicemailTriage\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "patch",
+      "name": "patch-null-duration"
+    },
+    {
+      "duration": "tick",
+      "status": 201,
+      "response": "{\"Identity\":\"Fixture\"}",
+      "force": false,
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Description\": \"\",\n  \"EnableTranscription\": false,\n  \"ShareData\": \"FutureValue\",\n  \"EnableTranscriptionProfanityMasking\": false,\n  \"EnableEditingCallAnswerRulesSetting\": false,\n  \"MaximumRecordingLength\": \"00:00:00.0000001\",\n  \"EnableTranscriptionTranslation\": false,\n  \"PrimarySystemPromptLanguage\": \"FuturePrimary\",\n  \"SecondarySystemPromptLanguage\": \"FutureSecondary\",\n  \"PreambleAudioFile\": \"fixture-audio-reference\",\n  \"PostambleAudioFile\": \"\",\n  \"PreamblePostambleMandatory\": false,\n  \"EnableVoicemailTriage\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "create",
+      "name": "create-one-tick"
+    },
+    {
+      "duration": "normal",
+      "status": 204,
+      "response": "",
+      "force": true,
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "delete",
+      "name": "delete-force-false"
+    },
+    {
+      "duration": "normal",
+      "status": 204,
+      "response": "",
+      "force": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "read",
+      "name": "read-empty"
+    },
+    {
+      "duration": "normal",
+      "status": 200,
+      "response": "{\"Identity\":\"Global\",\"MaximumRecordingLength\":null}",
+      "force": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "read",
+      "name": "read-null-duration"
+    },
+    {
+      "duration": "normal",
+      "status": 200,
+      "response": "{\"Identity\":\"Global\",\"MaximumRecordingLength\":\"PT90S\"}",
+      "force": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "operation": "read",
+      "name": "read-invalid-duration"
+    },
+    {
+      "duration": "normal",
+      "status": 200,
+      "response": "{\"value\":[]}",
+      "force": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "operation": "list",
+      "name": "list-envelope"
+    },
+    {
+      "duration": "normal",
+      "status": 403,
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "force": false,
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsOnlineVoicemailPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      },
+      "operation": "delete",
+      "name": "delete-denied"
+    }
+  ]
+}

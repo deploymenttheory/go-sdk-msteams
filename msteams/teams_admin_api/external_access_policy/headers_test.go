@@ -53,7 +53,10 @@ func TestCompiledCallsUseFreshCorrelationAndNoForestBootstrap(t *testing.T) {
 	if _, _, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.GetByIdentity(t.Context(), "Global"); err != nil {
 		t.Fatal(err)
 	}
-	if calls != 5 || len(seen) != 5 {
+	if _, _, err := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.GetByIdentity(t.Context(), "Global"); err != nil {
+		t.Fatal(err)
+	}
+	if calls != 6 || len(seen) != 6 {
 		t.Fatal("unexpected compiled request count")
 	}
 }
