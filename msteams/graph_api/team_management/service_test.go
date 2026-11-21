@@ -23,7 +23,10 @@ const (
 
 func runCase(t *testing.T, command string, c contracttest.Case) contracttest.Result {
 	t.Helper()
-	c.Family, c.Source, c.Mode = "team_management", source, auth.Delegated
+	c.Family, c.Source = "team_management", source
+	if c.Mode == "" {
+		c.Mode = auth.Delegated
+	}
 	if c.Name == "" {
 		c.Name = "composition-case"
 	}
@@ -75,8 +78,9 @@ func fixture(t *testing.T, name string) []contracttest.Exchange {
 					Value json.RawMessage
 				}
 				Response struct {
-					Status int
-					JSON   json.RawMessage
+					Status  int
+					JSON    json.RawMessage
+					Headers map[string]string
 				}
 			}
 		}
@@ -94,7 +98,11 @@ func fixture(t *testing.T, name string) []contracttest.Exchange {
 			if step.Body.Kind == "json" {
 				body = string(step.Body.Value)
 			}
-			steps = append(steps, wire(step.Method, step.Path, body, step.Response.Status, string(step.Response.JSON)))
+			exchange := wire(step.Method, step.Path, body, step.Response.Status, string(step.Response.JSON))
+			for key, value := range step.Response.Headers {
+				exchange.Reply.Headers.Set(key, value)
+			}
+			steps = append(steps, exchange)
 		}
 		return steps
 	}
