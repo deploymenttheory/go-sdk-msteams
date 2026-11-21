@@ -102,17 +102,17 @@ server description or token. Explicit callback data is for the signing-in user's
 | Tests | Contract checked |
 |---|---|
 | `TestAzureCredentialAdapter*`, `ExampleNewAzureTokenProvider` | Graph-compatible borrowed TokenCredential, exact tenant/scopes, cancellation and lifecycle boundary |
-| `TestSessionOwnsDelegatedProvidersWithoutStartingLogin` | Root/session wiring, constructor purity and owned close for all three methods |
-| `TestDelegatedPasswordAndSilentSecondAudience` | Password first grant; second audience silently uses the selected account |
-| `TestDelegatedOAuthFailuresPreserveDiagnosticsWithoutFallback` | MFA, conditional access, consent, denial and expiry fixtures preserve codes without retry/downgrade |
-| `TestDelegatedDeviceFlowAndCallback`, `TestDevicePollingHonorsIntervalAndSlowDown` | Prompt/poll behavior, pending state, interval and slow-down |
-| `TestDelegatedDeviceRejections`, `TestDeviceCodeExpiresWhilePromptWaits`, `TestDevicePromptCanCancelWithoutLeakingCallbackError` | Verification authority, expiry and explicit callback cancellation |
-| `TestBrowserPKCEAndConcurrentAudiencesShareAccount` | Real local callback, state/PKCE redemption and concurrent audience reuse |
-| `TestBrowserDenialCallbackErrorAndUntrustedAuthority`, `TestBrowserCallbackRequiresStateBeforeErrorOrCode` | Denial, callback failure, hostile authority, state/host/body checks |
-| `TestBrowserCancellationClosesSlowCallbackConnection` | Cancellation closes an active incomplete form POST and worker exits |
-| `TestDelegatedAccountCannotChangeBetweenAudiences`, `TestDelegatedSilentRefreshWithoutIDTokenKeepsSelectedAccount` | Account consistency and normal ID-token omission |
-| `TestDelegatedSilentTransportFailureDoesNotPrompt`, `TestDelegatedCancellationWhileWaitingAndClose` | No new login on transport failure; cancelled waiters/close release work |
-| `TestTrustedFederationPasswordUsesMicrosoftWSExchange`, `TestFederationEndpointValidation`, `TestDelegatedFederationDoesNotForwardPassword` | MSAL federation interoperability and endpoint trust |
+| `TestUnitSessionOwnsDelegatedProvidersWithoutStartingLogin` | Root/session wiring, constructor purity and owned close for all three methods |
+| `TestUnitDelegatedPasswordAndSilentSecondAudience` | Password first grant; second audience silently uses the selected account |
+| `TestUnitDelegatedOAuthFailuresPreserveDiagnosticsWithoutFallback` | MFA, conditional access, consent, denial and expiry fixtures preserve codes without retry/downgrade |
+| `TestUnitDelegatedDeviceFlowAndCallback`, `TestUnitDevicePollingHonorsIntervalAndSlowDown` | Prompt/poll behavior, pending state, interval and slow-down |
+| `TestUnitDelegatedDeviceRejections`, `TestUnitDeviceCodeExpiresWhilePromptWaits`, `TestUnitDevicePromptCanCancelWithoutLeakingCallbackError` | Verification authority, expiry and explicit callback cancellation |
+| `TestUnitBrowserPKCEAndConcurrentAudiencesShareAccount` | Real local callback, state/PKCE redemption and concurrent audience reuse |
+| `TestUnitBrowserDenialCallbackErrorAndUntrustedAuthority`, `TestUnitBrowserCallbackRequiresStateBeforeErrorOrCode` | Denial, callback failure, hostile authority, state/host/body checks |
+| `TestUnitBrowserCancellationClosesSlowCallbackConnection` | Cancellation closes an active incomplete form POST and worker exits |
+| `TestUnitDelegatedAccountCannotChangeBetweenAudiences`, `TestUnitDelegatedSilentRefreshWithoutIDTokenKeepsSelectedAccount` | Account consistency and normal ID-token omission |
+| `TestUnitDelegatedSilentTransportFailureDoesNotPrompt`, `TestUnitDelegatedCancellationWhileWaitingAndClose` | No new login on transport failure; cancelled waiters/close release work |
+| `TestUnitTrustedFederationPasswordUsesMicrosoftWSExchange`, `TestUnitFederationEndpointValidation`, `TestUnitDelegatedFederationDoesNotForwardPassword` | MSAL federation interoperability and endpoint trust |
 
 Fixtures use synthetic unsigned ID-token representations only inside the fake trusted
 identity transport, to exercise MSAL account extraction. They are not tenant credentials

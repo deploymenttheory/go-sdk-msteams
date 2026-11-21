@@ -55,7 +55,7 @@ func postBrowserResult(ctx context.Context, raw string, deny bool, service *dele
 	return nil
 }
 
-func TestBrowserPKCEAndConcurrentAudiencesShareAccount(t *testing.T) {
+func TestUnitBrowserPKCEAndConcurrentAudiencesShareAccount(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t}
 	cfg := delegatedConfig(Browser)
@@ -79,7 +79,7 @@ func TestBrowserPKCEAndConcurrentAudiencesShareAccount(t *testing.T) {
 	}
 }
 
-func TestBrowserDenialCallbackErrorAndUntrustedAuthority(t *testing.T) {
+func TestUnitBrowserDenialCallbackErrorAndUntrustedAuthority(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name               string
@@ -117,7 +117,7 @@ func TestBrowserDenialCallbackErrorAndUntrustedAuthority(t *testing.T) {
 	}
 }
 
-func TestBrowserCancellationClosesSlowCallbackConnection(t *testing.T) {
+func TestUnitBrowserCancellationClosesSlowCallbackConnection(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t}
 	cfg := delegatedConfig(Browser)
@@ -174,7 +174,7 @@ func TestBrowserCancellationClosesSlowCallbackConnection(t *testing.T) {
 	_ = connection.Close()
 }
 
-func TestBrowserCallbackRequiresStateBeforeErrorOrCode(t *testing.T) {
+func TestUnitBrowserCallbackRequiresStateBeforeErrorOrCode(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, method, host, body string

@@ -153,9 +153,9 @@ func globalConferencingPrompts(values []*resource.Configuration) (*resource.Conf
 	return found, nil
 }
 
-// TestLabAudioConferencingPromptsReadOnly performs only Global and filtered reads.
+// TestAccAudioConferencingPromptsReadOnly performs only Global and filtered reads.
 // It never edits prompts, packages, roles, consent or effective conferencing state.
-func TestLabAudioConferencingPromptsReadOnly(t *testing.T) {
+func TestAccAudioConferencingPromptsReadOnly(t *testing.T) {
 	cfg, e := lab.Load()
 	if e != nil {
 		t.Fatal("invalid lab enablement")
@@ -196,7 +196,7 @@ func TestLabAudioConferencingPromptsReadOnly(t *testing.T) {
 	}
 	t.Log("selected custom prompt reads verified; writes, playback and cleanup require separate qualification")
 }
-func TestConferencingPromptsOracleRejectsIncompleteOrMixedProjections(t *testing.T) {
+func TestUnitConferencingPromptsOracleRejectsIncompleteOrMixedProjections(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Prompts":[{"Identity":null,"Id":null,"Name":"","AudioPrompt":null,"TextPrompt":null,"Type":"","Locale":""}],"Packages":[{"Identity":null,"Id":null,"Name":null,"DefaultLocale":"","InboundStartRecordingPrompt":["future",null],"InboundEndRecordingPrompt":[],"OutboundStartRecordingPrompt":[],"OutboundEndRecordingPrompt":[],"MeetingStartRecordingPrompt":[],"MeetingEndRecordingPrompt":[]}]}`

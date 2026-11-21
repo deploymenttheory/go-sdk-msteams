@@ -65,7 +65,7 @@ func oneGroup() string {
 	return `{"value":[{"id":"` + groupID + `","displayName":"Group name","visibility":"Private","mailNickname":"fixture"}]}`
 }
 
-func TestListSourceDerivedTenantUserAndPartialBatch(t *testing.T) {
+func TestUnitListSourceDerivedTenantUserAndPartialBatch(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, name := range []string{"tenant-search-intersection", "joined-filtered", "tenant-partial-batch"} {
@@ -108,7 +108,7 @@ func TestListSourceDerivedTenantUserAndPartialBatch(t *testing.T) {
 	evidence(t, "team-list-service.json", results)
 }
 
-func TestIncompleteDiscoveryCannotEstablishIntersectionOrHydrate(t *testing.T) {
+func TestUnitIncompleteDiscoveryCannotEstablishIntersectionOrHydrate(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"page-bound", "foreign-next", "second-search-denied"} {
 		first := discovery(`"displayName:Group"`, `{"value":[{"id":"`+groupID+`"}],"@odata.nextLink":"`+auth.GraphAudience+`/beta/groups?$skiptoken=next"}`)
@@ -142,7 +142,7 @@ func TestIncompleteDiscoveryCannotEstablishIntersectionOrHydrate(t *testing.T) {
 	}
 }
 
-func TestHydrationRetriesOnlyThrottledItemsAndPreservesOrdering(t *testing.T) {
+func TestUnitHydrationRetriesOnlyThrottledItemsAndPreservesOrdering(t *testing.T) {
 	for _, header := range []string{"2", "0"} {
 		synctest.Test(t, func(t *testing.T) {
 			groups := discovery("", `{"value":[{"id":"`+groupID+`"},{"id":"`+secondTeamID+`"}]}`)
@@ -167,7 +167,7 @@ func TestHydrationRetriesOnlyThrottledItemsAndPreservesOrdering(t *testing.T) {
 	}
 }
 
-func TestHydrationTimeoutKeepsSuccessfulPeers(t *testing.T) {
+func TestUnitHydrationTimeoutKeepsSuccessfulPeers(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		steps := []contracttest.Exchange{discovery("", `{"value":[{"id":"`+groupID+`"},{"id":"`+secondTeamID+`"}]}`), batch([]string{groupID, secondTeamID}, `{"responses":[{"id":"1","status":200,"body":{"id":"`+groupID+`"}},{"id":"2","status":429,"headers":{"Retry-After":"30"}}]}`)}
 		listCase(t, contracttest.Case{Name: "throttle-timeout", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -180,7 +180,7 @@ func TestHydrationTimeoutKeepsSuccessfulPeers(t *testing.T) {
 	})
 }
 
-func TestHydrationRejectsMalformedWrongIdentityAndUnexpectedStatuses(t *testing.T) {
+func TestUnitHydrationRejectsMalformedWrongIdentityAndUnexpectedStatuses(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string
@@ -205,7 +205,7 @@ func TestHydrationRejectsMalformedWrongIdentityAndUnexpectedStatuses(t *testing.
 	}
 }
 
-func TestListingLocalValidationAndCurrentUserMode(t *testing.T) {
+func TestUnitListingLocalValidationAndCurrentUserMode(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"batch-negative", "batch-oversized", "attempts-negative", "timeout-negative", "delay-negative", "pages-negative", "wrong-paging", "control-search", "current-application"} {
 		want := client.ErrRequest
@@ -246,7 +246,7 @@ func TestListingLocalValidationAndCurrentUserMode(t *testing.T) {
 	}
 }
 
-func TestBatchWidthChunksAndResponseOrderAreIndependent(t *testing.T) {
+func TestUnitBatchWidthChunksAndResponseOrderAreIndependent(t *testing.T) {
 	t.Parallel()
 	ids := []string{groupID, secondTeamID, "44444444-4444-4444-8444-444444444444", "55555555-5555-4555-8555-555555555555", "66666666-6666-4666-8666-666666666666"}
 	items := []map[string]string{}
@@ -290,7 +290,7 @@ func TestBatchWidthChunksAndResponseOrderAreIndependent(t *testing.T) {
 	}, Want: contracttest.Expected{Status: 200}})
 }
 
-func TestHydrationFailureHasNormalizedSubrequestDiagnostics(t *testing.T) {
+func TestUnitHydrationFailureHasNormalizedSubrequestDiagnostics(t *testing.T) {
 	t.Parallel()
 	steps := []contracttest.Exchange{discovery("", oneGroup()), batch([]string{groupID}, `{"responses":[{"id":"1","status":403,"headers":{"request-id":"fixture-subrequest","client-request-id":"fixture-client"},"body":{"error":{"code":"Forbidden","message":"private-server-message","innerError":{"code":"FixtureInner"}}}}]}`)}
 	listCase(t, contracttest.Case{Name: "subrequest-diagnostics", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -309,7 +309,7 @@ func TestHydrationFailureHasNormalizedSubrequestDiagnostics(t *testing.T) {
 	}, Want: contracttest.Expected{Status: 200, Error: auth.ErrForbidden}})
 }
 
-func TestUserFiltersUsePairedStateAndKnownNonmatches(t *testing.T) {
+func TestUnitUserFiltersUsePairedStateAndKnownNonmatches(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"exact-case", "mail-case-insensitive", "archive-unknown", "known-nonmatch-with-unknown-archive"} {
 		user := ownerID
@@ -355,7 +355,7 @@ func TestUserFiltersUsePairedStateAndKnownNonmatches(t *testing.T) {
 	}
 }
 
-func TestMissingBatchResultsKeepKnownSuccessAndFailedIdentity(t *testing.T) {
+func TestUnitMissingBatchResultsKeepKnownSuccessAndFailedIdentity(t *testing.T) {
 	t.Parallel()
 	steps := []contracttest.Exchange{discovery("", `{"value":[{"id":"`+groupID+`"},{"id":"`+secondTeamID+`"}]}`), batch([]string{groupID, secondTeamID}, `{"responses":[{"id":"1","status":200,"body":{"id":"`+groupID+`"}}]}`)}
 	listCase(t, contracttest.Case{Name: "missing-batch-item", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -367,7 +367,7 @@ func TestMissingBatchResultsKeepKnownSuccessAndFailedIdentity(t *testing.T) {
 	}, Want: contracttest.Expected{Status: 200, Error: management.ErrListingIncomplete}})
 }
 
-func TestThrottleExhaustionIsBoundedAndPreservesFinalDiagnostics(t *testing.T) {
+func TestUnitThrottleExhaustionIsBoundedAndPreservesFinalDiagnostics(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		throttled := batch([]string{groupID}, `{"responses":[{"id":"1","status":429,"body":{"error":{"code":"TooManyRequests"}}}]}`)
 		steps := []contracttest.Exchange{discovery("", oneGroup()), throttled, throttled, throttled, throttled}
@@ -386,7 +386,7 @@ func TestThrottleExhaustionIsBoundedAndPreservesFinalDiagnostics(t *testing.T) {
 	})
 }
 
-func TestClientCloseCancelsPendingListThrottleWithoutLosingSuccess(t *testing.T) {
+func TestUnitClientCloseCancelsPendingListThrottleWithoutLosingSuccess(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		steps := []contracttest.Exchange{discovery("", `{"value":[{"id":"`+groupID+`"},{"id":"`+secondTeamID+`"}]}`), batch([]string{groupID, secondTeamID}, `{"responses":[{"id":"1","status":200,"body":{"id":"`+groupID+`"}},{"id":"2","status":429,"headers":{"Retry-After":"30"}}]}`)}
 		listCase(t, contracttest.Case{Name: "close-during-list", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {

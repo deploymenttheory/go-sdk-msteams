@@ -82,9 +82,9 @@ func clientConfigurationOracle(t *testing.T, ctx context.Context, tenant string)
 	return value
 }
 
-// TestLabClientConfigurationReadOnly performs configuration reads only.
+// TestAccClientConfigurationReadOnly performs configuration reads only.
 // Tenant updates and effective client behavior need separate acceptance.
-func TestLabClientConfigurationReadOnly(t *testing.T) {
+func TestAccClientConfigurationReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -125,7 +125,7 @@ func TestLabClientConfigurationReadOnly(t *testing.T) {
 	t.Log("selected client configuration reads verified; persistence and effective client behavior remain separately qualified")
 }
 
-func TestClientConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitClientConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"AllowEmailIntoChannel":false,"RestrictedSenderList":"","AllowDropBox":null,"AllowBox":null,"AllowGoogleDrive":null,"AllowShareFile":null,"AllowEgnyte":null,"AllowOrganizationTab":null,"AllowSkypeBusinessInterop":null,"ContentPin":"0000","AllowResourceAccountSendMessage":null,"ResourceAccountContentAccess":null,"AllowGuestUser":null,"AllowScopedPeopleSearchandAccess":null,"AllowRoleBasedChatPermissions":null,"ExtendedWorkInfoInPeopleSearch":null,"UseUnifiedDomain":null}`
@@ -159,7 +159,7 @@ func globalClientConfiguration(values []*resource.Configuration) (*resource.Conf
 	}
 	return found, nil
 }
-func TestClientConfigurationGlobalSelection(t *testing.T) {
+func TestUnitClientConfigurationGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Configuration{Identity: new("Global")}
 	tagged := &resource.Configuration{Identity: new("Tag:Global")}
@@ -183,7 +183,7 @@ func matchesClientConfigurationGetterProjection(value *resource.Configuration, s
 	return json.Unmarshal(clientConfigurationProjection(value), &left) == nil && json.Unmarshal(raw, &right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestClientConfigurationOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitClientConfigurationOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"restrictedsenderlist":"fixture"}`, `{"RestrictedSenderList":"earlier","restrictedsenderlist":"fixture"}`, `{"RestrictedSenderList":null,"restrictedsenderlist":"fixture"}`} {
 		var value resource.Configuration

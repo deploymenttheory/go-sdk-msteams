@@ -9,7 +9,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-func TestSessionOwnsDelegatedProvidersWithoutStartingLogin(t *testing.T) {
+func TestUnitSessionOwnsDelegatedProvidersWithoutStartingLogin(t *testing.T) {
 	t.Parallel()
 	for _, method := range []auth.Method{auth.Browser, auth.DeviceCode, auth.Password} {
 		t.Run(string(method), func(t *testing.T) {

@@ -17,7 +17,7 @@ const bindingSource = "contracts/endpoints/8.1.0/fixtures/files-policy-binding.j
 const getCommand = "Get-CsTeamsFilesPolicy"
 const grantCommand = "Grant-CsTeamsFilesPolicy"
 
-func TestFilesPolicyFiltersMatchCapturedSource(t *testing.T) {
+func TestUnitFilesPolicyFiltersMatchCapturedSource(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + bindingSource)
 	if e != nil {
@@ -87,7 +87,7 @@ func TestFilesPolicyFiltersMatchCapturedSource(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestFilesPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
+func TestUnitFilesPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + bindingSource)
 	if e != nil {

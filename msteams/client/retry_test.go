@@ -57,7 +57,7 @@ func fakeRetryClock(c *requestController) *[]time.Duration {
 	return &waits
 }
 
-func TestRetryAfterParsingAndBoundedJitter(t *testing.T) {
+func TestUnitRetryAfterParsingAndBoundedJitter(t *testing.T) {
 	now := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
 	for _, tc := range []struct {
 		input string
@@ -91,7 +91,7 @@ func TestRetryAfterParsingAndBoundedJitter(t *testing.T) {
 	}
 }
 
-func TestRetrySafeOperationReplaysFrozenJSONAndPreservesMetadata(t *testing.T) {
+func TestUnitRetrySafeOperationReplaysFrozenJSONAndPreservesMetadata(t *testing.T) {
 	calls := 0
 	bodies := []string{}
 	inputs := map[string]string{"value": "first"}
@@ -137,7 +137,7 @@ func TestRetrySafeOperationReplaysFrozenJSONAndPreservesMetadata(t *testing.T) {
 	}
 }
 
-func TestRetryRequiresOperationSafetyAndNeverReplaysStreams(t *testing.T) {
+func TestUnitRetryRequiresOperationSafetyAndNeverReplaysStreams(t *testing.T) {
 	for _, method := range []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete} {
 		t.Run(method, func(t *testing.T) {
 			calls := 0
@@ -159,7 +159,7 @@ func TestRetryRequiresOperationSafetyAndNeverReplaysStreams(t *testing.T) {
 	}
 }
 
-func TestRetryAttemptsAndTotalDelayBudgets(t *testing.T) {
+func TestUnitRetryAttemptsAndTotalDelayBudgets(t *testing.T) {
 	for _, tc := range []struct {
 		name, after  string
 		budget       time.Duration
@@ -180,7 +180,7 @@ func TestRetryAttemptsAndTotalDelayBudgets(t *testing.T) {
 	}
 }
 
-func TestRetryStatusClassification(t *testing.T) {
+func TestUnitRetryStatusClassification(t *testing.T) {
 	for _, status := range []int{400, 401, 403, 404, 408, 409, 429, 500, 502, 503, 504} {
 		t.Run(http.StatusText(status), func(t *testing.T) {
 			calls := 0
@@ -198,7 +198,7 @@ func TestRetryStatusClassification(t *testing.T) {
 	}
 }
 
-func TestRequestCancellationReleasesQueuedInflightAndBackoff(t *testing.T) {
+func TestUnitRequestCancellationReleasesQueuedInflightAndBackoff(t *testing.T) {
 	for _, phase := range []string{"queue", "inflight", "backoff"} {
 		t.Run(phase, func(t *testing.T) {
 			started := make(chan struct{})
@@ -247,7 +247,7 @@ func TestRequestCancellationReleasesQueuedInflightAndBackoff(t *testing.T) {
 	}
 }
 
-func TestRequestBudgetIncludesAuthenticationAndQueue(t *testing.T) {
+func TestUnitRequestBudgetIncludesAuthenticationAndQueue(t *testing.T) {
 	binding := auth.Binding{TenantID: "fixture", Cloud: "commercial", IdentityID: "fixture-client", Mode: auth.Application}
 	provider, err := auth.NewRefreshProvider(binding, func(ctx context.Context, _ auth.TokenRequest) (auth.Token, error) {
 		<-ctx.Done()
@@ -273,7 +273,7 @@ func TestRequestBudgetIncludesAuthenticationAndQueue(t *testing.T) {
 	}
 }
 
-func TestConcurrencySharedAcrossBackendsAndReleasedOnClose(t *testing.T) {
+func TestUnitConcurrencySharedAcrossBackendsAndReleasedOnClose(t *testing.T) {
 	entered := make(chan struct{}, 8)
 	scope, c := retryScope(t, RequestPolicy{MaxConcurrent: 2}, nil, func(r *http.Request) (*http.Response, error) {
 		entered <- struct{}{}
@@ -316,7 +316,7 @@ func TestConcurrencySharedAcrossBackendsAndReleasedOnClose(t *testing.T) {
 	}
 }
 
-func TestUnauthorizedRefreshIsOptInOnceAndWithinAttemptBudget(t *testing.T) {
+func TestUnitUnauthorizedRefreshIsOptInOnceAndWithinAttemptBudget(t *testing.T) {
 	for _, tc := range []struct {
 		name                                    string
 		safe, refresh, capable                  bool
@@ -376,7 +376,7 @@ func TestUnauthorizedRefreshIsOptInOnceAndWithinAttemptBudget(t *testing.T) {
 
 type acquireOnly struct{ auth.Provider }
 
-func TestExpiredQueuedTokenIsReacquiredBeforeSending(t *testing.T) {
+func TestUnitExpiredQueuedTokenIsReacquiredBeforeSending(t *testing.T) {
 	var grants atomic.Int32
 	acquired := make(chan struct{})
 	binding := auth.Binding{TenantID: "fixture", Cloud: "commercial", IdentityID: "fixture-client", Mode: auth.Application}
@@ -422,7 +422,7 @@ func TestExpiredQueuedTokenIsReacquiredBeforeSending(t *testing.T) {
 	}
 }
 
-func TestPerAttemptTimeoutRetriesWithinOperationDeadline(t *testing.T) {
+func TestUnitPerAttemptTimeoutRetriesWithinOperationDeadline(t *testing.T) {
 	calls := 0
 	scope, c := retryScope(t, RequestPolicy{Timeout: time.Second}, nil, func(r *http.Request) (*http.Response, error) {
 		calls++
@@ -440,7 +440,7 @@ func TestPerAttemptTimeoutRetriesWithinOperationDeadline(t *testing.T) {
 	}
 }
 
-func TestRequestPolicyValidation(t *testing.T) {
+func TestUnitRequestPolicyValidation(t *testing.T) {
 	for _, policy := range []RequestPolicy{{MaxAttempts: -1}, {MaxAttempts: 101}, {Timeout: -1}, {BaseDelay: -1}, {MaxDelay: time.Nanosecond}, {MaxConcurrent: -1}, {MaxConcurrent: 1025}} {
 		if _, err := newRequestController([]SessionOption{WithRequestPolicy(policy)}); !errors.Is(err, ErrRequestPolicy) {
 			t.Fatalf("accepted %#v", policy)

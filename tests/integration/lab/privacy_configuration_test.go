@@ -77,9 +77,9 @@ func privacyConfigurationOracle(t *testing.T, ctx context.Context, tenant string
 	return value
 }
 
-// TestLabPrivacyConfigurationReadOnly never edits Global, creates resources or grants a
+// TestAccPrivacyConfigurationReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabPrivacyConfigurationReadOnly(t *testing.T) {
+func TestAccPrivacyConfigurationReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -125,7 +125,7 @@ func TestLabPrivacyConfigurationReadOnly(t *testing.T) {
 	t.Log("selected privacy configuration reads verified; persistence, feature effects and assignments remain separately qualified")
 }
 
-func TestPrivacyConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitPrivacyConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"EnablePrivacyMode":false,"AutoInitiateContacts":true,"PublishLocationDataDefault":null,"DisplayPublishedPhotoDefault":false}`

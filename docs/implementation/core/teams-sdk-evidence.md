@@ -141,7 +141,7 @@ contract status remains `metadata-only`, and live status remains `not-run` while
 the candidate evidence and remaining acceptance work are reviewed. These links
 do not infer a contract pass or tenant success from green CI alone.
 
-Opt-in `TestLabTeamLifecycle` and `TestLabRecoverTeamLifecycle` are now prepared
+Opt-in `TestAccTeamLifecycle` and `TestAccRecoverTeamLifecycle` are now prepared
 for disposable group-first and migration fixtures. They skip before credential
 loading without all three lab flags, require a private same-tenant owner fixture,
 and use a bound recovery journal with positive paired ownership checks before

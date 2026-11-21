@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_hold_policy"
 )
 
-func TestCallHoldAllMutationErrorsAreSingleSend(t *testing.T) {
+func TestUnitCallHoldAllMutationErrorsAreSingleSend(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "patch", "delete", "user", "tenant", "group"} {
@@ -83,7 +83,7 @@ func TestCallHoldAllMutationErrorsAreSingleSend(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallHoldInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
+func TestUnitCallHoldInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCallHoldPolicies
@@ -142,7 +142,7 @@ func TestCallHoldInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	evidence(t, []contracttest.Result{r})
 }
 
-func TestCallHoldGrantOmitsZeroRankLikeMappedWrapper(t *testing.T) {
+func TestUnitCallHoldGrantOmitsZeroRankLikeMappedWrapper(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, rank := range []int32{0, 2, -1} {

@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 )
 
-func TestFeedbackPolicyInterleavesProtocolsWithoutHeaderLeakage(t *testing.T) {
+func TestUnitFeedbackPolicyInterleavesProtocolsWithoutHeaderLeakage(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -45,7 +45,7 @@ func TestFeedbackPolicyInterleavesProtocolsWithoutHeaderLeakage(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestFeedbackPolicySetRetainsPreparationAndAcceptance(t *testing.T) {
+func TestUnitFeedbackPolicySetRetainsPreparationAndAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {

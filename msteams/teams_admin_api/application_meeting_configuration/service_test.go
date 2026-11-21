@@ -102,7 +102,7 @@ func pinned(t *testing.T) fixture {
 	return f
 }
 
-func TestPinnedDispatchFromRootClient(t *testing.T) {
+func TestUnitPinnedDispatchFromRootClient(t *testing.T) {
 	t.Parallel()
 	f := pinned(t)
 	var results []contracttest.Result
@@ -172,7 +172,7 @@ func change(t *testing.T, name string) *configuration.AppIDChange {
 	}
 }
 
-func TestUpdateMatchesPinnedListNormalizer(t *testing.T) {
+func TestUnitUpdateMatchesPinnedListNormalizer(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, observed := range pinned(t).Models {
@@ -188,7 +188,7 @@ func TestUpdateMatchesPinnedListNormalizer(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestListFilterIsLocalAndReadSnapshotsPreserveData(t *testing.T) {
+func TestUnitListFilterIsLocalAndReadSnapshotsPreserveData(t *testing.T) {
 	t.Parallel()
 	reply := `[{"Identity":"tag:Fixture","AllowRemoveParticipantAppIds":null,"Future":{"enabled":false}},{"Identity":"Global","AllowRemoveParticipantAppIds":[]},{"Identity":"Other"},{"Identity":"tag:fixture-2","AllowRemoveParticipantAppIds":["a",""]}]`
 	var results []contracttest.Result
@@ -219,7 +219,7 @@ func TestListFilterIsLocalAndReadSnapshotsPreserveData(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestIdentityEscapingAndMutationDenialPreserveMetadata(t *testing.T) {
+func TestUnitIdentityEscapingAndMutationDenialPreserveMetadata(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "escaped", Mode: auth.Application, Steps: []contracttest.Exchange{discovery(), wire("GET", collection+"/configuration/tag:Fixture%20%2F%20Config", getCommand, nil, 200, `{"Identity":"tag:Fixture / Config","AllowRemoveParticipantAppIds":[{"Future":false}]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.ApplicationMeetingConfigurations.GetByIdentity(ctx, "tag:Fixture / Config")
@@ -243,7 +243,7 @@ func TestIdentityEscapingAndMutationDenialPreserveMetadata(t *testing.T) {
 	}
 }
 
-func TestMalformedAndUnexpectedSuccess(t *testing.T) {
+func TestUnitMalformedAndUnexpectedSuccess(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, method, body string
@@ -290,7 +290,7 @@ func TestMalformedAndUnexpectedSuccess(t *testing.T) {
 	}
 }
 
-func TestInvalidInputsStayLocal(t *testing.T) {
+func TestUnitInvalidInputsStayLocal(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "invalid-input", Mode: auth.Application, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.ApplicationMeetingConfigurations

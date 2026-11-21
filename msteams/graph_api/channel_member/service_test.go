@@ -77,7 +77,7 @@ func expectedSnapshot(roles, raw string) json.RawMessage {
 	return json.RawMessage(`{"id":"` + string(memberID) + `","user_id":"` + userID + `","roles":` + roles + `,"type":"#microsoft.graph.aadUserConversationMember","email":"","display_name":null,"raw":` + raw + `}`)
 }
 
-func TestNativeCRUDAndOwnerActions(t *testing.T) {
+func TestUnitNativeCRUDAndOwnerActions(t *testing.T) {
 	t.Parallel()
 	path := "/beta/teams/" + teamID + "/channels/" + url.PathEscape(channelID) + "/members"
 	byID := path + "/" + url.PathEscape(string(memberID))
@@ -154,7 +154,7 @@ func TestNativeCRUDAndOwnerActions(t *testing.T) {
 	}
 }
 
-func TestCreateCloudAndConfiguredModeBindings(t *testing.T) {
+func TestUnitCreateCloudAndConfiguredModeBindings(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -176,7 +176,7 @@ func TestCreateCloudAndConfiguredModeBindings(t *testing.T) {
 	}
 }
 
-func TestNativeValidationDoesNotAcquireCredentials(t *testing.T) {
+func TestUnitNativeValidationDoesNotAcquireCredentials(t *testing.T) {
 	t.Parallel()
 	for index, roles := range [][]channelmember.Role{nil, {"member"}, {channelmember.Guest}, {"future"}, {channelmember.Owner, channelmember.Owner}} {
 		t.Run("roles-"+strconv.Itoa(index), func(t *testing.T) {
@@ -213,7 +213,7 @@ func TestNativeValidationDoesNotAcquireCredentials(t *testing.T) {
 	}
 }
 
-func TestNativeHTTPAndEnvelopeFailures(t *testing.T) {
+func TestUnitNativeHTTPAndEnvelopeFailures(t *testing.T) {
 	t.Parallel()
 	path := "/beta/teams/" + teamID + "/channels/" + url.PathEscape(channelID) + "/members/" + url.PathEscape(string(memberID))
 	for _, tc := range []struct {
@@ -239,7 +239,7 @@ func TestNativeHTTPAndEnvelopeFailures(t *testing.T) {
 	}
 }
 
-func TestMutationFailureIsNotReplayedOrInferredAbsent(t *testing.T) {
+func TestUnitMutationFailureIsNotReplayedOrInferredAbsent(t *testing.T) {
 	t.Parallel()
 	for _, method := range []string{"POST", "PATCH", "DELETE"} {
 		for _, status := range []int{404, 429, 503} {

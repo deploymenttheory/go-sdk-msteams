@@ -7,12 +7,12 @@ browser or alternative identity is used to bypass approval boundaries.
 
 All cases require `MSTEAMS_LAB_READ_ONLY=1` before credentials/fixtures are read.
 Batch and private migration use the existing explicit private lab identity.
-`TestLabBatchDeploymentStatusReadOnly` also requires private JSON at
+`TestAccBatchDeploymentStatusReadOnly` also requires private JSON at
 `MSTEAMS_LAB_BATCH_STATUS_FILE`, with tenant_id and a known existing
 orchestration_id. Tenant must match the selected identity. It reads one raw
 status and does not poll, submit or interpret Completed as success.
 
-`TestLabPrivateChannelMigrationReadOnly` reads the bound tenant observation and
+`TestAccPrivateChannelMigrationReadOnly` reads the bound tenant observation and
 checks the returned tenant identity. Optional `MSTEAMS_LAB_POWERSHELL_ORACLE=1`
 and absolute `MSTEAMS_LAB_MODULE_PATH` enable the existing hash-guarded read-only
 child for these two cases. It executes only the selected Get status command,
@@ -21,7 +21,7 @@ discards stderr and publishes no IDs/tokens/status/error contents. Batch text an
 selected migration tenant/status/detail fields are compared; this does not claim
 live timestamp normalization or every parameter/error branch.
 
-`TestLabMultiGeoRegionReadOnly` requires a separate private
+`TestAccMultiGeoRegionReadOnly` requires a separate private
 `MSTEAMS_LAB_REGION_FILE`; when absent it explicitly skips, even if other read-only
 tests are enabled. Its JSON contains tenant_id, identity_id (selected user GUID),
 cloud (commercial/gcc), entity_id, entity_type (User/Group), and tokens. The token
@@ -36,9 +36,9 @@ A matching delegated PowerShell session/oracle remains further qualification.
 With explicitly selected private inputs, run only the intended case:
 
 ```sh
-go test -count=1 -run '^TestLabBatchDeploymentStatusReadOnly$' ./tests/integration/lab
-go test -count=1 -run '^TestLabPrivateChannelMigrationReadOnly$' ./tests/integration/lab
-go test -count=1 -run '^TestLabMultiGeoRegionReadOnly$' ./tests/integration/lab
+go test -count=1 -run '^TestAccBatchDeploymentStatusReadOnly$' ./tests/integration/lab
+go test -count=1 -run '^TestAccPrivateChannelMigrationReadOnly$' ./tests/integration/lab
+go test -count=1 -run '^TestAccMultiGeoRegionReadOnly$' ./tests/integration/lab
 ```
 
 Never automate deployment submission merely to obtain a status fixture. Before

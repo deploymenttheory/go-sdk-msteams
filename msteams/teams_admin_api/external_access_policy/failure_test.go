@@ -17,7 +17,7 @@ import (
 
 const itemPath = "/Skype.Policy/configurations/ExternalAccessPolicy/configuration/Global"
 
-func TestUpdateFailurePreservesPreparationAndNeverReplays(t *testing.T) {
+func TestUnitUpdateFailurePreservesPreparationAndNeverReplays(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name                    string
@@ -50,7 +50,7 @@ func TestUpdateFailurePreservesPreparationAndNeverReplays(t *testing.T) {
 	}
 }
 
-func TestCreateComparisonIsExplicitAndDoesNotCloneGlobal(t *testing.T) {
+func TestUnitCreateComparisonIsExplicitAndDoesNotCloneGlobal(t *testing.T) {
 	t.Parallel()
 	for _, status := range []int{200, 403} {
 		run(t, contracttest.Case{Name: fmt.Sprint("comparison-", status), Steps: []contracttest.Exchange{
@@ -72,7 +72,7 @@ func TestCreateComparisonIsExplicitAndDoesNotCloneGlobal(t *testing.T) {
 	}})
 }
 
-func TestAssignmentsAndMutationsRejectInvalidInputBeforeTokens(t *testing.T) {
+func TestUnitAssignmentsAndMutationsRejectInvalidInputBeforeTokens(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "invalid-scope-and-input", Mappings: []contracttest.Mapping{{Command: "Grant-CsExternalAccessPolicy", ParameterSet: "Identity"}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.ExternalAccessPolicies

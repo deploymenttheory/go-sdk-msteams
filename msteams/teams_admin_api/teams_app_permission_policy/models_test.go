@@ -65,7 +65,7 @@ func policyProjection(v resource.Policy) []byte {
 	return raw
 }
 
-func TestAppPermissionPinnedReadonlyPolicyModels(t *testing.T) {
+func TestUnitAppPermissionPinnedReadonlyPolicyModels(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Policies {
 		var value resource.Policy
@@ -87,7 +87,7 @@ func TestAppPermissionPinnedReadonlyPolicyModels(t *testing.T) {
 		}
 	}
 }
-func TestAppPermissionPinnedCatalogModels(t *testing.T) {
+func TestUnitAppPermissionPinnedCatalogModels(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Apps {
 		var value *resource.CatalogApp
@@ -110,7 +110,7 @@ func TestAppPermissionPinnedCatalogModels(t *testing.T) {
 		}
 	}
 }
-func TestAppPermissionSnapshotsRetainRepeatedPropertiesAndOwnership(t *testing.T) {
+func TestUnitAppPermissionSnapshotsRetainRepeatedPropertiesAndOwnership(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{}`, `{"Identity":"fixture-private","DefaultCatalogApps":null,"Future":false}`, `{"DefaultCatalogApps":[{"Id":"a","Future":null}],"defaultcatalogapps":[{"Id":"b"}],"DefaultCatalogApps":null}`, `{"GlobalCatalogApps":[{"Id":"x"}],"GlobalCatalogApps":[{"Id":"y"}],"PrivateCatalogApps":[null]}`} {
 		buffer := []byte(raw)
@@ -139,7 +139,7 @@ func bytesProjectionEqual(a, b resource.Policy) bool {
 	return sameJSON(policyProjection(a), policyProjection(b))
 }
 
-func TestAppPermissionPinnedCatalogEdits(t *testing.T) {
+func TestUnitAppPermissionPinnedCatalogEdits(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Lists {
 		a, duplicate, upper, b := resource.NewCatalogApp("a"), resource.NewCatalogApp("a"), resource.NewCatalogApp("A"), resource.NewCatalogApp("b")
@@ -173,7 +173,7 @@ func TestAppPermissionPinnedCatalogEdits(t *testing.T) {
 		}
 	}
 }
-func TestCatalogBuildersOwnInputsAndIgnoreNonKeyFields(t *testing.T) {
+func TestUnitCatalogBuildersOwnInputsAndIgnoreNonKeyFields(t *testing.T) {
 	t.Parallel()
 	a := resource.NewCatalogApp("a")
 	a.Identity = new("first")

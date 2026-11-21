@@ -14,7 +14,7 @@ import (
 	hierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 )
 
-func TestHierarchyDeletionFailuresAreNotReplayed(t *testing.T) {
+func TestUnitHierarchyDeletionFailuresAreNotReplayed(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, version := range []hierarchy.Version{hierarchy.V1, hierarchy.V2} {
@@ -32,7 +32,7 @@ func TestHierarchyDeletionFailuresAreNotReplayed(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestHierarchyOptionsProfilesAndSourceValidationAreLocal(t *testing.T) {
+func TestUnitHierarchyOptionsProfilesAndSourceValidationAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, cloud string
@@ -82,7 +82,7 @@ func TestHierarchyOptionsProfilesAndSourceValidationAreLocal(t *testing.T) {
 	}
 }
 
-func TestHierarchyRequiresBoundCanonicalTenantBeforeV2Calls(t *testing.T) {
+func TestUnitHierarchyRequiresBoundCanonicalTenantBeforeV2Calls(t *testing.T) {
 	t.Parallel()
 	// Preserve the runner's default non-GUID tenant. A caller must configure a
 	// canonical tenant in the session; this API accepts no substitutable tenant ID.
@@ -100,7 +100,7 @@ func TestHierarchyRequiresBoundCanonicalTenantBeforeV2Calls(t *testing.T) {
 	}
 }
 
-func TestHierarchyCancellationAndCloseFailuresRetainClassification(t *testing.T) {
+func TestUnitHierarchyCancellationAndCloseFailuresRetainClassification(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "cancelled-close-failure", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		ctx, stop := context.WithCancel(ctx)
@@ -140,7 +140,7 @@ func TestHierarchyCancellationAndCloseFailuresRetainClassification(t *testing.T)
 	}
 }
 
-func TestMalformedNativeHierarchyReadsAndImportHandles(t *testing.T) {
+func TestUnitMalformedNativeHierarchyReadsAndImportHandles(t *testing.T) {
 	t.Parallel()
 	for _, body := range []string{`null`, `[]`, `{}`, `{"id":"operation","status":false}`} {
 		run(t, contracttest.Case{Name: "malformed-status", Steps: []contracttest.Exchange{wire(hierarchy.V2, "GET", hierarchyPath()+"/operations/latest", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -160,7 +160,7 @@ func TestMalformedNativeHierarchyReadsAndImportHandles(t *testing.T) {
 	}
 }
 
-func TestAcceptedImportCloseFailureKeepsHTTPAcknowledgement(t *testing.T) {
+func TestUnitAcceptedImportCloseFailureKeepsHTTPAcknowledgement(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "accepted-close-failure", Steps: []contracttest.Exchange{uploadWire(hierarchy.V1, 202, `{"requestId":"operation"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s, input := source()
@@ -173,7 +173,7 @@ func TestAcceptedImportCloseFailureKeepsHTTPAcknowledgement(t *testing.T) {
 	}, Want: contracttest.Expected{Status: 202, Error: client.ErrStreamClose}})
 }
 
-func TestNilHierarchyContextIsLocal(t *testing.T) {
+func TestUnitNilHierarchyContextIsLocal(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "nil-context", Scope: "local", Invoke: func(_ context.Context, sdk *msteams.Client) contracttest.Observation {
 		var missing context.Context

@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
 )
 
-func TestAudioPolicyCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
+func TestUnitAudioPolicyCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -56,7 +56,7 @@ func TestAudioPolicyCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAudioPolicyGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
+func TestUnitAudioPolicyGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -85,7 +85,7 @@ func TestAudioPolicyGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T)
 	evidence(t, results)
 }
 
-func TestAudioPolicyGrantRankAndSparseGlobalComposition(t *testing.T) {
+func TestUnitAudioPolicyGrantRankAndSparseGlobalComposition(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, rank := range []int32{0, 2, -1} {

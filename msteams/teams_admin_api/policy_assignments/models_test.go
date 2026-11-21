@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestPinnedGeneratedAssignmentModelProjections(t *testing.T) {
+func TestUnitPinnedGeneratedAssignmentModelProjections(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-assignment-models.json")
 	if err != nil {
@@ -121,7 +121,7 @@ func containsProjection(actual, expected any) bool {
 	}
 }
 
-func TestAssignmentSnapshotPresenceAndRedaction(t *testing.T) {
+func TestUnitAssignmentSnapshotPresenceAndRedaction(t *testing.T) {
 	t.Parallel()
 	var value BatchStatus
 	if json.Unmarshal([]byte(`{"operationId":"fixture-private","completedCount":0,"errorCount":null,"userState":[{"id":"fixture-private","result":""}],"future":false}`), &value) != nil {
@@ -145,7 +145,7 @@ func TestAssignmentSnapshotPresenceAndRedaction(t *testing.T) {
 	}
 }
 
-func TestPinnedConditionalAssignmentMetadataMatchesTargets(t *testing.T) {
+func TestUnitPinnedConditionalAssignmentMetadataMatchesTargets(t *testing.T) {
 	t.Parallel()
 	read := func(raw []byte, err error) []json.RawMessage {
 		t.Helper()

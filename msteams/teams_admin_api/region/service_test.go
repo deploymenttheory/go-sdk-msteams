@@ -32,7 +32,7 @@ func wire(kind, id string, status int, body string) contracttest.Exchange {
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: "https://teams.cloud.microsoft/api/tms/prod/" + kind + "/" + url.PathEscape(id) + "/region", Audience: audience, TokenScope: scope, Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
 }
 
-func TestRegionUsesExactDelegatedScopeAndDirectEntityRoutes(t *testing.T) {
+func TestUnitRegionUsesExactDelegatedScopeAndDirectEntityRoutes(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, cloud := range []string{"commercial", "gcc"} {
@@ -59,7 +59,7 @@ func TestRegionUsesExactDelegatedScopeAndDirectEntityRoutes(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestApplicationRegionAndUnqualifiedCloudsRejectBeforeTokens(t *testing.T) {
+func TestUnitApplicationRegionAndUnqualifiedCloudsRejectBeforeTokens(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "application-local", Scope: "local", Mode: auth.Application, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, err := sdk.TeamsAdminAPI.Regions.GetForUser(ctx, "fixture")
@@ -73,7 +73,7 @@ func TestApplicationRegionAndUnqualifiedCloudsRejectBeforeTokens(t *testing.T) {
 	}
 }
 
-func TestRegionMalformedAndDeniedReadsRemainTypedFailures(t *testing.T) {
+func TestUnitRegionMalformedAndDeniedReadsRemainTypedFailures(t *testing.T) {
 	t.Parallel()
 	for _, body := range []string{`null`, `[]`, `{"Region":17}`, `{"LastMovementTimeStamp":{}}`} {
 		run(t, contracttest.Case{Name: "malformed", Mode: auth.Delegated, Steps: []contracttest.Exchange{wire("users", "fixture", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {

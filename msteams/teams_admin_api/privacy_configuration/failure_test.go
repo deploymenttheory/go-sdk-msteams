@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/privacy_configuration"
 )
 
-func TestPrivacyInputAndContextRejectBeforeTokens(t *testing.T) {
+func TestUnitPrivacyInputAndContextRejectBeforeTokens(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "invalid-input-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.PrivacyConfigurations
@@ -64,7 +64,7 @@ func TestPrivacyInputAndContextRejectBeforeTokens(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestPrivacyPatchErrorsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitPrivacyPatchErrorsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, status := range []int{400, 401, 403, 429, 503} {
@@ -80,7 +80,7 @@ func TestPrivacyPatchErrorsKeepStatusAndNeverReplay(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestPrivacyEmptyAndNullReadPresentation(t *testing.T) {
+func TestUnitPrivacyEmptyAndNullReadPresentation(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {

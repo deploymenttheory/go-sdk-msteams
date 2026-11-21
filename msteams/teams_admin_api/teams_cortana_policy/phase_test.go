@@ -9,7 +9,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 )
 
-func TestCortanaDiscoveryCannotEstablishAssignmentAcceptance(t *testing.T) {
+func TestUnitCortanaDiscoveryCannotEstablishAssignmentAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, reply := range []string{`{"Endpoints":{"AdminServiceEndpoint":"forest.fixture.invalid"}}`, "not-json"} {

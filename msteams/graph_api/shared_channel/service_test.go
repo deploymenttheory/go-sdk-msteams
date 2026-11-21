@@ -61,7 +61,7 @@ func evidence(t *testing.T, results []contracttest.Result) {
 	}
 }
 
-func TestNativeRelationshipReadListAndUnshare(t *testing.T) {
+func TestUnitNativeRelationshipReadListAndUnshare(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	raw := `{"id":"` + targetID + `","displayName":null,"tenantId":"foreign-tenant","isHostTeam":false,"future":{"v":7}}`
@@ -93,7 +93,7 @@ func TestNativeRelationshipReadListAndUnshare(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestUnshareFailureIsNotReplayed(t *testing.T) {
+func TestUnitUnshareFailureIsNotReplayed(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, status := range []int{403, 429, 503} {
@@ -107,7 +107,7 @@ func TestUnshareFailureIsNotReplayed(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestSharingPagesRetainPartialStateAndRejectForeignLinks(t *testing.T) {
+func TestUnitSharingPagesRetainPartialStateAndRejectForeignLinks(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, next string
@@ -131,7 +131,7 @@ func TestSharingPagesRetainPartialStateAndRejectForeignLinks(t *testing.T) {
 	}
 }
 
-func TestSharingLocalValidationAndUnexpectedStatus(t *testing.T) {
+func TestUnitSharingLocalValidationAndUnexpectedStatus(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct{ name, host, channel, target string }{{"bad-host", "not-a-uuid", channelID, targetID}, {"empty-channel", hostID, "", targetID}, {"bad-target", hostID, channelID, "bad"}, {"empty-target", hostID, channelID, ""}} {
 		t.Run(tc.name, func(t *testing.T) {

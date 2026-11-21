@@ -16,7 +16,7 @@ import (
 
 const bindingSource = "contracts/endpoints/8.1.0/fixtures/voicemail-wrapper-binding.json"
 
-func TestVoicemailBindingCompositionMatchesPinnedHelper(t *testing.T) {
+func TestUnitVoicemailBindingCompositionMatchesPinnedHelper(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../" + bindingSource)
 	if err != nil {
@@ -108,7 +108,7 @@ func TestVoicemailBindingCompositionMatchesPinnedHelper(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestVoicemailGeneratedIdentityUsesUnreservedEscaping(t *testing.T) {
+func TestUnitVoicemailGeneratedIdentityUsesUnreservedEscaping(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "generated-identity-unreserved", Source: generatedSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(), generatedWire("PATCH", origin+"/Skype.Policy/users/sip%3Afixture%2Buser%40example.invalid/policies/OnlineVoicemailPolicy", "Grant-CsOnlineVoicemailPolicy", json.RawMessage(`{"policyName":"Fixture"}`), 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.AssignUser(ctx, "sip:fixture+user@example.invalid", policy.Set("Fixture"))

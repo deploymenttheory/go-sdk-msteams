@@ -94,7 +94,7 @@ The PR records the candidate revision and platform CI evidence separately.
 
 ## Actual lab status
 
-On 2026-11-21, TestLabFederationReadOnly was attempted with the existing dedicated
+On 2026-11-21, TestAccFederationReadOnly was attempted with the existing dedicated
 SPN using client-secret and certificate authentication. All four selected Global
 resource reads returned HTTP 403 in both runs. Only fixed-stage status metadata was
 logged; no payload, token, identifier or principal data was retained. The later

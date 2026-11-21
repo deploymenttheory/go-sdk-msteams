@@ -17,7 +17,7 @@ const bindingSource = "contracts/endpoints/8.1.0/fixtures/events-policy-binding.
 const getCommand = "Get-CsTeamsEventsPolicy"
 const grantCommand = "Grant-CsTeamsEventsPolicy"
 
-func TestEventsPolicyFiltersMatchCapturedSource(t *testing.T) {
+func TestUnitEventsPolicyFiltersMatchCapturedSource(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + bindingSource)
 	if e != nil {
@@ -87,7 +87,7 @@ func TestEventsPolicyFiltersMatchCapturedSource(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestEventsPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
+func TestUnitEventsPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + bindingSource)
 	if e != nil {

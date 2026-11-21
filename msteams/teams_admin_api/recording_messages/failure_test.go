@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/recording_messages"
 )
 
-func TestRecordingInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
+func TestUnitRecordingInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-input-guards", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.RecordingMessages
@@ -67,7 +67,7 @@ func TestRecordingInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestRecordingMutationErrorsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitRecordingMutationErrorsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "patch", "delete"} {

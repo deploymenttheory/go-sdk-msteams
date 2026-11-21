@@ -73,7 +73,7 @@ func closeJournal(t *testing.T, j *lab.Journal) {
 	})
 }
 
-func TestJournalRecoversInterruptedCreationAndSharedSettings(t *testing.T) {
+func TestUnitJournalRecoversInterruptedCreationAndSharedSettings(t *testing.T) {
 	t.Parallel()
 	directory := filepath.Join(t.TempDir(), "private")
 	j, err := lab.NewJournal(directory, "fixture-tenant/cloud/identity")
@@ -165,7 +165,7 @@ func TestJournalRecoversInterruptedCreationAndSharedSettings(t *testing.T) {
 	}
 }
 
-func TestJournalUnknownIdentityAndCancellationRetainIntent(t *testing.T) {
+func TestUnitJournalUnknownIdentityAndCancellationRetainIntent(t *testing.T) {
 	t.Parallel()
 	j, err := lab.NewJournal(filepath.Join(t.TempDir(), "private"), "fixture")
 	if err != nil {
@@ -209,7 +209,7 @@ func TestJournalUnknownIdentityAndCancellationRetainIntent(t *testing.T) {
 	}
 }
 
-func TestJournalConcurrentPlansSurviveReopen(t *testing.T) {
+func TestUnitJournalConcurrentPlansSurviveReopen(t *testing.T) {
 	t.Parallel()
 	directory := filepath.Join(t.TempDir(), "private")
 	j, err := lab.NewJournal(directory, "fixture")
@@ -252,7 +252,7 @@ func TestJournalConcurrentPlansSurviveReopen(t *testing.T) {
 	}
 }
 
-func TestAppliedCreationCleansRecordedIdentityWithoutRediscovery(t *testing.T) {
+func TestUnitAppliedCreationCleansRecordedIdentityWithoutRediscovery(t *testing.T) {
 	t.Parallel()
 	j, err := lab.NewJournal(filepath.Join(t.TempDir(), "private"), "fixture")
 	if err != nil {
@@ -279,7 +279,7 @@ func TestAppliedCreationCleansRecordedIdentityWithoutRediscovery(t *testing.T) {
 	}
 }
 
-func TestJournalNamesAndCorruptDataAreRejected(t *testing.T) {
+func TestUnitJournalNamesAndCorruptDataAreRejected(t *testing.T) {
 	t.Parallel()
 	directory := filepath.Join(t.TempDir(), "private")
 	j, err := lab.NewJournal(directory, "fixture")

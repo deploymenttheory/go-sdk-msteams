@@ -100,7 +100,7 @@ func policyEvidence(t *testing.T, name string, results []contracttest.Result) {
 	}
 }
 
-func TestPolicyServiceContractsMapEveryPinnedSet(t *testing.T) {
+func TestUnitPolicyServiceContractsMapEveryPinnedSet(t *testing.T) {
 	t.Parallel()
 	seen := map[string]bool{}
 	var results []contracttest.Result
@@ -210,7 +210,7 @@ func TestPolicyServiceContractsMapEveryPinnedSet(t *testing.T) {
 	policyEvidence(t, "application-access-policy-service.json", results)
 }
 
-func TestPolicyListsFollowPinnedGlobalFirstComposition(t *testing.T) {
+func TestUnitPolicyListsFollowPinnedGlobalFirstComposition(t *testing.T) {
 	t.Parallel()
 	data, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-wrapper-compositions.json")
 	if err != nil {
@@ -275,7 +275,7 @@ func TestPolicyListsFollowPinnedGlobalFirstComposition(t *testing.T) {
 	policyEvidence(t, "application-access-policy-list-service.json", results)
 }
 
-func TestPolicyMutationsDoNotReplayUnderDefaultTransportPolicy(t *testing.T) {
+func TestUnitPolicyMutationsDoNotReplayUnderDefaultTransportPolicy(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {

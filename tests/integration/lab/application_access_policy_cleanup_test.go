@@ -48,7 +48,7 @@ func runApplicationCleanupCase(t *testing.T, c contracttest.Case) {
 	}
 }
 
-func TestApplicationPolicyCleanupRequiresPositiveCreationResolution(t *testing.T) {
+func TestUnitApplicationPolicyCleanupRequiresPositiveCreationResolution(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body, identity string
@@ -74,7 +74,7 @@ func TestApplicationPolicyCleanupRequiresPositiveCreationResolution(t *testing.T
 	}
 }
 
-func TestApplicationPolicyCleanupVerifiesAbsenceAfterDelete(t *testing.T) {
+func TestUnitApplicationPolicyCleanupVerifiesAbsenceAfterDelete(t *testing.T) {
 	t.Parallel()
 	const path = "/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/" + applicationCleanupFixture
 	for _, tc := range []struct {

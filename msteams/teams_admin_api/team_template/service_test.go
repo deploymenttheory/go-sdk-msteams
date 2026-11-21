@@ -137,7 +137,7 @@ func expectedCreateBody(t *testing.T, definition json.RawMessage) json.RawMessag
 	return raw
 }
 
-func TestServiceGetByID(t *testing.T) {
+func TestUnitServiceGetByID(t *testing.T) {
 	t.Parallel()
 	evidence := collectServiceEvidence(t, "Get-CsTeamTemplate")
 	for _, set := range []string{"Get", "GetViaIdentity"} {
@@ -162,7 +162,7 @@ func TestServiceGetByID(t *testing.T) {
 	}
 }
 
-func TestServiceList(t *testing.T) {
+func TestUnitServiceList(t *testing.T) {
 	t.Parallel()
 	evidence := collectServiceEvidence(t, "Get-CsTeamTemplateList")
 	for _, tc := range []struct {
@@ -197,7 +197,7 @@ func TestServiceList(t *testing.T) {
 	}
 }
 
-func TestServiceCreate(t *testing.T) {
+func TestUnitServiceCreate(t *testing.T) {
 	t.Parallel()
 	evidence := collectServiceEvidence(t, "New-CsTeamTemplate")
 	for _, set := range []string{"New", "NewExpanded", "NewViaIdentity", "NewViaIdentityExpanded"} {
@@ -222,7 +222,7 @@ func TestServiceCreate(t *testing.T) {
 	}
 }
 
-func TestServiceUpdateByID(t *testing.T) {
+func TestUnitServiceUpdateByID(t *testing.T) {
 	t.Parallel()
 	evidence := collectServiceEvidence(t, "Update-CsTeamTemplate")
 	for _, set := range []string{"Update", "UpdateExpanded", "UpdateViaIdentity", "UpdateViaIdentityExpanded"} {
@@ -251,7 +251,7 @@ func TestServiceUpdateByID(t *testing.T) {
 	}
 }
 
-func TestServiceDeleteByID(t *testing.T) {
+func TestUnitServiceDeleteByID(t *testing.T) {
 	t.Parallel()
 	evidence := collectServiceEvidence(t, "Remove-CsTeamTemplate")
 	for _, set := range []string{"Delete", "DeleteViaIdentity"} {
@@ -280,7 +280,7 @@ func TestServiceDeleteByID(t *testing.T) {
 	}
 }
 
-func TestServiceCreateGeneralChannelDoesNotMutateCaller(t *testing.T) {
+func TestUnitServiceCreateGeneralChannelDoesNotMutateCaller(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, channel, expected string
@@ -351,7 +351,7 @@ func operationCase(t *testing.T, operation, name string) contracttest.Case {
 	return c
 }
 
-func TestServiceErrorAndMutationReplayContracts(t *testing.T) {
+func TestUnitServiceErrorAndMutationReplayContracts(t *testing.T) {
 	t.Parallel()
 	for _, operation := range []string{"get", "list", "create", "update", "delete"} {
 		t.Run(operation, func(t *testing.T) {
@@ -399,7 +399,7 @@ func TestServiceErrorAndMutationReplayContracts(t *testing.T) {
 	}
 }
 
-func TestServiceMalformedSuccessAndUndeclaredStatuses(t *testing.T) {
+func TestUnitServiceMalformedSuccessAndUndeclaredStatuses(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, operation, body string
@@ -431,7 +431,7 @@ func TestServiceMalformedSuccessAndUndeclaredStatuses(t *testing.T) {
 	}
 }
 
-func TestServiceMalformedErrorsKeepHTTPClassification(t *testing.T) {
+func TestUnitServiceMalformedErrorsKeepHTTPClassification(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct{ name, body string }{
 		{name: "empty"}, {name: "text", body: "not-json"}, {name: "array", body: "[]"},
@@ -455,7 +455,7 @@ func TestServiceMalformedErrorsKeepHTTPClassification(t *testing.T) {
 	}
 }
 
-func TestServiceValidationCancellationAndCloseHaveNoIO(t *testing.T) {
+func TestUnitServiceValidationCancellationAndCloseHaveNoIO(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name string
@@ -511,7 +511,7 @@ func TestServiceValidationCancellationAndCloseHaveNoIO(t *testing.T) {
 	}
 }
 
-func TestServiceListRetainsUnknownEnvelopeAndSummaryFields(t *testing.T) {
+func TestUnitServiceListRetainsUnknownEnvelopeAndSummaryFields(t *testing.T) {
 	t.Parallel()
 	c := serviceCase(t, "list-unknown-fields", "template-list", "Get-CsTeamTemplateList", "DefaultLocaleOverride")
 	c.Steps[1].Reply.Body = []byte(`{"value":[{"id":"fixture","name":"Fixture","appCount":0,"futureSummary":false}],"futureEnvelope":{"values":[]}}`)
@@ -523,7 +523,7 @@ func TestServiceListRetainsUnknownEnvelopeAndSummaryFields(t *testing.T) {
 	passCase(t, c)
 }
 
-func TestServiceUsesSharedCollectionDiscovery(t *testing.T) {
+func TestUnitServiceUsesSharedCollectionDiscovery(t *testing.T) {
 	t.Parallel()
 	c := serviceCase(t, "collection-discovery-sharing", "template-list", "Get-CsTeamTemplateList", "DefaultLocaleOverride")
 	policyRead := contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet,
@@ -542,7 +542,7 @@ func TestServiceUsesSharedCollectionDiscovery(t *testing.T) {
 	passCase(t, c)
 }
 
-func TestServiceCloudAndModeRouting(t *testing.T) {
+func TestUnitServiceCloudAndModeRouting(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		t.Run(cloud, func(t *testing.T) {

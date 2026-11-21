@@ -111,9 +111,9 @@ func comparePowerShellPolicy(t *testing.T, ctx context.Context, name, descriptio
 	t.Log("PowerShell 8.1.0 / Go policy read parity: passed")
 }
 
-// TestLabApplicationAccessPolicyCRUD creates only a uniquely named, unassigned
+// TestAccApplicationAccessPolicyCRUD creates only a uniquely named, unassigned
 // policy. It never grants that policy to a user/group/tenant or edits Global.
-func TestLabApplicationAccessPolicyCRUD(t *testing.T) {
+func TestAccApplicationAccessPolicyCRUD(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal(err)

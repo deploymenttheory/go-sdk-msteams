@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func TestSuppliedTokenAudienceAndIdentityIsolation(t *testing.T) {
+func TestUnitSuppliedTokenAudienceAndIdentityIsolation(t *testing.T) {
 	t.Parallel()
 	binding := Binding{TenantID: "tenant", Cloud: "commercial", IdentityID: "identity", Mode: Application}
 	now := time.Unix(1000, 0)
@@ -45,7 +45,7 @@ func TestSuppliedTokenAudienceAndIdentityIsolation(t *testing.T) {
 	}
 }
 
-func TestSuppliedTokenExpiryCancellationAndClose(t *testing.T) {
+func TestUnitSuppliedTokenExpiryCancellationAndClose(t *testing.T) {
 	t.Parallel()
 	binding := Binding{TenantID: "tenant", Cloud: "commercial", IdentityID: "identity", Mode: Delegated}
 	now := time.Unix(1000, 0)
@@ -73,7 +73,7 @@ func TestSuppliedTokenExpiryCancellationAndClose(t *testing.T) {
 	}
 }
 
-func TestTokenFormattingIsRedacted(t *testing.T) {
+func TestUnitTokenFormattingIsRedacted(t *testing.T) {
 	t.Parallel()
 	token := Token{AccessToken: "sensitive-access-token", ExpiresAt: time.Now()}
 	for _, value := range []string{fmt.Sprintf("%v", token), fmt.Sprintf("%+v", token), fmt.Sprintf("%#v", token)} {

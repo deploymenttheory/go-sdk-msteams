@@ -76,9 +76,9 @@ func brandingOracle(t *testing.T, ctx context.Context, tenant string) brandingOb
 	return value
 }
 
-// TestLabMeetingBrandingReadOnly never edits Global, creates assets or grants a
+// TestAccMeetingBrandingReadOnly never edits Global, creates assets or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabMeetingBrandingReadOnly(t *testing.T) {
+func TestAccMeetingBrandingReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -124,7 +124,7 @@ func TestLabMeetingBrandingReadOnly(t *testing.T) {
 	t.Log("selected branding reads verified; persistence, Premium effects and assignments remain separately qualified")
 }
 
-func TestBrandingOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitBrandingOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"DefaultTheme":null,"EnableMeetingOptionsThemeOverride":null,"EnableMeetingOptionsBrandedReactionsOverride":false,"EnableNdiAssuranceSlate":false,"EnableMeetingBackgroundImages":false,"RequireBackgroundEffect":null}`

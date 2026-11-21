@@ -11,7 +11,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
 )
 
-func TestGroupPatchMatchesPinnedOmissionAndExplicitEmpty(t *testing.T) {
+func TestUnitGroupPatchMatchesPinnedOmissionAndExplicitEmpty(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/core-team-serialization.json")
 	if err != nil {
@@ -54,7 +54,7 @@ func TestGroupPatchMatchesPinnedOmissionAndExplicitEmpty(t *testing.T) {
 	}
 }
 
-func TestGroupReadPreservesNullableAndFutureFields(t *testing.T) {
+func TestUnitGroupReadPreservesNullableAndFutureFields(t *testing.T) {
 	t.Parallel()
 	var value group.Group
 	raw := `{"id":"fixture-group","displayName":"","description":null,"visibility":"futureVisibility","mailEnabled":true,"securityEnabled":false,"groupTypes":["Unified"],"resourceProvisioningOptions":[],"createdDateTime":"2026-01-02T03:04:05Z","extension_future":{"value":false}}`
@@ -78,7 +78,7 @@ func TestGroupReadPreservesNullableAndFutureFields(t *testing.T) {
 	}
 }
 
-func TestGroupReadRequiresIdentity(t *testing.T) {
+func TestUnitGroupReadRequiresIdentity(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`null`, `[]`, `{}`, `{"id":7}`, `{"id":"fixture","mailEnabled":"false"}`} {
 		var value group.Group
@@ -88,7 +88,7 @@ func TestGroupReadRequiresIdentity(t *testing.T) {
 	}
 }
 
-func TestMicrosoft365GroupConstructorDoesNotApplyPowerShellDefaults(t *testing.T) {
+func TestUnitMicrosoft365GroupConstructorDoesNotApplyPowerShellDefaults(t *testing.T) {
 	t.Parallel()
 	value, err := group.NewMicrosoft365Group("Fixture Group", "fixture-group")
 	if err != nil || value.DisplayName == nil || *value.DisplayName != "Fixture Group" || value.MailNickname == nil || *value.MailNickname != "fixture-group" {

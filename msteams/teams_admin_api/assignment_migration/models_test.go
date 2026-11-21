@@ -10,7 +10,7 @@ import (
 	migration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
 )
 
-func TestPinnedMigrationRequestAndStateDTOObservations(t *testing.T) {
+func TestUnitPinnedMigrationRequestAndStateDTOObservations(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json")
 	if err != nil {
@@ -61,7 +61,7 @@ func TestPinnedMigrationRequestAndStateDTOObservations(t *testing.T) {
 	}
 }
 
-func TestFutureStatesAndSnapshotFieldsRemainAvailable(t *testing.T) {
+func TestUnitFutureStatesAndSnapshotFieldsRemainAvailable(t *testing.T) {
 	t.Parallel()
 	for _, value := range []string{`"FutureState"`, `17`, `null`} {
 		input := `{"state":` + value + `,"directAssignmentsProcessed":0,"startTime":"original-timestamp","completionTime":null,"Future":{"enabled":false}}`
@@ -94,7 +94,7 @@ func TestFutureStatesAndSnapshotFieldsRemainAvailable(t *testing.T) {
 	}
 }
 
-func TestConflictAndRecommendationNullZeroAndFutureData(t *testing.T) {
+func TestUnitConflictAndRecommendationNullZeroAndFutureData(t *testing.T) {
 	t.Parallel()
 	input := `{"totalCountUsersWithConflict":0,"usersWithConflictDueDirectAssignmentsCount":0,"usersWithConflictDueDirectAssignmentsDetail":[null,{"userId":"fixture-user","policyInstance":null,"assignmentSource":"FutureSource","Future":false}],"usersWithConflictDueGroupAssignmentsDetail":null,"Future":{"x":null}}`
 	var value migration.Conflict

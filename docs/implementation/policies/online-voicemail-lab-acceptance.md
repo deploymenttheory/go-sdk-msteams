@@ -1,7 +1,7 @@
 # Online voicemail lab acceptance
 
 MSTEAMS_LAB_READ_ONLY=1 and MSTEAMS_LAB_IDENTITY_FILE enable
-TestLabOnlineVoicemailReadOnly using the existing private dedicated identity.
+TestAccOnlineVoicemailReadOnly using the existing private dedicated identity.
 MSTEAMS_LAB_AUTH_METHOD selects certificate (default) or client-secret. The test
 reads Global and a locally filtered list. Both actual credential-mode attempts
 returned resource HTTP 403; list and optional PowerShell comparison were not

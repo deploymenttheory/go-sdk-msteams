@@ -13,7 +13,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestOperationAccessFailuresRemainDistinct(t *testing.T) {
+func TestUnitOperationAccessFailuresRemainDistinct(t *testing.T) {
 	t.Parallel()
 	for _, backend := range []client.Backend{client.Graph, client.TeamsAdmin} {
 		for _, status := range []int{200, 401, 403, 404, 409, 500} {

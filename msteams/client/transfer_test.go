@@ -39,7 +39,7 @@ type deadlineReader struct{}
 
 func (deadlineReader) Read([]byte) (int, error) { return 0, context.DeadlineExceeded }
 
-func TestDownloadPreservesBodyDeadline(t *testing.T) {
+func TestUnitDownloadPreservesBodyDeadline(t *testing.T) {
 	t.Parallel()
 	body := &countedStream{Reader: deadlineReader{}}
 	scope, _, _ := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) {
@@ -51,7 +51,7 @@ func TestDownloadPreservesBodyDeadline(t *testing.T) {
 	}
 }
 
-func TestBinaryTransferPreservesBytesAndOwnership(t *testing.T) {
+func TestUnitBinaryTransferPreservesBytesAndOwnership(t *testing.T) {
 	t.Parallel()
 	want := []byte{0, 255, 1, 0, 128, '\r', '\n', '{', '}'}
 	for _, backend := range []client.Backend{client.Graph, client.TeamsAdmin} {
@@ -96,7 +96,7 @@ func TestBinaryTransferPreservesBytesAndOwnership(t *testing.T) {
 	}
 }
 
-func TestUploadFailuresCloseSourceAndNeverReplay(t *testing.T) {
+func TestUnitUploadFailuresCloseSourceAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name   string
@@ -169,7 +169,7 @@ func (s *truncatedStream) Read(p []byte) (int, error) {
 }
 func (s *truncatedStream) Close() error { s.closes++; return nil }
 
-func TestDownloadLimitsTruncationAndPartialWrites(t *testing.T) {
+func TestUnitDownloadLimitsTruncationAndPartialWrites(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"limit", "truncated", "writer", "forbidden", "close"} {
 		t.Run(name, func(t *testing.T) {
@@ -240,7 +240,7 @@ func (s *blockingUpload) Read([]byte) (int, error) {
 }
 func (s *blockingUpload) Close() error { s.closes.Add(1); close(s.closed); return nil }
 
-func TestUploadCancellationClosesBlockedSource(t *testing.T) {
+func TestUnitUploadCancellationClosesBlockedSource(t *testing.T) {
 	t.Parallel()
 	source := &blockingUpload{entered: make(chan struct{}), closed: make(chan struct{})}
 	scope, _, _ := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) { _, err := io.Copy(io.Discard, r.Body); return nil, err })}, "")
@@ -270,7 +270,7 @@ func TestUploadCancellationClosesBlockedSource(t *testing.T) {
 	}
 }
 
-func TestMultipartFramingBytesAndFailureCleanup(t *testing.T) {
+func TestUnitMultipartFramingBytesAndFailureCleanup(t *testing.T) {
 	t.Parallel()
 	for _, invalid := range []bool{false, true} {
 		t.Run(map[bool]string{false: "valid", true: "invalid"}[invalid], func(t *testing.T) {
@@ -323,7 +323,7 @@ func TestMultipartFramingBytesAndFailureCleanup(t *testing.T) {
 	}
 }
 
-func TestMultipartRejectsRepeatedSourceWithoutDoubleClose(t *testing.T) {
+func TestUnitMultipartRejectsRepeatedSourceWithoutDoubleClose(t *testing.T) {
 	t.Parallel()
 	source := &countedStream{Reader: strings.NewReader("fixture")}
 	var scope *client.Scope
@@ -333,7 +333,7 @@ func TestMultipartRejectsRepeatedSourceWithoutDoubleClose(t *testing.T) {
 	}
 }
 
-func TestUploadReachesHTTPServerBeforeSourceCompletes(t *testing.T) {
+func TestUnitUploadReachesHTTPServerBeforeSourceCompletes(t *testing.T) {
 	t.Parallel()
 	firstChunk := make(chan struct{})
 	httpClient := localBackend(t, func(w http.ResponseWriter, r *http.Request) {

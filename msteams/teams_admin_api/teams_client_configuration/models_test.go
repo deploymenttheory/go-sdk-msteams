@@ -48,7 +48,7 @@ func exactJSON(t *testing.T, raw []byte) any {
 	}
 	return v
 }
-func TestClientConfigurationKnownProjectionsMatchPinnedModels(t *testing.T) {
+func TestUnitClientConfigurationKnownProjectionsMatchPinnedModels(t *testing.T) {
 	t.Parallel()
 	for _, m := range modelCases(t) {
 		t.Run(m.Name, func(t *testing.T) {
@@ -78,7 +78,7 @@ func TestClientConfigurationKnownProjectionsMatchPinnedModels(t *testing.T) {
 		})
 	}
 }
-func TestClientConfigurationPreservesOwnedRawSnapshot(t *testing.T) {
+func TestUnitClientConfigurationPreservesOwnedRawSnapshot(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"Identity":"Global","AllowEmailIntoChannel":false,"ContentPin":"0000","Future":{"n":9007199254740993},"RestrictedSenderList":"first","restrictedsenderlist":null}`)
 	saved := append([]byte(nil), raw...)
@@ -94,7 +94,7 @@ func TestClientConfigurationPreservesOwnedRawSnapshot(t *testing.T) {
 	}
 }
 
-func TestClientConfigurationRequiresNativeJSONTypes(t *testing.T) {
+func TestUnitClientConfigurationRequiresNativeJSONTypes(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"AllowEmailIntoChannel":"false"}`, `{"RestrictedSenderList":false}`, `{"ContentPin":{}}`, `null`, `[]`} {
 		var value resource.Configuration
@@ -107,7 +107,7 @@ func TestClientConfigurationRequiresNativeJSONTypes(t *testing.T) {
 // The source model supplies accepted final values; the provider fixture
 // independently establishes sparse field binding and identity serialization.
 // This tests the composition, not a claimed source binder/network execution.
-func TestClientConfigurationRequestsRetainAcceptedModelSettings(t *testing.T) {
+func TestUnitClientConfigurationRequestsRetainAcceptedModelSettings(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for index, m := range modelCases(t) {

@@ -38,7 +38,7 @@ func subset(actual, expected any) bool {
 		return reflect.DeepEqual(actual, expected)
 	}
 }
-func TestPinnedPackageModelsAndRankDefaults(t *testing.T) {
+func TestUnitPinnedPackageModelsAndRankDefaults(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-package-models.json")
 	if err != nil {
@@ -113,7 +113,7 @@ func TestPinnedPackageModelsAndRankDefaults(t *testing.T) {
 	}
 }
 
-func TestPackageWrapperPolicyPairsRemainLocalAndOrdered(t *testing.T) {
+func TestUnitPackageWrapperPolicyPairsRemainLocalAndOrdered(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-package-binding.json")
 	if err != nil {
@@ -157,7 +157,7 @@ func TestPackageWrapperPolicyPairsRemainLocalAndOrdered(t *testing.T) {
 	}
 }
 
-func TestPackageSnapshotsAndRequestsRedactDiagnostics(t *testing.T) {
+func TestUnitPackageSnapshotsAndRequestsRedactDiagnostics(t *testing.T) {
 	t.Parallel()
 	var value AssignmentResult
 	if json.Unmarshal([]byte(`{"FailedUserErrorMessages":{"LegacyUser":["fixture-private"],"Future":false},"OperationId":null,"FailedUserIds":[],"ResponseMessage":"fixture-private"}`), &value) != nil {

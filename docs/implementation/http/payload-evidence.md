@@ -106,20 +106,20 @@ summary and userState details; absent details remain nil rather than proving no 
 
 ## Verification
 
-- TestBinaryTransferPreservesBytesAndOwnership: exact binary bytes on both backends,
+- TestUnitBinaryTransferPreservesBytesAndOwnership: exact binary bytes on both backends,
   content types, JSON result and bearer-free returned metadata.
-- TestUploadReachesHTTPServerBeforeSourceCompletes: real local HTTP server receives
+- TestUnitUploadReachesHTTPServerBeforeSourceCompletes: real local HTTP server receives
   a chunk while the caller still holds the unfinished source.
-- TestUploadFailuresCloseSourceAndNeverReplay: oversize/read/429/foreign/unsafe replay.
-- TestUploadCancellationClosesBlockedSource: cancellation releases a blocked reader.
-- TestDownloadLimitsTruncationAndPartialWrites: byte caps, unexpected EOF, partial
+- TestUnitUploadFailuresCloseSourceAndNeverReplay: oversize/read/429/foreign/unsafe replay.
+- TestUnitUploadCancellationClosesBlockedSource: cancellation releases a blocked reader.
+- TestUnitDownloadLimitsTruncationAndPartialWrites: byte caps, unexpected EOF, partial
   writer failure, error body isolation and close errors.
-- TestMultipartFramingBytesAndFailureCleanup and
-  TestMultipartRejectsRepeatedSourceWithoutDoubleClose: boundaries, bytes, filenames,
+- TestUnitMultipartFramingBytesAndFailureCleanup and
+  TestUnitMultipartRejectsRepeatedSourceWithoutDoubleClose: boundaries, bytes, filenames,
   fields and all-part cleanup.
 - Graph batch tests cover mixed 201/429/424, pre-auth validation, dependency cycles,
   malformed/missing results, preserved successes and outer-throttle no-replay.
-- TestTeamsBatchDetailsSurviveAggregateFailure: success plus unknown item failure
+- TestUnitTeamsBatchDetailsSurviveAggregateFailure: success plus unknown item failure
   remains inspectable; duplicate user results cannot establish success.
 
 These foundation fixtures do not promote any resource command to implemented or

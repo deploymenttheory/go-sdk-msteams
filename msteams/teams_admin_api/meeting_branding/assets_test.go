@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
 )
 
-func TestBrandingLocalBuildersMatchPinnedSetters(t *testing.T) {
+func TestUnitBrandingLocalBuildersMatchPinnedSetters(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../" + assetSource)
 	if err != nil {
@@ -66,7 +66,7 @@ func TestBrandingLocalBuildersMatchPinnedSetters(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestBrandingObjectEditsMatchPinnedCoreExtension(t *testing.T) {
+func TestUnitBrandingObjectEditsMatchPinnedCoreExtension(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../" + source)
 	if err != nil {
@@ -197,7 +197,7 @@ func TestBrandingObjectEditsMatchPinnedCoreExtension(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestBrandingAssetsOwnPointersAndProjectKnownFields(t *testing.T) {
+func TestUnitBrandingAssetsOwnPointersAndProjectKnownFields(t *testing.T) {
 	t.Parallel()
 	no, future := false, "FutureAlignment"
 	theme, err := resource.NewBrandingTheme("fixture-theme", resource.ThemeOptions{ThemeFields: resource.ThemeFields{Enabled: &no, ChatBackgroundImageAlignment: &future}})

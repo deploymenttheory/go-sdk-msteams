@@ -13,7 +13,7 @@ import (
 	operation "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_operation"
 )
 
-func TestConfiguredGraphCloudAndModeOwnTheBetaRequest(t *testing.T) {
+func TestUnitConfiguredGraphCloudAndModeOwnTheBetaRequest(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcch", "china"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -34,7 +34,7 @@ func TestConfiguredGraphCloudAndModeOwnTheBetaRequest(t *testing.T) {
 	}
 }
 
-func TestClosedWrongBackendAndInvalidTeamAreLocal(t *testing.T) {
+func TestUnitClosedWrongBackendAndInvalidTeamAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"closed", "wrong-backend", "nil-service", "invalid-team"} {
 		t.Run(name, func(t *testing.T) {
@@ -67,7 +67,7 @@ func TestClosedWrongBackendAndInvalidTeamAreLocal(t *testing.T) {
 	}
 }
 
-func TestPollingRejectsIdentityChangeAndContradictoryAcceptance(t *testing.T) {
+func TestUnitPollingRejectsIdentityChangeAndContradictoryAcceptance(t *testing.T) {
 	for _, tc := range []struct {
 		name, body string
 		status     int

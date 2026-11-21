@@ -51,7 +51,7 @@ func encodedSettings(t *testing.T, value team.Settings) map[string]any {
 	return fields
 }
 
-func TestSettingsOmissionAndEmptyContainers(t *testing.T) {
+func TestUnitSettingsOmissionAndEmptyContainers(t *testing.T) {
 	t.Parallel()
 	if len(encodedSettings(t, team.Settings{})) != 0 {
 		t.Fatal("native sparse input initialized omitted settings")
@@ -63,7 +63,7 @@ func TestSettingsOmissionAndEmptyContainers(t *testing.T) {
 	}
 }
 
-func TestSettingsPreserveFalseAndUseNativeStringRating(t *testing.T) {
+func TestUnitSettingsPreserveFalseAndUseNativeStringRating(t *testing.T) {
 	t.Parallel()
 	yes, no, rating := true, false, team.GiphyModerate
 	value := team.Settings{MemberSettings: &team.MemberSettings{AllowCreatePrivateChannels: &yes},
@@ -83,7 +83,7 @@ func TestSettingsPreserveFalseAndUseNativeStringRating(t *testing.T) {
 	}
 }
 
-func TestGiphyContentRatingRetainsFutureValues(t *testing.T) {
+func TestUnitGiphyContentRatingRetainsFutureValues(t *testing.T) {
 	t.Parallel()
 	var value team.FunSettings
 	if json.Unmarshal([]byte(`{"giphyContentRating":"future-rating"}`), &value) != nil || value.GiphyContentRating == nil || *value.GiphyContentRating != "future-rating" {

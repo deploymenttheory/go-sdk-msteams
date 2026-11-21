@@ -111,7 +111,7 @@ func managedFixture(t *testing.T, cfg *Config, endpoint *identityEndpoint) *Mana
 	t.Cleanup(func() { p.Close(); p.Wait() })
 	return p
 }
-func TestManagedIdentityPlatformSelection(t *testing.T) {
+func TestUnitManagedIdentityPlatformSelection(t *testing.T) {
 	for _, platform := range []string{"imds-system", "imds-user", "app-service", "azure-ml", "cloud-shell"} {
 		t.Run(platform, func(t *testing.T) {
 			clearManagedEnvironment(t)
@@ -161,7 +161,7 @@ func TestManagedIdentityPlatformSelection(t *testing.T) {
 		})
 	}
 }
-func TestManagedIdentityDoesNotReadAnotherSessionsGlobalCache(t *testing.T) {
+func TestUnitManagedIdentityDoesNotReadAnotherSessionsGlobalCache(t *testing.T) {
 	clearManagedEnvironment(t)
 	for _, label := range []string{"first", "second"} {
 		endpoint := &identityEndpoint{t: t, label: label, expectedHost: "169.254.169.254", identityKey: "client_id", header: "Metadata", headerValue: "true"}
@@ -199,7 +199,7 @@ func TestManagedIdentityDoesNotReadAnotherSessionsGlobalCache(t *testing.T) {
 		}
 	}
 }
-func TestManagedIdentityEnvironmentChangeRejectsCachedAndFreshTokens(t *testing.T) {
+func TestUnitManagedIdentityEnvironmentChangeRejectsCachedAndFreshTokens(t *testing.T) {
 	clearManagedEnvironment(t)
 	service := &identityEndpoint{t: t, label: "original", expectedHost: "169.254.169.254", identityKey: "client_id", header: "Metadata", headerValue: "true"}
 	p := managedFixture(t, &Config{Method: ManagedIdentity, TenantID: appTenant}, service)
@@ -220,7 +220,7 @@ func TestManagedIdentityEnvironmentChangeRejectsCachedAndFreshTokens(t *testing.
 		t.Fatal("changed environment contacted endpoint")
 	}
 }
-func TestManagedIdentityUnavailableAndRejectedResponses(t *testing.T) {
+func TestUnitManagedIdentityUnavailableAndRejectedResponses(t *testing.T) {
 	for _, tc := range []struct {
 		name                                                      string
 		status                                                    int
@@ -256,7 +256,7 @@ func TestManagedIdentityUnavailableAndRejectedResponses(t *testing.T) {
 		})
 	}
 }
-func TestManagedIdentityCancellationAndClose(t *testing.T) {
+func TestUnitManagedIdentityCancellationAndClose(t *testing.T) {
 	clearManagedEnvironment(t)
 	entered := make(chan struct{})
 	service := &identityEndpoint{t: t, label: "blocked", expectedHost: "169.254.169.254", identityKey: "client_id", header: "Metadata", headerValue: "true", block: entered}
@@ -279,7 +279,7 @@ func TestManagedIdentityCancellationAndClose(t *testing.T) {
 	}
 }
 
-func TestManagedIdentityBindingAndAudienceRejectBeforeDiscovery(t *testing.T) {
+func TestUnitManagedIdentityBindingAndAudienceRejectBeforeDiscovery(t *testing.T) {
 	clearManagedEnvironment(t)
 	service := &identityEndpoint{t: t}
 	p := managedFixture(t, &Config{Method: ManagedIdentity, TenantID: appTenant}, service)

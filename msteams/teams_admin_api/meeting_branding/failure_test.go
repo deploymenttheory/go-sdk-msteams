@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestBrandingInvalidInputRejectsBeforeCredentials(t *testing.T) {
+func TestUnitBrandingInvalidInputRejectsBeforeCredentials(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "invalid-input-and-scope", Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsMeetingBrandingPolicy", ParameterSet: "Identity"}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.MeetingBrandingPolicies
@@ -73,7 +73,7 @@ func TestBrandingInvalidInputRejectsBeforeCredentials(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestBrandingMutationsNeverReplayAndErrorsKeepStatus(t *testing.T) {
+func TestUnitBrandingMutationsNeverReplayAndErrorsKeepStatus(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, method := range []string{"POST", "DELETE"} {

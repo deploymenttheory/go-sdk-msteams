@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestClosedServiceAudiencesRespectCloud(t *testing.T) {
+func TestUnitClosedServiceAudiencesRespectCloud(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		cloud, audience string
@@ -46,7 +46,7 @@ func TestClosedServiceAudiencesRespectCloud(t *testing.T) {
 	}
 }
 
-func TestDelegatedHierarchyUsesSeparateResourceTokensAndOneAccount(t *testing.T) {
+func TestUnitDelegatedHierarchyUsesSeparateResourceTokensAndOneAccount(t *testing.T) {
 	t.Parallel()
 	targeting, hierarchy := "https://retailservices.teams.microsoft.com", "https://chatsvcagg.teams.microsoft.com"
 	service := &delegatedService{t: t, extraScopes: map[string]bool{targeting + "/.default": true, hierarchy + "/.default": true}}

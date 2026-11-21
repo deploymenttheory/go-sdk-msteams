@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/privacy_configuration"
 )
 
-func TestPrivacyPinnedProviderRequests(t *testing.T) {
+func TestUnitPrivacyPinnedProviderRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captured(t) {

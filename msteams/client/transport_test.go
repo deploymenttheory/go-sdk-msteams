@@ -81,7 +81,7 @@ func localBackend(t *testing.T, handler http.HandlerFunc, inspect func(*http.Req
 	})}
 }
 
-func TestBackendRoutingEscapingAndResponseMetadata(t *testing.T) {
+func TestUnitBackendRoutingEscapingAndResponseMetadata(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		backend        client.Backend
@@ -146,7 +146,7 @@ func TestBackendRoutingEscapingAndResponseMetadata(t *testing.T) {
 	}
 }
 
-func TestRejectedDestinationsAndRequestsNeverAcquireCredentials(t *testing.T) {
+func TestUnitRejectedDestinationsAndRequestsNeverAcquireCredentials(t *testing.T) {
 	t.Parallel()
 	badURLs := []string{
 		"https://attacker.invalid/v1.0/teams", "http://graph.microsoft.com/v1.0/teams",
@@ -206,7 +206,7 @@ func TestRejectedDestinationsAndRequestsNeverAcquireCredentials(t *testing.T) {
 	}
 }
 
-func TestContinuationURLPreservesOpaqueQuery(t *testing.T) {
+func TestUnitContinuationURLPreservesOpaqueQuery(t *testing.T) {
 	t.Parallel()
 	const rawQuery = "$skiptoken=a%2Bb%2fC&x=1&x=2&space=%20"
 	httpClient := localBackend(t, func(w http.ResponseWriter, r *http.Request) {
@@ -221,7 +221,7 @@ func TestContinuationURLPreservesOpaqueQuery(t *testing.T) {
 	}
 }
 
-func TestRedirectsAndBorrowedCookiesAreNotForwarded(t *testing.T) {
+func TestUnitRedirectsAndBorrowedCookiesAreNotForwarded(t *testing.T) {
 	t.Parallel()
 	var hits atomic.Int32
 	httpClient := localBackend(t, func(w http.ResponseWriter, r *http.Request) {
@@ -255,7 +255,7 @@ func TestRedirectsAndBorrowedCookiesAreNotForwarded(t *testing.T) {
 	}
 }
 
-func TestNormalizedErrorEnvelopes(t *testing.T) {
+func TestUnitNormalizedErrorEnvelopes(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name                                        string
@@ -311,7 +311,7 @@ func TestNormalizedErrorEnvelopes(t *testing.T) {
 	}
 }
 
-func TestWrongAudienceHasNoFallback(t *testing.T) {
+func TestUnitWrongAudienceHasNoFallback(t *testing.T) {
 	t.Parallel()
 	session, err := client.NewSession(&auth.Config{
 		Method: auth.SuppliedTokens, TenantID: "fixture-tenant", IdentityID: "fixture-identity", TokenMode: auth.Application,
@@ -333,7 +333,7 @@ func TestWrongAudienceHasNoFallback(t *testing.T) {
 	}
 }
 
-func TestConcurrentRequestsKeepHeadersAndResultsIsolated(t *testing.T) {
+func TestUnitConcurrentRequestsKeepHeadersAndResultsIsolated(t *testing.T) {
 	t.Parallel()
 	httpClient := localBackend(t, func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -361,7 +361,7 @@ func TestConcurrentRequestsKeepHeadersAndResultsIsolated(t *testing.T) {
 	}
 }
 
-func TestJSONBodiesSuccessDecodingAndEmptyResponses(t *testing.T) {
+func TestUnitJSONBodiesSuccessDecodingAndEmptyResponses(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string
@@ -399,7 +399,7 @@ func TestJSONBodiesSuccessDecodingAndEmptyResponses(t *testing.T) {
 	}
 }
 
-func TestJSONMediaTypeIsPreservedAndNonJSONRejected(t *testing.T) {
+func TestUnitJSONMediaTypeIsPreservedAndNonJSONRejected(t *testing.T) {
 	t.Parallel()
 	const contentType = "application/merge-patch+json; charset=utf-8"
 	httpClient := localBackend(t, func(w http.ResponseWriter, r *http.Request) {
@@ -429,7 +429,7 @@ type trackedBody struct {
 
 func (b *trackedBody) Close() error { b.closed.Store(true); return nil }
 
-func TestBodiesClosedForSuccessFailureAndSizeLimit(t *testing.T) {
+func TestUnitBodiesClosedForSuccessFailureAndSizeLimit(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string
@@ -455,7 +455,7 @@ func TestBodiesClosedForSuccessFailureAndSizeLimit(t *testing.T) {
 	}
 }
 
-func TestCancellationReachesBackendAndCloseCancelsRequest(t *testing.T) {
+func TestUnitCancellationReachesBackendAndCloseCancelsRequest(t *testing.T) {
 	t.Parallel()
 	for _, closeSession := range []bool{false, true} {
 		t.Run(fmt.Sprint(closeSession), func(t *testing.T) {
@@ -497,7 +497,7 @@ func TestCancellationReachesBackendAndCloseCancelsRequest(t *testing.T) {
 	}
 }
 
-func TestTransportErrorsDoNotExposeCredentialsOrURLs(t *testing.T) {
+func TestUnitTransportErrorsDoNotExposeCredentialsOrURLs(t *testing.T) {
 	t.Parallel()
 	responseBody := &trackedBody{Reader: strings.NewReader("fixture-secret")}
 	scope, _, _ := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) {

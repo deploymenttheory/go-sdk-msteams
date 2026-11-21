@@ -1,6 +1,6 @@
 # Team-operation read-only lab acceptance
 
-Prepared, not run. `TestLabTeamOperationReadOnly` reads an explicitly selected
+Prepared, not run. `TestAccTeamOperationReadOnly` reads an explicitly selected
 existing team operation. It starts no mutation, performs no remote cancellation
 and never follows the returned target location. The originating operation may
 already be complete; its lifetime and access remain server decisions.
@@ -10,7 +10,7 @@ MSTEAMS_LAB_TEAM_OPERATION_FILE containing tenant_id, team_id and operation_id.
 The fixture tenant must match the SDK identity's tenant. Team ID is a UUID;
 operation ID is the original opaque value from an observed receipt. Use the
 existing lab timeout setting and select
-`-run '^TestLabTeamOperationReadOnly$' -timeout=10m` for the lab package. Ordinary
+`-run '^TestAccTeamOperationReadOnly$' -timeout=10m` for the lab package. Ordinary
 CI skips before loading credentials or fixtures. No mutation flags are required.
 
 The helper defaults to certificate authentication; client-secret selects the

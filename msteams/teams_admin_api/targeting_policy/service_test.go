@@ -42,7 +42,7 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	return r
 }
 
-func TestPinnedModernResourceRoutes(t *testing.T) {
+func TestUnitPinnedModernResourceRoutes(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json")
 	if err != nil {
@@ -114,7 +114,7 @@ func TestPinnedModernResourceRoutes(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestSparseIdentityUpdateAndOpenValues(t *testing.T) {
+func TestUnitSparseIdentityUpdateAndOpenValues(t *testing.T) {
 	t.Parallel()
 	identity := "tag:Fixture / Policy"
 	mode, empty := "FutureServerMode", ""
@@ -130,7 +130,7 @@ func TestSparseIdentityUpdateAndOpenValues(t *testing.T) {
 	}
 }
 
-func TestPolicyListSortsGlobalAndRetainsRawFields(t *testing.T) {
+func TestUnitPolicyListSortsGlobalAndRetainsRawFields(t *testing.T) {
 	t.Parallel()
 	body := `[{"Identity":"tag:Later","CustomTagsMode":"Future","Description":null,"future":{"v":5}},{"Identity":"gLoBaL","SuggestedPresetTags":""},{"Identity":"tag:Last"}]`
 	run(t, contracttest.Case{Name: "global-first-raw", Steps: []contracttest.Exchange{discovery(), wire("GET", collection, "Get-CsTeamsTargetingPolicy", nil, 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -143,7 +143,7 @@ func TestPolicyListSortsGlobalAndRetainsRawFields(t *testing.T) {
 	}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
 }
 
-func TestCanceledPolicyDoesNotDiscoverOrAcquireCredentials(t *testing.T) {
+func TestUnitCanceledPolicyDoesNotDiscoverOrAcquireCredentials(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "cancelled", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		ctx, stop := context.WithCancel(ctx)
@@ -157,7 +157,7 @@ func TestCanceledPolicyDoesNotDiscoverOrAcquireCredentials(t *testing.T) {
 	}
 }
 
-func TestTargetingFilterIsLocalAndTagAware(t *testing.T) {
+func TestUnitTargetingFilterIsLocalAndTagAware(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-tag-filter", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsTargetingPolicy", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{discovery(), wire("GET", collection, "Get-CsTeamsTargetingPolicy", nil, 200, `[{"Identity":"Global"},{"Identity":"Tag:Fixture One"},{"Identity":"Fixture Two"},{"Identity":"Tag:Other"}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, err := sdk.TeamsAdminAPI.TargetingPolicies.ListFiltered(ctx, "fIX*")
@@ -170,7 +170,7 @@ func TestTargetingFilterIsLocalAndTagAware(t *testing.T) {
 	}, Want: contracttest.Expected{Error: policy.ErrInput}})
 }
 
-func TestTargetingFailuresDoNotInventSuccessOrReplayWrites(t *testing.T) {
+func TestUnitTargetingFailuresDoNotInventSuccessOrReplayWrites(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string

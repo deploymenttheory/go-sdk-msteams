@@ -72,7 +72,7 @@ compiled header spy includes voicemail. New/Set field inventories match pinned
 metadata; examples compile. Reports retain structural data only and do not promote
 full command coverage or live results.
 
-TestLabOnlineVoicemailReadOnly ran with dedicated-SPN secret and certificate;
+TestAccOnlineVoicemailReadOnly ran with dedicated-SPN secret and certificate;
 both Global requests returned resource HTTP 403. List and optional pinned read-only
 PowerShell scalar comparison were not reached. No successful read or restriction
 on mode/feature eligibility is inferred. The [lab plan](online-voicemail-lab-acceptance.md)

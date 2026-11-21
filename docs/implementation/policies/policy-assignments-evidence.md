@@ -164,11 +164,11 @@ one correlation per operation, reused across regional attempts, with no generate
 forest/MPA headers. Region annotations come from the request. Scope/origin checks
 reject an operation's attempt to change clouds before credentials are acquired.
 
-The dedicated lab SPN ran TestLabPolicyAssignmentsReadOnly with secret and certificate
+The dedicated lab SPN ran TestAccPolicyAssignmentsReadOnly with secret and certificate
 authentication. Both completed discovery, then the assignment-list endpoint returned
 HTTP 403. No per-ID read was reached. No batch, group write, OCE action or permission
 change ran. No authentication-mode or feature-availability conclusion follows.
-TestLabPolicyAssignmentsOCEReadOnly then ran with both credential modes, using the
+TestAccPolicyAssignmentsOCEReadOnly then ran with both credential modes, using the
 authenticating lab tenant as its target. Each made three regional status attempts
 and ended with HTTP 403. No OCE action or eligibility change ran. Successful OCE
 qualification remains unavailable; no mode/feature restriction is inferred.

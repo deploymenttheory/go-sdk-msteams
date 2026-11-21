@@ -69,24 +69,24 @@ prompt as a side effect of request retries.
 
 ## Verification
 
-- `TestRetryAfterParsingAndBoundedJitter`: seconds, dates, malformed/overflow values,
+- `TestUnitRetryAfterParsingAndBoundedJitter`: seconds, dates, malformed/overflow values,
   bounded exponential growth, jitter and service-delay precedence.
-- `TestRetrySafeOperationReplaysFrozenJSONAndPreservesMetadata`: POST query retry,
+- `TestUnitRetrySafeOperationReplaysFrozenJSONAndPreservesMetadata`: POST query retry,
   serialized body stability, conditional headers, final decode and token-free metadata.
-- `TestRetryRequiresOperationSafetyAndNeverReplaysStreams`: GET/POST/PUT/DELETE
+- `TestUnitRetryRequiresOperationSafetyAndNeverReplaysStreams`: GET/POST/PUT/DELETE
   ambiguous failures remain single attempts by default; streams fail before auth.
-- `TestRetryAttemptsAndTotalDelayBudgets`, `TestRetryStatusClassification`: bounded
+- `TestUnitRetryAttemptsAndTotalDelayBudgets`, `TestUnitRetryStatusClassification`: bounded
   429/transient handling with preserved errors and terminal status classification.
-- `TestRequestCancellationReleasesQueuedInflightAndBackoff`,
-  `TestConcurrencySharedAcrossBackendsAndReleasedOnClose`: cancellation, shared limits
+- `TestUnitRequestCancellationReleasesQueuedInflightAndBackoff`,
+  `TestUnitConcurrencySharedAcrossBackendsAndReleasedOnClose`: cancellation, shared limits
   and permit release, including session close.
-- `TestRequestBudgetIncludesAuthenticationAndQueue`,
-  `TestPerAttemptTimeoutRetriesWithinOperationDeadline`: total versus attempt deadlines.
-- `TestExpiredQueuedTokenIsReacquiredBeforeSending`: queue delay cannot send an expired
+- `TestUnitRequestBudgetIncludesAuthenticationAndQueue`,
+  `TestUnitPerAttemptTimeoutRetriesWithinOperationDeadline`: total versus attempt deadlines.
+- `TestUnitExpiredQueuedTokenIsReacquiredBeforeSending`: queue delay cannot send an expired
   cached token.
-- `TestUnauthorizedRefreshIsOptInOnceAndWithinAttemptBudget`: success, repeated 401,
+- `TestUnitUnauthorizedRefreshIsOptInOnceAndWithinAttemptBudget`: success, repeated 401,
   unsafe/disabled/unsupported refresh and attempt exhaustion.
-- `TestRejectedTokenRefreshCoalescesAndKeepsOtherAudiences`: concurrent/late rejection,
+- `TestUnitRejectedTokenRefreshCoalescesAndKeepsOtherAudiences`: concurrent/late rejection,
   binding isolation, unrelated audience retention and closed-provider behavior.
 
 Live throttling and tenant conditional-access behavior remain unqualified. Resource

@@ -125,7 +125,7 @@ func fixture(t *testing.T, cloud string, mode auth.Mode, steps ...exchange) (*ms
 	return sdk, p, &calls
 }
 
-func TestNativeCRUDAndRootWiring(t *testing.T) {
+func TestUnitNativeCRUDAndRootWiring(t *testing.T) {
 	t.Parallel()
 	falseValue := false
 	sdk, _, calls := fixture(t, "commercial", auth.Application,
@@ -151,7 +151,7 @@ func TestNativeCRUDAndRootWiring(t *testing.T) {
 	}
 }
 
-func TestListBasicProjectionsAndOpaqueContinuation(t *testing.T) {
+func TestUnitListBasicProjectionsAndOpaqueContinuation(t *testing.T) {
 	t.Parallel()
 	falseValue := false
 	opaque := "https://graph.microsoft.com/v1.0/teams?$skiptoken=opaque%2B%2F%3D&$select=id%2CdisplayName"
@@ -170,7 +170,7 @@ func TestListBasicProjectionsAndOpaqueContinuation(t *testing.T) {
 	}
 }
 
-func TestListPartialResultsAndBounds(t *testing.T) {
+func TestUnitListPartialResultsAndBounds(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name     string
@@ -197,7 +197,7 @@ func TestListPartialResultsAndBounds(t *testing.T) {
 	}
 }
 
-func TestReadEnvelopeAndStatusValidation(t *testing.T) {
+func TestUnitReadEnvelopeAndStatusValidation(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string
@@ -221,7 +221,7 @@ func TestReadEnvelopeAndStatusValidation(t *testing.T) {
 	}
 }
 
-func TestLocalValidationAndCancellationPerformNoIO(t *testing.T) {
+func TestUnitLocalValidationAndCancellationPerformNoIO(t *testing.T) {
 	t.Parallel()
 	sdk, p, calls := fixture(t, "commercial", auth.Application)
 	ctx, cancel := context.WithCancel(t.Context())
@@ -268,7 +268,7 @@ func TestLocalValidationAndCancellationPerformNoIO(t *testing.T) {
 	}
 }
 
-func TestMutationFailuresAreNotReplayed(t *testing.T) {
+func TestUnitMutationFailuresAreNotReplayed(t *testing.T) {
 	t.Parallel()
 	for _, method := range []string{"PUT", "PATCH", "DELETE"} {
 		t.Run(method, func(t *testing.T) {
@@ -300,7 +300,7 @@ func TestMutationFailuresAreNotReplayed(t *testing.T) {
 	}
 }
 
-func TestListRejectsUnexpectedSuccessfulPageStatus(t *testing.T) {
+func TestUnitListRejectsUnexpectedSuccessfulPageStatus(t *testing.T) {
 	t.Parallel()
 	for _, status := range []int{202, 206} {
 		t.Run(http.StatusText(status), func(t *testing.T) {

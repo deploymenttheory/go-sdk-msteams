@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_calling_policy"
 )
 
-func TestCallingPolicyPinnedProviderRequests(t *testing.T) {
+func TestUnitCallingPolicyPinnedProviderRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -86,7 +86,7 @@ func TestCallingPolicyPinnedProviderRequests(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallingPolicyFilteringKeepsGlobalAndLiteralWhitespace(t *testing.T) {
+func TestUnitCallingPolicyFilteringKeepsGlobalAndLiteralWhitespace(t *testing.T) {
 	t.Parallel()
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`
 	var results []contracttest.Result

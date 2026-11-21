@@ -80,18 +80,18 @@ The application provider's optional rejected-token replacement capability also a
 
 | Tests | Evidence |
 |---|---|
-| `TestWorkloadRotatedFileAndAudienceIsolation` | File rotation, cached token reuse, expiry refresh and separate Graph/Teams exchanges |
-| `TestWorkloadCallbackCoalescesAndRespectsBinding` | Concurrent callback coalescing and tenant rejection before source access |
-| `TestWorkloadInvalidAndExpiredAssertions` | Missing/empty/oversized sources, callback errors and issuer rejection of expired assertions |
-| `TestWorkloadCancellationAndOwnedClose` | Context propagation, close and owned callback release |
-| `TestManagedIdentityPlatformSelection` | IMDS system/user identities, App Service, Azure ML and Cloud Shell request formats |
-| `TestManagedIdentityDoesNotReadAnotherSessionsGlobalCache` | Cross-session cache isolation, concurrent coalescing and forced expiry refresh |
-| `TestManagedIdentityEnvironmentChangeRejectsCachedAndFreshTokens` | Endpoint/secret/ProgramData changes fail before cache or HTTP use |
-| `TestManagedIdentityUnavailableAndRejectedResponses` | Absent/rejected endpoints, wrong identity/resource echoes, expiry, response bounds and redirects |
-| `TestManagedIdentityCancellationAndClose` | Endpoint cancellation and owned environment release |
-| `TestManagedIdentityServiceFabricKeepsCertificatePinning` | Real local TLS endpoint accepts the configured pin and rejects a wrong pin despite a prior cached token |
-| `TestManagedIdentityArcRejectsUntrustedSecretFileChallenge` | Untrusted Arc secret-file challenge cannot trigger a credential-bearing second request |
-| `TestManagedIdentityGuardRejectsChangedDestinationAndIdentity` | Destination, path, resource, identity and configured URL validation |
+| `TestUnitWorkloadRotatedFileAndAudienceIsolation` | File rotation, cached token reuse, expiry refresh and separate Graph/Teams exchanges |
+| `TestUnitWorkloadCallbackCoalescesAndRespectsBinding` | Concurrent callback coalescing and tenant rejection before source access |
+| `TestUnitWorkloadInvalidAndExpiredAssertions` | Missing/empty/oversized sources, callback errors and issuer rejection of expired assertions |
+| `TestUnitWorkloadCancellationAndOwnedClose` | Context propagation, close and owned callback release |
+| `TestUnitManagedIdentityPlatformSelection` | IMDS system/user identities, App Service, Azure ML and Cloud Shell request formats |
+| `TestUnitManagedIdentityDoesNotReadAnotherSessionsGlobalCache` | Cross-session cache isolation, concurrent coalescing and forced expiry refresh |
+| `TestUnitManagedIdentityEnvironmentChangeRejectsCachedAndFreshTokens` | Endpoint/secret/ProgramData changes fail before cache or HTTP use |
+| `TestUnitManagedIdentityUnavailableAndRejectedResponses` | Absent/rejected endpoints, wrong identity/resource echoes, expiry, response bounds and redirects |
+| `TestUnitManagedIdentityCancellationAndClose` | Endpoint cancellation and owned environment release |
+| `TestUnitManagedIdentityServiceFabricKeepsCertificatePinning` | Real local TLS endpoint accepts the configured pin and rejects a wrong pin despite a prior cached token |
+| `TestUnitManagedIdentityArcRejectsUntrustedSecretFileChallenge` | Untrusted Arc secret-file challenge cannot trigger a credential-bearing second request |
+| `TestUnitManagedIdentityGuardRejectsChangedDestinationAndIdentity` | Destination, path, resource, identity and configured URL validation |
 
 Examples compile with the SDK on Linux/macOS/Windows. The manual live workflow runs
 file/callback assertions against both token audiences and performs only an organization

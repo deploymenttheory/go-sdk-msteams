@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_enhanced_encryption_policy"
 )
 
-func TestEnhancedEncryptionRequestsMatchLayeredBinding(t *testing.T) {
+func TestUnitEnhancedEncryptionRequestsMatchLayeredBinding(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + modelSource)
 	if e != nil {

@@ -81,7 +81,7 @@ before changing the ledger. A passing primitive or local-builder case alone
 cannot establish implemented service or full PowerShell parity.
 
 The initial real capture consumer is
-[`TestPinnedTemplatePrimitiveFixtures`](../../tests/contract/core/fixtures_test.go).
+[`TestUnitPinnedTemplatePrimitiveFixtures`](../../tests/contract/core/fixtures_test.go).
 It runs five captured template wire primitives through the shared ConfigAPI
 scope, checks command/set mappings against pinned runtime metadata, and explicitly
 does **not** claim a template service implementation. Nine family-registration

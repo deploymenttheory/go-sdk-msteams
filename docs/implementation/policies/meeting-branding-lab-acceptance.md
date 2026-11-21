@@ -1,7 +1,7 @@
 # Meeting branding lab acceptance
 
 MSTEAMS_LAB_READ_ONLY=1 and MSTEAMS_LAB_IDENTITY_FILE enable
-TestLabMeetingBrandingReadOnly with the existing private dedicated lab identity.
+TestAccMeetingBrandingReadOnly with the existing private dedicated lab identity.
 MSTEAMS_LAB_AUTH_METHOD selects certificate (default) or client-secret. The test
 reads Global and its locally filtered list; it creates no policy/assets and changes
 no Global setting or assignment. Failures retain only a fixed status message.

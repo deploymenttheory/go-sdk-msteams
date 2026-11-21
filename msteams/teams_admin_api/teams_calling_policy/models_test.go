@@ -48,7 +48,7 @@ func exactJSON(t *testing.T, raw []byte) any {
 	}
 	return v
 }
-func TestCallingPolicyKnownProjectionsMatchPinnedModels(t *testing.T) {
+func TestUnitCallingPolicyKnownProjectionsMatchPinnedModels(t *testing.T) {
 	t.Parallel()
 	for _, m := range modelCases(t) {
 		t.Run(m.Name, func(t *testing.T) {
@@ -80,7 +80,7 @@ func TestCallingPolicyKnownProjectionsMatchPinnedModels(t *testing.T) {
 		})
 	}
 }
-func TestCallingPolicyPreservesOwnedRawSnapshotAndExactInt64(t *testing.T) {
+func TestUnitCallingPolicyPreservesOwnedRawSnapshotAndExactInt64(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"Identity":"Global","CallingSpendUserLimit":9223372036854775807,"Future":{"n":9007199254740993},"Description":"first","description":null}`)
 	saved := append([]byte(nil), raw...)
@@ -95,7 +95,7 @@ func TestCallingPolicyPreservesOwnedRawSnapshotAndExactInt64(t *testing.T) {
 		t.Fatal("snapshot lost bytes or ownership")
 	}
 }
-func TestCallingPolicyRequiresNativeJSONTypes(t *testing.T) {
+func TestUnitCallingPolicyRequiresNativeJSONTypes(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"CallingSpendUserLimit":"9007199254740993"}`, `{"CallingSpendUserLimit":1.5}`, `{"CallRecordingExpirationDays":1.5}`, `{"AllowPrivateCalling":"false"}`, `{"Description":{}}`, `null`, `[]`} {
 		var value resource.Policy
@@ -108,7 +108,7 @@ func TestCallingPolicyRequiresNativeJSONTypes(t *testing.T) {
 // The source model supplies accepted final values; the provider fixture
 // independently establishes sparse field binding and identity serialization.
 // This tests the composition, not a claimed source binder/network execution.
-func TestCallingPolicyRequestsRetainAcceptedModelSettings(t *testing.T) {
+func TestUnitCallingPolicyRequestsRetainAcceptedModelSettings(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for index, m := range modelCases(t) {

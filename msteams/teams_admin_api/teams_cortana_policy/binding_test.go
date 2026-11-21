@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_cortana_policy"
 )
 
-func TestCortanaNativeRequestsMatchSuccessfulIsolatedBinding(t *testing.T) {
+func TestUnitCortanaNativeRequestsMatchSuccessfulIsolatedBinding(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + modelSource)
 	if e != nil {

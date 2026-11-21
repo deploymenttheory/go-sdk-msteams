@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_hold_policy"
 )
 
-func TestCallHoldInterleavesProtocolsWithoutHeaderLeakage(t *testing.T) {
+func TestUnitCallHoldInterleavesProtocolsWithoutHeaderLeakage(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -45,7 +45,7 @@ func TestCallHoldInterleavesProtocolsWithoutHeaderLeakage(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallHoldSetRetainsPreparationAndAcceptance(t *testing.T) {
+func TestUnitCallHoldSetRetainsPreparationAndAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {

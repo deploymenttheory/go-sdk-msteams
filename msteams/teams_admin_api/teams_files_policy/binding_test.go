@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
 )
 
-func TestFilesPolicyCapturedCompiledBindings(t *testing.T) {
+func TestUnitFilesPolicyCapturedCompiledBindings(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + bindingSource)
 	if e != nil {

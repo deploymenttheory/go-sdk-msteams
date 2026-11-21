@@ -8,7 +8,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_cortana_policy"
 )
 
-func TestCortanaKnownProjectionsAndOwnedRawSnapshot(t *testing.T) {
+func TestUnitCortanaKnownProjectionsAndOwnedRawSnapshot(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"Identity":"Global","Description":"","CortanaVoiceInvocationMode":"FutureMode","AllowCortanaVoiceInvocation":false,"AllowCortanaAmbientListening":true,"AllowCortanaInContextSuggestions":false,"Future":{"n":9007199254740993}}`)
 	original := append([]byte(nil), raw...)
@@ -24,7 +24,7 @@ func TestCortanaKnownProjectionsAndOwnedRawSnapshot(t *testing.T) {
 		t.Fatal("snapshot borrowed storage or changed with projections")
 	}
 }
-func TestCortanaUnprojectableValuesStayRaw(t *testing.T) {
+func TestUnitCortanaUnprojectableValuesStayRaw(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"AllowCortanaVoiceInvocation":"future","CortanaVoiceInvocationMode":{},"Description":[]}`, `{"AllowCortanaVoiceInvocation":0,"CortanaVoiceInvocationMode":false,"Description":{}}`} {
 		var value resource.Policy

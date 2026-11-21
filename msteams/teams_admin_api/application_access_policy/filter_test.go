@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestWildcardSemanticsMatchPowerShellStringCases(t *testing.T) {
+func TestUnitWildcardSemanticsMatchPowerShellStringCases(t *testing.T) {
 	t.Parallel()
 	for _, test := range []struct {
 		name, pattern, value string

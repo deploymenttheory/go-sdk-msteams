@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
 )
 
-func TestAppPermissionGrantRequiresOneExplicitScope(t *testing.T) {
+func TestUnitAppPermissionGrantRequiresOneExplicitScope(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -30,7 +30,7 @@ func TestAppPermissionGrantRequiresOneExplicitScope(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAppPermissionInputAndContextRejectBeforeHTTP(t *testing.T) {
+func TestUnitAppPermissionInputAndContextRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies
@@ -85,7 +85,7 @@ func TestAppPermissionInputAndContextRejectBeforeHTTP(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestAppPermissionMutationsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitAppPermissionMutationsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "patch", "delete", "user", "group", "tenant"} {

@@ -17,7 +17,7 @@ func projection(v resource.Configuration) map[string]*string {
 	return map[string]*string{"Identity": v.Identity, "ParentGuardianPreferredContactMethod": v.ParentGuardianPreferredContactMethod, "EduGenerativeAIEnhancements": v.EduGenerativeAIEnhancements, "UpdateParentInformation": v.UpdateParentInformation}
 }
 
-func TestEducationConfigurationModelsMatchPinnedSetters(t *testing.T) {
+func TestUnitEducationConfigurationModelsMatchPinnedSetters(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + source)
 	if e != nil {
@@ -55,7 +55,7 @@ func TestEducationConfigurationModelsMatchPinnedSetters(t *testing.T) {
 	}
 }
 
-func TestEducationConfigurationSnapshotOwnershipAndRedaction(t *testing.T) {
+func TestUnitEducationConfigurationSnapshotOwnershipAndRedaction(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"UpdateParentInformation":"fixture-private","Future":9007199254740993}`)
 	var v resource.Configuration

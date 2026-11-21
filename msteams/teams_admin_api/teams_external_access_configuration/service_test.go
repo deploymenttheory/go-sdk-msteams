@@ -15,7 +15,7 @@ import (
 	config "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 )
 
-func TestPinnedProviderDispatch(t *testing.T) {
+func TestUnitPinnedProviderDispatch(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	seen := 0
@@ -66,7 +66,7 @@ func TestPinnedProviderDispatch(t *testing.T) {
 	}
 	evidence(t, results)
 }
-func TestComposedUpdatePreservesReadIdentityAndSparseFields(t *testing.T) {
+func TestUnitComposedUpdatePreservesReadIdentityAndSparseFields(t *testing.T) {
 	t.Parallel()
 	path := "/Skype.Policy/configurations/TeamsExternalAccessConfiguration/configuration/scope%20/Fixture%20%2F%20Child"
 	r := run(t, contracttest.Case{Name: "composed-update", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsExternalAccessConfiguration", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{

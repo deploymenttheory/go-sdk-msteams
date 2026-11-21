@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_client_configuration"
 )
 
-func TestClientConfigurationPatchFailuresNeverReplay(t *testing.T) {
+func TestUnitClientConfigurationPatchFailuresNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, status := range []int{400, 401, 403, 429, 503} {
@@ -31,7 +31,7 @@ func TestClientConfigurationPatchFailuresNeverReplay(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestClientConfigurationInputContextAndBackendHaveNoHTTP(t *testing.T) {
+func TestUnitClientConfigurationInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsClientConfigurations

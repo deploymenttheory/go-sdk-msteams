@@ -29,7 +29,7 @@ func wire(origin, prefix, audience string, status int, body string) contracttest
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + prefix + "/channels/privateChannelMigrationStatus", Audience: audience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
 }
 
-func TestMigrationUsesExactPinnedCloudPrefixesAndAudiences(t *testing.T) {
+func TestUnitMigrationUsesExactPinnedCloudPrefixesAndAudiences(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct{ cloud, origin, prefix, audience string }{
@@ -57,7 +57,7 @@ func TestMigrationUsesExactPinnedCloudPrefixesAndAudiences(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestMigrationProfilesDoNotFallbackAndWrongBackendIsLocal(t *testing.T) {
+func TestUnitMigrationProfilesDoNotFallbackAndWrongBackendIsLocal(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"france", "germany"} {
 		run(t, contracttest.Case{Name: cloud, Cloud: cloud, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -78,7 +78,7 @@ func TestMigrationProfilesDoNotFallbackAndWrongBackendIsLocal(t *testing.T) {
 	}, Want: contracttest.Expected{Error: context.Canceled}})
 }
 
-func TestMigrationMalformedDetailsRemainExplicitCallerData(t *testing.T) {
+func TestUnitMigrationMalformedDetailsRemainExplicitCallerData(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "malformed-details", Steps: []contracttest.Exchange{wire("https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com", 200, `{"MigrationStatus":"RequiresAdminAttention","Details":"not-json"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)

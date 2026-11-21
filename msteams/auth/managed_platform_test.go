@@ -18,7 +18,7 @@ import (
 	"github.com/AzureAD/microsoft-authentication-library-for-go/apps/managedidentity"
 )
 
-func TestManagedIdentityServiceFabricKeepsCertificatePinning(t *testing.T) {
+func TestUnitManagedIdentityServiceFabricKeepsCertificatePinning(t *testing.T) {
 	clearManagedEnvironment(t)
 	var calls atomic.Int32
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -64,7 +64,7 @@ func TestManagedIdentityServiceFabricKeepsCertificatePinning(t *testing.T) {
 	}
 }
 
-func TestManagedIdentityArcRejectsUntrustedSecretFileChallenge(t *testing.T) {
+func TestUnitManagedIdentityArcRejectsUntrustedSecretFileChallenge(t *testing.T) {
 	clearManagedEnvironment(t)
 	t.Setenv("IDENTITY_ENDPOINT", "http://identity.test/token")
 	t.Setenv("IMDS_ENDPOINT", "http://identity.test")
@@ -86,7 +86,7 @@ func TestManagedIdentityArcRejectsUntrustedSecretFileChallenge(t *testing.T) {
 	}
 }
 
-func TestManagedIdentityGuardRejectsChangedDestinationAndIdentity(t *testing.T) {
+func TestUnitManagedIdentityGuardRejectsChangedDestinationAndIdentity(t *testing.T) {
 	clearManagedEnvironment(t)
 	env := map[string]string{"IDENTITY_ENDPOINT": "http://identity.test/token"}
 	t.Setenv("IDENTITY_ENDPOINT", env["IDENTITY_ENDPOINT"])

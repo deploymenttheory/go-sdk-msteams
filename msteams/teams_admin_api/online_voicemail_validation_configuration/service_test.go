@@ -14,7 +14,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestValidationPinnedProviderRequests(t *testing.T) {
+func TestUnitValidationPinnedProviderRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captured(t) {

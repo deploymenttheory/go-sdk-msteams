@@ -7,7 +7,7 @@ import (
 	external "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 )
 
-func TestPolicyDecodesNamedCommunicationModeWithoutLosingWireValue(t *testing.T) {
+func TestUnitPolicyDecodesNamedCommunicationModeWithoutLosingWireValue(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, wire string

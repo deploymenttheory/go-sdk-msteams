@@ -17,10 +17,10 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-// TestPinnedTemplatePrimitiveFixtures proves a representative captured contract
+// TestUnitPinnedTemplatePrimitiveFixtures proves a representative captured contract
 // can use the shared runner. It exercises the shared ConfigAPI scope only, not an
 // implemented template service or complete PowerShell command composition.
-func TestPinnedTemplatePrimitiveFixtures(t *testing.T) {
+func TestUnitPinnedTemplatePrimitiveFixtures(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json")
 	if err != nil {

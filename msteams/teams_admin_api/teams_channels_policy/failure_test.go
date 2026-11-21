@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_channels_policy"
 )
 
-func TestChannelsPolicyAllMutationErrorsAreSingleSend(t *testing.T) {
+func TestUnitChannelsPolicyAllMutationErrorsAreSingleSend(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "patch", "delete", "user", "tenant", "group"} {
@@ -83,7 +83,7 @@ func TestChannelsPolicyAllMutationErrorsAreSingleSend(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestChannelsPolicyInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
+func TestUnitChannelsPolicyInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsChannelsPolicies
@@ -142,7 +142,7 @@ func TestChannelsPolicyInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	evidence(t, []contracttest.Result{r})
 }
 
-func TestChannelsPolicyGrantOmitsZeroRankLikeMappedWrapper(t *testing.T) {
+func TestUnitChannelsPolicyGrantOmitsZeroRankLikeMappedWrapper(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, rank := range []int32{0, 2, -1} {

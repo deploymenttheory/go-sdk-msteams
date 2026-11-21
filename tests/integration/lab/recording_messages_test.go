@@ -150,9 +150,9 @@ func recordingOracle(t *testing.T, ctx context.Context, tenant string, identitie
 	return v
 }
 
-// TestLabRecordingMessagesReadOnly lists and reads at most five selected records.
+// TestAccRecordingMessagesReadOnly lists and reads at most five selected records.
 // It never creates messages, edits policy, changes assignments or grants roles.
-func TestLabRecordingMessagesReadOnly(t *testing.T) {
+func TestAccRecordingMessagesReadOnly(t *testing.T) {
 	cfg, e := lab.Load()
 	if e != nil {
 		t.Fatal("invalid lab enablement")
@@ -220,7 +220,7 @@ func TestLabRecordingMessagesReadOnly(t *testing.T) {
 	t.Log("bounded recording reads verified; writes, cleanup and effective behavior remain separately qualified")
 }
 
-func TestRecordingCollectionComparisonIgnoresResponseOrder(t *testing.T) {
+func TestUnitRecordingCollectionComparisonIgnoresResponseOrder(t *testing.T) {
 	t.Parallel()
 	a := &resource.Message{Identity: new("Global/a")}
 	b := &resource.Message{Identity: new("Global/b")}
@@ -234,7 +234,7 @@ func TestRecordingCollectionComparisonIgnoresResponseOrder(t *testing.T) {
 	}
 }
 
-func TestRecordingOracleRejectsWrongTenantDuplicateAndMixedOutput(t *testing.T) {
+func TestUnitRecordingOracleRejectsWrongTenantDuplicateAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	const identity = "Global/fixture"

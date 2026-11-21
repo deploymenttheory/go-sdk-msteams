@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_client_configuration"
 )
 
-func TestClientConfigurationPinnedCompiledCRUD(t *testing.T) {
+func TestUnitClientConfigurationPinnedCompiledCRUD(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -65,7 +65,7 @@ func TestClientConfigurationPinnedCompiledCRUD(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestClientConfigurationCompiledFilterDoesNotUseModernWhitespaceRules(t *testing.T) {
+func TestUnitClientConfigurationCompiledFilterDoesNotUseModernWhitespaceRules(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`

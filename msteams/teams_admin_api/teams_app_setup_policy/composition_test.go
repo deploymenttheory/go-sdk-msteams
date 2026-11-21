@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_setup_policy"
 )
 
-func TestAppSetupUpdateKeepsPreparationFalseAndAcceptance(t *testing.T) {
+func TestUnitAppSetupUpdateKeepsPreparationFalseAndAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -55,7 +55,7 @@ func TestAppSetupUpdateKeepsPreparationFalseAndAcceptance(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAppSetupComposesEveryListWithItsOwnKey(t *testing.T) {
+func TestUnitAppSetupComposesEveryListWithItsOwnKey(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, field := range []string{"AppPresetList", "PinnedAppBarApps", "PinnedMessageBarApps", "AppPresetMeetingList", "AdditionalCustomizationApps", "PinnedCallingBarApps"} {
@@ -100,7 +100,7 @@ func TestAppSetupComposesEveryListWithItsOwnKey(t *testing.T) {
 	}
 	evidence(t, results)
 }
-func TestAppSetupBuildersNeverAcquireCredentialsOrHTTP(t *testing.T) {
+func TestUnitAppSetupBuildersNeverAcquireCredentialsOrHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-setup-builders", Source: sourceModels, Invoke: func(_ context.Context, _ *msteams.Client) contracttest.Observation {
 		apps, e := resource.ReplaceApps(resource.NewApp("")).Apply(nil)

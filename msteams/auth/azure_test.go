@@ -24,7 +24,7 @@ func azureBinding() auth.Binding {
 	return auth.Binding{TenantID: "fixture.onmicrosoft.com", Cloud: "commercial", IdentityID: "fixture-user", Mode: auth.Delegated}
 }
 
-func TestAzureCredentialPreservesRegionScopeAndMigrationResource(t *testing.T) {
+func TestUnitAzureCredentialPreservesRegionScopeAndMigrationResource(t *testing.T) {
 	t.Parallel()
 	const audience = "https://migrationsvc.teams.microsoft.com"
 	const scope = audience + "/Region.Read.All"
@@ -60,7 +60,7 @@ func TestAzureCredentialPreservesRegionScopeAndMigrationResource(t *testing.T) {
 	}
 }
 
-func TestAzureCredentialCustomEnvironmentBinding(t *testing.T) {
+func TestUnitAzureCredentialCustomEnvironmentBinding(t *testing.T) {
 	t.Parallel()
 	endpoints := &auth.Endpoints{Authority: "https://identity.example.test", Graph: "https://graph.example.test", TeamsAdmin: "https://teams.example.test", TeamsAdminResource: "api://teams.example.test"}
 	binding := azureBinding()
@@ -101,7 +101,7 @@ func TestAzureCredentialCustomEnvironmentBinding(t *testing.T) {
 	}
 }
 
-func TestAzureCredentialAdapterBindsTenantAndResourceScopes(t *testing.T) {
+func TestUnitAzureCredentialAdapterBindsTenantAndResourceScopes(t *testing.T) {
 	t.Parallel()
 	binding := azureBinding()
 	var calls []policy.TokenRequestOptions
@@ -135,7 +135,7 @@ func TestAzureCredentialAdapterBindsTenantAndResourceScopes(t *testing.T) {
 	}
 }
 
-func TestAzureCredentialAdapterRejectsUnboundAcquisition(t *testing.T) {
+func TestUnitAzureCredentialAdapterRejectsUnboundAcquisition(t *testing.T) {
 	t.Parallel()
 	binding := azureBinding()
 	credential := azureCredentialFunc(func(context.Context, policy.TokenRequestOptions) (azcore.AccessToken, error) {
@@ -176,7 +176,7 @@ func TestAzureCredentialAdapterRejectsUnboundAcquisition(t *testing.T) {
 	}
 }
 
-func TestAzureCredentialAdapterValidatesTokensAndRedactsErrors(t *testing.T) {
+func TestUnitAzureCredentialAdapterValidatesTokensAndRedactsErrors(t *testing.T) {
 	t.Parallel()
 	binding := azureBinding()
 	sourceError := errors.New("fixture-secret response body")
@@ -209,7 +209,7 @@ func TestAzureCredentialAdapterValidatesTokensAndRedactsErrors(t *testing.T) {
 	}
 }
 
-func TestAzureCredentialAdapterPreservesCancellationContext(t *testing.T) {
+func TestUnitAzureCredentialAdapterPreservesCancellationContext(t *testing.T) {
 	t.Parallel()
 	binding := azureBinding()
 	ctx, cancel := context.WithTimeout(t.Context(), time.Minute)

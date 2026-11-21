@@ -11,7 +11,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-func TestOperationMinimumAppliesInsideTransportRetries(t *testing.T) {
+func TestUnitOperationMinimumAppliesInsideTransportRetries(t *testing.T) {
 	for _, header := range []string{"", "1", "40"} {
 		t.Run(header, func(t *testing.T) {
 			calls := 0
@@ -41,7 +41,7 @@ func TestOperationMinimumAppliesInsideTransportRetries(t *testing.T) {
 	}
 }
 
-func TestOperationMinimumAppliesToRejectedTokenReplacement(t *testing.T) {
+func TestUnitOperationMinimumAppliesToRejectedTokenReplacement(t *testing.T) {
 	for _, header := range []string{"", "40"} {
 		t.Run(header, func(t *testing.T) {
 			binding := auth.Binding{TenantID: "fixture", Cloud: "commercial", IdentityID: "fixture-client", Mode: auth.Application}

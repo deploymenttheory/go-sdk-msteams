@@ -167,7 +167,7 @@ func mapping(name string) []contracttest.Mapping {
 	return []contracttest.Mapping{{Command: command, ParameterSet: set}}
 }
 
-func TestPinnedGeneratedAssignmentRequests(t *testing.T) {
+func TestUnitPinnedGeneratedAssignmentRequests(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../" + source)
 	if err != nil {

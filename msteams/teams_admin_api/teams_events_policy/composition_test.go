@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_events_policy"
 )
 
-func TestEventsPolicySetRetainsPreparationAndAcceptance(t *testing.T) {
+func TestUnitEventsPolicySetRetainsPreparationAndAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -66,7 +66,7 @@ func TestEventsPolicySetRetainsPreparationAndAcceptance(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestEventsPolicyCompiledGrantRetainsExplicitZeroAndSignedRank(t *testing.T) {
+func TestUnitEventsPolicyCompiledGrantRetainsExplicitZeroAndSignedRank(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, rank := range []int32{0, -2147483648, 2147483647} {

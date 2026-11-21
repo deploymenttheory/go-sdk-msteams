@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_setup_policy"
 )
 
-func TestAppSetupGrantRequiresOneExplicitScope(t *testing.T) {
+func TestUnitAppSetupGrantRequiresOneExplicitScope(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -30,7 +30,7 @@ func TestAppSetupGrantRequiresOneExplicitScope(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAppSetupInputAndContextRejectBeforeHTTP(t *testing.T) {
+func TestUnitAppSetupInputAndContextRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsAppSetupPolicies
@@ -85,7 +85,7 @@ func TestAppSetupInputAndContextRejectBeforeHTTP(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestAppSetupMutationsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitAppSetupMutationsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "patch", "delete", "user", "group", "tenant"} {

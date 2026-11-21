@@ -185,14 +185,14 @@ capability evidence. No sovereign tenant, delegated login or Azure host was exer
 
 | Verification | Evidence |
 |---|---|
-| Concurrent tenant/identity isolation, copied metadata, owner-only Close, lazy inspection | TestSessionInformationAndCloseRemainClientLocal; TestSessionInfoIsLazyAndNilSafe |
-| Six native flows against every profile and custom origins/ports; distinct Graph/Teams scopes; certificate assertion authority; no instance-alias discovery | TestEnvironmentAuthenticationFlows |
-| Cross-authority issuer/token/browser metadata rejected before credential POST | TestEnvironmentRejectsForeignIdentityMetadataBeforeCredentialPOST |
-| Explicit endpoint validation, full-tuple cache isolation, equivalent origin canonicalization, internal region rejection, redaction | TestEnvironmentOverridesValidateAndIsolateBindings |
-| Backend routes, hostile continuation rejection before auth, custom Graph version guard, relative operation locations, immutable copied config | TestEnvironmentRoutesAndContinuationsStayBound |
-| Borrowed Azure adapter scope and custom authority binding | TestAzureCredentialCustomEnvironmentBinding |
+| Concurrent tenant/identity isolation, copied metadata, owner-only Close, lazy inspection | TestUnitSessionInformationAndCloseRemainClientLocal; TestUnitSessionInfoIsLazyAndNilSafe |
+| Six native flows against every profile and custom origins/ports; distinct Graph/Teams scopes; certificate assertion authority; no instance-alias discovery | TestUnitEnvironmentAuthenticationFlows |
+| Cross-authority issuer/token/browser metadata rejected before credential POST | TestUnitEnvironmentRejectsForeignIdentityMetadataBeforeCredentialPOST |
+| Explicit endpoint validation, full-tuple cache isolation, equivalent origin canonicalization, internal region rejection, redaction | TestUnitEnvironmentOverridesValidateAndIsolateBindings |
+| Backend routes, hostile continuation rejection before auth, custom Graph version guard, relative operation locations, immutable copied config | TestUnitEnvironmentRoutesAndContinuationsStayBound |
+| Borrowed Azure adapter scope and custom authority binding | TestUnitAzureCredentialCustomEnvironmentBinding |
 | Configuration precedence and session lifecycle regression | Existing msteams/client and msteams constructor/session tests |
-| Commercial app-token and operation access regression | Opt-in TestApplicationAccessLab; live result recorded in PR evidence |
+| Commercial app-token and operation access regression | Opt-in TestAccApplicationAccess; live result recorded in PR evidence |
 
 These are foundation contracts. The coverage ledger remains unchanged: this ticket
 does not promote the whole Connect surface, conditional helpers or resource commands

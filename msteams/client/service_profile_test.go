@@ -13,7 +13,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestHierarchyProfilesMatchPinnedOriginAudienceAndCloudMaps(t *testing.T) {
+func TestUnitHierarchyProfilesMatchPinnedOriginAudienceAndCloudMaps(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../contracts/endpoints/8.1.0/special-service-profiles.json")
 	if err != nil {
@@ -82,7 +82,7 @@ func TestHierarchyProfilesMatchPinnedOriginAudienceAndCloudMaps(t *testing.T) {
 	}
 }
 
-func TestHierarchyProfileErrorsKeepTypedBackendAndRedactDiagnostics(t *testing.T) {
+func TestUnitHierarchyProfileErrorsKeepTypedBackendAndRedactDiagnostics(t *testing.T) {
 	t.Parallel()
 	for _, backend := range []client.Backend{client.Targeting, client.Hierarchy} {
 		value := client.NewAPIError(backend, 403, http.Header{"request-id": {"private-canary"}}, []byte(`{"error":{"code":"PrivateCode","message":"private-canary"}}`))

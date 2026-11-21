@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestExternalAccessPinnedProviderDispatch(t *testing.T) {
+func TestUnitExternalAccessPinnedProviderDispatch(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	seen := 0
@@ -124,7 +124,7 @@ func TestExternalAccessPinnedProviderDispatch(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestExternalAccessComposedUpdate(t *testing.T) {
+func TestUnitExternalAccessComposedUpdate(t *testing.T) {
 	t.Parallel()
 	before := `{"Identity":"read-model-identity","AllowedExternalDomains":["a","a","A","b"],"BlockedExternalDomains":[],"Description":"preserved","Future":{"enabled":false}}`
 	input := external.UpdateRequest{Fields: external.Fields{EnableFederationAccess: policy.Null[bool]()}, AllowedExternalDomains: policy.ChangeStrings([]string{"b", "a"}, []string{"a", "b"})}

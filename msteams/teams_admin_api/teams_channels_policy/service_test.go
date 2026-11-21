@@ -17,7 +17,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_channels_policy"
 )
 
-func TestChannelsPolicyPinnedCompiledCRUD(t *testing.T) {
+func TestUnitChannelsPolicyPinnedCompiledCRUD(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -70,7 +70,7 @@ func TestChannelsPolicyPinnedCompiledCRUD(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestChannelsPolicyPinnedModernGrant(t *testing.T) {
+func TestUnitChannelsPolicyPinnedModernGrant(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + grantSource)
 	if e != nil {
@@ -146,7 +146,7 @@ func TestChannelsPolicyPinnedModernGrant(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestChannelsPolicyCompiledFilterDoesNotUseModernWhitespaceRules(t *testing.T) {
+func TestUnitChannelsPolicyCompiledFilterDoesNotUseModernWhitespaceRules(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`

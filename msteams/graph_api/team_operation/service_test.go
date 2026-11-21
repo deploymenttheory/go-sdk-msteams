@@ -65,7 +65,7 @@ func evidence(t *testing.T, results []contracttest.Result) {
 	}
 }
 
-func TestGetOperationPreservesNativeStatesAndFutureData(t *testing.T) {
+func TestUnitGetOperationPreservesNativeStatesAndFutureData(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, status := range []string{"notStarted", "inProgress", "succeeded", "failed", "futureStatus"} {
@@ -87,7 +87,7 @@ func TestGetOperationPreservesNativeStatesAndFutureData(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestGetRejectsMalformedAndUnexpectedResponses(t *testing.T) {
+func TestUnitGetRejectsMalformedAndUnexpectedResponses(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -109,7 +109,7 @@ func TestGetRejectsMalformedAndUnexpectedResponses(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestResumedWaitUsesBetaCadenceAndRetainsFailure(t *testing.T) {
+func TestUnitResumedWaitUsesBetaCadenceAndRetainsFailure(t *testing.T) {
 	for _, terminal := range []string{"succeeded", "failed", "futureStatus"} {
 		t.Run(terminal, func(t *testing.T) {
 			synctest.Test(t, func(t *testing.T) {
@@ -145,7 +145,7 @@ func TestResumedWaitUsesBetaCadenceAndRetainsFailure(t *testing.T) {
 	}
 }
 
-func TestReadRetryAndCancellationRespectMinimumCadence(t *testing.T) {
+func TestUnitReadRetryAndCancellationRespectMinimumCadence(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		started := time.Now()
 		r := run(t, contracttest.Case{Name: "get-retry-floor", Steps: []contracttest.Exchange{wire(503, `{"error":{"code":"Busy"}}`), wire(200, body("succeeded"))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -175,7 +175,7 @@ func TestReadRetryAndCancellationRespectMinimumCadence(t *testing.T) {
 	})
 }
 
-func TestLocalValidationAndResumeDoNotAcquireCredentials(t *testing.T) {
+func TestUnitLocalValidationAndResumeDoNotAcquireCredentials(t *testing.T) {
 	t.Parallel()
 	for index, id := range []string{"", ".", "..", " ", "line\n", "back\\slash"} {
 		t.Run(strconv.Itoa(index), func(t *testing.T) {

@@ -30,7 +30,7 @@ func run(t *testing.T, c contracttest.Case) {
 	}
 }
 
-func TestAssociatedViewsKeepCurrentAndExplicitUsersSeparate(t *testing.T) {
+func TestUnitAssociatedViewsKeepCurrentAndExplicitUsersSeparate(t *testing.T) {
 	t.Parallel()
 	for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
 		t.Run(string(mode), func(t *testing.T) {

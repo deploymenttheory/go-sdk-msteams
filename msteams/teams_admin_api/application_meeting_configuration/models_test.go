@@ -9,7 +9,7 @@ import (
 	configuration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_meeting_configuration"
 )
 
-func TestChangesOwnInputsAndRetainEmptyOperators(t *testing.T) {
+func TestUnitChangesOwnInputsAndRetainEmptyOperators(t *testing.T) {
 	t.Parallel()
 	ids := []string{"fixture"}
 	replacement := configuration.ReplaceAppIDs(ids)
@@ -57,7 +57,7 @@ func TestChangesOwnInputsAndRetainEmptyOperators(t *testing.T) {
 	}
 }
 
-func TestSnapshotRetainsNullOmissionEmptyAndFutureFields(t *testing.T) {
+func TestUnitSnapshotRetainsNullOmissionEmptyAndFutureFields(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"Identity":"Global"}`, `{"Identity":"Global","AllowRemoveParticipantAppIds":null}`, `{"Identity":"Global","AllowRemoveParticipantAppIds":[]}`, `{"Identity":"Global","AllowRemoveParticipantAppIds":["a",""]}`, `{"Identity":"Global","AllowRemoveParticipantAppIds":[{"Future":false}],"Future":{"value":null}}`} {
 		var value configuration.Configuration

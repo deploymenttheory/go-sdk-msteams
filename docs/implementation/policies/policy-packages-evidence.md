@@ -123,7 +123,7 @@ package tenant qualification needs an appropriate delegated context. It is not
 resolved by granting that SPN more Graph permissions or by interpreting 403 as
 evidence that application mode works. Independent implementation/capture work can
 continue without changing roles, consent or interactive sessions.
-The opt-in TestLabPolicyPackagesReadOnly run confirmed the configured identity's
+The opt-in TestAccPolicyPackagesReadOnly run confirmed the configured identity's
 local mode rejection and skipped delegated qualification. No package request or
 token acquisition ran. A separately supplied, tenant-bound delegated-token file
 can enable the bounded read path later; absence remains visible as unavailable.

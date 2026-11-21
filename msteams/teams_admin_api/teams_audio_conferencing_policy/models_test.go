@@ -10,7 +10,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
 )
 
-func TestAudioPolicyPinnedListNormalization(t *testing.T) {
+func TestUnitAudioPolicyPinnedListNormalization(t *testing.T) {
 	raw, e := os.ReadFile("../../../" + modelSource)
 	if e != nil {
 		t.Fatal(e)
@@ -90,7 +90,7 @@ func TestAudioPolicyPinnedListNormalization(t *testing.T) {
 	}
 }
 
-func TestAudioPolicyRawFutureShapesAndOwnedChanges(t *testing.T) {
+func TestUnitAudioPolicyRawFutureShapesAndOwnedChanges(t *testing.T) {
 	raw := []byte(`{"Identity":"Global","AllowTollFreeDialin":"FutureMode","MeetingInvitePhoneNumbers":["first",false],"Future":9007199254740993}`)
 	original := append([]byte(nil), raw...)
 	var v resource.Policy

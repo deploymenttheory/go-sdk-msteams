@@ -63,7 +63,7 @@ examples compile. Structural reports do not promote full command/live coverage.
 
 ## Tenant qualification
 
-TestLabVoicemailValidationReadOnly ran with dedicated-SPN secret and certificate;
+TestAccVoicemailValidationReadOnly ran with dedicated-SPN secret and certificate;
 both Global requests returned resource HTTP 403. Filtered list and optional pinned
 PowerShell scalar comparison were not reached. No mode restriction or feature/RBAC
 cause is inferred. The lab plan separates these reads from tenant-setting writes

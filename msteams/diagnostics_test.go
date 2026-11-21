@@ -87,7 +87,7 @@ func (s *recordedSpan) SetStatus(_ codes.Code, description string) {
 }
 func (s *recordedSpan) End(...trace.SpanEndOption) { s.mu.Lock(); defer s.mu.Unlock(); s.ends++ }
 
-func TestRequestDiagnosticsExcludeSecretsAcrossOutcomes(t *testing.T) {
+func TestUnitRequestDiagnosticsExcludeSecretsAcrossOutcomes(t *testing.T) {
 	t.Parallel()
 	for _, scenario := range []string{"json", "forbidden", "provider", "transport", "retry", "upload", "download", "cancelled", "invalid-method"} {
 		t.Run(scenario, func(t *testing.T) {
@@ -186,7 +186,7 @@ func TestRequestDiagnosticsExcludeSecretsAcrossOutcomes(t *testing.T) {
 	}
 }
 
-func TestDiagnosticsRemainOptInAndBorrowed(t *testing.T) {
+func TestUnitDiagnosticsRemainOptInAndBorrowed(t *testing.T) {
 	t.Parallel()
 	core, logs := observer.New(zap.DebugLevel)
 	logger := zap.New(core)

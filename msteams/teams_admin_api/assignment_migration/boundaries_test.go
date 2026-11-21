@@ -13,7 +13,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
 )
 
-func TestGPARejectsInvalidInputBeforeCredentialAcquisition(t *testing.T) {
+func TestUnitGPARejectsInvalidInputBeforeCredentialAcquisition(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "invalid-input-and-context", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.AssignmentMigrations
@@ -79,7 +79,7 @@ func TestGPARejectsInvalidInputBeforeCredentialAcquisition(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestGPAMalformedAcceptedResponsesStayErrorsWithoutResubmission(t *testing.T) {
+func TestUnitGPAMalformedAcceptedResponsesStayErrorsWithoutResubmission(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, op := range []string{"create", "clear"} {
@@ -96,7 +96,7 @@ func TestGPAMalformedAcceptedResponsesStayErrorsWithoutResubmission(t *testing.T
 	evidence(t, results)
 }
 
-func TestGPARequestCanonicalGUIDAndNullResult(t *testing.T) {
+func TestUnitGPARequestCanonicalGUIDAndNullResult(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "canonical-guid-null-result", Mappings: mapping("create"), Want: contracttest.Expected{JSON: json.RawMessage("null")}, Steps: []contracttest.Exchange{wire("create", "POST", "directAssignmentsMigration/migrate?allowNonEmptyGroup=False", json.RawMessage(`{"authority":"Tenant","policytype":"FixturePolicy","policyname":"Fixture","groupid":"abcdef01-0000-4000-8000-000000000001"}`), 202, "null")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		input := request(false)

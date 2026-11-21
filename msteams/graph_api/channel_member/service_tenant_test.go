@@ -11,7 +11,7 @@ import (
 	channelmember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_member"
 )
 
-func TestExternalTenantCreationPreservesExplicitTenant(t *testing.T) {
+func TestUnitExternalTenantCreationPreservesExplicitTenant(t *testing.T) {
 	t.Parallel()
 	tenant := "33333333-3333-4333-8333-333333333333"
 	path := "/beta/teams/" + teamID + "/channels/19:channel%2Fopaque@thread.tacv2/members"
@@ -23,7 +23,7 @@ func TestExternalTenantCreationPreservesExplicitTenant(t *testing.T) {
 		}, Want: contracttest.Expected{Status: 201, JSON: expectedSnapshot(`[]`, raw)}})
 }
 
-func TestInvalidChannelAndTenantAreRejectedBeforeCredentials(t *testing.T) {
+func TestUnitInvalidChannelAndTenantAreRejectedBeforeCredentials(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct{ name, channel, tenant string }{
 		{"empty-channel", "", userID},

@@ -1,6 +1,6 @@
 # Teams feedback policy lab acceptance
 
-On 2026-11-21, TestLabFeedbackPolicyReadOnly attempted a compiled
+On 2026-11-21, TestAccFeedbackPolicyReadOnly attempted a compiled
 TeamsFeedbackPolicy Global read with the dedicated lab SPN using client-secret
 and certificate authentication. Both actual resource reads returned HTTP 403.
 The harness verifies the response request path to distinguish resource denial

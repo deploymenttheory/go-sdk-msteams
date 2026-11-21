@@ -45,7 +45,7 @@ func cleanupProvider(t *testing.T, p *RefreshProvider) {
 	t.Cleanup(func() { p.Close(); p.Wait() })
 }
 
-func TestZeroRefreshProviderIsClosed(t *testing.T) {
+func TestUnitZeroRefreshProviderIsClosed(t *testing.T) {
 	t.Parallel()
 	var provider RefreshProvider
 	if _, err := provider.AcquireToken(context.Background(), TokenRequest{Audience: "graph"}); !errors.Is(err, ErrProviderClosed) {
@@ -56,7 +56,7 @@ func TestZeroRefreshProviderIsClosed(t *testing.T) {
 	provider.Wait()
 }
 
-func TestRefreshSingleFlightPerAudienceAndExpiry(t *testing.T) {
+func TestUnitRefreshSingleFlightPerAudienceAndExpiry(t *testing.T) {
 	t.Parallel()
 	clock := &fakeClock{}
 	var graphCalls, teamsCalls atomic.Int32
@@ -111,7 +111,7 @@ func TestRefreshSingleFlightPerAudienceAndExpiry(t *testing.T) {
 	}
 }
 
-func TestCancelledWaiterDoesNotCancelAnotherWaiter(t *testing.T) {
+func TestUnitCancelledWaiterDoesNotCancelAnotherWaiter(t *testing.T) {
 	t.Parallel()
 	binding := testBinding()
 	started := make(chan context.Context, 1)
@@ -153,7 +153,7 @@ func TestCancelledWaiterDoesNotCancelAnotherWaiter(t *testing.T) {
 	}
 }
 
-func TestAbandonedRefreshMustExitBeforeReplacement(t *testing.T) {
+func TestUnitAbandonedRefreshMustExitBeforeReplacement(t *testing.T) {
 	t.Parallel()
 	binding := testBinding()
 	cancelled := make(chan struct{})
@@ -206,7 +206,7 @@ func TestAbandonedRefreshMustExitBeforeReplacement(t *testing.T) {
 	}
 }
 
-func TestRefreshErrorsAreRedactedAndNotCached(t *testing.T) {
+func TestUnitRefreshErrorsAreRedactedAndNotCached(t *testing.T) {
 	t.Parallel()
 	sentinel := errors.New("sensitive-refresh-diagnostic")
 	var calls atomic.Int32
@@ -231,7 +231,7 @@ func TestRefreshErrorsAreRedactedAndNotCached(t *testing.T) {
 	}
 }
 
-func TestRefreshRejectsWrongBindingAndInvalidTokens(t *testing.T) {
+func TestUnitRefreshRejectsWrongBindingAndInvalidTokens(t *testing.T) {
 	t.Parallel()
 	clock := &fakeClock{}
 	var calls atomic.Int32
@@ -261,7 +261,7 @@ func TestRefreshRejectsWrongBindingAndInvalidTokens(t *testing.T) {
 	}
 }
 
-func TestCloseCancelsRefreshAndClearsCache(t *testing.T) {
+func TestUnitCloseCancelsRefreshAndClearsCache(t *testing.T) {
 	t.Parallel()
 	started := make(chan struct{})
 	exited := make(chan struct{})
@@ -292,7 +292,7 @@ func TestCloseCancelsRefreshAndClearsCache(t *testing.T) {
 	}
 }
 
-func TestRefreshRejectsInvalidCallbackResults(t *testing.T) {
+func TestUnitRefreshRejectsInvalidCallbackResults(t *testing.T) {
 	t.Parallel()
 	clock := &fakeClock{}
 	cases := []struct {
@@ -335,7 +335,7 @@ func TestRefreshRejectsInvalidCallbackResults(t *testing.T) {
 	}
 }
 
-func TestRefreshRejectsInvalidConstructionOptions(t *testing.T) {
+func TestUnitRefreshRejectsInvalidConstructionOptions(t *testing.T) {
 	t.Parallel()
 	var calls atomic.Int32
 	callback := func(context.Context, TokenRequest) (Token, error) {
@@ -367,7 +367,7 @@ func TestRefreshRejectsInvalidConstructionOptions(t *testing.T) {
 	}
 }
 
-func TestRefreshProviderDiagnosticsRedactPopulatedCache(t *testing.T) {
+func TestUnitRefreshProviderDiagnosticsRedactPopulatedCache(t *testing.T) {
 	t.Parallel()
 	const secret = "sensitive-cached-access-token"
 	provider, err := NewRefreshProvider(testBinding(), func(context.Context, TokenRequest) (Token, error) {

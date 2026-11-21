@@ -1,6 +1,6 @@
 # Call hold policy lab acceptance
 
-`TestLabCallHoldPolicyReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1` before it
+`TestAccCallHoldPolicyReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1` before it
 reads the selected private identity file. It reads compiled Global and a Global
 filtered list, selects one exact case-insensitive Global identity (allowing
 Tag:Global as a separate match), and compares the four nullable string getters.
@@ -10,7 +10,7 @@ Use `MSTEAMS_LAB_IDENTITY_FILE` and `MSTEAMS_LAB_AUTH_METHOD=client-secret` or
 `certificate`, with mutation/consequential opt-ins unset, then run:
 
 ```sh
-go test -count=1 -run '^TestLabCallHoldPolicyReadOnly$' -v ./tests/integration/lab
+go test -count=1 -run '^TestAccCallHoldPolicyReadOnly$' -v ./tests/integration/lab
 ```
 
 Both actual credential modes returned resource HTTP 403 on Global on

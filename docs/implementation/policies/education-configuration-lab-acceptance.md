@@ -1,6 +1,6 @@
 # Teams education configuration lab acceptance
 
-On 2026-11-21, TestLabEducationConfigurationReadOnly attempted a compiled
+On 2026-11-21, TestAccEducationConfigurationReadOnly attempted a compiled
 TeamsEducationConfiguration Global read using the dedicated lab SPN with
 client-secret and certificate authentication. Both actual resource reads returned
 HTTP 403. No response payload, tenant/client ID or credential was retained.

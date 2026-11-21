@@ -13,7 +13,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestValidationComposedUpdateRetainsPreparationAndOmission(t *testing.T) {
+func TestUnitValidationComposedUpdateRetainsPreparationAndOmission(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -48,7 +48,7 @@ func TestValidationComposedUpdateRetainsPreparationAndOmission(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestValidationListFilteringAndGlobalOrder(t *testing.T) {
+func TestUnitValidationListFilteringAndGlobalOrder(t *testing.T) {
 	t.Parallel()
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"}]`
 	var results []contracttest.Result

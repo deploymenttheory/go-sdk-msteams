@@ -10,7 +10,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestPinnedValidationSetterObservations(t *testing.T) {
+func TestUnitPinnedValidationSetterObservations(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/voicemail-validation-models.json")
 	if err != nil {

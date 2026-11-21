@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_events_policy"
 )
 
-func TestEventsPolicyGrantRequiresOneExplicitScope(t *testing.T) {
+func TestUnitEventsPolicyGrantRequiresOneExplicitScope(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -30,7 +30,7 @@ func TestEventsPolicyGrantRequiresOneExplicitScope(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestEventsPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
+func TestUnitEventsPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsEventsPolicies
@@ -80,7 +80,7 @@ func TestEventsPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestEventsPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitEventsPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "patch", "delete", "user", "group", "tenant"} {

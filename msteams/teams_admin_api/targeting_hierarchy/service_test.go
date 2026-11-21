@@ -110,7 +110,7 @@ func uploaded(v hierarchy.UploadResult, err error) contracttest.Observation {
 	return contracttest.Observation{Value: map[string]any{"found": v.LookupHTTPAccepted, "create_attempted": v.CreateAttempted, "created": v.CreationHTTPAccepted, "import_attempted": v.ImportAttempted, "accepted": v.ImportHTTPAccepted, "request_id": id}, Response: v.Response, Err: err}
 }
 
-func TestNativeStatusRoutesAndIndependentHierarchyPrimitives(t *testing.T) {
+func TestUnitNativeStatusRoutesAndIndependentHierarchyPrimitives(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -162,7 +162,7 @@ func TestNativeStatusRoutesAndIndependentHierarchyPrimitives(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestNativeImportsStreamOriginalCSVWithoutPreparation(t *testing.T) {
+func TestUnitNativeImportsStreamOriginalCSVWithoutPreparation(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, version := range []hierarchy.Version{hierarchy.V1, hierarchy.V2} {
@@ -195,7 +195,7 @@ func TestNativeImportsStreamOriginalCSVWithoutPreparation(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestUploadCompositionCreatesOnlyAfter404AndRetainsPartialState(t *testing.T) {
+func TestUnitUploadCompositionCreatesOnlyAfter404AndRetainsPartialState(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {

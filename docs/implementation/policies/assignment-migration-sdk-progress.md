@@ -48,7 +48,7 @@ HTTP errors retain their actual status rather than cmdlet output strings. Empty 
 malformed successful bodies fail decoding with response retained; JSON null stays nil.
 No automatic wait, terminal-state inference, submission replay or rollback is added.
 
-TestLabAssignmentMigrationReadOnly ran using dedicated-SPN secret and certificate;
+TestAccAssignmentMigrationReadOnly ran using dedicated-SPN secret and certificate;
 both status-list requests returned resource HTTP 403. GetByID and optional pinned
 PowerShell comparison were not reached. Other reads need explicit fixtures and
 remain unrun. No mode/feature restriction is inferred from denial. Start/cleanup

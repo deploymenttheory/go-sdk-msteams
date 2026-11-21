@@ -31,7 +31,7 @@ type bindingCapture struct {
 	}
 }
 
-func TestEducationConfigurationCapturedBindingValues(t *testing.T) {
+func TestUnitEducationConfigurationCapturedBindingValues(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + bindingSource)
 	if e != nil {
@@ -129,7 +129,7 @@ func TestEducationConfigurationCapturedBindingValues(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestEducationConfigurationCapturedFilters(t *testing.T) {
+func TestUnitEducationConfigurationCapturedFilters(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + bindingSource)
 	if e != nil {

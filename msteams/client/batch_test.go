@@ -16,7 +16,7 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-func TestTeamsBatchDetailsSurviveAggregateFailure(t *testing.T) {
+func TestUnitTeamsBatchDetailsSurviveAggregateFailure(t *testing.T) {
 	t.Parallel()
 	body := []byte(`{"operationId":"fixture","overallStatus":"Complete","errorCount":1,"completedCount":2,"notStartedCount":0,"inProgressCount":0,"userState":[{"id":"one","state":"Completed","result":"Success"},{"id":"two","state":"Completed","result":"FutureFailureValue"}]}`)
 	result, err := teamsadminapi.DecodeBatchPolicyResult(body)
@@ -29,7 +29,7 @@ func TestTeamsBatchDetailsSurviveAggregateFailure(t *testing.T) {
 	}
 }
 
-func TestGraphBatchRetainsMixedOutcomesWithoutReplay(t *testing.T) {
+func TestUnitGraphBatchRetainsMixedOutcomesWithoutReplay(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name    string
@@ -69,7 +69,7 @@ func TestGraphBatchRetainsMixedOutcomesWithoutReplay(t *testing.T) {
 	}
 }
 
-func TestGraphBatchValidatesBeforeAuthentication(t *testing.T) {
+func TestUnitGraphBatchValidatesBeforeAuthentication(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name     string
@@ -106,7 +106,7 @@ func TestGraphBatchValidatesBeforeAuthentication(t *testing.T) {
 	}
 }
 
-func TestGraphBatchMalformedResponsesPreserveKnownResults(t *testing.T) {
+func TestUnitGraphBatchMalformedResponsesPreserveKnownResults(t *testing.T) {
 	t.Parallel()
 	for _, body := range []string{
 		`{"responses":[{"id":"a","status":200}]}`,
@@ -125,7 +125,7 @@ func TestGraphBatchMalformedResponsesPreserveKnownResults(t *testing.T) {
 	}
 }
 
-func TestGraphBatchOuterThrottleIsNotRetried(t *testing.T) {
+func TestUnitGraphBatchOuterThrottleIsNotRetried(t *testing.T) {
 	t.Parallel()
 	calls := 0
 	scope, _, _ := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) {

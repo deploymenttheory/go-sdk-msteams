@@ -146,9 +146,9 @@ func lifecycleJournal(t *testing.T, cfg lab.Config, sdk *msteams.Client, binding
 	return journal, fixture, intent
 }
 
-// TestLabTeamLifecycle creates a fresh fixture for each creation path. Existing
+// TestAccTeamLifecycle creates a fresh fixture for each creation path. Existing
 // resource IDs are never accepted as mutation targets. No tenant roles are set.
-func TestLabTeamLifecycle(t *testing.T) {
+func TestAccTeamLifecycle(t *testing.T) {
 	cfg := lifecycleLabConfig(t)
 	_ = teamOracleEnabled(t) // Validate the optional oracle before fixture writes.
 	sdk, binding, _ := labSDKClient(t)
@@ -300,7 +300,7 @@ func lifecycleObserveAbsent(ctx context.Context, sdk *msteams.Client, id string)
 	}
 }
 
-func TestLabRecoverTeamLifecycle(t *testing.T) {
+func TestAccRecoverTeamLifecycle(t *testing.T) {
 	cfg := lifecycleLabConfig(t)
 	sdk, binding, _ := labSDKClient(t)
 	file := os.Getenv("MSTEAMS_LAB_RECOVERY_JOURNAL")

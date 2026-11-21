@@ -23,7 +23,7 @@ func batchWire(kind string, region resource.Region, status int, reply string) co
 	return oceWire("GET", origin+path+"?region="+string(region), status, reply)
 }
 
-func TestOCERegionalLookupPreservesAttemptsAndSourceOrder(t *testing.T) {
+func TestUnitOCERegionalLookupPreservesAttemptsAndSourceOrder(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, kind := range []string{"status", "definition"} {
@@ -52,7 +52,7 @@ func TestOCERegionalLookupPreservesAttemptsAndSourceOrder(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestOCERegionalListRetainsPartialResultsAndFailures(t *testing.T) {
+func TestUnitOCERegionalListRetainsPartialResultsAndFailures(t *testing.T) {
 	t.Parallel()
 	c := contracttest.Case{Name: "oce-regional-partial-list", Source: oceSource, Mappings: []contracttest.Mapping{{Command: "Get-CsBatchOperationStatus", ParameterSet: "GetAllBatchOperationStatus"}}, Steps: []contracttest.Exchange{batchWire("status-list", resource.RegionNOAM, 200, `[{"OperationId":"`+oceOperation+`","OverallStatus":"Future","Region":"spoofed"}]`), batchWire("status-list", resource.RegionEMEA, 503, `{"code":"FixtureUnavailable","message":"fixture-private"}`), batchWire("status-list", resource.RegionAPAC, 200, `[{"OperationId":"`+oceGroup+`","CompletedCount":0}]`)}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503, Codes: []string{"FixtureUnavailable"}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.PolicyAssignments.ListOCEBatchStatuses(ctx, resource.OCEContext{TenantID: oceTenant}, nil)
@@ -64,7 +64,7 @@ func TestOCERegionalListRetainsPartialResultsAndFailures(t *testing.T) {
 	evidence(t, []contracttest.Result{run(t, c)})
 }
 
-func TestOCERegionalFailuresAndMalformedSuccessRemainVisible(t *testing.T) {
+func TestUnitOCERegionalFailuresAndMalformedSuccessRemainVisible(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	c := contracttest.Case{Name: "oce-regional-all-failed", Source: oceSource, Steps: []contracttest.Exchange{batchWire("status", resource.RegionNOAM, 404, `{}`), batchWire("status", resource.RegionEMEA, 404, `{}`), batchWire("status", resource.RegionAPAC, 404, `{}`)}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -98,7 +98,7 @@ func TestOCERegionalFailuresAndMalformedSuccessRemainVisible(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestOCEActionsKeepAcceptanceAndNeverReplay(t *testing.T) {
+func TestUnitOCEActionsKeepAcceptanceAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"batch", "group", "refresh"} {

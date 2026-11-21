@@ -24,7 +24,7 @@ func metadata(status int) *resty.Response {
 	return &resty.Response{RawResponse: &http.Response{StatusCode: status, Header: make(http.Header)}}
 }
 
-func TestDiscoveryNormalizationCachingAndHeaderOwnership(t *testing.T) {
+func TestUnitDiscoveryNormalizationCachingAndHeaderOwnership(t *testing.T) {
 	t.Parallel()
 	var discoveries, management int
 	base := doFunc(func(_ context.Context, request client.Request, result any) (*resty.Response, error) {
@@ -62,7 +62,7 @@ func TestDiscoveryNormalizationCachingAndHeaderOwnership(t *testing.T) {
 	}
 }
 
-func TestInvalidDiscoveryNeverFallsBackOrCaches(t *testing.T) {
+func TestUnitInvalidDiscoveryNeverFallsBackOrCaches(t *testing.T) {
 	t.Parallel()
 	for _, test := range []struct{ name, body string }{
 		{name: "missing", body: `{}`},
@@ -92,7 +92,7 @@ func TestInvalidDiscoveryNeverFallsBackOrCaches(t *testing.T) {
 	}
 }
 
-func TestDiscoveryAuthorizationMetadataPropagates(t *testing.T) {
+func TestUnitDiscoveryAuthorizationMetadataPropagates(t *testing.T) {
 	t.Parallel()
 	expected := metadata(403)
 	adapter := configapi.New(doFunc(func(context.Context, client.Request, any) (*resty.Response, error) {
@@ -108,7 +108,7 @@ func TestDiscoveryAuthorizationMetadataPropagates(t *testing.T) {
 	}
 }
 
-func TestQueuedDiscoveryRespectsCancellation(t *testing.T) {
+func TestUnitQueuedDiscoveryRespectsCancellation(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		started := make(chan struct{})
 		release := make(chan struct{})

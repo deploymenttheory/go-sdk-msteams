@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
 )
 
-func TestCallParkCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
+func TestUnitCallParkCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -56,7 +56,7 @@ func TestCallParkCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallParkGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
+func TestUnitCallParkGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -85,7 +85,7 @@ func TestCallParkGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallParkGrantRankAndSparseGlobalComposition(t *testing.T) {
+func TestUnitCallParkGrantRankAndSparseGlobalComposition(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, rank := range []int32{0, 2, -1} {

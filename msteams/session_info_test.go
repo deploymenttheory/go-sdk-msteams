@@ -14,7 +14,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestSessionInformationAndCloseRemainClientLocal(t *testing.T) {
+func TestUnitSessionInformationAndCloseRemainClientLocal(t *testing.T) {
 	t.Parallel()
 	configs := []*auth.Config{
 		{Method: auth.SuppliedTokens, TenantID: "tenant-a", IdentityID: "identity-a", TokenMode: auth.Application, AccessTokens: map[string]auth.Token{auth.GraphAudience: {AccessToken: "fixture-a", ExpiresAt: time.Now().Add(time.Hour)}}},
@@ -81,7 +81,7 @@ func TestSessionInformationAndCloseRemainClientLocal(t *testing.T) {
 	}
 }
 
-func TestSessionInfoIsLazyAndNilSafe(t *testing.T) {
+func TestUnitSessionInfoIsLazyAndNilSafe(t *testing.T) {
 	t.Parallel()
 	var sdk *msteams.Client
 	if _, err := sdk.SessionInfo(); !errors.Is(err, client.ErrClosed) {

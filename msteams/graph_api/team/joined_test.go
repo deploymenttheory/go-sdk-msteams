@@ -9,7 +9,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestJoinedTeamsArePagedBasicProjectionsWithoutInitialOData(t *testing.T) {
+func TestUnitJoinedTeamsArePagedBasicProjectionsWithoutInitialOData(t *testing.T) {
 	t.Parallel()
 	path := "/v1.0/users/" + userID + "/joinedTeams"
 	next := "https://graph.microsoft.com" + path + "?$skiptoken=opaque%2B%2F%3D"
@@ -22,7 +22,7 @@ func TestJoinedTeamsArePagedBasicProjectionsWithoutInitialOData(t *testing.T) {
 	}
 }
 
-func TestJoinedTeamsRejectInvalidBoundsAndSuccessfulNon200(t *testing.T) {
+func TestUnitJoinedTeamsRejectInvalidBoundsAndSuccessfulNon200(t *testing.T) {
 	t.Parallel()
 	sdk, provider, _ := fixture(t, "commercial", auth.Application)
 	if _, err := sdk.GraphAPI.Teams.NewJoinedPager("../private", client.PagingOptions{}); !errors.Is(err, client.ErrRequest) {

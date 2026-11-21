@@ -13,7 +13,7 @@ import (
 	management "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_user_management"
 )
 
-func TestPrivateUPNFailurePreventsMembershipReadsAndWrites(t *testing.T) {
+func TestUnitPrivateUPNFailurePreventsMembershipReadsAndWrites(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string
@@ -31,7 +31,7 @@ func TestPrivateUPNFailurePreventsMembershipReadsAndWrites(t *testing.T) {
 	}
 }
 
-func TestSharedNullEmailAndTenantSelectionUseReturnedMembership(t *testing.T) {
+func TestUnitSharedNullEmailAndTenantSelectionUseReturnedMembership(t *testing.T) {
 	t.Parallel()
 	first := `{"id":"first","userId":"` + userID + `","email":null,"tenantId":"` + teamID + `","roles":[]}`
 	second := `{"id":"second","userId":"` + userID + `","email":null,"tenantId":"` + tenantID + `","roles":[]}`

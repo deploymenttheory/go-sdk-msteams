@@ -13,7 +13,7 @@ import (
 	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
 )
 
-func TestListReturnsOneNativePageWithoutImplicitTraversal(t *testing.T) {
+func TestUnitListReturnsOneNativePageWithoutImplicitTraversal(t *testing.T) {
 	t.Parallel()
 	next := auth.GraphAudience + "/v1.0/teams/" + teamID + "/members?$skiptoken=opaque%2B%2F%3D"
 	query := url.Values{"$filter": {"roles/any(r:r eq 'owner')"}, "$select": {"id,roles,userId"}, "$top": {"999"}}
@@ -37,7 +37,7 @@ func listObservation(result client.ListResult[teammember.Member], err error) con
 	return contracttest.Observation{Value: map[string]any{"ids": ids, "pages": result.Pages}, Response: result.Response, Err: err}
 }
 
-func TestListAllOpaquePagingAndFrozenOptions(t *testing.T) {
+func TestUnitListAllOpaquePagingAndFrozenOptions(t *testing.T) {
 	t.Parallel()
 	path := "/v1.0/teams/" + teamID + "/members"
 	next := auth.GraphAudience + path + "?$skiptoken=opaque%2B%2F%3D&$select=id%2CuserId"
@@ -56,7 +56,7 @@ func TestListAllOpaquePagingAndFrozenOptions(t *testing.T) {
 		}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"ids":["opaque-1"],"pages":2}`)}})
 }
 
-func TestListAllPreservesPartialResultsOnFailureAndLimits(t *testing.T) {
+func TestUnitListAllPreservesPartialResultsOnFailureAndLimits(t *testing.T) {
 	t.Parallel()
 	path := "/v1.0/teams/" + teamID + "/members"
 	for _, tc := range []struct {
@@ -90,7 +90,7 @@ func TestListAllPreservesPartialResultsOnFailureAndLimits(t *testing.T) {
 	})
 }
 
-func TestListRejectsMalformedCollectionsAndPreservesResponse(t *testing.T) {
+func TestUnitListRejectsMalformedCollectionsAndPreservesResponse(t *testing.T) {
 	t.Parallel()
 	for _, body := range []string{`{}`, `null`, `{"value":null}`, `{"value":[null]}`, `{"value":[{"userId":"directory-only"}]}`, `{"value":[],"@odata.nextLink":7}`} {
 		nativeCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/teams/"+teamID+"/members", "", 200, body)},
@@ -101,7 +101,7 @@ func TestListRejectsMalformedCollectionsAndPreservesResponse(t *testing.T) {
 	}
 }
 
-func TestCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
+func TestUnitCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, action := range []string{"get", "create", "update", "delete", "list", "all", "closed", "wrong-backend", "invalid-team", "invalid-user", "invalid-projection", "invalid-style", "invalid-status", "invalid-limit", "nil-service"} {
 		t.Run(action, func(t *testing.T) {
@@ -162,7 +162,7 @@ func TestCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
 	}
 }
 
-func TestListAllRejectsUnexpectedSuccessfulStatus(t *testing.T) {
+func TestUnitListAllRejectsUnexpectedSuccessfulStatus(t *testing.T) {
 	t.Parallel()
 	for _, status := range []int{202, 206} {
 		nativeCase(t, contracttest.Case{Name: "unexpected-status", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/teams/"+teamID+"/members", "", status, `{"value":[{"id":"opaque"}]}`)},

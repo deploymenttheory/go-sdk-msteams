@@ -72,7 +72,7 @@ func equalJSON(t *testing.T, got any, want json.RawMessage) {
 func configurationDTO(v *Configuration) map[string]any {
 	return map[string]any{"Identity": v.Identity, "Prompts": project(v.Prompts, promptDTO), "Packages": project(v.Packages, packageDTO)}
 }
-func TestPinnedPromptModels(t *testing.T) {
+func TestUnitPinnedPromptModels(t *testing.T) {
 	for i, c := range readModels(t).Models {
 		t.Run(c.Kind+"/"+c.Input, func(t *testing.T) {
 			var got any
@@ -112,7 +112,7 @@ func TestPinnedPromptModels(t *testing.T) {
 		})
 	}
 }
-func TestPinnedPromptConstructors(t *testing.T) {
+func TestUnitPinnedPromptConstructors(t *testing.T) {
 	for _, c := range readModels(t).Constructors {
 		t.Run(c.Kind+"/"+c.Name, func(t *testing.T) {
 			if c.NullID || c.NullTypeOrLocale || c.Kind == "prompt" && c.NullLocale {
@@ -196,7 +196,7 @@ func packageCase(name string, removed, other *PromptPackage) *PackageEdit {
 		return ChangePackages(nil, []*PromptPackage{removed})
 	}
 }
-func TestPinnedPromptAndPackageEdits(t *testing.T) {
+func TestUnitPinnedPromptAndPackageEdits(t *testing.T) {
 	for _, c := range readModels(t).Lists {
 		t.Run(c.Kind+"/"+c.Name, func(t *testing.T) {
 			var got any
@@ -262,7 +262,7 @@ func TestPinnedPromptAndPackageEdits(t *testing.T) {
 		})
 	}
 }
-func TestEditsOwnNestedDataAndRawSnapshots(t *testing.T) {
+func TestUnitEditsOwnNestedDataAndRawSnapshots(t *testing.T) {
 	raw := []byte(`{"Id":"11111111-1111-1111-1111-111111111111","InboundStartRecordingPrompt":["first",null],"Future":{"keep":false}}`)
 	var v PromptPackage
 	if json.Unmarshal(raw, &v) != nil {
@@ -301,7 +301,7 @@ func TestEditsOwnNestedDataAndRawSnapshots(t *testing.T) {
 		t.Fatal("zero edit accepted")
 	}
 }
-func TestRawDuplicatesAndTypedArraysStayIndependent(t *testing.T) {
+func TestUnitRawDuplicatesAndTypedArraysStayIndependent(t *testing.T) {
 	raw := []byte(`{"Prompts":[{}],"prompts":[{}],"Packages":[{"InboundStartRecordingPrompt":["a"],"InboundStartRecordingPrompt":["b"]}],"Future":false}`)
 	original := append([]byte(nil), raw...)
 	var v Configuration

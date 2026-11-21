@@ -99,7 +99,7 @@ func evidence(t *testing.T, name string, results []contracttest.Result) {
 	}
 }
 
-func TestAddCompositionStagesAndCorrectedPreflight(t *testing.T) {
+func TestUnitAddCompositionStagesAndCorrectedPreflight(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -127,7 +127,7 @@ func TestAddCompositionStagesAndCorrectedPreflight(t *testing.T) {
 	evidence(t, "team-user-add-service.json", results)
 }
 
-func TestAddCompletePreflightAndResolvedIdentity(t *testing.T) {
+func TestUnitAddCompletePreflightAndResolvedIdentity(t *testing.T) {
 	t.Parallel()
 	next := auth.GraphAudience + "/v1.0/groups/" + groupID + "/members?$skiptoken=next"
 	for _, tc := range []struct {
@@ -156,7 +156,7 @@ func TestAddCompletePreflightAndResolvedIdentity(t *testing.T) {
 		Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + userID + `","resolution":"direct","stages":["resolve-user:succeeded","read-members:succeeded","add-member-reference:skipped"]}`)}})
 }
 
-func TestRemoveCompositionPreservesLastOwnerAndPartialWrites(t *testing.T) {
+func TestUnitRemoveCompositionPreservesLastOwnerAndPartialWrites(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	owners := `{"value":[{"id":"` + userID + `"},{"id":"` + otherID + `"}]}`
@@ -185,7 +185,7 @@ func TestRemoveCompositionPreservesLastOwnerAndPartialWrites(t *testing.T) {
 	evidence(t, "team-user-remove-service.json", results)
 }
 
-func TestRemoveReadsAllOwnersBeforeLastOwnerGuard(t *testing.T) {
+func TestUnitRemoveReadsAllOwnersBeforeLastOwnerGuard(t *testing.T) {
 	t.Parallel()
 	next := auth.GraphAudience + "/v1.0/groups/" + groupID + "/owners?$skiptoken=next"
 	runCase(t, "Remove-TeamUser", contracttest.Case{Name: "last-owner-after-all-pages", Steps: []contracttest.Exchange{
@@ -197,7 +197,7 @@ func TestRemoveReadsAllOwnersBeforeLastOwnerGuard(t *testing.T) {
 		Want: contracttest.Expected{Status: 204, JSON: json.RawMessage(`{"id":"` + userID + `","resolution":"identifier","stages":["resolve-user:succeeded","read-owners:succeeded","check-last-owner:succeeded","remove-owner-reference:succeeded"]}`)}})
 }
 
-func TestCompositionInvalidInputAndCancellationAreLocal(t *testing.T) {
+func TestUnitCompositionInvalidInputAndCancellationAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, method := range []string{"add", "remove", "list"} {
 		for _, condition := range []string{"bad-role", "bad-group", "bad-limits", "cancelled", "closed", "nil-service"} {

@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_calling_policy"
 )
 
-func TestCallingPolicyGrantRequiresOneExplicitScope(t *testing.T) {
+func TestUnitCallingPolicyGrantRequiresOneExplicitScope(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -30,7 +30,7 @@ func TestCallingPolicyGrantRequiresOneExplicitScope(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallingPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
+func TestUnitCallingPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCallingPolicies
@@ -96,7 +96,7 @@ func TestCallingPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestCallingPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitCallingPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "patch", "delete", "user", "group", "tenant"} {

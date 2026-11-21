@@ -16,7 +16,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team"
 )
 
-func TestCreateBindsUsersAndTemplatesToSelectedCloud(t *testing.T) {
+func TestUnitCreateBindsUsersAndTemplatesToSelectedCloud(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -50,7 +50,7 @@ func TestCreateBindsUsersAndTemplatesToSelectedCloud(t *testing.T) {
 	}
 }
 
-func TestDelegatedCreateCanOmitMembers(t *testing.T) {
+func TestUnitDelegatedCreateCanOmitMembers(t *testing.T) {
 	t.Parallel()
 	sdk, _, _ := fixture(t, "commercial", auth.Delegated, exchange{method: "POST", path: "/v1.0/teams", json: `{"template@odata.bind":"https://graph.microsoft.com/v1.0/teamsTemplates('educationClass')","displayName":"fixture"}`, status: 202,
 		header: http.Header{"Location": {"https://graph.microsoft.com/v1.0/teams/" + teamID + "/operations/" + opID}}})
@@ -60,7 +60,7 @@ func TestDelegatedCreateCanOmitMembers(t *testing.T) {
 	}
 }
 
-func TestCreateValidationDoesNotAcquireTokens(t *testing.T) {
+func TestUnitCreateValidationDoesNotAcquireTokens(t *testing.T) {
 	t.Parallel()
 	sdk, p, _ := fixture(t, "commercial", auth.Application)
 	for _, value := range []team.CreateRequest{
@@ -77,7 +77,7 @@ func TestCreateValidationDoesNotAcquireTokens(t *testing.T) {
 	}
 }
 
-func TestAcceptedOperationRejectsUnsafeLocationsWithoutLosingResponse(t *testing.T) {
+func TestUnitAcceptedOperationRejectsUnsafeLocationsWithoutLosingResponse(t *testing.T) {
 	t.Parallel()
 	for i, location := range []string{
 		"", "https://foreign.invalid/v1.0/teams/" + teamID + "/operations/" + opID,
@@ -102,7 +102,7 @@ func TestAcceptedOperationRejectsUnsafeLocationsWithoutLosingResponse(t *testing
 	}
 }
 
-func TestArchiveAndUnarchiveWireBodies(t *testing.T) {
+func TestUnitArchiveAndUnarchiveWireBodies(t *testing.T) {
 	t.Parallel()
 	falseValue := false
 	header := http.Header{"Location": {"/v1.0/teams/" + teamID + "/operations/" + opID}}
@@ -122,7 +122,7 @@ func TestArchiveAndUnarchiveWireBodies(t *testing.T) {
 	}
 }
 
-func TestArchiveSharePointOptionIsRejectedInApplicationMode(t *testing.T) {
+func TestUnitArchiveSharePointOptionIsRejectedInApplicationMode(t *testing.T) {
 	t.Parallel()
 	sdk, p, _ := fixture(t, "commercial", auth.Application)
 	for _, value := range []bool{true, false} {
@@ -135,7 +135,7 @@ func TestArchiveSharePointOptionIsRejectedInApplicationMode(t *testing.T) {
 	}
 }
 
-func TestAcceptedOperationHonorsRetryAfterAndDoesNotPollImplicitly(t *testing.T) {
+func TestUnitAcceptedOperationHonorsRetryAfterAndDoesNotPollImplicitly(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		statusPath := "/v1.0/teams/" + teamID + "/operations/" + opID
 		sdk, _, calls := fixture(t, "commercial", auth.Application,
@@ -156,7 +156,7 @@ func TestAcceptedOperationHonorsRetryAfterAndDoesNotPollImplicitly(t *testing.T)
 	})
 }
 
-func TestResumedOperationWaitUsesGraphCadence(t *testing.T) {
+func TestUnitResumedOperationWaitUsesGraphCadence(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		path := "/v1.0/teams/" + teamID + "/operations/" + opID
 		sdk, _, _ := fixture(t, "commercial", auth.Application,
@@ -175,7 +175,7 @@ func TestResumedOperationWaitUsesGraphCadence(t *testing.T) {
 	})
 }
 
-func TestOperationFailureUnknownStateAndIdentityMismatch(t *testing.T) {
+func TestUnitOperationFailureUnknownStateAndIdentityMismatch(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string
@@ -203,7 +203,7 @@ func TestOperationFailureUnknownStateAndIdentityMismatch(t *testing.T) {
 	}
 }
 
-func TestCancelledWaitPreservesAcceptedOperation(t *testing.T) {
+func TestUnitCancelledWaitPreservesAcceptedOperation(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		sdk, _, calls := fixture(t, "commercial", auth.Application, exchange{method: "POST", path: "/v1.0/teams/" + teamID + "/unarchive", status: 202,
 			header: http.Header{"Location": {"/v1.0/teams/" + teamID + "/operations/" + opID}}})
@@ -218,7 +218,7 @@ func TestCancelledWaitPreservesAcceptedOperation(t *testing.T) {
 	})
 }
 
-func TestOperationSubmissionIsNeverReplayed(t *testing.T) {
+func TestUnitOperationSubmissionIsNeverReplayed(t *testing.T) {
 	t.Parallel()
 	for _, action := range []string{"create", "archive", "unarchive"} {
 		t.Run(action, func(t *testing.T) {

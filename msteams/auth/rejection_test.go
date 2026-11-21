@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func TestRejectedTokenRefreshCoalescesAndKeepsOtherAudiences(t *testing.T) {
+func TestUnitRejectedTokenRefreshCoalescesAndKeepsOtherAudiences(t *testing.T) {
 	binding := Binding{TenantID: "fixture", Cloud: "commercial", IdentityID: "fixture-app", Mode: Application}
 	var grants atomic.Int32
 	provider, err := NewRefreshProvider(binding, func(ctx context.Context, r TokenRequest) (Token, error) {

@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_packages"
 )
 
-func TestPackageDocumentedApplicationRestrictionBeforeCredentials(t *testing.T) {
+func TestUnitPackageDocumentedApplicationRestrictionBeforeCredentials(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod"} {
@@ -32,7 +32,7 @@ func TestPackageDocumentedApplicationRestrictionBeforeCredentials(t *testing.T) 
 	evidence(t, results)
 }
 
-func TestPackageInputContextAndBackendBeforeCredentials(t *testing.T) {
+func TestUnitPackageInputContextAndBackendBeforeCredentials(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "input-context-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.PolicyPackages
@@ -80,7 +80,7 @@ func TestPackageInputContextAndBackendBeforeCredentials(t *testing.T) {
 	evidence(t, []contracttest.Result{r})
 }
 
-func TestPackageMutationErrorsKeepDataAndNeverReplay(t *testing.T) {
+func TestUnitPackageMutationErrorsKeepDataAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, row := range captures(t) {
@@ -113,7 +113,7 @@ func TestPackageMutationErrorsKeepDataAndNeverReplay(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestPackageDiscoveryFailureIsNotBusinessResponse(t *testing.T) {
+func TestUnitPackageDiscoveryFailureIsNotBusinessResponse(t *testing.T) {
 	t.Parallel()
 	step := discovery()
 	step.Reply.Status = 403
@@ -128,7 +128,7 @@ func TestPackageDiscoveryFailureIsNotBusinessResponse(t *testing.T) {
 	evidence(t, []contracttest.Result{run(t, c)})
 }
 
-func TestPackageGroupDefaultRankingsMatchExportedWrapper(t *testing.T) {
+func TestUnitPackageGroupDefaultRankingsMatchExportedWrapper(t *testing.T) {
 	t.Parallel()
 	f := captured{Method: "POST", URL: origin + "/Teams.VerticalPackaging/package/group", Body: []byte(`{"GroupId":"fixture/group","PolicyRankings":[]}`), Status: 200, Reply: `{}`}
 	c := contracttest.Case{Name: "group-default-rankings", Source: "contracts/endpoints/8.1.0/fixtures/policy-package-binding.json", Mappings: mapping("group-assign"), Steps: []contracttest.Exchange{discovery(), wire(f, "Grant-CsGroupPolicyPackageAssignment")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {

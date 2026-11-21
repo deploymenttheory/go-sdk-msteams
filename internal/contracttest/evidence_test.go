@@ -13,7 +13,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 )
 
-func TestWriteEvidence(t *testing.T) {
+func TestUnitWriteEvidence(t *testing.T) {
 	t.Parallel()
 	c := graphCase()
 	c.Name = "retains-unknown-fields"
@@ -61,7 +61,7 @@ func TestWriteEvidence(t *testing.T) {
 	}
 }
 
-func TestWriteEvidenceOmitsBinaryPayloads(t *testing.T) {
+func TestUnitWriteEvidenceOmitsBinaryPayloads(t *testing.T) {
 	t.Parallel()
 	payload := []byte("private-binary-canary\x00\xff")
 	c := binaryCase(payload)
@@ -89,7 +89,7 @@ type rejectedWriter struct{}
 
 func (rejectedWriter) Write([]byte) (int, error) { return 0, errors.New("private-writer-diagnostic") }
 
-func TestWriteEvidenceRejectsInvalidOrUnexecutedRuns(t *testing.T) {
+func TestUnitWriteEvidenceRejectsInvalidOrUnexecutedRuns(t *testing.T) {
 	t.Parallel()
 	result := requirePass(t, graphCase())
 	for _, tc := range []struct {
@@ -115,7 +115,7 @@ func TestWriteEvidenceRejectsInvalidOrUnexecutedRuns(t *testing.T) {
 	}
 }
 
-func TestRunDoesNotReadEnvironmentCredentials(t *testing.T) {
+func TestUnitRunDoesNotReadEnvironmentCredentials(t *testing.T) {
 	// Deliberately non-parallel: environment changes are process-scoped. The
 	// callback invokes the real SDK scope, not just a no-op constructor.
 	t.Setenv("MSTEAMS_AUTH_METHOD", "not-a-method")
@@ -131,7 +131,7 @@ func TestRunDoesNotReadEnvironmentCredentials(t *testing.T) {
 	}
 }
 
-func TestRunLocalCaseRejectsCredentialAcquisition(t *testing.T) {
+func TestUnitRunLocalCaseRejectsCredentialAcquisition(t *testing.T) {
 	t.Parallel()
 	c := graphCase()
 	c.Name, c.Scope, c.Steps = "invalid-local-auth", "local", []Exchange{}

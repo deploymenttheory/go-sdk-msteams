@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-func TestCapabilityMatrixCoversPinnedInventory(t *testing.T) {
+func TestUnitCapabilityMatrixCoversPinnedInventory(t *testing.T) {
 	t.Parallel()
 	data, err := os.ReadFile("../../contracts/powershell/8.1.0/reconciliation.json")
 	if err != nil {
@@ -52,7 +52,7 @@ func TestCapabilityMatrixCoversPinnedInventory(t *testing.T) {
 	}
 }
 
-func TestEveryDocumentedRestrictionAndCloud(t *testing.T) {
+func TestUnitEveryDocumentedRestrictionAndCloud(t *testing.T) {
 	t.Parallel()
 	catalog, err := NewCatalog()
 	if err != nil {
@@ -108,7 +108,7 @@ func TestEveryDocumentedRestrictionAndCloud(t *testing.T) {
 	}
 }
 
-func TestCapabilityReportingDoesNotInferAuthorization(t *testing.T) {
+func TestUnitCapabilityReportingDoesNotInferAuthorization(t *testing.T) {
 	t.Parallel()
 	catalog, err := NewCatalog()
 	if err != nil {

@@ -53,7 +53,7 @@ func comparePowerShellTeamUsers(t *testing.T, ctx context.Context, sdk *msteams.
 	t.Log("PowerShell 8.1.0 / Go team-user projection: passed")
 }
 
-func TestTeamUserOracleComparesUniqueCollectionsWithoutAssumingServerOrder(t *testing.T) {
+func TestUnitTeamUserOracleComparesUniqueCollectionsWithoutAssumingServerOrder(t *testing.T) {
 	t.Parallel()
 	first := teamOracleUser{ID: "11111111-1111-4111-8111-111111111111", Role: "owner"}
 	second := teamOracleUser{ID: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", Role: "member"}

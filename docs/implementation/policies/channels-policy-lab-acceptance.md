@@ -1,6 +1,6 @@
 # Teams channels policy lab acceptance
 
-On 2026-11-21, the opt-in TestLabChannelsPolicyReadOnly attempted a compiled
+On 2026-11-21, the opt-in TestAccChannelsPolicyReadOnly attempted a compiled
 TeamsChannelsPolicy Global read with the dedicated SPN, using client-secret and
 certificate authentication. Both actual resource reads returned HTTP 403.
 No response payload, tenant/client identifier or credential was retained in the

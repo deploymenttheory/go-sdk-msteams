@@ -33,7 +33,7 @@ func listed(value management.ListResult, err error) contracttest.Observation {
 	return contracttest.Observation{Value: map[string]any{"complete": value.Complete, "members": len(value.Members), "items": rows}, Response: value.Response, Err: err}
 }
 
-func TestListRoleOrderPresenceAndPagedEnrichment(t *testing.T) {
+func TestUnitListRoleOrderPresenceAndPagedEnrichment(t *testing.T) {
 	t.Parallel()
 	ownerID, guestID := teamID, tenantID
 	rosterJSON := `{"value":[` +
@@ -57,7 +57,7 @@ func TestListRoleOrderPresenceAndPagedEnrichment(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestRoleFilterPrecedesEnrichment(t *testing.T) {
+func TestUnitRoleFilterPrecedesEnrichment(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct{ name, role, id string }{
@@ -74,7 +74,7 @@ func TestRoleFilterPrecedesEnrichment(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestEnrichmentChunksDistinctIDsAndStillRefreshesExistingUPNs(t *testing.T) {
+func TestUnitEnrichmentChunksDistinctIDsAndStillRefreshesExistingUPNs(t *testing.T) {
 	t.Parallel()
 	ids := make([]string, 11)
 	rows := make([]string, 12)
@@ -95,7 +95,7 @@ func TestEnrichmentChunksDistinctIDsAndStillRefreshesExistingUPNs(t *testing.T) 
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestEnrichmentFailureNeverProducesACompleteList(t *testing.T) {
+func TestUnitEnrichmentFailureNeverProducesACompleteList(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -125,7 +125,7 @@ func TestEnrichmentFailureNeverProducesACompleteList(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestEmptyFilteredListDoesNotQueryDirectoryAndInvalidOptionsAreLocal(t *testing.T) {
+func TestUnitEmptyFilteredListDoesNotQueryDirectoryAndInvalidOptionsAreLocal(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "empty-filter", Steps: []contracttest.Exchange{channelRead("private"), roster()}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		return listed(sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{Role: management.Owner}))

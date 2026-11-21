@@ -51,7 +51,7 @@ records the operations and absent Create/Delete contract. The documented
 Global-only instance and the helper's open identity forwarding are distinguished;
 the Go primitive requires an explicit identity or named UpdateGlobal operation.
 
-`TestLabApplicationMeetingConfigurationReadOnly` is prepared and unrun. It checks
+`TestAccApplicationMeetingConfigurationReadOnly` is prepared and unrun. It checks
 Global item/filtered-list observations and optionally compares Identity/string
 AppIDs with the pinned certificate-authenticated PowerShell read. Its opt-in gate
 runs before credential access; child output is bounded, transient and never

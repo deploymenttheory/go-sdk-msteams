@@ -11,7 +11,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
 )
 
-func TestPinnedVoicemailDurationModelObservations(t *testing.T) {
+func TestUnitPinnedVoicemailDurationModelObservations(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/voicemail-models.json")
 	if err != nil {
@@ -52,7 +52,7 @@ func TestPinnedVoicemailDurationModelObservations(t *testing.T) {
 	}
 }
 
-func TestTimeSpanBoundsAndSubTickPrecision(t *testing.T) {
+func TestUnitTimeSpanBoundsAndSubTickPrecision(t *testing.T) {
 	t.Parallel()
 	for _, value := range []string{"10675199.02:48:05.4775808", "-10675199.02:48:05.4775809", "999999999999999999999999.00:00:00", "00:60:00", "24:00:00", "00:00:60", "PT90S", "90", "00:00:00.00000001", ""} {
 		if _, err := resource.ParseTimeSpanConstant(value); err == nil {
@@ -77,7 +77,7 @@ func TestTimeSpanBoundsAndSubTickPrecision(t *testing.T) {
 	}
 }
 
-func TestVoicemailSnapshotsPreserveAbsenceNullAndFutureFields(t *testing.T) {
+func TestUnitVoicemailSnapshotsPreserveAbsenceNullAndFutureFields(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"Identity":"Fixture","Future":false}`, `{"Identity":"Fixture","MaximumRecordingLength":null,"ShareData":"FutureValue","EnableTranscription":false,"Future":{"value":[]}}`} {
 		var value resource.Policy

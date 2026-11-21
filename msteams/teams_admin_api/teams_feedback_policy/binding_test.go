@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 )
 
-func TestFeedbackPolicyCapturedCompiledBindings(t *testing.T) {
+func TestUnitFeedbackPolicyCapturedCompiledBindings(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + bindingSource)
 	if e != nil {

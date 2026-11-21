@@ -63,7 +63,7 @@ func archiveExpected(requested bool, before, after string, accepted, confirmed b
 
 const beforeStages = `"read-group:succeeded","read-team:succeeded","check-archived-state:succeeded"`
 
-func TestArchivedStateWaitsAndConfirmsReadback(t *testing.T) {
+func TestUnitArchivedStateWaitsAndConfirmsReadback(t *testing.T) {
 	var results []contracttest.Result
 	for _, name := range []string{"archive-explicit-false", "archive-omitted", "unarchive"} {
 		synctest.Test(t, func(t *testing.T) {
@@ -97,7 +97,7 @@ func TestArchivedStateWaitsAndConfirmsReadback(t *testing.T) {
 	evidence(t, "team-archive-service.json", results)
 }
 
-func TestArchivePrechecksRejectUnchangedOrUnknownState(t *testing.T) {
+func TestUnitArchivePrechecksRejectUnchangedOrUnknownState(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, before string
@@ -114,7 +114,7 @@ func TestArchivePrechecksRejectUnchangedOrUnknownState(t *testing.T) {
 	}
 }
 
-func TestArchiveTimeoutAndFailureRetainRemoteOperation(t *testing.T) {
+func TestUnitArchiveTimeoutAndFailureRetainRemoteOperation(t *testing.T) {
 	for _, tc := range []struct {
 		name, state string
 		timeout     time.Duration
@@ -160,7 +160,7 @@ func TestArchiveTimeoutAndFailureRetainRemoteOperation(t *testing.T) {
 	}
 }
 
-func TestSuccessfulOperationDoesNotFabricateArchiveReadback(t *testing.T) {
+func TestUnitSuccessfulOperationDoesNotFabricateArchiveReadback(t *testing.T) {
 	for _, state := range []string{"false", "null"} {
 		synctest.Test(t, func(t *testing.T) {
 			submit := submission(t, true)
@@ -175,7 +175,7 @@ func TestSuccessfulOperationDoesNotFabricateArchiveReadback(t *testing.T) {
 	}
 }
 
-func TestArchiveWaitCanResumeUnderNewContextWithoutRepeatingAction(t *testing.T) {
+func TestUnitArchiveWaitCanResumeUnderNewContextWithoutRepeatingAction(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		submit := submission(t, true)
 		submit.Request.JSON = nil
@@ -204,7 +204,7 @@ func TestArchiveWaitCanResumeUnderNewContextWithoutRepeatingAction(t *testing.T)
 	})
 }
 
-func TestArchiveCancellationAndClosePreserveAcceptance(t *testing.T) {
+func TestUnitArchiveCancellationAndClosePreserveAcceptance(t *testing.T) {
 	for _, shutdown := range []bool{false, true} {
 		synctest.Test(t, func(t *testing.T) {
 			submit := submission(t, true)
@@ -241,7 +241,7 @@ func TestArchiveCancellationAndClosePreserveAcceptance(t *testing.T) {
 	}
 }
 
-func TestArchiveValidationStopsBeforeAnyReadOrWrite(t *testing.T) {
+func TestUnitArchiveValidationStopsBeforeAnyReadOrWrite(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"unarchive-spo-false", "application-spo-false", "negative-timeout", "negative-interval", "negative-polls", "propagation-not-evidenced"} {
 		mode := auth.Delegated
@@ -280,7 +280,7 @@ func TestArchiveValidationStopsBeforeAnyReadOrWrite(t *testing.T) {
 	}
 }
 
-func TestArchiveFailureStopsLaterStagesAndNeverResubmits(t *testing.T) {
+func TestUnitArchiveFailureStopsLaterStagesAndNeverResubmits(t *testing.T) {
 	for _, phase := range []string{"group-preread", "team-preread", "submit-forbidden", "unsafe-handle", "poll-not-found", "group-readback", "team-readback"} {
 		synctest.Test(t, func(t *testing.T) {
 			submit := submission(t, true)

@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestVoicemailInvalidInputAndContextFailBeforeTokens(t *testing.T) {
+func TestUnitVoicemailInvalidInputAndContextFailBeforeTokens(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "invalid-input-and-scope", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.OnlineVoicemailPolicies
@@ -69,7 +69,7 @@ func TestVoicemailInvalidInputAndContextFailBeforeTokens(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestVoicemailWriteDenialsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitVoicemailWriteDenialsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "delete", "group"} {

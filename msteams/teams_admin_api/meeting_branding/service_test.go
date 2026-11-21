@@ -59,7 +59,7 @@ func settings(t *testing.T, nested bool) resource.Settings {
 	return resource.Settings{Fields: fields, MeetingBackgroundImages: images, MeetingBrandingThemes: themes, NDIAssuranceSlateImages: slates}
 }
 
-func TestBrandingPinnedProviderRequests(t *testing.T) {
+func TestUnitBrandingPinnedProviderRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captured(t) {

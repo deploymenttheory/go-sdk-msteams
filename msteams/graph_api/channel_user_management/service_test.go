@@ -97,7 +97,7 @@ func changed(value management.ChangeResult, err error) contracttest.Observation 
 	return contracttest.Observation{Value: map[string]any{"channel": value.ChannelID, "user": value.UserID, "membership": value.MembershipID, "actions": actions, "states": states}, Response: value.Response, Err: err}
 }
 
-func TestAddRemoveAndOwnerCompositions(t *testing.T) {
+func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -170,7 +170,7 @@ func TestAddRemoveAndOwnerCompositions(t *testing.T) {
 
 func stringPointer(value string) *string { return &value }
 
-func TestFailuresStopBeforeFurtherChanges(t *testing.T) {
+func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, action := range []string{"create", "promote", "demote", "delete"} {
@@ -227,7 +227,7 @@ func TestFailuresStopBeforeFurtherChanges(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestLocalValidationAndStandardGuard(t *testing.T) {
+func TestUnitLocalValidationAndStandardGuard(t *testing.T) {
 	t.Parallel()
 	for _, action := range []string{"add", "remove"} {
 		t.Run(action+"-standard", func(t *testing.T) {

@@ -9,7 +9,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 )
 
-func TestCallHoldDiscoveryCannotEstablishAssignmentAcceptance(t *testing.T) {
+func TestUnitCallHoldDiscoveryCannotEstablishAssignmentAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, reply := range []string{`{"Endpoints":{"AdminServiceEndpoint":"forest.fixture.invalid"}}`, "not-json"} {

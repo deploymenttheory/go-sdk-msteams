@@ -131,9 +131,9 @@ func membershipLabConfig(t *testing.T) lab.Config {
 	return cfg
 }
 
-// TestLabTeamMembershipCRUD creates one disposable team. It is never run by
+// TestAccTeamMembershipCRUD creates one disposable team. It is never run by
 // normal CI and cannot accept a pre-existing team ID as its mutation target.
-func TestLabTeamMembershipCRUD(t *testing.T) {
+func TestAccTeamMembershipCRUD(t *testing.T) {
 	cfg := membershipLabConfig(t)
 	_ = teamOracleEnabled(t) // Validate the optional oracle before fixture writes.
 	sdk, binding, _ := labSDKClient(t)
@@ -353,9 +353,9 @@ func observeReferences(ctx context.Context, sdk *msteams.Client, teamID, userID 
 	})
 }
 
-// TestLabRecoverTeamMembership only reopens an explicit private journal under the
+// TestAccRecoverTeamMembership only reopens an explicit private journal under the
 // same tenant/cloud/app binding. Denied/absent/ambiguous reads keep it unresolved.
-func TestLabRecoverTeamMembership(t *testing.T) {
+func TestAccRecoverTeamMembership(t *testing.T) {
 	cfg := membershipLabConfig(t)
 	sdk, binding, _ := labSDKClient(t)
 	file := os.Getenv("MSTEAMS_LAB_RECOVERY_JOURNAL")

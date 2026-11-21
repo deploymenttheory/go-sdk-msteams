@@ -17,7 +17,7 @@ import (
 func fixtureSettings() resource.Settings {
 	return resource.Settings{Description: new(""), AllowCallPark: new(false), ParkTimeoutSeconds: new(int64(0)), PickupRangeStart: new(int64(9007199254740993)), PickupRangeEnd: new(int64(9223372036854775807))}
 }
-func TestCallParkPinnedGeneratedRequests(t *testing.T) {
+func TestUnitCallParkPinnedGeneratedRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -124,7 +124,7 @@ func TestCallParkPinnedGeneratedRequests(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallParkModernFilterAndWhitespace(t *testing.T) {
+func TestUnitCallParkModernFilterAndWhitespace(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const reply = `[{"Identity":"Other"},{"Identity":"gLoBaL"},{"Identity":"Global"},{"Identity":"Tag:Global"},{"Identity":"Fixture"}]`

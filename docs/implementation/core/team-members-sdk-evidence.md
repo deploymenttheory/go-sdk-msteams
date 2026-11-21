@@ -103,7 +103,7 @@ links the prepared opt-in acceptance entry point without implying execution.
 Implementation stays `in-progress`, contract status stays `metadata-only`, and
 live status stays `not-run` pending evidence review and tenant qualification.
 
-Opt-in `TestLabTeamMembershipCRUD` and `TestLabRecoverTeamMembership` entry points
+Opt-in `TestAccTeamMembershipCRUD` and `TestAccRecoverTeamMembership` entry points
 are prepared for native CRUD/role observations and backing-reference compositions
 on a new disposable team. They require all three lab flags, same-tenant distinct
 user fixtures and a private bound recovery journal, and skip before loading

@@ -14,7 +14,7 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-func TestBannerComposedUpdateKeepsReadIDAndFailurePreparation(t *testing.T) {
+func TestUnitBannerComposedUpdateKeepsReadIDAndFailurePreparation(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const readID = "00000000-0000-4000-8000-000000000032"
@@ -56,7 +56,7 @@ func TestBannerComposedUpdateKeepsReadIDAndFailurePreparation(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestBannerComposedUpdateUsesNullableReadSelector(t *testing.T) {
+func TestUnitBannerComposedUpdateUsesNullableReadSelector(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {

@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
 )
 
-func TestAppPermissionUpdateRetainsPreparationAndAcceptance(t *testing.T) {
+func TestUnitAppPermissionUpdateRetainsPreparationAndAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -55,7 +55,7 @@ func TestAppPermissionUpdateRetainsPreparationAndAcceptance(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAppPermissionUpdatesEachReadonlyCatalogWithoutRawReplay(t *testing.T) {
+func TestUnitAppPermissionUpdatesEachReadonlyCatalogWithoutRawReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, field := range []string{"DefaultCatalogApps", "GlobalCatalogApps", "PrivateCatalogApps"} {
@@ -82,7 +82,7 @@ func TestAppPermissionUpdatesEachReadonlyCatalogWithoutRawReplay(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAppPermissionCatalogBuildersHaveNoCredentialsOrHTTP(t *testing.T) {
+func TestUnitAppPermissionCatalogBuildersHaveNoCredentialsOrHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-catalog-builders", Source: sourceModels, Invoke: func(_ context.Context, _ *msteams.Client) contracttest.Observation {
 		for _, id := range []string{"", " ", "future-app"} {

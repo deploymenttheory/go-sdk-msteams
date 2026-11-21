@@ -116,7 +116,7 @@ func invoke(ctx context.Context, sdk *msteams.Client, operation string, allow bo
 	}
 }
 
-func TestPinnedGPARequestHelper(t *testing.T) {
+func TestUnitPinnedGPARequestHelper(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + fixture)
 	if e != nil {
@@ -166,7 +166,7 @@ func TestPinnedGPARequestHelper(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestGPAEncodesSegmentsAndThresholdSeparately(t *testing.T) {
+func TestUnitGPAEncodesSegmentsAndThresholdSeparately(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct{ name, value, suffix string }{
@@ -190,7 +190,7 @@ func TestGPAEncodesSegmentsAndThresholdSeparately(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestGPAErrorsRetainHTTPStatusAndDoNotReplaySubmissions(t *testing.T) {
+func TestUnitGPAErrorsRetainHTTPStatusAndDoNotReplaySubmissions(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, op := range []string{"create", "clear"} {

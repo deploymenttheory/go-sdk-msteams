@@ -22,10 +22,10 @@ response, including when handle extraction fails. Server URLs are never inferred
 to be the channel itself. Future read fields and null/absent distinctions survive.
 Name and owner compositions use one overall session/caller deadline.
 
-`TestNativeCRUDContracts`, `TestCollectionsAndPaging`,
-`TestFailuresPreserveStatusAndDoNotReplayWrites`,
-`TestSharedCreationAndOperation`, `TestOwnerResolutionComposition` and
-`TestNameCompositionsUseCompleteUniqueLookup` exercise the real root client with
+`TestUnitNativeCRUDContracts`, `TestUnitCollectionsAndPaging`,
+`TestUnitFailuresPreserveStatusAndDoNotReplayWrites`,
+`TestUnitSharedCreationAndOperation`, `TestUnitOwnerResolutionComposition` and
+`TestUnitNameCompositionsUseCompleteUniqueLookup` exercise the real root client with
 synthetic credentials and an in-memory HTTP transport. Exact method/escaped
 path/query/selected headers/body/status and selected results are compared by
 the shared contract runner. Cases cover all six command mappings, genuine
@@ -40,7 +40,7 @@ the tested revision and case outcomes, `coverage_claim:false` and `live:not-run`
 The command ledger remains `in-progress`/`metadata-only`/`not-run`. No unknown
 runtime input or blocked lab case becomes a fabricated pass or generic stub.
 
-The gated `TestLabChannelCRUD` is prepared for an owned parent team and all
+The gated `TestAccChannelCRUD` is prepared for an owned parent team and all
 three channel types, with private journal recovery; it has not run. See
 [lab procedure](channel-lab-acceptance.md).
 

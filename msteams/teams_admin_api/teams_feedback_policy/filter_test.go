@@ -14,7 +14,7 @@ import (
 
 const bindingSource = "contracts/endpoints/8.1.0/fixtures/feedback-policy-binding.json"
 
-func TestFeedbackPolicyFiltersMatchCapturedSource(t *testing.T) {
+func TestUnitFeedbackPolicyFiltersMatchCapturedSource(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + bindingSource)
 	if e != nil {

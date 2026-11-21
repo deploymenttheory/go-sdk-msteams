@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_enhanced_encryption_policy"
 )
 
-func TestEnhancedEncryptionCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
+func TestUnitEnhancedEncryptionCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -56,7 +56,7 @@ func TestEnhancedEncryptionCreateRetainsSubmissionOnReadBackFailure(t *testing.T
 	evidence(t, results)
 }
 
-func TestEnhancedEncryptionGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
+func TestUnitEnhancedEncryptionGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -85,7 +85,7 @@ func TestEnhancedEncryptionGroupAcceptanceSurvivesOnlyActualPostResponses(t *tes
 	evidence(t, results)
 }
 
-func TestEnhancedEncryptionGrantRankAndSparseGlobalComposition(t *testing.T) {
+func TestUnitEnhancedEncryptionGrantRankAndSparseGlobalComposition(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, rank := range []int32{0, 2, -1} {

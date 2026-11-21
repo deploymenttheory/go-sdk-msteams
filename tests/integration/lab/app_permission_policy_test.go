@@ -129,9 +129,9 @@ func globalAppPermissionPolicy(values []*resource.Policy) (*resource.Policy, err
 	return found, nil
 }
 
-// TestLabAppPermissionPolicyReadOnly never creates or edits policies, grants an
+// TestAccAppPermissionPolicyReadOnly never creates or edits policies, grants an
 // app policy to a principal, installs apps or changes directory permissions.
-func TestLabAppPermissionPolicyReadOnly(t *testing.T) {
+func TestAccAppPermissionPolicyReadOnly(t *testing.T) {
 	cfg, e := lab.Load()
 	if e != nil {
 		t.Fatal("invalid lab enablement")
@@ -172,7 +172,7 @@ func TestLabAppPermissionPolicyReadOnly(t *testing.T) {
 	}
 	t.Log("selected app permission reads verified; writes, assignments, cleanup and effective behavior remain separately qualified")
 }
-func TestAppPermissionGlobalSelectionAllowsTaggedMatches(t *testing.T) {
+func TestUnitAppPermissionGlobalSelectionAllowsTaggedMatches(t *testing.T) {
 	t.Parallel()
 	global := &resource.Policy{Identity: new("Global")}
 	tagged := &resource.Policy{Identity: new("Tag:Global")}
@@ -185,7 +185,7 @@ func TestAppPermissionGlobalSelectionAllowsTaggedMatches(t *testing.T) {
 		}
 	}
 }
-func TestAppPermissionOracleRejectsWrongTenantIncompleteAndMixedOutput(t *testing.T) {
+func TestUnitAppPermissionOracleRejectsWrongTenantIncompleteAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":null,"DefaultCatalogAppsType":"FutureMode","GlobalCatalogAppsType":"","PrivateCatalogAppsType":null,"DefaultCatalogApps":[{"Identity":null,"Id":null}],"GlobalCatalogApps":[],"PrivateCatalogApps":[]}`

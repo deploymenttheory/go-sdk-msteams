@@ -68,7 +68,7 @@ Sources and current limitations: [versioned contract](../../../contracts/endpoin
 Unit wire tests consume the checked pinned request/dispatch artifact and assert
 ConfigAPI routing/token audience. Live qualification is tracked separately.
 
-The opt-in `TestLabApplicationAccessPolicyCRUD` creates only a random, unassigned
+The opt-in `TestAccApplicationAccessPolicyCRUD` creates only a random, unassigned
 policy, journals intent before creation, verifies non-default create/update
 read-back, checks list membership, deletes it and verifies absence. Cleanup is
 tenant/identity-bound and leaves unresolved private recovery data on failure.

@@ -1,6 +1,6 @@
 # Teams client configuration lab acceptance
 
-On 2026-11-21, TestLabClientConfigurationReadOnly attempted a compiled
+On 2026-11-21, TestAccClientConfigurationReadOnly attempted a compiled
 TeamsClientConfiguration Global read with the dedicated SPN in client-secret and
 certificate modes. Both actual resource reads returned HTTP 403. No response
 payload, tenant/client identifier or credential was retained in this repository.

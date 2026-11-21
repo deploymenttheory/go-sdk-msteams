@@ -17,7 +17,7 @@ func projection(v resource.Policy) map[string]*string {
 	return map[string]*string{"Identity": v.Identity, "ParentDigestEnabledType": v.ParentDigestEnabledType, "MakeCodeEnabledType": v.MakeCodeEnabledType, "TurnItInEnabledType": v.TurnItInEnabledType, "TurnItInApiUrl": v.TurnItInAPIURL, "TurnItInApiKey": v.TurnItInAPIKey}
 }
 
-func TestEducationAssignmentsModelsMatchPinnedSetters(t *testing.T) {
+func TestUnitEducationAssignmentsModelsMatchPinnedSetters(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + source)
 	if e != nil {
@@ -55,7 +55,7 @@ func TestEducationAssignmentsModelsMatchPinnedSetters(t *testing.T) {
 	}
 }
 
-func TestEducationAssignmentsSnapshotOwnershipAndRedaction(t *testing.T) {
+func TestUnitEducationAssignmentsSnapshotOwnershipAndRedaction(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"TurnItInApiKey":"fixture-private","Future":9007199254740993,"TurnItInApiUrl":"https:// "}`)
 	var v resource.Policy

@@ -169,9 +169,9 @@ func globalAppSetupPolicy(values []*resource.Policy) (*resource.Policy, error) {
 	return found, nil
 }
 
-// TestLabAppSetupPolicyReadOnly reads only Global and a filtered list. It never
+// TestAccAppSetupPolicyReadOnly reads only Global and a filtered list. It never
 // changes policies, app layouts, assignments, app installation or directory roles.
-func TestLabAppSetupPolicyReadOnly(t *testing.T) {
+func TestAccAppSetupPolicyReadOnly(t *testing.T) {
 	cfg, e := lab.Load()
 	if e != nil {
 		t.Fatal("invalid lab enablement")
@@ -215,7 +215,7 @@ func TestLabAppSetupPolicyReadOnly(t *testing.T) {
 	}
 	t.Log("selected app setup reads verified; writes, assignments, cleanup and effective layout remain separately qualified")
 }
-func TestAppSetupOracleRejectsWrongTenantMixedOutputAndOrderOverflow(t *testing.T) {
+func TestUnitAppSetupOracleRejectsWrongTenantMixedOutputAndOrderOverflow(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":null,"AllowSideLoading":false,"AllowUserPinning":null,"AppPresetList":[],"PinnedAppBarApps":[{"Identity":null,"Id":null,"Order":9223372036854775807}],"PinnedMessageBarApps":[],"AppPresetMeetingList":[],"AdditionalCustomizationApps":[],"PinnedCallingBarApps":[]}`

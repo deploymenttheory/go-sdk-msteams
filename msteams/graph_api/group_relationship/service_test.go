@@ -69,7 +69,7 @@ func wire(method, origin, path, body string, status int, response string) contra
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: origin, JSON: payload, Headers: headers}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
 }
 
-func TestReferenceWritesAndFixedDeleteSuffix(t *testing.T) {
+func TestUnitReferenceWritesAndFixedDeleteSuffix(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		defaultTarget := "directoryObjects"
@@ -98,7 +98,7 @@ func TestReferenceWritesAndFixedDeleteSuffix(t *testing.T) {
 	}
 }
 
-func TestReferenceBindingsUseSelectedGraphCloud(t *testing.T) {
+func TestUnitReferenceBindingsUseSelectedGraphCloud(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -124,7 +124,7 @@ func TestReferenceBindingsUseSelectedGraphCloud(t *testing.T) {
 	}
 }
 
-func TestReferenceFailuresAreActualOutcomesAndNeverReplayed(t *testing.T) {
+func TestUnitReferenceFailuresAreActualOutcomesAndNeverReplayed(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		for _, method := range []string{"POST", "DELETE"} {
@@ -159,7 +159,7 @@ func TestReferenceFailuresAreActualOutcomesAndNeverReplayed(t *testing.T) {
 	}
 }
 
-func TestReferenceListPreservesLimitedAndFutureObjects(t *testing.T) {
+func TestUnitReferenceListPreservesLimitedAndFutureObjects(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		t.Run(kind, func(t *testing.T) {
@@ -185,7 +185,7 @@ func aggregate(result client.ListResult[relation.DirectoryObject], err error) co
 	return contracttest.Observation{Value: map[string]any{"ids": ids, "pages": result.Pages}, Response: result.Response, Err: err}
 }
 
-func TestReferencePagingIsOpaqueAndRetainsHeader(t *testing.T) {
+func TestUnitReferencePagingIsOpaqueAndRetainsHeader(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		path := "/v1.0/groups/" + groupID + "/" + kind
@@ -205,7 +205,7 @@ func TestReferencePagingIsOpaqueAndRetainsHeader(t *testing.T) {
 	}
 }
 
-func TestReferencePartialTraversalAndEnvelopeFailures(t *testing.T) {
+func TestUnitReferencePartialTraversalAndEnvelopeFailures(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		path := "/v1.0/groups/" + groupID + "/" + kind
@@ -239,7 +239,7 @@ func TestReferencePartialTraversalAndEnvelopeFailures(t *testing.T) {
 	}
 }
 
-func TestReferenceValidationDoesNotAcquireCredentials(t *testing.T) {
+func TestUnitReferenceValidationDoesNotAcquireCredentials(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		for _, action := range []string{"bad-group", "bad-object", "bad-kind", "bad-top", "bad-select", "bad-status", "wrong-backend", "closed", "cancelled", "nil-service"} {
@@ -295,7 +295,7 @@ func TestReferenceValidationDoesNotAcquireCredentials(t *testing.T) {
 	}
 }
 
-func TestReferenceUnexpectedSuccessPreservesMetadata(t *testing.T) {
+func TestUnitReferenceUnexpectedSuccessPreservesMetadata(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("DELETE", auth.GraphAudience, "/v1.0/groups/"+groupID+"/"+kind+"/"+string(objectID)+"/$ref", "", 200, `{}`)},

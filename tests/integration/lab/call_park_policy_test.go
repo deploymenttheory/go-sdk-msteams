@@ -86,9 +86,9 @@ func callParkPolicyOracle(t *testing.T, ctx context.Context, tenant string) call
 	return value
 }
 
-// TestLabCallParkPolicyReadOnly never edits Global, creates resources or grants a
+// TestAccCallParkPolicyReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabCallParkPolicyReadOnly(t *testing.T) {
+func TestAccCallParkPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -161,7 +161,7 @@ func globalCallParkPolicy(values []resource.Policy) (*resource.Policy, error) {
 	}
 	return found, nil
 }
-func TestCallParkPolicyOracleRejectsIncompleteWrongTenantMixedOutputAndInt64Overflow(t *testing.T) {
+func TestUnitCallParkPolicyOracleRejectsIncompleteWrongTenantMixedOutputAndInt64Overflow(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":"","AllowCallPark":false,"ParkTimeoutSeconds":-9223372036854775808,"PickupRangeStart":9007199254740993,"PickupRangeEnd":9223372036854775807}`

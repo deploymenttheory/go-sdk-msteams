@@ -147,7 +147,7 @@ func sameSegments(actual, expected *url.URL) bool {
 	return true
 }
 
-func TestCRUDAndAssignmentsAgainstPinnedRequests(t *testing.T) {
+func TestUnitCRUDAndAssignmentsAgainstPinnedRequests(t *testing.T) {
 	t.Parallel()
 	cases := pinnedCases(t)
 	for _, test := range []struct {
@@ -229,7 +229,7 @@ func TestCRUDAndAssignmentsAgainstPinnedRequests(t *testing.T) {
 	}
 }
 
-func TestCreateReadbackFailureRetainsCreationWithoutCleanup(t *testing.T) {
+func TestUnitCreateReadbackFailureRetainsCreationWithoutCleanup(t *testing.T) {
 	t.Parallel()
 	cases := pinnedCases(t)
 	failed := cases["policy-forbidden"]
@@ -246,7 +246,7 @@ func TestCreateReadbackFailureRetainsCreationWithoutCleanup(t *testing.T) {
 	}
 }
 
-func TestListFilteredUsesLocalTagAwareMatching(t *testing.T) {
+func TestUnitListFilteredUsesLocalTagAwareMatching(t *testing.T) {
 	t.Parallel()
 	cases := pinnedCases(t)
 	step := cases["policy-list"]
@@ -270,7 +270,7 @@ func TestListFilteredUsesLocalTagAwareMatching(t *testing.T) {
 	}
 }
 
-func TestValidationAndCancellationNeverDiscoverOrSend(t *testing.T) {
+func TestUnitValidationAndCancellationNeverDiscoverOrSend(t *testing.T) {
 	t.Parallel()
 	for _, test := range []struct {
 		name   string
@@ -301,7 +301,7 @@ func TestValidationAndCancellationNeverDiscoverOrSend(t *testing.T) {
 	}
 }
 
-func TestMalformedOrEmptySuccessfulReadsAreFailures(t *testing.T) {
+func TestUnitMalformedOrEmptySuccessfulReadsAreFailures(t *testing.T) {
 	t.Parallel()
 	cases := pinnedCases(t)
 	for _, body := range []string{"", `null`, `{}`, `{"value":[]}`, `not-json`} {

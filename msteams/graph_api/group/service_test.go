@@ -89,7 +89,7 @@ func pinned(t *testing.T, name string) json.RawMessage {
 	return nil
 }
 
-func TestGroupCreateMatchesActualPinnedOrdinaryPayload(t *testing.T) {
+func TestUnitGroupCreateMatchesActualPinnedOrdinaryPayload(t *testing.T) {
 	t.Parallel()
 	body := pinned(t, "ordinary-group-create")
 	response := `{"id":"` + groupID + `","displayName":"Fixture Team","securityEnabled":false,"future":{"value":7}}`
@@ -109,7 +109,7 @@ func TestGroupCreateMatchesActualPinnedOrdinaryPayload(t *testing.T) {
 		}, Want: contracttest.Expected{Status: 201, JSON: json.RawMessage(`{"id":"` + groupID + `","display_name":"Fixture Team","security_enabled":false,"raw":` + response + `}`)}})
 }
 
-func TestGroupNativeCRUDSparsePatchAndNoImplicitReads(t *testing.T) {
+func TestUnitGroupNativeCRUDSparsePatchAndNoImplicitReads(t *testing.T) {
 	t.Parallel()
 	path := "/v1.0/groups/" + groupID
 	runCase(t, contracttest.Case{Name: "native-get", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, path+"?$select=id%2CdisplayName%2CsecurityEnabled", "", 200, `{"id":"`+groupID+`","displayName":null,"securityEnabled":false}`)},
@@ -139,7 +139,7 @@ func TestGroupNativeCRUDSparsePatchAndNoImplicitReads(t *testing.T) {
 		}, Want: contracttest.Expected{Status: 204}})
 }
 
-func TestGroupCreateCloudBindingsAndExplicitEmptyReferences(t *testing.T) {
+func TestUnitGroupCreateCloudBindingsAndExplicitEmptyReferences(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -168,7 +168,7 @@ func TestGroupCreateCloudBindingsAndExplicitEmptyReferences(t *testing.T) {
 	}
 }
 
-func TestGroupCreateRetainsExplicitEducationExtension(t *testing.T) {
+func TestUnitGroupCreateRetainsExplicitEducationExtension(t *testing.T) {
 	t.Parallel()
 	const extension = "extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType"
 	body := `{"displayName":"fixture","mailNickname":"fixture","groupTypes":["Unified"],"mailEnabled":true,"securityEnabled":false,"` + extension + `":"Section"}`
@@ -184,7 +184,7 @@ func TestGroupCreateRetainsExplicitEducationExtension(t *testing.T) {
 		}, Want: contracttest.Expected{Status: 201}})
 }
 
-func TestGroupValidationIsLocal(t *testing.T) {
+func TestUnitGroupValidationIsLocal(t *testing.T) {
 	t.Parallel()
 	for _, action := range []string{"missing-name", "bad-owner", "too-many-links", "extension-overwrite", "bad-extension-json", "bad-group", "bad-select", "wrong-backend", "closed", "cancelled", "nil-service"} {
 		t.Run(action, func(t *testing.T) {
@@ -242,7 +242,7 @@ func TestGroupValidationIsLocal(t *testing.T) {
 	}
 }
 
-func TestGroupFailuresPreserveMetadataAndDoNotReplayMutations(t *testing.T) {
+func TestUnitGroupFailuresPreserveMetadataAndDoNotReplayMutations(t *testing.T) {
 	t.Parallel()
 	for _, method := range []string{"POST", "PATCH", "DELETE"} {
 		for _, status := range []int{403, 404, 429, 503} {

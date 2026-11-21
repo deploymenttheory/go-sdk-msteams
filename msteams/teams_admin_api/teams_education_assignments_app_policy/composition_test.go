@@ -13,7 +13,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_education_assignments_app_policy"
 )
 
-func TestEducationAssignmentsSetKeepsPreparationAndAcceptance(t *testing.T) {
+func TestUnitEducationAssignmentsSetKeepsPreparationAndAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {

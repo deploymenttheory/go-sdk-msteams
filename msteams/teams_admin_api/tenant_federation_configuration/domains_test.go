@@ -12,7 +12,7 @@ import (
 	federation "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
-func TestDomainConstructorsAreLocal(t *testing.T) {
+func TestUnitDomainConstructorsAreLocal(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/federation-domain-models.json")
@@ -58,7 +58,7 @@ func TestDomainConstructorsAreLocal(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAllowListOwnsOriginalOrderAndRejectsInvalidZeroChoice(t *testing.T) {
+func TestUnitAllowListOwnsOriginalOrderAndRejectsInvalidZeroChoice(t *testing.T) {
 	t.Parallel()
 	input := []string{"fixture.invalid", "fixture.invalid"}
 	value := federation.NewAllowList(input...)

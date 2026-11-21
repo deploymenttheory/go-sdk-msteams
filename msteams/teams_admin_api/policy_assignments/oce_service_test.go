@@ -92,7 +92,7 @@ func invokeOCE(name string, ctx context.Context, sdk *msteams.Client) contractte
 	return o
 }
 
-func TestPinnedOCEDirectRequests(t *testing.T) {
+func TestUnitPinnedOCEDirectRequests(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../" + oceSource)
 	if err != nil {
@@ -142,7 +142,7 @@ func TestPinnedOCEDirectRequests(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestOCEOptionalQueryAndScopedEscaping(t *testing.T) {
+func TestUnitOCEOptionalQueryAndScopedEscaping(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	cases := []struct {

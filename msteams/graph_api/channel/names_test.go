@@ -11,7 +11,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
 )
 
-func TestNameCompositionsUseCompleteUniqueLookup(t *testing.T) {
+func TestUnitNameCompositionsUseCompleteUniqueLookup(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	next := base + "/channels?$skiptoken=next"
@@ -56,7 +56,7 @@ func TestNameCompositionsUseCompleteUniqueLookup(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestExplicitCollectionWrappers(t *testing.T) {
+func TestUnitExplicitCollectionWrappers(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct{ name, path string }{{"all", "allChannels"}, {"incoming", "incomingChannels"}} {
 		t.Run(tc.name, func(t *testing.T) {

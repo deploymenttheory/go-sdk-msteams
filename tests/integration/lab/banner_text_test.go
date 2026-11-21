@@ -130,9 +130,9 @@ func bannerOracle(t *testing.T, ctx context.Context, tenant string, identities [
 	return v
 }
 
-// TestLabBannerTextReadOnly lists banner records and reads at most five of them.
+// TestAccBannerTextReadOnly lists banner records and reads at most five of them.
 // It never creates banners, updates text, deletes records or grants access.
-func TestLabBannerTextReadOnly(t *testing.T) {
+func TestAccBannerTextReadOnly(t *testing.T) {
 	cfg, e := lab.Load()
 	if e != nil {
 		t.Fatal("invalid lab enablement")
@@ -200,7 +200,7 @@ func TestLabBannerTextReadOnly(t *testing.T) {
 	t.Log("bounded banner reads verified; mutations, cleanup and displayed behavior remain separately qualified")
 }
 
-func TestBannerCollectionComparisonAndOracleBoundary(t *testing.T) {
+func TestUnitBannerCollectionComparisonAndOracleBoundary(t *testing.T) {
 	t.Parallel()
 	a := &resource.Banner{Identity: new("Global/a")}
 	b := &resource.Banner{Identity: new("Global/b")}

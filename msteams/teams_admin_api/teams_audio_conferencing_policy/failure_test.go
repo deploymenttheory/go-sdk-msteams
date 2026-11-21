@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
 )
 
-func TestAudioPolicyMutationErrorsNeverReplay(t *testing.T) {
+func TestUnitAudioPolicyMutationErrorsNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "update", "delete", "user", "tenant", "group"} {
@@ -70,7 +70,7 @@ func TestAudioPolicyMutationErrorsNeverReplay(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAudioPolicyInputsAndBuildersHaveNoHTTP(t *testing.T) {
+func TestUnitAudioPolicyInputsAndBuildersHaveNoHTTP(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "local-input-context-and-builders", Source: modelSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsAudioConferencingPolicies

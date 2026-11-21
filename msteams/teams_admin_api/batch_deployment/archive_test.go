@@ -61,7 +61,7 @@ func archiveContents(t *testing.T, value deployment.Archive) map[string]string {
 	return result
 }
 
-func TestArchivePreservesOriginalBytesFixedNamesAndReaderOwnership(t *testing.T) {
+func TestUnitArchivePreservesOriginalBytesFixedNamesAndReaderOwnership(t *testing.T) {
 	t.Parallel()
 	teamsText, usersText := "Team Name,Existing Team ID\r\nFixture,\r\n", "User Full Name,User UPN or ID\nFixture 😀,fixture@invalid\n"
 	teams, users := &trackedCSV{Reader: strings.NewReader(teamsText)}, &trackedCSV{Reader: strings.NewReader(usersText)}
@@ -91,7 +91,7 @@ func TestArchivePreservesOriginalBytesFixedNamesAndReaderOwnership(t *testing.T)
 	}
 }
 
-func TestArchiveBudgetsApplyAcrossBothCSVsAndZIPFraming(t *testing.T) {
+func TestUnitArchiveBudgetsApplyAcrossBothCSVsAndZIPFraming(t *testing.T) {
 	t.Parallel()
 	input := "original bytes"
 	options := deployment.ArchiveOptions{MaxInputBytes: int64(2 * len(input)), MaxArchiveBytes: 8192}
@@ -114,7 +114,7 @@ func TestArchiveBudgetsApplyAcrossBothCSVsAndZIPFraming(t *testing.T) {
 	}
 }
 
-func TestArchiveRejectsInvalidAndFailedSourcesWithoutReturningPartialData(t *testing.T) {
+func TestUnitArchiveRejectsInvalidAndFailedSourcesWithoutReturningPartialData(t *testing.T) {
 	t.Parallel()
 	var missing *trackedCSV
 	for _, tc := range []struct {
@@ -139,7 +139,7 @@ func TestArchiveRejectsInvalidAndFailedSourcesWithoutReturningPartialData(t *tes
 	}
 }
 
-func TestArchiveCancellationStopsBeforeOrDuringInput(t *testing.T) {
+func TestUnitArchiveCancellationStopsBeforeOrDuringInput(t *testing.T) {
 	t.Parallel()
 	ctx, stop := context.WithCancel(t.Context())
 	stop()
@@ -160,7 +160,7 @@ func TestArchiveCancellationStopsBeforeOrDuringInput(t *testing.T) {
 	}
 }
 
-func TestArchiveConstructionIsIsolatedAndDoesNotParseCSV(t *testing.T) {
+func TestUnitArchiveConstructionIsIsolatedAndDoesNotParseCSV(t *testing.T) {
 	t.Parallel()
 	var group sync.WaitGroup
 	type result struct {

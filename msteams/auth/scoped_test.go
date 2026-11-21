@@ -13,7 +13,7 @@ import (
 const regionAudience = "https://migrationsvc.teams.microsoft.com"
 const regionScope = regionAudience + "/Region.Read.All"
 
-func TestScopedRefreshCacheCoalescingAndRejectionAreIsolated(t *testing.T) {
+func TestUnitScopedRefreshCacheCoalescingAndRejectionAreIsolated(t *testing.T) {
 	t.Parallel()
 	binding := Binding{TenantID: "fixture-tenant", Cloud: "commercial", IdentityID: "fixture-identity", Mode: Delegated}
 	var mu sync.Mutex
@@ -69,7 +69,7 @@ func TestScopedRefreshCacheCoalescingAndRejectionAreIsolated(t *testing.T) {
 	}
 }
 
-func TestSuppliedScopeTokensDoNotReuseAudienceDefault(t *testing.T) {
+func TestUnitSuppliedScopeTokensDoNotReuseAudienceDefault(t *testing.T) {
 	t.Parallel()
 	binding := Binding{TenantID: "fixture", Cloud: "commercial", IdentityID: "fixture", Mode: Delegated}
 	request := binding.RequestScope(regionAudience, regionScope)
@@ -91,7 +91,7 @@ func TestSuppliedScopeTokensDoNotReuseAudienceDefault(t *testing.T) {
 	}
 }
 
-func TestNativeRegionRequiresExactDelegatedScopeBeforeOAuth(t *testing.T) {
+func TestUnitNativeRegionRequiresExactDelegatedScopeBeforeOAuth(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc"} {
 		for _, scope := range []string{"", regionScope, regionAudience + "/.default"} {

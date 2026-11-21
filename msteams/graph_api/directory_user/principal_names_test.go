@@ -35,7 +35,7 @@ func namePath(ids []string) string {
 	return "/beta/users?" + url.Values{"$select": {"id,userPrincipalName"}, "$filter": {strings.Join(clauses, " or ")}}.Encode()
 }
 
-func TestPrincipalNamesEmptyAndInvalidInputsAreLocal(t *testing.T) {
+func TestUnitPrincipalNamesEmptyAndInvalidInputsAreLocal(t *testing.T) {
 	t.Parallel()
 	namesCase(t, contracttest.Case{Name: "empty", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.GraphAPI.UserResolver.LookupPrincipalNames(ctx, nil, directoryuser.PrincipalNamesOptions{})
@@ -51,7 +51,7 @@ func TestPrincipalNamesEmptyAndInvalidInputsAreLocal(t *testing.T) {
 	}, Want: contracttest.Expected{Error: client.ErrPagination}})
 }
 
-func TestPrincipalNamesRetainOnlyCompletedGroupsOnLaterFailure(t *testing.T) {
+func TestUnitPrincipalNamesRetainOnlyCompletedGroupsOnLaterFailure(t *testing.T) {
 	t.Parallel()
 	ids := make([]string, 11)
 	for i := range ids {

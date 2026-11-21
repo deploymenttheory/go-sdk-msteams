@@ -206,7 +206,7 @@ func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.
 	}
 	return o
 }
-func TestPinnedPackageRequestsAndBusinessFailures(t *testing.T) {
+func TestUnitPinnedPackageRequestsAndBusinessFailures(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, row := range captures(t) {
@@ -230,7 +230,7 @@ func TestPinnedPackageRequestsAndBusinessFailures(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestPackageInputObjectVariantsUsePackageName(t *testing.T) {
+func TestUnitPackageInputObjectVariantsUsePackageName(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, remove := range []bool{false, true} {

@@ -72,7 +72,7 @@ func evidence(t *testing.T, results []contracttest.Result) {
 	}
 }
 
-func TestNativeCRUDContracts(t *testing.T) {
+func TestUnitNativeCRUDContracts(t *testing.T) {
 	t.Parallel()
 	empty := ""
 	var results []contracttest.Result
@@ -122,7 +122,7 @@ func TestNativeCRUDContracts(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCollectionsAndPaging(t *testing.T) {
+func TestUnitCollectionsAndPaging(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -169,7 +169,7 @@ func TestCollectionsAndPaging(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestFailuresPreserveStatusAndDoNotReplayWrites(t *testing.T) {
+func TestUnitFailuresPreserveStatusAndDoNotReplayWrites(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, method := range []string{"POST", "PATCH", "DELETE"} {
@@ -228,7 +228,7 @@ func methodName(method string) string {
 	}
 }
 
-func TestLocalValidation(t *testing.T) {
+func TestUnitLocalValidation(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name   string
@@ -291,7 +291,7 @@ func TestLocalValidation(t *testing.T) {
 	}
 }
 
-func TestSharedCreationAndOperation(t *testing.T) {
+func TestUnitSharedCreationAndOperation(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		location := "/teams('" + teamID + "')/operations('job')"
 		step := wire("POST", base+"/channels", `{"displayName":"Fixture","membershipType":"shared"}`, 202, `{"id":"not-a-channel"}`)
@@ -316,7 +316,7 @@ func TestSharedCreationAndOperation(t *testing.T) {
 	})
 }
 
-func TestOperationLocationsFailLocally(t *testing.T) {
+func TestUnitOperationLocationsFailLocally(t *testing.T) {
 	t.Parallel()
 	for i, location := range []string{"", "//foreign.invalid/beta/teams/x/operations/job", "https://foreign.invalid/beta/teams/" + teamID + "/operations/job", "/v1.0/teams/" + teamID + "/operations/job", "/beta/teams/" + userID + "/operations/job", "/beta/users/" + userID, "/beta/teams/" + teamID + "/operations/job?secret=x", "/beta/teams/" + teamID + "/operations/job#x"} {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
@@ -328,7 +328,7 @@ func TestOperationLocationsFailLocally(t *testing.T) {
 	}
 }
 
-func TestOwnerResolutionComposition(t *testing.T) {
+func TestUnitOwnerResolutionComposition(t *testing.T) {
 	t.Parallel()
 	step := wire("POST", base+"/channels", `{"displayName":"Fixture","membershipType":"private","members":[{"@odata.type":"#microsoft.graph.aadUserConversationMember","user@odata.bind":"https://graph.microsoft.com/beta/users('`+userID+`')","roles":["owner"]}]}`, 201, `{"id":"created"}`)
 	result := run(t, contracttest.Case{Name: "owner-upn-resolution", Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire("GET", "https://graph.microsoft.com/v1.0/users/owner@fixture.invalid?$select=id", "", 200, `{"id":"`+userID+`"}`), step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {

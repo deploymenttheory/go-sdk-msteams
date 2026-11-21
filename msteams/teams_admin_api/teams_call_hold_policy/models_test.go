@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_hold_policy"
 )
 
-func TestCallHoldPinnedModels(t *testing.T) {
+func TestUnitCallHoldPinnedModels(t *testing.T) {
 	raw, e := os.ReadFile("../../../" + source)
 	if e != nil {
 		t.Fatal(e)
@@ -62,7 +62,7 @@ func TestCallHoldPinnedModels(t *testing.T) {
 	}
 }
 
-func TestCallHoldRawSnapshotsRetainDuplicatesAndOwnership(t *testing.T) {
+func TestUnitCallHoldRawSnapshotsRetainDuplicatesAndOwnership(t *testing.T) {
 	raw := []byte(`{"Description":"first","description":"second","AudioFileId":null,"Future":false}`)
 	original := append([]byte(nil), raw...)
 	var v resource.Policy

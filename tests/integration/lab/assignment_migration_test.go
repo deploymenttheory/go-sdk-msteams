@@ -81,9 +81,9 @@ func migrationOracle(t *testing.T, ctx context.Context, tenant string) migration
 	return v
 }
 
-// TestLabAssignmentMigrationReadOnly lists status and reads returned job IDs.
+// TestAccAssignmentMigrationReadOnly lists status and reads returned job IDs.
 // It never submits migrations/cleanup or changes effective assignments.
-func TestLabAssignmentMigrationReadOnly(t *testing.T) {
+func TestAccAssignmentMigrationReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	sdk, binding, _ := labSDKClient(t)
@@ -138,7 +138,7 @@ func TestLabAssignmentMigrationReadOnly(t *testing.T) {
 	t.Log("status read observations verified; submission/cleanup and effective assignments remain separately qualified")
 }
 
-func TestMigrationOracleRejectsWrongTenantAndMalformedProjection(t *testing.T) {
+func TestUnitMigrationOracleRejectsWrongTenantAndMalformedProjection(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	for _, raw := range []string{`{"success":false}`, `{"success":true,"tenant_id":"00000000-0000-4000-8000-000000000004","jobs":[]}`, `{"success":true,"tenant_id":"` + tenant + `"}`, `{"success":true,"tenant_id":"` + tenant + `","jobs":null}`, `{"success":true,"tenant_id":"` + tenant + `","jobs":[],"unknown":false}`, `{"success":true,"tenant_id":"` + tenant + `","jobs":[]} {}`} {

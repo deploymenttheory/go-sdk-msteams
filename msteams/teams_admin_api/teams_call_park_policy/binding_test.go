@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
 )
 
-func TestCallParkNativeRequestsMatchSuccessfulIsolatedBinding(t *testing.T) {
+func TestUnitCallParkNativeRequestsMatchSuccessfulIsolatedBinding(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + modelSource)
 	if e != nil {

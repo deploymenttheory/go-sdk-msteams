@@ -9,7 +9,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestValidationConfigurationRetainsWirePresenceAndFutureFields(t *testing.T) {
+func TestUnitValidationConfigurationRetainsWirePresenceAndFutureFields(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"Identity":"Global","Future":false}`, `{"Identity":"Global","AudioFileValidationEnabled":false,"AudioFileValidationUri":null}`, `{"Identity":"Global","audiofilevalidationuri":"HTTPS://example.invalid/validate","Future":{"a":[]}}`} {
 		var value resource.Configuration
@@ -24,7 +24,7 @@ func TestValidationConfigurationRetainsWirePresenceAndFutureFields(t *testing.T)
 	}
 }
 
-func TestValidationURIReadAndRequestRules(t *testing.T) {
+func TestUnitValidationURIReadAndRequestRules(t *testing.T) {
 	t.Parallel()
 	for _, uri := range []string{"", "http://example.invalid/validate", "relative", "https://", "https://example.invalid/val\nidate"} {
 		if (resource.Settings{AudioFileValidationURI: policy.Set(uri)}).Validate() == nil {

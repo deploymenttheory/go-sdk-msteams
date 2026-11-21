@@ -89,7 +89,7 @@ management operation was invoked. Observed wire shapes:
 excluded from errors. They remain available only in the explicitly returned raw response.
 Graph's error object and recursive `innerError` retain codes and request identifiers;
 header identifiers are preserved separately from body identifiers when they differ.
-The fixtures in `TestNormalizedErrorEnvelopes` are synthetic, derived from these models
+The fixtures in `TestUnitNormalizedErrorEnvelopes` are synthetic, derived from these models
 and the Graph documentation, and do not contain tenant captures.
 
 ## Delivered contract and checks
@@ -121,18 +121,18 @@ retain `errors.Is` identity. Request metadata never contains the attached bearer
 
 | Test | Evidence |
 |---|---|
-| `TestBackendRoutingEscapingAndResponseMetadata` | Distinct audiences/hosts, segment/query encoding, headers, typed result and raw metadata |
-| `TestRejectedDestinationsAndRequestsNeverAcquireCredentials` | Host/path/header/profile rejection before token acquisition |
-| `TestContinuationURLPreservesOpaqueQuery` | Encoded continuation query remains intact |
-| `TestRedirectsAndBorrowedCookiesAreNotForwarded` | One 307 response; no follow-up credentials/cookies or mutation of caller settings |
-| `TestNormalizedErrorEnvelopes` | Graph and four Teams shapes, malformed/non-JSON/empty errors, safe formatting |
-| `TestWrongAudienceHasNoFallback` | A Graph token cannot satisfy a Teams request |
-| `TestConcurrentRequestsKeepHeadersAndResultsIsolated` | Concurrent calls do not share request headers or result destinations |
-| `TestJSONBodiesSuccessDecodingAndEmptyResponses` | Explicit false/zero/empty values, empty success, safe decode failures |
-| `TestBodiesClosedForSuccessFailureAndSizeLimit` | Success/error/oversize response ownership |
-| `TestCancellationReachesBackendAndCloseCancelsRequest` | Caller/session cancellation reaches the HTTP server |
-| `TestTransportGuardClosesRejectedRequestBodies` | Final destination/context/token rejection closes request bodies |
-| `TestTransportErrorsDoNotExposeCredentialsOrURLs` | Foreign diagnostic text discarded; response-plus-error body closed |
+| `TestUnitBackendRoutingEscapingAndResponseMetadata` | Distinct audiences/hosts, segment/query encoding, headers, typed result and raw metadata |
+| `TestUnitRejectedDestinationsAndRequestsNeverAcquireCredentials` | Host/path/header/profile rejection before token acquisition |
+| `TestUnitContinuationURLPreservesOpaqueQuery` | Encoded continuation query remains intact |
+| `TestUnitRedirectsAndBorrowedCookiesAreNotForwarded` | One 307 response; no follow-up credentials/cookies or mutation of caller settings |
+| `TestUnitNormalizedErrorEnvelopes` | Graph and four Teams shapes, malformed/non-JSON/empty errors, safe formatting |
+| `TestUnitWrongAudienceHasNoFallback` | A Graph token cannot satisfy a Teams request |
+| `TestUnitConcurrentRequestsKeepHeadersAndResultsIsolated` | Concurrent calls do not share request headers or result destinations |
+| `TestUnitJSONBodiesSuccessDecodingAndEmptyResponses` | Explicit false/zero/empty values, empty success, safe decode failures |
+| `TestUnitBodiesClosedForSuccessFailureAndSizeLimit` | Success/error/oversize response ownership |
+| `TestUnitCancellationReachesBackendAndCloseCancelsRequest` | Caller/session cancellation reaches the HTTP server |
+| `TestUnitTransportGuardClosesRejectedRequestBodies` | Final destination/context/token rejection closes request bodies |
+| `TestUnitTransportErrorsDoNotExposeCredentialsOrURLs` | Foreign diagnostic text discarded; response-plus-error body closed |
 
 These tests map shared transport behavior, not individual PowerShell management commands.
 No command ledger entry is promoted to implemented, contract-tested or live-tested by

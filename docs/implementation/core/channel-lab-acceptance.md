@@ -1,15 +1,15 @@
 # Channel lab acceptance
 
-`TestLabChannelCRUD` is prepared and has not run against the tenant. Ordinary CI
+`TestAccChannelCRUD` is prepared and has not run against the tenant. Ordinary CI
 skips before reading credentials. It grants no role/permission and creates no user.
 
 Use the private identity, existing licensed owner, journal directory and three
 explicit enablement flags documented in [team lifecycle acceptance](team-lifecycle-lab-acceptance.md),
-then select `-run '^TestLabChannelCRUD$' -timeout=25m` for the lab package. The
+then select `-run '^TestAccChannelCRUD$' -timeout=25m` for the lab package. The
 test creates its own uniquely named team first, journals its owned group ID and
 uses the existing positively verified parent-team recovery handler. No existing
 team/channel ID can be supplied as a mutation target. Interrupted runs retain
-the same private parent journal and use `TestLabRecoverTeamLifecycle`.
+the same private parent journal and use `TestAccRecoverTeamLifecycle`.
 
 It creates standard/private/shared channels, waits for shared creation explicitly,
 checks ID-based reads, non-default name/empty-description update readback, bounded

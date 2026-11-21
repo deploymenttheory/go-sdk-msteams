@@ -67,9 +67,9 @@ func applicationMeetingOracle(t *testing.T, ctx context.Context) applicationMeet
 	return value
 }
 
-// TestLabApplicationMeetingConfigurationReadOnly never updates the tenant-wide
+// TestAccApplicationMeetingConfigurationReadOnly never updates the tenant-wide
 // allow-list. Mutation acceptance needs a separate explicitly authorized restore plan.
-func TestLabApplicationMeetingConfigurationReadOnly(t *testing.T) {
+func TestAccApplicationMeetingConfigurationReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	sdk, _, _ := labSDKClient(t)
@@ -93,7 +93,7 @@ func TestLabApplicationMeetingConfigurationReadOnly(t *testing.T) {
 	t.Log("selected configuration reads observed; tenant-wide update effects remain separately qualified")
 }
 
-func TestApplicationMeetingOracleRejectsIncompleteAndMixedOutput(t *testing.T) {
+func TestUnitApplicationMeetingOracleRejectsIncompleteAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"success":false}`, `{"success":true,"identity":"Other"}`, `{"success":true,"identity":"Global"}`, `{"success":true,"identity":"Global","app_ids":[],"unknown":false}`, `{"success":true,"identity":"Global"} {}`, `{"success":true,"identity":"Global","app_ids":42}`} {
 		if _, err := decodeApplicationMeetingOracle([]byte(raw)); err == nil {

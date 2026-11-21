@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_channels_policy"
 )
 
-func TestChannelsPolicyInterleavesProtocolsWithoutHeaderLeakage(t *testing.T) {
+func TestUnitChannelsPolicyInterleavesProtocolsWithoutHeaderLeakage(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -45,7 +45,7 @@ func TestChannelsPolicyInterleavesProtocolsWithoutHeaderLeakage(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestChannelsPolicySetRetainsPreparationAndAcceptance(t *testing.T) {
+func TestUnitChannelsPolicySetRetainsPreparationAndAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {

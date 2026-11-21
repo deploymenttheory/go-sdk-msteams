@@ -21,7 +21,7 @@ type oceTransport func(*http.Request) (*http.Response, error)
 
 func (f oceTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
 
-func TestOCEHeadersShareOneCorrelationPerOperationWithoutDiscovery(t *testing.T) {
+func TestUnitOCEHeadersShareOneCorrelationPerOperationWithoutDiscovery(t *testing.T) {
 	t.Parallel()
 	uuid := regexp.MustCompile(`^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$`)
 	var correlations []string
@@ -60,7 +60,7 @@ func TestOCEHeadersShareOneCorrelationPerOperationWithoutDiscovery(t *testing.T)
 	}
 }
 
-func TestOCEContextValidationPreventsCredentialForwarding(t *testing.T) {
+func TestUnitOCEContextValidationPreventsCredentialForwarding(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "oce-context-before-tokens", Source: oceSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.PolicyAssignments

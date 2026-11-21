@@ -88,7 +88,7 @@ func projection(v resource.Policy) []byte {
 	raw, _ := json.Marshal(map[string]any{"Identity": v.Identity, "Description": v.Description, "AllowSideLoading": v.AllowSideLoading, "AllowUserPinning": v.AllowUserPinning, "AppPresetList": appsProjection(v.AppPresetList), "PinnedAppBarApps": pinsProjection(v.PinnedAppBarApps), "PinnedMessageBarApps": pinsProjection(v.PinnedMessageBarApps), "AppPresetMeetingList": appsProjection(v.AppPresetMeetingList), "AdditionalCustomizationApps": customsProjection(v.AdditionalCustomizationApps), "PinnedCallingBarApps": appsProjection(v.PinnedCallingBarApps)})
 	return raw
 }
-func TestAppSetupPinnedPolicyProjections(t *testing.T) {
+func TestUnitAppSetupPinnedPolicyProjections(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Policies {
 		var v resource.Policy
@@ -109,7 +109,7 @@ func TestAppSetupPinnedPolicyProjections(t *testing.T) {
 		}
 	}
 }
-func TestAppSetupPinnedElementProjections(t *testing.T) {
+func TestUnitAppSetupPinnedElementProjections(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Elements {
 		var v any
@@ -162,7 +162,7 @@ func TestAppSetupPinnedElementProjections(t *testing.T) {
 		}
 	}
 }
-func TestAppSetupRawSnapshotsAndInt64StayExact(t *testing.T) {
+func TestUnitAppSetupRawSnapshotsAndInt64StayExact(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"Identity":"fixture-private","PinnedAppBarApps":[{"Id":"a","Order":9007199254740993,"Future":null}],"pinnedappbarapps":[{"Id":"b","Order":9223372036854775807}],"PinnedAppBarApps":null,"Future":false}`)
 	var v resource.Policy

@@ -11,7 +11,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
 )
 
-func TestFilesPolicyModelsMatchPinnedSetters(t *testing.T) {
+func TestUnitFilesPolicyModelsMatchPinnedSetters(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + source)
 	if e != nil {
@@ -55,7 +55,7 @@ func TestFilesPolicyModelsMatchPinnedSetters(t *testing.T) {
 	}
 }
 
-func TestFilesPolicySnapshotsOwnFutureData(t *testing.T) {
+func TestUnitFilesPolicySnapshotsOwnFutureData(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"Identity":"Global","NativeFileEntryPoints":"","SPChannelFilesTab":null,"DefaultFileUploadAppId":"not-a-guid","Future":9007199254740993}`)
 	var value resource.Policy

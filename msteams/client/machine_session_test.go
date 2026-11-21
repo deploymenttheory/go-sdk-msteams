@@ -9,7 +9,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-func TestSessionOwnsMachineProvidersWithoutAcquiring(t *testing.T) {
+func TestUnitSessionOwnsMachineProvidersWithoutAcquiring(t *testing.T) {
 	t.Parallel()
 	for _, method := range []auth.Method{auth.ManagedIdentity, auth.WorkloadIdentity} {
 		t.Run(string(method), func(t *testing.T) {

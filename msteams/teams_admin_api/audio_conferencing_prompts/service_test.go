@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestPromptsPinnedProviderRequests(t *testing.T) {
+func TestUnitPromptsPinnedProviderRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -69,7 +69,7 @@ func TestPromptsPinnedProviderRequests(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestPromptsFilterKeepsGlobalTagAndWhitespace(t *testing.T) {
+func TestUnitPromptsFilterKeepsGlobalTagAndWhitespace(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`

@@ -1,7 +1,7 @@
 # Voicemail validation configuration lab acceptance
 
 MSTEAMS_LAB_READ_ONLY=1 and MSTEAMS_LAB_IDENTITY_FILE enable
-TestLabVoicemailValidationReadOnly with the existing private dedicated lab identity.
+TestAccVoicemailValidationReadOnly with the existing private dedicated lab identity.
 MSTEAMS_LAB_AUTH_METHOD selects certificate (default) or client-secret. The test
 reads Global and a locally filtered list; it changes no validation setting or role.
 Both actual credential-mode attempts returned resource HTTP 403. List and optional

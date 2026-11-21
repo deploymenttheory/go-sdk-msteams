@@ -20,7 +20,7 @@ type pictureSource struct {
 
 func (s *pictureSource) Close() error { s.closes++; return s.closeErr }
 
-func TestUploadPictureUsesGroupPhotoRouteAndOriginalBytes(t *testing.T) {
+func TestUnitUploadPictureUsesGroupPhotoRouteAndOriginalBytes(t *testing.T) {
 	t.Parallel()
 	for _, status := range []int{200, 204, 503} {
 		t.Run(strconv.Itoa(status), func(t *testing.T) {
@@ -35,7 +35,7 @@ func TestUploadPictureUsesGroupPhotoRouteAndOriginalBytes(t *testing.T) {
 	}
 }
 
-func TestUploadPictureValidationClosesSourcesWithoutIO(t *testing.T) {
+func TestUnitUploadPictureValidationClosesSourcesWithoutIO(t *testing.T) {
 	t.Parallel()
 	sdk, p, _ := fixture(t, "commercial", auth.Application)
 	for _, id := range []string{"", "../groups"} {
@@ -64,7 +64,7 @@ func TestUploadPictureValidationClosesSourcesWithoutIO(t *testing.T) {
 	}
 }
 
-func TestUploadPictureEnforcesGraphSizeLimit(t *testing.T) {
+func TestUnitUploadPictureEnforcesGraphSizeLimit(t *testing.T) {
 	t.Parallel()
 	sdk, _, calls := fixture(t, "commercial", auth.Application, exchange{method: "PUT", path: "/v1.0/groups/" + teamID + "/photo/$value", status: 200})
 	source := &pictureSource{Reader: strings.NewReader(strings.Repeat("x", int(team.MaxPictureBytes)+1))}

@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestValidationInputAndContextRejectBeforeTokens(t *testing.T) {
+func TestUnitValidationInputAndContextRejectBeforeTokens(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "invalid-input-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations
@@ -57,7 +57,7 @@ func TestValidationInputAndContextRejectBeforeTokens(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestValidationPatchErrorsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitValidationPatchErrorsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, status := range []int{400, 401, 403, 429, 503} {

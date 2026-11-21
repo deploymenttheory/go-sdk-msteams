@@ -17,7 +17,7 @@ import (
 func fixtureSettings() resource.Settings {
 	return resource.Settings{AllowTollFreeDialin: new(false), MeetingInvitePhoneNumbers: resource.ChangePhoneNumbers([]string{"future-phone"}, []string{"+440000000001"})}
 }
-func TestAudioPolicyPinnedGeneratedRequests(t *testing.T) {
+func TestUnitAudioPolicyPinnedGeneratedRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -116,7 +116,7 @@ func TestAudioPolicyPinnedGeneratedRequests(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAudioPolicyModernFilterAndWhitespace(t *testing.T) {
+func TestUnitAudioPolicyModernFilterAndWhitespace(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const reply = `[{"Identity":"Other"},{"Identity":"gLoBaL"},{"Identity":"Global"},{"Identity":"Tag:Global"},{"Identity":"Fixture"}]`

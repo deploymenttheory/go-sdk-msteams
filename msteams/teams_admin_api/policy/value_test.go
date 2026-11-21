@@ -10,7 +10,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestFieldPreservesOmittedNullFalseAndEmpty(t *testing.T) {
+func TestUnitFieldPreservesOmittedNullFalseAndEmpty(t *testing.T) {
 	t.Parallel()
 	input := struct {
 		Omitted policy.Field[bool]   `json:"omitted,omitzero"`
@@ -44,7 +44,7 @@ func TestFieldPreservesOmittedNullFalseAndEmpty(t *testing.T) {
 	}
 }
 
-func TestCompiledListEditsMatchObservedHostBehavior(t *testing.T) {
+func TestUnitCompiledListEditsMatchObservedHostBehavior(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-provider-dispatch.json")
 	if err != nil {
@@ -94,7 +94,7 @@ func TestCompiledListEditsMatchObservedHostBehavior(t *testing.T) {
 	}
 }
 
-func TestPolicyListsOwnInputsAndInvalidEditStaysInvalid(t *testing.T) {
+func TestUnitPolicyListsOwnInputsAndInvalidEditStaysInvalid(t *testing.T) {
 	t.Parallel()
 	values := []string{"fixture"}
 	list := policy.Strings(values...)

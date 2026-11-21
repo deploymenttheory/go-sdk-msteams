@@ -23,7 +23,7 @@ func equalJSON(t *testing.T, actual []byte, expected string) {
 	}
 }
 
-func TestPolicyRetainsUnknownAndUnprojectedAppIDFields(t *testing.T) {
+func TestUnitPolicyRetainsUnknownAndUnprojectedAppIDFields(t *testing.T) {
 	t.Parallel()
 	for _, test := range []struct{ name, wire string }{
 		{name: "known and unknown", wire: `{"Identity":"tag:Fixture","AppIds":["fixture"],"Description":"","FutureFlag":false}`},
@@ -47,7 +47,7 @@ func TestPolicyRetainsUnknownAndUnprojectedAppIDFields(t *testing.T) {
 	}
 }
 
-func TestListChangesPreserveReplacementDeltaAndEmpty(t *testing.T) {
+func TestUnitListChangesPreserveReplacementDeltaAndEmpty(t *testing.T) {
 	t.Parallel()
 	for _, test := range []struct {
 		name     string
@@ -80,7 +80,7 @@ func TestListChangesPreserveReplacementDeltaAndEmpty(t *testing.T) {
 	}
 }
 
-func TestLegacyListChangesCleanOnlyMetadata(t *testing.T) {
+func TestUnitLegacyListChangesCleanOnlyMetadata(t *testing.T) {
 	t.Parallel()
 	input := []json.RawMessage{json.RawMessage(`{"AppId":"fixture","Enabled":false,"DataSource":"discard","Key":"discard"}`)}
 	replacement, err := policy.LegacyAppIDs(input)

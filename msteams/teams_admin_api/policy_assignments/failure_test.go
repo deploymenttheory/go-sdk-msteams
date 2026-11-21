@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 )
 
-func TestAssignmentInputAndContextBeforeCredentials(t *testing.T) {
+func TestUnitAssignmentInputAndContextBeforeCredentials(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "input-context-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.PolicyAssignments
@@ -66,7 +66,7 @@ func TestAssignmentInputAndContextBeforeCredentials(t *testing.T) {
 	evidence(t, []contracttest.Result{r})
 }
 
-func TestAssignmentWritesKeepDenialAndNeverReplay(t *testing.T) {
+func TestUnitAssignmentWritesKeepDenialAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "update", "delete", "batch"} {
@@ -104,7 +104,7 @@ func TestAssignmentWritesKeepDenialAndNeverReplay(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAssignmentSubmissionRetainsAcceptanceAndHandlePresence(t *testing.T) {
+func TestUnitAssignmentSubmissionRetainsAcceptanceAndHandlePresence(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, row := range []struct {
@@ -134,7 +134,7 @@ func TestAssignmentSubmissionRetainsAcceptanceAndHandlePresence(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAssignmentInputObjectSharesOpaqueUserRoute(t *testing.T) {
+func TestUnitAssignmentInputObjectSharesOpaqueUserRoute(t *testing.T) {
 	t.Parallel()
 	c := contracttest.Case{Name: "user-input-object", Mappings: []contracttest.Mapping{{Command: "Get-CsUserPolicyAssignment", ParameterSet: "GetViaIdentity"}}, Steps: []contracttest.Exchange{discovery(), wire("GET", origin+"/Skype.User/users/fixture%2Fuser%3A%40/policies", "Get-CsUserPolicyAssignment", nil, 200, `[{"policyType":"Fixture","policyName":"","policySource":[{"assignmentType":"Direct","reference":"fixture-direct"},{"assignmentType":"Group","reference":"fixture-group"}]}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.PolicyAssignments.GetUserByIdentity(ctx, resource.UserIdentity{Identity: "fixture/user:@"}, "")
@@ -146,7 +146,7 @@ func TestAssignmentInputObjectSharesOpaqueUserRoute(t *testing.T) {
 	evidence(t, []contracttest.Result{run(t, c)})
 }
 
-func TestAssignmentSettingsOmitNullAndRetainZero(t *testing.T) {
+func TestUnitAssignmentSettingsOmitNullAndRetainZero(t *testing.T) {
 	t.Parallel()
 	settings := resource.GroupSettings{PolicyName: policy.Null[string](), Priority: policy.Set(int32(0))}
 	raw, e := json.Marshal(settings)

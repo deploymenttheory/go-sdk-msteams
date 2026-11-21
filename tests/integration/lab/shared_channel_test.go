@@ -29,10 +29,10 @@ type sharedChannelFixture struct {
 	AssociatedUserID string `json:"associated_user_id"`
 }
 
-// TestLabSharedChannelReadOnly reads an explicitly selected existing sharing
+// TestAccSharedChannelReadOnly reads an explicitly selected existing sharing
 // relationship and optional associated-user view. It never establishes/removes
 // sharing or changes membership, a channel, a team, or cross-tenant policy.
-func TestLabSharedChannelReadOnly(t *testing.T) {
+func TestAccSharedChannelReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -143,7 +143,7 @@ func sameSharedTeamObservations(a, b []sharedTeamObservation) bool {
 	return ok && reflect.DeepEqual(left, right)
 }
 
-func TestSharedTeamOracleRetainsHostPresenceAndRejectsDuplicates(t *testing.T) {
+func TestUnitSharedTeamOracleRetainsHostPresenceAndRejectsDuplicates(t *testing.T) {
 	t.Parallel()
 	row := sharedTeamObservation{ID: "11111111-1111-4111-8111-111111111111", IsHost: new(bool)}
 	if !sameSharedTeamObservations([]sharedTeamObservation{row}, []sharedTeamObservation{row}) {

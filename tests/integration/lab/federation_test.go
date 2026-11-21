@@ -140,9 +140,9 @@ func compareFederation(t *testing.T, kind string, raw map[string]json.RawMessage
 	}
 }
 
-// TestLabFederationReadOnly reads Global and a locally filtered list. It never
+// TestAccFederationReadOnly reads Global and a locally filtered list. It never
 // edits tenant configuration, grants assignments or creates/deletes a policy.
-func TestLabFederationReadOnly(t *testing.T) {
+func TestAccFederationReadOnly(t *testing.T) {
 	cfg := federationReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	for _, kind := range []string{"external-policy", "acs", "external-users", "tenant"} {
@@ -241,7 +241,7 @@ func TestLabFederationReadOnly(t *testing.T) {
 	}
 }
 
-func TestFederationOracleRejectsMixedAndIncompleteOutput(t *testing.T) {
+func TestUnitFederationOracleRejectsMixedAndIncompleteOutput(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"success":false}`, `{"success":true,"kind":"acs","identity":"Global","settings":{}}`, `{"success":true,"kind":"acs","identity":"Global","settings":{"EnableAcsUsers":false,"RequireAcsFederationForMeeting":null,"extra":false}}`, `{"success":true,"kind":"tenant","identity":"Global","settings":{"EnableAcsUsers":false,"RequireAcsFederationForMeeting":null}}`} {
 		if _, err := decodeFederationOracle([]byte(raw), "acs"); err == nil {

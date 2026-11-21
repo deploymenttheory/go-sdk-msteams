@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
 )
 
-func TestCallParkMutationErrorsNeverReplay(t *testing.T) {
+func TestUnitCallParkMutationErrorsNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "update", "delete", "user", "tenant", "group"} {
@@ -70,7 +70,7 @@ func TestCallParkMutationErrorsNeverReplay(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallParkInputsAndBuildersHaveNoHTTP(t *testing.T) {
+func TestUnitCallParkInputsAndBuildersHaveNoHTTP(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "local-input-context-and-builders", Source: modelSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCallParkPolicies

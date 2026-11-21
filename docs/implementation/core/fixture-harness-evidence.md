@@ -26,7 +26,7 @@ produce a valid passing artifact.
 
 ## Representative settled contract
 
-[`TestPinnedTemplatePrimitiveFixtures`](../../../tests/contract/core/fixtures_test.go)
+[`TestUnitPinnedTemplatePrimitiveFixtures`](../../../tests/contract/core/fixtures_test.go)
 consumes five actual 8.1.0
 [`generated-request-dispatch.json`](../../../contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json)
 observations. The generated request URLs/bodies and response dispatch were

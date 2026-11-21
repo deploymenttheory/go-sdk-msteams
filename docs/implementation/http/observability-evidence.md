@@ -88,29 +88,29 @@ redirect rejection and explicit replay rules still apply.
 
 ## Verification
 
-- TestRequestDiagnosticsExcludeSecretsAcrossOutcomes captures rendered Zap fields
+- TestUnitRequestDiagnosticsExcludeSecretsAcrossOutcomes captures rendered Zap fields
   and span names/attributes/events/statuses for JSON success, forbidden responses,
   provider/transport failure, retry, upload/download, cancellation and invalid methods.
   It asserts no fixture secrets/tenant identifiers enter diagnostics and every created
   span ends exactly once. The actual trace context reaches auth and HTTP.
-- TestDiagnosticsRemainOptInAndBorrowed checks Debug is not implicitly enabled and
+- TestUnitDiagnosticsRemainOptInAndBorrowed checks Debug is not implicitly enabled and
   the caller logger remains usable after Close.
-- TestDefaultHeadersPreservePrecedenceAcrossRequestKinds covers JSON, upload,
+- TestUnitDefaultHeadersPreservePrecedenceAcrossRequestKinds covers JSON, upload,
   download, pager and operation paths, lower-case explicit Accept and caller mutation.
-- TestManagementHeadersNeverReachIdentityExchange checks native MSAL metadata/token
+- TestUnitManagementHeadersNeverReachIdentityExchange checks native MSAL metadata/token
   requests do not receive management defaults while the Graph request does.
-- TestTLSAndProxyOptionsReachVerifiedBackendWithoutMutatingTransport uses a real local
+- TestUnitTLSAndProxyOptionsReachVerifiedBackendWithoutMutatingTransport uses a real local
   CONNECT proxy and TLS server, with explicit trust and bearer/proxy header isolation.
-- TestTLSOptionSnapshotsCertificateAndECHData verifies nested TLS copying.
-- TestTransportOptionsRejectUnsafeOrIncompatibleConfiguration covers reserved headers,
+- TestUnitTLSOptionSnapshotsCertificateAndECHData verifies nested TLS copying.
+- TestUnitTransportOptionsRejectUnsafeOrIncompatibleConfiguration covers reserved headers,
   malformed proxy/TLS values, duplicates, typed-nil transports and opaque proxy conflicts.
-- TestZeroSessionDiagnosticsReturnClosed protects zero-value session behavior on all
+- TestUnitZeroSessionDiagnosticsReturnClosed protects zero-value session behavior on all
   request paths rather than allowing observation to panic before local validation.
 
 Validation on 2026-11-20 passed: `go test -race -count=1 -shuffle=on ./...`,
 `go build ./...`, `go vet ./...`, `golangci-lint run ./...`, formatter diff, coverage
 ledger, backlog validation and capability matrix verification. The opt-in
-`TestApplicationAccessLab` passed client-secret, certificate and invalid supplied-token
+`TestAccApplicationAccess` passed client-secret, certificate and invalid supplied-token
 cases against the existing commercial lab identity. These are read-only authentication/
 access regressions, not live proxy/TLS or telemetry qualification.
 

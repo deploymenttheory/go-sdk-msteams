@@ -10,7 +10,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_enhanced_encryption_policy"
 )
 
-func TestEnhancedEncryptionKnownProjectionsAndOwnedSnapshot(t *testing.T) {
+func TestUnitEnhancedEncryptionKnownProjectionsAndOwnedSnapshot(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"Identity":"Global","Description":"","CallingEndtoEndEncryptionEnabledType":"FutureCalling","MeetingEndToEndEncryption":"FutureMeeting","Future":{"n":9007199254740993}}`)
 	original := append([]byte(nil), raw...)
@@ -32,7 +32,7 @@ func TestEnhancedEncryptionKnownProjectionsAndOwnedSnapshot(t *testing.T) {
 	}
 }
 
-func TestEnhancedEncryptionUnprojectableValuesStayRaw(t *testing.T) {
+func TestUnitEnhancedEncryptionUnprojectableValuesStayRaw(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"CallingEndtoEndEncryptionEnabledType":{},"MeetingEndToEndEncryption":false,"Description":[]}`, `{"CallingEndtoEndEncryptionEnabledType":0,"MeetingEndToEndEncryption":[],"Description":{}}`} {
 		var value resource.Policy

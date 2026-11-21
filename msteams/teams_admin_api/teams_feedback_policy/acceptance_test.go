@@ -11,7 +11,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestFeedbackPolicyGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
+func TestUnitFeedbackPolicyGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {

@@ -82,9 +82,9 @@ func educationAssignmentsOracle(t *testing.T, ctx context.Context, tenant string
 	return value
 }
 
-// TestLabEducationAssignmentsReadOnly performs configuration reads only.
+// TestAccEducationAssignmentsReadOnly performs configuration reads only.
 // Tenant updates and effective assignment app behavior need separate acceptance.
-func TestLabEducationAssignmentsReadOnly(t *testing.T) {
+func TestAccEducationAssignmentsReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -125,7 +125,7 @@ func TestLabEducationAssignmentsReadOnly(t *testing.T) {
 	t.Log("selected education assignments policy reads verified; persistence and effective assignment app behavior remain separately qualified")
 }
 
-func TestEducationAssignmentsOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitEducationAssignmentsOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"ParentDigestEnabledType":null,"MakeCodeEnabledType":"","TurnItInEnabledType":null,"TurnItInApiUrl":"https://fixture.invalid","TurnItInApiKey":"fixture"}`
@@ -159,7 +159,7 @@ func globalEducationAssignments(values []*resource.Policy) (*resource.Policy, er
 	}
 	return found, nil
 }
-func TestEducationAssignmentsGlobalSelection(t *testing.T) {
+func TestUnitEducationAssignmentsGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Policy{Identity: new("Global")}
 	tagged := &resource.Policy{Identity: new("Tag:Global")}
@@ -183,7 +183,7 @@ func matchesEducationAssignmentsGetterProjection(value *resource.Policy, setting
 	return json.Unmarshal(educationAssignmentsProjection(value), &left) == nil && json.Unmarshal(raw, &right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestEducationAssignmentsOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitEducationAssignmentsOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"makecodeenabledtype":"fixture"}`, `{"MakeCodeEnabledType":"earlier","makecodeenabledtype":"fixture"}`, `{"MakeCodeEnabledType":null,"makecodeenabledtype":"fixture"}`} {
 		var value resource.Policy

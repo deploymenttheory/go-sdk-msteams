@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_custom_banner_text"
 )
 
-func TestBannerPinnedProviderAndSelectors(t *testing.T) {
+func TestUnitBannerPinnedProviderAndSelectors(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -115,7 +115,7 @@ func TestBannerPinnedProviderAndSelectors(t *testing.T) {
 	}
 	evidence(t, results)
 }
-func TestBannerFiltersMatchCapturedSource(t *testing.T) {
+func TestUnitBannerFiltersMatchCapturedSource(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct{ name, pattern, want string }{{"list", "", "Global,global,Tag:Fixture, ,Global/fixture"}, {"filter-tag", "Fixture*", "Tag:Fixture"}, {"filter-space", " ", " "}, {"filter-global", "Global", "Global,global"}, {"filter-scoped", "Global/*", "Global/fixture"}} {

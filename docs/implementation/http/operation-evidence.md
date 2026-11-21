@@ -85,15 +85,15 @@ or silently claiming completion.
 
 | Contract | Fixture |
 |---|---|
-| Accepted/running/succeeded/failed, sticky terminal result and diagnostics | `TestOperationWaitSequencesAndTerminalDiagnostics` |
-| Recoverable local cancellation, poll limit, distinct remote cancellation | `TestOperationCancellationAndPollingLimitAreResumable` |
-| Delta/date Retry-After, deadline, stalled job | `TestOperationRetryAfterAndStalledWait` |
-| Unknown future state, changed ID, 202 with success body | `TestOperationRejectsUnknownStateIdentityChangeAnd202Success` |
-| Exact propagation code/status/window and default rejection | `TestOperationPropagationRequiresExactBoundedEvidence` |
-| Missing/unsafe locations and Graph interval before authentication | `TestGraphOperationLocationValidationAndMinimumDelay` |
-| Batch completion with item failures or inconsistent metadata | `TestBatchCompleteDoesNotHidePartialFailure` |
-| Session closure interrupts polling sleep | `TestOperationCloseCancelsSleepWithoutLosingHandle` |
-| Graph polling floor inside transient and rejected-token HTTP retries | `TestOperationMinimumAppliesInsideTransportRetries`, `TestOperationMinimumAppliesToRejectedTokenReplacement` |
+| Accepted/running/succeeded/failed, sticky terminal result and diagnostics | `TestUnitOperationWaitSequencesAndTerminalDiagnostics` |
+| Recoverable local cancellation, poll limit, distinct remote cancellation | `TestUnitOperationCancellationAndPollingLimitAreResumable` |
+| Delta/date Retry-After, deadline, stalled job | `TestUnitOperationRetryAfterAndStalledWait` |
+| Unknown future state, changed ID, 202 with success body | `TestUnitOperationRejectsUnknownStateIdentityChangeAnd202Success` |
+| Exact propagation code/status/window and default rejection | `TestUnitOperationPropagationRequiresExactBoundedEvidence` |
+| Missing/unsafe locations and Graph interval before authentication | `TestUnitGraphOperationLocationValidationAndMinimumDelay` |
+| Batch completion with item failures or inconsistent metadata | `TestUnitBatchCompleteDoesNotHidePartialFailure` |
+| Session closure interrupts polling sleep | `TestUnitOperationCloseCancelsSleepWithoutLosingHandle` |
+| Graph polling floor inside transient and rejected-token HTTP retries | `TestUnitOperationMinimumAppliesInsideTransportRetries`, `TestUnitOperationMinimumAppliesToRejectedTokenReplacement` |
 
 Other operation families require their own evidenced decoders and routes in resource
 tickets; generic cancellation support does not claim Graph Teams exposes a cancelled

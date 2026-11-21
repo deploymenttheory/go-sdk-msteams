@@ -81,7 +81,7 @@ No template, team, policy, Graph grant or directory role was changed by these
 checks. The requested tenant-scoped Teams Administrator role remains pending
 after automatic review rejected the earlier broader privilege change.
 
-`TestLabTeamTemplateCRUD` prepares expanded and JSON Body variants. Each journals
+`TestAccTeamTemplateCRUD` prepares expanded and JSON Body variants. Each journals
 creation intent, creates an isolated named tenant template, resolves and verifies
 its opaque reference, checks non-default create/update read-back and General,
 lists, deletes and verifies absence. Optional pinned PowerShell reads compare

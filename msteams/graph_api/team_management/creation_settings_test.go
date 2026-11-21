@@ -70,7 +70,7 @@ var booleanSettings = map[string]func(*bool) team.Settings{
 	},
 }
 
-func TestSettingsInputsCoverBothPinnedApplicationParameterSets(t *testing.T) {
+func TestUnitSettingsInputsCoverBothPinnedApplicationParameterSets(t *testing.T) {
 	t.Parallel()
 	var runtime struct {
 		Commands []struct {
@@ -130,7 +130,7 @@ func TestSettingsInputsCoverBothPinnedApplicationParameterSets(t *testing.T) {
 	}
 }
 
-func TestCreationAndUpdatePreserveEveryPinnedSettingsField(t *testing.T) {
+func TestUnitCreationAndUpdatePreserveEveryPinnedSettingsField(t *testing.T) {
 	t.Parallel()
 	data, err := os.ReadFile("../../../" + settingsSource)
 	if err != nil {

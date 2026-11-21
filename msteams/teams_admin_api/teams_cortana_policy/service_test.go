@@ -17,7 +17,7 @@ import (
 func fixtureSettings() resource.Settings {
 	return resource.Settings{Description: new(""), CortanaVoiceInvocationMode: new("FutureMode"), AllowCortanaVoiceInvocation: new(false), AllowCortanaAmbientListening: new(true), AllowCortanaInContextSuggestions: new(false)}
 }
-func TestCortanaPinnedGeneratedRequests(t *testing.T) {
+func TestUnitCortanaPinnedGeneratedRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -124,7 +124,7 @@ func TestCortanaPinnedGeneratedRequests(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCortanaModernFilterAndWhitespace(t *testing.T) {
+func TestUnitCortanaModernFilterAndWhitespace(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const reply = `[{"Identity":"Other"},{"Identity":"gLoBaL"},{"Identity":"Global"},{"Identity":"Tag:Global"},{"Identity":"Fixture"}]`

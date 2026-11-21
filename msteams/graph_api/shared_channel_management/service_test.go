@@ -84,7 +84,7 @@ func observed(v management.AllowedUsersResult, err error) contracttest.Observati
 	return contracttest.Observation{Value: map[string]any{"complete": v.Complete, "members": len(v.Members), "items": rows}, Response: v.Response, Err: err}
 }
 
-func TestSharedTeamOptionalSelectorAndUnshare(t *testing.T) {
+func TestUnitSharedTeamOptionalSelectorAndUnshare(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, single := range []bool{false, true} {
@@ -106,7 +106,7 @@ func TestSharedTeamOptionalSelectorAndUnshare(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAssociatedTeamsSelectionAndResolution(t *testing.T) {
+func TestUnitAssociatedTeamsSelectionAndResolution(t *testing.T) {
 	t.Parallel()
 	userRoute := "/beta/users/" + userID + "/teamwork/associatedTeams"
 	direct := "/v1.0/users/fixture@invalid?" + url.Values{"$select": {"id"}}.Encode()
@@ -137,7 +137,7 @@ func TestAssociatedTeamsSelectionAndResolution(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAllowedUsersProjectionFilterAndNullableEnrichment(t *testing.T) {
+func TestUnitAllowedUsersProjectionFilterAndNullableEnrichment(t *testing.T) {
 	t.Parallel()
 	roster := `{"value":[{"id":"member","userId":"` + userID + `","email":"fallback@invalid","roles":[]},{"id":"owner","userId":"` + hostID + `","roles":["guest","OWNER"]},{"id":"future","email":"future@invalid","roles":["future"],"tenantId":"external"}]}`
 	result := run(t, contracttest.Case{Name: "allowed-users-projection", Mappings: mapping("Get-SharedWithTeamUser"), Steps: []contracttest.Exchange{wire("GET", allowed(), 200, roster), wire("GET", usersPath(hostID, userID), 200, `{"value":[{"id":"`+hostID+`","userPrincipalName":"owner@invalid"},{"id":"`+userID+`","userPrincipalName":null}]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -150,7 +150,7 @@ func TestAllowedUsersProjectionFilterAndNullableEnrichment(t *testing.T) {
 	evidence(t, []contracttest.Result{result, filtered})
 }
 
-func TestAllowedUserFailuresRetainNativeState(t *testing.T) {
+func TestUnitAllowedUserFailuresRetainNativeState(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -172,7 +172,7 @@ func TestAllowedUserFailuresRetainNativeState(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCompositionsRejectOptionsAndCancellationBeforeCredentials(t *testing.T) {
+func TestUnitCompositionsRejectOptionsAndCancellationBeforeCredentials(t *testing.T) {
 	t.Parallel()
 	for i, options := range []management.AllowedUsersOptions{{Role: management.Guest}, {Role: "future"}, {UserLookupMaxPages: -1}, {Traversal: client.PagingOptions{MaxPages: -1}}} {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {

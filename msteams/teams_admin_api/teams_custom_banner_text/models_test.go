@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_custom_banner_text"
 )
 
-func TestBannerModelSettersMatchPinnedSource(t *testing.T) {
+func TestUnitBannerModelSettersMatchPinnedSource(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../" + source)
 	if err != nil {
@@ -64,7 +64,7 @@ func TestBannerModelSettersMatchPinnedSource(t *testing.T) {
 		})
 	}
 }
-func TestBannerRejectsEarlierSetterFailureAndOwnsSnapshot(t *testing.T) {
+func TestUnitBannerRejectsEarlierSetterFailureAndOwnsSnapshot(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"Text":null,"Text":"later"}`, `{"Id":"invalid","Id":"01234567-89ab-cdef-0123-456789abcdef"}`, `{"Id":"01234567-89ab-cdef-0123-456789abcdef\n\n"}`} {
 		var value resource.Banner

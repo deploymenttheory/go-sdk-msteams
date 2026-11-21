@@ -82,9 +82,9 @@ func filesPolicyOracle(t *testing.T, ctx context.Context, tenant string) filesPo
 	return value
 }
 
-// TestLabFilesPolicyReadOnly performs configuration reads only.
+// TestAccFilesPolicyReadOnly performs configuration reads only.
 // Creates, updates, deletes, grants and effective file behavior need separate acceptance.
-func TestLabFilesPolicyReadOnly(t *testing.T) {
+func TestAccFilesPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -129,7 +129,7 @@ func TestLabFilesPolicyReadOnly(t *testing.T) {
 	t.Log("selected files policy reads verified; persistence and effective file behavior remain separately qualified")
 }
 
-func TestFilesPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitFilesPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"NativeFileEntryPoints":"","SPChannelFilesTab":null,"DefaultFileUploadAppId":"not-a-guid","FileSharingInChatswithExternalUsers":"Future"}`
@@ -163,7 +163,7 @@ func globalFilesPolicy(values []*resource.Policy) (*resource.Policy, error) {
 	}
 	return found, nil
 }
-func TestFilesPolicyGlobalSelection(t *testing.T) {
+func TestUnitFilesPolicyGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Policy{Identity: new("Global")}
 	tagged := &resource.Policy{Identity: new("Tag:Global")}
@@ -187,7 +187,7 @@ func matchesFilesPolicyGetterProjection(value *resource.Policy, settings map[str
 	return json.Unmarshal(filesPolicyProjection(value), &left) == nil && json.Unmarshal(raw, &right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestFilesPolicyOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitFilesPolicyOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"nativefileentrypoints":"fixture"}`, `{"NativeFileEntryPoints":"earlier","nativefileentrypoints":"fixture"}`, `{"NativeFileEntryPoints":null,"nativefileentrypoints":"fixture"}`} {
 		var value resource.Policy

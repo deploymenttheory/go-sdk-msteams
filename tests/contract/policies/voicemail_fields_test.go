@@ -11,7 +11,7 @@ import (
 	voicemail "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
 )
 
-func TestVoicemailRequestFieldsMatchPinnedParameters(t *testing.T) {
+func TestUnitVoicemailRequestFieldsMatchPinnedParameters(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/powershell/8.1.0/runtime.json")
 	if err != nil {

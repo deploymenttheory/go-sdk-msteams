@@ -48,7 +48,7 @@ func exactJSON(t *testing.T, raw []byte) any {
 	}
 	return v
 }
-func TestChannelsPolicyKnownProjectionsMatchPinnedModels(t *testing.T) {
+func TestUnitChannelsPolicyKnownProjectionsMatchPinnedModels(t *testing.T) {
 	t.Parallel()
 	for _, m := range modelCases(t) {
 		t.Run(m.Name, func(t *testing.T) {
@@ -78,7 +78,7 @@ func TestChannelsPolicyKnownProjectionsMatchPinnedModels(t *testing.T) {
 		})
 	}
 }
-func TestChannelsPolicyPreservesOwnedRawSnapshot(t *testing.T) {
+func TestUnitChannelsPolicyPreservesOwnedRawSnapshot(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"Identity":"Global","AllowPrivateChannelCreation":false,"AllowCreatePrivateChannel":"FutureMode","Future":{"n":9007199254740993},"Description":"first","description":null}`)
 	saved := append([]byte(nil), raw...)
@@ -94,7 +94,7 @@ func TestChannelsPolicyPreservesOwnedRawSnapshot(t *testing.T) {
 	}
 }
 
-func TestChannelsPolicyRequiresNativeJSONTypes(t *testing.T) {
+func TestUnitChannelsPolicyRequiresNativeJSONTypes(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"AllowPrivateChannelCreation":"false"}`, `{"AllowCreatePrivateChannel":false}`, `{"Description":{}}`, `null`, `[]`} {
 		var value resource.Policy
@@ -107,7 +107,7 @@ func TestChannelsPolicyRequiresNativeJSONTypes(t *testing.T) {
 // The source model supplies accepted final values; the provider fixture
 // independently establishes sparse field binding and identity serialization.
 // This tests the composition, not a claimed source binder/network execution.
-func TestChannelsPolicyRequestsRetainAcceptedModelSettings(t *testing.T) {
+func TestUnitChannelsPolicyRequestsRetainAcceptedModelSettings(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for index, m := range modelCases(t) {

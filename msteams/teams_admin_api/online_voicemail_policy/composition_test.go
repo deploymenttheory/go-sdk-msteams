@@ -14,7 +14,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestVoicemailComposedUpdateRetainsPreparationAndBoundValues(t *testing.T) {
+func TestUnitVoicemailComposedUpdateRetainsPreparationAndBoundValues(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -46,7 +46,7 @@ func TestVoicemailComposedUpdateRetainsPreparationAndBoundValues(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestVoicemailCreateComparisonDoesNotCloneDefaultsOrBlockSubmission(t *testing.T) {
+func TestUnitVoicemailCreateComparisonDoesNotCloneDefaultsOrBlockSubmission(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, status := range []int{200, 403} {
@@ -61,7 +61,7 @@ func TestVoicemailCreateComparisonDoesNotCloneDefaultsOrBlockSubmission(t *testi
 	evidence(t, results)
 }
 
-func TestVoicemailListFilteringAndExactGlobalOrder(t *testing.T) {
+func TestUnitVoicemailListFilteringAndExactGlobalOrder(t *testing.T) {
 	t.Parallel()
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"}]`
 	var results []contracttest.Result
@@ -90,7 +90,7 @@ func TestVoicemailListFilteringAndExactGlobalOrder(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestVoicemailBindingAndOperationReadComposeWithoutRediscovery(t *testing.T) {
+func TestUnitVoicemailBindingAndOperationReadComposeWithoutRediscovery(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "binding-group-zero-then-operation", Source: generatedSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: "GrantToGroup"}}, Steps: []contracttest.Exchange{discovery(), generatedWire("POST", origin+"/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy", "Grant-CsOnlineVoicemailPolicy", json.RawMessage(`{"policyName":""}`), 202, `{"OperationId":"fixture/operation"}`), generatedWire("GET", origin+"/Skype.Policy/assignments/operations/fixture%2Foperation", "Get-CsBatchPolicyAssignmentOperation", nil, 200, `{"operationId":"fixture/operation","overallStatus":"Future","completedCount":0,"Future":false}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.OnlineVoicemailPolicies

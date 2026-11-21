@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestPromptsInputContextAndBackendRejectBeforeHTTP(t *testing.T) {
+func TestUnitPromptsInputContextAndBackendRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts
@@ -61,7 +61,7 @@ func TestPromptsInputContextAndBackendRejectBeforeHTTP(t *testing.T) {
 	evidence(t, []contracttest.Result{r})
 }
 
-func TestPromptsPatchPreservesStatusAndNeverReplays(t *testing.T) {
+func TestUnitPromptsPatchPreservesStatusAndNeverReplays(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, status := range []int{400, 401, 403, 429, 503} {
@@ -77,7 +77,7 @@ func TestPromptsPatchPreservesStatusAndNeverReplays(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestPromptsBuildersNeverAcquireCredentialsOrHTTP(t *testing.T) {
+func TestUnitPromptsBuildersNeverAcquireCredentialsOrHTTP(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "local-prompt-package-builders", Source: sourceModels, Invoke: func(_ context.Context, _ *msteams.Client) contracttest.Observation {
 		prompt, e := resource.NewPrompt(firstID, "", "")

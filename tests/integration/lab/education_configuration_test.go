@@ -82,9 +82,9 @@ func educationConfigurationOracle(t *testing.T, ctx context.Context, tenant stri
 	return value
 }
 
-// TestLabEducationConfigurationReadOnly performs configuration reads only.
+// TestAccEducationConfigurationReadOnly performs configuration reads only.
 // Tenant updates and effective education behavior need separate acceptance.
-func TestLabEducationConfigurationReadOnly(t *testing.T) {
+func TestAccEducationConfigurationReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -125,7 +125,7 @@ func TestLabEducationConfigurationReadOnly(t *testing.T) {
 	t.Log("selected education configuration reads verified; persistence and effective education behavior remain separately qualified")
 }
 
-func TestEducationConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitEducationConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"ParentGuardianPreferredContactMethod":null,"EduGenerativeAIEnhancements":"","UpdateParentInformation":"fixture"}`
@@ -159,7 +159,7 @@ func globalEducationConfiguration(values []*resource.Configuration) (*resource.C
 	}
 	return found, nil
 }
-func TestEducationConfigurationGlobalSelection(t *testing.T) {
+func TestUnitEducationConfigurationGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Configuration{Identity: new("Global")}
 	tagged := &resource.Configuration{Identity: new("Tag:Global")}
@@ -183,7 +183,7 @@ func matchesEducationConfigurationGetterProjection(value *resource.Configuration
 	return json.Unmarshal(educationConfigurationProjection(value), &left) == nil && json.Unmarshal(raw, &right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestEducationConfigurationOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitEducationConfigurationOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"edugenerativeaienhancements":"fixture"}`, `{"EduGenerativeAIEnhancements":"earlier","edugenerativeaienhancements":"fixture"}`, `{"EduGenerativeAIEnhancements":null,"edugenerativeaienhancements":"fixture"}`} {
 		var value resource.Configuration

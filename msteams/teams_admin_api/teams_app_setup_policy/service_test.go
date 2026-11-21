@@ -17,7 +17,7 @@ import (
 
 const largeOrder int64 = 9007199254740993
 
-func TestAppSetupPinnedProviderRequests(t *testing.T) {
+func TestUnitAppSetupPinnedProviderRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -116,7 +116,7 @@ func TestAppSetupPinnedProviderRequests(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestAppSetupFilterKeepsGlobalTagAndWhitespace(t *testing.T) {
+func TestUnitAppSetupFilterKeepsGlobalTagAndWhitespace(t *testing.T) {
 	t.Parallel()
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`
 	var results []contracttest.Result

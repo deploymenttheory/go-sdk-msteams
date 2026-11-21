@@ -16,7 +16,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_education_assignments_app_policy"
 )
 
-func TestEducationAssignmentsPatchDoesNotReplayOrExposeKey(t *testing.T) {
+func TestUnitEducationAssignmentsPatchDoesNotReplayOrExposeKey(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -33,7 +33,7 @@ func TestEducationAssignmentsPatchDoesNotReplayOrExposeKey(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestEducationAssignmentsLocalGuardsBeforeCredentials(t *testing.T) {
+func TestUnitEducationAssignmentsLocalGuardsBeforeCredentials(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "local-guards", Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: "Identity"}, {Command: getCommand, ParameterSet: "Filter"}, {Command: setCommand, ParameterSet: "Identity"}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsEducationAssignmentsAppPolicies

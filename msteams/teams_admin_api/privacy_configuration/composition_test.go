@@ -13,7 +13,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/privacy_configuration"
 )
 
-func TestPrivacyComposedUpdateRetainsPreparationAndOmission(t *testing.T) {
+func TestUnitPrivacyComposedUpdateRetainsPreparationAndOmission(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -54,7 +54,7 @@ func TestPrivacyComposedUpdateRetainsPreparationAndOmission(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestPrivacyListFilteringAndGlobalOrder(t *testing.T) {
+func TestUnitPrivacyListFilteringAndGlobalOrder(t *testing.T) {
 	t.Parallel()
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":"fixture-two"}]`
 	var results []contracttest.Result
@@ -81,7 +81,7 @@ func TestPrivacyListFilteringAndGlobalOrder(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestPrivacyWhitespaceFilterRemainsLiteral(t *testing.T) {
+func TestUnitPrivacyWhitespaceFilterRemainsLiteral(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "literal-whitespace-filter", Mappings: []contracttest.Mapping{{Command: "Get-CsPrivacyConfiguration", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{wire("GET", collection, "Get-CsPrivacyConfiguration", nil, 200, `[{"Identity":"Global"},{"Identity":" "},{"Identity":"Tag: "}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, " ")
@@ -93,7 +93,7 @@ func TestPrivacyWhitespaceFilterRemainsLiteral(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestPrivacyUpdateKeepsMissingBodyIdentity(t *testing.T) {
+func TestUnitPrivacyUpdateKeepsMissingBodyIdentity(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, read := range []struct{ name, body string }{{"null", `{"Identity":null,"AutoInitiateContacts":true}`}, {"absent", `{"AutoInitiateContacts":true}`}} {

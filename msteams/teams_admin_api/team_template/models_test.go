@@ -7,7 +7,7 @@ import (
 	template "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
 )
 
-func TestTemplatePreservesResponseAndProjectsFlattenedDefinition(t *testing.T) {
+func TestUnitTemplatePreservesResponseAndProjectsFlattenedDefinition(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"displayName":"Root","@odata.id":"/opaque/reference","teamDefinition":{"displayName":"Definition","channels":[],"futureNested":false},"extendedProperties":{"shortDescription":"Summary","futureValues":[]},"futureNull":null}`)
 	var value template.Template
@@ -45,7 +45,7 @@ func TestTemplatePreservesResponseAndProjectsFlattenedDefinition(t *testing.T) {
 	}
 }
 
-func TestTemplateSummaryPreservesOmissionUnknownValuesAndZero(t *testing.T) {
+func TestUnitTemplateSummaryPreservesOmissionUnknownValuesAndZero(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, raw string
@@ -72,7 +72,7 @@ func TestTemplateSummaryPreservesOmissionUnknownValuesAndZero(t *testing.T) {
 	}
 }
 
-func TestErrorEnvelopeRetainsFutureFieldsAndEmptyErrors(t *testing.T) {
+func TestUnitErrorEnvelopeRetainsFutureFieldsAndEmptyErrors(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{
 		`{"operationId":"fixture-operation","errors":[{"code":"FixtureCode","message":"Fixture message","action":"Fixture action","futureDetail":false}],"futureEnvelope":[]}`,
@@ -94,7 +94,7 @@ func TestErrorEnvelopeRetainsFutureFieldsAndEmptyErrors(t *testing.T) {
 	}
 }
 
-func TestReadModelsRejectNonObjects(t *testing.T) {
+func TestUnitReadModelsRejectNonObjects(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name string

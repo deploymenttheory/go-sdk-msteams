@@ -84,9 +84,9 @@ func cortanaPolicyOracle(t *testing.T, ctx context.Context, tenant string) corta
 	return value
 }
 
-// TestLabCortanaPolicyReadOnly never edits Global, creates resources or grants a
+// TestAccCortanaPolicyReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabCortanaPolicyReadOnly(t *testing.T) {
+func TestAccCortanaPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -159,7 +159,7 @@ func globalCortanaPolicy(values []resource.Policy) (*resource.Policy, error) {
 	}
 	return found, nil
 }
-func TestCortanaPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitCortanaPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":"","CortanaVoiceInvocationMode":"FutureMode","AllowCortanaVoiceInvocation":false,"AllowCortanaAmbientListening":true,"AllowCortanaInContextSuggestions":null}`

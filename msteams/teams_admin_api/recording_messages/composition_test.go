@@ -13,7 +13,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/recording_messages"
 )
 
-func TestRecordingComposedUpdateKeepsReadIDAndFailurePreparation(t *testing.T) {
+func TestUnitRecordingComposedUpdateKeepsReadIDAndFailurePreparation(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const readID = "00000000-0000-4000-8000-000000000032"
@@ -55,7 +55,7 @@ func TestRecordingComposedUpdateKeepsReadIDAndFailurePreparation(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestRecordingComposedListEditUsesDTOProjection(t *testing.T) {
+func TestUnitRecordingComposedListEditUsesDTOProjection(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const before = `{"Identity":"read-model-identity","Id":"00000000-0000-4000-8000-000000000032","Future":true,"RecordingAndTranscriptionLocalizationCustomMessage":[{"Identity":"first","Language":"en-US","InitiatorImplicit":"a"},{"Identity":"second","Language":"en-US","InitiatorImplicit":"a","Future":false}]}`
@@ -89,7 +89,7 @@ func TestRecordingComposedListEditUsesDTOProjection(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestRecordingLocalBuilderHasNoCredentialsOrHTTP(t *testing.T) {
+func TestUnitRecordingLocalBuilderHasNoCredentialsOrHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-localization-builder", Source: "contracts/endpoints/8.1.0/fixtures/recording-message-models.json", Mappings: []contracttest.Mapping{{Command: "New-CsTeamsRecordingAndTranscriptionLocalizationCustomMessage", ParameterSet: "Identity"}}, Want: contracttest.Expected{JSON: json.RawMessage(`{"Identity":null,"Language":"Future-Language","InitiatorImplicit":null,"ParticipantImplicit":null,"InitiatorExplicit":null,"ParticipantExplicitRequested":null,"ParticipantExplicitProvided":null,"AgreementDialogue":null}`)}, Invoke: func(_ context.Context, _ *msteams.Client) contracttest.Observation {
 		v, e := resource.NewLocalization(resource.LocalizationInput{Language: "Future-Language"})

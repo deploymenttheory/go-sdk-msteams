@@ -15,10 +15,10 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-// TestApplicationAccessLab uses only the explicitly selected dedicated lab app.
+// TestAccApplicationAccess uses only the explicitly selected dedicated lab app.
 // Its expected grant is Organization.Read.All, with no User.Read.All or directory
 // role. Requests are read-only; assertions never log response bodies or identifiers.
-func TestApplicationAccessLab(t *testing.T) {
+func TestAccApplicationAccess(t *testing.T) {
 	if os.Getenv("MSTEAMS_LIVE_ACCESS") != "1" {
 		t.Skip("live operation access checks are opt-in")
 	}

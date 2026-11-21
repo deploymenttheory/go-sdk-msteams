@@ -70,7 +70,7 @@ func workloadFixture(t *testing.T, cfg *Config) (*ApplicationProvider, *workload
 	t.Cleanup(func() { p.Close(); p.Wait() })
 	return p, s
 }
-func TestWorkloadRotatedFileAndAudienceIsolation(t *testing.T) {
+func TestUnitWorkloadRotatedFileAndAudienceIsolation(t *testing.T) {
 	t.Parallel()
 	path := filepath.Join(t.TempDir(), "assertion.jwt")
 	if err := os.WriteFile(path, []byte("first-assertion\n"), 0600); err != nil {
@@ -113,7 +113,7 @@ func TestWorkloadRotatedFileAndAudienceIsolation(t *testing.T) {
 		t.Fatal("audiences crossed")
 	}
 }
-func TestWorkloadCallbackCoalescesAndRespectsBinding(t *testing.T) {
+func TestUnitWorkloadCallbackCoalescesAndRespectsBinding(t *testing.T) {
 	t.Parallel()
 	var calls atomic.Int32
 	p, s := workloadFixture(t, &Config{Method: WorkloadIdentity, TenantID: appTenant, ClientID: appID, Assertion: func(ctx context.Context) (string, error) { calls.Add(1); return "callback-assertion", ctx.Err() }})
@@ -144,7 +144,7 @@ func TestWorkloadCallbackCoalescesAndRespectsBinding(t *testing.T) {
 		t.Fatal("exchange not coalesced")
 	}
 }
-func TestWorkloadInvalidAndExpiredAssertions(t *testing.T) {
+func TestUnitWorkloadInvalidAndExpiredAssertions(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name   string
@@ -174,7 +174,7 @@ func TestWorkloadInvalidAndExpiredAssertions(t *testing.T) {
 		})
 	}
 }
-func TestWorkloadCancellationAndOwnedClose(t *testing.T) {
+func TestUnitWorkloadCancellationAndOwnedClose(t *testing.T) {
 	t.Parallel()
 	entered := make(chan struct{})
 	p, _ := workloadFixture(t, &Config{Method: WorkloadIdentity, TenantID: appTenant, ClientID: appID, Assertion: func(ctx context.Context) (string, error) { close(entered); <-ctx.Done(); return "", ctx.Err() }})
@@ -196,7 +196,7 @@ func TestWorkloadCancellationAndOwnedClose(t *testing.T) {
 	}
 }
 
-func TestWorkloadFileBoundsAndNonregularSources(t *testing.T) {
+func TestUnitWorkloadFileBoundsAndNonregularSources(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"empty", "oversize", "directory"} {
 		t.Run(kind, func(t *testing.T) {

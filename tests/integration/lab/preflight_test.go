@@ -13,9 +13,9 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-// TestLabPreflight stays discoverable in ordinary go test and explicitly skips
+// TestAccPreflight stays discoverable in ordinary go test and explicitly skips
 // before loading credentials. All requests are the harness's two read-only probes.
-func TestLabPreflight(t *testing.T) {
+func TestAccPreflight(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal(err)

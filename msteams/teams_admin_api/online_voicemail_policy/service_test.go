@@ -25,7 +25,7 @@ func settings(duration string) resource.Settings {
 	return resource.Settings{Description: policy.Set(""), ShareData: policy.Set("FutureValue"), PrimarySystemPromptLanguage: policy.Set("FuturePrimary"), SecondarySystemPromptLanguage: policy.Set("FutureSecondary"), PreambleAudioFile: policy.Set("fixture-audio-reference"), PostambleAudioFile: policy.Set(""), EnableTranscription: policy.Set(false), EnableTranscriptionProfanityMasking: policy.Set(false), EnableEditingCallAnswerRulesSetting: policy.Set(false), EnableTranscriptionTranslation: policy.Set(false), PreamblePostambleMandatory: policy.Set(false), EnableVoicemailTriage: policy.Set(false), MaximumRecordingLength: length}
 }
 
-func TestVoicemailCompiledProviderRequests(t *testing.T) {
+func TestUnitVoicemailCompiledProviderRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captured(t) {

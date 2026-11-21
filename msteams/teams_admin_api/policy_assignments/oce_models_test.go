@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestOCEProfilesMatchPinnedEnvironmentAndRegionTables(t *testing.T) {
+func TestUnitOCEProfilesMatchPinnedEnvironmentAndRegionTables(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-assignment-oce.json")
 	if err != nil {
@@ -45,7 +45,7 @@ func TestOCEProfilesMatchPinnedEnvironmentAndRegionTables(t *testing.T) {
 	}
 }
 
-func TestPinnedOCEModelObservationsPreserveReceivedFields(t *testing.T) {
+func TestUnitPinnedOCEModelObservationsPreserveReceivedFields(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-assignment-oce.json")
 	if err != nil {
@@ -165,7 +165,7 @@ func receivedProjection(input, projection any) any {
 	}
 }
 
-func TestOCEReadModelsDoNotMaterializeDefaultsOrLeakData(t *testing.T) {
+func TestUnitOCEReadModelsDoNotMaterializeDefaultsOrLeakData(t *testing.T) {
 	t.Parallel()
 	var status OCEBatchStatus
 	if json.Unmarshal([]byte(`{"CompletedCount":0,"ErrorCount":null,"future":"fixture-private","UserState":[{"Id":"fixture-private","AlternateId":null}]}`), &status) != nil {

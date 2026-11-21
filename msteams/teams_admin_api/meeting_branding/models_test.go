@@ -11,7 +11,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
 )
 
-func TestPinnedNestedBrandingProjection(t *testing.T) {
+func TestUnitPinnedNestedBrandingProjection(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-model-serialization.json")
 	if err != nil {
@@ -60,7 +60,7 @@ func TestPinnedNestedBrandingProjection(t *testing.T) {
 	}
 }
 
-func TestBrandingSnapshotsPreserveFuturePresenceAndRedactFormatting(t *testing.T) {
+func TestUnitBrandingSnapshotsPreserveFuturePresenceAndRedactFormatting(t *testing.T) {
 	t.Parallel()
 	const raw = `{"Identity":"fixture-private","MeetingBackgroundImages":[{"Id":"image","Order":-1,"Future":{"Enabled":false}}],"MeetingBrandingThemes":[{"Identity":"theme","Enabled":null,"MeetingReactions":[{"Id":"reaction","ReactionType":"Future","ReactionSpriteImageUrl":null,"Future":0}]}],"Future":[]}`
 	var p resource.Policy
@@ -83,7 +83,7 @@ func TestBrandingSnapshotsPreserveFuturePresenceAndRedactFormatting(t *testing.T
 	}
 }
 
-func TestPinnedAssetConstructorSnapshots(t *testing.T) {
+func TestUnitPinnedAssetConstructorSnapshots(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/branding-asset-models.json")
 	if err != nil {

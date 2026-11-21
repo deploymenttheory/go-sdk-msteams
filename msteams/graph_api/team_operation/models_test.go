@@ -9,7 +9,7 @@ import (
 	operation "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_operation"
 )
 
-func TestStatusInterpretationNeverGuessesFutureCompletion(t *testing.T) {
+func TestUnitStatusInterpretationNeverGuessesFutureCompletion(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name   string

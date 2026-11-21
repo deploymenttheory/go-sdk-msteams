@@ -1,7 +1,7 @@
 # Privacy configuration lab acceptance
 
 `MSTEAMS_LAB_READ_ONLY=1` and `MSTEAMS_LAB_IDENTITY_FILE` enable
-TestLabPrivacyConfigurationReadOnly with the existing private dedicated lab identity.
+TestAccPrivacyConfigurationReadOnly with the existing private dedicated lab identity.
 MSTEAMS_LAB_AUTH_METHOD selects certificate (default) or client-secret. The test
 reads Global and a locally filtered list. It changes no privacy setting, directory
 permission or role. Actual success/denial must be recorded separately from offline

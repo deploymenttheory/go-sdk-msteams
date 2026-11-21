@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestPinnedProviderDispatch(t *testing.T) {
+func TestUnitPinnedProviderDispatch(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	seen := 0
@@ -66,7 +66,7 @@ func TestPinnedProviderDispatch(t *testing.T) {
 	}
 	evidence(t, results)
 }
-func TestComposedUpdatePreservesReadIdentityAndSparseFields(t *testing.T) {
+func TestUnitComposedUpdatePreservesReadIdentityAndSparseFields(t *testing.T) {
 	t.Parallel()
 	path := "/Skype.Policy/configurations/TeamsAcsFederationConfiguration/configuration/scope%20/Fixture%20%2F%20Child"
 	r := run(t, contracttest.Case{Name: "composed-update", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsAcsFederationConfiguration", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{

@@ -51,7 +51,7 @@ func requirePass(t *testing.T, c Case) Result {
 	return result
 }
 
-func TestSuiteRegisterAndRun(t *testing.T) {
+func TestUnitSuiteRegisterAndRun(t *testing.T) {
 	t.Parallel()
 	// These are runner registration checks, not nine implemented resources.
 	families := []string{"teams", "team_templates", "team_members", "targeting", "shared_channels", "operations", "deployment_migration", "channels", "channel_members"}
@@ -84,7 +84,7 @@ func TestSuiteRegisterAndRun(t *testing.T) {
 	}
 }
 
-func TestRunDetectsWireAndResultRegressions(t *testing.T) {
+func TestUnitRunDetectsWireAndResultRegressions(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, path string
@@ -143,7 +143,7 @@ func TestRunDetectsWireAndResultRegressions(t *testing.T) {
 	}
 }
 
-func TestRunErrorAndCancellationContracts(t *testing.T) {
+func TestUnitRunErrorAndCancellationContracts(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name string
@@ -203,7 +203,7 @@ func TestRunErrorAndCancellationContracts(t *testing.T) {
 	})
 }
 
-func TestRunCloudAndModeBinding(t *testing.T) {
+func TestUnitRunCloudAndModeBinding(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, cloud string
@@ -236,7 +236,7 @@ func TestRunCloudAndModeBinding(t *testing.T) {
 	}
 }
 
-func TestRunInvalidFixtureNeverInvokes(t *testing.T) {
+func TestUnitRunInvalidFixtureNeverInvokes(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name string
@@ -271,7 +271,7 @@ func TestRunInvalidFixtureNeverInvokes(t *testing.T) {
 	}
 }
 
-func TestRunUnexpectedRequestCannotEscapeToNetwork(t *testing.T) {
+func TestUnitRunUnexpectedRequestCannotEscapeToNetwork(t *testing.T) {
 	t.Parallel()
 	c := graphCase()
 	// The callback deliberately calls the supplied HTTP client directly. Even
@@ -299,7 +299,7 @@ func TestRunUnexpectedRequestCannotEscapeToNetwork(t *testing.T) {
 	}
 }
 
-func TestCompareRequestPreservesNoBodyVersusJSONNull(t *testing.T) {
+func TestUnitCompareRequestPreservesNoBodyVersusJSONNull(t *testing.T) {
 	t.Parallel()
 	request, err := http.NewRequestWithContext(t.Context(), http.MethodGet, "https://graph.microsoft.com/v1.0/teams", io.NopCloser(strings.NewReader("null")))
 	if err != nil {
@@ -328,7 +328,7 @@ func binaryCase(payload []byte) Case {
 		}}
 }
 
-func TestRunBinaryComparesExactBytesWithoutNormalization(t *testing.T) {
+func TestUnitRunBinaryComparesExactBytesWithoutNormalization(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name    string

@@ -123,7 +123,7 @@ recorded in [the SDK evidence note](../../../docs/implementation/core/team-templ
 
 ## Lab acceptance
 
-`TestLabTeamTemplateCRUD` is opt-in and uses the dedicated lab identity. Its
+`TestAccTeamTemplateCRUD` is opt-in and uses the dedicated lab identity. Its
 expanded and JSON Body variants each journal intent, create one random tenant
 template, resolve its reference from
 a complete list and verifies ownership, reads non-default fields and General,
@@ -143,7 +143,7 @@ its output is compared in memory and not logged. Ordinary tests skip before
 reading credentials. No live CRUD success is claimed while the role grant is pending.
 
 After an interrupted run, select its private file in
-`MSTEAMS_LAB_RECOVERY_FILE` and run `TestLabTeamTemplateRecover` with the same
+`MSTEAMS_LAB_RECOVERY_FILE` and run `TestAccTeamTemplateRecover` with the same
 mutation opt-in, tenant/cloud/identity binding and private journal directory.
 An incomplete list, failed lookup, foreign reference, renamed fixture or
 ambiguous match remains unresolved rather than authorizing deletion.

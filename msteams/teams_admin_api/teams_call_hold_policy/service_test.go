@@ -17,7 +17,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_hold_policy"
 )
 
-func TestCallHoldPinnedCompiledCRUD(t *testing.T) {
+func TestUnitCallHoldPinnedCompiledCRUD(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -75,7 +75,7 @@ func TestCallHoldPinnedCompiledCRUD(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallHoldPinnedModernGrant(t *testing.T) {
+func TestUnitCallHoldPinnedModernGrant(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + grantSource)
 	if e != nil {
@@ -151,7 +151,7 @@ func TestCallHoldPinnedModernGrant(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCallHoldCompiledFilterDoesNotUseModernWhitespaceRules(t *testing.T) {
+func TestUnitCallHoldCompiledFilterDoesNotUseModernWhitespaceRules(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`

@@ -17,7 +17,7 @@ import (
 	configuration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
-func TestTenantFederationPinnedDispatch(t *testing.T) {
+func TestUnitTenantFederationPinnedDispatch(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -100,7 +100,7 @@ func inputFor(t *testing.T, name string) configuration.UpdateRequest {
 	return v
 }
 
-func TestTenantUpdateMatchesPinnedNormalization(t *testing.T) {
+func TestUnitTenantUpdateMatchesPinnedNormalization(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	rejected := 0
@@ -121,7 +121,7 @@ func TestTenantUpdateMatchesPinnedNormalization(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestTenantListFilteringAndRawChoices(t *testing.T) {
+func TestUnitTenantListFilteringAndRawChoices(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	reply := `[{"Identity":"tag:Fixture","AllowedDomains":{"AllowedDomain":[{"Domain":"a.example.invalid"}],"Future":false},"BlockedDomains":null},{"Identity":"Global","AllowedDomains":null,"AllowedTrialTenantDomains":[],"AllowTeamsConsumer":false,"Future":{"x":null}},{"Identity":"Other","ExternalAccessWithTrialTenants":"FutureState"}]`
@@ -152,7 +152,7 @@ func TestTenantListFilteringAndRawChoices(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestTenantIdentityEscapingAndMutationErrors(t *testing.T) {
+func TestUnitTenantIdentityEscapingAndMutationErrors(t *testing.T) {
 	t.Parallel()
 	identity := "scope/Fixture / Config"
 	run(t, contracttest.Case{Name: "escaped", Mode: auth.Application, Steps: []contracttest.Exchange{discovery(), wire("GET", collection+"/configuration/"+url.PathEscape(identity), getCommand, nil, 200, `{"Identity":"scope/Fixture / Config","AllowedDomains":["Future"]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -174,7 +174,7 @@ func TestTenantIdentityEscapingAndMutationErrors(t *testing.T) {
 	}
 }
 
-func TestTenantInvalidInputsDoNotAcquireCredentials(t *testing.T) {
+func TestUnitTenantInvalidInputsDoNotAcquireCredentials(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "invalid-local", Mode: auth.Application, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TenantFederationConfigurations

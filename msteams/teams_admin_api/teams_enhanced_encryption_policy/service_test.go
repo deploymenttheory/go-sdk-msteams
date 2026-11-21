@@ -17,7 +17,7 @@ import (
 func fixtureSettings() resource.Settings {
 	return resource.Settings{Description: new(""), CallingEndToEndEncryptionEnabledType: new("FutureCalling"), MeetingEndToEndEncryption: new("FutureMeeting")}
 }
-func TestEnhancedEncryptionPinnedGeneratedRequests(t *testing.T) {
+func TestUnitEnhancedEncryptionPinnedGeneratedRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -127,7 +127,7 @@ func TestEnhancedEncryptionPinnedGeneratedRequests(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestEnhancedEncryptionModernFilterAndWhitespace(t *testing.T) {
+func TestUnitEnhancedEncryptionModernFilterAndWhitespace(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	const reply = `[{"Identity":"Other"},{"Identity":"gLoBaL"},{"Identity":"Global"},{"Identity":"Tag:Global"},{"Identity":"Fixture"}]`

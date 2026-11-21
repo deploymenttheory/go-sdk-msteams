@@ -14,7 +14,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestBrandingComposedUpdatePreservesPreparationAndBoundFields(t *testing.T) {
+func TestUnitBrandingComposedUpdatePreservesPreparationAndBoundFields(t *testing.T) {
 	t.Parallel()
 	const before = `{"Identity":"read-model-identity","DefaultTheme":"preserved","EnableMeetingBackgroundImages":true,"MeetingBackgroundImages":[{"Id":"a","Order":0,"Name":"Fixture","ImageUri":"https://example.invalid/a"}],"Future":false}`
 	const image = `{"Identity":null,"Id":"a","Order":0,"Name":"Fixture","ImageUri":"https://example.invalid/a","IsRequired":null,"IsHidden":null}`
@@ -60,7 +60,7 @@ func TestBrandingComposedUpdatePreservesPreparationAndBoundFields(t *testing.T) 
 	evidence(t, results)
 }
 
-func TestBrandingUpdateFailuresDoNotReplayAndRetainHTTPAcceptance(t *testing.T) {
+func TestUnitBrandingUpdateFailuresDoNotReplayAndRetainHTTPAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, tc := range []struct {
@@ -92,7 +92,7 @@ func TestBrandingUpdateFailuresDoNotReplayAndRetainHTTPAcceptance(t *testing.T) 
 	evidence(t, results)
 }
 
-func TestBrandingCreateComparisonIsExplicitAndDoesNotCloneDefaults(t *testing.T) {
+func TestUnitBrandingCreateComparisonIsExplicitAndDoesNotCloneDefaults(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, status := range []int{200, 403} {
@@ -107,7 +107,7 @@ func TestBrandingCreateComparisonIsExplicitAndDoesNotCloneDefaults(t *testing.T)
 	evidence(t, results)
 }
 
-func TestBrandingListFilteringPreservesExactGlobalOrdering(t *testing.T) {
+func TestUnitBrandingListFilteringPreservesExactGlobalOrdering(t *testing.T) {
 	t.Parallel()
 	runResult := run(t, contracttest.Case{Name: "filter-local", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsMeetingBrandingPolicy", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{wire("GET", collection, "Get-CsTeamsMeetingBrandingPolicy", nil, 200, `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.MeetingBrandingPolicies.ListFiltered(ctx, "Fixture*")

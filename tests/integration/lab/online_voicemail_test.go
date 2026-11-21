@@ -76,9 +76,9 @@ func voicemailOracle(t *testing.T, ctx context.Context, tenant string) voicemail
 	return value
 }
 
-// TestLabOnlineVoicemailReadOnly never edits Global, creates assets or grants a
+// TestAccOnlineVoicemailReadOnly never edits Global, creates assets or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabOnlineVoicemailReadOnly(t *testing.T) {
+func TestAccOnlineVoicemailReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -124,7 +124,7 @@ func TestLabOnlineVoicemailReadOnly(t *testing.T) {
 	t.Log("selected voicemail reads verified; persistence, feature effects and assignments remain separately qualified")
 }
 
-func TestVoicemailOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitVoicemailOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":null,"EnableTranscription":false,"MaximumRecordingLength":"00:01:30"}`

@@ -62,7 +62,7 @@ Sources: [application authentication](https://learn.microsoft.com/en-us/microsof
 
 ## Live acceptance prepared, not yet executed
 
-`TestLabApplicationAccessPolicyCRUD` requires explicit mutation opt-in and a
+`TestAccApplicationAccessPolicyCRUD` requires explicit mutation opt-in and a
 private recovery directory. It creates one random unassigned policy, records
 intent before creation, checks non-default create/update read-back and omitted
 field retention, lists it, deletes it and checks absence. Tenant/identity-bound

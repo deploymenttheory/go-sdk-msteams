@@ -80,9 +80,9 @@ func audioConferencingPolicyOracle(t *testing.T, ctx context.Context, tenant str
 	return value
 }
 
-// TestLabAudioConferencingPolicyReadOnly never edits Global, creates resources or grants a
+// TestAccAudioConferencingPolicyReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabAudioConferencingPolicyReadOnly(t *testing.T) {
+func TestAccAudioConferencingPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -155,7 +155,7 @@ func globalAudioConferencingPolicy(values []resource.Policy) (*resource.Policy, 
 	}
 	return found, nil
 }
-func TestAudioConferencingPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitAudioConferencingPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"AllowTollFreeDialin":false,"MeetingInvitePhoneNumbers":["future-phone",null,{"Future":9007199254740993}]}`

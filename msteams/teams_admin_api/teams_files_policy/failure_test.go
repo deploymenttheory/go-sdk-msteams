@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
 )
 
-func TestFilesPolicyGrantRequiresOneExplicitScope(t *testing.T) {
+func TestUnitFilesPolicyGrantRequiresOneExplicitScope(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -30,7 +30,7 @@ func TestFilesPolicyGrantRequiresOneExplicitScope(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestFilesPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
+func TestUnitFilesPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
 	result := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsFilesPolicies
@@ -80,7 +80,7 @@ func TestFilesPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestFilesPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitFilesPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, operation := range []string{"create", "patch", "delete", "user", "group", "tenant"} {

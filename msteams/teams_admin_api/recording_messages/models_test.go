@@ -45,7 +45,7 @@ func models(t *testing.T) modelFixture {
 	}
 	return v
 }
-func TestRecordingPinnedModelSetterAndConstructorRules(t *testing.T) {
+func TestUnitRecordingPinnedModelSetterAndConstructorRules(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Models {
 		var value any
@@ -95,7 +95,7 @@ func TestRecordingPinnedModelSetterAndConstructorRules(t *testing.T) {
 		}
 	}
 }
-func TestRecordingSnapshotsRetainPresenceAndRejectEarlierBadSetters(t *testing.T) {
+func TestUnitRecordingSnapshotsRetainPresenceAndRejectEarlierBadSetters(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{}`, `{"Identity":"fixture-private","Id":null,"Future":{"a":[],"b":null}}`, `{"Id":"` + relative + `\n","RecordingAndTranscriptionLocalizationCustomMessage":[{"Language":"","InitiatorImplicit":"","Future":false},null]}`} {
 		var v resource.Message
@@ -124,7 +124,7 @@ func seed() []*resource.Localization {
 	}
 	return []*resource.Localization{makeItem("en-US", "a", "fixture-first"), makeItem("en-US", "a", "fixture-second"), makeItem("en-us", "a", "fixture-lower"), makeItem("en-US", "b", "fixture-different")}
 }
-func TestRecordingPinnedSevenFieldListEdits(t *testing.T) {
+func TestUnitRecordingPinnedSevenFieldListEdits(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Lists {
 		items := seed()
@@ -163,7 +163,7 @@ func TestRecordingPinnedSevenFieldListEdits(t *testing.T) {
 	}
 }
 
-func TestRecordingBuildersOwnInputsAndPreserveExactKeys(t *testing.T) {
+func TestUnitRecordingBuildersOwnInputsAndPreserveExactKeys(t *testing.T) {
 	t.Parallel()
 	text := "fixture-original"
 	v, e := resource.NewLocalization(resource.LocalizationInput{Language: "Future-Language", InitiatorImplicit: &text})
@@ -193,7 +193,7 @@ func TestRecordingBuildersOwnInputsAndPreserveExactKeys(t *testing.T) {
 	}
 }
 
-func TestRecordingRemovalComparesAllSevenOrdinalFields(t *testing.T) {
+func TestUnitRecordingRemovalComparesAllSevenOrdinalFields(t *testing.T) {
 	t.Parallel()
 	for _, field := range []string{"Language", "InitiatorImplicit", "ParticipantImplicit", "InitiatorExplicit", "ParticipantExplicitRequested", "ParticipantExplicitProvided", "AgreementDialogue"} {
 		remove := &resource.Localization{Language: new("en-US"), InitiatorImplicit: new("a")}

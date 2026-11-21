@@ -53,9 +53,9 @@ func targetingReadOnly(t *testing.T) lab.Config {
 	return cfg
 }
 
-// TestLabTargetingPolicyReadOnly reads Global and a locally filtered list. It
+// TestAccTargetingPolicyReadOnly reads Global and a locally filtered list. It
 // never changes a policy, assignment, directory grant or hierarchy.
-func TestLabTargetingPolicyReadOnly(t *testing.T) {
+func TestAccTargetingPolicyReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	sdk, binding, _ := labSDKClient(t)
@@ -89,9 +89,9 @@ func TestLabTargetingPolicyReadOnly(t *testing.T) {
 	t.Log("selected modern targeting reads observed; legacy flight eligibility and mutation effects remain separately qualified")
 }
 
-// TestLabTargetingHierarchyStatusReadOnly reads only the explicitly selected
+// TestAccTargetingHierarchyStatusReadOnly reads only the explicitly selected
 // version/request. It does not create/import/delete a singleton or poll it.
-func TestLabTargetingHierarchyStatusReadOnly(t *testing.T) {
+func TestAccTargetingHierarchyStatusReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	sdk, binding, _ := labSDKClient(t)

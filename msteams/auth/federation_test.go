@@ -18,7 +18,7 @@ const fixtureSAML = `<Envelope><Body><RequestSecurityTokenResponseCollection><Re
 <saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" AssertionID="fixture-assertion"/>
 </RequestedSecurityToken></RequestSecurityTokenResponse></RequestSecurityTokenResponseCollection></Body></Envelope>`
 
-func TestTrustedFederationPasswordUsesMicrosoftWSExchange(t *testing.T) {
+func TestUnitTrustedFederationPasswordUsesMicrosoftWSExchange(t *testing.T) {
 	t.Parallel()
 	for _, allowPassword := range []bool{false, true} {
 		t.Run(map[bool]string{false: "unapproved-password", true: "trusted-password"}[allowPassword], func(t *testing.T) {
@@ -76,7 +76,7 @@ func TestTrustedFederationPasswordUsesMicrosoftWSExchange(t *testing.T) {
 	}
 }
 
-func TestFederationEndpointValidation(t *testing.T) {
+func TestUnitFederationEndpointValidation(t *testing.T) {
 	t.Parallel()
 	for _, endpoint := range []string{"http://federation.test/mex", "https://user:secret@federation.test/mex", "https://federation.test/mex#fragment", "https://federation.test/mex?x=y", "https://federation.test/../mex", "https://login.microsoftonline.com/other/token"} {
 		cfg := delegatedConfig(Password)

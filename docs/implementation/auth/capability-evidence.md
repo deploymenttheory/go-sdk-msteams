@@ -87,12 +87,12 @@ See [Graph status semantics](https://learn.microsoft.com/en-us/graph/errors).
 
 | Contract | Test/evidence |
 |---|---|
-| Complete pinned union, dispositions, parameter sets, package identity | `TestCapabilityMatrixCoversPinnedInventory` |
-| Every current restriction, wildcard suffix and sovereign-only exception | `TestEveryDocumentedRestrictionAndCloud` checks every candidate across four clouds and both modes |
-| Same-type dual tokens, successful acquisition never authorizes a command, copy isolation | `TestCapabilityReportingDoesNotInferAuthorization` |
-| 401/403 distinction, missing-role fixture, misleading response text, 404 ambiguity | `TestOperationAccessFailuresRemainDistinct` for both backend profiles |
+| Complete pinned union, dispositions, parameter sets, package identity | `TestUnitCapabilityMatrixCoversPinnedInventory` |
+| Every current restriction, wildcard suffix and sovereign-only exception | `TestUnitEveryDocumentedRestrictionAndCloud` checks every candidate across four clouds and both modes |
+| Same-type dual tokens, successful acquisition never authorizes a command, copy isolation | `TestUnitCapabilityReportingDoesNotInferAuthorization` |
+| 401/403 distinction, missing-role fixture, misleading response text, 404 ambiguity | `TestUnitOperationAccessFailuresRemainDistinct` for both backend profiles |
 | Live secret/certificate, both audiences and authorized Graph read | [Initial application qualification](live-application-validation.md) |
-| Live permitted organization read, forbidden user read and invalid-token rejection | `TestApplicationAccessLab`, explicitly enabled against the dedicated app |
+| Live permitted organization read, forbidden user read and invalid-token rejection | `TestAccApplicationAccess`, explicitly enabled against the dedicated app |
 
 Missing-role and unavailable-feature cases are contract fixtures until resource
 qualification can prove the actual prerequisite. No directory roles or additional
@@ -101,7 +101,7 @@ or change the release-readiness ledger.
 
 ## Additional live qualification
 
-On 2026-11-20, `TestApplicationAccessLab` passed using the dedicated app's existing
+On 2026-11-20, `TestAccApplicationAccess` passed using the dedicated app's existing
 `Organization.Read.All` consent and no directory role. Both secret and PEM certificate
 flows acquired Graph and Teams audience tokens; Graph organization reads returned 200
 and minimal user-list reads returned 403, correctly matching `ErrForbidden`. A deliberately
@@ -115,7 +115,7 @@ Repeat only for the deliberately limited lab app:
 
 ```sh
 MSTEAMS_LIVE_ACCESS=1 MSTEAMS_LAB_IDENTITY_FILE=/private/path/lab-identity.json \
-  go test -count=1 -v -timeout 5m ./tests/integration/auth -run '^TestApplicationAccessLab$'
+  go test -count=1 -v -timeout 5m ./tests/integration/auth -run '^TestAccApplicationAccess$'
 ```
 
 Ordinary CI skips this test before reading files or acquiring credentials.

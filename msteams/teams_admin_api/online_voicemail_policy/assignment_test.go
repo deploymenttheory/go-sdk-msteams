@@ -35,7 +35,7 @@ func generatedWire(method, url, command string, body json.RawMessage, status int
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: url, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
 }
 
-func TestVoicemailGeneratedAssignmentRequests(t *testing.T) {
+func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../" + generatedSource)
 	if err != nil {

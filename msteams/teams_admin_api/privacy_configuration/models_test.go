@@ -11,7 +11,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/privacy_configuration"
 )
 
-func TestPrivacyConfigurationRetainsAllNullableSettingsAndFutureFields(t *testing.T) {
+func TestUnitPrivacyConfigurationRetainsAllNullableSettingsAndFutureFields(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"EnablePrivacyMode", "AutoInitiateContacts", "PublishLocationDataDefault", "DisplayPublishedPhotoDefault"} {
 		for _, value := range []string{"true", "false", "null"} {
@@ -46,7 +46,7 @@ func TestPrivacyConfigurationRetainsAllNullableSettingsAndFutureFields(t *testin
 	}
 }
 
-func TestPrivacyBoundSettingsKeepFalseNullAndOmission(t *testing.T) {
+func TestUnitPrivacyBoundSettingsKeepFalseNullAndOmission(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"EnablePrivacyMode", "AutoInitiateContacts", "PublishLocationDataDefault", "DisplayPublishedPhotoDefault"} {
 		for _, field := range []policy.Field[bool]{policy.Set(false), policy.Set(true), policy.Null[bool]()} {

@@ -16,9 +16,9 @@ import (
 	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
 )
 
-// TestLabChannelMembershipCRUD changes memberships only in a private channel of
+// TestAccChannelMembershipCRUD changes memberships only in a private channel of
 // its own journalled parent team. Existing fixtures are directory users only.
-func TestLabChannelMembershipCRUD(t *testing.T) {
+func TestAccChannelMembershipCRUD(t *testing.T) {
 	cfg := lifecycleLabConfig(t)
 	_ = teamOracleEnabled(t) // Validate optional oracle prerequisites before writes.
 	sdk, binding, _ := labSDKClient(t)

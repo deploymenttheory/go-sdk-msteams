@@ -14,7 +14,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 )
 
-func TestProviderFilteringIsLocalAndGlobalOrderIsExact(t *testing.T) {
+func TestUnitProviderFilteringIsLocalAndGlobalOrderIsExact(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	reply := `[{"Identity":"global","Future":null},{"Identity":"tag:Fixture","BlockedUsers":[]},{"Identity":"Global","BlockedUsers":["a"],"Future":{"value":false}},{"Identity":"Other"}]`
@@ -48,7 +48,7 @@ func TestProviderFilteringIsLocalAndGlobalOrderIsExact(t *testing.T) {
 	}
 	evidence(t, results)
 }
-func TestWrongBackendAndNilServiceRejectLocally(t *testing.T) {
+func TestUnitWrongBackendAndNilServiceRejectLocally(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "wrong-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		graph, e := client.NewScope(client.Graph, sdk.TeamsAdminAPI.Scope().Session())

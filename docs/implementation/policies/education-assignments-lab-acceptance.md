@@ -1,6 +1,6 @@
 # Education assignments app policy lab acceptance
 
-On 2026-11-21, TestLabEducationAssignmentsReadOnly attempted a compiled
+On 2026-11-21, TestAccEducationAssignmentsReadOnly attempted a compiled
 TeamsEducationAssignmentsAppPolicy Global read using the dedicated lab SPN with
 client-secret and certificate authentication. Both actual resource reads returned
 HTTP 403. No response payload, tenant/client ID, API key or credential was retained

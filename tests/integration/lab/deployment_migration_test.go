@@ -18,9 +18,9 @@ type privateMigrationObservation struct {
 	Details  *string `json:"details"`
 }
 
-// TestLabBatchDeploymentStatusReadOnly reads one explicitly selected existing
+// TestAccBatchDeploymentStatusReadOnly reads one explicitly selected existing
 // orchestration. It never submits a deployment or sends notification email.
-func TestLabBatchDeploymentStatusReadOnly(t *testing.T) {
+func TestAccBatchDeploymentStatusReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	sdk, binding, _ := labSDKClient(t)
@@ -52,7 +52,7 @@ func TestLabBatchDeploymentStatusReadOnly(t *testing.T) {
 	t.Log("selected raw batch status read observed; text does not establish deployment success")
 }
 
-func TestLabPrivateChannelMigrationReadOnly(t *testing.T) {
+func TestAccPrivateChannelMigrationReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	sdk, binding, _ := labSDKClient(t)
@@ -76,10 +76,10 @@ func TestLabPrivateChannelMigrationReadOnly(t *testing.T) {
 	t.Log("tenant private-channel migration observation read; completion/permissions remain separately qualified")
 }
 
-// TestLabMultiGeoRegionReadOnly requires a separately provisioned delegated
+// TestAccMultiGeoRegionReadOnly requires a separately provisioned delegated
 // scope-specific token file. It cannot reuse the dedicated application identity.
 // No token is obtained from an ambient browser or application-mode fallback.
-func TestLabMultiGeoRegionReadOnly(t *testing.T) {
+func TestAccMultiGeoRegionReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	path := os.Getenv("MSTEAMS_LAB_REGION_FILE")
 	if path == "" {

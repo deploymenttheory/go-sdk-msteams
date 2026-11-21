@@ -181,7 +181,7 @@ func enriched(stages string) json.RawMessage {
 	return json.RawMessage(`{"id":"` + groupID + `","value":{"id":"` + groupID + `","name":"Group name","description":"Group description","visibility":"Private","alias":"fixture","archived":false,"native_name":"Team name","group_raw":{"id":"` + groupID + `","displayName":"Group name","description":"Group description","visibility":"Private","mailNickname":"fixture"},"team_raw":{"id":"` + groupID + `","displayName":"Team name","isArchived":false,"memberSettings":{}}},"stages":` + stages + `}`)
 }
 
-func TestGetIdentityEnrichesFromSourceDerivedPairedRead(t *testing.T) {
+func TestUnitGetIdentityEnrichesFromSourceDerivedPairedRead(t *testing.T) {
 	t.Parallel()
 	r := runCase(t, "Get-Team", contracttest.Case{Name: "identity-enriched", Steps: fixture(t, "team-get-enriched"), Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		return observed(sdk.GraphAPI.TeamManagement.GetByID(ctx, groupID))
@@ -196,7 +196,7 @@ type observedPictureSource struct {
 
 func (s *observedPictureSource) Close() error { s.closes++; return nil }
 
-func TestDeleteAndPictureUseSourceDerivedPrimitiveMappings(t *testing.T) {
+func TestUnitDeleteAndPictureUseSourceDerivedPrimitiveMappings(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		command, sourceCase, report string
@@ -240,7 +240,7 @@ func TestDeleteAndPictureUseSourceDerivedPrimitiveMappings(t *testing.T) {
 	}
 }
 
-func TestUpdateOrdersWritesAndPreservesPartialOutcomes(t *testing.T) {
+func TestUnitUpdateOrdersWritesAndPreservesPartialOutcomes(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, name := range []string{"team-update-partial", "team-update-readback"} {
@@ -264,7 +264,7 @@ func TestUpdateOrdersWritesAndPreservesPartialOutcomes(t *testing.T) {
 	evidence(t, "team-update-service.json", results)
 }
 
-func TestEmptyUpdateUsesActualPinnedSettingsContainers(t *testing.T) {
+func TestUnitEmptyUpdateUsesActualPinnedSettingsContainers(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/core-team-serialization.json")
 	if err != nil {
@@ -295,7 +295,7 @@ func TestEmptyUpdateUsesActualPinnedSettingsContainers(t *testing.T) {
 	}, Want: contracttest.Expected{Status: 200, JSON: enriched(`["update-group:succeeded","update-team:succeeded","read-group:succeeded","read-team:succeeded"]`)}})
 }
 
-func TestFailuresStopLaterStagesWithoutReplayingOrRollingBack(t *testing.T) {
+func TestUnitFailuresStopLaterStagesWithoutReplayingOrRollingBack(t *testing.T) {
 	t.Parallel()
 	for _, phase := range []string{"group-write", "team-write", "group-read", "team-read", "wrong-group-id", "wrong-team-id"} {
 		t.Run(phase, func(t *testing.T) {
@@ -322,7 +322,7 @@ func TestFailuresStopLaterStagesWithoutReplayingOrRollingBack(t *testing.T) {
 	}
 }
 
-func TestInvalidInputAndCancellationPerformNoIO(t *testing.T) {
+func TestUnitInvalidInputAndCancellationPerformNoIO(t *testing.T) {
 	t.Parallel()
 	for _, method := range []string{"get", "update"} {
 		for _, condition := range []string{"invalid-id", "nil-context", "cancelled", "closed", "nil-service", "wrong-backend"} {

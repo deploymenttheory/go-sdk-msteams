@@ -41,7 +41,7 @@ func equalJSON(t *testing.T, expected, actual []byte) {
 	}
 }
 
-func TestNewDefinition(t *testing.T) {
+func TestUnitNewDefinition(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, display, short string
@@ -68,7 +68,7 @@ func TestNewDefinition(t *testing.T) {
 	}
 }
 
-func TestDefinitionMatchesPinnedModelObservations(t *testing.T) {
+func TestUnitDefinitionMatchesPinnedModelObservations(t *testing.T) {
 	t.Parallel()
 	selected := 0
 	for _, fixture := range modelObservations(t) {
@@ -113,7 +113,7 @@ func TestDefinitionMatchesPinnedModelObservations(t *testing.T) {
 	}
 }
 
-func TestParseDefinitionRejectsNonObjectsAndResetsReceiver(t *testing.T) {
+func TestUnitParseDefinitionRejectsNonObjectsAndResetsReceiver(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{"", "null", "[]", "true", `"text"`, "{"} {
 		t.Run("invalid "+raw, func(t *testing.T) {

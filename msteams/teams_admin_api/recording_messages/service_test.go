@@ -18,7 +18,7 @@ import (
 func fixtureLocalization() *resource.Localization {
 	return &resource.Localization{Language: new("en-US"), InitiatorImplicit: new("fixture initiator"), ParticipantImplicit: new(""), ParticipantExplicitRequested: new("fixture requested"), AgreementDialogue: new("fixture agreement")}
 }
-func TestRecordingPinnedProviderRequests(t *testing.T) {
+func TestUnitRecordingPinnedProviderRequests(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, f := range captures(t) {
@@ -107,7 +107,7 @@ func TestRecordingPinnedProviderRequests(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestRecordingListFilterKeepsSourceSelection(t *testing.T) {
+func TestUnitRecordingListFilterKeepsSourceSelection(t *testing.T) {
 	t.Parallel()
 	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`
 	var results []contracttest.Result

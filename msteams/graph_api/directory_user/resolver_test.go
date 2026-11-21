@@ -55,7 +55,7 @@ func mailPath(literal string) string {
 	return "/v1.0/users?" + url.Values{"$filter": {"mail eq '" + literal + "'"}, "$select": {"id"}, "$top": {"2"}}.Encode()
 }
 
-func TestResolverExplicitUUIDIsUnverifiedAndCredentialFree(t *testing.T) {
+func TestUnitResolverExplicitUUIDIsUnverifiedAndCredentialFree(t *testing.T) {
 	t.Parallel()
 	runCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, userID, directoryuser.ResolveOptions{}))
@@ -63,7 +63,7 @@ func TestResolverExplicitUUIDIsUnverifiedAndCredentialFree(t *testing.T) {
 		Want: contracttest.Expected{JSON: json.RawMessage(`{"id":"` + userID + `","source":"identifier","snapshot":null}`)}})
 }
 
-func TestResolverDirectAndCurrentReads(t *testing.T) {
+func TestUnitResolverDirectAndCurrentReads(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, selector, path, source string
@@ -85,7 +85,7 @@ func TestResolverDirectAndCurrentReads(t *testing.T) {
 	}
 }
 
-func TestResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
+func TestUnitResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
 	t.Parallel()
 	selector := "o'brien+tag#ext@example.invalid"
 	runCase(t, contracttest.Case{Steps: []contracttest.Exchange{
@@ -107,7 +107,7 @@ func TestResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
 	}
 }
 
-func TestResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
+func TestUnitResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
 	t.Parallel()
 	selector := "fixture@example.invalid"
 	first := wire(auth.GraphAudience, directPath(selector), 404, `{"error":{"code":"NotFound"}}`)
@@ -145,7 +145,7 @@ func TestResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
 	}
 }
 
-func TestResolverPendingAndMalformedNeverFallBack(t *testing.T) {
+func TestUnitResolverPendingAndMalformedNeverFallBack(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string
@@ -170,7 +170,7 @@ func TestResolverPendingAndMalformedNeverFallBack(t *testing.T) {
 	}
 }
 
-func TestResolverConfiguredCloudRoutes(t *testing.T) {
+func TestUnitResolverConfiguredCloudRoutes(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -189,7 +189,7 @@ func TestResolverConfiguredCloudRoutes(t *testing.T) {
 	}
 }
 
-func TestResolverValidationAndCurrentModeAreLocal(t *testing.T) {
+func TestUnitResolverValidationAndCurrentModeAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, action := range []string{"missing", "whitespace", "control", "backslash", "dot", "negative-pages", "app-current", "cancelled", "closed", "wrong-backend", "nil-resolver", "bad-select"} {
 		want := client.ErrRequest

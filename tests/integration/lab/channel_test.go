@@ -11,10 +11,10 @@ import (
 	management "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_management"
 )
 
-// TestLabChannelCRUD changes only channels in its own newly journalled team.
+// TestAccChannelCRUD changes only channels in its own newly journalled team.
 // The shared lifecycle recovery handler positively verifies and deletes that
 // parent team/group, including child channels after an interrupted run.
-func TestLabChannelCRUD(t *testing.T) {
+func TestAccChannelCRUD(t *testing.T) {
 	cfg := lifecycleLabConfig(t) // All three opt-ins precede any credential read.
 	sdk, binding, _ := labSDKClient(t)
 	owner, err := loadLifecycleOwner(os.Getenv("MSTEAMS_LAB_TEAM_OWNER_FILE"), binding)

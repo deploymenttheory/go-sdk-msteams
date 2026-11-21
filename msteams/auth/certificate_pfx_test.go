@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestPFXSupportedFormatAndPasswordFailures(t *testing.T) {
+func TestUnitPFXSupportedFormatAndPasswordFailures(t *testing.T) {
 	t.Parallel()
 	data, err := os.ReadFile("testdata/client-credentials-sha1.pfx")
 	if err != nil {
@@ -32,7 +32,7 @@ func TestPFXSupportedFormatAndPasswordFailures(t *testing.T) {
 	}
 }
 
-func TestPFXUnsupportedSHA256MACFailsExplicitly(t *testing.T) {
+func TestUnitPFXUnsupportedSHA256MACFailsExplicitly(t *testing.T) {
 	t.Parallel()
 	data, err := os.ReadFile("testdata/client-credentials-sha256.pfx")
 	if err != nil {

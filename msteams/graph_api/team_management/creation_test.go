@@ -61,7 +61,7 @@ func expectedCreation(owned bool, name, disposition string, primary, cleanup int
 	return json.RawMessage(fmt.Sprintf(`{"id":%q,"owned":%t,"owner_id":%q,"owner_source":%q,"alias":%q,"generated":false,"name":%s,"cleanup":%q,"primary_status":%d,"cleanup_status":%d,"stages":%s}`, groupID, owned, owner, resolution, alias, name, disposition, primary, cleanup, stages))
 }
 
-func TestCreationAndMigrationUsePinnedSourceDerivedSequences(t *testing.T) {
+func TestUnitCreationAndMigrationUsePinnedSourceDerivedSequences(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, name := range []string{"team-create-owned-group", "team-migrate-existing-success", "team-migrate-existing-failure"} {
@@ -95,7 +95,7 @@ func TestCreationAndMigrationUsePinnedSourceDerivedSequences(t *testing.T) {
 	evidence(t, "team-create-service.json", results)
 }
 
-func TestGroupCreationBindingsUseSelectedCloudAndConfiguredMode(t *testing.T) {
+func TestUnitGroupCreationBindingsUseSelectedCloudAndConfiguredMode(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -119,7 +119,7 @@ func TestGroupCreationBindingsUseSelectedCloudAndConfiguredMode(t *testing.T) {
 	}
 }
 
-func TestOwnerResolutionPrecedesAnyGroupWrite(t *testing.T) {
+func TestUnitOwnerResolutionPrecedesAnyGroupWrite(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"delegated-current", "direct-upn", "denied-upn"} {
 		selector, path := "", "/v1.0/me?$select=id"
@@ -145,7 +145,7 @@ func TestOwnerResolutionPrecedesAnyGroupWrite(t *testing.T) {
 	}
 }
 
-func TestEducationPresetsMatchActualPinnedModelCaptures(t *testing.T) {
+func TestUnitEducationPresetsMatchActualPinnedModelCaptures(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/core-model-serialization.json")
 	if err != nil {
@@ -194,7 +194,7 @@ func TestEducationPresetsMatchActualPinnedModelCaptures(t *testing.T) {
 	}
 }
 
-func TestCreationPropagationIsBoundedAndOnlyRetriesReceived404(t *testing.T) {
+func TestUnitCreationPropagationIsBoundedAndOnlyRetriesReceived404(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		happy := fixture(t, "team-create-owned-group")
 		missingGroup := wire("GET", "/v1.0/groups/"+groupID, "", 404, `{"error":{"code":"ResourceNotFound"}}`)
@@ -227,7 +227,7 @@ func TestCreationPropagationIsBoundedAndOnlyRetriesReceived404(t *testing.T) {
 	})
 }
 
-func TestCleanupKeepsPrimaryAndCleanupFailuresDistinct(t *testing.T) {
+func TestUnitCleanupKeepsPrimaryAndCleanupFailuresDistinct(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"delete-succeeded", "delete-denied", "retain-requested", "ambiguous-404", "ambiguous-existing-team", "reconcile-denied", "rejected-existing-team"} {
 		happy := fixture(t, "team-create-owned-group")
@@ -293,7 +293,7 @@ func TestCleanupKeepsPrimaryAndCleanupFailuresDistinct(t *testing.T) {
 	}
 }
 
-func TestCreatedTeamIsRetainedWhenEnrichmentFails(t *testing.T) {
+func TestUnitCreatedTeamIsRetainedWhenEnrichmentFails(t *testing.T) {
 	t.Parallel()
 	steps := fixture(t, "team-create-owned-group")
 	steps[3].Reply.Status = 403
@@ -308,7 +308,7 @@ func TestCreatedTeamIsRetainedWhenEnrichmentFails(t *testing.T) {
 	}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
 }
 
-func TestCreationTimeoutRetainsIDAndUsesBoundedFreshCleanupContext(t *testing.T) {
+func TestUnitCreationTimeoutRetainsIDAndUsesBoundedFreshCleanupContext(t *testing.T) {
 	for _, phase := range []string{"availability", "teamification"} {
 		synctest.Test(t, func(t *testing.T) {
 			happy := fixture(t, "team-create-owned-group")
@@ -336,7 +336,7 @@ func TestCreationTimeoutRetainsIDAndUsesBoundedFreshCleanupContext(t *testing.T)
 	}
 }
 
-func TestCreationValidationPrecedesCredentialsAndWrites(t *testing.T) {
+func TestUnitCreationValidationPrecedesCredentialsAndWrites(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"empty-name", "empty-alias", "empty-description", "empty-classification", "invalid-template", "class-explicit-visibility", "class-empty-visibility", "invalid-visibility", "negative-timeout", "negative-attempts", "negative-interval", "negative-cleanup-timeout", "application-without-owner"} {
 		mode := auth.Delegated

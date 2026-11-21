@@ -61,7 +61,7 @@ func createBody(t *testing.T, archive deployment.Archive) json.RawMessage {
 	return value
 }
 
-func TestBatchSubmissionUsesSelectedConfigAPIAndRetainsBothIdentities(t *testing.T) {
+func TestUnitBatchSubmissionUsesSelectedConfigAPIAndRetainsBothIdentities(t *testing.T) {
 	t.Parallel()
 	archive := testArchive(t)
 	body := createBody(t, archive)
@@ -76,7 +76,7 @@ func TestBatchSubmissionUsesSelectedConfigAPIAndRetainsBothIdentities(t *testing
 	evidence(t, []contracttest.Result{result})
 }
 
-func TestBatchStatusIsOpaqueAndIdentityInputIsNotAURI(t *testing.T) {
+func TestUnitBatchStatusIsOpaqueAndIdentityInputIsNotAURI(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, identity := range []bool{false, true} {
@@ -104,7 +104,7 @@ func TestBatchStatusIsOpaqueAndIdentityInputIsNotAURI(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestBatchErrorsRemainErrorsAndSubmissionIsNotReplayed(t *testing.T) {
+func TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed(t *testing.T) {
 	t.Parallel()
 	archive := testArchive(t)
 	for _, status := range []int{400, 404, 429, 503} {
@@ -121,7 +121,7 @@ func TestBatchErrorsRemainErrorsAndSubmissionIsNotReplayed(t *testing.T) {
 	}
 }
 
-func TestBatchRejectsInvalidInputBeforeDiscovery(t *testing.T) {
+func TestUnitBatchRejectsInvalidInputBeforeDiscovery(t *testing.T) {
 	t.Parallel()
 	for _, input := range []deployment.CreateRequest{{}, {Archive: testArchive(t)}, {UsersToNotify: "fixture@example.invalid"}} {
 		run(t, contracttest.Case{Name: "invalid-submit", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -137,7 +137,7 @@ func TestBatchRejectsInvalidInputBeforeDiscovery(t *testing.T) {
 	}, Want: contracttest.Expected{Error: context.Canceled}})
 }
 
-func TestBatchAcceptedWithoutUsableInstanceKeepsMetadata(t *testing.T) {
+func TestUnitBatchAcceptedWithoutUsableInstanceKeepsMetadata(t *testing.T) {
 	t.Parallel()
 	archive := testArchive(t)
 	result := run(t, contracttest.Case{Name: "accepted-missing-instance", Steps: []contracttest.Exchange{discover(), batchWire("POST", "/batchflwdeployment", createBody(t, archive), 202, `{"executionId":"fixture-execution"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {

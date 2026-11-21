@@ -69,7 +69,7 @@ redaction, non-replay and invalid scope/input are exercised. Header spy includes
 branding. Request-field inventories compare New/Set and theme options with pinned
 signatures. Examples compile; sanitized CI evidence maps exact command/set pairs.
 
-TestLabMeetingBrandingReadOnly ran with the existing dedicated SPN using client
+TestAccMeetingBrandingReadOnly ran with the existing dedicated SPN using client
 secret and certificate. Both Global requests returned resource HTTP 403. List and
 optional tenant-bound pinned PowerShell scalar comparison were not reached.
 No successful live behavior, mode restriction or feature/RBAC cause is inferred.

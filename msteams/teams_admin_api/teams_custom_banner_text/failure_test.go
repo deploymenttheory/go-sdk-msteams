@@ -15,7 +15,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_custom_banner_text"
 )
 
-func TestBannerMutationsNeverReplayInEitherSelector(t *testing.T) {
+func TestUnitBannerMutationsNeverReplayInEitherSelector(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, byID := range []bool{false, true} {
@@ -84,7 +84,7 @@ func TestBannerMutationsNeverReplayInEitherSelector(t *testing.T) {
 	}
 	evidence(t, results)
 }
-func TestBannerLocalInputContextAndBackendGuards(t *testing.T) {
+func TestUnitBannerLocalInputContextAndBackendGuards(t *testing.T) {
 	t.Parallel()
 	r := run(t, contracttest.Case{Name: "local-input-context-backend", Source: binderSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCustomBannerTexts

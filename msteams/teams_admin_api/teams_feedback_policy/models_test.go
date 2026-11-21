@@ -11,7 +11,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 )
 
-func TestFeedbackPolicyModelsMatchPinnedSetters(t *testing.T) {
+func TestUnitFeedbackPolicyModelsMatchPinnedSetters(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + source)
 	if e != nil {
@@ -55,7 +55,7 @@ func TestFeedbackPolicyModelsMatchPinnedSetters(t *testing.T) {
 	}
 }
 
-func TestFeedbackPolicySnapshotsOwnFutureData(t *testing.T) {
+func TestUnitFeedbackPolicySnapshotsOwnFutureData(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"Identity":"Global","AllowLogCollection":false,"AllowEmailCollection":null,"UserInitiatedMode":"","Future":9007199254740993}`)
 	var value resource.Policy

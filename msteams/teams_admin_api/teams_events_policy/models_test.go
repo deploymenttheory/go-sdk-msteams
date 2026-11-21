@@ -11,7 +11,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_events_policy"
 )
 
-func TestEventsPolicyModelsMatchPinnedSetters(t *testing.T) {
+func TestUnitEventsPolicyModelsMatchPinnedSetters(t *testing.T) {
 	t.Parallel()
 	raw, e := os.ReadFile("../../../" + source)
 	if e != nil {
@@ -55,7 +55,7 @@ func TestEventsPolicyModelsMatchPinnedSetters(t *testing.T) {
 	}
 }
 
-func TestEventsPolicySnapshotsOwnFutureData(t *testing.T) {
+func TestUnitEventsPolicySnapshotsOwnFutureData(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"Identity":"Global","UseMicrosoftECDN":false,"AllowEventIntegrations":null,"Description":"","Future":9007199254740993}`)
 	var value resource.Policy

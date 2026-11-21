@@ -90,21 +90,21 @@ that omitted page. Separate pagers are independent; one pager is consumed serial
 
 | Tests | Contract checked |
 |---|---|
-| `TestGraphPaginationUsesOpaqueLinksAndKeepsHeaders` | Three pages with empty intermediate data, exact URL preservation, query/header snapshots and completion |
-| `TestTeamsTokenPaginationPreservesQueryBodyAndTreatsNextLinkAsToken` | URL-shaped opaque token stays a query value; body/query snapshots and Teams audience isolation |
-| `TestOffsetPaginationContinuesAfterShortPages` | Nonzero starting offset, actual-count advancement, retained limit/filter and final empty array |
-| `TestPaginationLoopAndDestinationErrorsPreservePartialResults` | URL-loop canonicalization, cross-host/relative rejection before auth and collected prefix |
-| `TestTeamsTokenLoopsStopBeforeAnotherCredentialRequest` | Repeated token stops without another acquisition |
-| `TestPaginationTransportAndDecodeErrorsNeverReturnTruncatedSuccess` | Second-page failures retain prefix and last response, and remain terminal |
-| `TestPaginationLimitsAreTerminal` | Page/item bounds, whole-page aggregation limit and no silent resume after dropped data |
-| `TestPaginationCancellationReturnsCollectedPrefix` | Cancellation during the second request retains prior data |
-| `TestDecodeCollectionRequiresArrayEvenForBytes` | Non-array/null/missing envelope rejection, including Go's special []byte JSON behavior |
-| `TestPaginationConfigurationAndOffsetOverflow` | Ambiguous/negative offsets, unsafe operations, constructor purity and numeric overflow |
-| `TestIndependentPagersDoNotShareTraversalState` | Concurrent independent traversals under the race detector |
-| `TestPagerExpectedStatusRejectsUnexpectedPageBeforeDecode` | Configured HTTP 200 rejects 201/202/204/206 before decoding and cannot resume after failure |
-| `TestPagerExpectedStatusRetainsEarlierItemsAndLastResponse` | An unexpected later successful status retains the prior prefix and raw response |
-| `TestPagerStatusOptionPreservesGenericAndHTTPFailureBehavior` | Default any-2xx and explicitly selected success remain compatible; a 403 remains a typed forbidden error |
-| `TestPagerExpectedStatusValidationIsCredentialFree` | Invalid non-success expectations acquire no token and send no HTTP |
+| `TestUnitGraphPaginationUsesOpaqueLinksAndKeepsHeaders` | Three pages with empty intermediate data, exact URL preservation, query/header snapshots and completion |
+| `TestUnitTeamsTokenPaginationPreservesQueryBodyAndTreatsNextLinkAsToken` | URL-shaped opaque token stays a query value; body/query snapshots and Teams audience isolation |
+| `TestUnitOffsetPaginationContinuesAfterShortPages` | Nonzero starting offset, actual-count advancement, retained limit/filter and final empty array |
+| `TestUnitPaginationLoopAndDestinationErrorsPreservePartialResults` | URL-loop canonicalization, cross-host/relative rejection before auth and collected prefix |
+| `TestUnitTeamsTokenLoopsStopBeforeAnotherCredentialRequest` | Repeated token stops without another acquisition |
+| `TestUnitPaginationTransportAndDecodeErrorsNeverReturnTruncatedSuccess` | Second-page failures retain prefix and last response, and remain terminal |
+| `TestUnitPaginationLimitsAreTerminal` | Page/item bounds, whole-page aggregation limit and no silent resume after dropped data |
+| `TestUnitPaginationCancellationReturnsCollectedPrefix` | Cancellation during the second request retains prior data |
+| `TestUnitDecodeCollectionRequiresArrayEvenForBytes` | Non-array/null/missing envelope rejection, including Go's special []byte JSON behavior |
+| `TestUnitPaginationConfigurationAndOffsetOverflow` | Ambiguous/negative offsets, unsafe operations, constructor purity and numeric overflow |
+| `TestUnitIndependentPagersDoNotShareTraversalState` | Concurrent independent traversals under the race detector |
+| `TestUnitPagerExpectedStatusRejectsUnexpectedPageBeforeDecode` | Configured HTTP 200 rejects 201/202/204/206 before decoding and cannot resume after failure |
+| `TestUnitPagerExpectedStatusRetainsEarlierItemsAndLastResponse` | An unexpected later successful status retains the prior prefix and raw response |
+| `TestUnitPagerStatusOptionPreservesGenericAndHTTPFailureBehavior` | Default any-2xx and explicitly selected success remain compatible; a 403 remains a typed forbidden error |
+| `TestUnitPagerExpectedStatusValidationIsCredentialFree` | Invalid non-success expectations acquire no token and send no HTTP |
 
 These checks qualify traversal mechanics and the listed envelope/key mappings. They do
 not qualify resource-specific consistency guarantees, total-result limits, additional

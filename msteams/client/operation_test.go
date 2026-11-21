@@ -49,7 +49,7 @@ func fastWait() client.WaitOptions {
 	return client.WaitOptions{Timeout: time.Second, Interval: time.Millisecond, MaxPolls: 10}
 }
 
-func TestOperationWaitSequencesAndTerminalDiagnostics(t *testing.T) {
+func TestUnitOperationWaitSequencesAndTerminalDiagnostics(t *testing.T) {
 	t.Parallel()
 	for _, terminal := range []string{"succeeded", "failed"} {
 		t.Run(terminal, func(t *testing.T) {
@@ -85,7 +85,7 @@ func TestOperationWaitSequencesAndTerminalDiagnostics(t *testing.T) {
 	}
 }
 
-func TestOperationCancellationAndPollingLimitAreResumable(t *testing.T) {
+func TestUnitOperationCancellationAndPollingLimitAreResumable(t *testing.T) {
 	t.Parallel()
 	op, calls := operationFixture(t, []operationReply{
 		{200, `{"id":"fixture-id","status":"inProgress"}`, ""},
@@ -116,7 +116,7 @@ func TestOperationCancellationAndPollingLimitAreResumable(t *testing.T) {
 	}
 }
 
-func TestOperationRetryAfterAndStalledWait(t *testing.T) {
+func TestUnitOperationRetryAfterAndStalledWait(t *testing.T) {
 	t.Parallel()
 	for _, header := range []string{"1", time.Now().Add(time.Minute).UTC().Format(http.TimeFormat)} {
 		t.Run(header, func(t *testing.T) {
@@ -137,7 +137,7 @@ func TestOperationRetryAfterAndStalledWait(t *testing.T) {
 	}
 }
 
-func TestOperationRejectsUnknownStateIdentityChangeAnd202Success(t *testing.T) {
+func TestUnitOperationRejectsUnknownStateIdentityChangeAnd202Success(t *testing.T) {
 	t.Parallel()
 	for _, reply := range []operationReply{
 		{200, `{"id":"fixture-id","status":"unknownFutureValue"}`, ""},
@@ -152,7 +152,7 @@ func TestOperationRejectsUnknownStateIdentityChangeAnd202Success(t *testing.T) {
 	}
 }
 
-func TestOperationPropagationRequiresExactBoundedEvidence(t *testing.T) {
+func TestUnitOperationPropagationRequiresExactBoundedEvidence(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name        string
@@ -190,7 +190,7 @@ func TestOperationPropagationRequiresExactBoundedEvidence(t *testing.T) {
 	}
 }
 
-func TestGraphOperationLocationValidationAndMinimumDelay(t *testing.T) {
+func TestUnitGraphOperationLocationValidationAndMinimumDelay(t *testing.T) {
 	t.Parallel()
 	scope, _, provider := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(*http.Request) (*http.Response, error) {
 		t.Error("no immediate poll allowed")
@@ -215,7 +215,7 @@ func TestGraphOperationLocationValidationAndMinimumDelay(t *testing.T) {
 	}
 }
 
-func TestPropagationWindowCannotBeExtendedByServerDelay(t *testing.T) {
+func TestUnitPropagationWindowCannotBeExtendedByServerDelay(t *testing.T) {
 	t.Parallel()
 	op, calls := operationFixture(t, []operationReply{
 		{404, `{"error":{"code":"FixturePending"}}`, "1"},
@@ -231,7 +231,7 @@ func TestPropagationWindowCannotBeExtendedByServerDelay(t *testing.T) {
 	}
 }
 
-func TestBatchCompleteDoesNotHidePartialFailure(t *testing.T) {
+func TestUnitBatchCompleteDoesNotHidePartialFailure(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		body  string
@@ -254,7 +254,7 @@ func TestBatchCompleteDoesNotHidePartialFailure(t *testing.T) {
 	}
 }
 
-func TestOperationCloseCancelsSleepWithoutLosingHandle(t *testing.T) {
+func TestUnitOperationCloseCancelsSleepWithoutLosingHandle(t *testing.T) {
 	t.Parallel()
 	scope, session, _ := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(*http.Request) (*http.Response, error) {
 		t.Error("closed sleeping operation should not acquire a response")

@@ -14,7 +14,7 @@ import (
 // Required native string arguments express the final bound policy name. Shell
 // omission and PassThru binding failures are recorded source boundaries, not
 // invented native operations. Missing scope is expressible and rejects locally.
-func TestFeedbackPolicyMappedGrantForwarding(t *testing.T) {
+func TestUnitFeedbackPolicyMappedGrantForwarding(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../" + wrapperSource)
 	if err != nil {

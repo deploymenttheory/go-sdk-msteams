@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_cortana_policy"
 )
 
-func TestCortanaCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
+func TestUnitCortanaCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -56,7 +56,7 @@ func TestCortanaCreateRetainsSubmissionOnReadBackFailure(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCortanaGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
+func TestUnitCortanaGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -85,7 +85,7 @@ func TestCortanaGroupAcceptanceSurvivesOnlyActualPostResponses(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestCortanaGrantRankAndSparseGlobalComposition(t *testing.T) {
+func TestUnitCortanaGrantRankAndSparseGlobalComposition(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, rank := range []int32{0, 2, -1} {

@@ -12,7 +12,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_conferencing_prompts"
 )
 
-func TestPromptsUpdateKeepsPreparationAndHTTPAcceptance(t *testing.T) {
+func TestUnitPromptsUpdateKeepsPreparationAndHTTPAcceptance(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, c := range []struct {
@@ -53,7 +53,7 @@ func TestPromptsUpdateKeepsPreparationAndHTTPAcceptance(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestPromptsEditsFailBeforePatchOrPreserveSourceKeys(t *testing.T) {
+func TestUnitPromptsEditsFailBeforePatchOrPreserveSourceKeys(t *testing.T) {
 	t.Parallel()
 	var results []contracttest.Result
 	for _, name := range []string{"package-remove-nonempty", "package-remove-empty", "prompt-remove-first"} {

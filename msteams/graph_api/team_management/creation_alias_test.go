@@ -64,7 +64,7 @@ func creationReply(request *http.Request, status int, body string) *http.Respons
 	return &http.Response{StatusCode: status, Header: http.Header{"Content-Type": {"application/json"}}, Body: io.NopCloser(strings.NewReader(body)), Request: request}
 }
 
-func TestGeneratedAliasRequiresCompleteSuccessfulAvailabilityRead(t *testing.T) {
+func TestUnitGeneratedAliasRequiresCompleteSuccessfulAvailabilityRead(t *testing.T) {
 	t.Parallel()
 	pattern := regexp.MustCompile(`^groupTypes/any\(c:c eq 'Unified'\) and mailNickname eq '(msteams_[0-9a-f]{6})'$`)
 	for _, name := range []string{"available", "collision", "later-page-collision", "limit", "denied", "foreign-continuation"} {
@@ -155,7 +155,7 @@ func TestGeneratedAliasRequiresCompleteSuccessfulAvailabilityRead(t *testing.T) 
 	}
 }
 
-func TestLostCreationResponsesNeverReplayOrBlindlyCompensate(t *testing.T) {
+func TestUnitLostCreationResponsesNeverReplayOrBlindlyCompensate(t *testing.T) {
 	t.Parallel()
 	for _, phase := range []string{"group", "team"} {
 		t.Run(phase, func(t *testing.T) {

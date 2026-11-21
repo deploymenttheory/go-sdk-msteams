@@ -22,7 +22,7 @@ func statusObservation(value *hierarchy.Status) any {
 	return map[string]any{"id": value.ID, "status": value.Status, "last_known_status": value.LastKnownStatus, "error_message": value.ErrorMessage, "last_updated_at": value.LastUpdatedAt, "last_modified_by": value.LastModifiedBy, "filename": value.Filename}
 }
 
-func TestStatusProjectionMatchesPinnedCLRStateConstructors(t *testing.T) {
+func TestUnitStatusProjectionMatchesPinnedCLRStateConstructors(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/core-model-serialization.json")
 	if err != nil {
@@ -65,7 +65,7 @@ func TestStatusProjectionMatchesPinnedCLRStateConstructors(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestStatusErrorProjectionMatchesPinnedCLRConstructors(t *testing.T) {
+func TestUnitStatusErrorProjectionMatchesPinnedCLRConstructors(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/hierarchy-status-projections.json")
 	if err != nil {
@@ -118,7 +118,7 @@ func TestStatusErrorProjectionMatchesPinnedCLRConstructors(t *testing.T) {
 	evidence(t, results)
 }
 
-func TestMalformedNestedErrorsRetainReadableNativeOperation(t *testing.T) {
+func TestUnitMalformedNestedErrorsRetainReadableNativeOperation(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string

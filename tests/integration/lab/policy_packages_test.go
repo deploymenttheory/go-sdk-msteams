@@ -82,10 +82,10 @@ func delegatedPackageClient(t *testing.T) (*msteams.Client, string) {
 	return sdk, v.User
 }
 
-// TestLabPolicyPackagesReadOnly requires a separately supplied delegated context.
+// TestAccPolicyPackagesReadOnly requires a separately supplied delegated context.
 // With the existing SPN it verifies the documented local mode guard, then skips
 // tenant qualification. It never creates, changes or assigns a package.
-func TestLabPolicyPackagesReadOnly(t *testing.T) {
+func TestAccPolicyPackagesReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
@@ -131,7 +131,7 @@ func TestLabPolicyPackagesReadOnly(t *testing.T) {
 	t.Logf("delegated package list and %d selected reads observed; mutation/assignment and effective behavior remain separately qualified", checked)
 }
 
-func TestPackageDelegatedIdentityRejectsWrongTenantExpiryAndExtraData(t *testing.T) {
+func TestUnitPackageDelegatedIdentityRejectsWrongTenantExpiryAndExtraData(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	now := time.Date(2026, 11, 21, 12, 0, 0, 0, time.UTC)
