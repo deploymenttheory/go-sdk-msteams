@@ -1,0 +1,733 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-education-assignments-provider-and-models",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "exports": [
+    {
+      "name": "Get-CsTeamsEducationAssignmentsAppPolicy",
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsEducationAssignmentsAppPolicyCmdlet"
+    },
+    {
+      "name": "Set-CsTeamsEducationAssignmentsAppPolicy",
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTeamsEducationAssignmentsAppPolicyCmdlet"
+    }
+  ],
+  "stage": "Actual pinned public export types and direct HttpRequestHelper with synthetic InvocationInfo, credential-refusing host and memory sender. Client/version/host restored. MPACmdlet factory default supplied. Actual model constructors/setters/Newtonsoft projections for all five settings. No command constructor/lifecycle, public parameter binder, credentials, discovery or network. Compiled read/list/PATCH only; unexported Core New/Remove/Grant classes do not establish public operations.",
+  "cases": [
+    {
+      "input": "{}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsEducationAssignmentsAppPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "read",
+      "operation": "read",
+      "response": "{\"Identity\":\"Global\",\"Future\":false,\"ParentDigestEnabledType\":\"FutureParent\",\"MakeCodeEnabledType\":\"FutureCode\",\"TurnItInEnabledType\":\"FutureTurnItIn\",\"TurnItInApiUrl\":\"HTTPS://fixture.invalid\",\"TurnItInApiKey\":\"offline-fixture-key\"}",
+      "force_mode": -1
+    },
+    {
+      "input": "{}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsEducationAssignmentsAppPolicy, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "list-empty",
+      "operation": "list",
+      "response": "[]",
+      "force_mode": -1
+    },
+    {
+      "input": "{\"ParentDigestEnabledType\":\"FutureParent\",\"MakeCodeEnabledType\":\"FutureCode\",\"TurnItInEnabledType\":\"FutureTurnItIn\",\"TurnItInApiUrl\":\"HTTPS://fixture.invalid\",\"TurnItInApiKey\":\"offline-fixture-key\"}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentDigestEnabledType\": \"FutureParent\",\n  \"MakeCodeEnabledType\": \"FutureCode\",\n  \"TurnItInEnabledType\": \"FutureTurnItIn\",\n  \"TurnItInApiUrl\": \"HTTPS://fixture.invalid\",\n  \"TurnItInApiKey\": \"offline-fixture-key\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "patch-all",
+      "operation": "patch",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "input": "{\"ParentDigestEnabledType\":null,\"MakeCodeEnabledType\":null,\"TurnItInEnabledType\":null,\"TurnItInApiUrl\":null,\"TurnItInApiKey\":null}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentDigestEnabledType\": null,\n  \"MakeCodeEnabledType\": null,\n  \"TurnItInEnabledType\": null,\n  \"TurnItInApiUrl\": null,\n  \"TurnItInApiKey\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "patch-null",
+      "operation": "patch",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "input": "{\"ParentDigestEnabledType\":\"\",\"MakeCodeEnabledType\":\"\",\"TurnItInEnabledType\":\"\",\"TurnItInApiKey\":\"\"}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentDigestEnabledType\": \"\",\n  \"MakeCodeEnabledType\": \"\",\n  \"TurnItInEnabledType\": \"\",\n  \"TurnItInApiKey\": \"\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "patch-empty",
+      "operation": "patch",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "input": "{\"TurnItInApiKey\":\"\"}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"TurnItInApiKey\": \"\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "patch-force-false",
+      "operation": "patch",
+      "response": "",
+      "force_mode": 0
+    },
+    {
+      "input": "{\"TurnItInApiKey\":\"\"}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"TurnItInApiKey\": \"\",\n  \"Force\": \"True\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "patch-force-true",
+      "operation": "patch",
+      "response": "",
+      "force_mode": 1
+    },
+    {
+      "input": "{\"TurnItInApiUrl\":\"https://opaque\\n\"}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"TurnItInApiUrl\": \"https://opaque\\n\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "patch-url-final-lf",
+      "operation": "patch",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "input": "{\"TurnItInApiUrl\":\"\"}",
+      "capture": {
+        "Method": null,
+        "Url": null,
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": null,
+        "CorrelationIsGuid": false,
+        "HasTargetUri": false,
+        "MpaCmdlet": null,
+        "Sends": 0,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "status": 204,
+      "name": "patch-url-empty",
+      "operation": "patch",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "input": "{\"TurnItInApiUrl\":\"http://fixture.invalid\"}",
+      "capture": {
+        "Method": null,
+        "Url": null,
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": null,
+        "CorrelationIsGuid": false,
+        "HasTargetUri": false,
+        "MpaCmdlet": null,
+        "Sends": 0,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "status": 204,
+      "name": "patch-url-http",
+      "operation": "patch",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "input": "{}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 204,
+      "name": "read-empty",
+      "operation": "read",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "input": "{}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "status": 200,
+      "name": "read-null",
+      "operation": "read",
+      "response": "null",
+      "force_mode": -1
+    },
+    {
+      "input": "{}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "status": 200,
+      "name": "list-envelope",
+      "operation": "list",
+      "response": "{\"value\":[]}",
+      "force_mode": -1
+    },
+    {
+      "input": "{}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationAssignmentsAppPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      },
+      "status": 403,
+      "name": "read-denied",
+      "operation": "read",
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "force_mode": -1
+    }
+  ],
+  "models": [
+    {
+      "name": "constructor",
+      "input": "constructor",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "empty-object",
+      "input": "{}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "all-settings",
+      "input": "{\"ParentDigestEnabledType\":\"FutureParent\",\"MakeCodeEnabledType\":\"FutureCode\",\"TurnItInEnabledType\":\"FutureTurnItIn\",\"TurnItInApiUrl\":\"HTTPS://fixture.invalid\",\"TurnItInApiKey\":\"offline-fixture-key\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": "FutureParent",
+          "MakeCodeEnabledType": "FutureCode",
+          "TurnItInEnabledType": "FutureTurnItIn",
+          "TurnItInApiUrl": "HTTPS://fixture.invalid",
+          "TurnItInApiKey": "offline-fixture-key"
+        }
+      }
+    },
+    {
+      "name": "ParentDigestEnabledType-null",
+      "input": "{\"ParentDigestEnabledType\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "ParentDigestEnabledType-empty",
+      "input": "{\"ParentDigestEnabledType\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": "",
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "MakeCodeEnabledType-null",
+      "input": "{\"MakeCodeEnabledType\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "MakeCodeEnabledType-empty",
+      "input": "{\"MakeCodeEnabledType\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": "",
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "TurnItInEnabledType-null",
+      "input": "{\"TurnItInEnabledType\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "TurnItInEnabledType-empty",
+      "input": "{\"TurnItInEnabledType\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": "",
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "TurnItInApiUrl-null",
+      "input": "{\"TurnItInApiUrl\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "TurnItInApiUrl-empty",
+      "input": "{\"TurnItInApiUrl\":\"\"}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      }
+    },
+    {
+      "name": "TurnItInApiKey-null",
+      "input": "{\"TurnItInApiKey\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "TurnItInApiKey-empty",
+      "input": "{\"TurnItInApiKey\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": ""
+        }
+      }
+    },
+    {
+      "name": "url-http",
+      "input": "{\"TurnItInApiUrl\":\"http://fixture.invalid\"}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      }
+    },
+    {
+      "name": "url-upper",
+      "input": "{\"TurnItInApiUrl\":\"HTTPS://fixture.invalid\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": "HTTPS://fixture.invalid",
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "url-opaque",
+      "input": "{\"TurnItInApiUrl\":\"https://opaque\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": "https://opaque",
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "url-space",
+      "input": "{\"TurnItInApiUrl\":\"https:// \"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": "https:// ",
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "url-prefix-space",
+      "input": "{\"TurnItInApiUrl\":\" https://fixture.invalid\"}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      }
+    },
+    {
+      "name": "url-final-lf",
+      "input": "{\"TurnItInApiUrl\":\"https://fixture.invalid\\n\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": "https://fixture.invalid\n",
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "url-middle-lf",
+      "input": "{\"TurnItInApiUrl\":\"https://fixture\\n.invalid\"}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      }
+    },
+    {
+      "name": "url-empty-host",
+      "input": "{\"TurnItInApiUrl\":\"https://\"}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      }
+    },
+    {
+      "name": "long-api-key",
+      "input": "{\"TurnItInApiKey\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": null,
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      }
+    },
+    {
+      "name": "case-duplicate",
+      "input": "{\"ParentDigestEnabledType\":\"first\",\"parentdigestenabledtype\":\"second\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentDigestEnabledType": "second",
+          "MakeCodeEnabledType": null,
+          "TurnItInEnabledType": null,
+          "TurnItInApiUrl": null,
+          "TurnItInApiKey": null
+        }
+      }
+    },
+    {
+      "name": "invalid-then-valid-url",
+      "input": "{\"TurnItInApiUrl\":\"bad\",\"turnitinapiurl\":\"https://fixture.invalid\"}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      }
+    },
+    {
+      "name": "invalid-string-array",
+      "input": "{\"TurnItInApiKey\":[]}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonReaderException",
+        "value": null
+      }
+    }
+  ]
+}
