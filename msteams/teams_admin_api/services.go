@@ -12,6 +12,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
 	meetingbranding "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
 	onlinevoicemailpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
+	voicemailvalidation "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_validation_configuration"
 	privatechannelmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/private_channel_migration"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
@@ -24,22 +25,23 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
-	OnlineVoicemailPolicies           *onlinevoicemailpolicy.Service
-	MeetingBrandingPolicies           *meetingbranding.Service
-	AssignmentMigrations              *assignmentmigration.Service
-	TeamsExternalAccessConfigurations *teamsexternalaccessconfiguration.Service
-	ACSFederationConfigurations       *acsfederationconfiguration.Service
-	ExternalAccessPolicies            *externalaccesspolicy.Service
-	scope                             *client.Scope
-	ApplicationAccessPolicies         *applicationaccesspolicy.Service
-	ApplicationMeetingConfigurations  *applicationmeetingconfiguration.Service
-	TenantFederationConfigurations    *tenantfederationconfiguration.Service
-	TeamTemplates                     *teamtemplate.Service
-	TargetingPolicies                 *targetingpolicy.Service
-	TargetingHierarchy                *targetinghierarchy.Service
-	BatchDeployments                  *batchdeployment.Service
-	PrivateChannelMigration           *privatechannelmigration.Service
-	Regions                           *region.Service
+	OnlineVoicemailValidationConfigurations *voicemailvalidation.Service
+	OnlineVoicemailPolicies                 *onlinevoicemailpolicy.Service
+	MeetingBrandingPolicies                 *meetingbranding.Service
+	AssignmentMigrations                    *assignmentmigration.Service
+	TeamsExternalAccessConfigurations       *teamsexternalaccessconfiguration.Service
+	ACSFederationConfigurations             *acsfederationconfiguration.Service
+	ExternalAccessPolicies                  *externalaccesspolicy.Service
+	scope                                   *client.Scope
+	ApplicationAccessPolicies               *applicationaccesspolicy.Service
+	ApplicationMeetingConfigurations        *applicationmeetingconfiguration.Service
+	TenantFederationConfigurations          *tenantfederationconfiguration.Service
+	TeamTemplates                           *teamtemplate.Service
+	TargetingPolicies                       *targetingpolicy.Service
+	TargetingHierarchy                      *targetinghierarchy.Service
+	BatchDeployments                        *batchdeployment.Service
+	PrivateChannelMigration                 *privatechannelmigration.Service
+	Regions                                 *region.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -62,22 +64,23 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
-		scope:                             scope,
-		OnlineVoicemailPolicies:           onlinevoicemailpolicy.NewService(scope),
-		MeetingBrandingPolicies:           meetingbranding.NewService(scope),
-		AssignmentMigrations:              assignmentmigration.NewService(scope),
-		TeamsExternalAccessConfigurations: teamsexternalaccessconfiguration.NewService(scope),
-		ACSFederationConfigurations:       acsfederationconfiguration.NewService(scope),
-		ExternalAccessPolicies:            externalaccesspolicy.NewService(scope),
-		ApplicationAccessPolicies:         applicationaccesspolicy.NewService(backend),
-		ApplicationMeetingConfigurations:  applicationmeetingconfiguration.NewService(backend),
-		TenantFederationConfigurations:    tenantfederationconfiguration.NewService(backend),
-		TeamTemplates:                     teamtemplate.NewService(backend),
-		TargetingPolicies:                 targetingpolicy.NewService(backend),
-		TargetingHierarchy:                hierarchy,
-		BatchDeployments:                  batchdeployment.NewService(backend),
-		PrivateChannelMigration:           privatechannelmigration.NewService(migrationScope),
-		Regions:                           region.NewService(regionScope),
+		scope:                                   scope,
+		OnlineVoicemailValidationConfigurations: voicemailvalidation.NewService(scope),
+		OnlineVoicemailPolicies:                 onlinevoicemailpolicy.NewService(scope),
+		MeetingBrandingPolicies:                 meetingbranding.NewService(scope),
+		AssignmentMigrations:                    assignmentmigration.NewService(scope),
+		TeamsExternalAccessConfigurations:       teamsexternalaccessconfiguration.NewService(scope),
+		ACSFederationConfigurations:             acsfederationconfiguration.NewService(scope),
+		ExternalAccessPolicies:                  externalaccesspolicy.NewService(scope),
+		ApplicationAccessPolicies:               applicationaccesspolicy.NewService(backend),
+		ApplicationMeetingConfigurations:        applicationmeetingconfiguration.NewService(backend),
+		TenantFederationConfigurations:          tenantfederationconfiguration.NewService(backend),
+		TeamTemplates:                           teamtemplate.NewService(backend),
+		TargetingPolicies:                       targetingpolicy.NewService(backend),
+		TargetingHierarchy:                      hierarchy,
+		BatchDeployments:                        batchdeployment.NewService(backend),
+		PrivateChannelMigration:                 privatechannelmigration.NewService(migrationScope),
+		Regions:                                 region.NewService(regionScope),
 	}, nil
 }
 

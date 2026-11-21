@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-voicemail-validation-provider",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll",
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll",
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Pinned direct HttpRequestHelper methods with synthetic InvocationInfo; credential-refusing host; private client/version/host replaced/restored; memory-only sender. MPACmdlet default inserted from factory source. No command constructor/ProcessRecord, auth, discovery, URI dereference or network.",
+  "cases": [
+    {
+      "response": "{\"Identity\":\"fixture-response\",\"AudioFileValidationEnabled\":false,\"AudioFileValidationUri\":null,\"Future\":false}",
+      "name": "read",
+      "null_uri": true,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "force": false,
+      "status": 200,
+      "operation": "read"
+    },
+    {
+      "response": "[]",
+      "name": "list",
+      "null_uri": true,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "force": false,
+      "status": 200,
+      "operation": "list"
+    },
+    {
+      "response": "",
+      "name": "patch-null",
+      "null_uri": true,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"AudioFileValidationEnabled\": false,\n  \"AudioFileValidationUri\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "force": false,
+      "status": 204,
+      "operation": "patch"
+    },
+    {
+      "response": "",
+      "name": "patch-uri",
+      "null_uri": false,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"AudioFileValidationEnabled\": false,\n  \"AudioFileValidationUri\": \"HTTPS://example.invalid/validate\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "force": false,
+      "status": 204,
+      "operation": "patch"
+    },
+    {
+      "response": "",
+      "name": "patch-force-false",
+      "null_uri": true,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"AudioFileValidationEnabled\": false,\n  \"AudioFileValidationUri\": null,\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "force": true,
+      "status": 204,
+      "operation": "patch"
+    },
+    {
+      "response": "",
+      "name": "read-empty",
+      "null_uri": true,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "force": false,
+      "status": 204,
+      "operation": "read"
+    },
+    {
+      "response": "{\"Identity\":\"Global\",\"AudioFileValidationUri\":\"http://example.invalid/a\"}",
+      "name": "read-invalid-uri",
+      "null_uri": true,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "force": false,
+      "status": 200,
+      "operation": "read"
+    },
+    {
+      "response": "{\"Identity\":\"Global\",\"audiofilevalidationuri\":\"http://example.invalid/a\"}",
+      "name": "read-case-invalid-uri",
+      "null_uri": true,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "force": false,
+      "status": 200,
+      "operation": "read"
+    },
+    {
+      "response": "{\"value\":[]}",
+      "name": "list-envelope",
+      "null_uri": true,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "force": false,
+      "status": 200,
+      "operation": "list"
+    },
+    {
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "name": "read-denied",
+      "null_uri": true,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsOnlineVoicemailValidationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      },
+      "force": false,
+      "status": 403,
+      "operation": "read"
+    }
+  ]
+}
