@@ -1,7 +1,7 @@
 # Call hold policy: per-operation transport evidence
 
-POL-35 / issue #108, MicrosoftTeams 8.1.0, checked 2026-11-21. This checkpoint
-establishes source contracts before native implementation; it makes no complete
+POL-35 / issue #108, MicrosoftTeams 8.1.0, checked 2026-11-21. The source checkpoint
+below establishes contracts for native implementation; it makes no complete
 command or tenant qualification claim.
 
 ## Export selection
@@ -107,8 +107,25 @@ effective completion. All mutations retain no-replay controls.
 
 ## Qualification still required
 
-Native root wiring, tests, examples, exact ledger mappings and opt-in lab reads
-follow this checkpoint. Successful authorization, cloud/flight deployment,
-CRUD read-back/cleanup, streaming/audio playback, effective grants and optional
-pinned PowerShell/Go tenant comparisons remain open. No tenant mutation,
-privilege grant or successful live read is claimed here.
+Native per-operation root wiring, CRUD, modern scoped grants, typed settings/raw
+models, exact ledger mappings, examples and opt-in lab reads accompany this
+checkpoint. Contract cases run both credential modes synthetically, check an
+interleaved CRUD/Grant sequence, verify sparse Set preparation/acceptance,
+Rank-zero behavior, discovery versus actual POST 202 and single-send mutation
+errors. Source model observations and raw snapshot ownership are checked locally.
+
+Actual client-secret and certificate Global reads returned resource 403 on
+2026-11-21. Filter/list and optional pinned comparison were not reached. No
+tenant state changed. Successful authorization, cloud/flight deployment, CRUD
+read-back/cleanup, streaming/audio playback, effective grants and optional pinned
+PowerShell/Go comparisons remain open. The ledger stays in-progress/metadata-only;
+no privilege grant or successful live qualification is claimed.
+
+The full offline race/shuffle suite, SDK/examples build, vet, ledger validation
+and its ten tests passed on 2026-11-21. Capture scripts executed and all four
+PowerShell scripts parsed. Review caught an oracle comparison using exact raw
+key spelling instead of the Core getter projection; a case-varied/duplicate-key
+regression failed before correction and passed after typed canonical comparison.
+Focused resource/lab race checks and lab vet passed after that harness correction.
+Structural reports and CI evidence are reviewed at their exact revisions;
+none of these checks establishes live parity.

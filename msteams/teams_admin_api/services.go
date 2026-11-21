@@ -26,6 +26,7 @@ import (
 	teamsapppermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
 	teamsappsetuppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_setup_policy"
 	teamsaudioconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
+	teamscallholdpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_hold_policy"
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
@@ -33,6 +34,7 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsCallHoldPolicies                   *teamscallholdpolicy.Service
 	TeamsAudioConferencingPolicies          *teamsaudioconferencingpolicy.Service
 	AudioConferencingCustomPrompts          *audioconferencingprompts.Service
 	TeamsAppSetupPolicies                   *teamsappsetuppolicy.Service
@@ -80,6 +82,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsCallHoldPolicies:                   teamscallholdpolicy.NewService(scope),
 		TeamsAudioConferencingPolicies:          teamsaudioconferencingpolicy.NewService(backend),
 		AudioConferencingCustomPrompts:          audioconferencingprompts.NewService(scope),
 		TeamsAppSetupPolicies:                   teamsappsetuppolicy.NewService(scope),
