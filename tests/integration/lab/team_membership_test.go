@@ -135,6 +135,7 @@ func membershipLabConfig(t *testing.T) lab.Config {
 // normal CI and cannot accept a pre-existing team ID as its mutation target.
 func TestLabTeamMembershipCRUD(t *testing.T) {
 	cfg := membershipLabConfig(t)
+	_ = teamOracleEnabled(t) // Validate the optional oracle before fixture writes.
 	sdk, binding, _ := labSDKClient(t)
 	users, err := loadMembershipUsers(os.Getenv("MSTEAMS_LAB_MEMBERSHIP_USERS_FILE"), binding)
 	if err != nil {
@@ -228,18 +229,21 @@ func TestLabTeamMembershipCRUD(t *testing.T) {
 	if !found {
 		t.Fatal("team-user list did not project added owner")
 	}
+	comparePowerShellTeamUsers(t, ctx, sdk, teamID, fixture)
 	if _, err := sdk.GraphAPI.TeamUserManagement.Remove(ctx, teamID, users.Member, management.ChangeOptions{Role: management.Owner}); err != nil {
 		t.Fatal("team-user owner demotion failed")
 	}
 	if err := observeReferences(ctx, sdk, teamID, users.Member, true, false); err != nil {
 		t.Fatal("owner-only removal did not preserve membership")
 	}
+	comparePowerShellTeamUsers(t, ctx, sdk, teamID, fixture)
 	if _, err := sdk.GraphAPI.TeamUserManagement.Remove(ctx, teamID, users.Member, management.ChangeOptions{}); err != nil {
 		t.Fatal("team-user member removal failed")
 	}
 	if err := observeReferences(ctx, sdk, teamID, users.Member, false, false); err != nil {
 		t.Fatal("team-user removal did not converge in backing references")
 	}
+	comparePowerShellTeamUsers(t, ctx, sdk, teamID, fixture)
 	t.Log("native membership CRUD/role changes and backing-group team-user compositions passed; guest and Teams-client convergence qualification remain outstanding")
 }
 

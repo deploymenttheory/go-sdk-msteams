@@ -77,3 +77,25 @@ Credential-free root-client tests exercise positive, denied, missing, ambiguous,
 incomplete and mismatched ownership paths and ensure no delete occurs without
 both ownership reads. Private user-file tests check binding and distinct IDs.
 These offline checks do not substitute for a successful lab run.
+
+## Optional pinned PowerShell comparison
+
+Add `MSTEAMS_LAB_POWERSHELL_ORACLE=1` and an absolute
+`MSTEAMS_LAB_MODULE_PATH` for the extracted pinned 8.1.0 module. The shared
+[read-oracle procedure](team-lifecycle-lab-acceptance.md#optional-pinned-powershell-read-comparison)
+describes certificate authentication, module guards and private bounded process
+output. Configuration is checked before fixture writes. The Go SDK may use its
+selected secret/certificate method; PowerShell uses the same identity's certificate.
+
+After composed owner addition, owner-only removal and member removal, the Go test
+requires a complete team-user list, then compares it with `Get-TeamUser` on the
+same disposable team. The oracle first positively checks its ID and run-specific
+name through `Get-Team`. Directory IDs and roles compare without case, nullable
+user/name fields remain distinct, and collection order is ignored. Duplicate,
+missing, unexpected or invalid identities fail comparison. No tenant/user IDs or
+raw output are logged or uploaded.
+
+PowerShell performs reads only. This resulting-state check does not execute
+Add-TeamUser/Remove-TeamUser mutations or claim identical mutation traffic. Guest,
+service-principal, delegated and Teams-client convergence scenarios remain
+separate. The collection comparison was tested offline; no live oracle has run.

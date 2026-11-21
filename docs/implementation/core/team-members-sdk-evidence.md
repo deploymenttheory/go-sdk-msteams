@@ -113,3 +113,12 @@ root-client cases verify these cleanup boundaries, including denied/missing and
 partial discovery without false absence. No live run was made. See the
 [acceptance procedure](membership-lab-acceptance.md) for exact scope and remaining
 guest/client-convergence qualification.
+
+An additional oracle flag now enables pinned PowerShell read comparison after
+composed owner addition, owner-only removal and member removal. The shared reader
+checks the run-owned team and calls Get-TeamUser without writes. Complete Go
+collections compare by unique directory ID, role and nullable projection, without
+assuming server ordering. Offline tests reject missing/duplicate identities,
+changed roles, invalid IDs and null/empty collapse. Configuration is validated
+before fixture writes; private subprocess output is bounded and never logged.
+This resulting-state reader is prepared, not a successful tenant comparison.
