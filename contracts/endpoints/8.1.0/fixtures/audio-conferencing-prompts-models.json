@@ -1,0 +1,1734 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-audio-conferencing-prompts-models",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Actual pinned constructors/setters/Newtonsoft models and Core PSListModifierHelper. Prompt comparator copies the six-field Set source. Package comparator throws like Set source. Null constructor inputs selected in C#. No command lifecycle, credentials, discovery or sender.",
+  "models": [
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Prompts": [],
+          "Packages": []
+        }
+      },
+      "kind": "configuration",
+      "input": "constructor"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Prompts": [],
+          "Packages": []
+        }
+      },
+      "kind": "configuration",
+      "input": "{}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Prompts": [],
+          "Packages": []
+        }
+      },
+      "kind": "configuration",
+      "input": "{\"Identity\":null,\"Prompts\":null,\"Packages\":null}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Prompts": [
+            null
+          ],
+          "Packages": [
+            null
+          ]
+        }
+      },
+      "kind": "configuration",
+      "input": "{\"Prompts\":[null],\"Packages\":[null]}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Prompts": [
+            {
+              "Identity": null,
+              "Id": null,
+              "Name": null,
+              "AudioPrompt": null,
+              "TextPrompt": null,
+              "Type": null,
+              "Locale": null
+            },
+            {
+              "Identity": null,
+              "Id": null,
+              "Name": null,
+              "AudioPrompt": null,
+              "TextPrompt": null,
+              "Type": null,
+              "Locale": null
+            }
+          ],
+          "Packages": [
+            {
+              "Identity": null,
+              "InboundStartRecordingPrompt": [],
+              "InboundEndRecordingPrompt": [],
+              "OutboundStartRecordingPrompt": [],
+              "OutboundEndRecordingPrompt": [],
+              "MeetingStartRecordingPrompt": [],
+              "MeetingEndRecordingPrompt": [],
+              "Id": null,
+              "Name": null,
+              "DefaultLocale": null
+            },
+            {
+              "Identity": null,
+              "InboundStartRecordingPrompt": [],
+              "InboundEndRecordingPrompt": [],
+              "OutboundStartRecordingPrompt": [],
+              "OutboundEndRecordingPrompt": [],
+              "MeetingStartRecordingPrompt": [],
+              "MeetingEndRecordingPrompt": [],
+              "Id": null,
+              "Name": null,
+              "DefaultLocale": null
+            }
+          ]
+        }
+      },
+      "kind": "configuration",
+      "input": "{\"Prompts\":[{}],\"prompts\":[{}],\"Packages\":[{}],\"Packages\":[{}]}"
+    },
+    {
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      },
+      "kind": "configuration",
+      "input": "{\"Prompts\":{\"Id\":\"bad-envelope\"}}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "kind": "configuration",
+      "input": "{\"Prompts\":[{\"Id\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\"}]}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Prompts": [],
+          "Packages": []
+        }
+      },
+      "kind": "configuration",
+      "input": "{\"Future\":false}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Name": null,
+          "AudioPrompt": null,
+          "TextPrompt": null,
+          "Type": null,
+          "Locale": null
+        }
+      },
+      "kind": "prompt",
+      "input": "constructor"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Name": null,
+          "AudioPrompt": null,
+          "TextPrompt": null,
+          "Type": null,
+          "Locale": null
+        }
+      },
+      "kind": "prompt",
+      "input": "{}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Name": null,
+          "AudioPrompt": null,
+          "TextPrompt": null,
+          "Type": null,
+          "Locale": null
+        }
+      },
+      "kind": "prompt",
+      "input": "{\"Identity\":null,\"Name\":null,\"AudioPrompt\":null,\"TextPrompt\":null}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "kind": "prompt",
+      "input": "{\"Id\":null}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "kind": "prompt",
+      "input": "{\"Type\":null}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "kind": "prompt",
+      "input": "{\"Locale\":null}"
+    },
+    {
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "kind": "prompt",
+      "input": "{\"Id\":\"\"}"
+    },
+    {
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "kind": "prompt",
+      "input": "{\"Id\":\"future-id\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": "11111111-1111-1111-1111-111111111111",
+          "Name": null,
+          "AudioPrompt": null,
+          "TextPrompt": null,
+          "Type": null,
+          "Locale": null
+        }
+      },
+      "kind": "prompt",
+      "input": "{\"Id\":\"11111111-1111-1111-1111-111111111111\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": "ABCDEF12-1234-1234-1234-123456789ABC",
+          "Name": null,
+          "AudioPrompt": null,
+          "TextPrompt": null,
+          "Type": null,
+          "Locale": null
+        }
+      },
+      "kind": "prompt",
+      "input": "{\"Id\":\"ABCDEF12-1234-1234-1234-123456789ABC\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": "11111111-1111-1111-1111-111111111111\n",
+          "Name": null,
+          "AudioPrompt": null,
+          "TextPrompt": null,
+          "Type": null,
+          "Locale": null
+        }
+      },
+      "kind": "prompt",
+      "input": "{\"Id\":\"11111111-1111-1111-1111-111111111111\\n\"}"
+    },
+    {
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "kind": "prompt",
+      "input": "{\"Id\":\"11111111-1111-1111-1111-111111111111\\r\\n\"}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "kind": "prompt",
+      "input": "{\"Id\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": "11111111-1111-1111-1111-111111111111",
+          "Name": "",
+          "AudioPrompt": "",
+          "TextPrompt": "",
+          "Type": "",
+          "Locale": "future-locale"
+        }
+      },
+      "kind": "prompt",
+      "input": "{\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Type\":\"\",\"Locale\":\"future-locale\",\"Name\":\"\",\"AudioPrompt\":\"\",\"TextPrompt\":\"\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": null,
+          "Name": null,
+          "DefaultLocale": null
+        }
+      },
+      "kind": "package",
+      "input": "constructor"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": null,
+          "Name": null,
+          "DefaultLocale": null
+        }
+      },
+      "kind": "package",
+      "input": "{}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "kind": "package",
+      "input": "{\"Id\":null}"
+    },
+    {
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "kind": "package",
+      "input": "{\"Id\":\"\"}"
+    },
+    {
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "kind": "package",
+      "input": "{\"Id\":\"future-id\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": "11111111-1111-1111-1111-111111111111",
+          "Name": null,
+          "DefaultLocale": null
+        }
+      },
+      "kind": "package",
+      "input": "{\"Id\":\"11111111-1111-1111-1111-111111111111\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": "11111111-1111-1111-1111-111111111111\n",
+          "Name": null,
+          "DefaultLocale": null
+        }
+      },
+      "kind": "package",
+      "input": "{\"Id\":\"11111111-1111-1111-1111-111111111111\\n\"}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "kind": "package",
+      "input": "{\"DefaultLocale\":null}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": null,
+          "Name": null,
+          "DefaultLocale": ""
+        }
+      },
+      "kind": "package",
+      "input": "{\"DefaultLocale\":\"\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": null,
+          "Name": null,
+          "DefaultLocale": "future-locale"
+        }
+      },
+      "kind": "package",
+      "input": "{\"DefaultLocale\":\"future-locale\",\"Name\":null}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": null,
+          "Name": null,
+          "DefaultLocale": null
+        }
+      },
+      "kind": "package",
+      "input": "{\"InboundStartRecordingPrompt\":null,\"InboundEndRecordingPrompt\":null,\"OutboundStartRecordingPrompt\":null,\"OutboundEndRecordingPrompt\":null,\"MeetingStartRecordingPrompt\":null,\"MeetingEndRecordingPrompt\":null}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [
+            "a",
+            "a",
+            null,
+            "",
+            "b"
+          ],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": null,
+          "Name": null,
+          "DefaultLocale": null
+        }
+      },
+      "kind": "package",
+      "input": "{\"InboundStartRecordingPrompt\":[\"a\",\"a\",null,\"\"],\"inboundStartRecordingPrompt\":[\"b\"]}"
+    },
+    {
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      },
+      "kind": "package",
+      "input": "{\"InboundStartRecordingPrompt\":{}}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "kind": "package",
+      "input": "{\"Id\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\"}"
+    }
+  ],
+  "constructors": [
+    {
+      "null_id": false,
+      "locale": "xx-future",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": "11111111-1111-1111-1111-111111111111",
+          "Name": null,
+          "AudioPrompt": null,
+          "TextPrompt": null,
+          "Type": "FutureType",
+          "Locale": "xx-future"
+        }
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "type_or_locale": "FutureType",
+      "kind": "prompt",
+      "null_locale": false,
+      "null_type_or_locale": false,
+      "name": "valid"
+    },
+    {
+      "null_id": false,
+      "locale": "",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": "11111111-1111-1111-1111-111111111111",
+          "Name": null,
+          "AudioPrompt": null,
+          "TextPrompt": null,
+          "Type": "",
+          "Locale": ""
+        }
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "type_or_locale": "",
+      "kind": "prompt",
+      "null_locale": false,
+      "null_type_or_locale": false,
+      "name": "empty-fields"
+    },
+    {
+      "null_id": true,
+      "locale": "xx-future",
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "id": "",
+      "type_or_locale": "FutureType",
+      "kind": "prompt",
+      "null_locale": false,
+      "null_type_or_locale": false,
+      "name": "null-id"
+    },
+    {
+      "null_id": false,
+      "locale": "xx-future",
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "id": "future-id",
+      "type_or_locale": "FutureType",
+      "kind": "prompt",
+      "null_locale": false,
+      "null_type_or_locale": false,
+      "name": "invalid-id"
+    },
+    {
+      "null_id": false,
+      "locale": "xx-future",
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "type_or_locale": "",
+      "kind": "prompt",
+      "null_locale": false,
+      "null_type_or_locale": true,
+      "name": "null-type-or-default-locale"
+    },
+    {
+      "null_id": false,
+      "locale": "",
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "type_or_locale": "FutureType",
+      "kind": "prompt",
+      "null_locale": true,
+      "null_type_or_locale": false,
+      "name": "null-locale"
+    },
+    {
+      "null_id": false,
+      "locale": "xx-future",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": "11111111-1111-1111-1111-111111111111",
+          "Name": null,
+          "DefaultLocale": "FutureType"
+        }
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "type_or_locale": "FutureType",
+      "kind": "package",
+      "null_locale": false,
+      "null_type_or_locale": false,
+      "name": "valid"
+    },
+    {
+      "null_id": false,
+      "locale": "",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": "11111111-1111-1111-1111-111111111111",
+          "Name": null,
+          "DefaultLocale": ""
+        }
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "type_or_locale": "",
+      "kind": "package",
+      "null_locale": false,
+      "null_type_or_locale": false,
+      "name": "empty-fields"
+    },
+    {
+      "null_id": true,
+      "locale": "xx-future",
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "id": "",
+      "type_or_locale": "FutureType",
+      "kind": "package",
+      "null_locale": false,
+      "null_type_or_locale": false,
+      "name": "null-id"
+    },
+    {
+      "null_id": false,
+      "locale": "xx-future",
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "id": "future-id",
+      "type_or_locale": "FutureType",
+      "kind": "package",
+      "null_locale": false,
+      "null_type_or_locale": false,
+      "name": "invalid-id"
+    },
+    {
+      "null_id": false,
+      "locale": "xx-future",
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "type_or_locale": "",
+      "kind": "package",
+      "null_locale": false,
+      "null_type_or_locale": true,
+      "name": "null-type-or-default-locale"
+    },
+    {
+      "null_id": false,
+      "locale": "",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "InboundStartRecordingPrompt": [],
+          "InboundEndRecordingPrompt": [],
+          "OutboundStartRecordingPrompt": [],
+          "OutboundEndRecordingPrompt": [],
+          "MeetingStartRecordingPrompt": [],
+          "MeetingEndRecordingPrompt": [],
+          "Id": "11111111-1111-1111-1111-111111111111",
+          "Name": null,
+          "DefaultLocale": "FutureType"
+        }
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "type_or_locale": "FutureType",
+      "kind": "package",
+      "null_locale": true,
+      "null_type_or_locale": false,
+      "name": "null-locale"
+    }
+  ],
+  "lists": [
+    {
+      "name": "null",
+      "observation": {
+        "failure": null,
+        "values": []
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "empty-operators",
+      "observation": {
+        "failure": null,
+        "values": []
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "replace-duplicates",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "replace-null",
+      "observation": {
+        "failure": null,
+        "values": [
+          null
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "remove-one",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "remove-two",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "add-existing",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "add-null",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          null
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "remove-null",
+      "observation": {
+        "failure": "System.NullReferenceException",
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "remove-and-add",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "remove-from-empty",
+      "observation": {
+        "failure": null,
+        "values": []
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "null-existing",
+      "observation": {
+        "failure": "System.NullReferenceException",
+        "values": [
+          null,
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "identity-ignored",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "different-Id",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "different-Name",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "different-AudioPrompt",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "different-TextPrompt",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "different-Type",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "different-Locale",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "AudioPrompt": "audio",
+            "TextPrompt": "text",
+            "Type": "FutureType",
+            "Locale": "xx-future"
+          }
+        ]
+      },
+      "kind": "prompt"
+    },
+    {
+      "name": "null",
+      "observation": {
+        "failure": null,
+        "values": []
+      },
+      "kind": "package"
+    },
+    {
+      "name": "empty-operators",
+      "observation": {
+        "failure": null,
+        "values": []
+      },
+      "kind": "package"
+    },
+    {
+      "name": "replace-duplicates",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          }
+        ]
+      },
+      "kind": "package"
+    },
+    {
+      "name": "replace-null",
+      "observation": {
+        "failure": null,
+        "values": [
+          null
+        ]
+      },
+      "kind": "package"
+    },
+    {
+      "name": "remove-one",
+      "observation": {
+        "failure": "System.ArgumentException",
+        "values": [
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "DefaultLocale": "xx-future"
+          }
+        ]
+      },
+      "kind": "package"
+    },
+    {
+      "name": "remove-two",
+      "observation": {
+        "failure": "System.ArgumentException",
+        "values": [
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "DefaultLocale": "xx-future"
+          }
+        ]
+      },
+      "kind": "package"
+    },
+    {
+      "name": "add-existing",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          }
+        ]
+      },
+      "kind": "package"
+    },
+    {
+      "name": "add-null",
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "DefaultLocale": "xx-future"
+          },
+          null
+        ]
+      },
+      "kind": "package"
+    },
+    {
+      "name": "remove-null",
+      "observation": {
+        "failure": "System.ArgumentException",
+        "values": [
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "DefaultLocale": "xx-future"
+          }
+        ]
+      },
+      "kind": "package"
+    },
+    {
+      "name": "remove-and-add",
+      "observation": {
+        "failure": "System.ArgumentException",
+        "values": [
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "DefaultLocale": "xx-future"
+          }
+        ]
+      },
+      "kind": "package"
+    },
+    {
+      "name": "remove-from-empty",
+      "observation": {
+        "failure": null,
+        "values": []
+      },
+      "kind": "package"
+    },
+    {
+      "name": "null-existing",
+      "observation": {
+        "failure": "System.ArgumentException",
+        "values": [
+          null,
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "a",
+            "DefaultLocale": "xx-future"
+          },
+          {
+            "Identity": "ignored",
+            "InboundStartRecordingPrompt": [],
+            "InboundEndRecordingPrompt": [],
+            "OutboundStartRecordingPrompt": [],
+            "OutboundEndRecordingPrompt": [],
+            "MeetingStartRecordingPrompt": [],
+            "MeetingEndRecordingPrompt": [],
+            "Id": "11111111-1111-1111-1111-111111111111",
+            "Name": "b",
+            "DefaultLocale": "xx-future"
+          }
+        ]
+      },
+      "kind": "package"
+    }
+  ]
+}

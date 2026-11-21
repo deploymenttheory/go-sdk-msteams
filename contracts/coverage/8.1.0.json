@@ -5284,30 +5284,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/103/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/service_test.go",
+              "name": "TestPromptsFilterKeepsGlobalTagAndWhitespace"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/audio_conferencing_prompts_test.go",
+              "name": "TestLabAudioConferencingPromptsReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/103/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/service_test.go",
+              "name": "TestPromptsPinnedProviderRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/audio_conferencing_prompts_test.go",
+              "name": "TestLabAudioConferencingPromptsReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in Global custom prompts reads returned resource HTTP 403 with the dedicated lab SPN in client-secret and certificate modes. Filter/list and optional pinned PowerShell comparison were not reached. No prompts, packages, playback settings, roles or consent changed. Successful authorization/cloud/feature qualification remains open.",
         "evidence": []
       },
       "exclusion": null
@@ -26825,15 +26872,50 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/576/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/service_test.go",
+              "name": "TestPromptsPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go",
+              "name": "TestPromptsUpdateKeepsPreparationAndHTTPAcceptance"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go",
+              "name": "TestPromptsEditsFailBeforePatchOrPreserveSourceKeys"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/failure_test.go",
+              "name": "TestPromptsPatchPreservesStatusAndNeverReplays"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/audio_conferencing_prompts/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
