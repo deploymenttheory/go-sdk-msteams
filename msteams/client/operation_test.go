@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"testing"
+	"testing/synctest"
 	"time"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -118,17 +119,27 @@ func TestUnitOperationCancellationAndPollingLimitAreResumable(t *testing.T) {
 
 func TestUnitOperationRetryAfterAndStalledWait(t *testing.T) {
 	t.Parallel()
-	for _, header := range []string{"1", time.Now().Add(time.Minute).UTC().Format(http.TimeFormat)} {
-		t.Run(header, func(t *testing.T) {
-			op, calls := operationFixture(t, []operationReply{{200, `{"id":"fixture-id","status":"inProgress"}`, header}}, graphapi.DecodeTeamOperation)
-			options := fastWait()
-			options.Timeout = 20 * time.Millisecond
-			result, err := op.Wait(t.Context(), options)
-			if !errors.Is(err, context.DeadlineExceeded) || *calls != 1 || result.Handle.ID == "" {
-				t.Fatal("server delay shortened or timeout lost handle")
-			}
+	for _, kind := range []string{"delta-seconds", "http-date"} {
+		t.Run(kind, func(t *testing.T) {
+			// A fake clock prevents runner contention from consuming the timeout
+			// before the first in-memory response has been decoded.
+			synctest.Test(t, func(t *testing.T) {
+				header := "1"
+				if kind == "http-date" {
+					header = time.Now().Add(time.Minute).UTC().Format(http.TimeFormat)
+				}
+				op, calls := operationFixture(t, []operationReply{{200, `{"id":"fixture-id","status":"inProgress"}`, header}}, graphapi.DecodeTeamOperation)
+				options := fastWait()
+				options.Timeout = 20 * time.Millisecond
+				started := time.Now()
+				result, err := op.Wait(t.Context(), options)
+				if !errors.Is(err, context.DeadlineExceeded) || *calls != 1 || result.Handle.ID != "fixture-id" || result.Status.State != client.OperationRunning || time.Since(started) != options.Timeout {
+					t.Fatal("server delay shortened or timeout lost the last observation")
+				}
+			})
 		})
 	}
+
 	stalled, calls := operationFixture(t, []operationReply{{200, `{"id":"fixture-id","status":"inProgress"}`, ""}}, graphapi.DecodeTeamOperation)
 	options := fastWait()
 	options.MaxPolls = 3
