@@ -1,0 +1,938 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-policy-assignment-oce-static-metadata",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assembly": {
+    "sha256": "ea52b14ae69bfeb7ce63497176a81252dd7c0fa17ad93d6b8ae49ef358091f03",
+    "path": "net472/Microsoft.Teams.Policy.Administration.Cmdlets.OCE.dll"
+  },
+  "host_powershell_version": "7.6.6",
+  "stage": "Static CmdletInfo/ParameterSetInfo reflection on the pinned OCE assembly after ordinary unauthenticated dependency import. No OCE profile activation, command construction, ProcessRecord, credentials, sender, discovery or network. Common PowerShell parameters are omitted from this supplemental signature inventory.",
+  "commands": [
+    {
+      "name": "Get-CsBatchOperationDefinition",
+      "declaring_type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Policies.LROS.Operations.LROSOperations+GetBatchOperationDefinitionCmdlet",
+      "parameter_sets": [
+        {
+          "name": "GetBatchOperationDefinition",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "OperationId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        },
+        {
+          "name": "GetBatchOperationDefinitionForRegion",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "OperationId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Region",
+              "type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.Region",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "INT",
+                "NOAM",
+                "EMEA",
+                "APAC",
+                "ussec",
+                "usnat",
+                "gcch",
+                "dod",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Get-CsBatchOperationStatus",
+      "declaring_type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Policies.LROS.Operations.LROSOperations+GetBatchOperationStatusCmdlet",
+      "parameter_sets": [
+        {
+          "name": "GetAllBatchOperationStatus",
+          "is_default": true,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        },
+        {
+          "name": "GetAllBatchOperationStatusForRegion",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "Region",
+              "type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.Region",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "INT",
+                "NOAM",
+                "EMEA",
+                "APAC",
+                "ussec",
+                "usnat",
+                "gcch",
+                "dod",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        },
+        {
+          "name": "GetBatchOperationStatus",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "OperationId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        },
+        {
+          "name": "GetBatchOperationStatusForRegion",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "OperationId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Region",
+              "type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.Region",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "INT",
+                "NOAM",
+                "EMEA",
+                "APAC",
+                "ussec",
+                "usnat",
+                "gcch",
+                "dod",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Invoke-CsReprocessBatchOperation",
+      "declaring_type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Policies.LROS.Operations.LROSOperations+ReprocessBatchOperationCmdlet",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "OperationId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Region",
+              "type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.Region",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "INT",
+                "NOAM",
+                "EMEA",
+                "APAC",
+                "ussec",
+                "usnat",
+                "gcch",
+                "dod",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Get-CsGroupPolicyAssignments",
+      "declaring_type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Policies.GPA.Operations.GPAOperations+GetGroupPolicyAssignmentsCmdlet",
+      "parameter_sets": [
+        {
+          "name": "GetAllGroupPolicyAssignments",
+          "is_default": true,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        },
+        {
+          "name": "GetGroupPolicyAssignment",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "GroupId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "PolicyType",
+              "type": "System.String",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        },
+        {
+          "name": "GetGroupPolicyAssignments",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "GroupId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        },
+        {
+          "name": "GetPolicyAssignmentForGroups",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "PolicyType",
+              "type": "System.String",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Get-GPAGroupMembers",
+      "declaring_type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Policies.GetGPAGroupMembers+GPAGroupMembers",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "All",
+              "type": "System.Management.Automation.SwitchParameter",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "GroupId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Get-GPAUserMembership",
+      "declaring_type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Policies.GetGPAUserMembership+GPAUserMembership",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "Identity",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Invoke-CsRefreshGroupUsers",
+      "declaring_type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Policies.GPARefreshGroupUsers+RefreshGroupUsers",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "GroupId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "PolicyType",
+              "type": "System.String",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "TenantRegion",
+              "type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.Region",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "INT",
+                "NOAM",
+                "EMEA",
+                "APAC",
+                "ussec",
+                "usnat",
+                "gcch",
+                "dod",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "UserId",
+              "type": "System.Guid",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Invoke-CsReprocessGroupPolicyAssignment",
+      "declaring_type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Policies.GPAReprocessOperations+UpdateGPAOperationsCmdlet",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "is_default": false,
+          "parameters": [
+            {
+              "name": "Environment",
+              "type": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.EnvironmentType, Microsoft.Teams.Policy.Administration.Cmdlets.OCE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+              "mandatory": false,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "MultiTenant",
+                "INT",
+                "Itar",
+                "GCCH",
+                "DOD",
+                "Ag08",
+                "Ag09",
+                "Gallatin"
+              ]
+            },
+            {
+              "name": "GroupId",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "PolicyType",
+              "type": "System.String",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "Tenant",
+              "type": "System.Guid",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [
+                "Domain",
+                "TenantDomain",
+                "TenantId"
+              ],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": []
+            },
+            {
+              "name": "TenantRegion",
+              "type": "Microsoft.Teams.Policy.Administration.Cmdlets.OCE.Common.Region",
+              "mandatory": true,
+              "position": -2147483648,
+              "aliases": [],
+              "value_from_pipeline": false,
+              "value_from_pipeline_by_property_name": false,
+              "enum_values": [
+                "INT",
+                "NOAM",
+                "EMEA",
+                "APAC",
+                "ussec",
+                "usnat",
+                "gcch",
+                "dod",
+                "Gallatin"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

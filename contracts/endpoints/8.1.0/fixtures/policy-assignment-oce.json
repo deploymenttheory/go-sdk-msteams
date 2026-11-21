@@ -1,0 +1,717 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-policy-assignment-oce-direct",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "ea52b14ae69bfeb7ce63497176a81252dd7c0fa17ad93d6b8ae49ef358091f03",
+      "path": "net472/Microsoft.Teams.Policy.Administration.Cmdlets.OCE.dll"
+    },
+    {
+      "sha256": "c0549eba3a249ef431b0d0c61ee232c815b74fe0cfa1b41b0860a8531f33e6dd",
+      "path": "net472/CmdletSettings.json"
+    }
+  ],
+  "profiles": [
+    {
+      "environment": "INT",
+      "origin": "https://dev.api.interfaces.records.teams.microsoft.com",
+      "regions": [
+        "INT"
+      ]
+    },
+    {
+      "environment": "MultiTenant",
+      "origin": "https://api.interfaces.records.teams.microsoft.com",
+      "regions": [
+        "NOAM",
+        "EMEA",
+        "APAC"
+      ]
+    },
+    {
+      "environment": "Ag08",
+      "origin": "https://api.interfaces.records.teams.eaglex.ic.gov",
+      "regions": [
+        "usnat"
+      ]
+    },
+    {
+      "environment": "Ag09",
+      "origin": "https://api.interfaces.records.teams.microsoft.scloud",
+      "regions": [
+        "ussec"
+      ]
+    },
+    {
+      "environment": "Gallatin",
+      "origin": "https://api.interfaces.records.teams.microsoftonline.cn",
+      "regions": [
+        "Gallatin"
+      ]
+    },
+    {
+      "environment": "Itar",
+      "origin": "https://api.interfaces.records.gov.teams.microsoft.us",
+      "regions": [
+        "gcch"
+      ]
+    },
+    {
+      "environment": "GCCH",
+      "origin": "https://api.interfaces.records.gov.teams.microsoft.us",
+      "regions": [
+        "gcch"
+      ]
+    },
+    {
+      "environment": "DOD",
+      "origin": "https://api.interfaces.records.dod.teams.microsoft.us",
+      "regions": [
+        "dod"
+      ]
+    }
+  ],
+  "stage": "Pinned OCE base constructor reads only its hash-checked packaged settings. Synthetic runtime consumes verbose/warnings. Actual suffix lookup, InitializeHeaders and RestClient sender run with synthetic token and memory HttpClient; private client and global JSON settings are restored. No InitializeServiceParameters, cmdlet lifecycle, host credential acquisition, OCE profile activation or network. Model projections call only Newtonsoft on DTOs.",
+  "cases": [
+    {
+      "name": "batch-status",
+      "service": "LROS",
+      "operation": "GetBatchOperationStatusForRegion",
+      "status": 200,
+      "response": "{}",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/status/00000000-0000-4000-8000-000000000004?region=NOAM",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "batch-list",
+      "service": "LROS",
+      "operation": "GetAllBatchOperationStatusForRegion",
+      "status": 200,
+      "response": "[]",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/status?region=NOAM",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "batch-definition",
+      "service": "LROS",
+      "operation": "GetBatchOperationDefinitionForRegion",
+      "status": 200,
+      "response": "{}",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/definition/00000000-0000-4000-8000-000000000004?region=NOAM",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "batch-reprocess",
+      "service": "LROS",
+      "operation": "ReprocessBatchOperationForRegion",
+      "status": 202,
+      "response": "\"00000000-0000-4000-8000-000000000006\"",
+      "all": false,
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/reprocess/00000000-0000-4000-8000-000000000004?region=NOAM",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 202,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-get",
+      "service": "GPA",
+      "operation": "GetGroupPolicyAssignment",
+      "status": 200,
+      "response": "{}",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce/00000000-0000-4000-8000-000000000005/policyTypes/Fixture",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-list",
+      "service": "GPA",
+      "operation": "GetGroupPolicyAssignments",
+      "status": 200,
+      "response": "[]",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce/00000000-0000-4000-8000-000000000005/policyTypes",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-list-type",
+      "service": "GPA",
+      "operation": "GetPolicyAssignmentForGroups",
+      "status": 200,
+      "response": "[]",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce?policyType=Fixture",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-list-all",
+      "service": "GPA",
+      "operation": "GetAllGroupPolicyAssignments",
+      "status": 200,
+      "response": "[]",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-members",
+      "service": "GPA",
+      "operation": "GetGPAGroupMembers",
+      "status": 200,
+      "response": "[]",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Teams.InternalSupport/groups/00000000-0000-4000-8000-000000000005/users?all=False",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-members-all",
+      "service": "GPA",
+      "operation": "GetGPAGroupMembers",
+      "status": 200,
+      "response": "[]",
+      "all": true,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Teams.InternalSupport/groups/00000000-0000-4000-8000-000000000005/users?all=True",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "user-membership",
+      "service": "GPA",
+      "operation": "GetGPAUserMembership",
+      "status": 200,
+      "response": "[]",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Teams.InternalSupport/users/00000000-0000-0000-0000-000000000000/memberOf",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-refresh",
+      "service": "GPA",
+      "operation": "RefreshGroupUsers",
+      "status": 202,
+      "response": "\"fixture-operation\"",
+      "all": false,
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/00000000-0000-4000-8000-000000000005/refresh/users?tenantRegion=NOAM&userId=00000000-0000-0000-0000-000000000000&policyType=Fixture",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 202,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-reprocess",
+      "service": "GPA",
+      "operation": "ReprocessGroupPolicyAssignment",
+      "status": 200,
+      "response": "\"fixture-operation\"",
+      "all": false,
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/00000000-0000-4000-8000-000000000005/policyTypes/Fixture/reprocess?tenantRegion=NOAM",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-null",
+      "service": "GPA",
+      "operation": "GetGroupPolicyAssignment",
+      "status": 200,
+      "response": "null",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce/00000000-0000-4000-8000-000000000005/policyTypes/Fixture",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 200,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-partial-status",
+      "service": "GPA",
+      "operation": "GetGroupPolicyAssignment",
+      "status": 206,
+      "response": "{}",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce/00000000-0000-4000-8000-000000000005/policyTypes/Fixture",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": null,
+        "FailureType": "HttpRequestException",
+        "WarningCount": 1
+      }
+    },
+    {
+      "name": "group-forbidden",
+      "service": "GPA",
+      "operation": "GetGroupPolicyAssignment",
+      "status": 403,
+      "response": "{\"code\":\"FixtureDenied\",\"message\":\"fixture-private\"}",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce/00000000-0000-4000-8000-000000000005/policyTypes/Fixture",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": null,
+        "FailureType": "AuthenticationException",
+        "WarningCount": 2
+      }
+    },
+    {
+      "name": "group-not-found",
+      "service": "GPA",
+      "operation": "GetGroupPolicyAssignment",
+      "status": 404,
+      "response": "{}",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce/00000000-0000-4000-8000-000000000005/policyTypes/Fixture",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": 404,
+        "FailureType": null,
+        "WarningCount": 0
+      }
+    },
+    {
+      "name": "group-unavailable",
+      "service": "GPA",
+      "operation": "GetGroupPolicyAssignment",
+      "status": 503,
+      "response": "{\"code\":\"FixtureUnavailable\",\"message\":\"fixture-private\"}",
+      "all": false,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce/00000000-0000-4000-8000-000000000005/policyTypes/Fixture",
+        "Body": null,
+        "TenantMatches": true,
+        "CorrelationIsGuid": true,
+        "HasMpa": false,
+        "HasCmdletName": false,
+        "HasTargetUri": false,
+        "Sends": 1,
+        "ReturnedStatus": null,
+        "FailureType": "HttpRequestException",
+        "WarningCount": 1
+      }
+    }
+  ],
+  "models": [
+    {
+      "name": "group-empty",
+      "model": "GroupAssignment",
+      "input": {},
+      "projection": {
+        "groupId": "00000000-0000-0000-0000-000000000000",
+        "priority": 0,
+        "policyType": null,
+        "policyName": null,
+        "createdBy": "",
+        "createdTime": null
+      },
+      "rejected": false
+    },
+    {
+      "name": "group-values",
+      "model": "GroupAssignment",
+      "input": {
+        "groupId": "00000000-0000-4000-8000-000000000005",
+        "priority": 0,
+        "policyName": "",
+        "createdBy": null,
+        "createdTime": null,
+        "future": false
+      },
+      "projection": {
+        "groupId": "00000000-0000-4000-8000-000000000005",
+        "priority": 0,
+        "policyType": null,
+        "policyName": "",
+        "createdBy": null,
+        "createdTime": null
+      },
+      "rejected": false
+    },
+    {
+      "name": "member-empty",
+      "model": "GroupMembers",
+      "input": {},
+      "projection": {
+        "@odata.type": null,
+        "id": "00000000-0000-0000-0000-000000000000"
+      },
+      "rejected": false
+    },
+    {
+      "name": "member-values",
+      "model": "GroupMembers",
+      "input": {
+        "id": "00000000-0000-4000-8000-000000000007",
+        "@odata.type": "#fixture",
+        "future": false
+      },
+      "projection": {
+        "@odata.type": "#fixture",
+        "id": "00000000-0000-4000-8000-000000000007"
+      },
+      "rejected": false
+    },
+    {
+      "name": "membership-empty",
+      "model": "UserMembership",
+      "input": {},
+      "projection": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "groupTypes": null,
+        "mailEnabled": false,
+        "securityEnabled": false,
+        "visibility": null,
+        "createdDateTime": null,
+        "deletedDateTime": null
+      },
+      "rejected": false
+    },
+    {
+      "name": "membership-values",
+      "model": "UserMembership",
+      "input": {
+        "id": "00000000-0000-4000-8000-000000000005",
+        "groupTypes": [],
+        "mailEnabled": false,
+        "securityEnabled": true,
+        "visibility": "Future",
+        "createdDateTime": null
+      },
+      "projection": {
+        "id": "00000000-0000-4000-8000-000000000005",
+        "groupTypes": [],
+        "mailEnabled": false,
+        "securityEnabled": true,
+        "visibility": "Future",
+        "createdDateTime": null,
+        "deletedDateTime": null
+      },
+      "rejected": false
+    },
+    {
+      "name": "definition-empty",
+      "model": "BatchDefinition",
+      "input": {},
+      "projection": {
+        "Region": null,
+        "OperationId": "00000000-0000-0000-0000-000000000000",
+        "OperationName": null,
+        "OperationType": null,
+        "Commands": null,
+        "Ids": null,
+        "AcceptTime": 0
+      },
+      "rejected": false
+    },
+    {
+      "name": "definition-values",
+      "model": "BatchDefinition",
+      "input": {
+        "OperationId": "00000000-0000-4000-8000-000000000004",
+        "OperationName": "",
+        "OperationType": "Future",
+        "AcceptTime": 0,
+        "Ids": [],
+        "Commands": [
+          {
+            "Name": "Fixture",
+            "RetryCount": 0,
+            "Properties": {
+              "flag": false
+            },
+            "Description": ""
+          }
+        ]
+      },
+      "projection": {
+        "Region": null,
+        "OperationId": "00000000-0000-4000-8000-000000000004",
+        "OperationName": "",
+        "OperationType": "Future",
+        "Commands": [
+          {
+            "Name": "Fixture",
+            "RetryCount": 0,
+            "Properties": {
+              "flag": false
+            },
+            "Description": ""
+          }
+        ],
+        "Ids": [],
+        "AcceptTime": 0
+      },
+      "rejected": false
+    },
+    {
+      "name": "status-empty",
+      "model": "BatchStatus",
+      "input": {},
+      "projection": {
+        "Region": null,
+        "OperationName": null,
+        "OverallStatus": null,
+        "NotStartedCount": 0,
+        "InProgressCount": 0,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "CreatedBy": "00000000-0000-0000-0000-000000000000",
+        "CreatedTime": null,
+        "CompletedTime": null,
+        "OperationId": "00000000-0000-0000-0000-000000000000"
+      },
+      "rejected": false
+    },
+    {
+      "name": "status-values",
+      "model": "BatchStatus",
+      "input": {
+        "OperationId": "00000000-0000-4000-8000-000000000004",
+        "OverallStatus": "Future",
+        "CompletedCount": 0,
+        "CreatedTime": "fixture-time",
+        "CompletedTime": null
+      },
+      "projection": {
+        "Region": null,
+        "OperationName": null,
+        "OverallStatus": "Future",
+        "NotStartedCount": 0,
+        "InProgressCount": 0,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "CreatedBy": "00000000-0000-0000-0000-000000000000",
+        "CreatedTime": "fixture-time",
+        "CompletedTime": null,
+        "OperationId": "00000000-0000-4000-8000-000000000004"
+      },
+      "rejected": false
+    },
+    {
+      "name": "extended-values",
+      "model": "ExtendedBatchStatus",
+      "input": {
+        "OperationId": "00000000-0000-4000-8000-000000000004",
+        "UserState": [
+          {
+            "Id": "fixture-user",
+            "AlternateId": null,
+            "State": "Future",
+            "Result": ""
+          }
+        ]
+      },
+      "projection": {
+        "Region": null,
+        "UserState": [
+          {
+            "Id": "fixture-user",
+            "AlternateId": null,
+            "State": "Future",
+            "Result": ""
+          }
+        ],
+        "OperationName": null,
+        "OverallStatus": null,
+        "NotStartedCount": 0,
+        "InProgressCount": 0,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "CreatedBy": "00000000-0000-0000-0000-000000000000",
+        "CreatedTime": null,
+        "CompletedTime": null,
+        "OperationId": "00000000-0000-4000-8000-000000000004"
+      },
+      "rejected": false
+    },
+    {
+      "name": "null",
+      "model": "GroupAssignment",
+      "input": null,
+      "projection": null,
+      "rejected": false
+    }
+  ]
+}
