@@ -1,0 +1,1173 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-banner-text-provider-scope-and-models",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll",
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll",
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Actual command constructors under injected memory client (factory guarded), pure PrepareForScopeCheck, actual direct HttpRequestHelper with synthetic InvocationInfo, credential-refusing host and memory sender; actual model setters/Newtonsoft. No Begin/Process/End, public binder, scope authorization, token acquisition, discovery or network. Static client/version/host restored. New constructor GUID is observed by shape; explicit fixture ID selects deterministic requests.",
+  "cases": [
+    {
+      "operation": "read",
+      "selector": "identity",
+      "force_mode": -1,
+      "response": "{\"Identity\":\"Global/01234567-89ab-cdef-0123-456789abcdef\",\"Id\":\"01234567-89ab-cdef-0123-456789abcdef\",\"Text\":\"fixture\",\"Description\":null,\"Future\":false}",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "read-identity",
+      "status": 200,
+      "observed": {
+        "capture": {
+          "Method": "GET",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": "Get-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": false,
+          "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.CustomBannerText",
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Id": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+    },
+    {
+      "operation": "read",
+      "selector": "relative",
+      "force_mode": -1,
+      "response": "{}",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "read-relative",
+      "status": 200,
+      "observed": {
+        "capture": {
+          "Method": "GET",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": "Get-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": false,
+          "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.CustomBannerText",
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": ""
+    },
+    {
+      "operation": "read",
+      "selector": "identity",
+      "force_mode": -1,
+      "response": "{}",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "read-extra-slash",
+      "status": 200,
+      "observed": {
+        "capture": {
+          "Method": "GET",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/scope%20/01234567-89ab-cdef-0123-456789abcdef%20%2F%20Child",
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": "Get-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": false,
+          "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.CustomBannerText",
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "scope /01234567-89ab-cdef-0123-456789abcdef / Child",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef ",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Id": "01234567-89ab-cdef-0123-456789abcdef "
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": "scope /01234567-89ab-cdef-0123-456789abcdef / Child"
+    },
+    {
+      "operation": "list",
+      "selector": "default",
+      "force_mode": -1,
+      "response": "[]",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "list",
+      "status": 200,
+      "observed": {
+        "capture": {
+          "Method": "GET",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": "Get-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": false,
+          "DecodedNull": false,
+          "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.CustomBannerText, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": null,
+        "relative_id": null,
+        "metadata": {
+          "RequiredNotBoundedParameters": {}
+        },
+        "constructor_has_guid": false
+      },
+      "id": "",
+      "input": "{}",
+      "identity": ""
+    },
+    {
+      "operation": "create",
+      "selector": "identity",
+      "force_mode": -1,
+      "response": "{}",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "create-identity",
+      "status": 201,
+      "observed": {
+        "capture": {
+          "Method": "POST",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+          "Body": "{\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\",\n  \"Text\": \"fixture\",\n  \"Description\": \"\",\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "New-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": false,
+          "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.CustomBannerText",
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Id": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": true
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Text\":\"fixture\",\"Description\":\"\"}",
+      "identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+    },
+    {
+      "operation": "create",
+      "selector": "default",
+      "force_mode": -1,
+      "response": "{}",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "create-default-id",
+      "status": 201,
+      "observed": {
+        "capture": {
+          "Method": "POST",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+          "Body": "{\n  \"Text\": \"fixture\",\n  \"Identity\": \"Global/c4edb533-751c-4b73-9b2c-2ab20649dd0c\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "New-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": false,
+          "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.CustomBannerText",
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/c4edb533-751c-4b73-9b2c-2ab20649dd0c",
+        "relative_id": "c4edb533-751c-4b73-9b2c-2ab20649dd0c",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/c4edb533-751c-4b73-9b2c-2ab20649dd0c"
+          }
+        },
+        "constructor_has_guid": true
+      },
+      "id": "",
+      "input": "{\"Text\":\"fixture\"}",
+      "identity": ""
+    },
+    {
+      "operation": "create",
+      "selector": "relative",
+      "force_mode": -1,
+      "response": "{}",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "create-relative",
+      "status": 201,
+      "observed": {
+        "capture": {
+          "Method": "POST",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+          "Body": "{\n  \"Id\": null,\n  \"Text\": \"fixture\",\n  \"Description\": \"\",\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "New-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": false,
+          "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.CustomBannerText",
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": true
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Text\":\"fixture\",\"Description\":\"\"}",
+      "identity": ""
+    },
+    {
+      "operation": "create",
+      "selector": "identity",
+      "force_mode": 0,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "create-identity-force",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "POST",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+          "Body": "{\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\",\n  \"Text\": \"\",\n  \"Force\": \"False\",\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "New-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Id": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": true
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Text\":\"\"}",
+      "identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+    },
+    {
+      "operation": "create",
+      "selector": "relative",
+      "force_mode": 1,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "create-relative-force",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "POST",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+          "Body": "{\n  \"Id\": null,\n  \"Text\": \"\",\n  \"Force\": \"True\",\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "New-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": true
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Text\":\"\"}",
+      "identity": ""
+    },
+    {
+      "operation": "create",
+      "selector": "relative",
+      "force_mode": -1,
+      "response": "{}",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "create-relative-missing-text",
+      "status": 201,
+      "observed": {
+        "capture": {
+          "Method": null,
+          "Url": null,
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": null,
+          "CorrelationIsGuid": false,
+          "HasTargetUri": false,
+          "MpaCmdlet": null,
+          "Sends": 0,
+          "TokenRequests": 0,
+          "Success": null,
+          "DecodedNull": null,
+          "DecodedType": null,
+          "FailureType": "System.ArgumentNullException",
+          "Warnings": null
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": true
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": ""
+    },
+    {
+      "operation": "create",
+      "selector": "identity",
+      "force_mode": -1,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "create-identity-description-null",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "POST",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+          "Body": "{\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\",\n  \"Text\": \"fixture\",\n  \"Description\": null,\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "New-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Id": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": true
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Text\":\"fixture\",\"Description\":null}",
+      "identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+    },
+    {
+      "operation": "patch",
+      "selector": "identity",
+      "force_mode": -1,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "patch-identity",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "PATCH",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Text\": \"\",\n  \"Description\": null\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "Set-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Id": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Text\":\"\",\"Description\":null}",
+      "identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+    },
+    {
+      "operation": "patch",
+      "selector": "relative",
+      "force_mode": -1,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "patch-relative",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "PATCH",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": "{\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n  \"Text\": \"\",\n  \"Description\": null\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "Set-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Text\":\"\",\"Description\":null}",
+      "identity": ""
+    },
+    {
+      "operation": "patch",
+      "selector": "relative",
+      "force_mode": -1,
+      "response": "",
+      "read_model_id": "",
+      "name": "patch-relative-null-id",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "PATCH",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": "{\n  \"Id\": null,\n  \"Description\": \"\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "Set-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Description\":\"\"}",
+      "identity": ""
+    },
+    {
+      "operation": "patch",
+      "selector": "relative",
+      "force_mode": 0,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "patch-relative-description-only",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "PATCH",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": "{\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n  \"Description\": \"\",\n  \"Force\": \"False\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "Set-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Description\":\"\"}",
+      "identity": ""
+    },
+    {
+      "operation": "patch",
+      "selector": "identity",
+      "force_mode": 1,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "patch-identity-force",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "PATCH",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"Force\": \"True\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "Set-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Id": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Description\":\"\"}",
+      "identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+    },
+    {
+      "operation": "patch",
+      "selector": "identity",
+      "force_mode": -1,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "patch-text-null",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": null,
+          "Url": null,
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": null,
+          "CorrelationIsGuid": false,
+          "HasTargetUri": false,
+          "MpaCmdlet": null,
+          "Sends": 0,
+          "TokenRequests": 0,
+          "Success": null,
+          "DecodedNull": null,
+          "DecodedType": null,
+          "FailureType": "System.ArgumentNullException",
+          "Warnings": null
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Id": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{\"Text\":null}",
+      "identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+    },
+    {
+      "operation": "delete",
+      "selector": "identity",
+      "force_mode": -1,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "delete-identity",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "DELETE",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": "{\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "Remove-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Id": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+    },
+    {
+      "operation": "delete",
+      "selector": "relative",
+      "force_mode": -1,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "delete-relative",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "DELETE",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": "{\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "Remove-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": ""
+    },
+    {
+      "operation": "delete",
+      "selector": "relative",
+      "force_mode": 0,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "delete-relative-force",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "DELETE",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": "{\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n  \"Force\": \"False\"\n}",
+          "ContentType": "application/json; charset=utf-8",
+          "CmdletName": "Remove-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": ""
+    },
+    {
+      "operation": "read",
+      "selector": "relative",
+      "force_mode": -1,
+      "response": "null",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "read-null",
+      "status": 200,
+      "observed": {
+        "capture": {
+          "Method": "GET",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": "Get-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": ""
+    },
+    {
+      "operation": "read",
+      "selector": "relative",
+      "force_mode": -1,
+      "response": "",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "read-empty",
+      "status": 204,
+      "observed": {
+        "capture": {
+          "Method": "GET",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": "Get-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": true,
+          "DecodedNull": true,
+          "DecodedType": null,
+          "FailureType": null,
+          "Warnings": [
+            "fixture-warning"
+          ]
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": ""
+    },
+    {
+      "operation": "list",
+      "selector": "default",
+      "force_mode": -1,
+      "response": "{\"value\":[]}",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "list-envelope",
+      "status": 200,
+      "observed": {
+        "capture": {
+          "Method": "GET",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": "Get-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": null,
+          "DecodedNull": null,
+          "DecodedType": null,
+          "FailureType": "Newtonsoft.Json.JsonSerializationException",
+          "Warnings": null
+        },
+        "normalized_identity": null,
+        "relative_id": null,
+        "metadata": {
+          "RequiredNotBoundedParameters": {}
+        },
+        "constructor_has_guid": false
+      },
+      "id": "",
+      "input": "{}",
+      "identity": ""
+    },
+    {
+      "operation": "read",
+      "selector": "relative",
+      "force_mode": -1,
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "read_model_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "read-denied",
+      "status": 403,
+      "observed": {
+        "capture": {
+          "Method": "GET",
+          "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+          "Body": null,
+          "ContentType": null,
+          "CmdletName": "Get-CsTeamsCustomBannerText",
+          "CorrelationIsGuid": true,
+          "HasTargetUri": false,
+          "MpaCmdlet": "true",
+          "Sends": 1,
+          "TokenRequests": 0,
+          "Success": null,
+          "DecodedNull": null,
+          "DecodedType": null,
+          "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+          "Warnings": null
+        },
+        "normalized_identity": "Global/01234567-89ab-cdef-0123-456789abcdef",
+        "relative_id": "01234567-89ab-cdef-0123-456789abcdef",
+        "metadata": {
+          "RequiredNotBoundedParameters": {
+            "Identity": "Global/01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "constructor_has_guid": false
+      },
+      "id": "01234567-89ab-cdef-0123-456789abcdef",
+      "input": "{}",
+      "identity": ""
+    }
+  ],
+  "models": [
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Text": null,
+          "Description": null
+        }
+      },
+      "input": "constructor"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "input": "text-constructor-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Text": "",
+          "Description": null
+        }
+      },
+      "input": "text-constructor-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Text": null,
+          "Description": null
+        }
+      },
+      "input": "{}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "input": "{\"Text\":null}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Text": "",
+          "Description": null
+        }
+      },
+      "input": "{\"Text\":\"\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Text": null,
+          "Description": null
+        }
+      },
+      "input": "{\"Description\":null}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Text": null,
+          "Description": ""
+        }
+      },
+      "input": "{\"Description\":\"\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Text": null,
+          "Description": null
+        }
+      },
+      "input": "{\"Id\":null}"
+    },
+    {
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "input": "{\"Id\":\"\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": "01234567-89AB-CDEF-0123-456789abcdef",
+          "Text": null,
+          "Description": null
+        }
+      },
+      "input": "{\"Id\":\"01234567-89AB-CDEF-0123-456789abcdef\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": "01234567-89ab-cdef-0123-456789abcdef\n",
+          "Text": null,
+          "Description": null
+        }
+      },
+      "input": "{\"Id\":\"01234567-89ab-cdef-0123-456789abcdef\\n\"}"
+    },
+    {
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "input": "{\"Id\":\"{01234567-89ab-cdef-0123-456789abcdef}\"}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Text": "second",
+          "Description": null
+        }
+      },
+      "input": "{\"Text\":\"first\",\"text\":\"second\"}"
+    },
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "input": "{\"Text\":\"first\",\"Text\":null}"
+    },
+    {
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonReaderException",
+        "value": null
+      },
+      "input": "{\"Text\":[]}"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Id": null,
+          "Text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "Description": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      },
+      "input": "{\"Description\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"Text\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}"
+    }
+  ]
+}
