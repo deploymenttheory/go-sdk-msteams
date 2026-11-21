@@ -8894,19 +8894,45 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/212/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/channel/service.go",
+              "name": "Service.ListAll"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/channel/service_test.go",
+              "name": "TestCollectionsAndPaging"
+            },
+            {
+              "file": "msteams/graph_api/channel/names_test.go",
+              "name": "TestExplicitCollectionWrappers"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channel_test.go",
+              "name": "TestLabChannelCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/channel/service.go",
+            "name": "Service.ListAll"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/channel-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -8926,19 +8952,49 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/213/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/channel/service.go",
+              "name": "Service.ListComplete"
+            },
+            {
+              "file": "msteams/graph_api/channel/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/channel/service_test.go",
+              "name": "TestCollectionsAndPaging"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channel_test.go",
+              "name": "TestLabChannelCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/channel/service.go",
+            "name": "Service.ListComplete"
+          },
+          {
+            "file": "msteams/graph_api/channel/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/channel-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -8990,19 +9046,45 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/215/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/channel/service.go",
+              "name": "Service.ListIncoming"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/channel/service_test.go",
+              "name": "TestCollectionsAndPaging"
+            },
+            {
+              "file": "msteams/graph_api/channel/names_test.go",
+              "name": "TestExplicitCollectionWrappers"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channel_test.go",
+              "name": "TestLabChannelCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/channel/service.go",
+            "name": "Service.ListIncoming"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/channel-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -17281,19 +17363,57 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/407/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/channel/creation.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/graph_api/channel/creation.go",
+              "name": "Service.CreateWithOwner"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/channel/service_test.go",
+              "name": "TestNativeCRUDContracts"
+            },
+            {
+              "file": "msteams/graph_api/channel/service_test.go",
+              "name": "TestSharedCreationAndOperation"
+            },
+            {
+              "file": "msteams/graph_api/channel/service_test.go",
+              "name": "TestOwnerResolutionComposition"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channel_test.go",
+              "name": "TestLabChannelCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/channel/creation.go",
+            "name": "Service.Create"
+          },
+          {
+            "file": "msteams/graph_api/channel/creation.go",
+            "name": "Service.CreateWithOwner"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/channel-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -21069,19 +21189,53 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/517/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/channel/service.go",
+              "name": "Service.DeleteByID"
+            },
+            {
+              "file": "msteams/graph_api/channel/names.go",
+              "name": "Service.DeleteByDisplayName"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/channel/service_test.go",
+              "name": "TestNativeCRUDContracts"
+            },
+            {
+              "file": "msteams/graph_api/channel/names_test.go",
+              "name": "TestNameCompositionsUseCompleteUniqueLookup"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channel_test.go",
+              "name": "TestLabChannelCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/channel/service.go",
+            "name": "Service.DeleteByID"
+          },
+          {
+            "file": "msteams/graph_api/channel/names.go",
+            "name": "Service.DeleteByDisplayName"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/channel-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -26379,19 +26533,53 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/657/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/channel/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/graph_api/channel/names.go",
+              "name": "Service.UpdateByDisplayName"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/channel/service_test.go",
+              "name": "TestNativeCRUDContracts"
+            },
+            {
+              "file": "msteams/graph_api/channel/names_test.go",
+              "name": "TestNameCompositionsUseCompleteUniqueLookup"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channel_test.go",
+              "name": "TestLabChannelCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/channel/service.go",
+            "name": "Service.UpdateByID"
+          },
+          {
+            "file": "msteams/graph_api/channel/names.go",
+            "name": "Service.UpdateByDisplayName"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/channel-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
