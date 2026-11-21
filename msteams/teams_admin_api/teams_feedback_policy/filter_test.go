@@ -3,83 +3,88 @@ package teamsfeedbackpolicy_test
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"os"
-	"reflect"
+
+	"slices"
+	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 )
 
-const bindingSource = "contracts/endpoints/8.1.0/fixtures/feedback-policy-binding.json"
+const bindingSource = "msteams/teams_admin_api/teams_feedback_policy/testdata/get_global.json"
 
-func TestFeedbackPolicyFiltersMatchCapturedSource(t *testing.T) {
+func TestUnitFeedbackPolicyFiltersUseRealResponses(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../" + bindingSource)
-	if e != nil {
-		t.Fatal(e)
+	raw := readResponseFixture(t, "list.json")
+	var rows []json.RawMessage
+	if json.Unmarshal(raw, &rows) != nil {
+		t.Fatal("invalid real list fixture")
 	}
-	var fixture struct {
-		Filters []struct {
-			Pattern  string
-			Observed struct {
-				Identities    []string
-				Sends, Tokens int
+	identities := func(row json.RawMessage) string {
+		var value struct {
+			Identity string `json:"Identity"`
+		}
+		if json.Unmarshal(row, &value) != nil {
+			t.Fatal("invalid real list identity")
+		}
+		return value.Identity
+	}
+	slices.SortStableFunc(rows, func(a, b json.RawMessage) int {
+		left, right := strings.EqualFold(identities(a), "Global"), strings.EqualFold(identities(b), "Global")
+		if left == right {
+			return 0
+		}
+		if left {
+			return -1
+		}
+		return 1
+	})
+	cases := []struct {
+		Name, Pattern, OnlyID string
+		Empty                 bool
+	}{
+		{Name: "list"}, {Name: "all", Pattern: "*"}, {Name: "global", Pattern: "Global", OnlyID: "Global"},
+		{Name: "missing", Pattern: "__sdk_missing_fixture__", Empty: true},
+		{Name: "whitespace", Pattern: " ", Empty: true},
+	}
+	for _, row := range rows {
+		id := identities(row)
+		if strings.HasPrefix(id, "Tag:") && !strings.ContainsAny(id, "*?[]`") {
+			cases = append(cases, struct {
+				Name, Pattern, OnlyID string
+				Empty                 bool
+			}{Name: "tag-prefix", Pattern: strings.TrimPrefix(id, "Tag:"), OnlyID: id})
+			break
+		}
+	}
+	for _, tc := range cases {
+		want := make([]json.RawMessage, 0, len(rows))
+		for _, row := range rows {
+			if !tc.Empty && (tc.OnlyID == "" || strings.EqualFold(identities(row), tc.OnlyID)) {
+				want = append(want, row)
 			}
 		}
-	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Filters) != 5 {
-		t.Fatal("incomplete feedback filter fixture")
-	}
-	var results []contracttest.Result
-	for i, f := range fixture.Filters {
-		if f.Observed.Sends != 0 || f.Observed.Tokens != 0 {
-			t.Fatal("source filter crossed offline boundary")
+		expected, err := json.Marshal(want)
+		if err != nil {
+			t.Fatal(err)
 		}
-		var want []string
-		for _, id := range f.Observed.Identities {
-			if id == "Global" {
-				want = append(want, id)
-			}
-		}
-		for _, id := range f.Observed.Identities {
-			if id != "Global" {
-				want = append(want, id)
-			}
-		}
-		set := "Filter"
-		if f.Pattern == "" {
-			set = "Identity"
-		}
-		results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("source-filter-%d", i), Source: bindingSource, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, getCommand, nil, 200, `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "},{"Identity":"Global/fixture"}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			s := sdk.TeamsAdminAPI.TeamsFeedbackPolicies
-			var o contracttest.Observation
-			var got []string
-			if f.Pattern == "" {
-				v, r, e := s.List(ctx)
-				o = contracttest.Observation{Response: r, Err: e}
-				for _, p := range v {
-					if p == nil || p.Identity == nil {
-						t.Fatal("missing filter identity")
-					}
-					got = append(got, *p.Identity)
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "real-filter-" + tc.Name, Family: "teams_feedback_policy", Scope: "service", Source: "msteams/teams_admin_api/teams_feedback_policy/testdata/list.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsFeedbackPolicy", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				service := sdk.TeamsAdminAPI.TeamsFeedbackPolicies
+				if tc.Pattern == "" {
+					value, response, err := service.List(ctx)
+					return contracttest.Observation{Value: value, Response: response, Err: err}
 				}
-			} else {
-				v, r, e := s.ListFiltered(ctx, f.Pattern)
-				o = contracttest.Observation{Response: r, Err: e}
-				for _, p := range v {
-					if p == nil || p.Identity == nil {
-						t.Fatal("missing filter identity")
-					}
-					got = append(got, *p.Identity)
-				}
-			}
-			if !reflect.DeepEqual(got, want) {
-				t.Fatal("source filter/order differs")
-			}
-			return o
-		}}))
+				value, response, err := service.ListFiltered(ctx, tc.Pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("real filtering response differs: %v %+v", err, result.Differences())
+		}
 	}
-	evidence(t, results)
+
 }

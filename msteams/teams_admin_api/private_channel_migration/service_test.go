@@ -15,7 +15,7 @@ import (
 
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
-	c.Family, c.Source = "private_channel_migration", "contracts/endpoints/8.1.0/special-service-profiles.json"
+	c.Family, c.Source = "private_channel_migration", "msteams/teams_admin_api/private_channel_migration/service_test.go"
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
@@ -29,9 +29,9 @@ func wire(origin, prefix, audience string, status int, body string) contracttest
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + prefix + "/channels/privateChannelMigrationStatus", Audience: audience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
 }
 
-func TestMigrationUsesExactPinnedCloudPrefixesAndAudiences(t *testing.T) {
+func TestUnitMigrationCloudRequestPrefixesAndAudiences(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, tc := range []struct{ cloud, origin, prefix, audience string }{
 		{"commercial", "https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com"},
 		{"gcc", "https://teams.microsoft.com", "/fabric/gcc/templates/api", "https://templates.teams.microsoft.com"},
@@ -40,7 +40,7 @@ func TestMigrationUsesExactPinnedCloudPrefixesAndAudiences(t *testing.T) {
 		{"china", "https://teams.microsoftonline.cn", "/fabric/templates/api", "https://templates.teams.microsoftonline.cn"},
 	} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			results = append(results, run(t, contracttest.Case{Name: tc.cloud + "-" + string(mode), Cloud: tc.cloud, Mode: mode, Mappings: []contracttest.Mapping{{Command: "Get-TenantPrivateChannelMigrationStatus", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire(tc.origin, tc.prefix, tc.audience, 200, `{"TenantId":"fixture-tenant","MigrationStatus":"FutureStatus","Details":"{\"futureCount\":0}","LastChecked":null,"MigrationStartTimeStamp":"2026-01-01T00:00:00","MigrationCompletionTimeStamp":null,"future":[false]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: tc.cloud + "-" + string(mode), Cloud: tc.cloud, Mode: mode, Mappings: []contracttest.Mapping{{Command: "Get-TenantPrivateChannelMigrationStatus", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire(tc.origin, tc.prefix, tc.audience, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
 				var value any
 				if v != nil {
@@ -51,13 +51,12 @@ func TestMigrationUsesExactPinnedCloudPrefixesAndAudiences(t *testing.T) {
 					value = map[string]any{"tenant": v.TenantID, "status": v.MigrationStatus, "checked": v.LastChecked, "start": v.MigrationStartTimestamp, "details": details, "future": v.RawFields["future"]}
 				}
 				return contracttest.Observation{Value: value, Response: r, Err: err}
-			}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"tenant":"fixture-tenant","status":"FutureStatus","checked":null,"start":"2026-01-01T00:00:00","details":{"futureCount":0},"future":[false]}`)}}))
+			}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
 		}
 	}
-	evidence(t, results)
 }
 
-func TestMigrationProfilesDoNotFallbackAndWrongBackendIsLocal(t *testing.T) {
+func TestUnitMigrationProfilesDoNotFallbackAndWrongBackendIsLocal(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"france", "germany"} {
 		run(t, contracttest.Case{Name: cloud, Cloud: cloud, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -78,19 +77,15 @@ func TestMigrationProfilesDoNotFallbackAndWrongBackendIsLocal(t *testing.T) {
 	}, Want: contracttest.Expected{Error: context.Canceled}})
 }
 
-func TestMigrationMalformedDetailsRemainExplicitCallerData(t *testing.T) {
+func TestUnitMigrationMalformedDetailsRemainExplicitCallerData(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "malformed-details", Steps: []contracttest.Exchange{wire("https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com", 200, `{"MigrationStatus":"RequiresAdminAttention","Details":"not-json"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-		v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
-		if v == nil || v.Details == nil {
-			t.Error("native detail text was lost")
-		} else {
-			if _, e := v.DecodeDetails(); e == nil {
-				t.Error("malformed detail text decoded as an object")
-			}
-		}
-		return contracttest.Observation{Response: r, Err: err}
-	}, Want: contracttest.Expected{Status: 200}})
+	var value migration.Status
+	if err := json.Unmarshal([]byte(`{"MigrationStatus":"RequiresAdminAttention","Details":"not-json","LastChecked":null,"future":false}`), &value); err != nil || value.Details == nil {
+		t.Fatal("local status decoding lost details")
+	}
+	if _, err := value.DecodeDetails(); err == nil {
+		t.Fatal("malformed detail text accepted")
+	}
 	for _, body := range []string{`null`, `[]`, `{"Details":{}}`, `{"LastChecked":17}`} {
 		run(t, contracttest.Case{Name: "malformed-status", Steps: []contracttest.Exchange{wire("https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)

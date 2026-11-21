@@ -50,6 +50,6 @@ composition traverses all bounded pages and rejects ambiguity; pinned Set/Remove
 searched the first page. These are explicit SDK decisions, not byte-equivalence
 claims. The historical myorganization user fallback is not used.
 
-See [source evidence](../../../docs/implementation/core/channel-contract-evidence.md)
-and [implementation evidence](../../../docs/implementation/core/channel-sdk-evidence.md).
+See [unit tests](service_test.go)
+and [unit tests](service_test.go).
 Live tenant CRUD and PowerShell conformance remain unqualified.

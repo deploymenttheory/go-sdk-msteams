@@ -31,9 +31,9 @@ type operationFixture struct {
 	OperationID string `json:"operation_id"`
 }
 
-// TestLabTeamOperationReadOnly reads only an explicitly selected existing
+// TestAccTeamOperationReadOnly reads only an explicitly selected existing
 // operation. It never initiates an operation or follows the target resource URL.
-func TestLabTeamOperationReadOnly(t *testing.T) {
+func TestAccTeamOperationReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -101,7 +101,7 @@ func sameOperationProjection(a, b teamOracleOperation) bool {
 	return reflect.DeepEqual(a, b)
 }
 
-func TestOperationOracleComparesPresenceAndTimestampInstants(t *testing.T) {
+func TestUnitOperationOracleComparesPresenceAndTimestampInstants(t *testing.T) {
 	t.Parallel()
 	utc := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
 	offset := utc.In(time.FixedZone("fixture", 3600))

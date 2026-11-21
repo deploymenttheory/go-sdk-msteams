@@ -12,7 +12,7 @@ import (
 	management "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/shared_channel_management"
 )
 
-func TestResourceBoundariesAreLocal(t *testing.T) {
+func TestUnitResourceBoundariesAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, resource := range []string{"sharing", "associated", "composition"} {
 		for _, state := range []string{"nil-service", "wrong-backend", "closed", "nil-context"} {

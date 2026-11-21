@@ -2,7 +2,7 @@
 
 Use the existing private lab identity and the [lab lifecycle gates](../lab/lifecycle-evidence.md).
 Ordinary tests read no credentials. Explicit MSTEAMS_LAB_READ_ONLY=1 enables
-TestLabFederationReadOnly; MSTEAMS_LAB_IDENTITY_FILE names the private identity.
+TestAccFederationReadOnly; MSTEAMS_LAB_IDENTITY_FILE names the private identity.
 MSTEAMS_LAB_AUTH_METHOD selects certificate (default) or client-secret.
 
 The read test checks Global and a locally filtered list for external access policy,
@@ -18,7 +18,7 @@ Both actual read attempts (secret/certificate) stopped with resource HTTP 403
 for all four families. Listing and PowerShell comparison therefore remain unrun.
 No successful native resource or full command qualification is claimed.
 
-TestLabExternalAccessPolicyCRUD additionally requires MSTEAMS_LAB_MUTATIONS=1
+TestAccExternalAccessPolicyCRUD additionally requires MSTEAMS_LAB_MUTATIONS=1
 and a private MSTEAMS_LAB_JOURNAL_DIRECTORY. This prepared test is unrun. It plans
 creation before sending, creates one random unassigned policy, reads non-default
 Description/false values, updates Description while checking the omitted Boolean,

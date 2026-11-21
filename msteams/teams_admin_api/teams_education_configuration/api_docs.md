@@ -43,5 +43,5 @@ fresh UUID correlation. Synthetic application/delegated tests establish routing,
 not successful tenant authorization. Authorized updates/read-back/restoration,
 cloud/server availability and effective parent-contact, generative AI and parent
 information behavior remain open under #116. See
-[source evidence](../../../docs/implementation/policies/education-configuration-evidence.md)
+[unit tests](service_test.go)
 and the [lab acceptance record](../../../docs/implementation/policies/education-configuration-lab-acceptance.md).

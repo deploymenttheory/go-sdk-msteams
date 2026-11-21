@@ -1,6 +1,6 @@
 # Teams events policy lab acceptance
 
-On 2026-11-21, TestLabEventsPolicyReadOnly attempted a compiled TeamsEventsPolicy
+On 2026-11-21, TestAccEventsPolicyReadOnly attempted a compiled TeamsEventsPolicy
 Global read using the dedicated lab SPN with client-secret and certificate
 authentication. Both actual resource reads returned HTTP 403. The harness checks
 the response request path to distinguish a resource denial from preparation or

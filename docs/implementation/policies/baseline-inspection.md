@@ -69,10 +69,10 @@ Compiled names omit `Microsoft.Teams.Policy.Administration.Cmdlets.Core.` below.
 4. Meeting branding and domain builders: inspect base classes to settle local construction versus remote persistence, and track their model serialization into consuming policies.
 5. Produce versioned endpoint/response/error fixtures, source-backed permission restrictions and canonical Go mappings; preserve unknown or conditional contracts explicitly.
 
-Shared [Config API discovery/dispatch evidence](../core/policy-routing-evidence.md) supplies a traced reference but does not prove every compiled policy type uses the same provider route. No command coverage state changes here.
+Shared [tests](../../../tests/integration/lab) supplies a traced reference but does not prove every compiled policy type uses the same provider route. No command coverage state changes here.
 
-Detailed work has begun for the five [application-access-policy commands](application-access-contract-evidence.md)
-and six [assignment-migration commands](assignment-migration-evidence.md). These
+Detailed work has begun for the five [tests](../../../tests/integration/lab)
+and six [tests](../../../tests/integration/lab). These
 notes retain conditional routing, role/service qualification and fixture gaps;
 the full 40-command POL-01 contract remains open.
 

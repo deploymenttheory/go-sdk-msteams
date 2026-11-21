@@ -13,7 +13,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestConcurrentCloseCleansOwnedResourcesOnce(t *testing.T) {
+func TestUnitConcurrentCloseCleansOwnedResourcesOnce(t *testing.T) {
 	t.Parallel()
 	var cleaned atomic.Int32
 	session, err := client.NewSession(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"},
@@ -34,7 +34,7 @@ func TestConcurrentCloseCleansOwnedResourcesOnce(t *testing.T) {
 	}
 }
 
-func TestOperationContextPreservesDeadlineAndRejectsInvalidState(t *testing.T) {
+func TestUnitOperationContextPreservesDeadlineAndRejectsInvalidState(t *testing.T) {
 	t.Parallel()
 	session, err := client.NewSession(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"}, &http.Client{}, nil)
 	if err != nil {

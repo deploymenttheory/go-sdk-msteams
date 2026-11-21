@@ -1,35 +1,24 @@
 package client_test
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestHierarchyProfilesMatchPinnedOriginAudienceAndCloudMaps(t *testing.T) {
+func TestUnitHierarchyProfilesMatchPinnedOriginAudienceAndCloudMaps(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../contracts/endpoints/8.1.0/special-service-profiles.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var source struct {
-		Profiles []struct {
-			ID          string `json:"id"`
-			Audience    string `json:"audience"`
-			CloudRoutes map[string]struct {
-				Origin string `json:"origin"`
-			} `json:"cloud_routes"`
-		} `json:"profiles"`
-	}
-	if json.Unmarshal(raw, &source) != nil {
-		t.Fatal("invalid pinned profile contract")
+	profiles := map[string]struct {
+		Audience    string
+		CloudRoutes map[string]string
+	}{
+		"targeting-v1": {Audience: "https://retailservices.teams.microsoft.com", CloudRoutes: map[string]string{"commercial": "https://retailservices.teams.microsoft.com", "gcc": "https://retailservices.gcc.teams.microsoft.com"}},
+		"hierarchy-v2": {Audience: "https://chatsvcagg.teams.microsoft.com", CloudRoutes: map[string]string{"commercial": "https://hierarchy.teams.microsoft.com"}},
 	}
 	for _, tc := range []struct {
 		id      string
@@ -41,12 +30,7 @@ func TestHierarchyProfilesMatchPinnedOriginAudienceAndCloudMaps(t *testing.T) {
 	} {
 		for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 			t.Run(tc.id+"-"+cloud, func(t *testing.T) {
-				origin, audience := "", ""
-				for _, profile := range source.Profiles {
-					if profile.ID == tc.id {
-						origin, audience = profile.CloudRoutes[cloud].Origin, profile.Audience
-					}
-				}
+				origin, audience := profiles[tc.id].CloudRoutes[cloud], profiles[tc.id].Audience
 				calls := 0
 				httpClient := &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) {
 					calls++
@@ -82,7 +66,7 @@ func TestHierarchyProfilesMatchPinnedOriginAudienceAndCloudMaps(t *testing.T) {
 	}
 }
 
-func TestHierarchyProfileErrorsKeepTypedBackendAndRedactDiagnostics(t *testing.T) {
+func TestUnitHierarchyProfileErrorsKeepTypedBackendAndRedactDiagnostics(t *testing.T) {
 	t.Parallel()
 	for _, backend := range []client.Backend{client.Targeting, client.Hierarchy} {
 		value := client.NewAPIError(backend, 403, http.Header{"request-id": {"private-canary"}}, []byte(`{"error":{"code":"PrivateCode","message":"private-canary"}}`))

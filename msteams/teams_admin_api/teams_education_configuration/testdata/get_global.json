@@ -1,0 +1,43 @@
+{
+  "ParentGuardianPreferredContactMethod": "Email",
+  "EduGenerativeAIEnhancements": "Enabled",
+  "UpdateParentInformation": "Enabled",
+  "Key": {
+    "ScopeClass": "Global",
+    "SchemaId": {
+      "XName": {
+        "name": "Fixture name"
+      }
+    },
+    "AuthorityId": {
+      "Class": "Host",
+      "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+      }
+    },
+    "DefaultXml": {
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "Data": {
+        "TeamsEducationConfiguration": {
+          "@xmlns": "urn:schema:Microsoft.Rtc.Management.Settings.TeamsConfiguration.2016"
+        }
+      },
+      "ConfigObject": null,
+      "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+      "IsModified": true
+    },
+    "XmlRoot": {
+      "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+    }
+  },
+  "Identity": "Global",
+  "ConfigMetadata": {
+    "Authority": "Host"
+  },
+  "ConfigId": "Global"
+}

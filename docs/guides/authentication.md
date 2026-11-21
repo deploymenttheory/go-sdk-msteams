@@ -4,15 +4,15 @@ Select one `auth.Config.Method` when constructing the client. Each provider is l
 and acquires Graph and Teams tokens separately under the operation's context.
 There is no automatic fallback between users and applications.
 
-| Method | Mode | Portable inputs and limits | Evidence |
+| Method | Mode | Portable inputs and limits | Tests |
 |---|---|---|---|
-| `Browser` | Delegated | Caller opens browser; SDK owns loopback callback with state/PKCE; no Windows broker dependency | [Delegated](../implementation/auth/delegated-evidence.md) |
-| `DeviceCode` | Delegated | Caller displays code/verification URI; context cancels polling | [Delegated](../implementation/auth/delegated-evidence.md) |
-| `Password` | Delegated | Explicit username/password; MFA and conditional access can reject this flow; federated endpoints require explicit trust | [Delegated](../implementation/auth/delegated-evidence.md) |
-| `Certificate` | Application | PEM certificate/private key or supported PFX subset; no OS certificate store needed | [Application](../implementation/auth/client-credentials-evidence.md) |
-| `ClientSecret` | Application | Explicit secret; native provider corresponds to the module's externally acquired app-token path | [Application](../implementation/auth/client-credentials-evidence.md) |
-| `ManagedIdentity` | Application | Azure host supplies system-assigned or selected user-assigned identity; commercial profile | [Machine identities](../implementation/auth/machine-identity-evidence.md) |
-| `WorkloadIdentity` | Application | Assertion file or callback; Entra federation trust required; SDK addition rather than a claimed Connect parameter | [Machine identities](../implementation/auth/machine-identity-evidence.md) |
+| `Browser` | Delegated | Caller opens browser; SDK owns loopback callback with state/PKCE; no Windows broker dependency | [tests](../../msteams/auth) |
+| `DeviceCode` | Delegated | Caller displays code/verification URI; context cancels polling | [tests](../../msteams/auth) |
+| `Password` | Delegated | Explicit username/password; MFA and conditional access can reject this flow; federated endpoints require explicit trust | [tests](../../msteams/auth) |
+| `Certificate` | Application | PEM certificate/private key or supported PFX subset; no OS certificate store needed | [tests](../../msteams/auth) |
+| `ClientSecret` | Application | Explicit secret; native provider corresponds to the module's externally acquired app-token path | [tests](../../msteams/auth) |
+| `ManagedIdentity` | Application | Azure host supplies system-assigned or selected user-assigned identity; commercial profile | [tests](../../msteams/auth) |
+| `WorkloadIdentity` | Application | Assertion file or callback; Entra federation trust required; SDK addition rather than a claimed Connect parameter | [tests](../../msteams/auth) |
 | `SuppliedTokens` | Explicit single mode | Audience-keyed values and expiries; caller renews them; both audiences must belong to the same declared identity/mode | [Configuration](client-configuration.md) |
 | `ExternalProvider` | Explicit single mode | Borrowed provider or Azure credential adapter; caller owns credential lifecycle | [Configuration](client-configuration.md) |
 
@@ -44,10 +44,8 @@ itself. `ErrUnsupportedOperationMode` and `ErrTenantCapabilityUnavailable` are
 reserved for resource-specific evidence; generic response text does not trigger
 them. Keep `errors.As` access to `*client.APIError` for status and diagnostic codes.
 
-The [capability evidence](../implementation/auth/capability-evidence.md) explains
-source dates, permission/role boundaries and the test mapping. Resource research
-tickets own exact least-privilege requirements; callers should not grant a broad
-permission bundle just because authentication succeeded.
+The capability catalog keeps source dates and documented permission boundaries.
+Resource tickets track the authorization and acceptance tests still required.
 
 
 ## Environments and local sessions
@@ -63,8 +61,6 @@ Close clears only this client's owned state; changing environment means construc
 a new client. WithAuthConfig replaces environment-loaded defaults. No machine-global
 PowerShell settings or internal support-region headers are reproduced.
 
-[Session evidence](../implementation/auth/session-evidence.md) maps every assigned
-helper and Connect parameter, records pinned endpoint sources, and separates fixture
-coverage from live qualification. Sovereign profiles are fixture-tested only. Managed
-identity remains commercial-only, and the capability catalog covers only its dated
-commercial/GCC/GCCH/DoD documentation.
+Sovereign profiles have unit coverage; live qualification is still required.
+Managed identity remains commercial-only. The capability catalog records dated
+commercial/GCC/GCCH/DoD documentation observations.

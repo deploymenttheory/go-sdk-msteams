@@ -82,9 +82,9 @@ func educationConfigurationOracle(t *testing.T, ctx context.Context, tenant stri
 	return value
 }
 
-// TestLabEducationConfigurationReadOnly performs configuration reads only.
+// TestAccEducationConfigurationReadOnly performs configuration reads only.
 // Tenant updates and effective education behavior need separate acceptance.
-func TestLabEducationConfigurationReadOnly(t *testing.T) {
+func TestAccEducationConfigurationReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -99,6 +99,7 @@ func TestLabEducationConfigurationReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsEducationConfigurations.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_education_configuration", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -106,7 +107,8 @@ func TestLabEducationConfigurationReadOnly(t *testing.T) {
 		}
 		t.Fatalf("education configuration Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsEducationConfigurations.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsEducationConfigurations.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_education_configuration", "list", listResponse, nil)
 	selected, selectionErr := globalEducationConfiguration(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(educationConfigurationProjection(value), educationConfigurationProjection(selected)) {
 		t.Fatal("education configuration Global read/list projections differ")
@@ -125,7 +127,7 @@ func TestLabEducationConfigurationReadOnly(t *testing.T) {
 	t.Log("selected education configuration reads verified; persistence and effective education behavior remain separately qualified")
 }
 
-func TestEducationConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitEducationConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"ParentGuardianPreferredContactMethod":null,"EduGenerativeAIEnhancements":"","UpdateParentInformation":"fixture"}`
@@ -159,7 +161,7 @@ func globalEducationConfiguration(values []*resource.Configuration) (*resource.C
 	}
 	return found, nil
 }
-func TestEducationConfigurationGlobalSelection(t *testing.T) {
+func TestUnitEducationConfigurationGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Configuration{Identity: new("Global")}
 	tagged := &resource.Configuration{Identity: new("Tag:Global")}
@@ -183,7 +185,7 @@ func matchesEducationConfigurationGetterProjection(value *resource.Configuration
 	return json.Unmarshal(educationConfigurationProjection(value), &left) == nil && json.Unmarshal(raw, &right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestEducationConfigurationOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitEducationConfigurationOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"edugenerativeaienhancements":"fixture"}`, `{"EduGenerativeAIEnhancements":"earlier","edugenerativeaienhancements":"fixture"}`, `{"EduGenerativeAIEnhancements":null,"edugenerativeaienhancements":"fixture"}`} {
 		var value resource.Configuration

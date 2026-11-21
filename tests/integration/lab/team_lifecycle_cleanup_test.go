@@ -31,7 +31,7 @@ func lifecycleWire(method, path string, status int, body string) contracttest.Ex
 
 func lifecycleOffline(t *testing.T, c contracttest.Case) {
 	t.Helper()
-	c.Family, c.Source = "team_lifecycle_lab", "contracts/endpoints/8.1.0/fixtures/core-team-compositions.json"
+	c.Family, c.Source = "team_lifecycle_lab", "tests/integration/lab/team_lifecycle_cleanup_test.go"
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
@@ -41,7 +41,7 @@ func lifecycleOffline(t *testing.T, c contracttest.Case) {
 	}
 }
 
-func TestLifecycleResolveRequiresCompleteUniquePositiveMatch(t *testing.T) {
+func TestUnitLifecycleResolveRequiresCompleteUniquePositiveMatch(t *testing.T) {
 	t.Parallel()
 	row := `{"id":"` + lifecycleTestID + `","displayName":"` + lifecycleTestName + `","mailNickname":"` + lifecycleTestName + `"}`
 	query := url.Values{"$filter": {"displayName eq '" + lifecycleTestName + "'"}, "$select": {"id,displayName,mailNickname"}}.Encode()
@@ -68,7 +68,7 @@ func TestLifecycleResolveRequiresCompleteUniquePositiveMatch(t *testing.T) {
 	}
 }
 
-func TestLifecycleDeletionRequiresOwnedPairAndNeverReplays(t *testing.T) {
+func TestUnitLifecycleDeletionRequiresOwnedPairAndNeverReplays(t *testing.T) {
 	t.Parallel()
 	groupBody := `{"id":"` + lifecycleTestID + `","displayName":"` + lifecycleTestName + `","mailNickname":"` + lifecycleTestName + `","groupTypes":["Unified"]}`
 	teamBody := `{"id":"` + lifecycleTestID + `","displayName":"` + lifecycleTestName + `"}`
@@ -115,7 +115,7 @@ func TestLifecycleDeletionRequiresOwnedPairAndNeverReplays(t *testing.T) {
 	}
 }
 
-func TestLifecycleOwnerRequiresPrivateSameTenantFixture(t *testing.T) {
+func TestUnitLifecycleOwnerRequiresPrivateSameTenantFixture(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"valid", "other-tenant", "invalid-user", "missing-file"} {
 		t.Run(name, func(t *testing.T) {
@@ -145,7 +145,7 @@ func TestLifecycleOwnerRequiresPrivateSameTenantFixture(t *testing.T) {
 	}
 }
 
-func TestLifecycleDeletionObservationRequiresBoth404sAndRejectsDenial(t *testing.T) {
+func TestUnitLifecycleDeletionObservationRequiresBoth404sAndRejectsDenial(t *testing.T) {
 	for _, denied := range []bool{false, true} {
 		name := "both-missing"
 		if denied {

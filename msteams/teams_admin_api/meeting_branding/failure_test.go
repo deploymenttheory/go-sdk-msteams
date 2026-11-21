@@ -15,9 +15,9 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestBrandingInvalidInputRejectsBeforeCredentials(t *testing.T) {
+func TestUnitBrandingInvalidInputRejectsBeforeCredentials(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "invalid-input-and-scope", Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsMeetingBrandingPolicy", ParameterSet: "Identity"}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "invalid-input-and-scope", Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsMeetingBrandingPolicy", ParameterSet: "Identity"}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.MeetingBrandingPolicies
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity", "scope/..", "/empty-scope", "scope/"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -70,19 +70,18 @@ func TestBrandingInvalidInputRejectsBeforeCredentials(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{result})
 }
 
-func TestBrandingMutationsNeverReplayAndErrorsKeepStatus(t *testing.T) {
+func TestUnitBrandingMutationsNeverReplayAndErrorsKeepStatus(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, method := range []string{"POST", "DELETE"} {
 		for _, status := range []int{401, 403, 409, 429, 503} {
 			command, path := "New-CsTeamsMeetingBrandingPolicy", collection
 			if method == "DELETE" {
 				command, path = "Remove-CsTeamsMeetingBrandingPolicy", item
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", strings.ToLower(method), status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(method, path, command, json.RawMessage(`{"Identity":"Global"}`), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", strings.ToLower(method), status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(method, path, command, json.RawMessage(`{"Identity":"Global"}`), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				var observation contracttest.Observation
 				if method == "POST" {
 					_, observation.Response, observation.Err = sdk.TeamsAdminAPI.MeetingBrandingPolicies.Create(ctx, resource.CreateRequest{Identity: "Global"})
@@ -94,8 +93,7 @@ func TestBrandingMutationsNeverReplayAndErrorsKeepStatus(t *testing.T) {
 					return contracttest.Observation{Err: errors.New("normalized branding status/error redaction changed")}
 				}
 				return contracttest.Observation{Response: observation.Response}
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }

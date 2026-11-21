@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestTeamOracleRejectsIncompleteOrPollutedReports(t *testing.T) {
+func TestUnitTeamOracleRejectsIncompleteOrPollutedReports(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, kind, body string
@@ -71,7 +71,7 @@ func TestTeamOracleRejectsIncompleteOrPollutedReports(t *testing.T) {
 	}
 }
 
-func TestTeamOracleOutputIsBoundedAcrossWrites(t *testing.T) {
+func TestUnitTeamOracleOutputIsBoundedAcrossWrites(t *testing.T) {
 	t.Parallel()
 	var buffer teamOracleBuffer
 	first := []byte(strings.Repeat("a", maxTeamOracleBytes-1))

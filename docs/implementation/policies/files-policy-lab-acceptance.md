@@ -1,6 +1,6 @@
 # Teams files policy lab acceptance
 
-On 2026-11-21, TestLabFilesPolicyReadOnly attempted a compiled TeamsFilesPolicy
+On 2026-11-21, TestAccFilesPolicyReadOnly attempted a compiled TeamsFilesPolicy
 Global read with the dedicated lab SPN using client-secret and certificate
 authentication. Both actual resource reads returned HTTP 403. The harness checks
 the response request path to distinguish resource denial from preparation or

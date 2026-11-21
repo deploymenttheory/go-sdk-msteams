@@ -46,12 +46,11 @@ Compiled grants preserve nil versus empty PolicyName. User and tenant PATCH
 include additionalParameters:null; tenant uses capitalized PolicyName and Boolean
 forceSwitchPresent. Required group Rank is signed Int32 and always sent,
 including zero/negative values. Empty/mixed scope rejects before credentials/HTTP;
-the captured private parameterless Grant dispatch emits a source error without
-HTTP. Group 202 is decoded as the compiled policy model; raw future fields/HTTP
+a parameterless Grant is rejected locally without HTTP. Group 202 is decoded as the compiled policy model; raw future fields/HTTP
 metadata remain available without inferred polling or effective assignments.
 Mutations never replay automatically.
 
-See [source evidence](../../../docs/implementation/policies/files-policy-evidence.md)
+See [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/files-policy-lab-acceptance.md).
 All five commands/nine sets have native mappings. Issue #120 stays open for full
 command and successful tenant qualification.

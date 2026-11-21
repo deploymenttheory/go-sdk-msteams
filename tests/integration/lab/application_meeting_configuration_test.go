@@ -67,20 +67,22 @@ func applicationMeetingOracle(t *testing.T, ctx context.Context) applicationMeet
 	return value
 }
 
-// TestLabApplicationMeetingConfigurationReadOnly never updates the tenant-wide
+// TestAccApplicationMeetingConfigurationReadOnly never updates the tenant-wide
 // allow-list. Mutation acceptance needs a separate explicitly authorized restore plan.
-func TestLabApplicationMeetingConfigurationReadOnly(t *testing.T) {
+func TestAccApplicationMeetingConfigurationReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	sdk, _, _ := labSDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	s := sdk.TeamsAdminAPI.ApplicationMeetingConfigurations
-	value, _, err := s.GetByIdentity(ctx, "Global")
+	value, fixtureResponse, err := s.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "application_meeting_configuration", "get_global", fixtureResponse, nil)
 	if err != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("application meeting Global read failed")
 	}
-	listed, _, err := s.ListFiltered(ctx, "Global")
+	listed, listResponse, err := s.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "application_meeting_configuration", "list", listResponse, nil)
 	if err != nil || len(listed) != 1 || !reflect.DeepEqual(value.RawFields, listed[0].RawFields) {
 		t.Fatal("application meeting filtered read differs")
 	}
@@ -93,7 +95,7 @@ func TestLabApplicationMeetingConfigurationReadOnly(t *testing.T) {
 	t.Log("selected configuration reads observed; tenant-wide update effects remain separately qualified")
 }
 
-func TestApplicationMeetingOracleRejectsIncompleteAndMixedOutput(t *testing.T) {
+func TestUnitApplicationMeetingOracleRejectsIncompleteAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"success":false}`, `{"success":true,"identity":"Other"}`, `{"success":true,"identity":"Global"}`, `{"success":true,"identity":"Global","app_ids":[],"unknown":false}`, `{"success":true,"identity":"Global"} {}`, `{"success":true,"identity":"Global","app_ids":42}`} {
 		if _, err := decodeApplicationMeetingOracle([]byte(raw)); err == nil {

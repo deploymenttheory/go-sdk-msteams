@@ -3,7 +3,6 @@ package teamscallholdpolicy_test
 import (
 	"encoding/json"
 	"errors"
-	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -12,12 +11,9 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_hold_policy"
 )
 
-func TestCallHoldPinnedModels(t *testing.T) {
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
-	}
-	var fixture struct {
+func TestUnitCallHoldTypedModels(t *testing.T) {
+
+	fixture := struct {
 		Models []struct {
 			Input       string
 			Observation struct {
@@ -25,10 +21,117 @@ func TestCallHoldPinnedModels(t *testing.T) {
 				Value   json.RawMessage
 			}
 		}
+	}{
+		Models: []struct {
+			Input       string
+			Observation struct {
+				Failure *string
+				Value   json.RawMessage
+			}
+		}{
+
+			{
+				Input: "constructor",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AudioFileId\":null,\"Description\":null,\"Identity\":null,\"StreamingSourceAuthType\":null,\"StreamingSourceUrl\":null}"),
+				},
+			},
+
+			{
+				Input: "long-description",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AudioFileId\":\"future-file\",\"Description\":\"" + strings.Repeat("x", 2000) + "\",\"Identity\":null,\"StreamingSourceAuthType\":\"FutureAuth\",\"StreamingSourceUrl\":\"future://fixture\"}"),
+				},
+			},
+
+			{
+				Input: "{}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AudioFileId\":null,\"Description\":null,\"Identity\":null,\"StreamingSourceAuthType\":null,\"StreamingSourceUrl\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"Identity\":null,\"Description\":null,\"AudioFileId\":null,\"StreamingSourceUrl\":null,\"StreamingSourceAuthType\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AudioFileId\":null,\"Description\":null,\"Identity\":null,\"StreamingSourceAuthType\":null,\"StreamingSourceUrl\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"Identity\":\"Global\",\"Description\":\"\",\"AudioFileId\":\"future-file\",\"StreamingSourceUrl\":\"future://fixture\",\"StreamingSourceAuthType\":\"FutureAuth\",\"Future\":false}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AudioFileId\":\"future-file\",\"Description\":\"\",\"Identity\":\"Global\",\"StreamingSourceAuthType\":\"FutureAuth\",\"StreamingSourceUrl\":\"future://fixture\"}"),
+				},
+			},
+
+			{
+				Input: "{\"Description\":\"first\",\"description\":\"second\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AudioFileId\":null,\"Description\":\"second\",\"Identity\":null,\"StreamingSourceAuthType\":null,\"StreamingSourceUrl\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"Description\":\"first\",\"Description\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AudioFileId\":null,\"Description\":null,\"Identity\":null,\"StreamingSourceAuthType\":null,\"StreamingSourceUrl\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"AudioFileId\":{}}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("Newtonsoft.Json.JsonReaderException"),
+				},
+			},
+
+			{
+				Input: "{\"StreamingSourceUrl\":[]}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("Newtonsoft.Json.JsonReaderException"),
+				},
+			},
+
+			{
+				Input: "{\"StreamingSourceAuthType\":{}}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("Newtonsoft.Json.JsonReaderException"),
+				},
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Models) != 10 {
-		t.Fatal("incomplete call hold models")
-	}
+
 	for _, c := range fixture.Models {
 		t.Run(c.Input, func(t *testing.T) {
 			var v resource.Policy
@@ -62,7 +165,7 @@ func TestCallHoldPinnedModels(t *testing.T) {
 	}
 }
 
-func TestCallHoldRawSnapshotsRetainDuplicatesAndOwnership(t *testing.T) {
+func TestUnitCallHoldRawSnapshotsRetainDuplicatesAndOwnership(t *testing.T) {
 	raw := []byte(`{"Description":"first","description":"second","AudioFileId":null,"Future":false}`)
 	original := append([]byte(nil), raw...)
 	var v resource.Policy

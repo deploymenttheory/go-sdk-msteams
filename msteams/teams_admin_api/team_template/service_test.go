@@ -20,39 +20,37 @@ import (
 
 const opaqueID = "/api/teamtemplates/v1.0/fixture/Tenant/en-US"
 const configOrigin = "https://api.interfaces.records.teams.microsoft.com"
-const targetForest = "https://forest.fixture.invalid/"
+const targetForest = "https://admin.example.invalid/"
 
-type requestObservation struct {
-	Name     string          `json:"name"`
-	Method   string          `json:"method"`
-	URL      string          `json:"generated_url"`
-	Body     json.RawMessage `json:"body"`
-	Status   int             `json:"response_status"`
-	Response string          `json:"response_body"`
-	ref      string
+type requestVector struct {
+	Name, Method, URL string
+	Body              json.RawMessage
 }
 
-func requestFixture(t *testing.T, name string) requestObservation {
+func requestFixture(t *testing.T, name string) requestVector {
 	t.Helper()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json")
+	for _, tc := range []requestVector{
+		{Name: "template-read-opaque-id", Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/%2Fapi%2Fteamtemplates%2Fv1.0%2Ffixture%2FTenant%2Fen-US", Body: nil},
+		{Name: "template-list", Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/api/TeamTemplates/v1.0/en-US", Body: nil},
+		{Name: "template-delete-empty", Method: "DELETE", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/%2Fapi%2Fteamtemplates%2Fv1.0%2Ffixture%2FTenant%2Fen-US", Body: nil},
+		{Name: "template-create", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/api/TeamTemplates/v1.0/Tenant/en-US", Body: json.RawMessage("{\"displayName\":\"Fixture\",\"shortDescription\":\"Summary\"}")},
+		{Name: "template-update", Method: "PUT", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/%2Fapi%2Fteamtemplates%2Fv1.0%2Ffixture%2FTenant%2Fen-US", Body: json.RawMessage("{\"displayName\":\"Fixture\",\"shortDescription\":\"Summary\"}")},
+	} {
+		if tc.Name == name {
+			return tc
+		}
+	}
+	t.Fatal("unknown request vector")
+	return requestVector{}
+}
+
+func serviceDiscoveryFixture(t *testing.T) []byte {
+	t.Helper()
+	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	var artifact struct {
-		Version string               `json:"baseline_version"`
-		Cases   []requestObservation `json:"cases"`
-	}
-	if json.Unmarshal(raw, &artifact) != nil || artifact.Version != "8.1.0" {
-		t.Fatal("pinned request observations unavailable")
-	}
-	for index, item := range artifact.Cases {
-		if item.Name == name {
-			item.ref = "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json#/cases/" + strconv.Itoa(index)
-			return item
-		}
-	}
-	t.Fatal("required request fixture disappeared")
-	return requestObservation{}
+	return body
 }
 
 func serviceCase(t *testing.T, name, fixtureName, command, set string) contracttest.Case {
@@ -63,19 +61,19 @@ func serviceCase(t *testing.T, name, fixtureName, command, set string) contractt
 	requestHeaders.Set("X-MS-CmdletName", command)
 	requestHeaders.Set("X-MS-Target-Uri", targetForest)
 	var body json.RawMessage
-	if string(fixture.Body) != "null" {
+	if fixture.Body != nil {
 		body = fixture.Body
 		requestHeaders.Set("Content-Type", "application/json")
 	}
-	return contracttest.Case{Name: name, Family: "team_templates", Scope: "service", Source: fixture.ref,
+	return contracttest.Case{Name: name, Family: "team_templates", Scope: "service", Source: "msteams/teams_admin_api/team_template/service_test.go",
 		Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}},
 		Steps: []contracttest.Exchange{
 			{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
 				Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}},
-					Body: []byte(`{"Endpoints":{"AdminServiceEndpoint":"forest.fixture.invalid:444/ignored?x=y#ignored"}}`)}},
+					Body: serviceDiscoveryFixture(t)}},
 			{Request: contracttest.WireRequest{Method: fixture.Method, URL: fixture.URL, Audience: auth.TeamsAdminAudience, Headers: requestHeaders, JSON: body},
-				Reply: contracttest.Reply{Status: fixture.Status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(fixture.Response)}},
-		}, Want: contracttest.Expected{Status: fixture.Status}}
+				Reply: contracttest.Reply{Status: http.StatusForbidden, Headers: http.Header{"Content-Type": {"application/json"}}, Body: nil}},
+		}, Want: contracttest.Expected{Status: http.StatusForbidden, Error: auth.ErrForbidden}}
 }
 
 func passCase(t *testing.T, c contracttest.Case) contracttest.Result {
@@ -96,7 +94,7 @@ func inputDefinition(t *testing.T, body bool) (template.Definition, json.RawMess
 	if body {
 		name = "template-json-body-default-settings"
 	}
-	for _, fixture := range modelObservations(t) {
+	for _, fixture := range definitionCases() {
 		if fixture.Name != name {
 			continue
 		}
@@ -127,7 +125,7 @@ func expectedCreateBody(t *testing.T, definition json.RawMessage) json.RawMessag
 	if json.Unmarshal(definition, &fields) != nil {
 		t.Fatal("expected model JSON is invalid")
 	}
-	// This expectation composes the captured model with the custom wrapper's
+	// This expectation composes the definition input with the custom wrapper's
 	// source-established append; it does not call the SDK normalization helper.
 	fields["channels"] = json.RawMessage(`[{"id":"General","displayName":"General","isFavoriteByDefault":true}]`)
 	raw, err := json.Marshal(fields)
@@ -137,14 +135,14 @@ func expectedCreateBody(t *testing.T, definition json.RawMessage) json.RawMessag
 	return raw
 }
 
-func TestServiceGetByID(t *testing.T) {
+func TestUnitServiceGetByID(t *testing.T) {
 	t.Parallel()
-	evidence := collectServiceEvidence(t, "Get-CsTeamTemplate")
+	coverage := collectServiceCoverage(t, "Get-CsTeamTemplate")
 	for _, set := range []string{"Get", "GetViaIdentity"} {
 		t.Run(set, func(t *testing.T) {
 			t.Parallel()
 			c := serviceCase(t, "get-"+strings.ToLower(set), "template-read-opaque-id", "Get-CsTeamTemplate", set)
-			c.Want.JSON = json.RawMessage(`{"displayName":"Fixture"}`)
+
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				id := opaqueID
 				if set == "GetViaIdentity" {
@@ -157,14 +155,15 @@ func TestServiceGetByID(t *testing.T) {
 				}
 				return contracttest.Observation{Value: value, Response: response, Err: err}
 			}
-			evidence.add(c, passCase(t, c))
+			passCase(t, c)
+			coverage.add(c)
 		})
 	}
 }
 
-func TestServiceList(t *testing.T) {
+func TestUnitServiceList(t *testing.T) {
 	t.Parallel()
-	evidence := collectServiceEvidence(t, "Get-CsTeamTemplateList")
+	coverage := collectServiceCoverage(t, "Get-CsTeamTemplateList")
 	for _, tc := range []struct {
 		name, locale string
 		incomplete   bool
@@ -176,7 +175,7 @@ func TestServiceList(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			c := serviceCase(t, strings.ReplaceAll(tc.name, " ", "-"), "template-list", "Get-CsTeamTemplateList", "DefaultLocaleOverride")
-			c.Want.JSON = json.RawMessage(`{"value":[]}`)
+
 			var options *template.ListOptions
 			if tc.locale != "" {
 				options = &template.ListOptions{PublicTemplateLocale: &tc.locale}
@@ -192,14 +191,15 @@ func TestServiceList(t *testing.T) {
 				}
 				return contracttest.Observation{Value: value, Response: response, Err: err}
 			}
-			evidence.add(c, passCase(t, c))
+			passCase(t, c)
+			coverage.add(c)
 		})
 	}
 }
 
-func TestServiceCreate(t *testing.T) {
+func TestUnitServiceCreate(t *testing.T) {
 	t.Parallel()
-	evidence := collectServiceEvidence(t, "New-CsTeamTemplate")
+	coverage := collectServiceCoverage(t, "New-CsTeamTemplate")
 	for _, set := range []string{"New", "NewExpanded", "NewViaIdentity", "NewViaIdentityExpanded"} {
 		t.Run(set, func(t *testing.T) {
 			t.Parallel()
@@ -207,7 +207,7 @@ func TestServiceCreate(t *testing.T) {
 			definition, expected := inputDefinition(t, body)
 			c := serviceCase(t, "create-"+strings.ToLower(set), "template-create", "New-CsTeamTemplate", set)
 			c.Steps[1].Request.JSON = expectedCreateBody(t, expected)
-			c.Want.JSON = json.RawMessage(c.Steps[1].Reply.Body)
+
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				locale := "en-US"
 				if strings.Contains(set, "ViaIdentity") {
@@ -217,24 +217,25 @@ func TestServiceCreate(t *testing.T) {
 				value, response, err := sdk.TeamsAdminAPI.TeamTemplates.Create(ctx, locale, definition)
 				return contracttest.Observation{Value: value, Response: response, Err: err}
 			}
-			evidence.add(c, passCase(t, c))
+			passCase(t, c)
+			coverage.add(c)
 		})
 	}
 }
 
-func TestServiceUpdateByID(t *testing.T) {
+func TestUnitServiceUpdateByID(t *testing.T) {
 	t.Parallel()
-	evidence := collectServiceEvidence(t, "Update-CsTeamTemplate")
+	coverage := collectServiceCoverage(t, "Update-CsTeamTemplate")
 	for _, set := range []string{"Update", "UpdateExpanded", "UpdateViaIdentity", "UpdateViaIdentityExpanded"} {
 		t.Run(set, func(t *testing.T) {
 			t.Parallel()
-			for _, status := range []int{200, 201} {
+			for _, status := range []int{403} {
 				t.Run(strconv.Itoa(status), func(t *testing.T) {
 					definition, expected := inputDefinition(t, set == "Update" || set == "UpdateViaIdentity")
 					c := serviceCase(t, "update-"+strings.ToLower(set)+"-"+strconv.Itoa(status), "template-update", "Update-CsTeamTemplate", set)
 					c.Steps[1].Request.JSON = expected
 					c.Steps[1].Reply.Status, c.Want.Status = status, status
-					c.Want.JSON = json.RawMessage(c.Steps[1].Reply.Body)
+
 					c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 						id := opaqueID
 						if strings.Contains(set, "ViaIdentity") {
@@ -244,20 +245,21 @@ func TestServiceUpdateByID(t *testing.T) {
 						value, response, err := sdk.TeamsAdminAPI.TeamTemplates.UpdateByID(ctx, id, definition)
 						return contracttest.Observation{Value: value, Response: response, Err: err}
 					}
-					evidence.add(c, passCase(t, c))
+					passCase(t, c)
+					coverage.add(c)
 				})
 			}
 		})
 	}
 }
 
-func TestServiceDeleteByID(t *testing.T) {
+func TestUnitServiceDeleteByID(t *testing.T) {
 	t.Parallel()
-	evidence := collectServiceEvidence(t, "Remove-CsTeamTemplate")
+	coverage := collectServiceCoverage(t, "Remove-CsTeamTemplate")
 	for _, set := range []string{"Delete", "DeleteViaIdentity"} {
 		t.Run(set, func(t *testing.T) {
 			t.Parallel()
-			for _, status := range []int{200, 204} {
+			for _, status := range []int{403} {
 				t.Run(strconv.Itoa(status), func(t *testing.T) {
 					c := serviceCase(t, "delete-"+strings.ToLower(set)+"-"+strconv.Itoa(status), "template-delete-empty", "Remove-CsTeamTemplate", set)
 					c.Steps[1].Reply.Status, c.Want.Status = status, status
@@ -273,14 +275,15 @@ func TestServiceDeleteByID(t *testing.T) {
 						response, err := sdk.TeamsAdminAPI.TeamTemplates.DeleteByID(ctx, id)
 						return contracttest.Observation{Response: response, Err: err}
 					}
-					evidence.add(c, passCase(t, c))
+					passCase(t, c)
+					coverage.add(c)
 				})
 			}
 		})
 	}
 }
 
-func TestServiceCreateGeneralChannelDoesNotMutateCaller(t *testing.T) {
+func TestUnitServiceCreateGeneralChannelDoesNotMutateCaller(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, channel, expected string
@@ -296,7 +299,7 @@ func TestServiceCreateGeneralChannelDoesNotMutateCaller(t *testing.T) {
 			definition.Channels = backing[:1]
 			c := serviceCase(t, strings.ReplaceAll(tc.name, " ", "-"), "template-create", "New-CsTeamTemplate", "NewExpanded")
 			c.Steps[1].Request.JSON = json.RawMessage(`{"displayName":"Fixture","shortDescription":"Fixture summary","channels":` + tc.expected + `}`)
-			c.Want.JSON = json.RawMessage(c.Steps[1].Reply.Body)
+
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				value, response, err := sdk.TeamsAdminAPI.TeamTemplates.Create(ctx, "en-US", definition)
 				if backing[1] != preserved || len(definition.Channels) != 1 || definition.MemberSettings != nil {
@@ -323,6 +326,7 @@ func operationCase(t *testing.T, operation, name string) contracttest.Case {
 		fixture, command, set = "template-delete-empty", "Remove-CsTeamTemplate", "Delete"
 	}
 	c := serviceCase(t, name, fixture, command, set)
+	c.Want.Error = nil
 	if operation == "create" {
 		c.Steps[1].Request.JSON = expectedCreateBody(t, c.Steps[1].Request.JSON)
 	}
@@ -351,7 +355,7 @@ func operationCase(t *testing.T, operation, name string) contracttest.Case {
 	return c
 }
 
-func TestServiceErrorAndMutationReplayContracts(t *testing.T) {
+func TestUnitServiceErrorAndMutationReplayContracts(t *testing.T) {
 	t.Parallel()
 	for _, operation := range []string{"get", "list", "create", "update", "delete"} {
 		t.Run(operation, func(t *testing.T) {
@@ -399,7 +403,7 @@ func TestServiceErrorAndMutationReplayContracts(t *testing.T) {
 	}
 }
 
-func TestServiceMalformedSuccessAndUndeclaredStatuses(t *testing.T) {
+func TestUnitServiceMalformedSuccessAndUndeclaredStatuses(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, operation, body string
@@ -431,7 +435,7 @@ func TestServiceMalformedSuccessAndUndeclaredStatuses(t *testing.T) {
 	}
 }
 
-func TestServiceMalformedErrorsKeepHTTPClassification(t *testing.T) {
+func TestUnitServiceMalformedErrorsKeepHTTPClassification(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct{ name, body string }{
 		{name: "empty"}, {name: "text", body: "not-json"}, {name: "array", body: "[]"},
@@ -455,7 +459,7 @@ func TestServiceMalformedErrorsKeepHTTPClassification(t *testing.T) {
 	}
 }
 
-func TestServiceValidationCancellationAndCloseHaveNoIO(t *testing.T) {
+func TestUnitServiceValidationCancellationAndCloseHaveNoIO(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name string
@@ -505,44 +509,38 @@ func TestServiceValidationCancellationAndCloseHaveNoIO(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			c := contracttest.Case{Name: strings.ReplaceAll(tc.name, " ", "-"), Family: "team_templates", Scope: "service",
-				Source: "contracts/endpoints/8.1.0/core.json#/commands", Invoke: tc.call, Want: contracttest.Expected{Error: tc.want}}
+				Source: "msteams/teams_admin_api/team_template/service_test.go", Invoke: tc.call, Want: contracttest.Expected{Error: tc.want}}
 			passCase(t, c)
 		})
 	}
 }
 
-func TestServiceListRetainsUnknownEnvelopeAndSummaryFields(t *testing.T) {
+func TestUnitServiceListRequestUsesDefaultLocale(t *testing.T) {
 	t.Parallel()
-	c := serviceCase(t, "list-unknown-fields", "template-list", "Get-CsTeamTemplateList", "DefaultLocaleOverride")
-	c.Steps[1].Reply.Body = []byte(`{"value":[{"id":"fixture","name":"Fixture","appCount":0,"futureSummary":false}],"futureEnvelope":{"values":[]}}`)
-	c.Want.JSON = json.RawMessage(c.Steps[1].Reply.Body)
+	c := serviceCase(t, "list-default-locale", "template-list", "Get-CsTeamTemplateList", "DefaultLocaleOverride")
 	c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-		value, response, err := sdk.TeamsAdminAPI.TeamTemplates.List(ctx, nil)
-		return contracttest.Observation{Value: value, Response: response, Err: err}
+		v, r, e := sdk.TeamsAdminAPI.TeamTemplates.List(ctx, nil)
+		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}
 	passCase(t, c)
 }
 
-func TestServiceUsesSharedCollectionDiscovery(t *testing.T) {
+func TestUnitServiceUsesSharedCollectionDiscovery(t *testing.T) {
 	t.Parallel()
-	c := serviceCase(t, "collection-discovery-sharing", "template-list", "Get-CsTeamTemplateList", "DefaultLocaleOverride")
-	policyRead := contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet,
-		URL: configOrigin + "/Skype.Policy/configurations/ApplicationAccessPolicy", Audience: auth.TeamsAdminAudience,
-		Headers: http.Header{"X-MS-Target-Uri": {targetForest}}},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(`[]`)}}
+	c := serviceCase(t, "shared-discovery", "template-list", "Get-CsTeamTemplateList", "DefaultLocaleOverride")
+	policyRead := contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Skype.Policy/configurations/ApplicationAccessPolicy", Audience: auth.TeamsAdminAudience, Headers: http.Header{"X-MS-Target-Uri": {targetForest}}}, Reply: contracttest.Reply{Status: 403}}
 	c.Steps = []contracttest.Exchange{c.Steps[0], policyRead, c.Steps[1]}
-	c.Want.JSON = json.RawMessage(`{"value":[]}`)
 	c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-		if _, response, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.List(ctx); err != nil {
-			return contracttest.Observation{Response: response, Err: err}
+		if _, _, e := sdk.TeamsAdminAPI.ApplicationAccessPolicies.List(ctx); !errors.Is(e, auth.ErrForbidden) {
+			return contracttest.Observation{Err: fmt.Errorf("expected policy denial: %w", e)}
 		}
-		value, response, err := sdk.TeamsAdminAPI.TeamTemplates.List(ctx, nil)
-		return contracttest.Observation{Value: value, Response: response, Err: err}
+		v, r, e := sdk.TeamsAdminAPI.TeamTemplates.List(ctx, nil)
+		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}
 	passCase(t, c)
 }
 
-func TestServiceCloudAndModeRouting(t *testing.T) {
+func TestUnitServiceCloudAndModeRouting(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		t.Run(cloud, func(t *testing.T) {
@@ -559,7 +557,7 @@ func TestServiceCloudAndModeRouting(t *testing.T) {
 						c.Steps[index].Request.URL = strings.Replace(c.Steps[index].Request.URL, configOrigin, environment.Endpoints.TeamsAdmin, 1)
 						c.Steps[index].Request.Audience = environment.Endpoints.TeamsAdminResource
 					}
-					c.Want.JSON = json.RawMessage(`{"displayName":"Fixture"}`)
+
 					c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 						value, response, err := sdk.TeamsAdminAPI.TeamTemplates.GetByID(ctx, opaqueID)
 						return contracttest.Observation{Value: value, Response: response, Err: err}

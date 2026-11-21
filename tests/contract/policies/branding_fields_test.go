@@ -11,7 +11,7 @@ import (
 	branding "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
 )
 
-func TestBrandingRequestFieldsMatchPinnedParameters(t *testing.T) {
+func TestUnitBrandingRequestFieldsMatchPinnedParameters(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/powershell/8.1.0/runtime.json")
 	if err != nil {

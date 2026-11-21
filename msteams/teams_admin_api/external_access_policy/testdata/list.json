@@ -1,0 +1,90 @@
+[
+  {
+    "AllowedExternalDomains": [],
+    "BlockedExternalDomains": [],
+    "Description": null,
+    "EnableFederationAccess": false,
+    "EnableXmppAccess": false,
+    "EnablePublicCloudAudioVideoAccess": false,
+    "EnableTeamsSmsAccess": true,
+    "EnableOutsideAccess": true,
+    "EnableAcsFederationAccess": true,
+    "EnableTeamsConsumerAccess": true,
+    "EnableTeamsConsumerInbound": true,
+    "RestrictTeamsConsumerAccessToExternalUserProfiles": false,
+    "FederatedBilateralChats": false,
+    "CommunicationWithExternalOrgs": "OrganizationDefault",
+    "Identity": "fixture-policy-1fd03240",
+    "SchemaVersion": "0.0.1",
+    "ConfigId": "fixture-config-363cb5c1",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    }
+  },
+  {
+    "AllowedExternalDomains": [],
+    "BlockedExternalDomains": [],
+    "Description": null,
+    "EnableFederationAccess": true,
+    "EnableXmppAccess": false,
+    "EnablePublicCloudAudioVideoAccess": true,
+    "EnableTeamsSmsAccess": true,
+    "EnableOutsideAccess": true,
+    "EnableAcsFederationAccess": true,
+    "EnableTeamsConsumerAccess": true,
+    "EnableTeamsConsumerInbound": true,
+    "RestrictTeamsConsumerAccessToExternalUserProfiles": false,
+    "FederatedBilateralChats": false,
+    "CommunicationWithExternalOrgs": "OrganizationDefault",
+    "Identity": "fixture-policy-aadfb95e",
+    "SchemaVersion": "0.0.1",
+    "ConfigId": "fixture-config-c8faa0d7",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    }
+  },
+  {
+    "AllowedExternalDomains": [],
+    "BlockedExternalDomains": [],
+    "Description": null,
+    "EnableFederationAccess": true,
+    "EnableXmppAccess": false,
+    "EnablePublicCloudAudioVideoAccess": false,
+    "EnableTeamsSmsAccess": true,
+    "EnableOutsideAccess": true,
+    "EnableAcsFederationAccess": true,
+    "EnableTeamsConsumerAccess": true,
+    "EnableTeamsConsumerInbound": true,
+    "RestrictTeamsConsumerAccessToExternalUserProfiles": false,
+    "FederatedBilateralChats": false,
+    "CommunicationWithExternalOrgs": "OrganizationDefault",
+    "Identity": "fixture-policy-942a9f64",
+    "SchemaVersion": "0.0.1",
+    "ConfigId": "fixture-config-6de4cbc2",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    }
+  },
+  {
+    "AllowedExternalDomains": [],
+    "BlockedExternalDomains": [],
+    "Description": null,
+    "EnableFederationAccess": true,
+    "EnableXmppAccess": false,
+    "EnablePublicCloudAudioVideoAccess": true,
+    "EnableTeamsSmsAccess": true,
+    "EnableOutsideAccess": true,
+    "EnableAcsFederationAccess": true,
+    "EnableTeamsConsumerAccess": true,
+    "EnableTeamsConsumerInbound": true,
+    "RestrictTeamsConsumerAccessToExternalUserProfiles": false,
+    "FederatedBilateralChats": false,
+    "CommunicationWithExternalOrgs": "OrganizationDefault",
+    "Identity": "Global",
+    "SchemaVersion": "0.0.1",
+    "ConfigId": "fixture-config-60dcdf4f",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    }
+  }
+]

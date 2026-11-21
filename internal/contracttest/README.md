@@ -16,8 +16,13 @@ registration and fixture input must remain unchanged during execution.
 
 Each case provides:
 
-- Curated name, resource family, repository contract reference and exact
-  command/parameter-set mappings. `Scope` is `service`, `primitive` or `local`.
+- Curated name, resource family, repository fixture reference and exact
+  command/parameter-set mappings. Sources accept JSON under `contracts/` or
+  a service's `msteams/**/testdata/`, with an optional JSON pointer. Ordinary
+  input vectors can reference their `*_test.go` file under `msteams/`, `tests/`
+  or `internal/`. Absolute
+  paths, traversal and backslashes are rejected. `Scope` is `service`, `primitive`
+  or `local`.
 - Ordered `Exchange` attempts, each with method, full escaped HTTPS URL, audience,
   selected headers and either a JSON body or exact binary bytes, followed by its
   synthetic response. `WireRequest.JSON` and `WireRequest.Binary` are mutually
@@ -37,7 +42,7 @@ borrowed HTTP client. Missing and extra attempts fail. Include discovery,
 read-back, paging and explicit retry attempts as separate exchanges when the
 service contract calls for them. Replay policy remains the real SDK policy.
 `Mode` selects application (the default) or delegated fixture authentication;
-the canonical cloud and selected mode are retained in the structural report.
+the canonical cloud and selected mode are retained in the returned result.
 
 Paths compare their escaped representation, so an opaque ID containing `/`
 must remain one segment. Query key order is immaterial; repeated value order and
@@ -65,43 +70,13 @@ credentials. Pre-canceled operation cases can similarly expect no exchanges and
 `context.Canceled`. The runner's setup always uses explicit configuration;
 ambient `MSTEAMS_*` authentication settings cannot change it.
 
-## Evidence and limits
+## Scope and limits
 
-`WriteEvidence(writer, revision, results)` accepts a full Git revision and
-executed results. It produces a stable JSON artifact with version, outcome,
-scope, contract/mapping references, attempt/acquisition counts and structural
-differences. It omits URLs, headers, payloads, tokens, tenant/application bindings
-and raw error strings. Names/mappings/source references are curated metadata;
-never derive them from tenant content. Writer failures return a fixed error.
+The runner asserts the real SDK request and response behavior against permanent
+unit fixtures. It does not write per-run contract artifacts or promote coverage
+ledger states. Resource tests own their command and parameter-set coverage checks.
 
-The writer does not update `contracts/coverage/8.1.0.json`. An artifact has
-`coverage_claim: false` and `live: "not-run"`. Resource owners must review
-complete command/parameter-set coverage and provide implementation/test symbols
-before changing the ledger. A passing primitive or local-builder case alone
-cannot establish implemented service or full PowerShell parity.
-
-The initial real capture consumer is
-[`TestPinnedTemplatePrimitiveFixtures`](../../tests/contract/core/fixtures_test.go).
-It runs five captured template wire primitives through the shared ConfigAPI
-scope, checks command/set mappings against pinned runtime metadata, and explicitly
-does **not** claim a template service implementation. Nine family-registration
-checks in the runner unit tests prove reuse, not nine delivered resource suites.
-Resource tickets own their exact service fixtures, cloud/auth restrictions,
-modern/legacy compositions and tenant acceptance.
-
-Ordinary `go test ./...` runs all these offline checks. CI passes the exact
-checked-out revision in `MSTEAMS_CONTRACT_REVISION` during its existing race run,
-uses Go's `-artifacts -outputdir` support, and uploads an explicit report-file
-allowlist. CORE-15 supplies `core-primitives.json`; CORE-27 adds
-`team-template-service.json` for real resource/local-builder callbacks.
-Local artifact generation should use a clean committed implementation revision:
-
-```sh
-mkdir -p /tmp/msteams-contract-artifacts
-MSTEAMS_CONTRACT_REVISION=<full-tested-commit> \
-  go test -race -count=1 -artifacts -outputdir /tmp/msteams-contract-artifacts \
-  ./tests/contract/core
-```
-
-Omitting the revision still runs all cases and writes no persistent run artifact.
-These artifacts never replace a real tenant CRUD and PowerShell parity test.
+A passing unit test proves the selected assertions against its supplied fixture.
+Tenant CRUD, PowerShell comparison and cleanup require separately executed
+`TestAcc` tests and their recorded acceptance results. Unit fixtures derived from
+acceptance runs must be sanitized before they enter `testdata`.

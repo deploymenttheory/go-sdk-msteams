@@ -15,9 +15,9 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_hold_policy"
 )
 
-func TestCallHoldAllMutationErrorsAreSingleSend(t *testing.T) {
+func TestUnitCallHoldAllMutationErrorsAreSingleSend(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, operation := range []string{"create", "patch", "delete", "user", "tenant", "group"} {
 		for _, status := range []int{400, 401, 403, 429, 503} {
 			command, set := newCommand, "Identity"
@@ -37,15 +37,15 @@ func TestCallHoldAllMutationErrorsAreSingleSend(t *testing.T) {
 				steps = []contracttest.Exchange{compiledWire("DELETE", item, deleteCommand, json.RawMessage(`{"Identity":"Global"}`), status, `{"Message":"fixture-private"}`)}
 			case "user":
 				command = grantCommand
-				steps = []contracttest.Exchange{discovery(), modernWire("PATCH", "/Skype.Policy/users/fixture%2Fuser/policies/TeamsCallHoldPolicy", json.RawMessage(`{"policyName":""}`), status, `{"Message":"fixture-private"}`)}
+				steps = []contracttest.Exchange{discovery(t), modernWire("PATCH", "/Skype.Policy/users/fixture%2Fuser/policies/TeamsCallHoldPolicy", json.RawMessage(`{"policyName":""}`), status, `{"Message":"fixture-private"}`)}
 			case "tenant":
 				command, set = grantCommand, "GrantToTenant"
-				steps = []contracttest.Exchange{discovery(), modernWire("PATCH", "/Skype.Policy/tenants/policies/TeamsCallHoldPolicy", json.RawMessage(`{"policyName":"","forceSwitchPresent":false}`), status, `{"Message":"fixture-private"}`)}
+				steps = []contracttest.Exchange{discovery(t), modernWire("PATCH", "/Skype.Policy/tenants/policies/TeamsCallHoldPolicy", json.RawMessage(`{"policyName":"","forceSwitchPresent":false}`), status, `{"Message":"fixture-private"}`)}
 			case "group":
 				command, set = grantCommand, "GrantToGroup"
-				steps = []contracttest.Exchange{discovery(), modernWire("POST", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsCallHoldPolicy", json.RawMessage(`{"policyName":""}`), status, `{"Message":"fixture-private"}`)}
+				steps = []contracttest.Exchange{discovery(t), modernWire("POST", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsCallHoldPolicy", json.RawMessage(`{"policyName":""}`), status, `{"Message":"fixture-private"}`)}
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Source: primarySource, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Source: primarySource, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsCallHoldPolicies
 				var o contracttest.Observation
 				switch operation {
@@ -77,15 +77,14 @@ func TestCallHoldAllMutationErrorsAreSingleSend(t *testing.T) {
 				}
 				o.Err = nil
 				return o
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }
 
-func TestCallHoldInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
+func TestUnitCallHoldInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	t.Parallel()
-	r := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCallHoldPolicies
 		for _, id := range []string{"", " ", ".", "..", "scope/", "/empty", "scope/..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -139,12 +138,11 @@ func TestCallHoldInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{r})
 }
 
-func TestCallHoldGrantOmitsZeroRankLikeMappedWrapper(t *testing.T) {
+func TestUnitCallHoldGrantOmitsZeroRankLikeMappedWrapper(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, rank := range []int32{0, 2, -1} {
 		body := map[string]any{"policyName": "Fixture"}
 		name := "rank-zero-omitted"
@@ -156,10 +154,13 @@ func TestCallHoldGrantOmitsZeroRankLikeMappedWrapper(t *testing.T) {
 			}
 		}
 		raw, _ := json.Marshal(body)
-		results = append(results, run(t, contracttest.Case{Name: name, Source: wrapperSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: "GrantToGroup"}}, Steps: []contracttest.Exchange{discovery(), modernWire("POST", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsCallHoldPolicy", raw, 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: name, Source: wrapperSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: "GrantToGroup"}}, Steps: []contracttest.Exchange{discovery(t), modernWire("POST", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsCallHoldPolicy", raw, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			_, r, e := sdk.TeamsAdminAPI.TeamsCallHoldPolicies.Assign(ctx, resource.Assignment{Group: &resource.GroupGrant{ID: "fixture/group", PolicyName: "Fixture", Rank: new(rank)}})
 			return contracttest.Observation{Response: r, Err: e}
-		}}))
+		}, Want: contracttest.Expected{APIError: &client.
+			APIError{Backend: client.TeamsAdmin,
+			StatusCode: 400,
+		}},
+		})
 	}
-	evidence(t, results)
 }

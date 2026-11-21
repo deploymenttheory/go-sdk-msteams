@@ -30,9 +30,9 @@ func listed(value management.ListResult, err error) contracttest.Observation {
 	return contracttest.Observation{Value: map[string]any{"items": items, "complete": value.Complete, "stages": stages}, Response: value.Response, Err: err}
 }
 
-func TestListCompositionOwnerPrecedenceProjectionAndFilters(t *testing.T) {
+func TestUnitListCompositionOwnerPrecedenceProjectionAndFilters(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	owners := `{"value":[{"id":"` + userID + `","displayName":"Owner","userPrincipalName":"owner@example.invalid","userType":"Member"}]}`
 	members := `{"value":[{"id":"` + guestID + `","displayName":"Guest","userPrincipalName":"guest@example.invalid","userType":"gUeSt"},{"id":"` + userID + `","displayName":"Owner","userPrincipalName":"owner@example.invalid","userType":"Member"},{"id":"` + otherID + `","displayName":"Member","userPrincipalName":"member@example.invalid","userType":"Member"},{"id":"` + unknownID + `","displayName":null,"userPrincipalName":null,"userType":null}]}`
 	owner := `{"id":"` + userID + `","role":"owner","native_user_type":"Member","name":"Owner","user":"owner@example.invalid"}`
@@ -58,16 +58,15 @@ func TestListCompositionOwnerPrecedenceProjectionAndFilters(t *testing.T) {
 			if tc.members {
 				steps = append(steps, listRead("members", members))
 			}
-			results = append(results, runCase(t, "Get-TeamUser", contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, "Get-TeamUser", contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				return listed(sdk.GraphAPI.TeamUserManagement.List(ctx, groupID, management.ListOptions{Role: tc.role}))
 			},
-				Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"items":` + tc.items + `,"complete":true,"stages":` + tc.stages + `}`)}}))
+				Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"items":` + tc.items + `,"complete":true,"stages":` + tc.stages + `}`)}})
 		})
 	}
-	evidence(t, "team-user-list-service.json", results)
 }
 
-func TestListCompositionPreservesOwnerPrefixOnMemberReadFailure(t *testing.T) {
+func TestUnitListCompositionPreservesOwnerPrefixOnMemberReadFailure(t *testing.T) {
 	t.Parallel()
 	owner := `{"id":"` + userID + `","role":"owner","native_user_type":null,"name":null,"user":null}`
 	runCase(t, "Get-TeamUser", contracttest.Case{Name: "partial-after-owners", Steps: []contracttest.Exchange{listRead("owners", `{"value":[{"id":"`+userID+`"}]}`), wire("GET", "/v1.0/groups/"+groupID+"/members?$select=id%2CdisplayName%2CuserPrincipalName%2CuserType", "", 403, `{"error":{"code":"Forbidden"}}`)},
@@ -77,7 +76,7 @@ func TestListCompositionPreservesOwnerPrefixOnMemberReadFailure(t *testing.T) {
 		Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden, JSON: json.RawMessage(`{"items":[` + owner + `],"complete":false,"stages":["read-owners:succeeded","read-members:unconfirmed"]}`)}})
 }
 
-func TestCompositionMappingsExistInPinnedRuntime(t *testing.T) {
+func TestUnitCompositionMappingsExistInPinnedRuntime(t *testing.T) {
 	t.Parallel()
 	// Source files are curated contract metadata. This guards report mappings
 	// against accidental command/set changes without promoting their coverage.

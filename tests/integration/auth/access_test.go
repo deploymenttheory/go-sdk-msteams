@@ -15,12 +15,21 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-// TestApplicationAccessLab uses only the explicitly selected dedicated lab app.
-// Its expected grant is Organization.Read.All, with no User.Read.All or directory
-// role. Requests are read-only; assertions never log response bodies or identifiers.
-func TestApplicationAccessLab(t *testing.T) {
+// TestAccApplicationAccess uses only the explicitly selected dedicated lab app.
+// The default profile expects organization-only access. An explicitly selected
+// Teams Administrator profile requires user reads too. Requests are read-only;
+// assertions never log response bodies or identifiers.
+func TestAccApplicationAccess(t *testing.T) {
 	if os.Getenv("MSTEAMS_LIVE_ACCESS") != "1" {
 		t.Skip("live operation access checks are opt-in")
+	}
+	expectedUsersStatus := http.StatusForbidden
+	switch os.Getenv("MSTEAMS_LAB_ACCESS_PROFILE") {
+	case "", "organization-only":
+	case "teams-administrator":
+		expectedUsersStatus = http.StatusOK
+	default:
+		t.Fatal("unsupported explicit lab access profile")
 	}
 	file := os.Getenv("MSTEAMS_LAB_IDENTITY_FILE")
 	if file == "" {
@@ -73,11 +82,17 @@ func TestApplicationAccessLab(t *testing.T) {
 			}
 			response, err = scope.Do(ctx, client.Request{Method: http.MethodGet, Path: []string{"v1.0", "users"},
 				Query: map[string][]string{"$select": {"id"}, "$top": {"1"}}}, nil)
-			if response == nil || response.StatusCode() != http.StatusForbidden || !errors.Is(err, auth.ErrForbidden) {
-				t.Fatal("expected forbidden user read for the deliberately limited lab app")
+			if response == nil || response.StatusCode() != expectedUsersStatus {
+				t.Fatal("user read differs from the explicit lab access profile")
 			}
-			if errors.Is(err, auth.ErrUnauthenticated) || errors.Is(err, auth.ErrTenantCapabilityUnavailable) || errors.Is(err, auth.ErrUnsupportedOperationMode) {
-				t.Fatal("forbidden access was misclassified")
+			if expectedUsersStatus == http.StatusOK {
+				if err != nil {
+					t.Fatal("expected permitted user read for the approved administrator profile")
+				}
+			} else {
+				if !errors.Is(err, auth.ErrForbidden) || errors.Is(err, auth.ErrUnauthenticated) || errors.Is(err, auth.ErrTenantCapabilityUnavailable) || errors.Is(err, auth.ErrUnsupportedOperationMode) {
+					t.Fatal("forbidden access was misclassified")
+				}
 			}
 		})
 	}

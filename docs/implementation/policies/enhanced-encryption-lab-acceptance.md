@@ -1,6 +1,6 @@
 # Teams enhanced encryption policy lab acceptance
 
-On 2026-11-21, TestLabEnhancedEncryptionReadOnly attempted a modern
+On 2026-11-21, TestAccEnhancedEncryptionReadOnly attempted a modern
 TeamsEnhancedEncryptionPolicy Global read with the dedicated lab SPN using
 client-secret and certificate authentication. Both actual resource requests
 returned HTTP 403. The harness checked the request path to distinguish resource

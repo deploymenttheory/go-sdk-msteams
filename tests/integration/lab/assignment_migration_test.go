@@ -81,15 +81,16 @@ func migrationOracle(t *testing.T, ctx context.Context, tenant string) migration
 	return v
 }
 
-// TestLabAssignmentMigrationReadOnly lists status and reads returned job IDs.
+// TestAccAssignmentMigrationReadOnly lists status and reads returned job IDs.
 // It never submits migrations/cleanup or changes effective assignments.
-func TestLabAssignmentMigrationReadOnly(t *testing.T) {
+func TestAccAssignmentMigrationReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	sdk, binding, _ := labSDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	jobs, response, err := sdk.TeamsAdminAPI.AssignmentMigrations.List(ctx)
+	writeResponseFixture(t, "assignment_migration", "list", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -115,7 +116,8 @@ func TestLabAssignmentMigrationReadOnly(t *testing.T) {
 			}
 		}
 		projected = append(projected, migrationProjection{ID: strings.ToLower(*job.MigrationEventID), State: string(state)})
-		value, _, err := sdk.TeamsAdminAPI.AssignmentMigrations.GetByID(ctx, *job.MigrationEventID)
+		value, fixtureResponse, err := sdk.TeamsAdminAPI.AssignmentMigrations.GetByID(ctx, *job.MigrationEventID)
+		writeResponseFixture(t, "assignment_migration", "get_by_id", fixtureResponse, nil)
 		if err != nil || value == nil || value.MigrationEventID == nil || !strings.EqualFold(*value.MigrationEventID, *job.MigrationEventID) {
 			t.Fatal("migration read did not return the selected job")
 		}
@@ -138,7 +140,7 @@ func TestLabAssignmentMigrationReadOnly(t *testing.T) {
 	t.Log("status read observations verified; submission/cleanup and effective assignments remain separately qualified")
 }
 
-func TestMigrationOracleRejectsWrongTenantAndMalformedProjection(t *testing.T) {
+func TestUnitMigrationOracleRejectsWrongTenantAndMalformedProjection(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	for _, raw := range []string{`{"success":false}`, `{"success":true,"tenant_id":"00000000-0000-4000-8000-000000000004","jobs":[]}`, `{"success":true,"tenant_id":"` + tenant + `"}`, `{"success":true,"tenant_id":"` + tenant + `","jobs":null}`, `{"success":true,"tenant_id":"` + tenant + `","jobs":[],"unknown":false}`, `{"success":true,"tenant_id":"` + tenant + `","jobs":[]} {}`} {

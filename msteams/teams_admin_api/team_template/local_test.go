@@ -11,7 +11,7 @@ import (
 	template "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
 )
 
-func TestNewHiddenTemplate(t *testing.T) {
+func TestUnitNewHiddenTemplate(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, id string
@@ -36,7 +36,7 @@ func TestNewHiddenTemplate(t *testing.T) {
 	}
 }
 
-func TestNewHiddenMeetingTemplate(t *testing.T) {
+func TestUnitNewHiddenMeetingTemplate(t *testing.T) {
 	t.Parallel()
 	if _, err := template.NewHiddenMeetingTemplate(""); !errors.Is(err, template.ErrInput) {
 		t.Fatal("missing required meeting-template ID was accepted")
@@ -47,9 +47,9 @@ func TestNewHiddenMeetingTemplate(t *testing.T) {
 	}
 }
 
-func TestHiddenBuildersHaveNoManagementOrAuthIO(t *testing.T) {
+func TestUnitHiddenBuildersHaveNoManagementOrAuthIO(t *testing.T) {
 	t.Parallel()
-	evidence := collectServiceEvidence(t, "New-CsTeamsHiddenTemplate", "New-CsTeamsHiddenMeetingTemplate")
+	coverage := collectServiceCoverage(t, "New-CsTeamsHiddenTemplate", "New-CsTeamsHiddenMeetingTemplate")
 	for _, tc := range []struct {
 		name, command, source string
 		invoke                func(context.Context, *msteams.Client) contracttest.Observation
@@ -80,7 +80,7 @@ func TestHiddenBuildersHaveNoManagementOrAuthIO(t *testing.T) {
 			if !result.Passed() {
 				t.Fatalf("local builder contract differed: %+v", result.Differences())
 			}
-			evidence.add(c, result)
+			coverage.add(c)
 		})
 	}
 }

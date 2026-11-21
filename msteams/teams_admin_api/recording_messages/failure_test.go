@@ -15,9 +15,9 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/recording_messages"
 )
 
-func TestRecordingInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
+func TestUnitRecordingInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "local-input-guards", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "local-input-guards", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.RecordingMessages
 		for _, id := range []string{"", " ", ".", "..", "scope/", "/empty", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -64,12 +64,11 @@ func TestRecordingInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{result})
 }
 
-func TestRecordingMutationErrorsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitRecordingMutationErrorsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, operation := range []string{"create", "patch", "delete"} {
 		for _, status := range []int{400, 401, 403, 429, 503} {
 			method, command, path, body := "POST", "New-CsTeamsRecordingAndTranscriptionCustomMessage", collection, `{"Identity":"Global/`+relative+`","Id":null}`
@@ -79,7 +78,7 @@ func TestRecordingMutationErrorsKeepStatusAndNeverReplay(t *testing.T) {
 			if operation == "delete" {
 				method, command, path, body = "DELETE", "Remove-CsTeamsRecordingAndTranscriptionCustomMessage", item, `{"Id":"`+relative+`"}`
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "ParentAndRelativeKey"}}, Steps: []contracttest.Exchange{wire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "ParentAndRelativeKey"}}, Steps: []contracttest.Exchange{wire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.RecordingMessages
 				var observation contracttest.Observation
 				switch operation {
@@ -99,8 +98,7 @@ func TestRecordingMutationErrorsKeepStatusAndNeverReplay(t *testing.T) {
 				}
 				observation.Err = nil
 				return observation
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }

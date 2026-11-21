@@ -1,6 +1,6 @@
 # Teams calling policy lab acceptance
 
-On 2026-11-21, `TestLabCallingPolicyReadOnly` used the dedicated lab SPN to read
+On 2026-11-21, `TestAccCallingPolicyReadOnly` used the dedicated lab SPN to read
 compiled TeamsCallingPolicy Global with client-secret and certificate auth.
 Both actual resource reads returned HTTP 403. No response payload, tenant ID,
 client ID, secret, certificate or token was retained in this repository.

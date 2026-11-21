@@ -10,7 +10,7 @@ import (
 	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
 )
 
-func TestReadPreservesOpaqueAndDirectoryIdentities(t *testing.T) {
+func TestUnitReadPreservesOpaqueAndDirectoryIdentities(t *testing.T) {
 	t.Parallel()
 	const raw = `{"@odata.type":"#microsoft.graph.aadUserConversationMember","id":"opaque+/=:#%雪","userId":"22222222-2222-4222-8222-222222222222","tenantId":"other-tenant","roles":["owner","futureQualifier"],"displayName":null,"email":"","visibleHistoryStartDateTime":"2026-01-02T03:04:05Z","future":{"enabled":false}}`
 	var value teammember.Member
@@ -28,7 +28,7 @@ func TestReadPreservesOpaqueAndDirectoryIdentities(t *testing.T) {
 	}
 }
 
-func TestReadRetainsUnknownSubtypeAndNullableAADFields(t *testing.T) {
+func TestUnitReadRetainsUnknownSubtypeAndNullableAADFields(t *testing.T) {
 	t.Parallel()
 	for _, roles := range []string{"null", "[]", `["guest"]`} {
 		var value teammember.Member
@@ -42,7 +42,7 @@ func TestReadRetainsUnknownSubtypeAndNullableAADFields(t *testing.T) {
 	}
 }
 
-func TestReadRequiresMembershipIdentityAndRedactsDecodeErrors(t *testing.T) {
+func TestUnitReadRequiresMembershipIdentityAndRedactsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`null`, `[]`, `{}`, `{"userId":"directory-only"}`, `{"id":""}`, `{"id":7}`, `{"id":"opaque","roles":"private-value"}`} {
 		var value teammember.Member
@@ -53,7 +53,7 @@ func TestReadRequiresMembershipIdentityAndRedactsDecodeErrors(t *testing.T) {
 	}
 }
 
-func TestRolePatchDistinguishesOmissionNullDemotionAndPromotion(t *testing.T) {
+func TestUnitRolePatchDistinguishesOmissionNullDemotionAndPromotion(t *testing.T) {
 	t.Parallel()
 	var null []teammember.Role
 	empty := []teammember.Role{}

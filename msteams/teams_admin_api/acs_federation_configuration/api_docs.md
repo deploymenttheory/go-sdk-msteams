@@ -48,4 +48,4 @@ allowed-resource default. Licensing, resource-ID acceptance and effective
 federation prerequisites remain separate from request construction.
 
 Exact RBAC/consent, cloud feature deployment and successful app/delegated service
-behavior remain unqualified. [Evidence and prepared acceptance](../../../docs/implementation/policies/federation-sdk-evidence.md).
+behavior remain unqualified. [unit tests](service_test.go).

@@ -163,9 +163,9 @@ func templateReadBack(t *testing.T, ctx context.Context, service *template.Servi
 	return value
 }
 
-// TestLabTeamTemplateCRUD creates one uniquely named tenant template. It creates
+// TestAccTeamTemplateCRUD creates one uniquely named tenant template. It creates
 // no team, changes no permission policy, and never edits a Microsoft template.
-func TestLabTeamTemplateCRUD(t *testing.T) {
+func TestAccTeamTemplateCRUD(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal(err)
@@ -290,9 +290,9 @@ func runTemplateCRUD(t *testing.T, cfg lab.Config, body bool) {
 	t.Log("template delete/absence: passed")
 }
 
-// TestLabTeamTemplateRecover is an explicit operator-selected recovery path for
+// TestAccTeamTemplateRecover is an explicit operator-selected recovery path for
 // an interrupted run. OpenJournal checks tenant/cloud/identity binding locally.
-func TestLabTeamTemplateRecover(t *testing.T) {
+func TestAccTeamTemplateRecover(t *testing.T) {
 	file := os.Getenv("MSTEAMS_LAB_RECOVERY_FILE")
 	if file == "" {
 		t.Skip("no explicit private recovery journal selected")

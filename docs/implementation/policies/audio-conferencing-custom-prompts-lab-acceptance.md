@@ -1,6 +1,6 @@
 # Audio conferencing custom prompts lab acceptance
 
-`TestLabAudioConferencingPromptsReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1`
+`TestAccAudioConferencingPromptsReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1`
 before reading an explicitly selected private identity file. It reads Global,
 then a Global-filtered collection, selects a unique case-insensitive exact
 Global identity (without confusing Tag:Global) and compares known projections.
@@ -12,7 +12,7 @@ and consequential opt-ins unset. Normal repository tests skip live reads.
 The selected family can be run with:
 
 ```sh
-go test -count=1 -run '^TestLabAudioConferencingPromptsReadOnly$' -v ./tests/integration/lab
+go test -count=1 -run '^TestAccAudioConferencingPromptsReadOnly$' -v ./tests/integration/lab
 ```
 
 On 2026-11-21 both actual credential modes reached the selected resource and

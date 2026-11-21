@@ -22,7 +22,7 @@ class LedgerTests(unittest.TestCase):
         self.write('contracts/powershell/8.1.0/reconciliation.json',self.reconciliation)
         self.write('contracts/powershell/8.1.0/runtime.json',self.runtime)
         (self.root/'sample.go').write_text('package sample\nfunc Get() {}\n',encoding='utf-8')
-        (self.root/'sample_test.go').write_text('package sample\nfunc TestGet() {}\nfunc TestLiveGet() {}\n',encoding='utf-8')
+        (self.root/'sample_test.go').write_text('package sample\nfunc TestUnitGet() {}\nfunc TestAccGet() {}\n',encoding='utf-8')
         self.record = self.ledger['records'][0]
 
     def write(self,path,value):
@@ -37,7 +37,7 @@ class LedgerTests(unittest.TestCase):
         symbol=dict(file='sample.go',name='Get')
         self.record['implementation'].update(status='implemented',symbols=[symbol])
         self.record['parameter_sets'][0]['symbols']=[symbol]
-        self.record['parameter_sets'][0]['contract_tests']=[dict(file='sample_test.go',name='TestGet')]
+        self.record['parameter_sets'][0]['contract_tests']=[dict(file='sample_test.go',name='TestUnitGet')]
         self.write('contract-result.json',dict(outcome='passed',revision='fixture-revision'))
         self.record['contract']=dict(status='passed',evidence=['contract-result.json'])
 
@@ -47,6 +47,16 @@ class LedgerTests(unittest.TestCase):
         self.assertFalse(result['release_ready'])
         self.assertEqual(result['complete'],0)
         self.assertEqual(self.check(complete=True)['result'],'failed')
+
+    def test_unit_and_acceptance_references_cannot_be_interchanged(self):
+        self.implemented()
+        group = self.record['parameter_sets'][0]
+        group['live_tests'] = [dict(file='sample_test.go', name='TestUnitGet')]
+        self.assertEqual(self.check()['result'], 'failed')
+        group['live_tests'] = [dict(file='sample_test.go', name='TestAccGet')]
+        self.assertEqual(self.check()['result'], 'passed')
+        group['contract_tests'] = [dict(file='sample_test.go', name='TestAccGet')]
+        self.assertEqual(self.check()['result'], 'failed')
 
     def test_missing_and_duplicate_ownership(self):
         self.record['implementation_owner']=None
@@ -83,7 +93,7 @@ class LedgerTests(unittest.TestCase):
 
     def test_skipped_live_run_cannot_be_passed(self):
         self.implemented()
-        self.record['parameter_sets'][0]['live_tests']=[dict(file='sample_test.go',name='TestLiveGet')]
+        self.record['parameter_sets'][0]['live_tests']=[dict(file='sample_test.go',name='TestAccGet')]
         self.write('live-result.json',dict(outcome='skipped',revision='fixture-revision'))
         self.record['live']=dict(status='passed',reason='',evidence=['live-result.json'])
         self.assertEqual(self.check()['result'],'failed')

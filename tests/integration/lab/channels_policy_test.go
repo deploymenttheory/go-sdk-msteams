@@ -60,7 +60,7 @@ func channelsPolicyOracle(t *testing.T, ctx context.Context, tenant string) chan
 		t.Fatal("invalid channels policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-channels-policy-policy.ps1")
+	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-channels-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -82,9 +82,9 @@ func channelsPolicyOracle(t *testing.T, ctx context.Context, tenant string) chan
 	return value
 }
 
-// TestLabChannelsPolicyReadOnly never edits Global, creates resources or grants a
+// TestAccChannelsPolicyReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabChannelsPolicyReadOnly(t *testing.T) {
+func TestAccChannelsPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -99,6 +99,7 @@ func TestLabChannelsPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsChannelsPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_channels_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -106,7 +107,8 @@ func TestLabChannelsPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("channels policy Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsChannelsPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsChannelsPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_channels_policy", "list", listResponse, nil)
 	selected, selectionErr := globalChannelsPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(channelsProjection(value), channelsProjection(selected)) {
 		t.Fatal("channels Global read/list projections differ")
@@ -125,7 +127,7 @@ func TestLabChannelsPolicyReadOnly(t *testing.T) {
 	t.Log("selected channels policy reads verified; persistence, feature effects and assignments remain separately qualified")
 }
 
-func TestChannelsPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitChannelsPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":"","AllowOrgWideTeamCreation":null,"EnablePrivateTeamDiscovery":null,"AllowPrivateChannelCreation":false,"AllowSharedChannelCreation":null,"AllowChannelSharingToExternalUser":null,"AllowUserToParticipateInExternalSharedChannel":null,"ThreadedChannelCreation":null,"AllowCreateChannel":null,"AllowCreateClassicChannel":null,"AllowCreatePrivateChannel":"FutureMode","AllowCreateSharedChannel":null,"CreateSharedChannelsByDefault":null,"AllowUsersFromOutsideTeam":null,"AllowGuestsFromOutsideTeam":null,"AllowUsersFromOutsideTeamInPrivateChannel":null,"AllowGuestsFromOutsideTeamInPrivateChannel":null,"AllowSharingWithTeamInOrg":null,"AllowSharingPrivateChannelWithTeamInOrg":null,"DefaultChannelTypeOnCreation":null}`
@@ -159,7 +161,7 @@ func globalChannelsPolicy(values []*resource.Policy) (*resource.Policy, error) {
 	}
 	return found, nil
 }
-func TestChannelsPolicyGlobalSelection(t *testing.T) {
+func TestUnitChannelsPolicyGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Policy{Identity: new("Global")}
 	tagged := &resource.Policy{Identity: new("Tag:Global")}
@@ -183,7 +185,7 @@ func matchesChannelsGetterProjection(value *resource.Policy, settings map[string
 	return json.Unmarshal(channelsProjection(value), &left) == nil && json.Unmarshal(raw, &right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestChannelsOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitChannelsOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"description":"fixture"}`, `{"Description":"earlier","description":"fixture"}`, `{"Description":null,"description":"fixture"}`} {
 		var value resource.Policy

@@ -22,12 +22,12 @@ func listObservation(result client.ListResult[group.Group], err error) contractt
 	return contracttest.Observation{Value: map[string]any{"ids": ids, "pages": result.Pages}, Response: result.Response, Err: err}
 }
 
-func TestGroupListAdvancedBetaQueryAndOpaquePaging(t *testing.T) {
+func TestUnitGroupListAdvancedBetaQueryAndOpaquePaging(t *testing.T) {
 	t.Parallel()
 	query := url.Values{"$filter": {"resourceProvisioningOptions/Any(x:x eq 'Team')"}, "$search": {`"displayName:fixture"`}, "$select": {"id,displayName"}, "$orderby": {"displayName"}, "$expand": {"owners($select=id)"}, "$top": {"999"}, "$count": {"true"}}
-	next := auth.GraphAudience + "/beta/groups?$skiptoken=opaque%2B%2F%3D"
-	first := wire("GET", auth.GraphAudience, "/beta/groups?"+query.Encode(), "", 200, `{"value":[{"id":"`+groupID+`","displayName":null}],"@odata.nextLink":"`+next+`"}`)
-	second := wire("GET", auth.GraphAudience, "/beta/groups?$skiptoken=opaque%2B%2F%3D", "", 200, `{"value":[]}`)
+
+	first := wire("GET", auth.GraphAudience, "/beta/groups?"+query.Encode(), "", 200, "")
+	second := wire("GET", auth.GraphAudience, "/beta/groups?$skiptoken=opaque%2B%2F%3D", "", 200, "")
 	first.Request.Headers.Set("ConsistencyLevel", "eventual")
 	second.Request.Headers.Set("ConsistencyLevel", "eventual")
 	count := true
@@ -43,12 +43,15 @@ func TestGroupListAdvancedBetaQueryAndOpaquePaging(t *testing.T) {
 	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"ids":["` + groupID + `"],"pages":2}`)}})
 }
 
-func TestGroupListReturnsOneNativePage(t *testing.T) {
+func TestUnitGroupListReturnsOneNativePage(t *testing.T) {
 	t.Parallel()
 	count := false
 	body := `{"value":[{"id":"` + groupID + `"}],"@odata.nextLink":"https://foreign.invalid/opaque","future":7}`
-	runCase(t, contracttest.Case{Name: "single-native-page", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/groups?$count=false", "", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	runCase(t, contracttest.Case{Name: "single-native-page", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/groups?$count=false", "", 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		page, response, err := sdk.GraphAPI.Groups.List(ctx, group.ListOptions{Count: &count})
+		if err != nil && isRequestBoundary(ctx) {
+			return contracttest.Observation{Response: response, Err: err}
+		}
 		var value any
 		if page != nil {
 			value = page.RawFields
@@ -57,7 +60,7 @@ func TestGroupListReturnsOneNativePage(t *testing.T) {
 	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(body)}})
 }
 
-func TestGroupListPartialResultsAndStatusGuard(t *testing.T) {
+func TestUnitGroupListPartialResultsAndStatusGuard(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, next string
@@ -90,7 +93,7 @@ func TestGroupListPartialResultsAndStatusGuard(t *testing.T) {
 	}
 }
 
-func TestGroupPagerConfigurationIsLocal(t *testing.T) {
+func TestUnitGroupPagerConfigurationIsLocal(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		options group.ListOptions

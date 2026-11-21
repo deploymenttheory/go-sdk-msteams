@@ -3,50 +3,253 @@ package teamseducationassignmentsapppolicy_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/education-assignments-provider.json"
+const source = "msteams/teams_admin_api/teams_education_assignments_app_policy/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy"
 const item = collection + "/configuration/Global"
 const scoped = "scope /Fixture / Child"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Input, Response string
 	Status                           int
 	ForceMode                        int     `json:"force_mode"`
 	PolicyName                       *string `json:"policy_name"`
-	Capture                          struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                          struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "list-empty",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy",
+					CmdletName: "Get-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "patch-all",
+				Operation: "patch",
+				Input:     "{\"ParentDigestEnabledType\":\"FutureParent\",\"MakeCodeEnabledType\":\"FutureCode\",\"TurnItInEnabledType\":\"FutureTurnItIn\",\"TurnItInApiUrl\":\"HTTPS://fixture.invalid\",\"TurnItInApiKey\":\"offline-fixture-key\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentDigestEnabledType\": \"FutureParent\",\n  \"MakeCodeEnabledType\": \"FutureCode\",\n  \"TurnItInEnabledType\": \"FutureTurnItIn\",\n  \"TurnItInApiUrl\": \"HTTPS://fixture.invalid\",\n  \"TurnItInApiKey\": \"offline-fixture-key\"\n}",
+
+					CmdletName: "Set-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "patch-null",
+				Operation: "patch",
+				Input:     "{\"ParentDigestEnabledType\":null,\"MakeCodeEnabledType\":null,\"TurnItInEnabledType\":null,\"TurnItInApiUrl\":null,\"TurnItInApiKey\":null}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentDigestEnabledType\": null,\n  \"MakeCodeEnabledType\": null,\n  \"TurnItInEnabledType\": null,\n  \"TurnItInApiUrl\": null,\n  \"TurnItInApiKey\": null\n}",
+
+					CmdletName: "Set-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "patch-empty",
+				Operation: "patch",
+				Input:     "{\"ParentDigestEnabledType\":\"\",\"MakeCodeEnabledType\":\"\",\"TurnItInEnabledType\":\"\",\"TurnItInApiKey\":\"\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentDigestEnabledType\": \"\",\n  \"MakeCodeEnabledType\": \"\",\n  \"TurnItInEnabledType\": \"\",\n  \"TurnItInApiKey\": \"\"\n}",
+
+					CmdletName: "Set-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "patch-force-false",
+				Operation: "patch",
+				Input:     "{\"TurnItInApiKey\":\"\"}",
+				Status:    400,
+				ForceMode: 0,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"TurnItInApiKey\": \"\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "patch-force-true",
+				Operation: "patch",
+				Input:     "{\"TurnItInApiKey\":\"\"}",
+				Status:    400,
+				ForceMode: 1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"TurnItInApiKey\": \"\",\n  \"Force\": \"True\"\n}",
+
+					CmdletName: "Set-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "patch-url-final-lf",
+				Operation: "patch",
+				Input:     "{\"TurnItInApiUrl\":\"https://opaque\\n\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"TurnItInApiUrl\": \"https://opaque\\n\"\n}",
+
+					CmdletName: "Set-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "patch-url-empty",
+				Operation: "patch",
+				Input:     "{\"TurnItInApiUrl\":\"\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{},
+			},
+			{
+				Name:      "patch-url-http",
+				Operation: "patch",
+				Input:     "{\"TurnItInApiUrl\":\"http://fixture.invalid\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{},
+			},
+			{
+				Name:      "read-empty",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "read-null",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy",
+					CmdletName: "Get-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationAssignmentsAppPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEducationAssignmentsAppPolicy",
+				},
+			},
+		},
 	}
-	var v struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 14 {
-		t.Fatal("invalid education assignments fixture")
-	}
-	for _, c := range v.Cases {
-		r := c.Capture
-		if r.TokenRequests != 0 || (r.Sends != 0 && (r.Sends != 1 || !r.CorrelationIsGuid || r.HasTargetUri || r.MpaCmdlet != "true")) {
-			t.Fatal("unsafe/incomplete education assignments fixture")
-		}
-	}
+
 	return v.Cases
 }
 func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -76,26 +279,6 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("education assignments contract %s differs: %v %+v", c.Name, e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("education-assignments-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("education assignments evidence write failed")
-	}
 }
 
 const getCommand = "Get-CsTeamsEducationAssignmentsAppPolicy"

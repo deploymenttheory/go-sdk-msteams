@@ -7,7 +7,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
 )
 
-func TestAssetReadValidationFollowsCaseInsensitiveSetterOrder(t *testing.T) {
+func TestUnitAssetReadValidationFollowsCaseInsensitiveSetterOrder(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		value any

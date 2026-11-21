@@ -1,0 +1,10 @@
+{
+  "BlockedUsers": [],
+  "BlockExternalUserAccess": false,
+  "Identity": "Global",
+  "SchemaVersion": "0.0.1",
+  "ConfigId": "Global",
+  "ConfigMetadata": {
+    "Authority": "Host"
+  }
+}

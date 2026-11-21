@@ -1,0 +1,102 @@
+name: Acceptance tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: msteams-lab-tenant-acceptance
+  cancel-in-progress: false
+
+env:
+  GOFLAGS: -mod=readonly
+  GOTOOLCHAIN: local
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  lab:
+    name: TestAcc (${{ matrix.auth }})
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+    strategy:
+      fail-fast: false
+      matrix:
+        auth: [certificate, client-secret]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      MSTEAMS_LAB_AUTH_METHOD: ${{ matrix.auth }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5
+        with:
+          go-version-file: go.mod
+      - name: Check TestUnit and TestAcc names
+        run: |
+          python3 tools/acceptance/ci.py check-names
+          python3 -m unittest discover -s tools/acceptance/tests -v
+      - name: Load repository secrets and MicrosoftTeams 8.1.0
+        env:
+          MSTEAMS_LAB_TENANT_ID: ${{ secrets.MSTEAMS_LAB_TENANT_ID }}
+          MSTEAMS_LAB_CLIENT_ID: ${{ secrets.MSTEAMS_LAB_CLIENT_ID }}
+          MSTEAMS_LAB_CLIENT_SECRET: ${{ secrets.MSTEAMS_LAB_CLIENT_SECRET }}
+          MSTEAMS_LAB_CERTIFICATE_PEM: ${{ secrets.MSTEAMS_LAB_CERTIFICATE_PEM }}
+          MSTEAMS_LAB_PRIVATE_KEY_PEM: ${{ secrets.MSTEAMS_LAB_PRIVATE_KEY_PEM }}
+          MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM: ${{ secrets.MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM }}
+        run: python3 tools/acceptance/ci.py prepare
+      - name: Run TestAcc tests
+        run: python3 tools/acceptance/ci.py run --report-directory "$RUNNER_TEMP/acceptance-report"
+      - name: Save recovery journals and remove credentials
+        if: always() && env.MSTEAMS_LAB_PRIVATE_DIRECTORY != ''
+        run: python3 tools/acceptance/ci.py finalize --report-directory "$RUNNER_TEMP/acceptance-report"
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: tenant-acceptance-${{ matrix.auth }}
+          path: |
+            ${{ runner.temp }}/acceptance-report/*.json
+            ${{ runner.temp }}/acceptance-report/recovery.cms
+          if-no-files-found: error
+          retention-days: 14
+  result:
+    name: TestAcc result
+    if: always()
+    needs: [lab]
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - name: Download test results
+        if: needs.lab.result != 'skipped'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+          REPOSITORY: ${{ github.repository }}
+        run: gh run download "$RUN_ID" --repo "$REPOSITORY" --pattern 'tenant-acceptance-*' --dir "$RUNNER_TEMP/test-results"
+      - name: Show failed tests
+        if: always()
+        env:
+          LAB_RESULT: ${{ needs.lab.result }}
+        run: |
+          if [ "$LAB_RESULT" = skipped ]; then
+            echo "::error::TestAcc did not run for this PR source. Run from a trusted repository branch."
+            exit 1
+          fi
+          python3 tools/acceptance/ci.py summarize --report-directory "$RUNNER_TEMP/test-results"
+          if [ "$LAB_RESULT" != success ]; then
+            echo "::error::A TestAcc job failed during setup, tests or cleanup. See its failed step."
+            exit 1
+          fi

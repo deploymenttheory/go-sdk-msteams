@@ -34,7 +34,7 @@ func certificateFixture(t *testing.T) ([]byte, []byte, time.Time) {
 	return cert, keyPEM, now
 }
 
-func TestPEMCertificatePairValidityAndOwnership(t *testing.T) {
+func TestUnitPEMCertificatePairValidityAndOwnership(t *testing.T) {
 	t.Parallel()
 	cert, key, now := certificateFixture(t)
 	// Spare capacity exposes accidental append into the caller's certificate buffer.
@@ -71,7 +71,7 @@ func TestPEMCertificatePairValidityAndOwnership(t *testing.T) {
 	}
 }
 
-func TestPEMCertificateAcceptsPKCS8RSAKey(t *testing.T) {
+func TestUnitPEMCertificateAcceptsPKCS8RSAKey(t *testing.T) {
 	t.Parallel()
 	cert, key, now := certificateFixture(t)
 	block, _ := pem.Decode(key)
@@ -93,7 +93,7 @@ func TestPEMCertificateAcceptsPKCS8RSAKey(t *testing.T) {
 	}
 }
 
-func TestPEMInvalidAndMismatchedMaterialIsRedacted(t *testing.T) {
+func TestUnitPEMInvalidAndMismatchedMaterialIsRedacted(t *testing.T) {
 	t.Parallel()
 	cert, key, _ := certificateFixture(t)
 	_, otherKey, _ := certificateFixture(t)
@@ -112,7 +112,7 @@ func TestPEMInvalidAndMismatchedMaterialIsRedacted(t *testing.T) {
 	}
 }
 
-func TestPEMRejectsUnsupportedAndEncryptedKeys(t *testing.T) {
+func TestUnitPEMRejectsUnsupportedAndEncryptedKeys(t *testing.T) {
 	t.Parallel()
 	cert, key, _ := certificateFixture(t)
 	block, _ := pem.Decode(key)
@@ -133,7 +133,7 @@ func TestPEMRejectsUnsupportedAndEncryptedKeys(t *testing.T) {
 	}
 }
 
-func TestInvalidPFXIsRedacted(t *testing.T) {
+func TestUnitInvalidPFXIsRedacted(t *testing.T) {
 	t.Parallel()
 	for _, data := range [][]byte{nil, []byte("sensitive-invalid-pfx")} {
 		if _, err := parsePFXCertificate(data, []byte("sensitive-password")); !errors.Is(err, ErrInvalidCertificate) {
@@ -142,7 +142,7 @@ func TestInvalidPFXIsRedacted(t *testing.T) {
 	}
 }
 
-func TestPEMRejectsIgnoredJunkAndBundledKeys(t *testing.T) {
+func TestUnitPEMRejectsIgnoredJunkAndBundledKeys(t *testing.T) {
 	t.Parallel()
 	cert, key, _ := certificateFixture(t)
 	join := func(parts ...[]byte) []byte { return bytes.Join(parts, nil) }
@@ -174,7 +174,7 @@ func TestPEMRejectsIgnoredJunkAndBundledKeys(t *testing.T) {
 	}
 }
 
-func TestPEMAcceptsSurroundingWhitespace(t *testing.T) {
+func TestUnitPEMAcceptsSurroundingWhitespace(t *testing.T) {
 	t.Parallel()
 	cert, key, now := certificateFixture(t)
 	padded := func(data []byte) []byte { return bytes.Join([][]byte{[]byte(" \r\n\t"), data, []byte("\t \r\n")}, nil) }
@@ -187,7 +187,7 @@ func TestPEMAcceptsSurroundingWhitespace(t *testing.T) {
 	}
 }
 
-func TestPFXRejectsPEMFallback(t *testing.T) {
+func TestUnitPFXRejectsPEMFallback(t *testing.T) {
 	t.Parallel()
 	cert, key, _ := certificateFixture(t)
 	bundle := bytes.Join([][]byte{cert, key}, nil)

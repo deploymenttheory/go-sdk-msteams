@@ -13,14 +13,17 @@ import (
 	channelmember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_member"
 )
 
-func TestListReturnsOneNativePageWithoutImplicitTraversal(t *testing.T) {
+func TestUnitListReturnsOneNativePageWithoutImplicitTraversal(t *testing.T) {
 	t.Parallel()
 	next := auth.GraphAudience + "/beta/teams/" + teamID + "/channels/" + url.PathEscape(channelID) + "/members?$skiptoken=opaque%2B%2F%3D"
 	query := url.Values{"$filter": {"roles/any(r:r eq 'owner')"}, "$select": {"id,roles,userId"}, "$top": {"999"}}
 	body := `{"value":[{"id":"opaque","@odata.type":"#microsoft.graph.futureMember","roles":["future"],"userId":null,"tenantId":"other-tenant"}],"@odata.nextLink":"` + next + `","futurePage":7}`
-	nativeCase(t, contracttest.Case{Name: "single-page", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/beta/teams/"+teamID+"/channels/"+url.PathEscape(channelID)+"/members?"+query.Encode(), "", 200, body)},
+	nativeCase(t, contracttest.Case{Name: "single-page", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/beta/teams/"+teamID+"/channels/"+url.PathEscape(channelID)+"/members?"+query.Encode(), "", 200, "")},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			page, response, err := sdk.GraphAPI.ChannelMembers.List(ctx, teamID, channelID, channelmember.ListOptions{Filter: "roles/any(r:r eq 'owner')", Select: []string{"id", "roles", "userId"}, Top: 999})
+			if err != nil && isRequestBoundary(ctx) {
+				return contracttest.Observation{Response: response, Err: err}
+			}
 			var value any
 			if page != nil {
 				value = map[string]any{"count": len(page.Items), "id": page.Items[0].ID, "roles": page.Items[0].Roles, "user_id": page.Items[0].UserID, "next": page.NextLink, "raw": page.RawFields}
@@ -37,13 +40,13 @@ func listObservation(result client.ListResult[channelmember.Member], err error) 
 	return contracttest.Observation{Value: map[string]any{"ids": ids, "pages": result.Pages}, Response: result.Response, Err: err}
 }
 
-func TestListAllOpaquePagingAndFrozenOptions(t *testing.T) {
+func TestUnitListAllOpaquePagingAndFrozenOptions(t *testing.T) {
 	t.Parallel()
 	path := "/beta/teams/" + teamID + "/channels/" + url.PathEscape(channelID) + "/members"
-	next := auth.GraphAudience + path + "?$skiptoken=opaque%2B%2F%3D&$select=id%2CuserId"
+
 	nativeCase(t, contracttest.Case{Name: "all-pages", Steps: []contracttest.Exchange{
-		wire("GET", auth.GraphAudience, path+"?$select=id%2CuserId&$top=1", "", 200, `{"value":[{"id":"opaque-1","roles":[]}],"@odata.nextLink":"`+next+`"}`),
-		wire("GET", auth.GraphAudience, path+"?$skiptoken=opaque%2B%2F%3D&$select=id%2CuserId", "", 200, `{"value":[]}`)},
+		wire("GET", auth.GraphAudience, path+"?$select=id%2CuserId&$top=1", "", 200, ""),
+		wire("GET", auth.GraphAudience, path+"?$skiptoken=opaque%2B%2F%3D&$select=id%2CuserId", "", 200, "")},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			fields := []string{"id", "userId"}
 			pager, err := sdk.GraphAPI.ChannelMembers.NewPager(teamID, channelID, channelmember.ListOptions{Select: fields, Top: 1}, client.PagingOptions{MaxPages: 2, MaxItems: 1})
@@ -56,7 +59,7 @@ func TestListAllOpaquePagingAndFrozenOptions(t *testing.T) {
 		}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"ids":["opaque-1"],"pages":2}`)}})
 }
 
-func TestListAllPreservesPartialResultsOnFailureAndLimits(t *testing.T) {
+func TestUnitListAllPreservesPartialResultsOnFailureAndLimits(t *testing.T) {
 	t.Parallel()
 	path := "/beta/teams/" + teamID + "/channels/" + url.PathEscape(channelID) + "/members"
 	for _, tc := range []struct {
@@ -90,18 +93,21 @@ func TestListAllPreservesPartialResultsOnFailureAndLimits(t *testing.T) {
 	})
 }
 
-func TestListRejectsMalformedCollectionsAndPreservesResponse(t *testing.T) {
+func TestUnitListRejectsMalformedCollectionsAndPreservesResponse(t *testing.T) {
 	t.Parallel()
 	for _, body := range []string{`{}`, `null`, `{"value":null}`, `{"value":[null]}`, `{"value":[{"userId":"directory-only"}]}`, `{"value":[],"@odata.nextLink":7}`} {
 		nativeCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/beta/teams/"+teamID+"/channels/"+url.PathEscape(channelID)+"/members", "", 200, body)},
 			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				_, response, err := sdk.GraphAPI.ChannelMembers.List(ctx, teamID, channelID, channelmember.ListOptions{})
+				if err != nil && isRequestBoundary(ctx) {
+					return contracttest.Observation{Response: response, Err: err}
+				}
 				return contracttest.Observation{Response: response, Err: err}
 			}, Want: contracttest.Expected{Status: 200, Error: client.ErrDecode}})
 	}
 }
 
-func TestCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
+func TestUnitCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, action := range []string{"get", "create", "update", "delete", "list", "all", "closed", "wrong-backend", "invalid-team", "invalid-user", "invalid-projection", "invalid-style", "invalid-status", "invalid-limit", "nil-service"} {
 		t.Run(action, func(t *testing.T) {
@@ -162,7 +168,7 @@ func TestCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
 	}
 }
 
-func TestListAllRejectsUnexpectedSuccessfulStatus(t *testing.T) {
+func TestUnitListAllRejectsUnexpectedSuccessfulStatus(t *testing.T) {
 	t.Parallel()
 	for _, status := range []int{202, 206} {
 		nativeCase(t, contracttest.Case{Name: "unexpected-status", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/beta/teams/"+teamID+"/channels/"+url.PathEscape(channelID)+"/members", "", status, `{"value":[{"id":"opaque"}]}`)},

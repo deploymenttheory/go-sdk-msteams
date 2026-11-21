@@ -59,10 +59,10 @@ func settings(t *testing.T, nested bool) resource.Settings {
 	return resource.Settings{Fields: fields, MeetingBackgroundImages: images, MeetingBrandingThemes: themes, NDIAssuranceSlateImages: slates}
 }
 
-func TestBrandingPinnedProviderRequests(t *testing.T) {
+func TestUnitBrandingTypedProviderRequests(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, f := range captured(t) {
+
+	for _, f := range requestInputs(t) {
 		set := "Identity"
 		switch f.Operation {
 		case "user":
@@ -73,12 +73,12 @@ func TestBrandingPinnedProviderRequests(t *testing.T) {
 			set = "GrantToGroup"
 		}
 		var input json.RawMessage
-		if f.Capture.Body != "" {
-			input = json.RawMessage(f.Capture.Body)
+		if f.Request.Body != "" {
+			input = json.RawMessage(f.Request.Body)
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: f.Capture.CmdletName, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(f.Capture.Method, strings.TrimPrefix(f.Capture.Url, origin), f.Capture.CmdletName, input, f.Status, f.Response)}}
-			if f.Capture.FailureType != nil {
+			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: f.Request.CmdletName, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(f.Request.Method, strings.TrimPrefix(f.Request.Url, origin), f.Request.CmdletName, input, f.Status, f.Response)}}
+			if f.Request.FailureType != nil {
 				if f.Status == 403 {
 					c.Want.Error = auth.ErrForbidden
 				} else {
@@ -86,6 +86,9 @@ func TestBrandingPinnedProviderRequests(t *testing.T) {
 				}
 			} else if f.Response != "" && f.Operation != "delete" {
 				c.Want.JSON = json.RawMessage(f.Response)
+			}
+			if len(c.Steps) != 0 {
+				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.MeetingBrandingPolicies
@@ -122,8 +125,7 @@ func TestBrandingPinnedProviderRequests(t *testing.T) {
 					return contracttest.Observation{Value: v, Response: r, Err: e}
 				}
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }

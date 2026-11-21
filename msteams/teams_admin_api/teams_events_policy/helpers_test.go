@@ -3,52 +3,492 @@ package teamseventspolicy_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/events-policy-provider.json"
+const source = "msteams/teams_admin_api/teams_events_policy/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsEventsPolicy"
 const item = collection + "/configuration/Global"
 const setCommand = "Set-CsTeamsEventsPolicy"
 const scoped = "scope /Fixture / Child"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Input, Response string
 	Status                           int
 	ForceMode                        int     `json:"force_mode"`
 	PolicyName                       *string `json:"policy_name"`
 	Rank                             int32   `json:"rank"`
-	Capture                          struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                          struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
+		Sends                         int
 	}
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:       "list-empty",
+				Operation:  "list",
+				Input:      "{}",
+				Status:     400,
+				ForceMode:  -1,
+				PolicyName: new(""),
+				Rank:       -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy",
+					CmdletName: "Get-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "create-all",
+				Operation: "create",
+				Input:     "{\"AllowWebinars\":\"Future-AllowWebinars\",\"EventAccessType\":\"Future-EventAccessType\",\"AllowTownhalls\":\"Future-AllowTownhalls\",\"TownhallEventAttendeeAccess\":\"Future-TownhallEventAttendeeAccess\",\"ExternalPresenterJoinVerification\":\"Future-ExternalPresenterJoinVerification\",\"AllowEmailEditing\":\"Future-AllowEmailEditing\",\"AllowedQuestionTypesInRegistrationForm\":\"Future-AllowedQuestionTypesInRegistrationForm\",\"AllowEventIntegrations\":false,\"AllowedWebinarTypesForRecordingPublish\":\"Future-AllowedWebinarTypesForRecordingPublish\",\"AllowedTownhallTypesForRecordingPublish\":\"Future-AllowedTownhallTypesForRecordingPublish\",\"RecordingForTownhall\":\"Future-RecordingForTownhall\",\"RecordingForWebinar\":\"Future-RecordingForWebinar\",\"TranscriptionForTownhall\":\"Future-TranscriptionForTownhall\",\"TranscriptionForWebinar\":\"Future-TranscriptionForWebinar\",\"TownhallChatExperience\":\"Future-TownhallChatExperience\",\"BroadcastPremiumApps\":\"Future-BroadcastPremiumApps\",\"UseMicrosoftECDN\":false,\"ImmersiveEvents\":\"Future-ImmersiveEvents\",\"TownhallMaxResolution\":\"Future-TownhallMaxResolution\",\"HighBitrateForTownhall\":\"Future-HighBitrateForTownhall\",\"BackroomChat\":\"Future-BackroomChat\",\"Registration\":\"Future-Registration\",\"AllowEngagementReport\":\"Future-AllowEngagementReport\",\"InfoShownInReportMode\":\"Future-InfoShownInReportMode\",\"Description\":\"Future-Description\"}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"AllowWebinars\": \"Future-AllowWebinars\",\n  \"EventAccessType\": \"Future-EventAccessType\",\n  \"AllowTownhalls\": \"Future-AllowTownhalls\",\n  \"TownhallEventAttendeeAccess\": \"Future-TownhallEventAttendeeAccess\",\n  \"ExternalPresenterJoinVerification\": \"Future-ExternalPresenterJoinVerification\",\n  \"AllowEmailEditing\": \"Future-AllowEmailEditing\",\n  \"AllowedQuestionTypesInRegistrationForm\": \"Future-AllowedQuestionTypesInRegistrationForm\",\n  \"AllowEventIntegrations\": false,\n  \"AllowedWebinarTypesForRecordingPublish\": \"Future-AllowedWebinarTypesForRecordingPublish\",\n  \"AllowedTownhallTypesForRecordingPublish\": \"Future-AllowedTownhallTypesForRecordingPublish\",\n  \"RecordingForTownhall\": \"Future-RecordingForTownhall\",\n  \"RecordingForWebinar\": \"Future-RecordingForWebinar\",\n  \"TranscriptionForTownhall\": \"Future-TranscriptionForTownhall\",\n  \"TranscriptionForWebinar\": \"Future-TranscriptionForWebinar\",\n  \"TownhallChatExperience\": \"Future-TownhallChatExperience\",\n  \"BroadcastPremiumApps\": \"Future-BroadcastPremiumApps\",\n  \"UseMicrosoftECDN\": false,\n  \"ImmersiveEvents\": \"Future-ImmersiveEvents\",\n  \"TownhallMaxResolution\": \"Future-TownhallMaxResolution\",\n  \"HighBitrateForTownhall\": \"Future-HighBitrateForTownhall\",\n  \"BackroomChat\": \"Future-BackroomChat\",\n  \"Registration\": \"Future-Registration\",\n  \"AllowEngagementReport\": \"Future-AllowEngagementReport\",\n  \"InfoShownInReportMode\": \"Future-InfoShownInReportMode\",\n  \"Description\": \"Future-Description\"\n}",
+
+					CmdletName: "New-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:       "create-empty",
+				Operation:  "create",
+				Input:      "{}",
+				Status:     400,
+				ForceMode:  -1,
+				PolicyName: new(""),
+				Rank:       -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "New-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "patch-all",
+				Operation: "patch",
+				Input:     "{\"AllowWebinars\":\"Future-AllowWebinars\",\"EventAccessType\":\"Future-EventAccessType\",\"AllowTownhalls\":\"Future-AllowTownhalls\",\"TownhallEventAttendeeAccess\":\"Future-TownhallEventAttendeeAccess\",\"ExternalPresenterJoinVerification\":\"Future-ExternalPresenterJoinVerification\",\"AllowEmailEditing\":\"Future-AllowEmailEditing\",\"AllowedQuestionTypesInRegistrationForm\":\"Future-AllowedQuestionTypesInRegistrationForm\",\"AllowEventIntegrations\":false,\"AllowedWebinarTypesForRecordingPublish\":\"Future-AllowedWebinarTypesForRecordingPublish\",\"AllowedTownhallTypesForRecordingPublish\":\"Future-AllowedTownhallTypesForRecordingPublish\",\"RecordingForTownhall\":\"Future-RecordingForTownhall\",\"RecordingForWebinar\":\"Future-RecordingForWebinar\",\"TranscriptionForTownhall\":\"Future-TranscriptionForTownhall\",\"TranscriptionForWebinar\":\"Future-TranscriptionForWebinar\",\"TownhallChatExperience\":\"Future-TownhallChatExperience\",\"BroadcastPremiumApps\":\"Future-BroadcastPremiumApps\",\"UseMicrosoftECDN\":false,\"ImmersiveEvents\":\"Future-ImmersiveEvents\",\"TownhallMaxResolution\":\"Future-TownhallMaxResolution\",\"HighBitrateForTownhall\":\"Future-HighBitrateForTownhall\",\"BackroomChat\":\"Future-BackroomChat\",\"Registration\":\"Future-Registration\",\"AllowEngagementReport\":\"Future-AllowEngagementReport\",\"InfoShownInReportMode\":\"Future-InfoShownInReportMode\",\"Description\":\"Future-Description\"}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"AllowWebinars\": \"Future-AllowWebinars\",\n  \"EventAccessType\": \"Future-EventAccessType\",\n  \"AllowTownhalls\": \"Future-AllowTownhalls\",\n  \"TownhallEventAttendeeAccess\": \"Future-TownhallEventAttendeeAccess\",\n  \"ExternalPresenterJoinVerification\": \"Future-ExternalPresenterJoinVerification\",\n  \"AllowEmailEditing\": \"Future-AllowEmailEditing\",\n  \"AllowedQuestionTypesInRegistrationForm\": \"Future-AllowedQuestionTypesInRegistrationForm\",\n  \"AllowEventIntegrations\": false,\n  \"AllowedWebinarTypesForRecordingPublish\": \"Future-AllowedWebinarTypesForRecordingPublish\",\n  \"AllowedTownhallTypesForRecordingPublish\": \"Future-AllowedTownhallTypesForRecordingPublish\",\n  \"RecordingForTownhall\": \"Future-RecordingForTownhall\",\n  \"RecordingForWebinar\": \"Future-RecordingForWebinar\",\n  \"TranscriptionForTownhall\": \"Future-TranscriptionForTownhall\",\n  \"TranscriptionForWebinar\": \"Future-TranscriptionForWebinar\",\n  \"TownhallChatExperience\": \"Future-TownhallChatExperience\",\n  \"BroadcastPremiumApps\": \"Future-BroadcastPremiumApps\",\n  \"UseMicrosoftECDN\": false,\n  \"ImmersiveEvents\": \"Future-ImmersiveEvents\",\n  \"TownhallMaxResolution\": \"Future-TownhallMaxResolution\",\n  \"HighBitrateForTownhall\": \"Future-HighBitrateForTownhall\",\n  \"BackroomChat\": \"Future-BackroomChat\",\n  \"Registration\": \"Future-Registration\",\n  \"AllowEngagementReport\": \"Future-AllowEngagementReport\",\n  \"InfoShownInReportMode\": \"Future-InfoShownInReportMode\",\n  \"Description\": \"Future-Description\"\n}",
+
+					CmdletName: "Set-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "patch-null",
+				Operation: "patch",
+				Input:     "{\"AllowWebinars\":null,\"EventAccessType\":null,\"AllowTownhalls\":null,\"TownhallEventAttendeeAccess\":null,\"ExternalPresenterJoinVerification\":null,\"AllowEmailEditing\":null,\"AllowedQuestionTypesInRegistrationForm\":null,\"AllowEventIntegrations\":null,\"AllowedWebinarTypesForRecordingPublish\":null,\"AllowedTownhallTypesForRecordingPublish\":null,\"RecordingForTownhall\":null,\"RecordingForWebinar\":null,\"TranscriptionForTownhall\":null,\"TranscriptionForWebinar\":null,\"TownhallChatExperience\":null,\"BroadcastPremiumApps\":null,\"UseMicrosoftECDN\":null,\"ImmersiveEvents\":null,\"TownhallMaxResolution\":null,\"HighBitrateForTownhall\":null,\"BackroomChat\":null,\"Registration\":null,\"AllowEngagementReport\":null,\"InfoShownInReportMode\":null,\"Description\":null}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"AllowWebinars\": null,\n  \"EventAccessType\": null,\n  \"AllowTownhalls\": null,\n  \"TownhallEventAttendeeAccess\": null,\n  \"ExternalPresenterJoinVerification\": null,\n  \"AllowEmailEditing\": null,\n  \"AllowedQuestionTypesInRegistrationForm\": null,\n  \"AllowEventIntegrations\": null,\n  \"AllowedWebinarTypesForRecordingPublish\": null,\n  \"AllowedTownhallTypesForRecordingPublish\": null,\n  \"RecordingForTownhall\": null,\n  \"RecordingForWebinar\": null,\n  \"TranscriptionForTownhall\": null,\n  \"TranscriptionForWebinar\": null,\n  \"TownhallChatExperience\": null,\n  \"BroadcastPremiumApps\": null,\n  \"UseMicrosoftECDN\": null,\n  \"ImmersiveEvents\": null,\n  \"TownhallMaxResolution\": null,\n  \"HighBitrateForTownhall\": null,\n  \"BackroomChat\": null,\n  \"Registration\": null,\n  \"AllowEngagementReport\": null,\n  \"InfoShownInReportMode\": null,\n  \"Description\": null\n}",
+
+					CmdletName: "Set-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "patch-empty-true",
+				Operation: "patch",
+				Input:     "{\"AllowWebinars\":\"\",\"EventAccessType\":\"\",\"AllowTownhalls\":\"\",\"TownhallEventAttendeeAccess\":\"\",\"ExternalPresenterJoinVerification\":\"\",\"AllowEmailEditing\":\"\",\"AllowedQuestionTypesInRegistrationForm\":\"\",\"AllowEventIntegrations\":true,\"AllowedWebinarTypesForRecordingPublish\":\"\",\"AllowedTownhallTypesForRecordingPublish\":\"\",\"RecordingForTownhall\":\"\",\"RecordingForWebinar\":\"\",\"TranscriptionForTownhall\":\"\",\"TranscriptionForWebinar\":\"\",\"TownhallChatExperience\":\"\",\"BroadcastPremiumApps\":\"\",\"UseMicrosoftECDN\":true,\"ImmersiveEvents\":\"\",\"TownhallMaxResolution\":\"\",\"HighBitrateForTownhall\":\"\",\"BackroomChat\":\"\",\"Registration\":\"\",\"AllowEngagementReport\":\"\",\"InfoShownInReportMode\":\"\",\"Description\":\"\"}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"AllowWebinars\": \"\",\n  \"EventAccessType\": \"\",\n  \"AllowTownhalls\": \"\",\n  \"TownhallEventAttendeeAccess\": \"\",\n  \"ExternalPresenterJoinVerification\": \"\",\n  \"AllowEmailEditing\": \"\",\n  \"AllowedQuestionTypesInRegistrationForm\": \"\",\n  \"AllowEventIntegrations\": true,\n  \"AllowedWebinarTypesForRecordingPublish\": \"\",\n  \"AllowedTownhallTypesForRecordingPublish\": \"\",\n  \"RecordingForTownhall\": \"\",\n  \"RecordingForWebinar\": \"\",\n  \"TranscriptionForTownhall\": \"\",\n  \"TranscriptionForWebinar\": \"\",\n  \"TownhallChatExperience\": \"\",\n  \"BroadcastPremiumApps\": \"\",\n  \"UseMicrosoftECDN\": true,\n  \"ImmersiveEvents\": \"\",\n  \"TownhallMaxResolution\": \"\",\n  \"HighBitrateForTownhall\": \"\",\n  \"BackroomChat\": \"\",\n  \"Registration\": \"\",\n  \"AllowEngagementReport\": \"\",\n  \"InfoShownInReportMode\": \"\",\n  \"Description\": \"\"\n}",
+
+					CmdletName: "Set-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "patch-force-false",
+				Operation: "patch",
+				Input:     "{\"Description\":\"\"}",
+				Status:    400,
+				ForceMode: 0,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "patch-force-true",
+				Operation: "patch",
+				Input:     "{\"Description\":\"\"}",
+				Status:    400,
+				ForceMode: 1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"Force\": \"True\"\n}",
+
+					CmdletName: "Set-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "delete",
+				Operation: "delete",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "Remove-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "delete-force-false",
+				Operation: "delete",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: 0,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Remove-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:       "read-empty",
+				Operation:  "read",
+				Input:      "{}",
+				Status:     400,
+				ForceMode:  -1,
+				PolicyName: new(""),
+				Rank:       -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "read-null",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy",
+					CmdletName: "Get-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEventsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "grant-user-null",
+				Operation: "user",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsEventsPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"additionalParameters\": null\n}",
+
+					CmdletName: "Grant-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "grant-tenant-null",
+				Operation: "tenant",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: 0,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsEventsPolicy",
+					Body:   "{\n  \"PolicyName\": null,\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+
+					CmdletName: "Grant-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "grant-group-null",
+				Operation: "group",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsEventsPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+
+					CmdletName: "Grant-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:       "grant-user-empty",
+				Operation:  "user",
+				Input:      "{}",
+				Status:     400,
+				ForceMode:  -1,
+				PolicyName: new(""),
+				Rank:       -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsEventsPolicy",
+					Body:   "{\n  \"policyName\": \"\",\n  \"additionalParameters\": null\n}",
+
+					CmdletName: "Grant-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:       "grant-tenant-empty",
+				Operation:  "tenant",
+				Input:      "{}",
+				Status:     400,
+				ForceMode:  1,
+				PolicyName: new(""),
+				Rank:       -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsEventsPolicy",
+					Body:   "{\n  \"PolicyName\": \"\",\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": true\n}",
+
+					CmdletName: "Grant-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:       "grant-group-empty",
+				Operation:  "group",
+				Input:      "{}",
+				Status:     400,
+				ForceMode:  -1,
+				PolicyName: new(""),
+				Rank:       -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsEventsPolicy",
+					Body:   "{\n  \"policyName\": \"\",\n  \"priority\": -1\n}",
+
+					CmdletName: "Grant-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "grant-group-rank-zero",
+				Operation: "group",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      0,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsEventsPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"priority\": 0\n}",
+
+					CmdletName: "Grant-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "grant-group-rank-two",
+				Operation: "group",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      2,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsEventsPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"priority\": 2\n}",
+
+					CmdletName: "Grant-CsTeamsEventsPolicy",
+				},
+			},
+			{
+				Name:      "grant-group-accepted",
+				Operation: "group",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Rank:      2,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+					Sends                         int
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsEventsPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"priority\": 2\n}",
+
+					CmdletName: "Grant-CsTeamsEventsPolicy",
+				},
+			},
+		},
 	}
-	var v struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 24 {
-		t.Fatal("invalid events policy fixture")
-	}
-	for _, c := range v.Cases {
-		r := c.Capture
-		if r.Sends != 1 || r.TokenRequests != 0 || !r.CorrelationIsGuid || r.HasTargetUri || r.MpaCmdlet != "true" {
-			t.Fatal("unsafe/incomplete events policy fixture")
-		}
-	}
+
 	return v.Cases
 }
 func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -78,24 +518,4 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("events policy contract %s differs: %v %+v", c.Name, e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("events-policy-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("events policy evidence write failed")
-	}
 }

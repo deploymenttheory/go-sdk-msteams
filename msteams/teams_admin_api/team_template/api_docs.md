@@ -99,7 +99,7 @@ for the Skype/Teams Tenant Admin resource.
 
 Sources: [application authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication),
 [Teams roles](https://learn.microsoft.com/en-us/microsoftteams/using-admin-roles),
-[pinned template contract](../../../docs/implementation/core/template-policy-deployment-evidence.md).
+[unit tests](service_test.go).
 Offline cloud/mode routing tests do not claim actual sovereign service eligibility.
 
 ## Baseline command and parameter-set mapping
@@ -119,11 +119,11 @@ Offline cloud/mode routing tests do not claim actual sovereign service eligibili
 Local hidden values do not persist or assign permission policies. Their eventual
 policy payload serialization belongs to the corresponding permission-policy
 service. Source/model/request evidence and implementation qualification are
-recorded in [the SDK evidence note](../../../docs/implementation/core/team-template-sdk-evidence.md).
+recorded in [unit tests](service_test.go).
 
 ## Lab acceptance
 
-`TestLabTeamTemplateCRUD` is opt-in and uses the dedicated lab identity. Its
+`TestAccTeamTemplateCRUD` is opt-in and uses the dedicated lab identity. Its
 expanded and JSON Body variants each journal intent, create one random tenant
 template, resolve its reference from
 a complete list and verifies ownership, reads non-default fields and General,
@@ -143,7 +143,7 @@ its output is compared in memory and not logged. Ordinary tests skip before
 reading credentials. No live CRUD success is claimed while the role grant is pending.
 
 After an interrupted run, select its private file in
-`MSTEAMS_LAB_RECOVERY_FILE` and run `TestLabTeamTemplateRecover` with the same
+`MSTEAMS_LAB_RECOVERY_FILE` and run `TestAccTeamTemplateRecover` with the same
 mutation opt-in, tenant/cloud/identity binding and private journal directory.
 An incomplete list, failed lookup, foreign reference, renamed fixture or
 ambiguous match remains unresolved rather than authorizing deletion.

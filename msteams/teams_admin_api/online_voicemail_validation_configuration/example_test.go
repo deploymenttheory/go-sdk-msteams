@@ -19,7 +19,7 @@ func ExampleService_GetByIdentity() {
 func ExampleService_UpdateByIdentity() {
 	update := func(ctx context.Context, sdk *msteams.Client) error {
 		_, _, err := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{AudioFileValidationEnabled: policy.Set(false)}})
-		// URI remains unbound. Global changes require a caller's explicit restore plan.
+
 		return err
 	}
 	_ = update

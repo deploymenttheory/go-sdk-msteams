@@ -4,7 +4,7 @@ Issue #100 remains open. Ordinary and conditional OCE services have native metho
 request/model observations and exact parameter-set mappings. No successful live
 policy-assignment qualification is claimed.
 
-`TestLabPolicyAssignmentsReadOnly` requires MSTEAMS_LAB_READ_ONLY=1 and the private
+`TestAccPolicyAssignmentsReadOnly` requires MSTEAMS_LAB_READ_ONLY=1 and the private
 MSTEAMS_LAB_IDENTITY_FILE. MSTEAMS_LAB_AUTH_METHOD selects client-secret or certificate.
 It lists generated jobs, then reads at most five returned operation IDs. It never
 submits work, edits assignments/rank, changes permissions or invokes OCE actions.
@@ -14,7 +14,7 @@ Actual dedicated-SPN runs in both credential modes completed discovery and recei
 resource HTTP 403 on the list. Per-ID reads were not reached. The Get command's live
 state is unavailable; no successful contract/live parity state is promoted.
 
-`TestLabPolicyAssignmentsOCEReadOnly` uses the same read-only gate and binds the
+`TestAccPolicyAssignmentsOCEReadOnly` uses the same read-only gate and binds the
 explicit OCE target to the authenticating lab tenant. It only lists regional status.
 Actual secret and certificate runs each made three regional attempts and ended
 with HTTP 403. It never enables a privileged PowerShell profile, elevates eligibility

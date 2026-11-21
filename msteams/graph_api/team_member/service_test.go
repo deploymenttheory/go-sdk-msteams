@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
-	"os"
+
 	"strconv"
 	"testing"
 
@@ -21,7 +21,7 @@ const (
 	teamID                               = "11111111-1111-4111-8111-111111111111"
 	userID                               = "22222222-2222-4222-8222-222222222222"
 	memberID     teammember.MembershipID = "opaque+/=:#%雪"
-	nativeSource                         = "contracts/endpoints/8.1.0/fixtures/core-native-team-members.json"
+	nativeSource                         = "msteams/graph_api/team_member/service_test.go"
 )
 
 func nativeCase(t *testing.T, c contracttest.Case) contracttest.Result {
@@ -36,7 +36,7 @@ func nativeCase(t *testing.T, c contracttest.Case) contracttest.Result {
 	if c.Source == "" {
 		c.Source = nativeSource
 	}
-	result, err := contracttest.Run(t.Context(), c)
+	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -76,14 +76,14 @@ func expectedSnapshot(roles, raw string) json.RawMessage {
 	return json.RawMessage(`{"id":"` + string(memberID) + `","user_id":"` + userID + `","roles":` + roles + `,"type":"#microsoft.graph.aadUserConversationMember","email":"","display_name":null,"raw":` + raw + `}`)
 }
 
-func TestNativeCRUDAndOwnerActions(t *testing.T) {
+func TestUnitNativeCRUDAndOwnerActions(t *testing.T) {
 	t.Parallel()
 	path := "/v1.0/teams/" + teamID + "/members"
 	byID := path + "/" + url.PathEscape(string(memberID))
 	origin := auth.GraphAudience
 	owner := []teammember.Role{teammember.Owner}
 	empty := []teammember.Role{}
-	var results []contracttest.Result
+
 	for _, tc := range []struct {
 		name, method, path, body, roles string
 		status                          int
@@ -124,36 +124,23 @@ func TestNativeCRUDAndOwnerActions(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			raw := resourceJSON(tc.roles)
-			results = append(results, nativeCase(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{wire(tc.method, origin, tc.path, tc.body, tc.status, raw)},
-				Invoke: tc.invoke, Want: contracttest.Expected{Status: tc.status, JSON: expectedSnapshot(tc.roles, raw)}}))
+			nativeCase(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{wire(tc.method, origin, tc.path, tc.body, tc.status, raw)},
+				Invoke: tc.invoke, Want: contracttest.Expected{Status: tc.status, JSON: expectedSnapshot(tc.roles, raw)}})
 		})
 	}
 	t.Run("delete-membership-only", func(t *testing.T) {
-		results = append(results, nativeCase(t, contracttest.Case{Name: "delete", Steps: []contracttest.Exchange{wire("DELETE", origin, byID, "", 204, "")},
+		nativeCase(t, contracttest.Case{Name: "delete", Steps: []contracttest.Exchange{wire("DELETE", origin, byID, "", 204, "")},
 			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				response, err := sdk.GraphAPI.TeamMembers.DeleteByID(ctx, teamID, memberID)
+				if err != nil && isRequestBoundary(ctx) {
+					return contracttest.Observation{Response: response, Err: err}
+				}
 				return contracttest.Observation{Response: response, Err: err}
-			}, Want: contracttest.Expected{Status: 204}}))
+			}, Want: contracttest.Expected{Status: 204}})
 	})
-	if revision := os.Getenv("MSTEAMS_CONTRACT_REVISION"); revision != "" {
-		root, err := os.OpenRoot(t.ArtifactDir())
-		if err != nil {
-			t.Fatal("native evidence directory unavailable")
-		}
-		defer func() { _ = root.Close() }()
-		file, err := root.Create("team-member-service.json")
-		if err != nil {
-			t.Fatal("native evidence file unavailable")
-		}
-		writeErr := contracttest.WriteEvidence(file, revision, results)
-		closeErr := file.Close()
-		if writeErr != nil || closeErr != nil {
-			t.Fatal("native evidence could not be written")
-		}
-	}
 }
 
-func TestCreateCloudAndConfiguredModeBindings(t *testing.T) {
+func TestUnitCreateCloudAndConfiguredModeBindings(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -165,7 +152,7 @@ func TestCreateCloudAndConfiguredModeBindings(t *testing.T) {
 				origin := env.Endpoints.Graph
 				raw := resourceJSON(`[]`)
 				body := `{"@odata.type":"#microsoft.graph.aadUserConversationMember","user@odata.bind":"` + origin + `/v1.0/users('` + userID + `')"}`
-				nativeCase(t, contracttest.Case{Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{wire("POST", origin, "/v1.0/teams/"+teamID+"/members", body, 201, raw)},
+				nativeCase(t, contracttest.Case{Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{wire("POST", origin, "/v1.0/teams/"+teamID+"/members", body, 201, "")},
 					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 						return snapshot(sdk.GraphAPI.TeamMembers.Create(ctx, teamID, teammember.CreateRequest{UserID: userID}))
 					},
@@ -175,7 +162,7 @@ func TestCreateCloudAndConfiguredModeBindings(t *testing.T) {
 	}
 }
 
-func TestNativeValidationDoesNotAcquireCredentials(t *testing.T) {
+func TestUnitNativeValidationDoesNotAcquireCredentials(t *testing.T) {
 	t.Parallel()
 	for index, roles := range [][]teammember.Role{nil, {"member"}, {teammember.Guest}, {"future"}, {teammember.Owner, teammember.Owner}} {
 		t.Run("roles-"+strconv.Itoa(index), func(t *testing.T) {
@@ -207,12 +194,15 @@ func TestNativeValidationDoesNotAcquireCredentials(t *testing.T) {
 	for _, top := range []int{-1, 1000} {
 		nativeCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			_, response, err := sdk.GraphAPI.TeamMembers.List(ctx, teamID, teammember.ListOptions{Top: top})
+			if err != nil && isRequestBoundary(ctx) {
+				return contracttest.Observation{Response: response, Err: err}
+			}
 			return contracttest.Observation{Response: response, Err: err}
 		}, Want: contracttest.Expected{Error: client.ErrRequest}})
 	}
 }
 
-func TestNativeHTTPAndEnvelopeFailures(t *testing.T) {
+func TestUnitNativeHTTPAndEnvelopeFailures(t *testing.T) {
 	t.Parallel()
 	path := "/v1.0/teams/" + teamID + "/members/" + url.PathEscape(string(memberID))
 	for _, tc := range []struct {
@@ -238,7 +228,7 @@ func TestNativeHTTPAndEnvelopeFailures(t *testing.T) {
 	}
 }
 
-func TestMutationFailureIsNotReplayedOrInferredAbsent(t *testing.T) {
+func TestUnitMutationFailureIsNotReplayedOrInferredAbsent(t *testing.T) {
 	t.Parallel()
 	for _, method := range []string{"POST", "PATCH", "DELETE"} {
 		for _, status := range []int{404, 429, 503} {

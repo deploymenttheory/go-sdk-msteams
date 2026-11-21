@@ -54,5 +54,5 @@ with a fresh UUID correlation and no modern forest target or Graph lookup.
 Synthetic application/delegated tests establish wire behavior rather than live
 authorization. Successful tenant updates/read-back/restoration, cloud/server
 availability and effective assignment app behavior remain open under #115. See
-[source evidence](../../../docs/implementation/policies/education-assignments-evidence.md)
+[unit tests](service_test.go)
 and the [lab acceptance record](../../../docs/implementation/policies/education-assignments-lab-acceptance.md).

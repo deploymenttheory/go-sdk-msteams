@@ -35,4 +35,4 @@ ordinary formatting redacts payloads. Context cancellation propagates throughout
 The existing selected-cloud ConfigAPI origin, Teams resource token and per-client
 forest discovery/header adapter apply. Source evidence does not prove modern
 flight eligibility, RBAC, app/delegated authorization or deployment in every
-cloud. [Evidence and outstanding qualification](../../../docs/implementation/policies/application-meeting-sdk-evidence.md).
+cloud. [unit tests](service_test.go).

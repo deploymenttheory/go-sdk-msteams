@@ -9,7 +9,7 @@ import (
 )
 
 func ExampleService_PatchByIdentity() {
-	// Use a configured client with a Teams administration token provider.
+
 	var sdk *msteams.Client
 	if sdk == nil {
 		return
@@ -22,7 +22,7 @@ func ExampleService_UpdateByIdentity() {
 	if sdk == nil {
 		return
 	}
-	// Explicit composition retains preparation and HTTP acceptance on failure.
+
 	result, _, err := sdk.TeamsAdminAPI.PrivacyConfigurations.UpdateByIdentity(context.Background(), "Global", resource.UpdateRequest{Settings: resource.Settings{AutoInitiateContacts: policy.Set(false)}})
 	_, _ = result, err
 }

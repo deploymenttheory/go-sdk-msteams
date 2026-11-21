@@ -29,7 +29,7 @@ func optionsAuth(graph string) *auth.Config {
 	return configuration
 }
 
-func TestDefaultHeadersPreservePrecedenceAcrossRequestKinds(t *testing.T) {
+func TestUnitDefaultHeadersPreservePrecedenceAcrossRequestKinds(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"json", "upload", "download", "pager", "operation"} {
 		t.Run(kind, func(t *testing.T) {
@@ -95,7 +95,7 @@ func TestDefaultHeadersPreservePrecedenceAcrossRequestKinds(t *testing.T) {
 	}
 }
 
-func TestTransportOptionsRejectUnsafeOrIncompatibleConfiguration(t *testing.T) {
+func TestUnitTransportOptionsRejectUnsafeOrIncompatibleConfiguration(t *testing.T) {
 	t.Parallel()
 	for _, option := range []msteams.ClientOption{
 		msteams.WithTransport((*recordingTransport)(nil)), msteams.WithUserAgent(""),
@@ -117,7 +117,7 @@ func TestTransportOptionsRejectUnsafeOrIncompatibleConfiguration(t *testing.T) {
 	}
 }
 
-func TestManagementHeadersNeverReachIdentityExchange(t *testing.T) {
+func TestUnitManagementHeadersNeverReachIdentityExchange(t *testing.T) {
 	t.Parallel()
 	const tenant = "11111111-1111-4111-8111-111111111111"
 	const authority = "https://login.microsoftonline.com/" + tenant
@@ -163,7 +163,7 @@ func TestManagementHeadersNeverReachIdentityExchange(t *testing.T) {
 	}
 }
 
-func TestTLSOptionSnapshotsCertificateAndECHData(t *testing.T) {
+func TestUnitTLSOptionSnapshotsCertificateAndECHData(t *testing.T) {
 	t.Parallel()
 	server := httptest.NewTLSServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
 	t.Cleanup(server.Close)
@@ -188,7 +188,7 @@ func TestTLSOptionSnapshotsCertificateAndECHData(t *testing.T) {
 	}
 }
 
-func TestTLSAndProxyOptionsReachVerifiedBackendWithoutMutatingTransport(t *testing.T) {
+func TestUnitTLSAndProxyOptionsReachVerifiedBackendWithoutMutatingTransport(t *testing.T) {
 	t.Parallel()
 	var backendCalls, proxyCalls atomic.Int32
 	backend := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -262,7 +262,7 @@ func TestTLSAndProxyOptionsReachVerifiedBackendWithoutMutatingTransport(t *testi
 	}
 }
 
-func TestZeroSessionDiagnosticsReturnClosed(t *testing.T) {
+func TestUnitZeroSessionDiagnosticsReturnClosed(t *testing.T) {
 	t.Parallel()
 	scope, err := client.NewScope(client.Graph, &client.Session{})
 	if err != nil {

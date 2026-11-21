@@ -10,7 +10,7 @@ import (
 func ExampleService_Create() {
 	create := func(ctx context.Context, sdk *msteams.Client, groupID string) (*resource.Job, error) {
 		job, _, err := sdk.TeamsAdminAPI.AssignmentMigrations.Create(ctx, resource.CreateRequest{Authority: "Tenant", PolicyType: "TeamsMeetingPolicy", PolicyName: "Fixture", GroupID: groupID})
-		// A returned job is an observation, not proof of completed assignments.
+
 		return job, err
 	}
 	_ = create

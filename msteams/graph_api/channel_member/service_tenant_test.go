@@ -11,19 +11,19 @@ import (
 	channelmember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_member"
 )
 
-func TestExternalTenantCreationPreservesExplicitTenant(t *testing.T) {
+func TestUnitExternalTenantCreationPreservesExplicitTenant(t *testing.T) {
 	t.Parallel()
 	tenant := "33333333-3333-4333-8333-333333333333"
 	path := "/beta/teams/" + teamID + "/channels/19:channel%2Fopaque@thread.tacv2/members"
 	body := `{"@odata.type":"#microsoft.graph.aadUserConversationMember","roles":[],"tenantId":"` + tenant + `","user@odata.bind":"https://graph.microsoft.com/beta/users('` + userID + `')"}`
 	raw := resourceJSON(`[]`)
-	nativeCase(t, contracttest.Case{Name: "external-tenant", Steps: []contracttest.Exchange{wire("POST", auth.GraphAudience, path, body, 201, raw)},
+	nativeCase(t, contracttest.Case{Name: "external-tenant", Steps: []contracttest.Exchange{wire("POST", auth.GraphAudience, path, body, 201, "")},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, channelID, channelmember.CreateRequest{UserID: userID, TenantID: &tenant}))
 		}, Want: contracttest.Expected{Status: 201, JSON: expectedSnapshot(`[]`, raw)}})
 }
 
-func TestInvalidChannelAndTenantAreRejectedBeforeCredentials(t *testing.T) {
+func TestUnitInvalidChannelAndTenantAreRejectedBeforeCredentials(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct{ name, channel, tenant string }{
 		{"empty-channel", "", userID},

@@ -13,7 +13,7 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-func TestEnvironmentRoutesAndContinuationsStayBound(t *testing.T) {
+func TestUnitEnvironmentRoutesAndContinuationsStayBound(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany", "custom"} {
 		t.Run(cloud, func(t *testing.T) {

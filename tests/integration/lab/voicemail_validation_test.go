@@ -76,9 +76,9 @@ func voicemailValidationOracle(t *testing.T, ctx context.Context, tenant string)
 	return value
 }
 
-// TestLabVoicemailValidationReadOnly never edits Global, creates assets or grants a
+// TestAccVoicemailValidationReadOnly never edits Global, creates assets or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabVoicemailValidationReadOnly(t *testing.T) {
+func TestAccVoicemailValidationReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -93,6 +93,7 @@ func TestLabVoicemailValidationReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "online_voicemail_validation_configuration", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -100,7 +101,8 @@ func TestLabVoicemailValidationReadOnly(t *testing.T) {
 		}
 		t.Fatalf("voicemail Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "online_voicemail_validation_configuration", "list", listResponse, nil)
 	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !reflect.DeepEqual(value.RawFields, listed[0].RawFields) {
 		t.Fatal("voicemail Global read/list observations differ")
 	}
@@ -124,7 +126,7 @@ func TestLabVoicemailValidationReadOnly(t *testing.T) {
 	t.Log("selected voicemail reads verified; persistence, feature effects and assignments remain separately qualified")
 }
 
-func TestVoicemailValidationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitVoicemailValidationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"AudioFileValidationEnabled":false,"AudioFileValidationUri":null}`

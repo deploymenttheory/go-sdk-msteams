@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestPrivateMigrationRejectsOtherCloudPrefixesOnSameHost(t *testing.T) {
+func TestUnitPrivateMigrationRejectsOtherCloudPrefixesOnSameHost(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc"} {
 		provider := &tokenRecorder{}
@@ -46,7 +46,7 @@ func TestPrivateMigrationRejectsOtherCloudPrefixesOnSameHost(t *testing.T) {
 	}
 }
 
-func TestRegionScopeSurvivesRejectedTokenRefresh(t *testing.T) {
+func TestUnitRegionScopeSurvivesRejectedTokenRefresh(t *testing.T) {
 	t.Parallel()
 	const audience = "https://migrationsvc.teams.microsoft.com"
 	const requestedScope = audience + "/Region.Read.All"

@@ -35,7 +35,7 @@ func closeClient(t *testing.T, c *msteams.Client) {
 	})
 }
 
-func TestExplicitClientIgnoresEnvironmentAndBorrowsTransport(t *testing.T) {
+func TestUnitExplicitClientIgnoresEnvironmentAndBorrowsTransport(t *testing.T) {
 	t.Setenv("MSTEAMS_AUTH_METHOD", "invalid")
 	t.Setenv("MSTEAMS_HTTP_TIMEOUT", "invalid")
 	transport := &recordingTransport{}
@@ -67,7 +67,7 @@ func TestExplicitClientIgnoresEnvironmentAndBorrowsTransport(t *testing.T) {
 	}
 }
 
-func TestEnvironmentLoadsThenExplicitOptionsOverride(t *testing.T) {
+func TestUnitEnvironmentLoadsThenExplicitOptionsOverride(t *testing.T) {
 	t.Setenv("MSTEAMS_AUTH_METHOD", "invalid")
 	t.Setenv("MSTEAMS_TENANT_ID", "environment-tenant")
 	t.Setenv("MSTEAMS_ACCESS_TOKENS", "malformed JSON")
@@ -88,7 +88,7 @@ func TestEnvironmentLoadsThenExplicitOptionsOverride(t *testing.T) {
 	}
 }
 
-func TestSuppliedTokensFromEnvironment(t *testing.T) {
+func TestUnitSuppliedTokensFromEnvironment(t *testing.T) {
 	for _, name := range []string{"MSTEAMS_CLIENT_SECRET", "MSTEAMS_USERNAME", "MSTEAMS_PASSWORD", "MSTEAMS_CERTIFICATE_PEM", "MSTEAMS_PRIVATE_KEY_PEM", "MSTEAMS_ASSERTION_FILE", "MSTEAMS_HTTP_TIMEOUT"} {
 		t.Setenv(name, "")
 	}
@@ -109,7 +109,7 @@ func TestSuppliedTokensFromEnvironment(t *testing.T) {
 	}
 }
 
-func TestInvalidClientOptions(t *testing.T) {
+func TestUnitInvalidClientOptions(t *testing.T) {
 	t.Parallel()
 	for _, option := range []msteams.ClientOption{nil, msteams.WithHTTPTimeout(0), msteams.WithHTTPTimeout(-time.Second), msteams.WithHTTPClient(nil), msteams.WithLogger(nil), msteams.WithTracerProvider(nil), msteams.WithHTTPClient(&http.Client{Transport: (*recordingTransport)(nil)}), msteams.WithHTTPClient(&http.Client{Timeout: -time.Second})} {
 		_, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"}, option)
@@ -122,7 +122,7 @@ func TestInvalidClientOptions(t *testing.T) {
 	}
 }
 
-func TestConcurrentClientsAndSnapshotsAreIndependent(t *testing.T) {
+func TestUnitConcurrentClientsAndSnapshotsAreIndependent(t *testing.T) {
 	t.Parallel()
 	var group sync.WaitGroup
 	for _, tenant := range []string{"first-tenant", "second-tenant"} {
@@ -158,7 +158,7 @@ func TestConcurrentClientsAndSnapshotsAreIndependent(t *testing.T) {
 	group.Wait()
 }
 
-func TestSessionCancellationAndClose(t *testing.T) {
+func TestUnitSessionCancellationAndClose(t *testing.T) {
 	t.Parallel()
 	c, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"})
 	if err != nil {

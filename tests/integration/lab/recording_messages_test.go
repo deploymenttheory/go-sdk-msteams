@@ -150,9 +150,9 @@ func recordingOracle(t *testing.T, ctx context.Context, tenant string, identitie
 	return v
 }
 
-// TestLabRecordingMessagesReadOnly lists and reads at most five selected records.
+// TestAccRecordingMessagesReadOnly lists and reads at most five selected records.
 // It never creates messages, edits policy, changes assignments or grants roles.
-func TestLabRecordingMessagesReadOnly(t *testing.T) {
+func TestAccRecordingMessagesReadOnly(t *testing.T) {
 	cfg, e := lab.Load()
 	if e != nil {
 		t.Fatal("invalid lab enablement")
@@ -167,6 +167,7 @@ func TestLabRecordingMessagesReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	values, response, e := sdk.TeamsAdminAPI.RecordingMessages.List(ctx)
+	writeResponseFixture(t, "recording_messages", "list", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -187,7 +188,8 @@ func TestLabRecordingMessagesReadOnly(t *testing.T) {
 		if v == nil || v.Identity == nil || *v.Identity == "" {
 			t.Fatal("recording identity unavailable")
 		}
-		read, _, e := sdk.TeamsAdminAPI.RecordingMessages.GetByIdentity(ctx, *v.Identity)
+		read, fixtureResponse, e := sdk.TeamsAdminAPI.RecordingMessages.GetByIdentity(ctx, *v.Identity)
+		writeResponseFixture(t, "recording_messages", "get_by_id", fixtureResponse, nil)
 		if e != nil || read == nil || read.Identity == nil || *read.Identity != *v.Identity {
 			t.Fatal("selected recording read failed; no output retained")
 		}
@@ -220,7 +222,7 @@ func TestLabRecordingMessagesReadOnly(t *testing.T) {
 	t.Log("bounded recording reads verified; writes, cleanup and effective behavior remain separately qualified")
 }
 
-func TestRecordingCollectionComparisonIgnoresResponseOrder(t *testing.T) {
+func TestUnitRecordingCollectionComparisonIgnoresResponseOrder(t *testing.T) {
 	t.Parallel()
 	a := &resource.Message{Identity: new("Global/a")}
 	b := &resource.Message{Identity: new("Global/b")}
@@ -234,7 +236,7 @@ func TestRecordingCollectionComparisonIgnoresResponseOrder(t *testing.T) {
 	}
 }
 
-func TestRecordingOracleRejectsWrongTenantDuplicateAndMixedOutput(t *testing.T) {
+func TestUnitRecordingOracleRejectsWrongTenantDuplicateAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	const identity = "Global/fixture"

@@ -82,9 +82,9 @@ func feedbackPolicyOracle(t *testing.T, ctx context.Context, tenant string) feed
 	return value
 }
 
-// TestLabFeedbackPolicyReadOnly performs configuration reads only.
+// TestAccFeedbackPolicyReadOnly performs configuration reads only.
 // Creates, updates, deletes, grants and effective feedback behavior need separate acceptance.
-func TestLabFeedbackPolicyReadOnly(t *testing.T) {
+func TestAccFeedbackPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -99,6 +99,7 @@ func TestLabFeedbackPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_feedback_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		phase := "preparation"
@@ -110,7 +111,8 @@ func TestLabFeedbackPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("feedback policy %s Global read failed (HTTP %d); no response payload retained", phase, status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_feedback_policy", "list", listResponse, nil)
 	selected, selectionErr := globalFeedbackPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(feedbackPolicyProjection(value), feedbackPolicyProjection(selected)) {
 		t.Fatal("feedback policy Global read/list projections differ")
@@ -129,7 +131,7 @@ func TestLabFeedbackPolicyReadOnly(t *testing.T) {
 	t.Log("selected feedback policy reads verified; persistence and effective feedback behavior remain separately qualified")
 }
 
-func TestFeedbackPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitFeedbackPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := map[string]any{}
@@ -178,7 +180,7 @@ func globalFeedbackPolicy(values []*resource.Policy) (*resource.Policy, error) {
 	}
 	return found, nil
 }
-func TestFeedbackPolicyGlobalSelection(t *testing.T) {
+func TestUnitFeedbackPolicyGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Policy{Identity: new("Global")}
 	tagged := &resource.Policy{Identity: new("Tag:Global")}
@@ -202,7 +204,7 @@ func matchesFeedbackPolicyGetterProjection(value *resource.Policy, settings map[
 	return json.Unmarshal(feedbackPolicyProjection(value), &left) == nil && json.Unmarshal(raw, &right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestFeedbackPolicyOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitFeedbackPolicyOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"userinitiatedmode":"fixture"}`, `{"UserInitiatedMode":"earlier","userinitiatedmode":"fixture"}`, `{"UserInitiatedMode":null,"userinitiatedmode":"fixture"}`} {
 		var value resource.Policy

@@ -1,25 +1,16 @@
 package teammanagement_test
 
 import (
-	"context"
 	"encoding/json"
 	"os"
 	"reflect"
-	"strconv"
-	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
-	"github.com/deploymenttheory/go-sdk-msteams/msteams"
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team"
-	management "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_management"
 )
 
-const settingsSource = "contracts/endpoints/8.1.0/fixtures/core-team-settings-fields.json"
-
 // Each typed input selects one setting independently, so moving, omitting or
-// inverting a flag fails against the actual pinned ToTeam serializer output.
+// inverting a flag fails against its independent request JSON vector.
 var booleanSettings = map[string]func(*bool) team.Settings{
 	"AllowCreateUpdateChannels": func(v *bool) team.Settings {
 		return team.Settings{MemberSettings: &team.MemberSettings{AllowCreateUpdateChannels: v}}
@@ -70,7 +61,7 @@ var booleanSettings = map[string]func(*bool) team.Settings{
 	},
 }
 
-func TestSettingsInputsCoverBothPinnedApplicationParameterSets(t *testing.T) {
+func TestUnitSettingsInputsCoverBothPinnedApplicationParameterSets(t *testing.T) {
 	t.Parallel()
 	var runtime struct {
 		Commands []struct {
@@ -130,113 +121,70 @@ func TestSettingsInputsCoverBothPinnedApplicationParameterSets(t *testing.T) {
 	}
 }
 
-func TestCreationAndUpdatePreserveEveryPinnedSettingsField(t *testing.T) {
+func TestUnitSettingsSerializeEveryInputField(t *testing.T) {
 	t.Parallel()
-	data, err := os.ReadFile("../../../" + settingsSource)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var capture struct {
-		Version       string `json:"baseline_version"`
-		Qualification string
-		Cases         []struct {
-			Parameter string
-			Value     json.RawMessage
-			Wire      map[string]map[string]any
-		}
-	}
-	if json.Unmarshal(data, &capture) != nil || capture.Version != "8.1.0" || capture.Qualification != "offline-model-serialization" || len(capture.Cases) != 36 {
-		t.Fatal("complete pinned settings-field capture unavailable")
-	}
-	seen := map[string]bool{}
-	var creates, updates []contracttest.Result
-	for index, row := range capture.Cases {
-		var input team.Settings
-		var label string
-		if setter, ok := booleanSettings[row.Parameter]; ok {
-			var value bool
-			if json.Unmarshal(row.Value, &value) != nil {
-				t.Fatal("boolean field capture invalid")
+	for _, row := range []struct {
+		parameter string
+		value     json.RawMessage
+		want      json.RawMessage
+	}{
+		{parameter: "AllowCreateUpdateChannels", value: json.RawMessage(`false`), want: json.RawMessage(`{"memberSettings":{"allowCreateUpdateChannels":false}}`)},
+		{parameter: "AllowCreateUpdateChannels", value: json.RawMessage(`true`), want: json.RawMessage(`{"memberSettings":{"allowCreateUpdateChannels":true}}`)},
+		{parameter: "AllowDeleteChannels", value: json.RawMessage(`false`), want: json.RawMessage(`{"memberSettings":{"allowDeleteChannels":false}}`)},
+		{parameter: "AllowDeleteChannels", value: json.RawMessage(`true`), want: json.RawMessage(`{"memberSettings":{"allowDeleteChannels":true}}`)},
+		{parameter: "AllowAddRemoveApps", value: json.RawMessage(`false`), want: json.RawMessage(`{"memberSettings":{"allowAddRemoveApps":false}}`)},
+		{parameter: "AllowAddRemoveApps", value: json.RawMessage(`true`), want: json.RawMessage(`{"memberSettings":{"allowAddRemoveApps":true}}`)},
+		{parameter: "AllowCreateUpdateRemoveTabs", value: json.RawMessage(`false`), want: json.RawMessage(`{"memberSettings":{"allowCreateUpdateRemoveTabs":false}}`)},
+		{parameter: "AllowCreateUpdateRemoveTabs", value: json.RawMessage(`true`), want: json.RawMessage(`{"memberSettings":{"allowCreateUpdateRemoveTabs":true}}`)},
+		{parameter: "AllowCreateUpdateRemoveConnectors", value: json.RawMessage(`false`), want: json.RawMessage(`{"memberSettings":{"allowCreateUpdateRemoveConnectors":false}}`)},
+		{parameter: "AllowCreateUpdateRemoveConnectors", value: json.RawMessage(`true`), want: json.RawMessage(`{"memberSettings":{"allowCreateUpdateRemoveConnectors":true}}`)},
+		{parameter: "AllowCreatePrivateChannels", value: json.RawMessage(`false`), want: json.RawMessage(`{"memberSettings":{"allowCreatePrivateChannels":false}}`)},
+		{parameter: "AllowCreatePrivateChannels", value: json.RawMessage(`true`), want: json.RawMessage(`{"memberSettings":{"allowCreatePrivateChannels":true}}`)},
+		{parameter: "AllowGuestCreateUpdateChannels", value: json.RawMessage(`false`), want: json.RawMessage(`{"guestSettings":{"allowCreateUpdateChannels":false}}`)},
+		{parameter: "AllowGuestCreateUpdateChannels", value: json.RawMessage(`true`), want: json.RawMessage(`{"guestSettings":{"allowCreateUpdateChannels":true}}`)},
+		{parameter: "AllowGuestDeleteChannels", value: json.RawMessage(`false`), want: json.RawMessage(`{"guestSettings":{"allowDeleteChannels":false}}`)},
+		{parameter: "AllowGuestDeleteChannels", value: json.RawMessage(`true`), want: json.RawMessage(`{"guestSettings":{"allowDeleteChannels":true}}`)},
+		{parameter: "AllowUserEditMessages", value: json.RawMessage(`false`), want: json.RawMessage(`{"messagingSettings":{"allowUserEditMessages":false}}`)},
+		{parameter: "AllowUserEditMessages", value: json.RawMessage(`true`), want: json.RawMessage(`{"messagingSettings":{"allowUserEditMessages":true}}`)},
+		{parameter: "AllowUserDeleteMessages", value: json.RawMessage(`false`), want: json.RawMessage(`{"messagingSettings":{"allowUserDeleteMessages":false}}`)},
+		{parameter: "AllowUserDeleteMessages", value: json.RawMessage(`true`), want: json.RawMessage(`{"messagingSettings":{"allowUserDeleteMessages":true}}`)},
+		{parameter: "AllowOwnerDeleteMessages", value: json.RawMessage(`false`), want: json.RawMessage(`{"messagingSettings":{"allowOwnerDeleteMessages":false}}`)},
+		{parameter: "AllowOwnerDeleteMessages", value: json.RawMessage(`true`), want: json.RawMessage(`{"messagingSettings":{"allowOwnerDeleteMessages":true}}`)},
+		{parameter: "AllowTeamMentions", value: json.RawMessage(`false`), want: json.RawMessage(`{"messagingSettings":{"allowTeamMentions":false}}`)},
+		{parameter: "AllowTeamMentions", value: json.RawMessage(`true`), want: json.RawMessage(`{"messagingSettings":{"allowTeamMentions":true}}`)},
+		{parameter: "AllowChannelMentions", value: json.RawMessage(`false`), want: json.RawMessage(`{"messagingSettings":{"allowChannelMentions":false}}`)},
+		{parameter: "AllowChannelMentions", value: json.RawMessage(`true`), want: json.RawMessage(`{"messagingSettings":{"allowChannelMentions":true}}`)},
+		{parameter: "AllowGiphy", value: json.RawMessage(`false`), want: json.RawMessage(`{"funSettings":{"allowGiphy":false}}`)},
+		{parameter: "AllowGiphy", value: json.RawMessage(`true`), want: json.RawMessage(`{"funSettings":{"allowGiphy":true}}`)},
+		{parameter: "AllowStickersAndMemes", value: json.RawMessage(`false`), want: json.RawMessage(`{"funSettings":{"allowStickersAndMemes":false}}`)},
+		{parameter: "AllowStickersAndMemes", value: json.RawMessage(`true`), want: json.RawMessage(`{"funSettings":{"allowStickersAndMemes":true}}`)},
+		{parameter: "AllowCustomMemes", value: json.RawMessage(`false`), want: json.RawMessage(`{"funSettings":{"allowCustomMemes":false}}`)},
+		{parameter: "AllowCustomMemes", value: json.RawMessage(`true`), want: json.RawMessage(`{"funSettings":{"allowCustomMemes":true}}`)},
+		{parameter: "ShowInTeamsSearchAndSuggestions", value: json.RawMessage(`false`), want: json.RawMessage(`{"discoverySettings":{"showInTeamsSearchAndSuggestions":false}}`)},
+		{parameter: "ShowInTeamsSearchAndSuggestions", value: json.RawMessage(`true`), want: json.RawMessage(`{"discoverySettings":{"showInTeamsSearchAndSuggestions":true}}`)},
+		{parameter: "GiphyContentRating", value: json.RawMessage(`"moderate"`), want: json.RawMessage(`{"funSettings":{"giphyContentRating":"moderate"}}`)},
+		{parameter: "GiphyContentRating", value: json.RawMessage(`"strict"`), want: json.RawMessage(`{"funSettings":{"giphyContentRating":"strict"}}`)},
+	} {
+		t.Run(row.parameter+"/"+string(row.value), func(t *testing.T) {
+			var input team.Settings
+			if setter, ok := booleanSettings[row.parameter]; ok {
+				var value bool
+				if json.Unmarshal(row.value, &value) != nil {
+					t.Fatal("invalid boolean test vector")
+				}
+				input = setter(&value)
+			} else {
+				var value team.GiphyContentRating
+				if json.Unmarshal(row.value, &value) != nil {
+					t.Fatal("invalid rating test vector")
+				}
+				input = team.Settings{FunSettings: &team.FunSettings{GiphyContentRating: &value}}
 			}
-			input, label = setter(&value), strconv.FormatBool(value)
-		} else if row.Parameter == "GiphyContentRating" {
-			var value team.GiphyContentRating
-			if json.Unmarshal(row.Value, &value) != nil {
-				t.Fatal("rating capture invalid")
+			actual, err := json.Marshal(input)
+			var got, want map[string]any
+			if err != nil || json.Unmarshal(actual, &got) != nil || json.Unmarshal(row.want, &want) != nil || !reflect.DeepEqual(got, want) {
+				t.Fatal("typed settings input changed field location, value or omission")
 			}
-			wantNumeric := float64(1)
-			if value == team.GiphyStrict {
-				wantNumeric = 0
-			} else if value != team.GiphyModerate {
-				t.Fatal("unknown pinned rating")
-			}
-			if row.Wire["funSettings"]["giphyContentRating"] != wantNumeric {
-				t.Fatal("pinned numeric rating observation changed")
-			}
-			// The reviewed native model follows Graph's string contract. Keep the
-			// immutable capture numeric; change only this comparison copy.
-			row.Wire["funSettings"]["giphyContentRating"] = string(value)
-			input, label = team.Settings{FunSettings: &team.FunSettings{GiphyContentRating: &value}}, string(value)
-		} else {
-			t.Fatal("unmapped captured field")
-		}
-		name := strings.ToLower(row.Parameter) + "-" + label
-		if seen[name] {
-			t.Fatal("duplicate field/value observation")
-		}
-		seen[name] = true
-		encoded, err := json.Marshal(row.Wire)
-		if err != nil {
-			t.Fatal(err)
-		}
-		for _, create := range []bool{true, false} {
-			t.Run(map[bool]string{true: "create", false: "update"}[create]+"/"+name, func(t *testing.T) {
-				command, fixtureName, writeIndex := "Set-Team", "team-update-readback", 1
-				if create {
-					command, fixtureName, writeIndex = "New-Team", "team-create-owned-group", 2
-				}
-				steps := fixture(t, fixtureName)
-				steps[writeIndex].Request.JSON = encoded
-				var readback map[string]any
-				if json.Unmarshal(steps[len(steps)-1].Reply.Body, &readback) != nil {
-					t.Fatal("paired team fixture unavailable")
-				}
-				for container, properties := range row.Wire {
-					readback[container] = properties
-				}
-				steps[len(steps)-1].Reply.Body, err = json.Marshal(readback)
-				if err != nil {
-					t.Fatal(err)
-				}
-				c := contracttest.Case{Name: map[bool]string{true: "create-", false: "update-"}[create] + name,
-					Source: settingsSource + "#/cases/" + strconv.Itoa(index), Steps: steps,
-					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-						var result management.Result
-						var callErr error
-						if create {
-							request := creationRequest()
-							request.Settings = input
-							created, err := sdk.GraphAPI.TeamManagement.Create(ctx, request)
-							result, callErr = created.Result, err
-						} else {
-							empty := ""
-							result, callErr = sdk.GraphAPI.TeamManagement.UpdateByID(ctx, groupID, management.UpdateRequest{Properties: group.UpdateRequest{Description: &empty}, Settings: input})
-						}
-						var value any
-						if result.Value != nil {
-							value = result.Value.Settings
-						}
-						return contracttest.Observation{Value: value, Response: result.Response, Err: callErr}
-					}, Want: contracttest.Expected{Status: 200, JSON: encoded}}
-				if create {
-					c.Mappings = []contracttest.Mapping{{Command: "New-Team", ParameterSet: "CreateTeam"}}
-					creates = append(creates, runCase(t, command, c))
-				} else {
-					updates = append(updates, runCase(t, command, c))
-				}
-			})
-		}
+		})
 	}
-	evidence(t, "team-create-settings-service.json", creates)
-	evidence(t, "team-update-settings-service.json", updates)
 }

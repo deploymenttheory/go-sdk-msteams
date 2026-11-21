@@ -14,9 +14,9 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
 )
 
-func TestCallParkMutationErrorsNeverReplay(t *testing.T) {
+func TestUnitCallParkMutationErrorsNeverReplay(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, operation := range []string{"create", "update", "delete", "user", "tenant", "group"} {
 		for _, status := range []int{400, 401, 403, 429, 503} {
 			method, command, path, body, set := "POST", newCommand, collection, json.RawMessage(`{"Identity":"Global"}`), "Identity"
@@ -32,7 +32,7 @@ func TestCallParkMutationErrorsNeverReplay(t *testing.T) {
 			case "group":
 				method, command, path, body, set = "POST", grantCommand, "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsCallParkPolicy", json.RawMessage(`{"policyName":""}`), "GrantToGroup"
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(), wire(method, path, command, body, status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), wire(method, path, command, body, status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsCallParkPolicies
 				var o contracttest.Observation
 				switch operation {
@@ -64,15 +64,14 @@ func TestCallParkMutationErrorsNeverReplay(t *testing.T) {
 				}
 				o.Err = nil
 				return o
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }
 
-func TestCallParkInputsAndBuildersHaveNoHTTP(t *testing.T) {
+func TestUnitCallParkInputsAndBuildersHaveNoHTTP(t *testing.T) {
 	t.Parallel()
-	r := run(t, contracttest.Case{Name: "local-input-context-and-builders", Source: modelSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "local-input-context-and-builders", Source: modelSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCallParkPolicies
 		for _, id := range []string{"", " ", ".", "..", "bad\\identity", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -110,5 +109,4 @@ func TestCallParkInputsAndBuildersHaveNoHTTP(t *testing.T) {
 
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{r})
 }

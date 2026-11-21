@@ -40,7 +40,7 @@ MSTEAMS_LAB_READ_ONLY=1 \
 MSTEAMS_LAB_MUTATIONS=1 \
 MSTEAMS_LAB_CONSEQUENTIAL=1 \
 MSTEAMS_LAB_TIMEOUT_SECONDS=300 \
-go test -count=1 -run '^TestLabTeamMembershipCRUD$' ./tests/integration/lab
+go test -count=1 -run '^TestAccTeamMembershipCRUD$' ./tests/integration/lab
 ```
 
 The command does not create a user, license an account, grant Graph consent or
@@ -69,7 +69,7 @@ normal Graph lifecycle, not permanent deleted-item purging.
 To recover an interrupted run, stop the original process, select its private
 file in `MSTEAMS_LAB_RECOVERY_JOURNAL`, retain the original credential binding and
 enable the same three lab flags, then run only
-`TestLabRecoverTeamMembership`. It will not mutate unrelated journal kinds or
+`TestAccRecoverTeamMembership`. It will not mutate unrelated journal kinds or
 delete a resource after failed ownership checks. Logs contain stage outcomes and
 the private journal basename, never tenant/user IDs, tokens or response bodies.
 

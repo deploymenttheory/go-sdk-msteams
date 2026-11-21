@@ -5,7 +5,7 @@ implementation. Exact tenant role/Graph approval requests remain pending; token
 acquisition alone is not authorization evidence. Existing user-provided Teams
 browser login does not authorize substituting an identity to bypass these gates.
 
-`TestLabSharedChannelReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1`, the existing
+`TestAccSharedChannelReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1`, the existing
 private `MSTEAMS_LAB_IDENTITY_FILE`, and a 0600 non-symlink
 `MSTEAMS_LAB_SHARED_CHANNEL_FILE`. With the flag absent it skips before reading
 credentials or fixture selectors. The fixture JSON has `tenant_id`,
@@ -40,7 +40,7 @@ it does not assume server ordering. The child never calls Remove-SharedWithTeam.
 Ordinary checks run with all lab flags unset. To run only this qualified probe:
 
 ```sh
-go test -count=1 -run '^TestLabSharedChannelReadOnly$' ./tests/integration/lab
+go test -count=1 -run '^TestAccSharedChannelReadOnly$' ./tests/integration/lab
 ```
 
 Remaining qualification: positive/denied visibility for host and recipient,

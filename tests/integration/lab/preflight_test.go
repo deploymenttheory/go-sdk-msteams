@@ -13,9 +13,9 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-// TestLabPreflight stays discoverable in ordinary go test and explicitly skips
+// TestAccPreflight stays discoverable in ordinary go test and explicitly skips
 // before loading credentials. All requests are the harness's two read-only probes.
-func TestLabPreflight(t *testing.T) {
+func TestAccPreflight(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal(err)
@@ -24,6 +24,14 @@ func TestLabPreflight(t *testing.T) {
 		t.Skip("lab preflight is opt-in: MSTEAMS_LAB_READ_ONLY=1")
 	} else if err != nil {
 		t.Fatal(err)
+	}
+	expectedUsersOutcome := "forbidden"
+	switch os.Getenv("MSTEAMS_LAB_ACCESS_PROFILE") {
+	case "", "organization-only":
+	case "teams-administrator":
+		expectedUsersOutcome = "available"
+	default:
+		t.Fatal("unsupported explicit lab access profile")
 	}
 	file := os.Getenv("MSTEAMS_LAB_IDENTITY_FILE")
 	if file == "" {
@@ -69,9 +77,9 @@ func TestLabPreflight(t *testing.T) {
 	for _, observation := range observations {
 		t.Logf("probe=%s status=%d outcome=%s", observation.Probe, observation.Status, observation.Outcome)
 	}
-	// This dedicated lab app deliberately has Organization.Read.All only. A changed
-	// access result requires investigating its permissions, never automatically granting.
-	if len(observations) != 2 || observations[0].Outcome != "available" || observations[1].Outcome != "forbidden" {
-		t.Fatal("dedicated lab app access inventory differs from its expected limited grants")
+	// Select the expected profile explicitly after an approved role change. Never
+	// infer a new expected outcome from a response or automatically change grants.
+	if len(observations) != 2 || observations[0].Outcome != "available" || observations[1].Outcome != expectedUsersOutcome {
+		t.Fatal("dedicated lab app access inventory differs from its explicit profile")
 	}
 }

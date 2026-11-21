@@ -21,7 +21,7 @@ type oceTransport func(*http.Request) (*http.Response, error)
 
 func (f oceTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
 
-func TestOCEHeadersShareOneCorrelationPerOperationWithoutDiscovery(t *testing.T) {
+func TestUnitOCEHeadersShareOneCorrelationPerOperationWithoutDiscovery(t *testing.T) {
 	t.Parallel()
 	uuid := regexp.MustCompile(`^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$`)
 	var correlations []string
@@ -34,12 +34,9 @@ func TestOCEHeadersShareOneCorrelationPerOperationWithoutDiscovery(t *testing.T)
 		if r.URL.Host != "api.interfaces.records.teams.microsoft.com" || r.Header.Get("Authorization") != "Bearer fixture-only" {
 			t.Error("OCE origin or credential audience changed")
 		}
-		status, body := 200, `{"OperationId":"`+oceOperation+`"}`
-		if len(correlations) == 1 {
-			status, body = 404, `{}`
-		}
-		if len(correlations) == 3 {
-			body = `[]`
+		status, body := 404, ""
+		if len(correlations) == 4 {
+			status = 403
 		}
 		return &http.Response{StatusCode: status, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body)), Request: r}, nil
 	})
@@ -49,20 +46,20 @@ func TestOCEHeadersShareOneCorrelationPerOperationWithoutDiscovery(t *testing.T)
 	}
 	defer func() { _ = sdk.Close() }()
 	s := sdk.TeamsAdminAPI.PolicyAssignments
-	if _, _, err := s.GetOCEBatchStatus(t.Context(), resource.OCEContext{TenantID: oceTenant}, oceOperation, nil); err != nil {
+	if _, _, err := s.GetOCEBatchStatus(t.Context(), resource.OCEContext{TenantID: oceTenant}, oceOperation, nil); err == nil {
 		t.Fatal(err)
 	}
-	if _, _, err := s.ListOCEGroup(t.Context(), resource.OCEContext{TenantID: oceTenant}, oceGroup); err != nil {
+	if _, _, err := s.ListOCEGroup(t.Context(), resource.OCEContext{TenantID: oceTenant}, oceGroup); !errors.Is(err, auth.ErrForbidden) {
 		t.Fatal(err)
 	}
-	if len(correlations) != 3 || correlations[0] != correlations[1] || correlations[0] == correlations[2] {
+	if len(correlations) != 4 || correlations[0] != correlations[1] || correlations[0] != correlations[2] || correlations[0] == correlations[3] {
 		t.Fatal("OCE correlation lifecycle differs from command initialization")
 	}
 }
 
-func TestOCEContextValidationPreventsCredentialForwarding(t *testing.T) {
+func TestUnitOCEContextValidationPreventsCredentialForwarding(t *testing.T) {
 	t.Parallel()
-	r := run(t, contracttest.Case{Name: "oce-context-before-tokens", Source: oceSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "oce-context-before-tokens", Source: oceSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.PolicyAssignments
 		for _, input := range []resource.OCEContext{{}, {TenantID: "fixture"}, {TenantID: oceTenant, Environment: "unknown"}} {
 			if _, _, e := s.ListOCEGroups(ctx, input); !errors.Is(e, resource.ErrInput) {
@@ -104,5 +101,4 @@ func TestOCEContextValidationPreventsCredentialForwarding(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{r})
 }

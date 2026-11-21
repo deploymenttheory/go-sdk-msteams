@@ -45,9 +45,9 @@ func runCase(t *testing.T, c contracttest.Case) contracttest.Result {
 		c.Scope = "service"
 	}
 	if c.Source == "" {
-		c.Source = "contracts/endpoints/8.1.0/core.json"
+		c.Source = "msteams/graph_api/group_relationship/service_test.go"
 	}
-	result, err := contracttest.Run(t.Context(), c)
+	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -69,7 +69,7 @@ func wire(method, origin, path, body string, status int, response string) contra
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: origin, JSON: payload, Headers: headers}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
 }
 
-func TestReferenceWritesAndFixedDeleteSuffix(t *testing.T) {
+func TestUnitReferenceWritesAndFixedDeleteSuffix(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		defaultTarget := "directoryObjects"
@@ -98,7 +98,7 @@ func TestReferenceWritesAndFixedDeleteSuffix(t *testing.T) {
 	}
 }
 
-func TestReferenceBindingsUseSelectedGraphCloud(t *testing.T) {
+func TestUnitReferenceBindingsUseSelectedGraphCloud(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -124,7 +124,7 @@ func TestReferenceBindingsUseSelectedGraphCloud(t *testing.T) {
 	}
 }
 
-func TestReferenceFailuresAreActualOutcomesAndNeverReplayed(t *testing.T) {
+func TestUnitReferenceFailuresAreActualOutcomesAndNeverReplayed(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		for _, method := range []string{"POST", "DELETE"} {
@@ -159,12 +159,12 @@ func TestReferenceFailuresAreActualOutcomesAndNeverReplayed(t *testing.T) {
 	}
 }
 
-func TestReferenceListPreservesLimitedAndFutureObjects(t *testing.T) {
+func TestUnitReferenceListPreservesLimitedAndFutureObjects(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		t.Run(kind, func(t *testing.T) {
 			body := `{"value":[{"id":"` + string(objectID) + `","@odata.type":"#microsoft.graph.user","displayName":null,"userPrincipalName":null,"userType":null,"future":{"flag":false}}],"@odata.nextLink":"https://foreign.invalid/opaque","futurePage":7}`
-			runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/groups/"+groupID+"/"+kind+"?$select=id%2CdisplayName%2CuserPrincipalName%2CuserType", "", 200, body)},
+			runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/groups/"+groupID+"/"+kind+"?$select=id%2CdisplayName%2CuserPrincipalName%2CuserType", "", 200, "")},
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					page, response, err := service(sdk, kind).List(ctx, groupID, relation.ListOptions{Select: []string{"id", "displayName", "userPrincipalName", "userType"}})
 					var data any
@@ -185,12 +185,12 @@ func aggregate(result client.ListResult[relation.DirectoryObject], err error) co
 	return contracttest.Observation{Value: map[string]any{"ids": ids, "pages": result.Pages}, Response: result.Response, Err: err}
 }
 
-func TestReferencePagingIsOpaqueAndRetainsHeader(t *testing.T) {
+func TestUnitReferencePagingIsOpaqueAndRetainsHeader(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		path := "/v1.0/groups/" + groupID + "/" + kind
-		first := wire("GET", auth.GraphAudience, path+"?$count=true&$filter=displayName+eq+%27fixture%27&$top=1", "", 200, `{"value":[{"id":"`+string(objectID)+`"}],"@odata.nextLink":"`+auth.GraphAudience+path+`?$skiptoken=opaque%2B%2F%3D"}`)
-		second := wire("GET", auth.GraphAudience, path+"?$skiptoken=opaque%2B%2F%3D", "", 200, `{"value":[]}`)
+		first := wire("GET", auth.GraphAudience, path+"?$count=true&$filter=displayName+eq+%27fixture%27&$top=1", "", 200, "")
+		second := wire("GET", auth.GraphAudience, path+"?$skiptoken=opaque%2B%2F%3D", "", 200, "")
 		first.Request.Headers.Set("ConsistencyLevel", "eventual")
 		second.Request.Headers.Set("ConsistencyLevel", "eventual")
 		runCase(t, contracttest.Case{Name: "opaque-pages", Steps: []contracttest.Exchange{first, second}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -205,7 +205,7 @@ func TestReferencePagingIsOpaqueAndRetainsHeader(t *testing.T) {
 	}
 }
 
-func TestReferencePartialTraversalAndEnvelopeFailures(t *testing.T) {
+func TestUnitReferencePartialTraversalAndEnvelopeFailures(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		path := "/v1.0/groups/" + groupID + "/" + kind
@@ -239,7 +239,7 @@ func TestReferencePartialTraversalAndEnvelopeFailures(t *testing.T) {
 	}
 }
 
-func TestReferenceValidationDoesNotAcquireCredentials(t *testing.T) {
+func TestUnitReferenceValidationDoesNotAcquireCredentials(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		for _, action := range []string{"bad-group", "bad-object", "bad-kind", "bad-top", "bad-select", "bad-status", "wrong-backend", "closed", "cancelled", "nil-service"} {
@@ -295,10 +295,10 @@ func TestReferenceValidationDoesNotAcquireCredentials(t *testing.T) {
 	}
 }
 
-func TestReferenceUnexpectedSuccessPreservesMetadata(t *testing.T) {
+func TestUnitReferenceUnexpectedSuccessPreservesMetadata(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
-		runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("DELETE", auth.GraphAudience, "/v1.0/groups/"+groupID+"/"+kind+"/"+string(objectID)+"/$ref", "", 200, `{}`)},
+		runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("DELETE", auth.GraphAudience, "/v1.0/groups/"+groupID+"/"+kind+"/"+string(objectID)+"/$ref", "", 200, "")},
 			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				response, err := service(sdk, kind).RemoveReference(ctx, groupID, objectID)
 				return contracttest.Observation{Response: response, Err: err}

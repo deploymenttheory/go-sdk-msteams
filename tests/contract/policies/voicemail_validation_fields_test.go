@@ -11,7 +11,7 @@ import (
 	validation "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_validation_configuration"
 )
 
-func TestVoicemailValidationFieldsMatchPinnedParameters(t *testing.T) {
+func TestUnitVoicemailValidationFieldsMatchPinnedParameters(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/powershell/8.1.0/runtime.json")
 	if err != nil {

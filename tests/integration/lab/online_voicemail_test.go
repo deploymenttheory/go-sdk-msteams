@@ -76,9 +76,9 @@ func voicemailOracle(t *testing.T, ctx context.Context, tenant string) voicemail
 	return value
 }
 
-// TestLabOnlineVoicemailReadOnly never edits Global, creates assets or grants a
+// TestAccOnlineVoicemailReadOnly never edits Global, creates assets or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabOnlineVoicemailReadOnly(t *testing.T) {
+func TestAccOnlineVoicemailReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -93,6 +93,7 @@ func TestLabOnlineVoicemailReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "online_voicemail_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -100,7 +101,8 @@ func TestLabOnlineVoicemailReadOnly(t *testing.T) {
 		}
 		t.Fatalf("voicemail Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "online_voicemail_policy", "list", listResponse, nil)
 	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !reflect.DeepEqual(value.RawFields, listed[0].RawFields) {
 		t.Fatal("voicemail Global read/list observations differ")
 	}
@@ -124,7 +126,7 @@ func TestLabOnlineVoicemailReadOnly(t *testing.T) {
 	t.Log("selected voicemail reads verified; persistence, feature effects and assignments remain separately qualified")
 }
 
-func TestVoicemailOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitVoicemailOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":null,"EnableTranscription":false,"MaximumRecordingLength":"00:01:30"}`

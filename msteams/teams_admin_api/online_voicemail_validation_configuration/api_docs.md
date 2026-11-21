@@ -35,5 +35,5 @@ calls without generated forest discovery or a Graph identity lookup. No Create,
 Delete or assignment operation is established by the two baseline commands.
 
 App/delegated token-mode fixtures establish request routing; successful tenant/RBAC/
-cloud behavior remains separate qualification. See [evidence](../../../docs/implementation/policies/voicemail-validation-sdk-progress.md)
+cloud behavior remains separate qualification. See [unit tests](service_test.go)
 and the [lab plan](../../../docs/implementation/policies/voicemail-validation-lab-acceptance.md).

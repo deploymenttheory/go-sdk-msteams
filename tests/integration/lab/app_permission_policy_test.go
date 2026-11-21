@@ -129,9 +129,9 @@ func globalAppPermissionPolicy(values []*resource.Policy) (*resource.Policy, err
 	return found, nil
 }
 
-// TestLabAppPermissionPolicyReadOnly never creates or edits policies, grants an
+// TestAccAppPermissionPolicyReadOnly never creates or edits policies, grants an
 // app policy to a principal, installs apps or changes directory permissions.
-func TestLabAppPermissionPolicyReadOnly(t *testing.T) {
+func TestAccAppPermissionPolicyReadOnly(t *testing.T) {
 	cfg, e := lab.Load()
 	if e != nil {
 		t.Fatal("invalid lab enablement")
@@ -146,6 +146,7 @@ func TestLabAppPermissionPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_app_permission_policy", "get_global", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -153,7 +154,8 @@ func TestLabAppPermissionPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("app permission Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_app_permission_policy", "list", listResponse, nil)
 	selected, selectionErr := globalAppPermissionPolicy(listed)
 	if e != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(appPermissionProjection(value), appPermissionProjection(selected)) {
 		t.Fatal("app permission Global read/list observations differ")
@@ -172,7 +174,7 @@ func TestLabAppPermissionPolicyReadOnly(t *testing.T) {
 	}
 	t.Log("selected app permission reads verified; writes, assignments, cleanup and effective behavior remain separately qualified")
 }
-func TestAppPermissionGlobalSelectionAllowsTaggedMatches(t *testing.T) {
+func TestUnitAppPermissionGlobalSelectionAllowsTaggedMatches(t *testing.T) {
 	t.Parallel()
 	global := &resource.Policy{Identity: new("Global")}
 	tagged := &resource.Policy{Identity: new("Tag:Global")}
@@ -185,7 +187,7 @@ func TestAppPermissionGlobalSelectionAllowsTaggedMatches(t *testing.T) {
 		}
 	}
 }
-func TestAppPermissionOracleRejectsWrongTenantIncompleteAndMixedOutput(t *testing.T) {
+func TestUnitAppPermissionOracleRejectsWrongTenantIncompleteAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":null,"DefaultCatalogAppsType":"FutureMode","GlobalCatalogAppsType":"","PrivateCatalogAppsType":null,"DefaultCatalogApps":[{"Identity":null,"Id":null}],"GlobalCatalogApps":[],"PrivateCatalogApps":[]}`

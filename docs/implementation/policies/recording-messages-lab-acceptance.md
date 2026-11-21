@@ -1,7 +1,7 @@
 # Recording messages lab acceptance
 
 MSTEAMS_LAB_READ_ONLY=1 and MSTEAMS_LAB_IDENTITY_FILE enable
-TestLabRecordingMessagesReadOnly with the existing private dedicated lab identity.
+TestAccRecordingMessagesReadOnly with the existing private dedicated lab identity.
 MSTEAMS_LAB_AUTH_METHOD selects certificate (default) or client-secret. The test
 lists the resource, compares a locally filtered list and reads at most five
 returned full identities. Where a selected record has a canonical Id and matching

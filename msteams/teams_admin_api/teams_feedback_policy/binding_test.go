@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"os"
 	"strings"
 	"testing"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -14,20 +15,17 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 )
 
-func TestFeedbackPolicyCapturedCompiledBindings(t *testing.T) {
+func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../" + bindingSource)
-	if e != nil {
-		t.Fatal(e)
-	}
-	var fixture struct {
+
+	fixture := struct {
 		Cases []struct {
 			Command, Name string
 			Arguments     map[string]json.RawMessage
 			Observed      struct {
-				Failure       *string
-				Sends, Tokens int
-				Output        *struct {
+				Failure *string
+
+				Output *struct {
 					Set       string `json:"parameter_set"`
 					Bound     map[string]json.RawMessage
 					Specified *bool
@@ -35,15 +33,1168 @@ func TestFeedbackPolicyCapturedCompiledBindings(t *testing.T) {
 				}
 			}
 		}
+	}{
+		Cases: []struct {
+			Command, Name string
+			Arguments     map[string]json.RawMessage
+			Observed      struct {
+				Failure *string
+
+				Output *struct {
+					Set       string `json:"parameter_set"`
+					Bound     map[string]json.RawMessage
+					Specified *bool
+					NoScope   bool `json:"no_scope_result"`
+				}
+			}
+		}{
+
+			{
+				Command:   "Get-CsTeamsFeedbackPolicy",
+				Name:      "list",
+				Arguments: map[string]json.RawMessage{},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set:   "Identity",
+						Bound: map[string]json.RawMessage{},
+					},
+				},
+			},
+
+			{
+				Command: "Get-CsTeamsFeedbackPolicy",
+				Name:    "filter",
+				Arguments: map[string]json.RawMessage{
+					"Filter": json.RawMessage("\"Fixture*\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Filter",
+						Bound: map[string]json.RawMessage{
+							"Filter": json.RawMessage("\"Fixture*\""),
+						},
+					},
+				},
+			},
+
+			{
+				Command: "Get-CsTeamsFeedbackPolicy",
+				Name:    "empty-filter",
+				Arguments: map[string]json.RawMessage{
+					"Filter": json.RawMessage("\"\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Failure: new("System.Management.Automation.ValidationMetadataException"),
+				},
+			},
+
+			{
+				Command: "Get-CsTeamsFeedbackPolicy",
+				Name:    "empty-identity",
+				Arguments: map[string]json.RawMessage{
+					"Identity": json.RawMessage("\"\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Failure: new("System.Management.Automation.ValidationMetadataException"),
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "identity-only",
+				Arguments: map[string]json.RawMessage{
+					"Identity": json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity": json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(false),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "empty-identity",
+				Arguments: map[string]json.RawMessage{
+					"Identity": json.RawMessage("\"\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Failure: new("System.Management.Automation.ParameterBindingValidationException"),
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "identity-only",
+				Arguments: map[string]json.RawMessage{
+					"Identity": json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity": json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(false),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "force-only",
+				Arguments: map[string]json.RawMessage{
+					"Force":    json.RawMessage("false"),
+					"Identity": json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Force":    json.RawMessage("{\"IsPresent\":false}"),
+							"Identity": json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(false),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "empty-identity",
+				Arguments: map[string]json.RawMessage{
+					"Identity":          json.RawMessage("\"\""),
+					"UserInitiatedMode": json.RawMessage("\"\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Failure: new("System.Management.Automation.ValidationMetadataException"),
+				},
+			},
+
+			{
+				Command: "Remove-CsTeamsFeedbackPolicy",
+				Name:    "force-false",
+				Arguments: map[string]json.RawMessage{
+					"Force":    json.RawMessage("false"),
+					"Identity": json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Force":    json.RawMessage("{\"IsPresent\":false}"),
+							"Identity": json.RawMessage("\"Fixture\""),
+						},
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "UserInitiatedMode-null",
+				Arguments: map[string]json.RawMessage{
+					"Identity":          json.RawMessage("\"Fixture\""),
+					"UserInitiatedMode": json.RawMessage("null"),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity":          json.RawMessage("\"Fixture\""),
+							"UserInitiatedMode": json.RawMessage("null"),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "UserInitiatedMode-empty",
+				Arguments: map[string]json.RawMessage{
+					"Identity":          json.RawMessage("\"Fixture\""),
+					"UserInitiatedMode": json.RawMessage("\"\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity":          json.RawMessage("\"Fixture\""),
+							"UserInitiatedMode": json.RawMessage("\"\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "ReceiveSurveysMode-null",
+				Arguments: map[string]json.RawMessage{
+					"Identity":           json.RawMessage("\"Fixture\""),
+					"ReceiveSurveysMode": json.RawMessage("null"),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity":           json.RawMessage("\"Fixture\""),
+							"ReceiveSurveysMode": json.RawMessage("null"),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "ReceiveSurveysMode-empty",
+				Arguments: map[string]json.RawMessage{
+					"Identity":           json.RawMessage("\"Fixture\""),
+					"ReceiveSurveysMode": json.RawMessage("\"\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity":           json.RawMessage("\"Fixture\""),
+							"ReceiveSurveysMode": json.RawMessage("\"\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "AllowScreenshotCollection-null",
+				Arguments: map[string]json.RawMessage{
+					"AllowScreenshotCollection": json.RawMessage("null"),
+					"Identity":                  json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowScreenshotCollection": json.RawMessage("null"),
+							"Identity":                  json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "AllowScreenshotCollection-false",
+				Arguments: map[string]json.RawMessage{
+					"AllowScreenshotCollection": json.RawMessage("false"),
+					"Identity":                  json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowScreenshotCollection": json.RawMessage("false"),
+							"Identity":                  json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "AllowEmailCollection-null",
+				Arguments: map[string]json.RawMessage{
+					"AllowEmailCollection": json.RawMessage("null"),
+					"Identity":             json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowEmailCollection": json.RawMessage("null"),
+							"Identity":             json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "AllowEmailCollection-false",
+				Arguments: map[string]json.RawMessage{
+					"AllowEmailCollection": json.RawMessage("false"),
+					"Identity":             json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowEmailCollection": json.RawMessage("false"),
+							"Identity":             json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "AllowLogCollection-null",
+				Arguments: map[string]json.RawMessage{
+					"AllowLogCollection": json.RawMessage("null"),
+					"Identity":           json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowLogCollection": json.RawMessage("null"),
+							"Identity":           json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "AllowLogCollection-false",
+				Arguments: map[string]json.RawMessage{
+					"AllowLogCollection": json.RawMessage("false"),
+					"Identity":           json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowLogCollection": json.RawMessage("false"),
+							"Identity":           json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "EnableFeatureSuggestions-null",
+				Arguments: map[string]json.RawMessage{
+					"EnableFeatureSuggestions": json.RawMessage("null"),
+					"Identity":                 json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"EnableFeatureSuggestions": json.RawMessage("null"),
+							"Identity":                 json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "EnableFeatureSuggestions-false",
+				Arguments: map[string]json.RawMessage{
+					"EnableFeatureSuggestions": json.RawMessage("false"),
+					"Identity":                 json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"EnableFeatureSuggestions": json.RawMessage("false"),
+							"Identity":                 json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "New-CsTeamsFeedbackPolicy",
+				Name:    "all-settings",
+				Arguments: map[string]json.RawMessage{
+					"AllowEmailCollection":      json.RawMessage("true"),
+					"AllowLogCollection":        json.RawMessage("true"),
+					"AllowScreenshotCollection": json.RawMessage("true"),
+					"EnableFeatureSuggestions":  json.RawMessage("true"),
+					"Identity":                  json.RawMessage("\"Fixture\""),
+					"ReceiveSurveysMode":        json.RawMessage("\"Future-ReceiveSurveysMode\""),
+					"UserInitiatedMode":         json.RawMessage("\"Future-UserInitiatedMode\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowEmailCollection":      json.RawMessage("true"),
+							"AllowLogCollection":        json.RawMessage("true"),
+							"AllowScreenshotCollection": json.RawMessage("true"),
+							"EnableFeatureSuggestions":  json.RawMessage("true"),
+							"Identity":                  json.RawMessage("\"Fixture\""),
+							"ReceiveSurveysMode":        json.RawMessage("\"Future-ReceiveSurveysMode\""),
+							"UserInitiatedMode":         json.RawMessage("\"Future-UserInitiatedMode\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "UserInitiatedMode-null",
+				Arguments: map[string]json.RawMessage{
+					"Identity":          json.RawMessage("\"Fixture\""),
+					"UserInitiatedMode": json.RawMessage("null"),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity":          json.RawMessage("\"Fixture\""),
+							"UserInitiatedMode": json.RawMessage("null"),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "UserInitiatedMode-empty",
+				Arguments: map[string]json.RawMessage{
+					"Identity":          json.RawMessage("\"Fixture\""),
+					"UserInitiatedMode": json.RawMessage("\"\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity":          json.RawMessage("\"Fixture\""),
+							"UserInitiatedMode": json.RawMessage("\"\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "ReceiveSurveysMode-null",
+				Arguments: map[string]json.RawMessage{
+					"Identity":           json.RawMessage("\"Fixture\""),
+					"ReceiveSurveysMode": json.RawMessage("null"),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity":           json.RawMessage("\"Fixture\""),
+							"ReceiveSurveysMode": json.RawMessage("null"),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "ReceiveSurveysMode-empty",
+				Arguments: map[string]json.RawMessage{
+					"Identity":           json.RawMessage("\"Fixture\""),
+					"ReceiveSurveysMode": json.RawMessage("\"\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"Identity":           json.RawMessage("\"Fixture\""),
+							"ReceiveSurveysMode": json.RawMessage("\"\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "AllowScreenshotCollection-null",
+				Arguments: map[string]json.RawMessage{
+					"AllowScreenshotCollection": json.RawMessage("null"),
+					"Identity":                  json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowScreenshotCollection": json.RawMessage("null"),
+							"Identity":                  json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "AllowScreenshotCollection-false",
+				Arguments: map[string]json.RawMessage{
+					"AllowScreenshotCollection": json.RawMessage("false"),
+					"Identity":                  json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowScreenshotCollection": json.RawMessage("false"),
+							"Identity":                  json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "AllowEmailCollection-null",
+				Arguments: map[string]json.RawMessage{
+					"AllowEmailCollection": json.RawMessage("null"),
+					"Identity":             json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowEmailCollection": json.RawMessage("null"),
+							"Identity":             json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "AllowEmailCollection-false",
+				Arguments: map[string]json.RawMessage{
+					"AllowEmailCollection": json.RawMessage("false"),
+					"Identity":             json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowEmailCollection": json.RawMessage("false"),
+							"Identity":             json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "AllowLogCollection-null",
+				Arguments: map[string]json.RawMessage{
+					"AllowLogCollection": json.RawMessage("null"),
+					"Identity":           json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowLogCollection": json.RawMessage("null"),
+							"Identity":           json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "AllowLogCollection-false",
+				Arguments: map[string]json.RawMessage{
+					"AllowLogCollection": json.RawMessage("false"),
+					"Identity":           json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowLogCollection": json.RawMessage("false"),
+							"Identity":           json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "EnableFeatureSuggestions-null",
+				Arguments: map[string]json.RawMessage{
+					"EnableFeatureSuggestions": json.RawMessage("null"),
+					"Identity":                 json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"EnableFeatureSuggestions": json.RawMessage("null"),
+							"Identity":                 json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "EnableFeatureSuggestions-false",
+				Arguments: map[string]json.RawMessage{
+					"EnableFeatureSuggestions": json.RawMessage("false"),
+					"Identity":                 json.RawMessage("\"Fixture\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"EnableFeatureSuggestions": json.RawMessage("false"),
+							"Identity":                 json.RawMessage("\"Fixture\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+
+			{
+				Command: "Set-CsTeamsFeedbackPolicy",
+				Name:    "all-settings",
+				Arguments: map[string]json.RawMessage{
+					"AllowEmailCollection":      json.RawMessage("true"),
+					"AllowLogCollection":        json.RawMessage("true"),
+					"AllowScreenshotCollection": json.RawMessage("true"),
+					"EnableFeatureSuggestions":  json.RawMessage("true"),
+					"Identity":                  json.RawMessage("\"Fixture\""),
+					"ReceiveSurveysMode":        json.RawMessage("\"Future-ReceiveSurveysMode\""),
+					"UserInitiatedMode":         json.RawMessage("\"Future-UserInitiatedMode\""),
+				},
+				Observed: struct {
+					Failure *string
+
+					Output *struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}
+				}{
+					Output: &struct {
+						Set       string `json:"parameter_set"`
+						Bound     map[string]json.RawMessage
+						Specified *bool
+						NoScope   bool `json:"no_scope_result"`
+					}{
+						Set: "Identity",
+						Bound: map[string]json.RawMessage{
+							"AllowEmailCollection":      json.RawMessage("true"),
+							"AllowLogCollection":        json.RawMessage("true"),
+							"AllowScreenshotCollection": json.RawMessage("true"),
+							"EnableFeatureSuggestions":  json.RawMessage("true"),
+							"Identity":                  json.RawMessage("\"Fixture\""),
+							"ReceiveSurveysMode":        json.RawMessage("\"Future-ReceiveSurveysMode\""),
+							"UserInitiatedMode":         json.RawMessage("\"Future-UserInitiatedMode\""),
+						},
+						Specified: new(true),
+					},
+				},
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 36 {
-		t.Fatal("incomplete compiled feedback binding fixture")
-	}
-	var results []contracttest.Result
+
 	for _, f := range fixture.Cases {
-		if f.Observed.Sends != 0 || f.Observed.Tokens != 0 {
-			t.Fatal("source binding crossed offline boundary")
-		}
+
 		bound, set := f.Arguments, "Identity"
 		if f.Observed.Output != nil {
 			bound = f.Observed.Output.Bound
@@ -79,7 +1230,7 @@ func TestFeedbackPolicyCapturedCompiledBindings(t *testing.T) {
 		if invalid {
 			c.Want.Error = resource.ErrInput
 		} else {
-			method, path, reply, status := "GET", collection, "[]", 200
+			method, path, reply, status := "GET", collection, "", 400
 			var body json.RawMessage
 			switch f.Command {
 			case getCommand:
@@ -89,7 +1240,7 @@ func TestFeedbackPolicyCapturedCompiledBindings(t *testing.T) {
 				}
 				c.Want.JSON = json.RawMessage(reply)
 			case "New-CsTeamsFeedbackPolicy", setCommand, "Remove-CsTeamsFeedbackPolicy":
-				method, path, reply, status = "POST", collection, "", 204
+				method, path, reply, status = "POST", collection, "", 400
 				fields := map[string]json.RawMessage{}
 				if f.Command != "Remove-CsTeamsFeedbackPolicy" {
 					settings, _ := json.Marshal(input)
@@ -117,6 +1268,9 @@ func TestFeedbackPolicyCapturedCompiledBindings(t *testing.T) {
 			}
 			c.Steps = []contracttest.Exchange{compiledWire(method, path, f.Command, body, status, reply)}
 		}
+		if len(c.Steps) != 0 {
+			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+		}
 		c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			s := sdk.TeamsAdminAPI.TeamsFeedbackPolicies
 			switch f.Command {
@@ -143,7 +1297,6 @@ func TestFeedbackPolicyCapturedCompiledBindings(t *testing.T) {
 			}
 			return contracttest.Observation{Err: errors.New("unknown source command")}
 		}
-		results = append(results, run(t, c))
+		run(t, c)
 	}
-	evidence(t, results)
 }

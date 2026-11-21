@@ -4,6 +4,7 @@ package externalaccesspolicy
 import (
 	"bytes"
 	"encoding/json"
+	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -23,6 +24,38 @@ const (
 	BlockSpecificExternalDomains
 	BlockAllExternalDomains
 )
+
+// UnmarshalJSON accepts the named live response form as well as the pinned
+// serializer's numeric form. Request serialization stays numeric; Policy keeps
+// the original response representation in RawFields.
+func (v *CommunicationWithExternalOrgs) UnmarshalJSON(data []byte) error {
+	var number int32
+	if json.Unmarshal(data, &number) == nil {
+		*v = CommunicationWithExternalOrgs(number)
+		return nil
+	}
+	var name string
+	if json.Unmarshal(data, &name) != nil {
+		return client.ErrDecode
+	}
+	var mode CommunicationWithExternalOrgs
+	switch strings.ToLower(name) {
+	case "organizationdefault":
+		mode = OrganizationDefault
+	case "allowallexternaldomains":
+		mode = AllowAllExternalDomains
+	case "allowspecificexternaldomains":
+		mode = AllowSpecificExternalDomains
+	case "blockspecificexternaldomains":
+		mode = BlockSpecificExternalDomains
+	case "blockallexternaldomains":
+		mode = BlockAllExternalDomains
+	default:
+		return client.ErrDecode
+	}
+	*v = mode
+	return nil
+}
 
 // Policy retains nullable/omitted/future wire fields. RawFields is authoritative;
 // native reads do not materialize defaults from the PowerShell CLR constructor.

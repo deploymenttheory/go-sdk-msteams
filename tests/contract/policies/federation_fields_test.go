@@ -14,7 +14,7 @@ import (
 	tenant "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
-func TestFederationRequestFieldsMatchPinnedParameters(t *testing.T) {
+func TestUnitFederationRequestFieldsMatchPinnedParameters(t *testing.T) {
 	t.Parallel()
 	raw, err := os.ReadFile("../../../contracts/powershell/8.1.0/runtime.json")
 	if err != nil {

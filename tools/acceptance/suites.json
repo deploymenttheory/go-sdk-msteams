@@ -1,0 +1,47 @@
+{
+  "authentication": {
+    "package": "./tests/integration/auth",
+    "tests": [
+      "TestAccApplicationAccess"
+    ]
+  },
+  "resource-reads": {
+    "package": "./tests/integration/lab",
+    "tests": [
+      "TestAccTeamsServiceDiscovery",
+      "TestAccPreflight",
+      "TestAccAppPermissionPolicyReadOnly",
+      "TestAccAppSetupPolicyReadOnly",
+      "TestAccApplicationMeetingConfigurationReadOnly",
+      "TestAccAssignmentMigrationReadOnly",
+      "TestAccAudioConferencingPolicyReadOnly",
+      "TestAccAudioConferencingPromptsReadOnly",
+      "TestAccBannerTextReadOnly",
+      "TestAccCallHoldPolicyReadOnly",
+      "TestAccCallParkPolicyReadOnly",
+      "TestAccCallingPolicyReadOnly",
+      "TestAccChannelsPolicyReadOnly",
+      "TestAccClientConfigurationReadOnly",
+      "TestAccCortanaPolicyReadOnly",
+      "TestAccEducationAssignmentsReadOnly",
+      "TestAccEducationConfigurationReadOnly",
+      "TestAccEnhancedEncryptionReadOnly",
+      "TestAccEventsPolicyReadOnly",
+      "TestAccFederationReadOnly",
+      "TestAccFeedbackPolicyReadOnly",
+      "TestAccFilesPolicyReadOnly",
+      "TestAccMeetingBrandingReadOnly",
+      "TestAccOnlineVoicemailReadOnly",
+      "TestAccPrivacyConfigurationReadOnly",
+      "TestAccRecordingMessagesReadOnly",
+      "TestAccVoicemailValidationReadOnly"
+    ]
+  },
+  "owned-policy-crud": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "tests": [
+      "TestAccApplicationAccessPolicyCRUD"
+    ]
+  }
+}

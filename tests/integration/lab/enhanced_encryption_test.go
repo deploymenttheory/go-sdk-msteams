@@ -78,9 +78,9 @@ func enhancedEncryptionOracle(t *testing.T, ctx context.Context, tenant string) 
 	return value
 }
 
-// TestLabEnhancedEncryptionReadOnly never edits Global, creates resources or grants a
+// TestAccEnhancedEncryptionReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabEnhancedEncryptionReadOnly(t *testing.T) {
+func TestAccEnhancedEncryptionReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -95,6 +95,7 @@ func TestLabEnhancedEncryptionReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_enhanced_encryption_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		phase := "preparation"
@@ -106,7 +107,8 @@ func TestLabEnhancedEncryptionReadOnly(t *testing.T) {
 		}
 		t.Fatalf("enhanced encryption policy %s Global read failed (HTTP %d); no response payload retained", phase, status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_enhanced_encryption_policy", "list", listResponse, nil)
 	selected, selectionErr := globalEnhancedEncryption(listed)
 	if err != nil || selectionErr != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("enhanced encryption policy Global selection differs")
@@ -157,7 +159,7 @@ func globalEnhancedEncryption(values []resource.Policy) (*resource.Policy, error
 	}
 	return found, nil
 }
-func TestEnhancedEncryptionOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitEnhancedEncryptionOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":"","CallingEndtoEndEncryptionEnabledType":"FutureCalling","MeetingEndToEndEncryption":null}`

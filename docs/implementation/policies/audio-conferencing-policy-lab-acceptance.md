@@ -1,6 +1,6 @@
 # Audio conferencing policy lab acceptance
 
-`TestLabAudioConferencingPolicyReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1`
+`TestAccAudioConferencingPolicyReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1`
 before reading the explicitly selected private identity. It reads Global and a
 Global-filtered collection, selects one exact case-insensitive Global identity
 without confusing Tag:Global, and compares the two known fields. It never
@@ -10,7 +10,7 @@ Select `MSTEAMS_LAB_IDENTITY_FILE` and `MSTEAMS_LAB_AUTH_METHOD=client-secret`
 or `certificate`, with mutation/consequential opt-ins unset, then run:
 
 ```sh
-go test -count=1 -run '^TestLabAudioConferencingPolicyReadOnly$' -v ./tests/integration/lab
+go test -count=1 -run '^TestAccAudioConferencingPolicyReadOnly$' -v ./tests/integration/lab
 ```
 
 Both actual credential modes returned resource HTTP 403 on Global on

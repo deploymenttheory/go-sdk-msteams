@@ -108,5 +108,5 @@ actions; no read or ordinary mutation invokes them or elevates eligibility.
 Issue #100 remains in-progress for full qualification. Native methods/tests map all
 fourteen commands and twenty-five sets. Successful tenant CRUD, OCE eligibility,
 complete shell binding/coercion and cloud behavior remain unqualified.
-[Pinned evidence](../../../docs/implementation/policies/policy-assignments-evidence.md)
+[unit tests](service_test.go)
 records the captures, actual lab denials and remaining work.

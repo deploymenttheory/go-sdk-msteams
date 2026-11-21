@@ -77,9 +77,9 @@ func privacyConfigurationOracle(t *testing.T, ctx context.Context, tenant string
 	return value
 }
 
-// TestLabPrivacyConfigurationReadOnly never edits Global, creates resources or grants a
+// TestAccPrivacyConfigurationReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabPrivacyConfigurationReadOnly(t *testing.T) {
+func TestAccPrivacyConfigurationReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -94,6 +94,7 @@ func TestLabPrivacyConfigurationReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.PrivacyConfigurations.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "privacy_configuration", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -101,7 +102,8 @@ func TestLabPrivacyConfigurationReadOnly(t *testing.T) {
 		}
 		t.Fatalf("privacy configuration Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "privacy_configuration", "list", listResponse, nil)
 	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !reflect.DeepEqual(value.RawFields, listed[0].RawFields) {
 		t.Fatal("privacy configuration Global read/list observations differ")
 	}
@@ -125,7 +127,7 @@ func TestLabPrivacyConfigurationReadOnly(t *testing.T) {
 	t.Log("selected privacy configuration reads verified; persistence, feature effects and assignments remain separately qualified")
 }
 
-func TestPrivacyConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitPrivacyConfigurationOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"EnablePrivacyMode":false,"AutoInitiateContacts":true,"PublishLocationDataDefault":null,"DisplayPublishedPhotoDefault":false}`

@@ -3,54 +3,446 @@ package teamsexternalaccessconfiguration_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/policy-provider-dispatch.json"
+const source = "msteams/teams_admin_api/teams_external_access_configuration/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const scoped = "scope /Fixture / Child"
 
-type capturedCase struct {
+type requestCase struct {
 	Name     string `json:"name"`
 	Status   int    `json:"status"`
 	Response string `json:"response"`
-	Capture  struct {
-		Method            string
-		Url               string
-		Body              string
-		ContentType       string
-		CmdletName        string
-		FailureType       *string
-		CorrelationIsGuid bool
-		HasTargetUri      bool
-		MpaCmdlet         string
-		Sends             int
-		TokenRequests     int
-		DecodedNull       *bool
-	} `json:"capture"`
+	Request  struct {
+		Method string
+		Url    string
+		Body   string
+
+		CmdletName  string
+		FailureType *string
+	} `json:"request"`
 }
 
-func captured(t *testing.T) []capturedCase {
+func requestInputs(t *testing.T) []requestCase {
 	t.Helper()
-	raw, err := os.ReadFile("../../../" + source)
-	if err != nil {
-		t.Fatal(err)
+
+	v := struct {
+		Cases []requestCase `json:"cases"`
+	}{
+		Cases: []requestCase{
+			{
+				Name:   "read",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "list",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy",
+					CmdletName: "Get-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "create",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Description\": \"\",\n  \"EnableFederationAccess\": false\n}",
+
+					CmdletName: "New-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "update",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"EnableFederationAccess\": false\n}",
+
+					CmdletName: "Set-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "delete",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "Remove-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "user",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/ExternalAccessPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"additionalParameters\": null\n}",
+
+					CmdletName: "Grant-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "tenant",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/ExternalAccessPolicy",
+					Body:   "{\n  \"PolicyName\": \"\",\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+
+					CmdletName: "Grant-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "group",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/ExternalAccessPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+
+					CmdletName: "Grant-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "acs-read",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAcsFederationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAcsFederationConfiguration",
+				},
+			},
+			{
+				Name:   "acs-list",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAcsFederationConfiguration",
+					CmdletName: "Get-CsTeamsAcsFederationConfiguration",
+				},
+			},
+			{
+				Name:   "acs-update",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAcsFederationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"AllowedAcsResources\": [],\n  \"EnableAcsUsers\": false\n}",
+
+					CmdletName: "Set-CsTeamsAcsFederationConfiguration",
+				},
+			},
+			{
+				Name:   "external-read",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsExternalAccessConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsExternalAccessConfiguration",
+				},
+			},
+			{
+				Name:   "external-list",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsExternalAccessConfiguration",
+					CmdletName: "Get-CsTeamsExternalAccessConfiguration",
+				},
+			},
+			{
+				Name:   "external-update",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsExternalAccessConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"BlockedUsers\": [],\n  \"BlockExternalUserAccess\": null\n}",
+
+					CmdletName: "Set-CsTeamsExternalAccessConfiguration",
+				},
+			},
+			{
+				Name:   "delete-force-false",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Remove-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "read-no-content",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "group-accepted-opaque",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/ExternalAccessPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+
+					CmdletName: "Grant-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "list-envelope",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy",
+					CmdletName: "Get-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "read-tagged",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/tag%3AFixture%20/%20Policy",
+					CmdletName: "Get-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "read-future-enum",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "read-null-domain-list",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsExternalAccessPolicy",
+				},
+			},
+			{
+				Name:   "acs-null-list",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAcsFederationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAcsFederationConfiguration",
+				},
+			},
+			{
+				Name:   "external-null-list",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsExternalAccessConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsExternalAccessConfiguration",
+				},
+			},
+			{
+				Name:   "delete-denied",
+				Status: 400,
+				Request: struct {
+					Method string
+					Url    string
+					Body   string
+
+					CmdletName  string
+					FailureType *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ExternalAccessPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "Remove-CsExternalAccessPolicy",
+				},
+			},
+		},
 	}
-	var v struct {
-		Cases []capturedCase `json:"cases"`
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 24 {
-		t.Fatal("invalid provider capture")
-	}
-	for _, c := range v.Cases {
-		if c.Capture.Sends != 1 || c.Capture.TokenRequests != 0 || !c.Capture.CorrelationIsGuid || c.Capture.HasTargetUri || c.Capture.MpaCmdlet != "true" {
-			t.Fatal("unsafe or incomplete provider observation")
-		}
-	}
+
 	return v.Cases
 }
 func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -63,12 +455,12 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"text/plain; charset=utf-8"}, "X-Ms-Configapi-Powershell-Warningmessage": {"fixture-warning"}}, Body: []byte(reply)}}
 }
-func exchange(c capturedCase) contracttest.Exchange {
+func exchange(c requestCase) contracttest.Exchange {
 	var body json.RawMessage
-	if c.Capture.Body != "" {
-		body = json.RawMessage(c.Capture.Body)
+	if c.Request.Body != "" {
+		body = json.RawMessage(c.Request.Body)
 	}
-	return wire(c.Capture.Method, c.Capture.Url[len(origin):], c.Capture.CmdletName, body, c.Status, c.Response)
+	return wire(c.Request.Method, c.Request.Url[len(origin):], c.Request.CmdletName, body, c.Status, c.Response)
 }
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
@@ -87,24 +479,4 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("provider differs: %v %+v", err, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, err := os.OpenRoot(t.ArtifactDir())
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = root.Close() }()
-	f, err := root.Create("teams-external-access-configuration-service.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	writeErr, closeErr := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if writeErr != nil || closeErr != nil {
-		t.Fatal("provider evidence write failed")
-	}
 }

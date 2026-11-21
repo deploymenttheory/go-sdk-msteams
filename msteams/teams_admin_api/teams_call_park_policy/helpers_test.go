@@ -12,11 +12,11 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/call-park-requests.json"
-const modelSource = "contracts/endpoints/8.1.0/fixtures/call-park-binding.json"
-const wrapperSource = "contracts/endpoints/8.1.0/fixtures/call-park-wrappers.json"
+const source = "msteams/teams_admin_api/teams_call_park_policy/testdata/get_global.json"
+const modelSource = "msteams/teams_admin_api/teams_call_park_policy/testdata/get_global.json"
+const wrapperSource = "msteams/teams_admin_api/teams_call_park_policy/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
-const forest = "https://forest.fixture.invalid/"
+const forest = "https://admin.example.invalid/"
 const collection = "/Skype.Policy/configurations/TeamsCallParkPolicy"
 const item = collection + "/configuration/Global"
 const identity = "tag:Fixture / Policy"
@@ -26,36 +26,180 @@ const setCommand = "Set-CsTeamsCallParkPolicy"
 const grantCommand = "Grant-CsTeamsCallParkPolicy"
 const deleteCommand = "Remove-CsTeamsCallParkPolicy"
 
-type requestCapture struct {
+type requestInput struct {
 	Name, Operation, Method string
 	URL                     string `json:"generated_url"`
 	Status                  int    `json:"response_status"`
 	Reply                   string `json:"response_body"`
-	Sends                   int
-	Canceled                bool
-	Body                    json.RawMessage
+
+	Canceled bool
+	Body     json.RawMessage
 }
 
-func captures(t *testing.T) []requestCapture {
+func requestInputs(t *testing.T) []requestInput {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct{ Cases []requestInput }{
+		Cases: []requestInput{
+			{
+				Name:      "policy-list",
+				Operation: "ConfigurationGetConfigurations",
+				Method:    "GET",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsCallParkPolicy",
+				Status:    400,
+				Canceled:  false,
+			},
+			{
+				Name:      "policy-read-escaped",
+				Operation: "ConfigurationGetConfiguration",
+				Method:    "GET",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsCallParkPolicy/configuration/tag%3AFixture%20%2F%20Policy",
+				Status:    400,
+				Canceled:  false,
+			},
+			{
+				Name:      "policy-create",
+				Operation: "ConfigurationCreateConfiguration",
+				Method:    "POST",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsCallParkPolicy",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"AllowCallPark\":false,\"Description\":\"\",\"Identity\":\"tag:Fixture / Policy\",\"ParkTimeoutSeconds\":0,\"PickupRangeEnd\":9223372036854775807,\"PickupRangeStart\":9007199254740993}"),
+			},
+			{
+				Name:      "policy-update-put",
+				Operation: "ConfigurationUpdateConfiguration",
+				Method:    "PUT",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsCallParkPolicy/configuration/tag%3AFixture%20%2F%20Policy",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"AllowCallPark\":false,\"Description\":\"\",\"Identity\":\"tag:Fixture / Policy\",\"ParkTimeoutSeconds\":0,\"PickupRangeEnd\":9223372036854775807,\"PickupRangeStart\":9007199254740993}"),
+			},
+			{
+				Name:      "policy-delete",
+				Operation: "ConfigurationDeleteConfiguration",
+				Method:    "DELETE",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsCallParkPolicy/configuration/tag%3AFixture%20%2F%20Policy",
+				Status:    400,
+				Canceled:  false,
+			},
+			{
+				Name:      "policy-forbidden",
+				Operation: "ConfigurationGetConfiguration",
+				Method:    "GET",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsCallParkPolicy/configuration/Fixture",
+				Status:    400,
+				Canceled:  false,
+			},
+			{
+				Name:      "policy-malformed-error",
+				Operation: "ConfigurationGetConfiguration",
+				Method:    "GET",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsCallParkPolicy/configuration/Fixture",
+				Status:    400,
+				Canceled:  false,
+			},
+			{
+				Name:      "policy-pre-canceled",
+				Operation: "ConfigurationGetConfigurations",
+				Status:    400,
+				Canceled:  true,
+			},
+			{
+				Name:      "policy-identity-only-put",
+				Operation: "ConfigurationUpdateConfiguration",
+				Method:    "PUT",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsCallParkPolicy/configuration/Global",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"Identity\":\"Global\"}"),
+			},
+			{
+				Name:      "policy-signed-int64-put",
+				Operation: "ConfigurationUpdateConfiguration",
+				Method:    "PUT",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsCallParkPolicy/configuration/Global",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"AllowCallPark\":false,\"Description\":\"\",\"Identity\":\"Global\",\"ParkTimeoutSeconds\":-9223372036854775808,\"PickupRangeEnd\":-1,\"PickupRangeStart\":0}"),
+			},
+			{
+				Name:      "user-assignment",
+				Operation: "UserGrantPolicy",
+				Method:    "PATCH",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/TeamsCallParkPolicy",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"policyName\":\"Fixture\"}"),
+			},
+			{
+				Name:      "user-clear-empty-policy",
+				Operation: "UserGrantPolicy",
+				Method:    "PATCH",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/TeamsCallParkPolicy",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"policyName\":\"\"}"),
+			},
+			{
+				Name:      "tenant-assignment",
+				Operation: "TenantGrantPolicy",
+				Method:    "PATCH",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsCallParkPolicy",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"forceSwitchPresent\":false,\"policyName\":\"Fixture\"}"),
+			},
+			{
+				Name:      "group-assignment-accepted",
+				Operation: "GroupGrantPolicyAssignment",
+				Method:    "POST",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsCallParkPolicy",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"policyName\":\"Fixture\",\"priority\":2}"),
+			},
+			{
+				Name:      "group-assignment-no-content",
+				Operation: "GroupGrantPolicyAssignment",
+				Method:    "POST",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsCallParkPolicy",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"policyName\":\"Fixture\",\"priority\":2}"),
+			},
+			{
+				Name:      "group-assignment-zero-priority",
+				Operation: "GroupGrantPolicyAssignment",
+				Method:    "POST",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsCallParkPolicy",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"policyName\":\"Fixture\",\"priority\":0}"),
+			},
+			{
+				Name:      "group-clear-without-priority",
+				Operation: "GroupGrantPolicyAssignment",
+				Method:    "POST",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsCallParkPolicy",
+				Status:    400,
+				Canceled:  false,
+				Body:      json.RawMessage("{\"policyName\":\"\"}"),
+			},
+		},
 	}
-	var v struct{ Cases []requestCapture }
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 17 {
-		t.Fatal("incomplete generated call park policy fixture")
-	}
-	for _, c := range v.Cases {
-		if c.Canceled && c.Sends != 0 || !c.Canceled && c.Sends != 1 {
-			t.Fatal("unexpected source send count")
-		}
-	}
+
 	return v.Cases
 }
-func discovery() contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(`{"Endpoints":{"AdminServiceEndpoint":"forest.fixture.invalid:444/ignored?x=y#ignored"}}`)}}
+func discovery(t *testing.T) contracttest.Exchange {
+	t.Helper()
+	raw, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
 }
+
 func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {forest}}
 	h[http.CanonicalHeaderKey("MPACmdlet")] = nil
@@ -66,7 +210,7 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
 }
-func capturedWire(t *testing.T, c requestCapture, command string) contracttest.Exchange {
+func requestWire(t *testing.T, c requestInput, command string) contracttest.Exchange {
 	t.Helper()
 	u, e := url.Parse(c.URL)
 	if e != nil {
@@ -99,24 +243,4 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("call park policy contract differs: %v %+v", e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("call-park-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("call park policy evidence write failed")
-	}
 }

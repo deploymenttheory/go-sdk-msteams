@@ -140,9 +140,9 @@ func compareFederation(t *testing.T, kind string, raw map[string]json.RawMessage
 	}
 }
 
-// TestLabFederationReadOnly reads Global and a locally filtered list. It never
+// TestAccFederationReadOnly reads Global and a locally filtered list. It never
 // edits tenant configuration, grants assignments or creates/deletes a policy.
-func TestLabFederationReadOnly(t *testing.T) {
+func TestAccFederationReadOnly(t *testing.T) {
 	cfg := federationReadOnly(t)
 	oracle := teamOracleEnabled(t)
 	for _, kind := range []string{"external-policy", "acs", "external-users", "tenant"} {
@@ -158,12 +158,14 @@ func TestLabFederationReadOnly(t *testing.T) {
 			switch kind {
 			case "external-policy":
 				v, r, e := sdk.TeamsAdminAPI.ExternalAccessPolicies.GetByIdentity(ctx, "Global")
+				writeResponseFixture(t, "external_access_policy", "get_global", r, nil)
 				response, err = r, e
 				if v != nil {
 					identity, raw = v.Identity, v.RawFields
 				}
 				if err == nil {
-					values, _, e := sdk.TeamsAdminAPI.ExternalAccessPolicies.ListFiltered(ctx, "Global")
+					values, listResponse, e := sdk.TeamsAdminAPI.ExternalAccessPolicies.ListFiltered(ctx, "Global")
+					writeResponseFixture(t, "external_access_policy", "list", listResponse, nil)
 					err = e
 					for _, v := range values {
 						if v != nil {
@@ -173,12 +175,14 @@ func TestLabFederationReadOnly(t *testing.T) {
 				}
 			case "acs":
 				v, r, e := sdk.TeamsAdminAPI.ACSFederationConfigurations.GetByIdentity(ctx, "Global")
+				writeResponseFixture(t, "acs_federation_configuration", "get_global", r, nil)
 				response, err = r, e
 				if v != nil {
 					identity, raw = v.Identity, v.RawFields
 				}
 				if err == nil {
-					values, _, e := sdk.TeamsAdminAPI.ACSFederationConfigurations.ListFiltered(ctx, "Global")
+					values, listResponse, e := sdk.TeamsAdminAPI.ACSFederationConfigurations.ListFiltered(ctx, "Global")
+					writeResponseFixture(t, "acs_federation_configuration", "list", listResponse, nil)
 					err = e
 					for _, v := range values {
 						if v != nil {
@@ -188,12 +192,14 @@ func TestLabFederationReadOnly(t *testing.T) {
 				}
 			case "external-users":
 				v, r, e := sdk.TeamsAdminAPI.TeamsExternalAccessConfigurations.GetByIdentity(ctx, "Global")
+				writeResponseFixture(t, "teams_external_access_configuration", "get_global", r, nil)
 				response, err = r, e
 				if v != nil {
 					identity, raw = v.Identity, v.RawFields
 				}
 				if err == nil {
-					values, _, e := sdk.TeamsAdminAPI.TeamsExternalAccessConfigurations.ListFiltered(ctx, "Global")
+					values, listResponse, e := sdk.TeamsAdminAPI.TeamsExternalAccessConfigurations.ListFiltered(ctx, "Global")
+					writeResponseFixture(t, "teams_external_access_configuration", "list", listResponse, nil)
 					err = e
 					for _, v := range values {
 						if v != nil {
@@ -203,12 +209,14 @@ func TestLabFederationReadOnly(t *testing.T) {
 				}
 			case "tenant":
 				v, r, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.GetByIdentity(ctx, "Global")
+				writeResponseFixture(t, "tenant_federation_configuration", "get_global", r, nil)
 				response, err = r, e
 				if v != nil {
 					identity, raw = &v.Identity, v.RawFields
 				}
 				if err == nil {
-					values, _, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.ListFiltered(ctx, "Global")
+					values, listResponse, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.ListFiltered(ctx, "Global")
+					writeResponseFixture(t, "tenant_federation_configuration", "list", listResponse, nil)
 					err = e
 					for _, v := range values {
 						listed = append(listed, v.RawFields)
@@ -241,7 +249,7 @@ func TestLabFederationReadOnly(t *testing.T) {
 	}
 }
 
-func TestFederationOracleRejectsMixedAndIncompleteOutput(t *testing.T) {
+func TestUnitFederationOracleRejectsMixedAndIncompleteOutput(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"success":false}`, `{"success":true,"kind":"acs","identity":"Global","settings":{}}`, `{"success":true,"kind":"acs","identity":"Global","settings":{"EnableAcsUsers":false,"RequireAcsFederationForMeeting":null,"extra":false}}`, `{"success":true,"kind":"tenant","identity":"Global","settings":{"EnableAcsUsers":false,"RequireAcsFederationForMeeting":null}}`} {
 		if _, err := decodeFederationOracle([]byte(raw), "acs"); err == nil {

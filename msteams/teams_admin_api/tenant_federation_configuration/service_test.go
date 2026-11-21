@@ -6,7 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"reflect"
+
+	"slices"
 	"strings"
 	"testing"
 
@@ -17,9 +18,9 @@ import (
 	configuration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
-func TestTenantFederationPinnedDispatch(t *testing.T) {
+func TestUnitTenantFederationTypedDispatch(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
 		for _, f := range pinned(t).Cases {
 			command := getCommand
@@ -30,7 +31,7 @@ func TestTenantFederationPinnedDispatch(t *testing.T) {
 			if string(body) == "null" {
 				body = nil
 			}
-			results = append(results, run(t, contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(), wire(f.Method, strings.TrimPrefix(f.URL, origin), command, body, f.Status, f.Response)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(t), wire(f.Method, strings.TrimPrefix(f.URL, origin), command, body, f.Status, f.Response)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TenantFederationConfigurations
 				switch f.Name {
 				case "tenant-federation-list":
@@ -52,10 +53,9 @@ func TestTenantFederationPinnedDispatch(t *testing.T) {
 				default:
 					return contracttest.Observation{Err: errors.New("unknown pinned request")}
 				}
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }
 
 func inputFor(t *testing.T, name string) configuration.UpdateRequest {
@@ -100,9 +100,9 @@ func inputFor(t *testing.T, name string) configuration.UpdateRequest {
 	return v
 }
 
-func TestTenantUpdateMatchesPinnedNormalization(t *testing.T) {
+func TestUnitTenantUpdateMatchesTypedNormalization(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	rejected := 0
 	for _, f := range pinned(t).Models {
 		if f.Rejected {
@@ -110,60 +110,112 @@ func TestTenantUpdateMatchesPinnedNormalization(t *testing.T) {
 			continue
 		}
 		input := inputFor(t, f.Name)
-		results = append(results, run(t, contracttest.Case{Name: f.Name, Mode: auth.Application, Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(), wire("PUT", collection+"/configuration/Global", setCommand, f.Wire, 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: f.Name, Mode: auth.Application, Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(t), wire("PUT", collection+"/configuration/Global", setCommand, f.Wire, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			r, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.UpdateGlobal(ctx, input)
 			return contracttest.Observation{Response: r, Err: e}
-		}}))
+		}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.
+			TeamsAdmin, StatusCode: 400}},
+		})
 	}
 	if rejected != 3 {
 		t.Fatal("pinned rejection count differs")
 	}
-	evidence(t, results)
 }
 
-func TestTenantListFilteringAndRawChoices(t *testing.T) {
+func TestUnitTenantFiltersUseRealResponses(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	reply := `[{"Identity":"tag:Fixture","AllowedDomains":{"AllowedDomain":[{"Domain":"a.example.invalid"}],"Future":false},"BlockedDomains":null},{"Identity":"Global","AllowedDomains":null,"AllowedTrialTenantDomains":[],"AllowTeamsConsumer":false,"Future":{"x":null}},{"Identity":"Other","ExternalAccessWithTrialTenants":"FutureState"}]`
-	for index, pattern := range []string{"", "Fixture*"} {
-		results = append(results, run(t, contracttest.Case{Name: fmt.Sprint("list-", index), Mode: auth.Delegated, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{discovery(), wire("GET", collection, getCommand, nil, 200, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			v, r, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.ListFiltered(ctx, pattern)
-			if e == nil {
-				want := []string{"Global", "tag:Fixture", "Other"}
-				if pattern != "" {
-					want = []string{"tag:Fixture"}
-				}
-				var ids []string
-				for _, item := range v {
-					ids = append(ids, item.Identity)
-					raw, err := json.Marshal(item)
-					var fields map[string]json.RawMessage
-					if err != nil || json.Unmarshal(raw, &fields) != nil || !reflect.DeepEqual(fields, item.RawFields) {
-						e = errors.New("response snapshot changed")
-					}
-				}
-				if !reflect.DeepEqual(ids, want) {
-					e = errors.New("local filter/order changed")
-				}
-			}
-			return contracttest.Observation{Response: r, Err: e}
-		}}))
+	raw := readResponseFixture(t, "list.json")
+	var rows []json.RawMessage
+	if json.Unmarshal(raw, &rows) != nil {
+		t.Fatal("invalid real list fixture")
 	}
-	evidence(t, results)
+	identities := func(row json.RawMessage) string {
+		var value struct {
+			Identity string `json:"Identity"`
+		}
+		if json.Unmarshal(row, &value) != nil {
+			t.Fatal("invalid real list identity")
+		}
+		return value.Identity
+	}
+	slices.SortStableFunc(rows, func(a, b json.RawMessage) int {
+		left, right := strings.EqualFold(identities(a), "Global"), strings.EqualFold(identities(b), "Global")
+		if left == right {
+			return 0
+		}
+		if left {
+			return -1
+		}
+		return 1
+	})
+	cases := []struct {
+		Name, Pattern, OnlyID string
+		Empty                 bool
+	}{
+		{Name: "list"}, {Name: "all", Pattern: "*"}, {Name: "global", Pattern: "Global", OnlyID: "Global"},
+		{Name: "missing", Pattern: "__sdk_missing_fixture__", Empty: true},
+		{Name: "whitespace", Pattern: " ", Empty: false},
+	}
+	for _, row := range rows {
+		id := identities(row)
+		if strings.HasPrefix(id, "Tag:") && !strings.ContainsAny(id, "*?[]`") {
+			cases = append(cases, struct {
+				Name, Pattern, OnlyID string
+				Empty                 bool
+			}{Name: "tag-prefix", Pattern: strings.TrimPrefix(id, "Tag:"), OnlyID: id})
+			break
+		}
+	}
+	for _, tc := range cases {
+		want := make([]json.RawMessage, 0, len(rows))
+		for _, row := range rows {
+			if !tc.Empty && (tc.OnlyID == "" || strings.EqualFold(identities(row), tc.OnlyID)) {
+				want = append(want, row)
+			}
+		}
+		expected, err := json.Marshal(want)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "real-filter-" + tc.Name, Family: "tenant_federation_configuration", Scope: "service", Source: "msteams/teams_admin_api/tenant_federation_configuration/testdata/list.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TenantFederationSettings", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				service := sdk.TeamsAdminAPI.TenantFederationConfigurations
+				if tc.Pattern == "" {
+					value, response, err := service.List(ctx)
+					return contracttest.Observation{Value: value, Response: response, Err: err}
+				}
+				value, response, err := service.ListFiltered(ctx, tc.Pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("real filtering response differs: %v %+v", err, result.Differences())
+		}
+	}
+
 }
 
-func TestTenantIdentityEscapingAndMutationErrors(t *testing.T) {
+func TestUnitTenantIdentityEscapingAndMutationErrors(t *testing.T) {
 	t.Parallel()
+
+	var snapshot configuration.Configuration
+	if json.Unmarshal([]byte(`{"Identity":"scope/Fixture / Config","AllowedDomains":["Future"]}`), &snapshot) != nil || snapshot.Identity != "scope/Fixture / Config" || string(snapshot.AllowedDomains) != `["Future"]` {
+		t.Fatal("local compatibility model input lost raw fields")
+	}
 	identity := "scope/Fixture / Config"
-	run(t, contracttest.Case{Name: "escaped", Mode: auth.Application, Steps: []contracttest.Exchange{discovery(), wire("GET", collection+"/configuration/"+url.PathEscape(identity), getCommand, nil, 200, `{"Identity":"scope/Fixture / Config","AllowedDomains":["Future"]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "escaped", Mode: auth.Application, Steps: []contracttest.Exchange{discovery(t), wire("GET", collection+"/configuration/"+url.PathEscape(identity), getCommand, nil, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.GetByIdentity(ctx, identity)
 		if e == nil && (v.Identity != identity || string(v.AllowedDomains) != `["Future"]`) {
 			e = errors.New("escaped read changed")
 		}
 		return contracttest.Observation{Response: r, Err: e}
-	}})
+	}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.
+		TeamsAdmin, StatusCode: 400}},
+	})
 	for _, status := range []int{400, 403, 429, 503} {
-		run(t, contracttest.Case{Name: fmt.Sprint("denied-", status), Mode: auth.Application, Steps: []contracttest.Exchange{discovery(), wire("PUT", collection+"/configuration/Global", setCommand, json.RawMessage(`{"Identity":"Global"}`), status, `{"Code":"FutureDenied","Message":"fixture private text"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: fmt.Sprint("denied-", status), Mode: auth.Application, Steps: []contracttest.Exchange{discovery(t), wire("PUT", collection+"/configuration/Global", setCommand, json.RawMessage(`{"Identity":"Global"}`), status, `{"Code":"FutureDenied","Message":"fixture private text"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			r, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.UpdateGlobal(ctx, configuration.UpdateRequest{})
 			var api *client.APIError
 			if !errors.As(e, &api) || api.StatusCode != status || r == nil || !strings.Contains(string(r.Body()), "fixture private text") || strings.Contains(fmt.Sprint(e), "fixture private text") {
@@ -174,7 +226,7 @@ func TestTenantIdentityEscapingAndMutationErrors(t *testing.T) {
 	}
 }
 
-func TestTenantInvalidInputsDoNotAcquireCredentials(t *testing.T) {
+func TestUnitTenantInvalidInputsDoNotAcquireCredentials(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "invalid-local", Mode: auth.Application, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TenantFederationConfigurations

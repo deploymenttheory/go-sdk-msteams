@@ -80,9 +80,9 @@ func audioConferencingPolicyOracle(t *testing.T, ctx context.Context, tenant str
 	return value
 }
 
-// TestLabAudioConferencingPolicyReadOnly never edits Global, creates resources or grants a
+// TestAccAudioConferencingPolicyReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabAudioConferencingPolicyReadOnly(t *testing.T) {
+func TestAccAudioConferencingPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -97,6 +97,7 @@ func TestLabAudioConferencingPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsAudioConferencingPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_audio_conferencing_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -104,7 +105,8 @@ func TestLabAudioConferencingPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("audio conferencing policy Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsAudioConferencingPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsAudioConferencingPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_audio_conferencing_policy", "list", listResponse, nil)
 	selected, selectionErr := globalAudioConferencingPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("audio policy Global selection differs")
@@ -155,7 +157,7 @@ func globalAudioConferencingPolicy(values []resource.Policy) (*resource.Policy, 
 	}
 	return found, nil
 }
-func TestAudioConferencingPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitAudioConferencingPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"AllowTollFreeDialin":false,"MeetingInvitePhoneNumbers":["future-phone",null,{"Future":9007199254740993}]}`

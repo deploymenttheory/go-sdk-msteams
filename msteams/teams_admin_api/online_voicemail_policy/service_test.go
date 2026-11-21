@@ -25,23 +25,26 @@ func settings(duration string) resource.Settings {
 	return resource.Settings{Description: policy.Set(""), ShareData: policy.Set("FutureValue"), PrimarySystemPromptLanguage: policy.Set("FuturePrimary"), SecondarySystemPromptLanguage: policy.Set("FutureSecondary"), PreambleAudioFile: policy.Set("fixture-audio-reference"), PostambleAudioFile: policy.Set(""), EnableTranscription: policy.Set(false), EnableTranscriptionProfanityMasking: policy.Set(false), EnableEditingCallAnswerRulesSetting: policy.Set(false), EnableTranscriptionTranslation: policy.Set(false), PreamblePostambleMandatory: policy.Set(false), EnableVoicemailTriage: policy.Set(false), MaximumRecordingLength: length}
 }
 
-func TestVoicemailCompiledProviderRequests(t *testing.T) {
+func TestUnitVoicemailCompiledProviderRequests(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, f := range captured(t) {
+
+	for _, f := range requestInputs(t) {
 		var body json.RawMessage
-		if f.Capture.Body != "" {
-			body = json.RawMessage(f.Capture.Body)
+		if f.Request.Body != "" {
+			body = json.RawMessage(f.Request.Body)
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: f.Capture.CmdletName, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(f.Capture.Method, strings.TrimPrefix(f.Capture.Url, origin), f.Capture.CmdletName, body, f.Status, f.Response)}}
-			if f.Capture.FailureType != nil {
+			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: f.Request.CmdletName, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(f.Request.Method, strings.TrimPrefix(f.Request.Url, origin), f.Request.CmdletName, body, f.Status, f.Response)}}
+			if f.Request.FailureType != nil {
 				c.Want.Error = client.ErrDecode
 				if f.Status == 403 {
 					c.Want.Error = auth.ErrForbidden
 				}
 			} else if f.Operation != "delete" && f.Response != "" {
 				c.Want.JSON = json.RawMessage(f.Response)
+			}
+			if len(c.Steps) != 0 {
+				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.OnlineVoicemailPolicies
@@ -68,8 +71,7 @@ func TestVoicemailCompiledProviderRequests(t *testing.T) {
 					return contracttest.Observation{Value: v, Response: r, Err: e}
 				}
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }

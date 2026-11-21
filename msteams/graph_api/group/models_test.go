@@ -3,7 +3,6 @@ package group_test
 import (
 	"encoding/json"
 	"errors"
-	"os"
 	"reflect"
 	"testing"
 
@@ -11,50 +10,32 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
 )
 
-func TestGroupPatchMatchesPinnedOmissionAndExplicitEmpty(t *testing.T) {
+func TestUnitGroupPatchPreservesOmissionAndExplicitEmpty(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/core-team-serialization.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var source struct {
-		Version string `json:"baseline_version"`
-		Cases   []struct {
-			Name string          `json:"name"`
-			Wire json.RawMessage `json:"wire"`
-		} `json:"cases"`
-	}
-	if json.Unmarshal(raw, &source) != nil || source.Version != "8.1.0" {
-		t.Fatal("pinned group serializer capture unavailable")
-	}
 	empty := ""
 	visibility := group.Visibility("")
-	requests := map[string]group.UpdateRequest{
-		"group-patch-omitted":        {},
-		"group-patch-explicit-empty": {DisplayName: &empty, Description: &empty, Visibility: &visibility, MailNickname: &empty, Classification: &empty},
-	}
-	checked := 0
-	for _, capture := range source.Cases {
-		request, ok := requests[capture.Name]
-		if !ok {
-			continue
-		}
-		checked++
-		encoded, err := json.Marshal(request)
-		if err != nil {
-			t.Fatal(err)
-		}
-		var actual, expected map[string]any
-		if json.Unmarshal(encoded, &actual) != nil || json.Unmarshal(capture.Wire, &expected) != nil || !reflect.DeepEqual(actual, expected) {
-			t.Fatal("group patch changed pinned omitted/empty intent")
-		}
-	}
-	if checked != 2 {
-		t.Fatal("pinned group patch captures disappeared")
+	for _, tc := range []struct {
+		name    string
+		request group.UpdateRequest
+		want    string
+	}{
+		{name: "omitted", request: group.UpdateRequest{}, want: `{}`},
+		{name: "explicit-empty", request: group.UpdateRequest{DisplayName: &empty, Description: &empty, Visibility: &visibility, MailNickname: &empty, Classification: &empty}, want: `{"classification":"","description":"","displayName":"","mailNickname":"","visibility":""}`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			actual, err := json.Marshal(tc.request)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var got, want map[string]any
+			if json.Unmarshal(actual, &got) != nil || json.Unmarshal([]byte(tc.want), &want) != nil || !reflect.DeepEqual(got, want) {
+				t.Fatal("group patch lost omitted or explicit-empty input")
+			}
+		})
 	}
 }
 
-func TestGroupReadPreservesNullableAndFutureFields(t *testing.T) {
+func TestUnitGroupReadPreservesNullableAndFutureFields(t *testing.T) {
 	t.Parallel()
 	var value group.Group
 	raw := `{"id":"fixture-group","displayName":"","description":null,"visibility":"futureVisibility","mailEnabled":true,"securityEnabled":false,"groupTypes":["Unified"],"resourceProvisioningOptions":[],"createdDateTime":"2026-01-02T03:04:05Z","extension_future":{"value":false}}`
@@ -78,7 +59,7 @@ func TestGroupReadPreservesNullableAndFutureFields(t *testing.T) {
 	}
 }
 
-func TestGroupReadRequiresIdentity(t *testing.T) {
+func TestUnitGroupReadRequiresIdentity(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`null`, `[]`, `{}`, `{"id":7}`, `{"id":"fixture","mailEnabled":"false"}`} {
 		var value group.Group
@@ -88,7 +69,7 @@ func TestGroupReadRequiresIdentity(t *testing.T) {
 	}
 }
 
-func TestMicrosoft365GroupConstructorDoesNotApplyPowerShellDefaults(t *testing.T) {
+func TestUnitMicrosoft365GroupConstructorDoesNotApplyPowerShellDefaults(t *testing.T) {
 	t.Parallel()
 	value, err := group.NewMicrosoft365Group("Fixture Group", "fixture-group")
 	if err != nil || value.DisplayName == nil || *value.DisplayName != "Fixture Group" || value.MailNickname == nil || *value.MailNickname != "fixture-group" {

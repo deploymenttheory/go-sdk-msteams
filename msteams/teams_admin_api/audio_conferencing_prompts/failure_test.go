@@ -15,9 +15,9 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestPromptsInputContextAndBackendRejectBeforeHTTP(t *testing.T) {
+func TestUnitPromptsInputContextAndBackendRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
-	r := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts
 		for _, id := range []string{"", " ", ".", "..", "scope/", "/empty", "scope/..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -58,28 +58,26 @@ func TestPromptsInputContextAndBackendRejectBeforeHTTP(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{r})
 }
 
-func TestPromptsPatchPreservesStatusAndNeverReplays(t *testing.T) {
+func TestUnitPromptsPatchPreservesStatusAndNeverReplays(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, status := range []int{400, 401, 403, 429, 503} {
-		results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("patch-error-%d", status), Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"Global","Prompts":[]}`), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: fmt.Sprintf("patch-error-%d", status), Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"Global","Prompts":[]}`), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			_, r, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{Prompts: policy.Set[[]*resource.Prompt](nil)}})
 			var api *client.APIError
 			if !errors.As(e, &api) || api.StatusCode != status || strings.Contains(fmt.Sprint(e), "fixture-private") {
 				return contracttest.Observation{Err: errors.New("status/redaction changed")}
 			}
 			return contracttest.Observation{Response: r}
-		}}))
+		}})
 	}
-	evidence(t, results)
 }
 
-func TestPromptsBuildersNeverAcquireCredentialsOrHTTP(t *testing.T) {
+func TestUnitPromptsBuildersNeverAcquireCredentialsOrHTTP(t *testing.T) {
 	t.Parallel()
-	r := run(t, contracttest.Case{Name: "local-prompt-package-builders", Source: sourceModels, Invoke: func(_ context.Context, _ *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "local-prompt-package-builders", Source: sourceModels, Invoke: func(_ context.Context, _ *msteams.Client) contracttest.Observation {
 		prompt, e := resource.NewPrompt(firstID, "", "")
 		if e != nil || prompt.Type == nil || *prompt.Type != "" || prompt.Locale == nil || *prompt.Locale != "" {
 			return contracttest.Observation{Err: errors.New("prompt builder lost empty values")}
@@ -101,5 +99,4 @@ func TestPromptsBuildersNeverAcquireCredentialsOrHTTP(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{r})
 }

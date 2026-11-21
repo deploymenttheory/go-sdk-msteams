@@ -185,7 +185,7 @@ func newTestDelegated(t *testing.T, cfg *Config, service *delegatedService) *Del
 	return provider
 }
 
-func TestDelegatedPasswordAndSilentSecondAudience(t *testing.T) {
+func TestUnitDelegatedPasswordAndSilentSecondAudience(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t}
 	cfg := delegatedConfig(Password)
@@ -202,7 +202,7 @@ func TestDelegatedPasswordAndSilentSecondAudience(t *testing.T) {
 	}
 }
 
-func TestDelegatedOAuthFailuresPreserveDiagnosticsWithoutFallback(t *testing.T) {
+func TestUnitDelegatedOAuthFailuresPreserveDiagnosticsWithoutFallback(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		code  string
@@ -238,7 +238,7 @@ func TestDelegatedOAuthFailuresPreserveDiagnosticsWithoutFallback(t *testing.T) 
 	}
 }
 
-func TestDelegatedDeviceFlowAndCallback(t *testing.T) {
+func TestUnitDelegatedDeviceFlowAndCallback(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t, pending: 1}
 	cfg := delegatedConfig(DeviceCode)
@@ -268,7 +268,7 @@ func TestDelegatedDeviceFlowAndCallback(t *testing.T) {
 	}
 }
 
-func TestDelegatedDeviceRejections(t *testing.T) {
+func TestUnitDelegatedDeviceRejections(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, verification, failure string
@@ -290,7 +290,7 @@ func TestDelegatedDeviceRejections(t *testing.T) {
 	}
 }
 
-func TestDelegatedAccountCannotChangeBetweenAudiences(t *testing.T) {
+func TestUnitDelegatedAccountCannotChangeBetweenAudiences(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t}
 	provider := newTestDelegated(t, delegatedConfig(Password), service)
@@ -305,7 +305,7 @@ func TestDelegatedAccountCannotChangeBetweenAudiences(t *testing.T) {
 	}
 }
 
-func TestDelegatedCancellationWhileWaitingAndClose(t *testing.T) {
+func TestUnitDelegatedCancellationWhileWaitingAndClose(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t}
 	cfg := delegatedConfig(DeviceCode)
@@ -342,7 +342,7 @@ func TestDelegatedCancellationWhileWaitingAndClose(t *testing.T) {
 	}
 }
 
-func TestDelegatedFederationDoesNotForwardPassword(t *testing.T) {
+func TestUnitDelegatedFederationDoesNotForwardPassword(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t, federated: true}
 	provider := newTestDelegated(t, delegatedConfig(Password), service)
@@ -354,7 +354,7 @@ func TestDelegatedFederationDoesNotForwardPassword(t *testing.T) {
 	}
 }
 
-func TestDelegatedSilentRefreshWithoutIDTokenKeepsSelectedAccount(t *testing.T) {
+func TestUnitDelegatedSilentRefreshWithoutIDTokenKeepsSelectedAccount(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t, omitRefreshID: true}
 	provider := newTestDelegated(t, delegatedConfig(Password), service)
@@ -368,7 +368,7 @@ func TestDelegatedSilentRefreshWithoutIDTokenKeepsSelectedAccount(t *testing.T) 
 	}
 }
 
-func TestDelegatedSilentTransportFailureDoesNotPrompt(t *testing.T) {
+func TestUnitDelegatedSilentTransportFailureDoesNotPrompt(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t}
 	cfg := delegatedConfig(DeviceCode)
@@ -390,7 +390,7 @@ func TestDelegatedSilentTransportFailureDoesNotPrompt(t *testing.T) {
 	}
 }
 
-func TestDevicePollingHonorsIntervalAndSlowDown(t *testing.T) {
+func TestUnitDevicePollingHonorsIntervalAndSlowDown(t *testing.T) {
 	t.Parallel()
 	now := time.Unix(1000, 0)
 	var delays []time.Duration
@@ -435,7 +435,7 @@ func TestDevicePollingHonorsIntervalAndSlowDown(t *testing.T) {
 	authority.stopPolling()
 }
 
-func TestDelegatedConfigurationRequiresExplicitCallbacks(t *testing.T) {
+func TestUnitDelegatedConfigurationRequiresExplicitCallbacks(t *testing.T) {
 	t.Parallel()
 	for _, cfg := range []*Config{
 		{Method: Browser, TenantID: appTenant, ClientID: appID},
@@ -449,7 +449,7 @@ func TestDelegatedConfigurationRequiresExplicitCallbacks(t *testing.T) {
 	}
 }
 
-func TestDeviceCodeExpiresWhilePromptWaits(t *testing.T) {
+func TestUnitDeviceCodeExpiresWhilePromptWaits(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t, deviceExpires: 1}
 	cfg := delegatedConfig(DeviceCode)
@@ -463,7 +463,7 @@ func TestDeviceCodeExpiresWhilePromptWaits(t *testing.T) {
 	}
 }
 
-func TestDevicePromptCanCancelWithoutLeakingCallbackError(t *testing.T) {
+func TestUnitDevicePromptCanCancelWithoutLeakingCallbackError(t *testing.T) {
 	t.Parallel()
 	service := &delegatedService{t: t}
 	cfg := delegatedConfig(DeviceCode)

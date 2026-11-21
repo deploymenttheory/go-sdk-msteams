@@ -27,7 +27,7 @@ func cleanupExchange(method, path string, status int, body string) contracttest.
 func runCleanupCase(t *testing.T, c contracttest.Case) {
 	t.Helper()
 	c.Family = "membership_lab_cleanup"
-	c.Source = "contracts/endpoints/8.1.0/fixtures/core-native-team-members.json"
+	c.Source = "tests/integration/lab/team_membership_cleanup_test.go"
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
@@ -40,7 +40,7 @@ func runCleanupCase(t *testing.T, c contracttest.Case) {
 	}
 }
 
-func TestMembershipCleanupResolveRequiresCompleteUniquePositiveMatch(t *testing.T) {
+func TestUnitMembershipCleanupResolveRequiresCompleteUniquePositiveMatch(t *testing.T) {
 	t.Parallel()
 	query := url.Values{"$filter": {"displayName eq '" + cleanupFixture + "'"}, "$select": {"id,displayName"}}.Encode()
 	for _, tc := range []struct {
@@ -66,7 +66,7 @@ func TestMembershipCleanupResolveRequiresCompleteUniquePositiveMatch(t *testing.
 	}, Want: contracttest.Expected{Error: lab.ErrUnresolved}})
 }
 
-func TestMembershipCleanupDeleteRequiresBothOwnedSnapshots(t *testing.T) {
+func TestUnitMembershipCleanupDeleteRequiresBothOwnedSnapshots(t *testing.T) {
 	t.Parallel()
 	groupQuery := url.Values{"$select": {"id,displayName,groupTypes"}}.Encode()
 	for _, phase := range []string{"owned", "team-denied", "team-missing", "team-other-name", "team-other-id", "group-other-name", "group-not-unified", "group-other-id", "delete-denied"} {
@@ -134,7 +134,7 @@ func TestMembershipCleanupDeleteRequiresBothOwnedSnapshots(t *testing.T) {
 	}
 }
 
-func TestMembershipUsersRequirePrivateSameTenantDistinctIDs(t *testing.T) {
+func TestUnitMembershipUsersRequirePrivateSameTenantDistinctIDs(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"valid", "other-tenant", "reused-id", "invalid-id", "missing-file"} {
 		t.Run(name, func(t *testing.T) {

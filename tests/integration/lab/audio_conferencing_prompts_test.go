@@ -153,9 +153,9 @@ func globalConferencingPrompts(values []*resource.Configuration) (*resource.Conf
 	return found, nil
 }
 
-// TestLabAudioConferencingPromptsReadOnly performs only Global and filtered reads.
+// TestAccAudioConferencingPromptsReadOnly performs only Global and filtered reads.
 // It never edits prompts, packages, roles, consent or effective conferencing state.
-func TestLabAudioConferencingPromptsReadOnly(t *testing.T) {
+func TestAccAudioConferencingPromptsReadOnly(t *testing.T) {
 	cfg, e := lab.Load()
 	if e != nil {
 		t.Fatal("invalid lab enablement")
@@ -170,6 +170,7 @@ func TestLabAudioConferencingPromptsReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "audio_conferencing_prompts", "get_global", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -177,7 +178,8 @@ func TestLabAudioConferencingPromptsReadOnly(t *testing.T) {
 		}
 		t.Fatalf("custom prompts Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.ListFiltered(ctx, "Global")
+	listed, listResponse, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "audio_conferencing_prompts", "list", listResponse, nil)
 	selected, selectionErr := globalConferencingPrompts(listed)
 	if e != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(conferencingPromptsProjection(value), conferencingPromptsProjection(selected)) {
 		t.Fatal("custom prompts Global/list projections differ")
@@ -196,7 +198,7 @@ func TestLabAudioConferencingPromptsReadOnly(t *testing.T) {
 	}
 	t.Log("selected custom prompt reads verified; writes, playback and cleanup require separate qualification")
 }
-func TestConferencingPromptsOracleRejectsIncompleteOrMixedProjections(t *testing.T) {
+func TestUnitConferencingPromptsOracleRejectsIncompleteOrMixedProjections(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Prompts":[{"Identity":null,"Id":null,"Name":"","AudioPrompt":null,"TextPrompt":null,"Type":"","Locale":""}],"Packages":[{"Identity":null,"Id":null,"Name":null,"DefaultLocale":"","InboundStartRecordingPrompt":["future",null],"InboundEndRecordingPrompt":[],"OutboundStartRecordingPrompt":[],"OutboundEndRecordingPrompt":[],"MeetingStartRecordingPrompt":[],"MeetingEndRecordingPrompt":[]}]}`

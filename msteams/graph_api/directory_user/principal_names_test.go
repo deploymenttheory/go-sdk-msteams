@@ -17,11 +17,11 @@ import (
 
 func namesCase(t *testing.T, c contracttest.Case) {
 	t.Helper()
-	c.Family, c.Source = "directory_principal_names", "contracts/endpoints/8.1.0/core.json"
+	c.Family, c.Source = "directory_principal_names", "msteams/graph_api/directory_user/principal_names_test.go"
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
-	r, e := contracttest.Run(t.Context(), c)
+	r, e := contracttest.Run(t.Context(), requestBoundary(t, c))
 	if e != nil || !r.Passed() {
 		t.Fatalf("principal-name contract differs: setup=%v differences=%+v", e, r.Differences())
 	}
@@ -35,23 +35,32 @@ func namePath(ids []string) string {
 	return "/beta/users?" + url.Values{"$select": {"id,userPrincipalName"}, "$filter": {strings.Join(clauses, " or ")}}.Encode()
 }
 
-func TestPrincipalNamesEmptyAndInvalidInputsAreLocal(t *testing.T) {
+func TestUnitPrincipalNamesEmptyAndInvalidInputsAreLocal(t *testing.T) {
 	t.Parallel()
 	namesCase(t, contracttest.Case{Name: "empty", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.GraphAPI.UserResolver.LookupPrincipalNames(ctx, nil, directoryuser.PrincipalNamesOptions{})
+		if e != nil && isRequestBoundary(ctx) {
+			return contracttest.Observation{Response: r, Err: e}
+		}
 		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}, Want: contracttest.Expected{JSON: json.RawMessage(`{}`)}})
 	namesCase(t, contracttest.Case{Name: "invalid-uuid", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.GraphAPI.UserResolver.LookupPrincipalNames(ctx, []string{userID, "id' or true"}, directoryuser.PrincipalNamesOptions{})
+		if e != nil && isRequestBoundary(ctx) {
+			return contracttest.Observation{Response: r, Err: e}
+		}
 		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}, Want: contracttest.Expected{Error: client.ErrRequest}})
 	namesCase(t, contracttest.Case{Name: "invalid-limit", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.GraphAPI.UserResolver.LookupPrincipalNames(ctx, nil, directoryuser.PrincipalNamesOptions{MaxPages: -1})
+		if e != nil && isRequestBoundary(ctx) {
+			return contracttest.Observation{Response: r, Err: e}
+		}
 		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}, Want: contracttest.Expected{Error: client.ErrPagination}})
 }
 
-func TestPrincipalNamesRetainOnlyCompletedGroupsOnLaterFailure(t *testing.T) {
+func TestUnitPrincipalNamesRetainOnlyCompletedGroupsOnLaterFailure(t *testing.T) {
 	t.Parallel()
 	ids := make([]string, 11)
 	for i := range ids {

@@ -76,7 +76,7 @@ func customCase(name string, current []*resource.CustomizationApp) ([]*resource.
 	}
 	return edit.Apply(current)
 }
-func TestAppSetupPinnedListComparisons(t *testing.T) {
+func TestUnitAppSetupTypedListComparisons(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Lists {
 		var value any
@@ -113,7 +113,7 @@ func TestAppSetupPinnedListComparisons(t *testing.T) {
 		}
 	}
 }
-func TestAppSetupEditsOwnDataAndRejectZeroValues(t *testing.T) {
+func TestUnitAppSetupEditsOwnDataAndRejectZeroValues(t *testing.T) {
 	t.Parallel()
 	a := resource.NewApp("a")
 	a.Identity = new("first")

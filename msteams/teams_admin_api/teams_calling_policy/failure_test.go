@@ -15,24 +15,23 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_calling_policy"
 )
 
-func TestCallingPolicyGrantRequiresOneExplicitScope(t *testing.T) {
+func TestUnitCallingPolicyGrantRequiresOneExplicitScope(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, c := range []struct {
 		name  string
 		input policy.Assignment
 	}{{"empty", policy.Assignment{}}, {"mixed", policy.Assignment{User: &policy.UserAssignment{Identity: "fixture"}, Tenant: &policy.TenantAssignment{}}}} {
-		results = append(results, run(t, contracttest.Case{Name: "grant-" + c.name, Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsCallingPolicy", ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: "grant-" + c.name, Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsCallingPolicy", ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			v, r, e := sdk.TeamsAdminAPI.TeamsCallingPolicies.Assign(ctx, c.input)
 			return contracttest.Observation{Value: v, Response: r, Err: e}
-		}}))
+		}})
 	}
-	evidence(t, results)
 }
 
-func TestCallingPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
+func TestUnitCallingPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCallingPolicies
 		for _, id := range []string{"", " ", ".", "..", "scope/", "/empty", "scope/..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -93,12 +92,11 @@ func TestCallingPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{result})
 }
 
-func TestCallingPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
+func TestUnitCallingPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, operation := range []string{"create", "patch", "delete", "user", "group", "tenant"} {
 		for _, status := range []int{400, 401, 403, 429, 503} {
 			method, command, path, body, set := "POST", "New-CsTeamsCallingPolicy", collection, `{"Identity":"Global"}`, "Identity"
@@ -114,7 +112,7 @@ func TestCallingPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
 			case "tenant":
 				method, command, path, body, set = "PATCH", "Grant-CsTeamsCallingPolicy", "/Skype.Policy/tenants/policies/TeamsCallingPolicy", `{"PolicyName":null,"additionalParameters":null,"forceSwitchPresent":false}`, "GrantToTenant"
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsCallingPolicies
 				var observation contracttest.Observation
 				switch operation {
@@ -143,8 +141,7 @@ func TestCallingPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
 				}
 				observation.Err = nil
 				return observation
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }

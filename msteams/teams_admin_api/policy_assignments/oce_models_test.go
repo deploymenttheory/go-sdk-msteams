@@ -3,33 +3,31 @@ package policyassignments
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 	"testing"
 )
 
-func TestOCEProfilesMatchPinnedEnvironmentAndRegionTables(t *testing.T) {
+func TestUnitOCEEnvironmentAndRegionTables(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-assignment-oce.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var fixture struct {
-		Profiles []struct {
-			Environment string
-			Origin      string
-			Regions     []Region
-		}
-	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Profiles) != 8 {
-		t.Fatal("incomplete pinned profiles")
+	profilesWant := []struct {
+		Environment, Origin string
+		Regions             []Region
+	}{
+		{Environment: "INT", Origin: "https://dev.api.interfaces.records.teams.microsoft.com", Regions: []Region{"INT"}},
+		{Environment: "MultiTenant", Origin: "https://api.interfaces.records.teams.microsoft.com", Regions: []Region{"NOAM", "EMEA", "APAC"}},
+		{Environment: "Ag08", Origin: "https://api.interfaces.records.teams.eaglex.ic.gov", Regions: []Region{"usnat"}},
+		{Environment: "Ag09", Origin: "https://api.interfaces.records.teams.microsoft.scloud", Regions: []Region{"ussec"}},
+		{Environment: "Gallatin", Origin: "https://api.interfaces.records.teams.microsoftonline.cn", Regions: []Region{"Gallatin"}},
+		{Environment: "Itar", Origin: "https://api.interfaces.records.gov.teams.microsoft.us", Regions: []Region{"gcch"}},
+		{Environment: "GCCH", Origin: "https://api.interfaces.records.gov.teams.microsoft.us", Regions: []Region{"gcch"}},
+		{Environment: "DOD", Origin: "https://api.interfaces.records.dod.teams.microsoft.us", Regions: []Region{"dod"}},
 	}
 	profiles := oceProfiles()
-	if len(profiles) != len(fixture.Profiles) {
+	if len(profiles) != len(profilesWant) {
 		t.Fatal("profile count changed")
 	}
-	for _, observed := range fixture.Profiles {
+	for _, observed := range profilesWant {
 		found := false
 		for _, profile := range profiles {
 			if string(profile.environment) == observed.Environment {
@@ -45,27 +43,27 @@ func TestOCEProfilesMatchPinnedEnvironmentAndRegionTables(t *testing.T) {
 	}
 }
 
-func TestPinnedOCEModelObservationsPreserveReceivedFields(t *testing.T) {
+func TestUnitOCEModelVectorsPreserveReceivedFields(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-assignment-oce.json")
-	if err != nil {
-		t.Fatal(err)
+	cases := []struct {
+		Name, Model       string
+		Input, Projection json.RawMessage
+	}{
+		{Name: "group-empty", Model: "GroupAssignment", Input: json.RawMessage("{}"), Projection: json.RawMessage("{\"groupId\":\"00000000-0000-0000-0000-000000000000\",\"priority\":0,\"policyType\":null,\"policyName\":null,\"createdBy\":\"\",\"createdTime\":null}")},
+		{Name: "group-values", Model: "GroupAssignment", Input: json.RawMessage("{\"groupId\":\"00000000-0000-4000-8000-000000000005\",\"priority\":0,\"policyName\":\"\",\"createdBy\":null,\"createdTime\":null,\"future\":false}"), Projection: json.RawMessage("{\"groupId\":\"00000000-0000-4000-8000-000000000005\",\"priority\":0,\"policyType\":null,\"policyName\":\"\",\"createdBy\":null,\"createdTime\":null}")},
+		{Name: "member-empty", Model: "GroupMembers", Input: json.RawMessage("{}"), Projection: json.RawMessage("{\"@odata.type\":null,\"id\":\"00000000-0000-0000-0000-000000000000\"}")},
+		{Name: "member-values", Model: "GroupMembers", Input: json.RawMessage("{\"id\":\"00000000-0000-4000-8000-000000000007\",\"@odata.type\":\"#fixture\",\"future\":false}"), Projection: json.RawMessage("{\"@odata.type\":\"#fixture\",\"id\":\"00000000-0000-4000-8000-000000000007\"}")},
+		{Name: "membership-empty", Model: "UserMembership", Input: json.RawMessage("{}"), Projection: json.RawMessage("{\"id\":\"00000000-0000-0000-0000-000000000000\",\"groupTypes\":null,\"mailEnabled\":false,\"securityEnabled\":false,\"visibility\":null,\"createdDateTime\":null,\"deletedDateTime\":null}")},
+		{Name: "membership-values", Model: "UserMembership", Input: json.RawMessage("{\"id\":\"00000000-0000-4000-8000-000000000005\",\"groupTypes\":[],\"mailEnabled\":false,\"securityEnabled\":true,\"visibility\":\"Future\",\"createdDateTime\":null}"), Projection: json.RawMessage("{\"id\":\"00000000-0000-4000-8000-000000000005\",\"groupTypes\":[],\"mailEnabled\":false,\"securityEnabled\":true,\"visibility\":\"Future\",\"createdDateTime\":null,\"deletedDateTime\":null}")},
+		{Name: "definition-empty", Model: "BatchDefinition", Input: json.RawMessage("{}"), Projection: json.RawMessage("{\"Region\":null,\"OperationId\":\"00000000-0000-0000-0000-000000000000\",\"OperationName\":null,\"OperationType\":null,\"Commands\":null,\"Ids\":null,\"AcceptTime\":0}")},
+		{Name: "definition-values", Model: "BatchDefinition", Input: json.RawMessage("{\"OperationId\":\"00000000-0000-4000-8000-000000000004\",\"OperationName\":\"\",\"OperationType\":\"Future\",\"AcceptTime\":0,\"Ids\":[],\"Commands\":[{\"Name\":\"Fixture\",\"RetryCount\":0,\"Properties\":{\"flag\":false},\"Description\":\"\"}]}"), Projection: json.RawMessage("{\"Region\":null,\"OperationId\":\"00000000-0000-4000-8000-000000000004\",\"OperationName\":\"\",\"OperationType\":\"Future\",\"Commands\":[{\"Name\":\"Fixture\",\"RetryCount\":0,\"Properties\":{\"flag\":false},\"Description\":\"\"}],\"Ids\":[],\"AcceptTime\":0}")},
+		{Name: "status-empty", Model: "BatchStatus", Input: json.RawMessage("{}"), Projection: json.RawMessage("{\"Region\":null,\"OperationName\":null,\"OverallStatus\":null,\"NotStartedCount\":0,\"InProgressCount\":0,\"CompletedCount\":0,\"ErrorCount\":0,\"CreatedBy\":\"00000000-0000-0000-0000-000000000000\",\"CreatedTime\":null,\"CompletedTime\":null,\"OperationId\":\"00000000-0000-0000-0000-000000000000\"}")},
+		{Name: "status-values", Model: "BatchStatus", Input: json.RawMessage("{\"OperationId\":\"00000000-0000-4000-8000-000000000004\",\"OverallStatus\":\"Future\",\"CompletedCount\":0,\"CreatedTime\":\"fixture-time\",\"CompletedTime\":null}"), Projection: json.RawMessage("{\"Region\":null,\"OperationName\":null,\"OverallStatus\":\"Future\",\"NotStartedCount\":0,\"InProgressCount\":0,\"CompletedCount\":0,\"ErrorCount\":0,\"CreatedBy\":\"00000000-0000-0000-0000-000000000000\",\"CreatedTime\":\"fixture-time\",\"CompletedTime\":null,\"OperationId\":\"00000000-0000-4000-8000-000000000004\"}")},
+		{Name: "extended-values", Model: "ExtendedBatchStatus", Input: json.RawMessage("{\"OperationId\":\"00000000-0000-4000-8000-000000000004\",\"UserState\":[{\"Id\":\"fixture-user\",\"AlternateId\":null,\"State\":\"Future\",\"Result\":\"\"}]}"), Projection: json.RawMessage("{\"Region\":null,\"UserState\":[{\"Id\":\"fixture-user\",\"AlternateId\":null,\"State\":\"Future\",\"Result\":\"\"}],\"OperationName\":null,\"OverallStatus\":null,\"NotStartedCount\":0,\"InProgressCount\":0,\"CompletedCount\":0,\"ErrorCount\":0,\"CreatedBy\":\"00000000-0000-0000-0000-000000000000\",\"CreatedTime\":null,\"CompletedTime\":null,\"OperationId\":\"00000000-0000-4000-8000-000000000004\"}")},
+		{Name: "null", Model: "GroupAssignment", Input: json.RawMessage("null"), Projection: json.RawMessage("null")},
 	}
-	var fixture struct {
-		Models []struct {
-			Name, Model       string
-			Input, Projection json.RawMessage
-			Rejected          bool
-		}
-	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Models) != 12 {
-		t.Fatal("incomplete OCE models")
-	}
-	for _, row := range fixture.Models {
+	for _, row := range cases {
 		t.Run(row.Name, func(t *testing.T) {
-			if row.Rejected {
-				t.Fatal("unexpected pinned model rejection")
-			}
 			if string(row.Input) == "null" {
 				var value *GroupAssignment
 				if json.Unmarshal(row.Input, &value) != nil || value != nil {
@@ -89,7 +87,7 @@ func TestPinnedOCEModelObservationsPreserveReceivedFields(t *testing.T) {
 				t.Fatal("unknown OCE model")
 			}
 			if json.Unmarshal(row.Input, value) != nil {
-				t.Fatal("native OCE model rejected observed fields")
+				t.Fatal("native OCE model rejected model input")
 			}
 			var typed any
 			switch v := value.(type) {
@@ -117,10 +115,10 @@ func TestPinnedOCEModelObservationsPreserveReceivedFields(t *testing.T) {
 			if json.Unmarshal(encoded, &actual) != nil || json.Unmarshal(row.Projection, &projection) != nil || json.Unmarshal(row.Input, &input) != nil {
 				t.Fatal("invalid model projection")
 			}
-			// CLR defaults are observable in the oracle but must not manufacture
+			// Model defaults must not manufacture
 			// fields absent from the wire in a native read snapshot.
 			if !containsProjection(actual, receivedProjection(input, projection)) {
-				t.Fatal("native typed fields differ from pinned received values")
+				t.Fatal("native typed fields differ from expected received values")
 			}
 			encoded, e = json.Marshal(value)
 			if e != nil {
@@ -165,7 +163,7 @@ func receivedProjection(input, projection any) any {
 	}
 }
 
-func TestOCEReadModelsDoNotMaterializeDefaultsOrLeakData(t *testing.T) {
+func TestUnitOCEReadModelsDoNotMaterializeDefaultsOrLeakData(t *testing.T) {
 	t.Parallel()
 	var status OCEBatchStatus
 	if json.Unmarshal([]byte(`{"CompletedCount":0,"ErrorCount":null,"future":"fixture-private","UserState":[{"Id":"fixture-private","AlternateId":null}]}`), &status) != nil {

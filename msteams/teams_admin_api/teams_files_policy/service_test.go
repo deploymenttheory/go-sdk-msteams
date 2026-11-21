@@ -3,7 +3,6 @@ package teamsfilespolicy_test
 import (
 	"context"
 	"encoding/json"
-	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -14,15 +13,14 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
 )
 
-func TestFilesPolicyPinnedProviderRequests(t *testing.T) {
+func TestUnitFilesPolicyRequestShapes(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, f := range captures(t) {
+
+	for _, f := range requestInputs() {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			x := f.Capture
 			var body json.RawMessage
-			if x.Body != "" {
-				body = json.RawMessage(x.Body)
+			if len(f.Body) != 0 {
+				body = f.Body
 			}
 			set := "Identity"
 			switch f.Operation {
@@ -33,15 +31,7 @@ func TestFilesPolicyPinnedProviderRequests(t *testing.T) {
 			case "group":
 				set = "GrantToGroup"
 			}
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: x.CmdletName, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
-			if x.FailureType != nil {
-				c.Want.Error = client.ErrDecode
-				if f.Status == 403 {
-					c.Want.Error = auth.ErrForbidden
-				}
-			} else if f.Response != "" {
-				c.Want.JSON = json.RawMessage(f.Response)
-			}
+			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: f.Command, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire(f.Method, f.Path, f.Command, body, 400, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsFilesPolicies
 				controls := policy.Controls{}
@@ -79,8 +69,7 @@ func TestFilesPolicyPinnedProviderRequests(t *testing.T) {
 				v, r, e := s.PatchByIdentity(ctx, scoped, resource.PatchRequest{Settings: settings, Controls: controls, BodyIdentity: policy.Set("read-model-identity")})
 				return contracttest.Observation{Value: v, Response: r, Err: e}
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }

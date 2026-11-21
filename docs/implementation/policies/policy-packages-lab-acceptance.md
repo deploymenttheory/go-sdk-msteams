@@ -3,7 +3,7 @@
 Issue #101 remains open. Native methods, request/model observations and exact
 parameter-set mappings do not establish successful tenant qualification.
 
-TestLabPolicyPackagesReadOnly requires MSTEAMS_LAB_READ_ONLY=1 and the private
+TestAccPolicyPackagesReadOnly requires MSTEAMS_LAB_READ_ONLY=1 and the private
 MSTEAMS_LAB_IDENTITY_FILE for the expected lab tenant. Without a separately supplied
 delegated context it verifies the existing SPN's documented local mode rejection,
 then skips tenant qualification. The actual configured-SPN run took this path;

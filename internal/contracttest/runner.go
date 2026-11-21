@@ -122,7 +122,7 @@ type Case struct {
 	Mode     auth.Mode
 	// TenantID optionally selects a synthetic UUID binding for tenant-scoped
 	// resources. Empty preserves the existing fixture-tenant binding. It is not
-	// retained in structural reports and is never loaded from credentials/env.
+	// retained in results and is never loaded from credentials/env.
 	TenantID string
 	Steps    []Exchange
 	Invoke   func(context.Context, *msteams.Client) Observation
@@ -132,13 +132,12 @@ type Case struct {
 func (Case) String() string   { return "synthetic offline contract case" }
 func (Case) GoString() string { return "synthetic offline contract case" }
 
-// Result retains structural evidence only, never observations, URLs or tokens.
+// Result retains comparison outcomes, never observations, URLs or tokens.
 type Result struct {
-	name, family, scope, source string
-	cloud, mode                 string
-	mappings                    []Mapping
-	differences                 []Difference
-	httpCalls, tokenCalls       int
+	name, family string
+	cloud, mode  string
+	differences  []Difference
+	httpCalls    int
 }
 
 func (r Result) Passed() bool { return r.name != "" && len(r.differences) == 0 }
@@ -229,9 +228,9 @@ func Run(ctx context.Context, c Case) (Result, error) {
 	if len(c.Steps) == 0 && h.tokenCalls != 0 {
 		h.add("tokens", "unexpected-acquisition")
 	}
-	return Result{name: c.Name, family: c.Family, scope: c.Scope, source: c.Source,
+	return Result{name: c.Name, family: c.Family,
 		cloud: environment.Name, mode: string(mode),
-		mappings: slices.Clone(c.Mappings), httpCalls: h.httpCalls, tokenCalls: h.tokenCalls,
+		httpCalls:   h.httpCalls,
 		differences: append(slices.Clone(h.differences), compareObservation(c.Want, observed)...)}, nil
 }
 
@@ -304,7 +303,11 @@ func validCase(c Case) bool {
 
 func validSource(source string) bool {
 	file, pointer, _ := strings.Cut(source, "#")
-	validFile := strings.HasPrefix(file, "contracts/") && path.Clean(file) == file && strings.HasSuffix(file, ".json")
+	allowedRoot := strings.HasPrefix(file, "contracts/") ||
+		strings.HasPrefix(file, "msteams/") && strings.Contains(file, "/testdata/")
+	validJSON := allowedRoot && strings.HasSuffix(file, ".json")
+	validGo := (strings.HasPrefix(file, "msteams/") || strings.HasPrefix(file, "tests/") || strings.HasPrefix(file, "internal/")) && strings.HasSuffix(file, "_test.go")
+	validFile := (validJSON || validGo) && path.Clean(file) == file
 	validPointer := pointer == "" || strings.HasPrefix(pointer, "/")
 	return validFile && validPointer && !strings.ContainsAny(source, "\\\r\n\x00")
 }

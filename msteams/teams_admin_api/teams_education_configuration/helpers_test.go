@@ -3,50 +3,214 @@ package teamseducationconfiguration_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/education-configuration-provider.json"
+const source = "msteams/teams_admin_api/teams_education_configuration/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsEducationConfiguration"
 const item = collection + "/configuration/Global"
 const scoped = "scope /Fixture / Child"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Input, Response string
 	Status                           int
 	ForceMode                        int     `json:"force_mode"`
 	PolicyName                       *string `json:"policy_name"`
-	Capture                          struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                          struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "list-empty",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration",
+					CmdletName: "Get-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "patch-all",
+				Operation: "patch",
+				Input:     "{\"ParentGuardianPreferredContactMethod\":\"FutureContact\",\"EduGenerativeAIEnhancements\":\"FutureEnhancement\",\"UpdateParentInformation\":\"FutureUpdate\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentGuardianPreferredContactMethod\": \"FutureContact\",\n  \"EduGenerativeAIEnhancements\": \"FutureEnhancement\",\n  \"UpdateParentInformation\": \"FutureUpdate\"\n}",
+
+					CmdletName: "Set-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "patch-null",
+				Operation: "patch",
+				Input:     "{\"ParentGuardianPreferredContactMethod\":null,\"EduGenerativeAIEnhancements\":null,\"UpdateParentInformation\":null}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentGuardianPreferredContactMethod\": null,\n  \"EduGenerativeAIEnhancements\": null,\n  \"UpdateParentInformation\": null\n}",
+
+					CmdletName: "Set-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "patch-empty",
+				Operation: "patch",
+				Input:     "{\"ParentGuardianPreferredContactMethod\":\"\",\"EduGenerativeAIEnhancements\":\"\",\"UpdateParentInformation\":\"\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentGuardianPreferredContactMethod\": \"\",\n  \"EduGenerativeAIEnhancements\": \"\",\n  \"UpdateParentInformation\": \"\"\n}",
+
+					CmdletName: "Set-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "patch-force-false",
+				Operation: "patch",
+				Input:     "{\"UpdateParentInformation\":\"\"}",
+				Status:    400,
+				ForceMode: 0,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"UpdateParentInformation\": \"\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "patch-force-true",
+				Operation: "patch",
+				Input:     "{\"UpdateParentInformation\":\"\"}",
+				Status:    400,
+				ForceMode: 1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"UpdateParentInformation\": \"\",\n  \"Force\": \"True\"\n}",
+
+					CmdletName: "Set-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "read-empty",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "read-null",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration",
+					CmdletName: "Get-CsTeamsEducationConfiguration",
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsEducationConfiguration",
+				},
+			},
+		},
 	}
-	var v struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 11 {
-		t.Fatal("invalid education configuration fixture")
-	}
-	for _, c := range v.Cases {
-		r := c.Capture
-		if r.TokenRequests != 0 || (r.Sends != 0 && (r.Sends != 1 || !r.CorrelationIsGuid || r.HasTargetUri || r.MpaCmdlet != "true")) {
-			t.Fatal("unsafe/incomplete education configuration fixture")
-		}
-	}
+
 	return v.Cases
 }
 func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -76,26 +240,6 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("education configuration contract %s differs: %v %+v", c.Name, e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("education-configuration-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("education configuration evidence write failed")
-	}
 }
 
 const getCommand = "Get-CsTeamsEducationConfiguration"

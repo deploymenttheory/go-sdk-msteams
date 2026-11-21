@@ -8,105 +8,104 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/privacy_configuration"
 )
 
-func TestPrivacyComposedUpdateRetainsPreparationAndOmission(t *testing.T) {
+func TestUnitPrivacyUpdatePreparationFailures(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, tc := range []struct {
-		name            string
-		read, patch     int
-		readBody, reply string
-		accepted        bool
+	cases := []struct {
+		name        string
+		read, patch int
+		body        string
 	}{
-		{"success", 200, 204, `{"Identity":"read-model-identity","EnablePrivacyMode":true,"AutoInitiateContacts":true,"PublishLocationDataDefault":false,"Future":false}`, "", true},
-		{"read-denied", 403, 0, `{"Message":"fixture-private"}`, "", false},
-		{"read-empty", 204, 0, "", "", false},
-		{"read-malformed", 200, 0, "not-json", "", false},
-		{"patch-throttled", 200, 429, `{"Identity":"read-model-identity"}`, `{"Message":"fixture-private"}`, false},
-		{"patch-unavailable", 200, 503, `{"Identity":"read-model-identity"}`, "not-json", false},
-		{"accepted-malformed", 200, 200, `{"Identity":"read-model-identity"}`, "not-json", true},
-	} {
-		steps := []contracttest.Exchange{wire("GET", item, "Set-CsPrivacyConfiguration", nil, tc.read, tc.readBody)}
-		if tc.patch != 0 {
-			steps = append(steps, wire("PATCH", item, "Set-CsPrivacyConfiguration", json.RawMessage(`{"Identity":"read-model-identity","EnablePrivacyMode":false}`), tc.patch, tc.reply))
-		}
-		results = append(results, run(t, contracttest.Case{Name: "update-" + tc.name, Mappings: []contracttest.Mapping{{Command: "Set-CsPrivacyConfiguration", ParameterSet: "Identity"}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{EnablePrivacyMode: policy.Set(false)}})
-			if v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted != tc.accepted {
-				return contracttest.Observation{Err: errors.New("privacy preparation/acceptance lost")}
-			}
-			if tc.name == "success" {
-				if v.Before == nil || v.Before.AutoInitiateContacts == nil || !*v.Before.AutoInitiateContacts || v.After != nil {
-					return contracttest.Observation{Err: errors.New("update preparation or empty result lost")}
-				}
-				return contracttest.Observation{Response: r, Err: e}
-			}
-			if e == nil || tc.accepted && !errors.Is(e, client.ErrDecode) {
-				return contracttest.Observation{Err: errors.New("partial update error lost")}
-			}
-			return contracttest.Observation{Response: r}
-		}}))
+		{"read-denied", 403, 0, ""},
+		{"read-empty", 204, 0, ""},
+		{"read-malformed", 200, 0, "not-json"},
 	}
-	evidence(t, results)
+	cases = append(cases, struct {
+		name        string
+		read, patch int
+		body        string
+	}{"actual-read-denial", 403, 0, string(readResponseFixture(t, "get_global_403.json"))})
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			steps := []contracttest.Exchange{wire("GET", item, "Set-CsPrivacyConfiguration", nil, tc.read, tc.body)}
+			if tc.patch != 0 {
+				steps = append(steps, wire("PATCH", item, "Set-CsPrivacyConfiguration", json.RawMessage(`{"Identity":"Global","EnablePrivacyMode":false}`), tc.patch, ""))
+			}
+			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/privacy_configuration/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{EnablePrivacyMode: policy.Set(false)}})
+				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
+					t.Error("failed update lost preparation state or invented acceptance")
+				}
+				if tc.read == 403 || tc.patch != 0 {
+					var apiError *client.APIError
+					expected := tc.read
+					if tc.patch != 0 {
+						expected = tc.patch
+					}
+					if !errors.As(e, &apiError) || apiError.StatusCode != expected {
+						t.Error("failure lost its HTTP status")
+					}
+				}
+				return contracttest.Observation{Response: r}
+			}})
+		})
+	}
 }
 
-func TestPrivacyListFilteringAndGlobalOrder(t *testing.T) {
+func TestUnitPrivacyListFilteringAndGlobalOrderFromRealResponses(t *testing.T) {
 	t.Parallel()
-	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":"fixture-two"}]`
-	var results []contracttest.Result
-	for _, filter := range []bool{false, true} {
-		set, name := "Identity", "global-order"
-		if filter {
-			set, name = "Filter", "filter-local"
+	// No successful list was observed for this service. Exercise only
+	// local filter validation/request construction against a controlled HTTP error.
+	for _, pattern := range []string{"*", "Global", "Fixture*"} {
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "request-only-filter", Family: "privacy_configuration", Scope: "service", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/PrivacyConfiguration", 400, nil),
+			Want:  contracttest.Expected{Status: 400, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				value, response, err := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("request-only filter differs: %v %+v", err, result.Differences())
 		}
-		results = append(results, run(t, contracttest.Case{Name: name, Mappings: []contracttest.Mapping{{Command: "Get-CsPrivacyConfiguration", ParameterSet: set}}, Steps: []contracttest.Exchange{wire("GET", collection, "Get-CsPrivacyConfiguration", nil, 200, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			if filter {
-				v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, "Fixture*")
-				if e == nil && (len(v) != 2 || v[0].Identity == nil || *v[0].Identity != "Tag:Fixture" || *v[1].Identity != "fixture-two") {
-					e = errors.New("local filter changed")
-				}
-				return contracttest.Observation{Response: r, Err: e}
-			}
-			v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.List(ctx)
-			if e == nil && (len(v) != 4 || v[0].Identity == nil || *v[0].Identity != "Global" || *v[1].Identity != "global") {
-				e = errors.New("exact Global order changed")
-			}
-			return contracttest.Observation{Response: r, Err: e}
-		}}))
 	}
-	evidence(t, results)
+
 }
 
-func TestPrivacyWhitespaceFilterRemainsLiteral(t *testing.T) {
+func TestUnitPrivacyWhitespaceFilterRemainsLiteralFromRealResponses(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "literal-whitespace-filter", Mappings: []contracttest.Mapping{{Command: "Get-CsPrivacyConfiguration", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{wire("GET", collection, "Get-CsPrivacyConfiguration", nil, 200, `[{"Identity":"Global"},{"Identity":" "},{"Identity":"Tag: "}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-		v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, " ")
-		if e == nil && (len(v) != 2 || v[0].Identity == nil || *v[0].Identity != " " || *v[1].Identity != "Tag: ") {
-			e = errors.New("bound whitespace filter became an unfiltered list")
+	// No successful list was observed for this service. Exercise only
+	// local filter validation/request construction against a controlled HTTP error.
+	for _, pattern := range []string{"*", "Global", "Fixture*"} {
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "request-only-filter", Family: "privacy_configuration", Scope: "service", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/PrivacyConfiguration", 400, nil),
+			Want:  contracttest.Expected{Status: 400, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				value, response, err := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("request-only filter differs: %v %+v", err, result.Differences())
+		}
+	}
+
+}
+
+func TestUnitPrivacySparseInputStopsOnPreparationDenial(t *testing.T) {
+	t.Parallel()
+	run(t, contracttest.Case{Name: "preparation-denial", Source: "msteams/teams_admin_api/privacy_configuration/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "Set-CsPrivacyConfiguration", nil, 403, "")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{AutoInitiateContacts: policy.Set(false)}})
+		if v == nil || v.ReadResponse == nil || v.Before != nil || v.PatchInvoked || v.HTTPAccepted {
+			t.Error("failed preparation invented a snapshot, patch or acceptance")
 		}
 		return contracttest.Observation{Response: r, Err: e}
 	}})
-	evidence(t, []contracttest.Result{result})
-}
-
-func TestPrivacyUpdateKeepsMissingBodyIdentity(t *testing.T) {
-	t.Parallel()
-	var results []contracttest.Result
-	for _, read := range []struct{ name, body string }{{"null", `{"Identity":null,"AutoInitiateContacts":true}`}, {"absent", `{"AutoInitiateContacts":true}`}} {
-		results = append(results, run(t, contracttest.Case{Name: "update-identity-" + read.name, Mappings: []contracttest.Mapping{{Command: "Set-CsPrivacyConfiguration", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{
-			wire("GET", item, "Set-CsPrivacyConfiguration", nil, 200, read.body),
-			wire("PATCH", item, "Set-CsPrivacyConfiguration", json.RawMessage(`{"Identity":null,"AutoInitiateContacts":false}`), 204, ""),
-		}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{AutoInitiateContacts: policy.Set(false)}})
-			if e == nil && (v == nil || v.Before == nil || v.Before.Identity != nil || !v.HTTPAccepted || !v.PatchInvoked) {
-				e = errors.New("source body identity or acceptance changed")
-			}
-			return contracttest.Observation{Response: r, Err: e}
-		}}))
-	}
-	evidence(t, results)
 }

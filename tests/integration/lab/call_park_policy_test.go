@@ -86,9 +86,9 @@ func callParkPolicyOracle(t *testing.T, ctx context.Context, tenant string) call
 	return value
 }
 
-// TestLabCallParkPolicyReadOnly never edits Global, creates resources or grants a
+// TestAccCallParkPolicyReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabCallParkPolicyReadOnly(t *testing.T) {
+func TestAccCallParkPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -103,6 +103,7 @@ func TestLabCallParkPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsCallParkPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_call_park_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -110,7 +111,8 @@ func TestLabCallParkPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("call park policy Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsCallParkPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsCallParkPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_call_park_policy", "list", listResponse, nil)
 	selected, selectionErr := globalCallParkPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("call park policy Global selection differs")
@@ -161,7 +163,7 @@ func globalCallParkPolicy(values []resource.Policy) (*resource.Policy, error) {
 	}
 	return found, nil
 }
-func TestCallParkPolicyOracleRejectsIncompleteWrongTenantMixedOutputAndInt64Overflow(t *testing.T) {
+func TestUnitCallParkPolicyOracleRejectsIncompleteWrongTenantMixedOutputAndInt64Overflow(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":"","AllowCallPark":false,"ParkTimeoutSeconds":-9223372036854775808,"PickupRangeStart":9007199254740993,"PickupRangeEnd":9223372036854775807}`

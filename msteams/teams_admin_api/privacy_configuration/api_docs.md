@@ -40,5 +40,5 @@ command for this family.
 Application/delegated synthetic fixtures prove routing with the selected mode,
 not tenant RBAC, cloud availability or production parity. Teams administrative
 authorization is required independently of token acquisition; exact least-privilege
-role qualification remains open. See [evidence](../../../docs/implementation/policies/privacy-configuration-evidence.md)
+role qualification remains open. See [unit tests](service_test.go)
 and the [lab plan](../../../docs/implementation/policies/privacy-configuration-lab-acceptance.md).

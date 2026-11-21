@@ -16,7 +16,7 @@ Current associated-team documentation lists Team.ReadBasic.All and restricts
 delegated access to the signed-in user; application access requires an explicit
 user. A pinned explicit-user branch is not a promise that delegated requests can
 read another user. Cloud availability and authorization require separate lab
-qualification. See [source evidence](../../../docs/implementation/core/channel-contract-evidence.md).
+qualification. See [unit tests](service_test.go).
 
 `SharedChannelManagement.ListAssociatedTeams` adds the pinned UUID/UPN/empty-user
 selection, using the shared directory resolver. The native service stays ID-based.

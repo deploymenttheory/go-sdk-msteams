@@ -1,6 +1,6 @@
 # Call park policy lab acceptance
 
-`TestLabCallParkPolicyReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1` before it
+`TestAccCallParkPolicyReadOnly` requires `MSTEAMS_LAB_READ_ONLY=1` before it
 reads an explicitly selected private identity. It reads Global and a Global
 filtered list, selects one exact case-insensitive Global identity without
 confusing Tag:Global, and compares all five known properties with exact numbers.
@@ -10,7 +10,7 @@ Use `MSTEAMS_LAB_IDENTITY_FILE` and `MSTEAMS_LAB_AUTH_METHOD=client-secret` or
 `certificate`, with mutation/consequential opt-ins unset, then run:
 
 ```sh
-go test -count=1 -run '^TestLabCallParkPolicyReadOnly$' -v ./tests/integration/lab
+go test -count=1 -run '^TestAccCallParkPolicyReadOnly$' -v ./tests/integration/lab
 ```
 
 Both actual credential modes returned resource HTTP 403 on Global on

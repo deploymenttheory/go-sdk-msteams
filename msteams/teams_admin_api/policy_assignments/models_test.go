@@ -9,27 +9,29 @@ import (
 	"testing"
 )
 
-func TestPinnedGeneratedAssignmentModelProjections(t *testing.T) {
+func TestUnitAssignmentModelProjectionVectors(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-assignment-models.json")
-	if err != nil {
-		t.Fatal(err)
+	cases := []struct {
+		Name, Model       string
+		Input, Projection json.RawMessage
+	}{
+		{Name: "group-empty", Model: "GroupAssignment", Input: json.RawMessage("{}"), Projection: json.RawMessage("{}")},
+		{Name: "group-zero", Model: "GroupAssignment", Input: json.RawMessage("{\"groupId\":\"fixture-group\",\"priority\":0,\"policyType\":\"Fixture\",\"policyName\":\"\",\"createdBy\":null,\"future\":false}"), Projection: json.RawMessage("{\"groupId\":\"fixture-group\",\"priority\":0,\"policyType\":\"Fixture\",\"policyName\":\"\"}")},
+		{Name: "group-negative", Model: "GroupAssignment", Input: json.RawMessage("{\"priority\":-1,\"createdTime\":\"2026-11-21T10:00:00.1234567Z\"}"), Projection: json.RawMessage("{\"priority\":-1,\"createdTime\":\"2026-11-21T10:00:00.1234567Z\"}")},
+		{Name: "effective-empty", Model: "EffectivePolicy", Input: json.RawMessage("{}"), Projection: json.RawMessage("{}")},
+		{Name: "effective-sources", Model: "EffectivePolicy", Input: json.RawMessage("{\"policyType\":\"Fixture\",\"policyName\":\"\",\"policySource\":[{\"assignmentType\":\"Direct\",\"policyName\":\"\",\"groupId\":null},{\"assignmentType\":\"Group\",\"policyName\":\"FixtureGroup\",\"groupId\":\"fixture-group\"},{\"assignmentType\":\"Future\",\"future\":false}],\"future\":0}"), Projection: json.RawMessage("{\"policyType\":\"Fixture\",\"policyName\":\"\",\"policySource\":[{\"policyName\":\"\",\"assignmentType\":\"Direct\"},{\"policyName\":\"FixtureGroup\",\"assignmentType\":\"Group\"},{\"assignmentType\":\"Future\"}]}")},
+		{Name: "source-empty", Model: "SourceEntry", Input: json.RawMessage("{}"), Projection: json.RawMessage("{}")},
+		{Name: "source-values", Model: "SourceEntry", Input: json.RawMessage("{\"assignmentType\":\"Group\",\"policyName\":\"Fixture\",\"policyType\":\"FixtureType\",\"reference\":\"fixture-group\",\"groupId\":\"future-group-field\",\"future\":null}"), Projection: json.RawMessage("{\"policyName\":\"Fixture\",\"policyType\":\"FixtureType\",\"assignmentType\":\"Group\",\"reference\":\"fixture-group\"}")},
+		{Name: "batch-empty", Model: "BatchJobStatus", Input: json.RawMessage("{}"), Projection: json.RawMessage("{}")},
+		{Name: "batch-values", Model: "BatchJobStatus", Input: json.RawMessage("{\"operationId\":\"fixture-operation\",\"operationName\":\"\",\"overallStatus\":\"Future\",\"notStartedCount\":0,\"inProgressCount\":1,\"completedCount\":2,\"errorCount\":3,\"createdBy\":\"fixture-user\",\"createdTime\":\"2026-11-21T10:00:00.1234567Z\",\"completedTime\":null,\"userState\":[{\"id\":\"fixture-user\",\"state\":\"Future\",\"result\":\"\"}],\"future\":false}"), Projection: json.RawMessage("{\"userState\":[{\"id\":\"fixture-user\",\"state\":\"Future\",\"result\":\"\"}],\"operationName\":\"\",\"overallStatus\":\"Future\",\"notStartedCount\":0,\"inProgressCount\":1,\"completedCount\":2,\"errorCount\":3,\"createdBy\":\"fixture-user\",\"createdTime\":\"2026-11-21T10:00:00.1234567Z\",\"operationId\":\"fixture-operation\"}")},
+		{Name: "batch-null-count", Model: "BatchJobStatus", Input: json.RawMessage("{\"completedCount\":null,\"userState\":[]}"), Projection: json.RawMessage("{\"userState\":[]}")},
+		{Name: "simple-empty", Model: "SimpleBatchJobStatus", Input: json.RawMessage("{}"), Projection: json.RawMessage("{}")},
+		{Name: "simple-zero", Model: "SimpleBatchJobStatus", Input: json.RawMessage("{\"operationId\":\"fixture-operation\",\"overallStatus\":\"Future\",\"completedCount\":0}"), Projection: json.RawMessage("{\"overallStatus\":\"Future\",\"completedCount\":0,\"operationId\":\"fixture-operation\"}")},
+		{Name: "user-state-empty", Model: "GrantActionStatus", Input: json.RawMessage("{}"), Projection: json.RawMessage("{}")},
+		{Name: "user-state-values", Model: "GrantActionStatus", Input: json.RawMessage("{\"id\":\"fixture-user\",\"state\":\"Future\",\"result\":\"\",\"future\":false}"), Projection: json.RawMessage("{\"id\":\"fixture-user\",\"state\":\"Future\",\"result\":\"\"}")},
 	}
-	var fixture struct {
-		Cases []struct {
-			Name, Model       string
-			Input, Projection json.RawMessage
-			Rejected          bool
-		}
-	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 14 {
-		t.Fatal("incomplete pinned model observations")
-	}
-	for _, row := range fixture.Cases {
+	for _, row := range cases {
 		t.Run(row.Name, func(t *testing.T) {
-			if row.Rejected {
-				t.Fatal("unexpected pinned rejection")
-			}
 			var value any
 			switch row.Model {
 			case "GroupAssignment":
@@ -43,10 +45,10 @@ func TestPinnedGeneratedAssignmentModelProjections(t *testing.T) {
 			case "GrantActionStatus":
 				value = &UserOutcome{}
 			default:
-				t.Fatal("unknown captured model")
+				t.Fatal("unknown model")
 			}
 			if json.Unmarshal(row.Input, value) != nil {
-				t.Fatal("native model rejected pinned input")
+				t.Fatal("native model rejected local input")
 			}
 			// Remove root snapshot marshaling to check the decoded typed fields,
 			// independently of the lossless received-object round trip below.
@@ -77,7 +79,7 @@ func TestPinnedGeneratedAssignmentModelProjections(t *testing.T) {
 				t.Fatal("invalid model projection")
 			}
 			if !containsProjection(got, want) {
-				t.Fatal("typed fields differ from pinned projection")
+				t.Fatal("typed fields differ from expected projection")
 			}
 			encoded, e = json.Marshal(value)
 			if e != nil {
@@ -121,7 +123,7 @@ func containsProjection(actual, expected any) bool {
 	}
 }
 
-func TestAssignmentSnapshotPresenceAndRedaction(t *testing.T) {
+func TestUnitAssignmentSnapshotPresenceAndRedaction(t *testing.T) {
 	t.Parallel()
 	var value BatchStatus
 	if json.Unmarshal([]byte(`{"operationId":"fixture-private","completedCount":0,"errorCount":null,"userState":[{"id":"fixture-private","result":""}],"future":false}`), &value) != nil {
@@ -145,7 +147,7 @@ func TestAssignmentSnapshotPresenceAndRedaction(t *testing.T) {
 	}
 }
 
-func TestPinnedConditionalAssignmentMetadataMatchesTargets(t *testing.T) {
+func TestUnitPinnedConditionalAssignmentMetadataMatchesTargets(t *testing.T) {
 	t.Parallel()
 	read := func(raw []byte, err error) []json.RawMessage {
 		t.Helper()
@@ -158,8 +160,8 @@ func TestPinnedConditionalAssignmentMetadataMatchesTargets(t *testing.T) {
 		}
 		return fixture.Commands
 	}
-	first := read(os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json"))
-	second := read(os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-netcoreapp3.1-metadata.json"))
+	first := read(os.ReadFile("../../../contracts/powershell/8.1.0/conditional-policy-assignment-net472.json"))
+	second := read(os.ReadFile("../../../contracts/powershell/8.1.0/conditional-policy-assignment-netcoreapp3.1.json"))
 	sets := 0
 	for i, command := range first {
 		var a, b any

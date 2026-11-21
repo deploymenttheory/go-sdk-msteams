@@ -10,29 +10,29 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	hierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 )
 
-func TestHierarchyDeletionFailuresAreNotReplayed(t *testing.T) {
+func TestUnitHierarchyDeletionFailuresAreNotReplayed(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, version := range []hierarchy.Version{hierarchy.V1, hierarchy.V2} {
 		for _, status := range []int{403, 429, 503} {
 			path, backend := "/api/rest/v1/nodes/hierarchy", client.Targeting
 			if version == hierarchy.V2 {
 				path, backend = hierarchyPath(), client.Hierarchy
 			}
-			results = append(results, run(t, contracttest.Case{Name: "delete-v" + string(version) + "-" + strconv.Itoa(status), Mappings: mapping("Remove-TeamTargetingHierarchy"), Steps: []contracttest.Exchange{wire(version, "DELETE", path, status, `{"error":{"code":"Denied","message":"private"}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "delete-v" + string(version) + "-" + strconv.Itoa(status), Mappings: mapping("Remove-TeamTargetingHierarchy"), Steps: []contracttest.Exchange{wire(version, "DELETE", path, status, `{"error":{"code":"Denied","message":"private"}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				r, err := sdk.TeamsAdminAPI.TargetingHierarchy.Delete(ctx, version)
 				return contracttest.Observation{Response: r, Err: err}
-			}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: backend, StatusCode: status, Codes: []string{"Denied"}}}}))
+			}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: backend, StatusCode: status, Codes: []string{"Denied"}}}})
 		}
 	}
-	evidence(t, results)
 }
 
-func TestHierarchyOptionsProfilesAndSourceValidationAreLocal(t *testing.T) {
+func TestUnitHierarchyOptionsProfilesAndSourceValidationAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, cloud string
@@ -82,11 +82,11 @@ func TestHierarchyOptionsProfilesAndSourceValidationAreLocal(t *testing.T) {
 	}
 }
 
-func TestHierarchyRequiresBoundCanonicalTenantBeforeV2Calls(t *testing.T) {
+func TestUnitHierarchyRequiresBoundCanonicalTenantBeforeV2Calls(t *testing.T) {
 	t.Parallel()
 	// Preserve the runner's default non-GUID tenant. A caller must configure a
 	// canonical tenant in the session; this API accepts no substitutable tenant ID.
-	c := contracttest.Case{Name: "bound-tenant-required", Family: "targeting_hierarchy", Scope: "local", Source: "contracts/endpoints/8.1.0/special-service-profiles.json", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	c := contracttest.Case{Name: "bound-tenant-required", Family: "targeting_hierarchy", Scope: "local", Source: "msteams/teams_admin_api/targeting_hierarchy/failure_test.go", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s, input := source()
 		v, err := sdk.TeamsAdminAPI.TargetingHierarchy.UploadCSV(ctx, input, hierarchy.V2)
 		if s.closes != 1 || v.CreateAttempted || v.ImportAttempted {
@@ -100,7 +100,7 @@ func TestHierarchyRequiresBoundCanonicalTenantBeforeV2Calls(t *testing.T) {
 	}
 }
 
-func TestHierarchyCancellationAndCloseFailuresRetainClassification(t *testing.T) {
+func TestUnitHierarchyCancellationAndCloseFailuresRetainClassification(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "cancelled-close-failure", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		ctx, stop := context.WithCancel(ctx)
@@ -140,7 +140,7 @@ func TestHierarchyCancellationAndCloseFailuresRetainClassification(t *testing.T)
 	}
 }
 
-func TestMalformedNativeHierarchyReadsAndImportHandles(t *testing.T) {
+func TestUnitMalformedNativeHierarchyReadsAndImportHandles(t *testing.T) {
 	t.Parallel()
 	for _, body := range []string{`null`, `[]`, `{}`, `{"id":"operation","status":false}`} {
 		run(t, contracttest.Case{Name: "malformed-status", Steps: []contracttest.Exchange{wire(hierarchy.V2, "GET", hierarchyPath()+"/operations/latest", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -160,20 +160,20 @@ func TestMalformedNativeHierarchyReadsAndImportHandles(t *testing.T) {
 	}
 }
 
-func TestAcceptedImportCloseFailureKeepsHTTPAcknowledgement(t *testing.T) {
+func TestUnitFailedImportClosesSourceWithoutAcknowledgement(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "accepted-close-failure", Steps: []contracttest.Exchange{uploadWire(hierarchy.V1, 202, `{"requestId":"operation"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "denied-close-failure", Steps: []contracttest.Exchange{uploadWire(hierarchy.V1, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s, input := source()
 		s.closeErr = errors.New("private-close-canary")
 		v, err := sdk.TeamsAdminAPI.TargetingHierarchy.UploadCSV(ctx, input, hierarchy.V1)
-		if s.closes != 1 || !v.ImportAttempted || !v.ImportHTTPAccepted || strings.Contains(err.Error(), "private-close-canary") {
-			t.Error("accepted import lost acknowledgement or leaked close error")
+		if s.closes != 1 || !v.ImportAttempted || v.ImportHTTPAccepted || !errors.Is(err, client.ErrStreamClose) || strings.Contains(err.Error(), "private-close-canary") {
+			t.Error("failed import lost ownership or invented acknowledgement")
 		}
 		return contracttest.Observation{Response: v.Response, Err: err}
-	}, Want: contracttest.Expected{Status: 202, Error: client.ErrStreamClose}})
+	}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
 }
 
-func TestNilHierarchyContextIsLocal(t *testing.T) {
+func TestUnitNilHierarchyContextIsLocal(t *testing.T) {
 	t.Parallel()
 	run(t, contracttest.Case{Name: "nil-context", Scope: "local", Invoke: func(_ context.Context, sdk *msteams.Client) contracttest.Observation {
 		var missing context.Context

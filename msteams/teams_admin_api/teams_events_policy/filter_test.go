@@ -3,9 +3,9 @@ package teamseventspolicy_test
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"os"
-	"reflect"
+
+	"slices"
+	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -13,87 +13,89 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-const bindingSource = "contracts/endpoints/8.1.0/fixtures/events-policy-binding.json"
+const bindingSource = "msteams/teams_admin_api/teams_events_policy/testdata/get_global.json"
 const getCommand = "Get-CsTeamsEventsPolicy"
 const grantCommand = "Grant-CsTeamsEventsPolicy"
 
-func TestEventsPolicyFiltersMatchCapturedSource(t *testing.T) {
+func TestUnitEventsPolicyFiltersUseRealResponses(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../" + bindingSource)
-	if e != nil {
-		t.Fatal(e)
+	raw := readResponseFixture(t, "list.json")
+	var rows []json.RawMessage
+	if json.Unmarshal(raw, &rows) != nil {
+		t.Fatal("invalid real list fixture")
 	}
-	var fixture struct {
-		Filters []struct {
-			Pattern  string
-			Observed struct {
-				Identities    []string
-				Sends, Tokens int
+	identities := func(row json.RawMessage) string {
+		var value struct {
+			Identity string `json:"Identity"`
+		}
+		if json.Unmarshal(row, &value) != nil {
+			t.Fatal("invalid real list identity")
+		}
+		return value.Identity
+	}
+	slices.SortStableFunc(rows, func(a, b json.RawMessage) int {
+		left, right := strings.EqualFold(identities(a), "Global"), strings.EqualFold(identities(b), "Global")
+		if left == right {
+			return 0
+		}
+		if left {
+			return -1
+		}
+		return 1
+	})
+	cases := []struct {
+		Name, Pattern, OnlyID string
+		Empty                 bool
+	}{
+		{Name: "list"}, {Name: "all", Pattern: "*"}, {Name: "global", Pattern: "Global", OnlyID: "Global"},
+		{Name: "missing", Pattern: "__sdk_missing_fixture__", Empty: true},
+		{Name: "whitespace", Pattern: " ", Empty: true},
+	}
+	for _, row := range rows {
+		id := identities(row)
+		if strings.HasPrefix(id, "Tag:") && !strings.ContainsAny(id, "*?[]`") {
+			cases = append(cases, struct {
+				Name, Pattern, OnlyID string
+				Empty                 bool
+			}{Name: "tag-prefix", Pattern: strings.TrimPrefix(id, "Tag:"), OnlyID: id})
+			break
+		}
+	}
+	for _, tc := range cases {
+		want := make([]json.RawMessage, 0, len(rows))
+		for _, row := range rows {
+			if !tc.Empty && (tc.OnlyID == "" || strings.EqualFold(identities(row), tc.OnlyID)) {
+				want = append(want, row)
 			}
 		}
-	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Filters) != 5 {
-		t.Fatal("incomplete events filter fixture")
-	}
-	var results []contracttest.Result
-	for i, f := range fixture.Filters {
-		if f.Observed.Sends != 0 || f.Observed.Tokens != 0 {
-			t.Fatal("source filter crossed offline boundary")
+		expected, err := json.Marshal(want)
+		if err != nil {
+			t.Fatal(err)
 		}
-		var want []string
-		for _, id := range f.Observed.Identities {
-			if id == "Global" {
-				want = append(want, id)
-			}
-		}
-		for _, id := range f.Observed.Identities {
-			if id != "Global" {
-				want = append(want, id)
-			}
-		}
-		set := "Filter"
-		if f.Pattern == "" {
-			set = "Identity"
-		}
-		results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("source-filter-%d", i), Source: bindingSource, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, getCommand, nil, 200, `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "},{"Identity":"Global/fixture"}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			s := sdk.TeamsAdminAPI.TeamsEventsPolicies
-			var o contracttest.Observation
-			var got []string
-			if f.Pattern == "" {
-				v, r, e := s.List(ctx)
-				o = contracttest.Observation{Response: r, Err: e}
-				for _, p := range v {
-					if p == nil || p.Identity == nil {
-						t.Fatal("missing filter identity")
-					}
-					got = append(got, *p.Identity)
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "real-filter-" + tc.Name, Family: "teams_events_policy", Scope: "service", Source: "msteams/teams_admin_api/teams_events_policy/testdata/list.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsEventsPolicy", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				service := sdk.TeamsAdminAPI.TeamsEventsPolicies
+				if tc.Pattern == "" {
+					value, response, err := service.List(ctx)
+					return contracttest.Observation{Value: value, Response: response, Err: err}
 				}
-			} else {
-				v, r, e := s.ListFiltered(ctx, f.Pattern)
-				o = contracttest.Observation{Response: r, Err: e}
-				for _, p := range v {
-					if p == nil || p.Identity == nil {
-						t.Fatal("missing filter identity")
-					}
-					got = append(got, *p.Identity)
-				}
-			}
-			if !reflect.DeepEqual(got, want) {
-				t.Fatal("source filter/order differs")
-			}
-			return o
-		}}))
+				value, response, err := service.ListFiltered(ctx, tc.Pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("real filtering response differs: %v %+v", err, result.Differences())
+		}
 	}
-	evidence(t, results)
+
 }
 
-func TestEventsPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
+func TestUnitEventsPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../" + bindingSource)
-	if e != nil {
-		t.Fatal(e)
-	}
-	var fixture struct {
+
+	fixture := struct {
 		Cases []struct {
 			Name, Command string
 			Observed      struct {
@@ -104,10 +106,1967 @@ func TestEventsPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
 				}
 			}
 		}
+	}{
+		Cases: []struct {
+			Name, Command string
+			Observed      struct {
+				Failure       *string
+				Sends, Tokens int
+				Output        struct {
+					NoScope bool `json:"no_scope_result"`
+				}
+			}
+		}{
+
+			{
+				Name:    "list",
+				Command: "Get-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "filter",
+				Command: "Get-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "empty-filter",
+				Command: "Get-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Failure: new("System.Management.Automation.ValidationMetadataException"),
+				},
+			},
+
+			{
+				Name:    "empty-identity",
+				Command: "Get-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Failure: new("System.Management.Automation.ValidationMetadataException"),
+				},
+			},
+
+			{
+				Name:    "identity-only",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "empty-identity",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Failure: new("System.Management.Automation.ParameterBindingValidationException"),
+				},
+			},
+
+			{
+				Name:    "identity-only",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "force-only",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "empty-identity",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Failure: new("System.Management.Automation.ValidationMetadataException"),
+				},
+			},
+
+			{
+				Name:    "force-false",
+				Command: "Remove-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "no-scope",
+				Command: "Grant-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Failure: new("System.Exception"),
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{
+						NoScope: true,
+					},
+				},
+			},
+
+			{
+				Name:    "user-omitted-name",
+				Command: "Grant-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{
+						NoScope: false,
+					},
+				},
+			},
+
+			{
+				Name:    "user-null-name",
+				Command: "Grant-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{
+						NoScope: false,
+					},
+				},
+			},
+
+			{
+				Name:    "user-empty-name",
+				Command: "Grant-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{
+						NoScope: false,
+					},
+				},
+			},
+
+			{
+				Name:    "tenant-false-selector",
+				Command: "Grant-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{
+						NoScope: false,
+					},
+				},
+			},
+
+			{
+				Name:    "tenant-true-force",
+				Command: "Grant-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{
+						NoScope: false,
+					},
+				},
+			},
+
+			{
+				Name:    "group-rank-zero",
+				Command: "Grant-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{
+						NoScope: false,
+					},
+				},
+			},
+
+			{
+				Name:    "group-rank-negative",
+				Command: "Grant-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{
+						NoScope: false,
+					},
+				},
+			},
+
+			{
+				Name:    "group-rank-two",
+				Command: "Grant-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{
+						NoScope: false,
+					},
+				},
+			},
+
+			{
+				Name:    "AllowWebinars-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowWebinars-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "EventAccessType-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "EventAccessType-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowTownhalls-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowTownhalls-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallEventAttendeeAccess-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallEventAttendeeAccess-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "ExternalPresenterJoinVerification-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "ExternalPresenterJoinVerification-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEmailEditing-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEmailEditing-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedQuestionTypesInRegistrationForm-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedQuestionTypesInRegistrationForm-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEventIntegrations-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEventIntegrations-false",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedWebinarTypesForRecordingPublish-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedWebinarTypesForRecordingPublish-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedTownhallTypesForRecordingPublish-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedTownhallTypesForRecordingPublish-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "RecordingForTownhall-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "RecordingForTownhall-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "RecordingForWebinar-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "RecordingForWebinar-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TranscriptionForTownhall-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TranscriptionForTownhall-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TranscriptionForWebinar-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TranscriptionForWebinar-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallChatExperience-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallChatExperience-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "BroadcastPremiumApps-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "BroadcastPremiumApps-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "UseMicrosoftECDN-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "UseMicrosoftECDN-false",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "ImmersiveEvents-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "ImmersiveEvents-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallMaxResolution-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallMaxResolution-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "HighBitrateForTownhall-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "HighBitrateForTownhall-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "BackroomChat-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "BackroomChat-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "Registration-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "Registration-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEngagementReport-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEngagementReport-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "InfoShownInReportMode-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "InfoShownInReportMode-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "Description-null",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "Description-empty",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "all-settings",
+				Command: "New-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowWebinars-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowWebinars-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "EventAccessType-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "EventAccessType-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowTownhalls-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowTownhalls-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallEventAttendeeAccess-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallEventAttendeeAccess-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "ExternalPresenterJoinVerification-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "ExternalPresenterJoinVerification-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEmailEditing-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEmailEditing-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedQuestionTypesInRegistrationForm-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedQuestionTypesInRegistrationForm-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEventIntegrations-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEventIntegrations-false",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedWebinarTypesForRecordingPublish-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedWebinarTypesForRecordingPublish-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedTownhallTypesForRecordingPublish-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowedTownhallTypesForRecordingPublish-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "RecordingForTownhall-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "RecordingForTownhall-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "RecordingForWebinar-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "RecordingForWebinar-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TranscriptionForTownhall-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TranscriptionForTownhall-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TranscriptionForWebinar-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TranscriptionForWebinar-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallChatExperience-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallChatExperience-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "BroadcastPremiumApps-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "BroadcastPremiumApps-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "UseMicrosoftECDN-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "UseMicrosoftECDN-false",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "ImmersiveEvents-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "ImmersiveEvents-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallMaxResolution-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "TownhallMaxResolution-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "HighBitrateForTownhall-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "HighBitrateForTownhall-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "BackroomChat-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "BackroomChat-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "Registration-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "Registration-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEngagementReport-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "AllowEngagementReport-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "InfoShownInReportMode-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "InfoShownInReportMode-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "Description-null",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "Description-empty",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+
+			{
+				Name:    "all-settings",
+				Command: "Set-CsTeamsEventsPolicy",
+				Observed: struct {
+					Failure       *string
+					Sends, Tokens int
+					Output        struct {
+						NoScope bool `json:"no_scope_result"`
+					}
+				}{
+					Output: struct {
+						NoScope bool `json:"no_scope_result"`
+					}{},
+				},
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil {
-		t.Fatal("invalid events binder fixture")
-	}
+
 	found := false
 	for _, x := range fixture.Cases {
 		if x.Command == grantCommand && x.Name == "no-scope" {
@@ -117,9 +2076,8 @@ func TestEventsPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
 	if !found {
 		t.Fatal("source no-scope failure not observed")
 	}
-	r := run(t, contracttest.Case{Name: "grant-no-scope", Source: bindingSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: policy.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "grant-no-scope", Source: bindingSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: policy.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsEventsPolicies.Assign(ctx, policy.Assignment{})
 		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}})
-	evidence(t, []contracttest.Result{r})
 }

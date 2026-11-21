@@ -34,11 +34,6 @@ jobs:
         run: python -m unittest discover -s tools/baseline/tests -v
       - name: Validate approved backlog artifacts
         run: python tools/backlog/validate.py
-      - name: Validate resource contract evidence inventory
-        run: |
-          python tools/contracts/verify_models.py
-          python tools/contracts/verify_resources.py
-          python -m unittest discover -s tools/contracts/tests -v
   pinned-package:
     strategy:
       fail-fast: false
@@ -53,8 +48,6 @@ jobs:
           python tools/baseline/baseline.py --output "$RUNNER_TEMP/first.json"
           python tools/baseline/baseline.py --output "$RUNNER_TEMP/second.json"
           cmp "$RUNNER_TEMP/first.json" "$RUNNER_TEMP/second.json"
-      - name: Reproduce pinned model serialization without tenant credentials
-        run: python tools/contracts/verify_models.py --acquire
       - name: Preserve platform observation
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:

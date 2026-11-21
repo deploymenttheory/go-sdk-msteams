@@ -1,6 +1,6 @@
 # Teams custom banner text lab acceptance
 
-On 2026-11-21, TestLabBannerTextReadOnly attempted the CustomBannerText collection
+On 2026-11-21, TestAccBannerTextReadOnly attempted the CustomBannerText collection
 read using the dedicated lab SPN in client-secret and certificate modes. Both
 actual resource reads returned HTTP 403. No response payload, tenant/client ID
 or credential was retained. Filtered/selected reads and optional pinned comparison

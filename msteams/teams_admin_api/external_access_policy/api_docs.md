@@ -53,4 +53,4 @@ zero/mixed scope rejects locally; it is not a fourth assignment type. Clear,
 default/effective-policy and group propagation semantics remain unqualified.
 
 Exact RBAC/consent, cloud feature deployment and successful app/delegated service
-behavior remain unqualified. [Evidence and prepared acceptance](../../../docs/implementation/policies/federation-sdk-evidence.md).
+behavior remain unqualified. [unit tests](service_test.go).

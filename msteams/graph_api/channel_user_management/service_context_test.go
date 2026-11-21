@@ -19,7 +19,7 @@ type roundTripFunc func(*http.Request) (*http.Response, error)
 
 func (f roundTripFunc) RoundTrip(request *http.Request) (*http.Response, error) { return f(request) }
 
-func TestCallerDeadlineBoundsWholeCompositionBeforeMutation(t *testing.T) {
+func TestUnitCallerDeadlineBoundsWholeCompositionBeforeMutation(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		calls := 0
 		sdk, err := msteams.NewClient(&auth.Config{Method: auth.SuppliedTokens, TenantID: "fixture-tenant", IdentityID: "fixture-identity", TokenMode: auth.Application, AccessTokens: map[string]auth.Token{auth.GraphAudience: {AccessToken: "synthetic-offline-token", ExpiresAt: time.Now().Add(time.Hour)}}},

@@ -8,7 +8,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
 )
 
-func TestChannelModelPreservesPresenceAndUnknownValues(t *testing.T) {
+func TestUnitChannelModelPreservesPresenceAndUnknownValues(t *testing.T) {
 	t.Parallel()
 	var value channel.Channel
 	data := []byte(`{"id":"fixture","description":null,"membershipType":"future","isArchived":false,"summary":{"future":5},"moderationSettings":{"unknown":true},"future":7}`)
@@ -20,7 +20,7 @@ func TestChannelModelPreservesPresenceAndUnknownValues(t *testing.T) {
 	}
 }
 
-func TestHostTeamProjectionIsPassiveAndStrict(t *testing.T) {
+func TestUnitHostTeamProjectionIsPassiveAndStrict(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, address string

@@ -3,7 +3,6 @@ package onlinevoicemailpolicy_test
 import (
 	"encoding/json"
 	"math"
-	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -11,22 +10,102 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
 )
 
-func TestPinnedVoicemailDurationModelObservations(t *testing.T) {
+func TestUnitTypedVoicemailDurationModelObservations(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/voicemail-models.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var capture struct {
+
+	inputVectors := struct {
 		Cases []struct {
 			Ticks *int64
 			Wire  json.RawMessage
 		}
+	}{
+		Cases: []struct {
+			Ticks *int64
+			Wire  json.RawMessage
+		}{
+
+			{
+				Ticks: new(int64(0)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:00:00\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(1)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:00:00.0000001\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(-1)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"-00:00:00.0000001\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(9)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:00:00.0000009\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(10)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:00:00.0000010\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(11)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:00:00.0000011\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(9999)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:00:00.0009999\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(10000)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:00:00.0010000\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(9999999)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:00:00.9999999\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(10000000)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:00:01\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(900000000)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"00:01:30\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(864000000000)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"1.00:00:00\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(864000000001)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"1.00:00:00.0000001\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(9223372036854775807)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"10675199.02:48:05.4775807\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Ticks: new(int64(-9223372036854775808)),
+				Wire:  json.RawMessage("{\"Description\":\"\",\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":false,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":\"-10675199.02:48:05.4775808\",\"PostambleAudioFile\":null,\"PreambleAudioFile\":\"fixture-audio-reference\",\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":\"FutureValue\"}"),
+			},
+
+			{
+				Wire: json.RawMessage("{\"Description\":null,\"EnableEditingCallAnswerRulesSetting\":null,\"EnableTranscription\":null,\"EnableTranscriptionProfanityMasking\":null,\"EnableTranscriptionTranslation\":null,\"EnableVoicemailTriage\":null,\"Identity\":\"fixture-policy\",\"MaximumRecordingLength\":null,\"PostambleAudioFile\":null,\"PreambleAudioFile\":null,\"PreamblePostambleMandatory\":null,\"PrimarySystemPromptLanguage\":null,\"SecondarySystemPromptLanguage\":null,\"ShareData\":null}"),
+			},
+		},
 	}
-	if json.Unmarshal(raw, &capture) != nil || len(capture.Cases) != 16 {
-		t.Fatal("invalid pinned voicemail observations")
-	}
-	for _, c := range capture.Cases {
+
+	for _, c := range inputVectors.Cases {
 		var value resource.Policy
 		if json.Unmarshal(c.Wire, &value) != nil {
 			t.Fatal("pinned voicemail model decode failed")
@@ -52,7 +131,7 @@ func TestPinnedVoicemailDurationModelObservations(t *testing.T) {
 	}
 }
 
-func TestTimeSpanBoundsAndSubTickPrecision(t *testing.T) {
+func TestUnitTimeSpanBoundsAndSubTickPrecision(t *testing.T) {
 	t.Parallel()
 	for _, value := range []string{"10675199.02:48:05.4775808", "-10675199.02:48:05.4775809", "999999999999999999999999.00:00:00", "00:60:00", "24:00:00", "00:00:60", "PT90S", "90", "00:00:00.00000001", ""} {
 		if _, err := resource.ParseTimeSpanConstant(value); err == nil {
@@ -77,7 +156,7 @@ func TestTimeSpanBoundsAndSubTickPrecision(t *testing.T) {
 	}
 }
 
-func TestVoicemailSnapshotsPreserveAbsenceNullAndFutureFields(t *testing.T) {
+func TestUnitVoicemailSnapshotsPreserveAbsenceNullAndFutureFields(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"Identity":"Fixture","Future":false}`, `{"Identity":"Fixture","MaximumRecordingLength":null,"ShareData":"FutureValue","EnableTranscription":false,"Future":{"value":[]}}`} {
 		var value resource.Policy

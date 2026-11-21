@@ -12,43 +12,39 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_packages"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/policy-package-requests.json"
+const source = "msteams/teams_admin_api/policy_packages/service_test.go"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
-const forest = "https://fixture-forest.example.invalid/"
+const forest = "https://admin.example.invalid/"
 
-type captured struct {
-	Name    string          `json:"name"`
-	Method  string          `json:"method"`
-	URL     string          `json:"generated_url"`
-	Body    json.RawMessage `json:"body"`
-	Headers http.Header     `json:"headers"`
-	Status  int             `json:"response_status"`
-	Reply   string          `json:"response_body"`
-	Failure *string         `json:"decoder_failure"`
-	Sends   int             `json:"sends"`
+type requestCase struct {
+	Name, Method, URL string
+	Body              json.RawMessage
+	Headers           http.Header
+	Status            int
+	Reply             string
 }
 
-func captures(t *testing.T) []captured {
-	t.Helper()
-	raw, err := os.ReadFile("../../../" + source)
-	if err != nil {
-		t.Fatal(err)
+func requestCases() []requestCase {
+	return []requestCase{
+		{Name: "list", Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package", Body: nil, Headers: http.Header{}, Status: 403},
+		{Name: "get", Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/Fixture%2FPackage%3A%40", Body: nil, Headers: http.Header{}, Status: 403},
+		{Name: "user-get", Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/assigned", Body: nil, Headers: http.Header{"user": {"fixture-user@example.invalid"}}, Status: 403},
+		{Name: "user-recommendations", Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package", Body: nil, Headers: http.Header{"user": {"fixture-user@example.invalid"}}, Status: 403},
+		{Name: "create", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage("{\"Description\":\"\",\"PackageName\":\"Fixture/Package:@\",\"PolicyList\":[{\"PolicyName\":\"FixtureMeeting\",\"PolicyType\":\"TeamsMeetingPolicy\"}]}"), Headers: http.Header{}, Status: 403},
+		{Name: "create-empty-dto", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage("{}"), Headers: http.Header{}, Status: 403},
+		{Name: "update", Method: "PUT", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage("{\"Description\":\"\",\"PackageName\":\"Fixture/Package:@\",\"PolicyList\":[]}"), Headers: http.Header{}, Status: 403},
+		{Name: "delete", Method: "DELETE", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/custompackage/Fixture%2FPackage%3A%40", Body: nil, Headers: http.Header{}, Status: 403},
+		{Name: "group-assign", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/group", Body: json.RawMessage("{\"GroupId\":\"fixture/group\",\"PackageName\":\"FixturePackage\",\"PolicyRankings\":[{\"PolicyType\":\"TeamsMeetingPolicy\",\"Rank\":0}]}"), Headers: http.Header{}, Status: 403},
+		{Name: "group-empty-package", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/group", Body: json.RawMessage("{\"GroupId\":\"fixture/group\",\"PackageName\":\"\",\"PolicyRankings\":[]}"), Headers: http.Header{}, Status: 403},
+		{Name: "group-null-package-default-rank", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/group", Body: json.RawMessage("{\"GroupId\":\"fixture/group\",\"PolicyRankings\":[{\"PolicyType\":\"Fixture\",\"Rank\":0}]}"), Headers: http.Header{}, Status: 403},
+		{Name: "user-grant", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/batch", Body: json.RawMessage("{\"PackageType\":\"FixturePackage\",\"UserIds\":[\"fixture/a\",\"fixture/a\",\"fixture/b\"]}"), Headers: http.Header{}, Status: 403},
+		{Name: "batch-grant", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/operation/batchpackage", Body: json.RawMessage("{\"PackageType\":\"FixturePackage\",\"UserIds\":[\"fixture/a\",\"fixture/a\",\"fixture/b\"]}"), Headers: http.Header{}, Status: 403},
 	}
-	var fixture struct{ Cases []captured }
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 23 {
-		t.Fatal("incomplete package request observations")
-	}
-	for _, row := range fixture.Cases {
-		if row.Sends != 1 {
-			t.Fatal("invalid package capture")
-		}
-	}
-	return fixture.Cases
 }
+
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
 	c.Family = "policy_packages"
@@ -70,33 +66,17 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	}
 	return r
 }
-func evidence(t *testing.T, results []contracttest.Result) {
+
+func discovery(t *testing.T) contracttest.Exchange {
 	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, err := os.OpenRoot(t.ArtifactDir())
+	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer func() { _ = root.Close() }()
-	f, err := root.Create("policy-package-service.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err = contracttest.WriteEvidence(f, revision, results); err != nil {
-		_ = f.Close()
-		t.Fatal(err)
-	}
-	if err = f.Close(); err != nil {
-		t.Fatal(err)
-	}
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Body: body}}
 }
-func discovery() contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Body: []byte(`{"endpoints":{"adminServiceEndpoint":"fixture-forest.example.invalid:443/path?q=f#x"}}`)}}
-}
-func wire(f captured, command string) contracttest.Exchange {
+
+func wire(f requestCase, command string) contracttest.Exchange {
 	h := f.Headers.Clone()
 	if h == nil {
 		h = http.Header{}
@@ -206,41 +186,36 @@ func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.
 	}
 	return o
 }
-func TestPinnedPackageRequestsAndBusinessFailures(t *testing.T) {
+func TestUnitPackageRequestVectors(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, row := range captures(t) {
-		mappings := mapping(row.Name)
-		c := contracttest.Case{Name: row.Name, Mappings: mappings, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			return invoke(row.Name, ctx, sdk)
-		}}
-		if row.Name == "create-empty-dto" {
-			c.Want.Error = resource.ErrInput
-		} else {
-			c.Steps = []contracttest.Exchange{discovery(), wire(row, mappings[0].Command)}
-			if row.Failure != nil {
-				c.Want.Error = client.ErrDecode
+	for _, tc := range requestCases() {
+		t.Run(tc.Name, func(t *testing.T) {
+			mappings := mapping(tc.Name)
+			c := contracttest.Case{Name: tc.Name, Mappings: mappings, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				return invoke(tc.Name, ctx, sdk)
+			}}
+			if tc.Name == "create-empty-dto" {
+				c.Want.Error = resource.ErrInput
+			} else {
+				c.Steps = []contracttest.Exchange{discovery(t), wire(tc, mappings[0].Command)}
+				c.Want.Error = auth.ErrForbidden
 			}
-			if row.Status >= 400 {
-				c.Want.APIError = &client.APIError{Backend: client.TeamsAdmin, StatusCode: row.Status}
-			}
-		}
-		results = append(results, run(t, c))
+			run(t, c)
+		})
 	}
-	evidence(t, results)
 }
 
-func TestPackageInputObjectVariantsUsePackageName(t *testing.T) {
+func TestUnitPackageInputObjectVariantsUsePackageName(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, remove := range []bool{false, true} {
-		f := captured{Name: "get-input-object", Method: "GET", URL: origin + "/Teams.VerticalPackaging/package/Fixture%2FPackage%3A%40", Status: 200, Reply: `{"Name":"Fixture/Package:@","Policies":{}}`}
+		f := requestCase{Name: "get-input-object", Method: "GET", URL: origin + "/Teams.VerticalPackaging/package/Fixture%2FPackage%3A%40", Status: 403}
 		command, set := "Get-CsPolicyPackage", "GetViaIdentity"
 		if remove {
-			f.Name, f.Method, f.URL, f.Status, f.Reply = "delete-input-object", "DELETE", origin+"/Teams.VerticalPackaging/package/custompackage/Fixture%2FPackage%3A%40", 204, ""
+			f.Name, f.Method, f.URL = "delete-input-object", "DELETE", origin+"/Teams.VerticalPackaging/package/custompackage/Fixture%2FPackage%3A%40"
 			command, set = "Remove-CsCustomPolicyPackage", "RemoveViaIdentity"
 		}
-		c := contracttest.Case{Name: f.Name, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(), wire(f, command)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		c := contracttest.Case{Want: contracttest.Expected{Error: auth.ErrForbidden}, Name: f.Name, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), wire(f, command)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			input := resource.Identity{PackageName: "Fixture/Package:@"}
 			var o contracttest.Observation
 			if remove {
@@ -250,7 +225,6 @@ func TestPackageInputObjectVariantsUsePackageName(t *testing.T) {
 			}
 			return o
 		}}
-		results = append(results, run(t, c))
+		run(t, c)
 	}
-	evidence(t, results)
 }

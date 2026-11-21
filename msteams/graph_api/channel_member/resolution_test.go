@@ -13,7 +13,7 @@ import (
 	channelmember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_member"
 )
 
-func TestResolveByUserRequiresCompleteUnambiguousReturnedIdentity(t *testing.T) {
+func TestUnitResolveByUserRequiresCompleteUnambiguousReturnedIdentity(t *testing.T) {
 	t.Parallel()
 	path := "/beta/teams/" + teamID + "/channels/" + url.PathEscape(channelID) + "/members"
 	next := auth.GraphAudience + path + "?$skiptoken=next"

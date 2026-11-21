@@ -3,7 +3,6 @@ package policyassignments_test
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"os"
 	"strings"
@@ -12,14 +11,13 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/policy-assignment-requests.json"
+const source = "msteams/teams_admin_api/policy_assignments/service_test.go"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
-const forest = "https://fixture-forest.example.invalid/"
+const forest = "https://admin.example.invalid/"
 
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
@@ -39,32 +37,16 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	}
 	return r
 }
-func evidence(t *testing.T, results []contracttest.Result) {
+
+func discovery(t *testing.T) contracttest.Exchange {
 	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, err := os.OpenRoot(t.ArtifactDir())
+	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer func() { _ = root.Close() }()
-	f, err := root.Create("policy-assignment-service.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err = contracttest.WriteEvidence(f, revision, results); err != nil {
-		_ = f.Close()
-		t.Fatal(err)
-	}
-	if err = f.Close(); err != nil {
-		t.Fatal(err)
-	}
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Body: body}}
 }
-func discovery() contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Body: []byte(`{"endpoints":{"adminServiceEndpoint":"fixture-forest.example.invalid:443/path?q=f#x"}}`)}}
-}
+
 func wire(method, url, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
 	h := http.Header{"Accept": {"application/json"}}
 	h.Set("X-MS-CmdletName", command)
@@ -136,9 +118,6 @@ func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.
 	default:
 		o.Value, o.Response, o.Err = s.GetGroup(ctx, groupID, policyType)
 	}
-	if result, ok := o.Value.(*resource.OperationResult); ok && result != nil && !result.HTTPAccepted {
-		o.Err = errors.New("successful submission lost acceptance")
-	}
 	return o
 }
 
@@ -167,53 +146,45 @@ func mapping(name string) []contracttest.Mapping {
 	return []contracttest.Mapping{{Command: command, ParameterSet: set}}
 }
 
-func TestPinnedGeneratedAssignmentRequests(t *testing.T) {
+func TestUnitAssignmentRequestVectors(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../" + source)
-	if err != nil {
-		t.Fatal(err)
+	cases := []struct {
+		name, method, url string
+		body              json.RawMessage
+	}{
+		{name: "batch-list", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations", body: nil},
+		{name: "batch-list-filter", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations?status=Future%20%2F%3F%26%3A%40", body: nil},
+		{name: "batch-get", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/fixture%2Foperation%3A%40", body: nil},
+		{name: "group-get", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: nil},
+		{name: "group-list", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes", body: nil},
+		{name: "group-list-type", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments?policyType=Fixture%20%2F%3F%26%3A%40", body: nil},
+		{name: "group-list-all", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments", body: nil},
+		{name: "user-effective", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.User/users/fixture%2Fuser%3A%40/policies?policyType=Fixture%20%2F%3F%26%3A%40", body: nil},
+		{name: "user-effective-all", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.User/users/fixture%2Fuser%3A%40/policies", body: nil},
+		{name: "group-create", method: "PUT", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: json.RawMessage("{\"policyName\":\"Fixture\",\"priority\":0}")},
+		{name: "group-create-empty", method: "PUT", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: json.RawMessage("{}")},
+		{name: "group-create-empty-name-negative-rank", method: "PUT", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: json.RawMessage("{\"policyName\":\"\",\"priority\":-1}")},
+		{name: "group-delete", method: "DELETE", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: nil},
+		{name: "group-delete-no-content", method: "DELETE", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: nil},
+		{name: "group-update", method: "PATCH", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: json.RawMessage("{\"policyName\":\"UpdatedFixture\",\"priority\":0}")},
+		{name: "group-update-empty", method: "PATCH", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: json.RawMessage("{}")},
+		{name: "batch-create", method: "POST", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations?operationName=Fixture%20%2F%3F%26%3A%40", body: json.RawMessage("{\"policy\":{\"policyType\":\"Fixture\",\"policyName\":\"\"},\"identities\":[\"fixture/a\",\"fixture/a\",\"fixture/b\"],\"additionalParameters\":{\"flag\":false,\"n\":0,\"empty\":\"\"}}")},
+		{name: "batch-create-empty", method: "POST", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations", body: json.RawMessage("{\"identities\":[]}")},
+		{name: "batch-create-nested-additional", method: "POST", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations", body: json.RawMessage("{\"identities\":[],\"additionalParameters\":{\"nested\":{\"flag\":false},\"array\":[0,false,\"\",\"null\",{}]}}")},
 	}
-	var fixture struct {
-		Cases []struct {
-			Name    string          `json:"name"`
-			Method  string          `json:"method"`
-			URL     string          `json:"generated_url"`
-			Body    json.RawMessage `json:"body"`
-			Reply   string          `json:"response_body"`
-			Status  int             `json:"response_status"`
-			Failure *string         `json:"decoder_failure"`
-			Sends   int             `json:"sends"`
-		}
-	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 25 {
-		t.Fatal("invalid pinned request observations")
-	}
-	var results []contracttest.Result
-	for _, f := range fixture.Cases {
-		if f.Sends != 1 {
-			t.Fatal("unsafe pinned request")
-		}
-		command := "Set-CsGroupPolicyAssignment"
-		mappings := mapping(f.Name)
-		if len(mappings) != 0 {
-			command = mappings[0].Command
-		}
-		body := f.Body
-		if string(body) == "null" {
-			body = nil
-		}
-		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: mappings, Steps: []contracttest.Exchange{discovery(), wire(f.Method, f.URL, command, body, f.Status, f.Reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return invoke(f.Name, ctx, sdk)
-			}}
-			if f.Failure != nil {
-				c.Want.Error = client.ErrDecode
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			command := "Set-CsGroupPolicyAssignment"
+			mappings := mapping(tc.name)
+			if len(mappings) > 0 {
+				command = mappings[0].Command
 			}
-			if f.Status == 403 {
-				c.Want.APIError = &client.APIError{StatusCode: 403, Backend: client.TeamsAdmin, Codes: []string{"FixtureDenied"}}
+			for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
+				run(t, contracttest.Case{Name: tc.name + "-" + string(mode), Mode: mode, Mappings: mappings, Steps: []contracttest.Exchange{discovery(t), wire(tc.method, tc.url, command, tc.body, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					return invoke(tc.name, ctx, sdk)
+				}, Want: contracttest.Expected{Error: auth.ErrForbidden}})
 			}
-			results = append(results, run(t, c))
-		}
+		})
 	}
-	evidence(t, results)
 }

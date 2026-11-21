@@ -25,7 +25,7 @@ func (p *testProvider) AcquireToken(ctx context.Context, r auth.TokenRequest) (a
 }
 func (p *testProvider) Close() { p.closes.Add(1) }
 
-func TestSessionSuppliedTokensAreCopiedAndAudienceIsolated(t *testing.T) {
+func TestUnitSessionSuppliedTokensAreCopiedAndAudienceIsolated(t *testing.T) {
 	t.Parallel()
 	cfg := &auth.Config{Method: auth.SuppliedTokens, TenantID: "tenant", IdentityID: "identity", TokenMode: auth.Application,
 		AccessTokens: map[string]auth.Token{"graph": {AccessToken: "graph-secret", ExpiresAt: time.Now().Add(time.Hour)}}}
@@ -54,7 +54,7 @@ func TestSessionSuppliedTokensAreCopiedAndAudienceIsolated(t *testing.T) {
 	}
 }
 
-func TestExternalProviderReceivesBindingAndRemainsBorrowed(t *testing.T) {
+func TestUnitExternalProviderReceivesBindingAndRemainsBorrowed(t *testing.T) {
 	t.Parallel()
 	binding := auth.Binding{TenantID: "tenant", Cloud: "commercial", IdentityID: "identity", Mode: auth.Delegated}
 	var calls atomic.Int32
@@ -85,7 +85,7 @@ func TestExternalProviderReceivesBindingAndRemainsBorrowed(t *testing.T) {
 	}
 }
 
-func TestSessionCloseCancelsBorrowedProviderOperation(t *testing.T) {
+func TestUnitSessionCloseCancelsBorrowedProviderOperation(t *testing.T) {
 	t.Parallel()
 	entered := make(chan struct{})
 	exited := make(chan struct{})
@@ -126,7 +126,7 @@ func TestSessionCloseCancelsBorrowedProviderOperation(t *testing.T) {
 	}
 }
 
-func TestExternalProviderRejectsInvalidConfigurationAndRedactsErrors(t *testing.T) {
+func TestUnitExternalProviderRejectsInvalidConfigurationAndRedactsErrors(t *testing.T) {
 	t.Parallel()
 	binding := auth.Binding{TenantID: "tenant", Cloud: "commercial", IdentityID: "id", Mode: auth.Application}
 	var absent *testProvider
@@ -157,7 +157,7 @@ func TestExternalProviderRejectsInvalidConfigurationAndRedactsErrors(t *testing.
 	}
 }
 
-func TestManagedIdentitySessionRejectsUnknownAudience(t *testing.T) {
+func TestUnitManagedIdentitySessionRejectsUnknownAudience(t *testing.T) {
 	t.Parallel()
 	sdk, err := msteams.NewClient(&auth.Config{Method: auth.ManagedIdentity, TenantID: "fixture.example"})
 	if err != nil {
@@ -169,7 +169,7 @@ func TestManagedIdentitySessionRejectsUnknownAudience(t *testing.T) {
 	}
 }
 
-func TestApplicationSessionUsesOwnedProviderWithoutConstructorAuthentication(t *testing.T) {
+func TestUnitApplicationSessionUsesOwnedProviderWithoutConstructorAuthentication(t *testing.T) {
 	t.Parallel()
 	transport := &recordingTransport{}
 	cfg := &auth.Config{Method: auth.ClientSecret, TenantID: "11111111-1111-4111-8111-111111111111", ClientID: "22222222-2222-4222-8222-222222222222", ClientSecret: "synthetic-secret"}
@@ -196,7 +196,7 @@ func TestApplicationSessionUsesOwnedProviderWithoutConstructorAuthentication(t *
 	}
 }
 
-func TestCertificateParsingRemainsLazyAndErrorsStayLocal(t *testing.T) {
+func TestUnitCertificateParsingRemainsLazyAndErrorsStayLocal(t *testing.T) {
 	t.Parallel()
 	transport := &recordingTransport{}
 	sdk, err := msteams.NewClient(&auth.Config{Method: auth.Certificate, TenantID: "11111111-1111-4111-8111-111111111111", ClientID: "22222222-2222-4222-8222-222222222222", PFX: []byte("invalid-pfx")}, msteams.WithHTTPClient(&http.Client{Transport: transport}))

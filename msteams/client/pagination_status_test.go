@@ -9,7 +9,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestPagerExpectedStatusRejectsUnexpectedPageBeforeDecode(t *testing.T) {
+func TestUnitPagerExpectedStatusRejectsUnexpectedPageBeforeDecode(t *testing.T) {
 	t.Parallel()
 	for _, status := range []int{201, 202, 204, 206} {
 		t.Run(http.StatusText(status), func(t *testing.T) {
@@ -36,7 +36,7 @@ func TestPagerExpectedStatusRejectsUnexpectedPageBeforeDecode(t *testing.T) {
 	}
 }
 
-func TestPagerExpectedStatusRetainsEarlierItemsAndLastResponse(t *testing.T) {
+func TestUnitPagerExpectedStatusRetainsEarlierItemsAndLastResponse(t *testing.T) {
 	t.Parallel()
 	calls := 0
 	scope, _, _ := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) {
@@ -58,7 +58,7 @@ func TestPagerExpectedStatusRetainsEarlierItemsAndLastResponse(t *testing.T) {
 	}
 }
 
-func TestPagerStatusOptionPreservesGenericAndHTTPFailureBehavior(t *testing.T) {
+func TestUnitPagerStatusOptionPreservesGenericAndHTTPFailureBehavior(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name             string
@@ -87,7 +87,7 @@ func TestPagerStatusOptionPreservesGenericAndHTTPFailureBehavior(t *testing.T) {
 	}
 }
 
-func TestPagerExpectedStatusValidationIsCredentialFree(t *testing.T) {
+func TestUnitPagerExpectedStatusValidationIsCredentialFree(t *testing.T) {
 	t.Parallel()
 	scope, _, provider := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(*http.Request) (*http.Response, error) {
 		t.Error("invalid constructor sent HTTP")

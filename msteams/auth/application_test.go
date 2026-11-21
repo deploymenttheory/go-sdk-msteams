@@ -199,7 +199,7 @@ func application(t *testing.T, cfg *Config, service *tokenService) *ApplicationP
 	return p
 }
 
-func TestApplicationMSALCredentialModesAndAudiences(t *testing.T) {
+func TestUnitApplicationMSALCredentialModesAndAudiences(t *testing.T) {
 	t.Parallel()
 	pfx, err := os.ReadFile("testdata/client-credentials-sha1.pfx")
 	if err != nil {
@@ -252,7 +252,7 @@ func TestApplicationMSALCredentialModesAndAudiences(t *testing.T) {
 	}
 }
 
-func TestApplicationRefreshActuallyExchangesNewCredentials(t *testing.T) {
+func TestUnitApplicationRefreshActuallyExchangesNewCredentials(t *testing.T) {
 	t.Parallel()
 	service := newTokenService(t)
 	p := application(t, appConfig(), service)
@@ -273,7 +273,7 @@ func TestApplicationRefreshActuallyExchangesNewCredentials(t *testing.T) {
 	}
 }
 
-func TestApplicationRejectsBindingCloudAndUnsafeTenant(t *testing.T) {
+func TestUnitApplicationRejectsBindingCloudAndUnsafeTenant(t *testing.T) {
 	t.Parallel()
 	service := newTokenService(t)
 	p := application(t, appConfig(), service)
@@ -302,7 +302,7 @@ func TestApplicationRejectsBindingCloudAndUnsafeTenant(t *testing.T) {
 	}
 }
 
-func TestApplicationErrorsDoNotRetainServiceBodies(t *testing.T) {
+func TestUnitApplicationErrorsDoNotRetainServiceBodies(t *testing.T) {
 	t.Parallel()
 	service := newTokenService(t)
 	service.fail = true
@@ -320,7 +320,7 @@ func TestApplicationErrorsDoNotRetainServiceBodies(t *testing.T) {
 	}
 }
 
-func TestApplicationRejectsMetadataTokenDestinations(t *testing.T) {
+func TestUnitApplicationRejectsMetadataTokenDestinations(t *testing.T) {
 	t.Parallel()
 	for _, endpoint := range []string{"https://other.test/token", "http://login.microsoftonline.com/" + appTenant + "/oauth2/v2.0/token", "https://login.microsoftonline.com/other-tenant/oauth2/v2.0/token"} {
 		service := newTokenService(t)
@@ -335,7 +335,7 @@ func TestApplicationRejectsMetadataTokenDestinations(t *testing.T) {
 	}
 }
 
-func TestApplicationCloseCancelsTokenExchange(t *testing.T) {
+func TestUnitApplicationCloseCancelsTokenExchange(t *testing.T) {
 	t.Parallel()
 	service := newTokenService(t)
 	service.block = make(chan struct{})
@@ -365,7 +365,7 @@ func TestApplicationCloseCancelsTokenExchange(t *testing.T) {
 	}
 }
 
-func TestApplicationIgnoresImplicitMSALRegion(t *testing.T) {
+func TestUnitApplicationIgnoresImplicitMSALRegion(t *testing.T) {
 	t.Setenv("MSAL_FORCE_REGION", "unrequested-region")
 	service := newTokenService(t)
 	p := application(t, appConfig(), service)
@@ -374,7 +374,7 @@ func TestApplicationIgnoresImplicitMSALRegion(t *testing.T) {
 	}
 }
 
-func TestApplicationDomainCanonicalizationAndIssuerIsolation(t *testing.T) {
+func TestUnitApplicationDomainCanonicalizationAndIssuerIsolation(t *testing.T) {
 	t.Parallel()
 	service := newTokenService(t)
 	service.metadataPath = "/example.onmicrosoft.com/v2.0/.well-known/openid-configuration"
@@ -400,7 +400,7 @@ func TestApplicationDomainCanonicalizationAndIssuerIsolation(t *testing.T) {
 	}
 }
 
-func TestApplicationRejectsRedirectsAndExpiredCertificatesBeforeExchange(t *testing.T) {
+func TestUnitApplicationRejectsRedirectsAndExpiredCertificatesBeforeExchange(t *testing.T) {
 	t.Parallel()
 	service := newTokenService(t)
 	service.redirect = true
@@ -453,7 +453,7 @@ type tokenRoundTrip func(*http.Request) (*http.Response, error)
 
 func (f tokenRoundTrip) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
 
-func TestAuthorityRejectsAlternativeDestinationsAndClosesBodies(t *testing.T) {
+func TestUnitAuthorityRejectsAlternativeDestinationsAndClosesBodies(t *testing.T) {
 	t.Parallel()
 	for _, alter := range []func(*http.Request){
 		func(r *http.Request) { r.Host = "other.test" },
@@ -487,7 +487,7 @@ func TestAuthorityRejectsAlternativeDestinationsAndClosesBodies(t *testing.T) {
 	}
 }
 
-func TestAuthorityBoundsAndClosesResponses(t *testing.T) {
+func TestUnitAuthorityBoundsAndClosesResponses(t *testing.T) {
 	t.Parallel()
 	body := &trackedBody{Reader: strings.NewReader(strings.Repeat("x", 1024*1024+1))}
 	guard := &authorityHTTP{tenant: appTenant, client: &http.Client{Transport: tokenRoundTrip(func(r *http.Request) (*http.Response, error) {

@@ -23,7 +23,7 @@ func graphCase() Case {
 		Header: http.Header{"If-Match": {`W/"fixture"`}},
 		Body:   json.RawMessage(`{"description":null,"settings":{"enabled":false},"members":[]}`)}
 	return Case{Name: "sparse-update", Family: "teams", Scope: "primitive",
-		Source:   "contracts/endpoints/8.1.0/core.json#/operations",
+		Source:   "internal/contracttest/runner_test.go",
 		Mappings: []Mapping{{Command: "Set-Team", ParameterSet: "__AllParameterSets"}},
 		Steps: []Exchange{{Request: WireRequest{Method: http.MethodPatch,
 			URL:      "https://graph.microsoft.com/v1.0/teams/fixture%20%2F%3F%23%25%E9%9B%AA?%24select=id&%24select=displayName&%24filter=displayName+eq+%27A+%26+B%27",
@@ -51,7 +51,7 @@ func requirePass(t *testing.T, c Case) Result {
 	return result
 }
 
-func TestSuiteRegisterAndRun(t *testing.T) {
+func TestUnitSuiteRegisterAndRun(t *testing.T) {
 	t.Parallel()
 	// These are runner registration checks, not nine implemented resources.
 	families := []string{"teams", "team_templates", "team_members", "targeting", "shared_channels", "operations", "deployment_migration", "channels", "channel_members"}
@@ -84,7 +84,7 @@ func TestSuiteRegisterAndRun(t *testing.T) {
 	}
 }
 
-func TestRunDetectsWireAndResultRegressions(t *testing.T) {
+func TestUnitRunDetectsWireAndResultRegressions(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, path string
@@ -143,7 +143,7 @@ func TestRunDetectsWireAndResultRegressions(t *testing.T) {
 	}
 }
 
-func TestRunErrorAndCancellationContracts(t *testing.T) {
+func TestUnitRunErrorAndCancellationContracts(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name string
@@ -203,7 +203,7 @@ func TestRunErrorAndCancellationContracts(t *testing.T) {
 	})
 }
 
-func TestRunCloudAndModeBinding(t *testing.T) {
+func TestUnitRunCloudAndModeBinding(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, cloud string
@@ -236,7 +236,7 @@ func TestRunCloudAndModeBinding(t *testing.T) {
 	}
 }
 
-func TestRunInvalidFixtureNeverInvokes(t *testing.T) {
+func TestUnitRunInvalidFixtureNeverInvokes(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name string
@@ -245,6 +245,17 @@ func TestRunInvalidFixtureNeverInvokes(t *testing.T) {
 		{name: "missing name", edit: func(c *Case) { c.Name = "" }},
 		{name: "foreign source", edit: func(c *Case) { c.Source = "https://example.invalid/secret.json" }},
 		{name: "source traversal", edit: func(c *Case) { c.Source = "contracts/../../secret.json" }},
+		{name: "absolute testdata source", edit: func(c *Case) { c.Source = "/msteams/graph_api/channel/testdata/channel.json" }},
+		{name: "windows testdata source", edit: func(c *Case) { c.Source = `C:\msteams\graph_api\channel\testdata\channel.json` }},
+		{name: "service source outside testdata", edit: func(c *Case) { c.Source = "msteams/graph_api/channel/channel.json" }},
+		{name: "testdata source traversal", edit: func(c *Case) { c.Source = "msteams/graph_api/channel/testdata/../../secret.json" }},
+		{name: "testdata source backslash", edit: func(c *Case) { c.Source = `msteams/graph_api/channel/testdata/..\secret.json` }},
+		{name: "testdata source control", edit: func(c *Case) { c.Source = "msteams/graph_api/channel/testdata/secret\n.json" }},
+		{name: "testdata source bad pointer", edit: func(c *Case) { c.Source = "msteams/graph_api/channel/testdata/channel.json#secret" }},
+		{name: "test vector source traversal", edit: func(c *Case) { c.Source = "msteams/graph_api/../../secret_test.go" }},
+		{name: "test vector source production file", edit: func(c *Case) { c.Source = "msteams/graph_api/channel/service.go" }},
+		{name: "test vector source absolute", edit: func(c *Case) { c.Source = "/msteams/graph_api/channel/service_test.go" }},
+		{name: "recovery source traversal", edit: func(c *Case) { c.Source = "tests/integration/lab/../../../secret_test.go" }},
 		{name: "unknown scope", edit: func(c *Case) { c.Scope = "live" }},
 		{name: "unknown mode", edit: func(c *Case) { c.Mode = "mixed" }},
 		{name: "local http", edit: func(c *Case) { c.Scope = "local" }},
@@ -271,7 +282,27 @@ func TestRunInvalidFixtureNeverInvokes(t *testing.T) {
 	}
 }
 
-func TestRunUnexpectedRequestCannotEscapeToNetwork(t *testing.T) {
+func TestUnitRunPermanentServiceTestdataSources(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		name   string
+		source string
+	}{
+		{name: "graph service", source: "msteams/graph_api/channel/testdata/channel.json"},
+		{name: "administration service pointer", source: "msteams/teams_admin_api/application_access_policy/testdata/policy.json#/body"},
+		{name: "service Go test vectors", source: "msteams/graph_api/channel/service_test.go"},
+		{name: "adversarial recovery vectors", source: "tests/integration/lab/team_lifecycle_cleanup_test.go"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			c := graphCase()
+			c.Source = tc.source
+			requirePass(t, c)
+		})
+	}
+}
+
+func TestUnitRunUnexpectedRequestCannotEscapeToNetwork(t *testing.T) {
 	t.Parallel()
 	c := graphCase()
 	// The callback deliberately calls the supplied HTTP client directly. Even
@@ -299,7 +330,7 @@ func TestRunUnexpectedRequestCannotEscapeToNetwork(t *testing.T) {
 	}
 }
 
-func TestCompareRequestPreservesNoBodyVersusJSONNull(t *testing.T) {
+func TestUnitCompareRequestPreservesNoBodyVersusJSONNull(t *testing.T) {
 	t.Parallel()
 	request, err := http.NewRequestWithContext(t.Context(), http.MethodGet, "https://graph.microsoft.com/v1.0/teams", io.NopCloser(strings.NewReader("null")))
 	if err != nil {
@@ -314,7 +345,7 @@ func TestCompareRequestPreservesNoBodyVersusJSONNull(t *testing.T) {
 
 func binaryCase(payload []byte) Case {
 	return Case{Name: "binary-upload", Family: "transfer", Scope: "primitive",
-		Source: "contracts/endpoints/8.1.0/core.json#/operations",
+		Source: "internal/contracttest/runner_test.go",
 		Steps: []Exchange{{Request: WireRequest{Method: http.MethodPut,
 			URL:      "https://graph.microsoft.com/v1.0/groups/fixture/photo/$value",
 			Audience: auth.GraphAudience, Headers: http.Header{"Content-Type": {"image/jpeg"}},
@@ -328,7 +359,7 @@ func binaryCase(payload []byte) Case {
 		}}
 }
 
-func TestRunBinaryComparesExactBytesWithoutNormalization(t *testing.T) {
+func TestUnitRunBinaryComparesExactBytesWithoutNormalization(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name    string

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -12,22 +11,42 @@ import (
 	federation "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
-func TestDomainConstructorsAreLocal(t *testing.T) {
+func TestUnitDomainConstructorsAreLocal(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/federation-domain-models.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var artifact struct {
+
+	artifact := struct {
 		Cases []struct {
 			Name string          `json:"name"`
 			Wire json.RawMessage `json:"wire"`
 		} `json:"cases"`
+	}{
+		Cases: []struct {
+			Name string          `json:"name"`
+			Wire json.RawMessage `json:"wire"`
+		}{
+
+			{
+				Name: "domain-pattern",
+				Wire: json.RawMessage("{\"Domain\":\"*.example.invalid\"}"),
+			},
+
+			{
+				Name: "allow-list",
+				Wire: json.RawMessage("[\"b.example.invalid\",\"a.example.invalid\",\"b.example.invalid\",\"\"]"),
+			},
+
+			{
+				Name: "empty-allow-list",
+				Wire: json.RawMessage("[]"),
+			},
+
+			{
+				Name: "allow-all",
+				Wire: json.RawMessage("[\"AllowAllKnownDomains\"]"),
+			},
+		},
 	}
-	if json.Unmarshal(raw, &artifact) != nil || len(artifact.Cases) != 4 {
-		t.Fatal("invalid pinned domain observations")
-	}
+
 	observed := map[string]json.RawMessage{}
 	for _, c := range artifact.Cases {
 		observed[c.Name] = c.Wire
@@ -46,19 +65,18 @@ func TestDomainConstructorsAreLocal(t *testing.T) {
 		if len(observed[tc.name]) == 0 {
 			t.Fatal("missing pinned case")
 		}
-		r, err := contracttest.Run(t.Context(), contracttest.Case{Name: tc.name, Family: "tenant_federation_configuration", Scope: "local", Source: "contracts/endpoints/8.1.0/fixtures/federation-domain-models.json", Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "__AllParameterSets"}}, Invoke: func(context.Context, *msteams.Client) contracttest.Observation {
+		r, err := contracttest.Run(t.Context(), contracttest.Case{Name: tc.name, Family: "tenant_federation_configuration", Scope: "local", Source: "msteams/teams_admin_api/tenant_federation_configuration/testdata/get_global.json", Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "__AllParameterSets"}}, Invoke: func(context.Context, *msteams.Client) contracttest.Observation {
 			v, e := tc.build()
 			return contracttest.Observation{Value: v, Err: e}
 		}, Want: contracttest.Expected{JSON: observed[tc.name]}})
 		if err != nil || !r.Passed() {
 			t.Fatalf("local builder differs: %v %+v", err, r.Differences())
 		}
-		results = append(results, r)
+
 	}
-	evidence(t, results)
 }
 
-func TestAllowListOwnsOriginalOrderAndRejectsInvalidZeroChoice(t *testing.T) {
+func TestUnitAllowListOwnsOriginalOrderAndRejectsInvalidZeroChoice(t *testing.T) {
 	t.Parallel()
 	input := []string{"fixture.invalid", "fixture.invalid"}
 	value := federation.NewAllowList(input...)

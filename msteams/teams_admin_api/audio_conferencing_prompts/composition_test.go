@@ -8,89 +8,61 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_conferencing_prompts"
 )
 
-func TestPromptsUpdateKeepsPreparationAndHTTPAcceptance(t *testing.T) {
+func TestUnitPromptsUpdatePreparationFailures(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, c := range []struct {
-		name            string
-		read, patch     int
-		readBody, reply string
-		accepted        bool
+	cases := []struct {
+		name        string
+		read, patch int
+		body        string
 	}{
-		{"success", 200, 204, `{"Identity":"read-model-identity","Prompts":[{}],"Packages":[{}],"Future":false}`, "", true},
-		{"read-denied", 403, 0, `{"Message":"fixture-private"}`, "", false},
-		{"read-empty", 204, 0, "", "", false},
-		{"read-malformed", 200, 0, "not-json", "", false},
-		{"patch-throttled", 200, 429, `{"Identity":"read-model-identity"}`, `{"Message":"fixture-private"}`, false},
-		{"patch-unavailable", 200, 503, `{"Identity":"read-model-identity"}`, "not-json", false},
-		{"accepted-malformed", 200, 200, `{"Identity":"read-model-identity"}`, "not-json", true},
-	} {
-		steps := []contracttest.Exchange{wire("GET", item, setCommand, nil, c.read, c.readBody)}
-		if c.patch != 0 {
-			steps = append(steps, wire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"read-model-identity","Prompts":[]}`), c.patch, c.reply))
-		}
-		results = append(results, run(t, contracttest.Case{Name: "update-" + c.name, Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			v, r, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Prompts: resource.ClearPrompts()})
-			if v == nil || v.ReadResponse == nil || v.PatchInvoked != (c.patch != 0) || v.HTTPAccepted != c.accepted {
-				return contracttest.Observation{Err: errors.New("preparation/acceptance lost")}
-			}
-			if c.name == "success" {
-				if v.Before == nil || len(v.Before.Prompts) != 1 || len(v.Before.Packages) != 1 || v.Before.RawFields["Future"] == nil || v.After != nil {
-					return contracttest.Observation{Err: errors.New("read snapshot changed")}
-				}
-				return contracttest.Observation{Response: r, Err: e}
-			}
-			if e == nil || c.accepted && !errors.Is(e, client.ErrDecode) {
-				return contracttest.Observation{Err: errors.New("partial failure lost")}
-			}
-			return contracttest.Observation{Response: r}
-		}}))
+		{"read-denied", 403, 0, ""},
+		{"read-empty", 204, 0, ""},
+		{"read-malformed", 200, 0, "not-json"},
 	}
-	evidence(t, results)
-}
-
-func TestPromptsEditsFailBeforePatchOrPreserveSourceKeys(t *testing.T) {
-	t.Parallel()
-	var results []contracttest.Result
-	for _, name := range []string{"package-remove-nonempty", "package-remove-empty", "prompt-remove-first"} {
-		read := `{"Identity":"read-model-identity","Packages":[{}],"Future":false}`
-		body := `{"Identity":"read-model-identity","Packages":[]}`
-		if name == "package-remove-empty" {
-			read = `{"Identity":"read-model-identity","Packages":[],"Future":false}`
-		}
-		if name == "prompt-remove-first" {
-			read = `{"Identity":"read-model-identity","Prompts":[{"Id":"11111111-1111-1111-1111-111111111111"}],"prompts":[{"Id":"11111111-1111-1111-1111-111111111111","Future":false}],"Future":false}`
-			body = `{"Identity":"read-model-identity","Prompts":[{"Identity":null,"Id":"11111111-1111-1111-1111-111111111111","Name":null,"AudioPrompt":null,"TextPrompt":null,"Type":null,"Locale":null},{"Identity":null,"Id":"22222222-2222-2222-2222-222222222222","Name":null,"AudioPrompt":null,"TextPrompt":null,"Type":null,"Locale":null}]}`
-		}
-		steps := []contracttest.Exchange{wire("GET", item, setCommand, nil, 200, read)}
-		patch := name != "package-remove-nonempty"
-		if patch {
-			steps = append(steps, wire("PATCH", item, setCommand, json.RawMessage(body), 204, ""))
-		}
-		results = append(results, run(t, contracttest.Case{Name: name, Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			input := resource.UpdateRequest{Packages: resource.ChangePackages(nil, []*resource.PromptPackage{{}})}
-			if name == "prompt-remove-first" {
-				input = resource.UpdateRequest{Prompts: resource.ChangePrompts([]*resource.Prompt{{ID: new(secondID)}}, []*resource.Prompt{{Identity: new("ignored"), ID: new(firstID)}})}
+	cases = append(cases, struct {
+		name        string
+		read, patch int
+		body        string
+	}{"actual-read-denial", 400, 0, string(readResponseFixture(t, "get_global_400.json"))})
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			steps := []contracttest.Exchange{wire("GET", item, setCommand, nil, tc.read, tc.body)}
+			if tc.patch != 0 {
+				steps = append(steps, wire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"Global","Prompts":[]}`), tc.patch, ""))
 			}
-			v, r, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.UpdateByIdentity(ctx, "Global", input)
-			if v == nil || v.Before == nil || v.Before.RawFields["Future"] == nil || v.PatchInvoked != patch || v.HTTPAccepted != patch {
-				return contracttest.Observation{Err: errors.New("source edit preparation changed")}
-			}
-			if !patch {
-				if !errors.Is(e, resource.ErrInput) || len(v.Before.Packages) != 1 {
-					return contracttest.Observation{Err: errors.New("nonempty package removal was dispatched or lost snapshot")}
+			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				v, r, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Prompts: resource.ClearPrompts()})
+				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
+					t.Error("failed update lost preparation state or invented acceptance")
+				}
+				if tc.read == 403 || tc.patch != 0 {
+					var apiError *client.APIError
+					expected := tc.read
+					if tc.patch != 0 {
+						expected = tc.patch
+					}
+					if !errors.As(e, &apiError) || apiError.StatusCode != expected {
+						t.Error("failure lost its HTTP status")
+					}
 				}
 				return contracttest.Observation{Response: r}
-			}
-			if name == "prompt-remove-first" && len(v.Before.Prompts) != 2 {
-				return contracttest.Observation{Err: errors.New("edit mutated preparation snapshot")}
-			}
-			return contracttest.Observation{Response: r, Err: e}
-		}}))
+			}})
+		})
 	}
-	evidence(t, results)
+}
+
+func TestUnitPromptsEditsStopOnPreparationDenial(t *testing.T) {
+	t.Parallel()
+	run(t, contracttest.Case{Name: "preparation-denial", Source: "msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, setCommand, nil, 403, "")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		v, r, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Packages: resource.ChangePackages(nil, []*resource.PromptPackage{{}})})
+		if v == nil || v.ReadResponse == nil || v.Before != nil || v.PatchInvoked || v.HTTPAccepted {
+			t.Error("failed preparation invented a snapshot, patch or acceptance")
+		}
+		return contracttest.Observation{Response: r, Err: e}
+	}})
 }

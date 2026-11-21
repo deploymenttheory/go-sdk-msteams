@@ -78,9 +78,9 @@ func callHoldPolicyOracle(t *testing.T, ctx context.Context, tenant string) call
 	return value
 }
 
-// TestLabCallHoldPolicyReadOnly never edits Global, creates resources or grants a
+// TestAccCallHoldPolicyReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabCallHoldPolicyReadOnly(t *testing.T) {
+func TestAccCallHoldPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -95,6 +95,7 @@ func TestLabCallHoldPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsCallHoldPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_call_hold_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -102,7 +103,8 @@ func TestLabCallHoldPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("call hold policy Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsCallHoldPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsCallHoldPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_call_hold_policy", "list", listResponse, nil)
 	selected, selectionErr := globalCallHoldPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(callHoldProjection(value), callHoldProjection(selected)) {
 		t.Fatal("call hold Global read/list projections differ")
@@ -121,7 +123,7 @@ func TestLabCallHoldPolicyReadOnly(t *testing.T) {
 	t.Log("selected call hold policy reads verified; persistence, feature effects and assignments remain separately qualified")
 }
 
-func TestCallHoldPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitCallHoldPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":"","AudioFileId":null,"StreamingSourceUrl":"future://fixture","StreamingSourceAuthType":"FutureAuth"}`
@@ -155,7 +157,7 @@ func globalCallHoldPolicy(values []*resource.Policy) (*resource.Policy, error) {
 	}
 	return found, nil
 }
-func TestCallHoldPolicyGlobalSelection(t *testing.T) {
+func TestUnitCallHoldPolicyGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Policy{Identity: new("Global")}
 	tagged := &resource.Policy{Identity: new("Tag:Global")}
@@ -179,7 +181,7 @@ func matchesCallHoldGetterProjection(value *resource.Policy, settings map[string
 	return json.Unmarshal(callHoldProjection(value), &left) == nil && json.Unmarshal(raw, &right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestCallHoldOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitCallHoldOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"description":"fixture"}`, `{"Description":"earlier","description":"fixture"}`, `{"Description":null,"description":"fixture"}`} {
 		var value resource.Policy

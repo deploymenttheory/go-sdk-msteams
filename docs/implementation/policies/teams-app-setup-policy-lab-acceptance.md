@@ -1,7 +1,7 @@
 # Teams app setup policy lab acceptance
 
 MSTEAMS_LAB_READ_ONLY=1 and MSTEAMS_LAB_IDENTITY_FILE enable
-TestLabAppSetupPolicyReadOnly with the existing private dedicated lab identity.
+TestAccAppSetupPolicyReadOnly with the existing private dedicated lab identity.
 MSTEAMS_LAB_AUTH_METHOD selects certificate (default) or client-secret. The test
 reads Global and a locally filtered list, selecting the Global identity while
 allowing Tag:Global matches. Known scalar and six-list projections are compared.

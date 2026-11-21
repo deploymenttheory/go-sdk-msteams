@@ -1,7 +1,7 @@
 # Assignment migration lab acceptance
 
 MSTEAMS_LAB_READ_ONLY=1 and MSTEAMS_LAB_IDENTITY_FILE enable
-TestLabAssignmentMigrationReadOnly using the existing dedicated identity.
+TestAccAssignmentMigrationReadOnly using the existing dedicated identity.
 MSTEAMS_LAB_AUTH_METHOD selects client-secret or certificate (default). The test
 lists status and reads returned job IDs. It never starts migrations or clears
 assignments. Both actual credential-mode attempts returned resource HTTP 403;

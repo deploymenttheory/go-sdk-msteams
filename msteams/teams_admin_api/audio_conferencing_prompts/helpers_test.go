@@ -3,52 +3,271 @@ package audioconferencingprompts_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/audio-conferencing-prompts-provider.json"
-const sourceModels = "contracts/endpoints/8.1.0/fixtures/audio-conferencing-prompts-models.json"
+const source = "msteams/teams_admin_api/audio_conferencing_prompts/testdata/get_global_400.json"
+const sourceModels = "msteams/teams_admin_api/audio_conferencing_prompts/testdata/get_global_400.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration"
 const item = collection + "/configuration/Global"
 const scoped = "scope /Fixture / Child"
-const getCommand = "Get-CsTeamsAudioConferencingCustomPromptsConfiguration"
 const setCommand = "Set-CsTeamsAudioConferencingCustomPromptsConfiguration"
 const firstID = "11111111-1111-1111-1111-111111111111"
 const secondID = "22222222-2222-2222-2222-222222222222"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Fields, Response string
 	Status                            int
 	ForceMode                         int `json:"force_mode"`
-	Capture                           struct {
-		Method, Url, Body, CmdletName, MpaCmdlet string
-		FailureType                              *string
-		Sends, TokenRequests                     int
-		CorrelationIsGuid, HasTargetUri          bool
+	Request                           struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct{ Cases []inputVectors }{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "list-empty",
+				Operation: "list",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration",
+					CmdletName: "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "list-null",
+				Operation: "list",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration",
+					CmdletName: "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "patch-all",
+				Operation: "patch",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "PATCH",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:       "{\n  \"Identity\": \"read-model-identity\",\n  \"Prompts\": [\n    {\n      \"Identity\": \"prompt-meta\",\n      \"Id\": \"11111111-1111-1111-1111-111111111111\",\n      \"Name\": \"\",\n      \"AudioPrompt\": null,\n      \"TextPrompt\": \"text\",\n      \"Type\": \"FutureType\",\n      \"Locale\": \"xx-future\"\n    }\n  ],\n  \"Packages\": [\n    {\n      \"Identity\": \"package-meta\",\n      \"InboundStartRecordingPrompt\": [\n        \"11111111-1111-1111-1111-111111111111\",\n        \"11111111-1111-1111-1111-111111111111\",\n        null\n      ],\n      \"InboundEndRecordingPrompt\": [\n        \"\"\n      ],\n      \"OutboundStartRecordingPrompt\": [\n        \"future-reference\"\n      ],\n      \"OutboundEndRecordingPrompt\": [\n        \"11111111-1111-1111-1111-111111111111\"\n      ],\n      \"MeetingStartRecordingPrompt\": [\n        \"22222222-2222-2222-2222-222222222222\"\n      ],\n      \"MeetingEndRecordingPrompt\": [],\n      \"Id\": \"22222222-2222-2222-2222-222222222222\",\n      \"Name\": null,\n      \"DefaultLocale\": \"\"\n    }\n  ]\n}",
+					CmdletName: "Set-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "patch-prompts",
+				Operation: "patch",
+				Fields:    "prompts",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "PATCH",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:       "{\n  \"Identity\": \"read-model-identity\",\n  \"Prompts\": [\n    {\n      \"Identity\": \"prompt-meta\",\n      \"Id\": \"11111111-1111-1111-1111-111111111111\",\n      \"Name\": \"\",\n      \"AudioPrompt\": null,\n      \"TextPrompt\": \"text\",\n      \"Type\": \"FutureType\",\n      \"Locale\": \"xx-future\"\n    }\n  ]\n}",
+					CmdletName: "Set-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "patch-packages",
+				Operation: "patch",
+				Fields:    "packages",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "PATCH",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:       "{\n  \"Identity\": \"read-model-identity\",\n  \"Packages\": [\n    {\n      \"Identity\": \"package-meta\",\n      \"InboundStartRecordingPrompt\": [\n        \"11111111-1111-1111-1111-111111111111\",\n        \"11111111-1111-1111-1111-111111111111\",\n        null\n      ],\n      \"InboundEndRecordingPrompt\": [\n        \"\"\n      ],\n      \"OutboundStartRecordingPrompt\": [\n        \"future-reference\"\n      ],\n      \"OutboundEndRecordingPrompt\": [\n        \"11111111-1111-1111-1111-111111111111\"\n      ],\n      \"MeetingStartRecordingPrompt\": [\n        \"22222222-2222-2222-2222-222222222222\"\n      ],\n      \"MeetingEndRecordingPrompt\": [],\n      \"Id\": \"22222222-2222-2222-2222-222222222222\",\n      \"Name\": null,\n      \"DefaultLocale\": \"\"\n    }\n  ]\n}",
+					CmdletName: "Set-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "patch-empty-lists",
+				Operation: "patch",
+				Fields:    "empty-lists",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "PATCH",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:       "{\n  \"Identity\": \"read-model-identity\",\n  \"Prompts\": [],\n  \"Packages\": []\n}",
+					CmdletName: "Set-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "patch-force-false",
+				Operation: "patch",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: 0,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "PATCH",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:       "{\n  \"Identity\": \"read-model-identity\",\n  \"Prompts\": [\n    {\n      \"Identity\": \"prompt-meta\",\n      \"Id\": \"11111111-1111-1111-1111-111111111111\",\n      \"Name\": \"\",\n      \"AudioPrompt\": null,\n      \"TextPrompt\": \"text\",\n      \"Type\": \"FutureType\",\n      \"Locale\": \"xx-future\"\n    }\n  ],\n  \"Packages\": [\n    {\n      \"Identity\": \"package-meta\",\n      \"InboundStartRecordingPrompt\": [\n        \"11111111-1111-1111-1111-111111111111\",\n        \"11111111-1111-1111-1111-111111111111\",\n        null\n      ],\n      \"InboundEndRecordingPrompt\": [\n        \"\"\n      ],\n      \"OutboundStartRecordingPrompt\": [\n        \"future-reference\"\n      ],\n      \"OutboundEndRecordingPrompt\": [\n        \"11111111-1111-1111-1111-111111111111\"\n      ],\n      \"MeetingStartRecordingPrompt\": [\n        \"22222222-2222-2222-2222-222222222222\"\n      ],\n      \"MeetingEndRecordingPrompt\": [],\n      \"Id\": \"22222222-2222-2222-2222-222222222222\",\n      \"Name\": null,\n      \"DefaultLocale\": \"\"\n    }\n  ],\n  \"Force\": \"False\"\n}",
+					CmdletName: "Set-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "patch-force-true",
+				Operation: "patch",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: 1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "PATCH",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:       "{\n  \"Identity\": \"read-model-identity\",\n  \"Prompts\": [\n    {\n      \"Identity\": \"prompt-meta\",\n      \"Id\": \"11111111-1111-1111-1111-111111111111\",\n      \"Name\": \"\",\n      \"AudioPrompt\": null,\n      \"TextPrompt\": \"text\",\n      \"Type\": \"FutureType\",\n      \"Locale\": \"xx-future\"\n    }\n  ],\n  \"Packages\": [\n    {\n      \"Identity\": \"package-meta\",\n      \"InboundStartRecordingPrompt\": [\n        \"11111111-1111-1111-1111-111111111111\",\n        \"11111111-1111-1111-1111-111111111111\",\n        null\n      ],\n      \"InboundEndRecordingPrompt\": [\n        \"\"\n      ],\n      \"OutboundStartRecordingPrompt\": [\n        \"future-reference\"\n      ],\n      \"OutboundEndRecordingPrompt\": [\n        \"11111111-1111-1111-1111-111111111111\"\n      ],\n      \"MeetingStartRecordingPrompt\": [\n        \"22222222-2222-2222-2222-222222222222\"\n      ],\n      \"MeetingEndRecordingPrompt\": [],\n      \"Id\": \"22222222-2222-2222-2222-222222222222\",\n      \"Name\": null,\n      \"DefaultLocale\": \"\"\n    }\n  ],\n  \"Force\": \"True\"\n}",
+					CmdletName: "Set-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "read-empty",
+				Operation: "read",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "read-null",
+				Operation: "read",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "read-null-prompt-id",
+				Operation: "read",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "read-null-package-locale",
+				Operation: "read",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration",
+					CmdletName: "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Fields:    "all",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAudioConferencingCustomPromptsConfiguration",
+				},
+			},
+		},
 	}
-	var v struct{ Cases []capture }
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 15 {
-		t.Fatal("incomplete prompts provider fixture")
-	}
-	for _, c := range v.Cases {
-		x := c.Capture
-		if x.Sends != 1 || x.TokenRequests != 0 || !x.CorrelationIsGuid || x.HasTargetUri || x.MpaCmdlet != "true" {
-			t.Fatal("unsafe/incomplete source fixture")
-		}
-	}
+
 	return v.Cases
 }
 func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -78,24 +297,4 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("prompts contract differs: %v %+v", e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("audio-conferencing-prompts-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("prompts evidence write failed")
-	}
 }

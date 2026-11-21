@@ -24,7 +24,7 @@ func paginationResponse(r *http.Request, status int, body string) *http.Response
 	return &http.Response{StatusCode: status, Header: http.Header{"Content-Type": {"application/json"}}, Body: io.NopCloser(strings.NewReader(body)), Request: r}
 }
 
-func TestGraphPaginationUsesOpaqueLinksAndKeepsHeaders(t *testing.T) {
+func TestUnitGraphPaginationUsesOpaqueLinksAndKeepsHeaders(t *testing.T) {
 	t.Parallel()
 	firstLink := "https://graph.microsoft.com/v1.0/fixture?$skiptoken=a%2Bb%2F%3D%26&$top=2"
 	secondLink := "https://graph.microsoft.com/v1.0/fixture?$skiptoken=next"
@@ -75,7 +75,7 @@ func TestGraphPaginationUsesOpaqueLinksAndKeepsHeaders(t *testing.T) {
 	}
 }
 
-func TestTeamsTokenPaginationPreservesQueryBodyAndTreatsNextLinkAsToken(t *testing.T) {
+func TestUnitTeamsTokenPaginationPreservesQueryBodyAndTreatsNextLinkAsToken(t *testing.T) {
 	t.Parallel()
 	cursor := "https://untrusted.invalid/path?x=1&opaque=+/% 雪"
 	calls := 0
@@ -122,7 +122,7 @@ func TestTeamsTokenPaginationPreservesQueryBodyAndTreatsNextLinkAsToken(t *testi
 	}
 }
 
-func TestOffsetPaginationContinuesAfterShortPages(t *testing.T) {
+func TestUnitOffsetPaginationContinuesAfterShortPages(t *testing.T) {
 	t.Parallel()
 	calls := 0
 	scope, _, _ := transportScope(t, client.TeamsAdmin, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) {
@@ -143,7 +143,7 @@ func TestOffsetPaginationContinuesAfterShortPages(t *testing.T) {
 	}
 }
 
-func TestPaginationLoopAndDestinationErrorsPreservePartialResults(t *testing.T) {
+func TestUnitPaginationLoopAndDestinationErrorsPreservePartialResults(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, next string
@@ -176,7 +176,7 @@ func TestPaginationLoopAndDestinationErrorsPreservePartialResults(t *testing.T) 
 	}
 }
 
-func TestPaginationTransportAndDecodeErrorsNeverReturnTruncatedSuccess(t *testing.T) {
+func TestUnitPaginationTransportAndDecodeErrorsNeverReturnTruncatedSuccess(t *testing.T) {
 	t.Parallel()
 	for _, decodeFailure := range []bool{false, true} {
 		t.Run(strconv.FormatBool(decodeFailure), func(t *testing.T) {
@@ -209,7 +209,7 @@ func TestPaginationTransportAndDecodeErrorsNeverReturnTruncatedSuccess(t *testin
 	}
 }
 
-func TestPaginationLimitsAreTerminal(t *testing.T) {
+func TestUnitPaginationLimitsAreTerminal(t *testing.T) {
 	t.Parallel()
 	for _, itemLimit := range []bool{false, true} {
 		t.Run(strconv.FormatBool(itemLimit), func(t *testing.T) {
@@ -243,7 +243,7 @@ func TestPaginationLimitsAreTerminal(t *testing.T) {
 	}
 }
 
-func TestPaginationCancellationReturnsCollectedPrefix(t *testing.T) {
+func TestUnitPaginationCancellationReturnsCollectedPrefix(t *testing.T) {
 	t.Parallel()
 	entered := make(chan struct{})
 	calls := 0
@@ -278,7 +278,7 @@ func TestPaginationCancellationReturnsCollectedPrefix(t *testing.T) {
 	}
 }
 
-func TestDecodeCollectionRequiresArrayEvenForBytes(t *testing.T) {
+func TestUnitDecodeCollectionRequiresArrayEvenForBytes(t *testing.T) {
 	t.Parallel()
 	for _, body := range []string{`{"value":"c2VjcmV0"}`, `{"value":null}`, `{"value":{}}`, `{}`, `null`} {
 		if _, err := client.DecodeCollection[byte]([]byte(body), "value", "@odata.nextLink"); !errors.Is(err, client.ErrDecode) {
@@ -291,7 +291,7 @@ func TestDecodeCollectionRequiresArrayEvenForBytes(t *testing.T) {
 	}
 }
 
-func TestIndependentPagersDoNotShareTraversalState(t *testing.T) {
+func TestUnitIndependentPagersDoNotShareTraversalState(t *testing.T) {
 	t.Parallel()
 	scope, _, _ := transportScope(t, client.Graph, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) { return paginationResponse(r, 200, `{"value":[1]}`), nil })}, "commercial")
 	var group sync.WaitGroup
@@ -311,7 +311,7 @@ func TestIndependentPagersDoNotShareTraversalState(t *testing.T) {
 	group.Wait()
 }
 
-func TestTeamsTokenLoopsStopBeforeAnotherCredentialRequest(t *testing.T) {
+func TestUnitTeamsTokenLoopsStopBeforeAnotherCredentialRequest(t *testing.T) {
 	t.Parallel()
 	calls := 0
 	scope, _, provider := transportScope(t, client.TeamsAdmin, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) {
@@ -333,7 +333,7 @@ func TestTeamsTokenLoopsStopBeforeAnotherCredentialRequest(t *testing.T) {
 	}
 }
 
-func TestPaginationConfigurationAndOffsetOverflow(t *testing.T) {
+func TestUnitPaginationConfigurationAndOffsetOverflow(t *testing.T) {
 	t.Parallel()
 	calls := 0
 	scope, _, _ := transportScope(t, client.TeamsAdmin, &http.Client{Transport: transportFunc(func(r *http.Request) (*http.Response, error) { calls++; return paginationResponse(r, 200, `[1]`), nil })}, "commercial")

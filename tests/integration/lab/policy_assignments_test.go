@@ -8,10 +8,10 @@ import (
 	policyassignments "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 )
 
-// TestLabPolicyAssignmentsReadOnly never submits batches, edits group rank,
+// TestAccPolicyAssignmentsReadOnly never submits batches, edits group rank,
 // grants policies, refreshes users or invokes OCE reprocessing operations.
 // It lists ordinary generated jobs and reads at most five returned job IDs.
-func TestLabPolicyAssignmentsReadOnly(t *testing.T) {
+func TestAccPolicyAssignmentsReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	sdk, _, _ := labSDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
@@ -44,10 +44,10 @@ func TestLabPolicyAssignmentsReadOnly(t *testing.T) {
 	t.Logf("ordinary assignment list and %d selected reads observed; writes, OCE and effective assignment convergence remain separately qualified", checked)
 }
 
-// TestLabPolicyAssignmentsOCEReadOnly uses the authenticating lab tenant as the
+// TestAccPolicyAssignmentsOCEReadOnly uses the authenticating lab tenant as the
 // explicit OCE target. It only lists regional status; no privileged PowerShell
 // profile, contributor elevation, refresh or reprocessing action runs.
-func TestLabPolicyAssignmentsOCEReadOnly(t *testing.T) {
+func TestAccPolicyAssignmentsOCEReadOnly(t *testing.T) {
 	cfg := targetingReadOnly(t)
 	sdk, binding, _ := labSDKClient(t)
 	tenant, _, ok := strings.Cut(binding, "|")

@@ -82,9 +82,9 @@ func callingPolicyOracle(t *testing.T, ctx context.Context, tenant string) calli
 	return value
 }
 
-// TestLabCallingPolicyReadOnly never edits Global, creates resources or grants a
+// TestAccCallingPolicyReadOnly never edits Global, creates resources or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabCallingPolicyReadOnly(t *testing.T) {
+func TestAccCallingPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -99,6 +99,7 @@ func TestLabCallingPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsCallingPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_calling_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -106,7 +107,8 @@ func TestLabCallingPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("calling policy Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsCallingPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsCallingPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_calling_policy", "list", listResponse, nil)
 	selected, selectionErr := globalCallingPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(callingProjection(value), callingProjection(selected)) {
 		t.Fatal("calling Global read/list projections differ")
@@ -125,7 +127,7 @@ func TestLabCallingPolicyReadOnly(t *testing.T) {
 	t.Log("selected calling policy reads verified; persistence, feature effects and assignments remain separately qualified")
 }
 
-func TestCallingPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitCallingPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"Description":"","AllowPrivateCalling":false,"AllowWebPSTNCalling":null,"AllowSIPDevicesCalling":null,"AllowVoicemail":null,"AllowCallGroups":null,"AllowDelegation":null,"AllowCallForwardingToUser":null,"AllowCallForwardingToPhone":null,"PreventTollBypass":null,"BusyOnBusyEnabledType":null,"MusicOnHoldEnabledType":null,"AllowCloudRecordingForCalls":null,"ExplicitRecordingConsent":null,"PreventComplianceRecording":null,"EnableRecordingAndTranscriptionCustomMessage":null,"RecordingAndTranscriptionCustomMessageIdentifier":null,"AllowMeetingKnowledgeGeneration":null,"AllowTranscriptionForCalling":null,"RecordingAndTranscriptionAudioNotification":null,"PopoutForIncomingPstnCalls":null,"PopoutAppPathForIncomingPstnCalls":null,"LiveCaptionsEnabledTypeForCalling":null,"AutoAnswerEnabledType":null,"SpamFilteringEnabledType":null,"CallRecordingExpirationDays":null,"AllowCallRedirect":null,"InboundPstnCallRoutingTreatment":null,"InboundFederatedCallRoutingTreatment":null,"EnableWebPstnMediaBypass":null,"EnableSpendLimits":null,"CallingSpendUserLimit":9223372036854775807,"Copilot":null,"ShowTeamsCallsInCallLog":null,"RealTimeText":null,"AIInterpreter":null,"VoiceSimulationInInterpreter":null,"ReportCall":null,"VoicePhishingDetection":null}`
@@ -159,7 +161,7 @@ func globalCallingPolicy(values []*resource.Policy) (*resource.Policy, error) {
 	}
 	return found, nil
 }
-func TestCallingPolicyGlobalSelection(t *testing.T) {
+func TestUnitCallingPolicyGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Policy{Identity: new("Global")}
 	tagged := &resource.Policy{Identity: new("Tag:Global")}
@@ -186,7 +188,7 @@ func matchesCallingGetterProjection(value *resource.Policy, settings map[string]
 	return a.Decode(&left) == nil && b.Decode(&right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestCallingOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitCallingOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"description":"fixture"}`, `{"Description":"earlier","description":"fixture"}`, `{"Description":null,"description":"fixture"}`} {
 		var value resource.Policy

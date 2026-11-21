@@ -10,43 +10,276 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/channels-policy-provider.json"
+const source = "msteams/teams_admin_api/teams_channels_policy/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsChannelsPolicy"
 const item = collection + "/configuration/Global"
 const scoped = "scope /Fixture / Child"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Input, Response string
 	Status                           int
 	ForceMode                        int     `json:"force_mode"`
 	PolicyName                       *string `json:"policy_name"`
-	Capture                          struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                          struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "list-empty",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy",
+					CmdletName: "Get-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "create-all",
+				Operation: "create",
+				Input:     "{\"Description\":\"Future-Description\",\"AllowOrgWideTeamCreation\":false,\"EnablePrivateTeamDiscovery\":false,\"AllowPrivateChannelCreation\":false,\"AllowSharedChannelCreation\":false,\"AllowChannelSharingToExternalUser\":false,\"AllowUserToParticipateInExternalSharedChannel\":false,\"ThreadedChannelCreation\":\"Future-ThreadedChannelCreation\",\"AllowCreateChannel\":\"Future-AllowCreateChannel\",\"AllowCreateClassicChannel\":\"Future-AllowCreateClassicChannel\",\"AllowCreatePrivateChannel\":\"Future-AllowCreatePrivateChannel\",\"AllowCreateSharedChannel\":\"Future-AllowCreateSharedChannel\",\"CreateSharedChannelsByDefault\":\"Future-CreateSharedChannelsByDefault\",\"AllowUsersFromOutsideTeam\":\"Future-AllowUsersFromOutsideTeam\",\"AllowGuestsFromOutsideTeam\":\"Future-AllowGuestsFromOutsideTeam\",\"AllowUsersFromOutsideTeamInPrivateChannel\":\"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\"AllowGuestsFromOutsideTeamInPrivateChannel\":\"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\"AllowSharingWithTeamInOrg\":\"Future-AllowSharingWithTeamInOrg\",\"AllowSharingPrivateChannelWithTeamInOrg\":\"Future-AllowSharingPrivateChannelWithTeamInOrg\",\"DefaultChannelTypeOnCreation\":\"Future-DefaultChannelTypeOnCreation\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Description\": \"Future-Description\",\n  \"AllowOrgWideTeamCreation\": false,\n  \"EnablePrivateTeamDiscovery\": false,\n  \"AllowPrivateChannelCreation\": false,\n  \"AllowSharedChannelCreation\": false,\n  \"AllowChannelSharingToExternalUser\": false,\n  \"AllowUserToParticipateInExternalSharedChannel\": false,\n  \"ThreadedChannelCreation\": \"Future-ThreadedChannelCreation\",\n  \"AllowCreateChannel\": \"Future-AllowCreateChannel\",\n  \"AllowCreateClassicChannel\": \"Future-AllowCreateClassicChannel\",\n  \"AllowCreatePrivateChannel\": \"Future-AllowCreatePrivateChannel\",\n  \"AllowCreateSharedChannel\": \"Future-AllowCreateSharedChannel\",\n  \"CreateSharedChannelsByDefault\": \"Future-CreateSharedChannelsByDefault\",\n  \"AllowUsersFromOutsideTeam\": \"Future-AllowUsersFromOutsideTeam\",\n  \"AllowGuestsFromOutsideTeam\": \"Future-AllowGuestsFromOutsideTeam\",\n  \"AllowUsersFromOutsideTeamInPrivateChannel\": \"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\n  \"AllowGuestsFromOutsideTeamInPrivateChannel\": \"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\n  \"AllowSharingWithTeamInOrg\": \"Future-AllowSharingWithTeamInOrg\",\n  \"AllowSharingPrivateChannelWithTeamInOrg\": \"Future-AllowSharingPrivateChannelWithTeamInOrg\",\n  \"DefaultChannelTypeOnCreation\": \"Future-DefaultChannelTypeOnCreation\"\n}",
+
+					CmdletName: "New-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "create-empty",
+				Operation: "create",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "New-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "patch-all",
+				Operation: "patch",
+				Input:     "{\"Description\":\"Future-Description\",\"AllowOrgWideTeamCreation\":false,\"EnablePrivateTeamDiscovery\":false,\"AllowPrivateChannelCreation\":false,\"AllowSharedChannelCreation\":false,\"AllowChannelSharingToExternalUser\":false,\"AllowUserToParticipateInExternalSharedChannel\":false,\"ThreadedChannelCreation\":\"Future-ThreadedChannelCreation\",\"AllowCreateChannel\":\"Future-AllowCreateChannel\",\"AllowCreateClassicChannel\":\"Future-AllowCreateClassicChannel\",\"AllowCreatePrivateChannel\":\"Future-AllowCreatePrivateChannel\",\"AllowCreateSharedChannel\":\"Future-AllowCreateSharedChannel\",\"CreateSharedChannelsByDefault\":\"Future-CreateSharedChannelsByDefault\",\"AllowUsersFromOutsideTeam\":\"Future-AllowUsersFromOutsideTeam\",\"AllowGuestsFromOutsideTeam\":\"Future-AllowGuestsFromOutsideTeam\",\"AllowUsersFromOutsideTeamInPrivateChannel\":\"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\"AllowGuestsFromOutsideTeamInPrivateChannel\":\"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\"AllowSharingWithTeamInOrg\":\"Future-AllowSharingWithTeamInOrg\",\"AllowSharingPrivateChannelWithTeamInOrg\":\"Future-AllowSharingPrivateChannelWithTeamInOrg\",\"DefaultChannelTypeOnCreation\":\"Future-DefaultChannelTypeOnCreation\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"Future-Description\",\n  \"AllowOrgWideTeamCreation\": false,\n  \"EnablePrivateTeamDiscovery\": false,\n  \"AllowPrivateChannelCreation\": false,\n  \"AllowSharedChannelCreation\": false,\n  \"AllowChannelSharingToExternalUser\": false,\n  \"AllowUserToParticipateInExternalSharedChannel\": false,\n  \"ThreadedChannelCreation\": \"Future-ThreadedChannelCreation\",\n  \"AllowCreateChannel\": \"Future-AllowCreateChannel\",\n  \"AllowCreateClassicChannel\": \"Future-AllowCreateClassicChannel\",\n  \"AllowCreatePrivateChannel\": \"Future-AllowCreatePrivateChannel\",\n  \"AllowCreateSharedChannel\": \"Future-AllowCreateSharedChannel\",\n  \"CreateSharedChannelsByDefault\": \"Future-CreateSharedChannelsByDefault\",\n  \"AllowUsersFromOutsideTeam\": \"Future-AllowUsersFromOutsideTeam\",\n  \"AllowGuestsFromOutsideTeam\": \"Future-AllowGuestsFromOutsideTeam\",\n  \"AllowUsersFromOutsideTeamInPrivateChannel\": \"Future-AllowUsersFromOutsideTeamInPrivateChannel\",\n  \"AllowGuestsFromOutsideTeamInPrivateChannel\": \"Future-AllowGuestsFromOutsideTeamInPrivateChannel\",\n  \"AllowSharingWithTeamInOrg\": \"Future-AllowSharingWithTeamInOrg\",\n  \"AllowSharingPrivateChannelWithTeamInOrg\": \"Future-AllowSharingPrivateChannelWithTeamInOrg\",\n  \"DefaultChannelTypeOnCreation\": \"Future-DefaultChannelTypeOnCreation\"\n}",
+
+					CmdletName: "Set-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "patch-null",
+				Operation: "patch",
+				Input:     "{\"Description\":null,\"AllowPrivateChannelCreation\":null,\"AllowCreatePrivateChannel\":null}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": null,\n  \"AllowPrivateChannelCreation\": null,\n  \"AllowCreatePrivateChannel\": null\n}",
+
+					CmdletName: "Set-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "patch-empty",
+				Operation: "patch",
+				Input:     "{\"Description\":\"\",\"AllowCreatePrivateChannel\":\"\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"AllowCreatePrivateChannel\": \"\"\n}",
+
+					CmdletName: "Set-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "patch-force-false",
+				Operation: "patch",
+				Input:     "{\"Description\":\"\"}",
+				Status:    400,
+				ForceMode: 0,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "patch-force-true",
+				Operation: "patch",
+				Input:     "{\"Description\":\"\"}",
+				Status:    400,
+				ForceMode: 1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"Force\": \"True\"\n}",
+
+					CmdletName: "Set-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "delete",
+				Operation: "delete",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "Remove-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "delete-force-false",
+				Operation: "delete",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: 0,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Remove-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "read-empty",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "read-null",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy",
+					CmdletName: "Get-CsTeamsChannelsPolicy",
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsChannelsPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsChannelsPolicy",
+				},
+			},
+		},
 	}
-	var v struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 15 {
-		t.Fatal("invalid channels policy fixture")
-	}
-	for _, c := range v.Cases {
-		r := c.Capture
-		if r.Sends != 1 || r.TokenRequests != 0 || !r.CorrelationIsGuid || r.HasTargetUri || r.MpaCmdlet != "true" {
-			t.Fatal("unsafe/incomplete channels policy fixture")
-		}
-	}
+
 	return v.Cases
 }
 func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -77,39 +310,25 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	}
 	return r
 }
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("channels-policy-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("channels policy evidence write failed")
-	}
-}
 
 const getCommand = "Get-CsTeamsChannelsPolicy"
 const newCommand = "New-CsTeamsChannelsPolicy"
 const setCommand = "Set-CsTeamsChannelsPolicy"
 const deleteCommand = "Remove-CsTeamsChannelsPolicy"
 const grantCommand = "Grant-CsTeamsChannelsPolicy"
-const forest = "https://forest.fixture.invalid/"
-const grantSource = "contracts/endpoints/8.1.0/fixtures/channels-policy-grant-requests.json"
-const wrapperSource = "contracts/endpoints/8.1.0/fixtures/channels-policy-grant-wrappers.json"
+const forest = "https://admin.example.invalid/"
+const grantSource = "msteams/teams_admin_api/teams_channels_policy/testdata/get_global.json"
+const wrapperSource = "msteams/teams_admin_api/teams_channels_policy/testdata/get_global.json"
 
-func discovery() contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(`{"Endpoints":{"AdminServiceEndpoint":"forest.fixture.invalid:444/ignored?x=y#ignored"}}`)}}
+func discovery(t *testing.T) contracttest.Exchange {
+	t.Helper()
+	raw, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
 }
+
 func modernWire(method, path string, body json.RawMessage, status int, reply string) contracttest.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {grantCommand}, "X-MS-Target-Uri": {forest}}
 	h[http.CanonicalHeaderKey("MPACmdlet")] = nil

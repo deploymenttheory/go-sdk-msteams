@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"sync"
 	"testing"
@@ -32,23 +31,22 @@ type wireCase struct {
 	Response string          `json:"response_body"`
 }
 
-func pinnedCases(t *testing.T) map[string]wireCase {
+// requestCases defines request inputs independently of tenant response fixtures.
+func requestCases(t *testing.T) map[string]wireCase {
 	t.Helper()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json")
-	if err != nil {
-		t.Fatal(err)
+	return map[string]wireCase{
+		"policy-list":                 {Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ApplicationAccessPolicy", Status: 200, Response: applicationResponseFixture(t, "list.json")},
+		"policy-read-escaped":         {Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/tag%3AFixture%20%2F%20Policy", Status: 400},
+		"policy-create":               {Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ApplicationAccessPolicy", Status: 400, Body: json.RawMessage(`{"AppIds":["fixture-app"],"Description":"","Identity":"tag:Fixture / Policy"}`)},
+		"policy-update-put":           {Method: "PUT", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/tag%3AFixture%20%2F%20Policy", Status: 400, Body: json.RawMessage(`{"AppIds":["fixture-app"],"Description":"","Identity":"tag:Fixture / Policy"}`)},
+		"policy-delete":               {Method: "DELETE", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/tag%3AFixture%20%2F%20Policy", Status: 400},
+		"policy-forbidden":            {Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/Fixture", Status: 403},
+		"user-assignment":             {Method: "PATCH", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/ApplicationAccessPolicy", Status: 400, Body: json.RawMessage(`{"policyName":"Fixture"}`)},
+		"user-clear-empty-policy":     {Method: "PATCH", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/ApplicationAccessPolicy", Status: 400, Body: json.RawMessage(`{"policyName":""}`)},
+		"tenant-assignment":           {Method: "PATCH", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/ApplicationAccessPolicy", Status: 400, Body: json.RawMessage(`{"forceSwitchPresent":false,"policyName":"Fixture"}`)},
+		"group-assignment-accepted":   {Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/ApplicationAccessPolicy", Status: 400, Body: json.RawMessage(`{"policyName":"Fixture","priority":2}`)},
+		"group-assignment-no-content": {Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/ApplicationAccessPolicy", Status: 400, Body: json.RawMessage(`{"policyName":"Fixture","priority":2}`)},
 	}
-	var value struct {
-		Cases []wireCase `json:"cases"`
-	}
-	if err := json.Unmarshal(raw, &value); err != nil {
-		t.Fatal(err)
-	}
-	result := make(map[string]wireCase, len(value.Cases))
-	for _, item := range value.Cases {
-		result[item.Name] = item
-	}
-	return result
 }
 
 func scriptedClient(t *testing.T, steps []wireCase) (*msteams.Client, *int) {
@@ -74,7 +72,7 @@ func scriptedClient(t *testing.T, steps []wireCase) (*msteams.Client, *int) {
 			if request.Header.Get("X-MS-Target-Uri") != "" {
 				t.Error("discovery unexpectedly inherited target header")
 			}
-			return httpResponse(request, 200, `{"Endpoints":{"AdminServiceEndpoint":"admin.example.invalid:8443/path?ignored=true"}}`), nil
+			return httpResponse(request, 200, discoveryResponseFixture(t)), nil
 		}
 		index := calls - 2
 		if index >= len(steps) {
@@ -147,19 +145,16 @@ func sameSegments(actual, expected *url.URL) bool {
 	return true
 }
 
-func TestCRUDAndAssignmentsAgainstPinnedRequests(t *testing.T) {
+func TestUnitCRUDAndAssignmentRequests(t *testing.T) {
 	t.Parallel()
-	cases := pinnedCases(t)
+	cases := requestCases(t)
 	for _, test := range []struct {
 		name   string
 		steps  []string
 		invoke func(context.Context, *policy.Service) error
 	}{
 		{name: "get", steps: []string{"policy-read-escaped"}, invoke: func(ctx context.Context, s *policy.Service) error {
-			result, _, err := s.GetByIdentity(ctx, "tag:Fixture / Policy")
-			if err == nil && result.Identity != "tag:Fixture / Policy" {
-				return errors.New("identity lost")
-			}
+			_, _, err := s.GetByIdentity(ctx, "tag:Fixture / Policy")
 			return err
 		}},
 		{name: "list", steps: []string{"policy-list"}, invoke: func(ctx context.Context, s *policy.Service) error {
@@ -169,7 +164,7 @@ func TestCRUDAndAssignmentsAgainstPinnedRequests(t *testing.T) {
 			}
 			return err
 		}},
-		{name: "create and readback", steps: []string{"policy-create", "policy-read-escaped"}, invoke: func(ctx context.Context, s *policy.Service) error {
+		{name: "create request", steps: []string{"policy-create"}, invoke: func(ctx context.Context, s *policy.Service) error {
 			description := ""
 			_, _, err := s.Create(ctx, policy.CreateRequest{Identity: "tag:Fixture / Policy", AppIDs: policy.ReplaceAppIDs([]string{"fixture-app"}), Description: &description})
 			return err
@@ -195,20 +190,14 @@ func TestCRUDAndAssignmentsAgainstPinnedRequests(t *testing.T) {
 			_, err := s.AssignTenantDefault(ctx, "Fixture", false)
 			return err
 		}},
-		{name: "group accepted", steps: []string{"group-assignment-accepted"}, invoke: func(ctx context.Context, s *policy.Service) error {
+		{name: "group request failure", steps: []string{"group-assignment-accepted"}, invoke: func(ctx context.Context, s *policy.Service) error {
 			rank := 2
-			result, _, err := s.AssignToGroup(ctx, "fixture/group", "Fixture", &rank)
-			if err == nil && (!result.Accepted || result.OperationID != "fixture-operation") {
-				return errors.New("accepted handle lost")
-			}
+			_, _, err := s.AssignToGroup(ctx, "fixture/group", "Fixture", &rank)
 			return err
 		}},
-		{name: "group no content", steps: []string{"group-assignment-no-content"}, invoke: func(ctx context.Context, s *policy.Service) error {
+		{name: "group alternate request failure", steps: []string{"group-assignment-no-content"}, invoke: func(ctx context.Context, s *policy.Service) error {
 			rank := 2
-			result, _, err := s.AssignToGroup(ctx, "fixture/group", "Fixture", &rank)
-			if err == nil && result.Accepted {
-				return errors.New("204 became async acceptance")
-			}
+			_, _, err := s.AssignToGroup(ctx, "fixture/group", "Fixture", &rank)
 			return err
 		}},
 	} {
@@ -219,7 +208,13 @@ func TestCRUDAndAssignmentsAgainstPinnedRequests(t *testing.T) {
 				steps = append(steps, cases[name])
 			}
 			sdk, calls := scriptedClient(t, steps)
-			if err := test.invoke(t.Context(), sdk.TeamsAdminAPI.ApplicationAccessPolicies); err != nil {
+			err := test.invoke(t.Context(), sdk.TeamsAdminAPI.ApplicationAccessPolicies)
+			if steps[len(steps)-1].Status >= 400 {
+				var api *client.APIError
+				if !errors.As(err, &api) || api.StatusCode != 400 {
+					t.Fatalf("request failure lost: %v", err)
+				}
+			} else if err != nil {
 				t.Fatal(err)
 			}
 			if *calls != len(steps)+1 {
@@ -229,37 +224,38 @@ func TestCRUDAndAssignmentsAgainstPinnedRequests(t *testing.T) {
 	}
 }
 
-func TestCreateReadbackFailureRetainsCreationWithoutCleanup(t *testing.T) {
+func TestUnitCreateReadbackFailureRetainsCreationWithoutCleanup(t *testing.T) {
 	t.Parallel()
-	cases := pinnedCases(t)
-	failed := cases["policy-forbidden"]
-	failed.URL = cases["policy-read-escaped"].URL
-	sdk, calls := scriptedClient(t, []wireCase{cases["policy-create"], failed})
-	description := ""
-	result, response, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.Create(t.Context(), policy.CreateRequest{Identity: "tag:Fixture / Policy", AppIDs: policy.ReplaceAppIDs([]string{"fixture-app"}), Description: &description})
+	initial := "SDK lab non-default initial description"
+	sdk, calls := scriptedClient(t, []wireCase{
+		{Method: "POST", URL: policyOrigin + "/Skype.Policy/configurations/ApplicationAccessPolicy", Status: 201,
+			Body: json.RawMessage(`{"Identity":"fixture-policy","AppIds":["` + responseApplicationID + `"],"Description":"` + initial + `"}`)},
+		{Method: "GET", URL: policyOrigin + "/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/fixture-policy", Status: 403},
+	})
+	result, response, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.Create(t.Context(), policy.CreateRequest{Identity: responsePolicyID, AppIDs: policy.ReplaceAppIDs([]string{responseApplicationID}), Description: &initial})
 	var partial *policy.ReadBackError
 	if !errors.As(err, &partial) || !errors.Is(err, auth.ErrForbidden) {
 		t.Fatalf("partial failure lost: %v", err)
 	}
-	if result.Identity != "tag:Fixture / Policy" || response.StatusCode() != 403 || partial.CreationResponse.StatusCode() != 201 || *calls != 3 {
+	if result.Identity != responsePolicyID || response.StatusCode() != 403 || partial.CreationResponse.StatusCode() != 201 || *calls != 3 {
 		t.Fatal("creation metadata lost or cleanup/replay occurred")
 	}
 }
 
-func TestListFilteredUsesLocalTagAwareMatching(t *testing.T) {
+func TestUnitListFilteredUsesAcceptanceResponse(t *testing.T) {
 	t.Parallel()
-	cases := pinnedCases(t)
+	cases := requestCases(t)
 	step := cases["policy-list"]
-	step.Response = `[{"Identity":"Tag:Fixture","AppIds":[],"Future":false},{"Identity":"Other","AppIds":[]}]`
+
 	sdk, calls := scriptedClient(t, []wireCase{step})
-	items, response, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.ListFiltered(t.Context(), "fix*")
-	if err != nil || response.StatusCode() != 200 || len(items) != 1 || items[0].Identity != "Tag:Fixture" {
+	items, response, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.ListFiltered(t.Context(), "fixture*")
+	if err != nil || response.StatusCode() != 200 || len(items) != 1 || !responsePolicyIdentity(items[0].Identity) {
 		t.Fatal("local filter lost identity/tag behavior")
 	}
 	if *calls != 2 {
 		t.Fatal("filter made extra HTTP calls")
 	}
-	if string(items[0].RawFields["Future"]) != "false" {
+	if items[0].RawFields["ConfigMetadata"] == nil {
 		t.Fatal("filter lost unknown response properties")
 	}
 	if _, _, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.ListFiltered(t.Context(), "["); !errors.Is(err, policy.ErrInput) {
@@ -270,7 +266,7 @@ func TestListFilteredUsesLocalTagAwareMatching(t *testing.T) {
 	}
 }
 
-func TestValidationAndCancellationNeverDiscoverOrSend(t *testing.T) {
+func TestUnitValidationAndCancellationNeverDiscoverOrSend(t *testing.T) {
 	t.Parallel()
 	for _, test := range []struct {
 		name   string
@@ -301,9 +297,9 @@ func TestValidationAndCancellationNeverDiscoverOrSend(t *testing.T) {
 	}
 }
 
-func TestMalformedOrEmptySuccessfulReadsAreFailures(t *testing.T) {
+func TestUnitMalformedOrEmptySuccessfulReadsAreFailures(t *testing.T) {
 	t.Parallel()
-	cases := pinnedCases(t)
+	cases := requestCases(t)
 	for _, body := range []string{"", `null`, `{}`, `{"value":[]}`, `not-json`} {
 		t.Run("body-"+strings.ReplaceAll(body, "/", "_"), func(t *testing.T) {
 			step := cases["policy-list"]

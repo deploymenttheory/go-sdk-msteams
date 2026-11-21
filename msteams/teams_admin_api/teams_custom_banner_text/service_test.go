@@ -3,6 +3,7 @@ package teamscustombannertext_test
 import (
 	"context"
 	"encoding/json"
+	"slices"
 	"strings"
 	"testing"
 
@@ -14,13 +15,13 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_custom_banner_text"
 )
 
-func TestBannerPinnedProviderAndSelectors(t *testing.T) {
+func TestUnitBannerTypedProviderAndSelectors(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, f := range captures(t) {
+
+	for _, f := range requestInputs(t) {
 		if f.Name == "create-default-id" {
 			continue
-		} // Fresh UUID protocol checked independently.
+		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
 			x := f.Observed.Request
 			set := "Identity"
@@ -28,14 +29,14 @@ func TestBannerPinnedProviderAndSelectors(t *testing.T) {
 				set = "ParentAndRelativeKey"
 			}
 			command := x.CmdletName
-			if x.Sends == 0 {
+			if x.Method == "" {
 				command = setCommand
 				if f.Operation == "create" {
 					command = newCommand
 				}
 			}
 			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}}
-			if x.Sends != 0 {
+			if x.Method != "" {
 				var body json.RawMessage
 				if x.Body != "" {
 					body = json.RawMessage(x.Body)
@@ -44,7 +45,7 @@ func TestBannerPinnedProviderAndSelectors(t *testing.T) {
 			}
 			if x.FailureType != nil {
 				c.Want.Error = client.ErrDecode
-				if x.Sends == 0 {
+				if x.Method == "" {
 					c.Want.Error = resource.ErrInput
 				}
 				if f.Status == 403 {
@@ -56,6 +57,9 @@ func TestBannerPinnedProviderAndSelectors(t *testing.T) {
 				} else {
 					c.Want.JSON = json.RawMessage(f.Response)
 				}
+			}
+			if len(c.Steps) != 0 {
+				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsCustomBannerTexts
@@ -110,42 +114,81 @@ func TestBannerPinnedProviderAndSelectors(t *testing.T) {
 				}
 				return contracttest.Observation{Err: resource.ErrInput}
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }
-func TestBannerFiltersMatchCapturedSource(t *testing.T) {
+func TestUnitBannerFiltersUseRealResponses(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, c := range []struct{ name, pattern, want string }{{"list", "", "Global,global,Tag:Fixture, ,Global/fixture"}, {"filter-tag", "Fixture*", "Tag:Fixture"}, {"filter-space", " ", " "}, {"filter-global", "Global", "Global,global"}, {"filter-scoped", "Global/*", "Global/fixture"}} {
-		set := "Filter"
-		if c.pattern == "" {
-			set = "Identity"
-		}
-		results = append(results, run(t, contracttest.Case{Name: c.name, Source: binderSource, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{wire("GET", collection, getCommand, nil, 200, `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "},{"Identity":"Global/fixture"}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			var values []*resource.Banner
-			var o contracttest.Observation
-			if c.pattern == "" {
-				v, r, e := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.List(ctx)
-				values = v
-				o = contracttest.Observation{Response: r, Err: e}
-			} else {
-				v, r, e := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.ListFiltered(ctx, c.pattern)
-				values = v
-				o = contracttest.Observation{Response: r, Err: e}
-			}
-			ids := []string{}
-			for _, v := range values {
-				if v != nil && v.Identity != nil {
-					ids = append(ids, *v.Identity)
-				}
-			}
-			if strings.Join(ids, ",") != c.want {
-				o.Err = resource.ErrInput
-			}
-			return o
-		}}))
+	raw := readResponseFixture(t, "list.json")
+	var rows []json.RawMessage
+	if json.Unmarshal(raw, &rows) != nil {
+		t.Fatal("invalid real list fixture")
 	}
-	evidence(t, results)
+	identities := func(row json.RawMessage) string {
+		var value struct {
+			Identity string `json:"Identity"`
+		}
+		if json.Unmarshal(row, &value) != nil {
+			t.Fatal("invalid real list identity")
+		}
+		return value.Identity
+	}
+	slices.SortStableFunc(rows, func(a, b json.RawMessage) int {
+		left, right := strings.EqualFold(identities(a), "Global"), strings.EqualFold(identities(b), "Global")
+		if left == right {
+			return 0
+		}
+		if left {
+			return -1
+		}
+		return 1
+	})
+	cases := []struct {
+		Name, Pattern, OnlyID string
+		Empty                 bool
+	}{
+		{Name: "list"}, {Name: "all", Pattern: "*"}, {Name: "global", Pattern: "Global", OnlyID: "Global"},
+		{Name: "missing", Pattern: "__sdk_missing_fixture__", Empty: true},
+		{Name: "whitespace", Pattern: " ", Empty: true},
+	}
+	for _, row := range rows {
+		id := identities(row)
+		if strings.HasPrefix(id, "Tag:") && !strings.ContainsAny(id, "*?[]`") {
+			cases = append(cases, struct {
+				Name, Pattern, OnlyID string
+				Empty                 bool
+			}{Name: "tag-prefix", Pattern: strings.TrimPrefix(id, "Tag:"), OnlyID: id})
+			break
+		}
+	}
+	for _, tc := range cases {
+		want := make([]json.RawMessage, 0, len(rows))
+		for _, row := range rows {
+			if !tc.Empty && (tc.OnlyID == "" || strings.EqualFold(identities(row), tc.OnlyID)) {
+				want = append(want, row)
+			}
+		}
+		expected, err := json.Marshal(want)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "real-filter-" + tc.Name, Family: "teams_custom_banner_text", Scope: "service", Source: "msteams/teams_admin_api/teams_custom_banner_text/testdata/list.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/CustomBannerText", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				service := sdk.TeamsAdminAPI.TeamsCustomBannerTexts
+				if tc.Pattern == "" {
+					value, response, err := service.List(ctx)
+					return contracttest.Observation{Value: value, Response: response, Err: err}
+				}
+				value, response, err := service.ListFiltered(ctx, tc.Pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("real filtering response differs: %v %+v", err, result.Differences())
+		}
+	}
+
 }

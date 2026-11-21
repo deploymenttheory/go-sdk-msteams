@@ -11,7 +11,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-func TestExplicitMethodsValidateWithoutAuthentication(t *testing.T) {
+func TestUnitExplicitMethodsValidateWithoutAuthentication(t *testing.T) {
 	t.Parallel()
 	cases := []*auth.Config{
 		{Method: auth.Browser, ClientID: "client", OpenBrowser: func(context.Context, string) error { return nil }},
@@ -37,7 +37,7 @@ func TestExplicitMethodsValidateWithoutAuthentication(t *testing.T) {
 	// expired-token handling to the operation-scoped authentication provider.
 }
 
-func TestRejectMissingAndIncompatibleCredentials(t *testing.T) {
+func TestUnitRejectMissingAndIncompatibleCredentials(t *testing.T) {
 	t.Parallel()
 	cases := []*auth.Config{
 		nil,
@@ -64,7 +64,7 @@ func TestRejectMissingAndIncompatibleCredentials(t *testing.T) {
 	}
 }
 
-func TestAssertionCallbackIsNotInvokedByValidation(t *testing.T) {
+func TestUnitAssertionCallbackIsNotInvokedByValidation(t *testing.T) {
 	t.Parallel()
 	called := false
 	cfg := &auth.Config{
@@ -86,7 +86,7 @@ func TestAssertionCallbackIsNotInvokedByValidation(t *testing.T) {
 	}
 }
 
-func TestCloneIsolatesMutableCredentials(t *testing.T) {
+func TestUnitCloneIsolatesMutableCredentials(t *testing.T) {
 	t.Parallel()
 	cfg := &auth.Config{
 		Certificate: []byte("cert"), PrivateKey: []byte("private"),
@@ -108,7 +108,7 @@ func TestCloneIsolatesMutableCredentials(t *testing.T) {
 	}
 }
 
-func TestConfigurationDiagnosticsRedactSecrets(t *testing.T) {
+func TestUnitConfigurationDiagnosticsRedactSecrets(t *testing.T) {
 	t.Parallel()
 	cfg := &auth.Config{TenantID: "tenant", Method: auth.DeviceCode, ClientID: "client", ClientSecret: "sensitive-value"}
 	for _, output := range []string{fmt.Sprintf("%v", cfg), fmt.Sprintf("%+v", cfg), fmt.Sprintf("%#v", cfg), fmt.Sprintf("%+v", *cfg), cfg.Validate().Error()} {
@@ -118,7 +118,7 @@ func TestConfigurationDiagnosticsRedactSecrets(t *testing.T) {
 	}
 }
 
-func TestPFXConfigurationIsExclusiveAndCopied(t *testing.T) {
+func TestUnitPFXConfigurationIsExclusiveAndCopied(t *testing.T) {
 	t.Parallel()
 	cfg := &auth.Config{Method: auth.Certificate, TenantID: "tenant", ClientID: "client", PFX: []byte("pfx"), PFXPassword: []byte("password")}
 	if err := cfg.Validate(); err != nil {

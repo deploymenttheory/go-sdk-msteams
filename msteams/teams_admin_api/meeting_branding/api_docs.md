@@ -55,5 +55,5 @@ remain available to callers. Context, destination and audience checks remain sha
 
 Successful persistence, assignment, Premium feature effects, RBAC, cloud deployment
 and full binding/coercion parity remain separately qualified. See
-[evidence](../../../docs/implementation/policies/meeting-branding-sdk-progress.md) and
+[unit tests](service_test.go) and
 the [lab plan](../../../docs/implementation/policies/meeting-branding-lab-acceptance.md).

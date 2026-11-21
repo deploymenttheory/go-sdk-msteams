@@ -43,9 +43,9 @@ func (h externalPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) erro
 }
 func (externalPolicyCleanup) Restore(context.Context, lab.Entry) error { return lab.ErrUnresolved }
 
-// TestLabExternalAccessPolicyCRUD creates one uniquely named unassigned policy.
+// TestAccExternalAccessPolicyCRUD creates one uniquely named unassigned policy.
 // It never grants it, changes Global, or edits tenant federation configuration.
-func TestLabExternalAccessPolicyCRUD(t *testing.T) {
+func TestAccExternalAccessPolicyCRUD(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")

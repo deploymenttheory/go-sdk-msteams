@@ -3,7 +3,8 @@ package teamsapppermissionpolicy_test
 import (
 	"context"
 	"encoding/json"
-	"errors"
+
+	"slices"
 	"strings"
 	"testing"
 
@@ -15,12 +16,12 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
 )
 
-func TestAppPermissionPinnedProviderRequests(t *testing.T) {
+func TestUnitAppPermissionTypedProviderRequests(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, f := range captures(t) {
+
+	for _, f := range requestInputs(t) {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			x := f.Capture
+			x := f.Request
 			var body json.RawMessage
 			if x.Body != "" {
 				body = json.RawMessage(x.Body)
@@ -42,6 +43,9 @@ func TestAppPermissionPinnedProviderRequests(t *testing.T) {
 				}
 			} else if f.Response != "" {
 				c.Want.JSON = json.RawMessage(f.Response)
+			}
+			if len(c.Steps) != 0 {
+				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies
@@ -97,47 +101,82 @@ func TestAppPermissionPinnedProviderRequests(t *testing.T) {
 				v, r, e := s.PatchByIdentity(ctx, scoped, resource.PatchRequest{Settings: settings, Controls: controls, BodyIdentity: policy.Set("read-model-identity")})
 				return contracttest.Observation{Value: v, Response: r, Err: e}
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }
 
-func TestAppPermissionFilteringKeepsGlobalAndLiteralWhitespace(t *testing.T) {
+func TestUnitAppPermissionFiltersUseRealResponses(t *testing.T) {
 	t.Parallel()
-	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`
-	var results []contracttest.Result
-	for _, pattern := range []string{"", "Fixture*", " "} {
-		name, set, want := "list", "Identity", "Global,global,Tag:Fixture, "
-		if pattern == "Fixture*" {
-			name, set, want = "filter-tag", "Filter", "Tag:Fixture"
-		}
-		if pattern == " " {
-			name, set, want = "filter-whitespace", "Filter", " "
-		}
-		results = append(results, run(t, contracttest.Case{Name: name, Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsAppPermissionPolicy", ParameterSet: set}}, Steps: []contracttest.Exchange{wire("GET", collection, "Get-CsTeamsAppPermissionPolicy", nil, 200, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			var observation contracttest.Observation
-			if pattern == "" {
-				v, r, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.List(ctx)
-				observation = contracttest.Observation{Value: v, Response: r, Err: e}
-			} else {
-				v, r, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.ListFiltered(ctx, pattern)
-				observation = contracttest.Observation{Value: v, Response: r, Err: e}
-			}
-			values, _ := observation.Value.([]*resource.Policy)
-			var ids []string
-			for _, v := range values {
-				if v == nil || v.Identity == nil {
-					ids = append(ids, "missing")
-				} else {
-					ids = append(ids, *v.Identity)
-				}
-			}
-			if observation.Err == nil && strings.Join(ids, ",") != want {
-				observation.Err = errors.New("app permission filter/order changed")
-			}
-			return observation
-		}}))
+	raw := readResponseFixture(t, "list.json")
+	var rows []json.RawMessage
+	if json.Unmarshal(raw, &rows) != nil {
+		t.Fatal("invalid real list fixture")
 	}
-	evidence(t, results)
+	identities := func(row json.RawMessage) string {
+		var value struct {
+			Identity string `json:"Identity"`
+		}
+		if json.Unmarshal(row, &value) != nil {
+			t.Fatal("invalid real list identity")
+		}
+		return value.Identity
+	}
+	slices.SortStableFunc(rows, func(a, b json.RawMessage) int {
+		left, right := strings.EqualFold(identities(a), "Global"), strings.EqualFold(identities(b), "Global")
+		if left == right {
+			return 0
+		}
+		if left {
+			return -1
+		}
+		return 1
+	})
+	cases := []struct {
+		Name, Pattern, OnlyID string
+		Empty                 bool
+	}{
+		{Name: "list"}, {Name: "all", Pattern: "*"}, {Name: "global", Pattern: "Global", OnlyID: "Global"},
+		{Name: "missing", Pattern: "__sdk_missing_fixture__", Empty: true},
+		{Name: "whitespace", Pattern: " ", Empty: true},
+	}
+	for _, row := range rows {
+		id := identities(row)
+		if strings.HasPrefix(id, "Tag:") && !strings.ContainsAny(id, "*?[]`") {
+			cases = append(cases, struct {
+				Name, Pattern, OnlyID string
+				Empty                 bool
+			}{Name: "tag-prefix", Pattern: strings.TrimPrefix(id, "Tag:"), OnlyID: id})
+			break
+		}
+	}
+	for _, tc := range cases {
+		want := make([]json.RawMessage, 0, len(rows))
+		for _, row := range rows {
+			if !tc.Empty && (tc.OnlyID == "" || strings.EqualFold(identities(row), tc.OnlyID)) {
+				want = append(want, row)
+			}
+		}
+		expected, err := json.Marshal(want)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "real-filter-" + tc.Name, Family: "teams_app_permission_policy", Scope: "service", Source: "msteams/teams_admin_api/teams_app_permission_policy/testdata/list.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsAppPermissionPolicy", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				service := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies
+				if tc.Pattern == "" {
+					value, response, err := service.List(ctx)
+					return contracttest.Observation{Value: value, Response: response, Err: err}
+				}
+				value, response, err := service.ListFiltered(ctx, tc.Pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("real filtering response differs: %v %+v", err, result.Differences())
+		}
+	}
+
 }

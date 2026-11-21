@@ -56,7 +56,7 @@ setting. Mutations never replay. No implicit read-back, restoration, ETag or
 atomicity guarantee is added. HTTP acceptance is separate from persistence and
 effective client behavior.
 
-See [source evidence](../../../docs/implementation/policies/client-configuration-evidence.md)
+See [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/client-configuration-lab-acceptance.md).
 Both commands and all three exact parameter sets have native/test mappings.
 Issue #112 and full command/tenant qualification remain open.

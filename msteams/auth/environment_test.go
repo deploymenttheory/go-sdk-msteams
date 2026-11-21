@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func TestEnvironmentOverridesValidateAndIsolateBindings(t *testing.T) {
+func TestUnitEnvironmentOverridesValidateAndIsolateBindings(t *testing.T) {
 	t.Parallel()
 	base := Endpoints{"https://identity.example.test", "https://graph.example.test", "https://teams.example.test", "api://teams.example.test"}
 	first, err := ResolveEnvironment("custom", &base)
@@ -77,7 +77,7 @@ var environmentCases = []struct{ name, authority, graph, teams string }{
 	{"custom", "https://identity.example.test:8443", "https://graph.example.test:8443", "https://teams.example.test:8443"},
 }
 
-func TestEnvironmentAuthenticationFlows(t *testing.T) {
+func TestUnitEnvironmentAuthenticationFlows(t *testing.T) {
 	t.Parallel()
 	pfx, err := os.ReadFile("testdata/client-credentials-sha1.pfx")
 	if err != nil {
@@ -244,7 +244,7 @@ func (f *environmentIdentity) RoundTrip(r *http.Request) (*http.Response, error)
 	return &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": {"application/json"}}, Body: io.NopCloser(strings.NewReader(string(body))), Request: r}, nil
 }
 
-func TestEnvironmentRejectsForeignIdentityMetadataBeforeCredentialPOST(t *testing.T) {
+func TestUnitEnvironmentRejectsForeignIdentityMetadataBeforeCredentialPOST(t *testing.T) {
 	t.Parallel()
 	for _, field := range []string{"issuer", "token_endpoint", "authorization_endpoint"} {
 		for _, method := range []Method{ClientSecret, Password, Browser} {

@@ -1,11 +1,11 @@
 # Channel membership lab acceptance
 
-Prepared, not run. `TestLabChannelMembershipCRUD` uses the private identity and
+Prepared, not run. `TestAccChannelMembershipCRUD` uses the private identity and
 three distinct existing licensed lab users in the schema from
 [team membership acceptance](membership-lab-acceptance.md). Set all three explicit
 read/mutation/consequential flags, identity file, membership-user file, timeout
 and private journal directory described there. Select
-`-run '^TestLabChannelMembershipCRUD$' -timeout=25m` for the lab package.
+`-run '^TestAccChannelMembershipCRUD$' -timeout=25m` for the lab package.
 Regular CI skips before private-file loading.
 
 The test creates its own unique group-first parent team and journals the owned
@@ -14,7 +14,7 @@ prerequisites inside that owned fixture. It creates one private channel with an
 explicit owner; no caller-supplied team/channel/membership ID can be mutated.
 The shared lifecycle cleanup handler positively identifies the owned parent
 team and Unified group before deletion. Interrupted runs retain the same private
-journal and use TestLabRecoverTeamLifecycle. Incomplete/ambiguous creation is
+journal and use TestAccRecoverTeamLifecycle. Incomplete/ambiguous creation is
 not inferred absent, and no unrelated parent team is substituted.
 
 A second existing user exercises native channel member create/read/list,

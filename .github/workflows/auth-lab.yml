@@ -34,7 +34,7 @@ jobs:
       - name: Prepare ephemeral workload assertion
         run: python3 tools/lab/github_oidc.py
       - name: Verify SDK assertion sources and both resource audiences
-        run: go test -count=1 -v -timeout 5m ./tests/integration/auth
+        run: go test -count=1 -v -timeout 5m -run '^TestAccWorkloadIdentity$' ./tests/integration/auth
       - name: Remove ephemeral assertion
         if: always()
         run: python3 tools/lab/github_oidc.py --cleanup

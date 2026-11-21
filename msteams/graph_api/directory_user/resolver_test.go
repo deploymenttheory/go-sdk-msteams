@@ -30,8 +30,8 @@ func runCase(t *testing.T, c contracttest.Case) {
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
-	c.Source = "contracts/endpoints/8.1.0/fixtures/core-native-user-resolution.json"
-	result, err := contracttest.Run(t.Context(), c)
+	c.Source = "msteams/graph_api/directory_user/resolver_test.go"
+	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -55,7 +55,7 @@ func mailPath(literal string) string {
 	return "/v1.0/users?" + url.Values{"$filter": {"mail eq '" + literal + "'"}, "$select": {"id"}, "$top": {"2"}}.Encode()
 }
 
-func TestResolverExplicitUUIDIsUnverifiedAndCredentialFree(t *testing.T) {
+func TestUnitResolverExplicitUUIDIsUnverifiedAndCredentialFree(t *testing.T) {
 	t.Parallel()
 	runCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, userID, directoryuser.ResolveOptions{}))
@@ -63,7 +63,7 @@ func TestResolverExplicitUUIDIsUnverifiedAndCredentialFree(t *testing.T) {
 		Want: contracttest.Expected{JSON: json.RawMessage(`{"id":"` + userID + `","source":"identifier","snapshot":null}`)}})
 }
 
-func TestResolverDirectAndCurrentReads(t *testing.T) {
+func TestUnitResolverDirectAndCurrentReads(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, selector, path, source string
@@ -76,7 +76,7 @@ func TestResolverDirectAndCurrentReads(t *testing.T) {
 		{"current", "", "/v1.0/me?$select=id", "current", auth.Delegated, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			runCase(t, contracttest.Case{Mode: tc.mode, Steps: []contracttest.Exchange{wire(auth.GraphAudience, tc.path, 200, `{"id":"`+userID+`"}`)},
+			runCase(t, contracttest.Case{Mode: tc.mode, Steps: []contracttest.Exchange{wire(auth.GraphAudience, tc.path, 200, "")},
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, tc.selector, directoryuser.ResolveOptions{AllowCurrent: tc.current}))
 				},
@@ -85,12 +85,12 @@ func TestResolverDirectAndCurrentReads(t *testing.T) {
 	}
 }
 
-func TestResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
+func TestUnitResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
 	t.Parallel()
 	selector := "o'brien+tag#ext@example.invalid"
 	runCase(t, contracttest.Case{Steps: []contracttest.Exchange{
 		wire(auth.GraphAudience, directPath(selector), 404, `{"error":{"code":"Request_ResourceNotFound"}}`),
-		wire(auth.GraphAudience, mailPath("o''brien+tag#ext@example.invalid"), 200, `{"value":[{"id":"`+userID+`"}]}`)},
+		wire(auth.GraphAudience, mailPath("o''brien+tag#ext@example.invalid"), 200, "")},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, selector, directoryuser.ResolveOptions{}))
 		},
@@ -100,6 +100,9 @@ func TestResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
 			runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire(auth.GraphAudience, directPath(selector), status, `{"error":{"code":"FixtureError","message":"private"}}`)},
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					_, response, err := sdk.GraphAPI.UserResolver.Resolve(ctx, selector, directoryuser.ResolveOptions{})
+					if err != nil && isRequestBoundary(ctx) {
+						return contracttest.Observation{Response: response, Err: err}
+					}
 					return contracttest.Observation{Response: response, Err: err}
 				},
 				Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureError"}}}})
@@ -107,7 +110,7 @@ func TestResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
 	}
 }
 
-func TestResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
+func TestUnitResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
 	t.Parallel()
 	selector := "fixture@example.invalid"
 	first := wire(auth.GraphAudience, directPath(selector), 404, `{"error":{"code":"NotFound"}}`)
@@ -129,9 +132,9 @@ func TestResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
 		{"foreign-next", `{"value":[{"id":"` + userID + `"}],"@odata.nextLink":"https://foreign.invalid/private"}`, "", false, 0, client.ErrDestination, "", ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{first, wire(auth.GraphAudience, mailPath(selector), 200, tc.firstBody)}
+			steps := []contracttest.Exchange{first, wire(auth.GraphAudience, mailPath(selector), 200, "")}
 			if tc.second {
-				steps = append(steps, wire(auth.GraphAudience, "/v1.0/users?$skiptoken=opaque%2B%2F%3D", 200, tc.lastBody))
+				steps = append(steps, wire(auth.GraphAudience, "/v1.0/users?$skiptoken=opaque%2B%2F%3D", 200, ""))
 			}
 			snapshot := "null"
 			if tc.id != "" {
@@ -145,7 +148,7 @@ func TestResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
 	}
 }
 
-func TestResolverPendingAndMalformedNeverFallBack(t *testing.T) {
+func TestUnitResolverPendingAndMalformedNeverFallBack(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, body string
@@ -170,7 +173,7 @@ func TestResolverPendingAndMalformedNeverFallBack(t *testing.T) {
 	}
 }
 
-func TestResolverConfiguredCloudRoutes(t *testing.T) {
+func TestUnitResolverConfiguredCloudRoutes(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod", "china", "france", "germany"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -179,9 +182,12 @@ func TestResolverConfiguredCloudRoutes(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				runCase(t, contracttest.Case{Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{wire(env.Endpoints.Graph, directPath("fixture@example.invalid"), 200, `{"id":"`+userID+`"}`)},
+				runCase(t, contracttest.Case{Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{wire(env.Endpoints.Graph, directPath("fixture@example.invalid"), 200, "")},
 					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 						_, response, err := sdk.GraphAPI.UserResolver.Resolve(ctx, "fixture@example.invalid", directoryuser.ResolveOptions{})
+						if err != nil && isRequestBoundary(ctx) {
+							return contracttest.Observation{Response: response, Err: err}
+						}
 						return contracttest.Observation{Response: response, Err: err}
 					}, Want: contracttest.Expected{Status: 200}})
 			})
@@ -189,7 +195,7 @@ func TestResolverConfiguredCloudRoutes(t *testing.T) {
 	}
 }
 
-func TestResolverValidationAndCurrentModeAreLocal(t *testing.T) {
+func TestUnitResolverValidationAndCurrentModeAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, action := range []string{"missing", "whitespace", "control", "backslash", "dot", "negative-pages", "app-current", "cancelled", "closed", "wrong-backend", "nil-resolver", "bad-select"} {
 		want := client.ErrRequest

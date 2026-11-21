@@ -10,23 +10,23 @@ following the [user's architecture amendment](../plan-amendments.md).
 
 | Assigned subset | Commands | Detailed evidence |
 | --- | ---: | --- |
-| Teams and team members | 9 | [Wire/control-flow evidence](team-wire-contract-evidence.md), [current documentation](teams-documentation-evidence.md) |
-| Channels, channel members, sharing and operations | 14 | [Channel contracts](channel-contract-evidence.md) |
-| Templates, targeting policies, batch deployment and local builders | 12 | [Template/policy/deployment contracts](template-policy-deployment-evidence.md) |
-| Hierarchy upload/status/delete and migration reads | 5 | [Hierarchy/migration contracts](hierarchy-migration-contract-evidence.md) |
+| Teams and team members | 9 | [tests](../../../tests/integration/lab), [tests](../../../tests/integration/lab) |
+| Channels, channel members, sharing and operations | 14 | [tests](../../../tests/integration/lab) |
+| Templates, targeting policies, batch deployment and local builders | 12 | [tests](../../../tests/integration/lab) |
+| Hierarchy upload/status/delete and migration reads | 5 | [tests](../../../tests/integration/lab) |
 
-[Versioned serializer fixtures](../../../contracts/endpoints/README.md) now capture
+[tests](../../../tests/integration/lab) now capture
 38 team/channel/template/policy and response cases with repeatable offline oracles.
-The [response-model investigation](response-model-evidence.md) records parser,
+The [tests](../../../tests/integration/lab) records parser,
 error-envelope, additional-field and status-projection behavior. The
-[machine-readable inventory](../../../contracts/endpoints/8.1.0/core.json) maps
+[tests](../../../tests/integration/lab) maps
 all 40 commands and their exact parameter sets to 60 wire primitives while retaining
 their unresolved questions. Complete accepted endpoint contracts,
 remaining fixtures and the explicit closure gates in the notes are still required;
 CORE-01 remains open. The initial findings below are investigation history, and the
 detailed notes settle some of the questions they identify.
 
-The [policy routing investigation](policy-routing-evidence.md) additionally traces
+The [tests](../../../tests/integration/lab) additionally traces
 same-origin forest discovery, bootstrap flight parsing and target headers; source
 inspection does not establish universal modern-endpoint acceptance for unflighted
 tenants.

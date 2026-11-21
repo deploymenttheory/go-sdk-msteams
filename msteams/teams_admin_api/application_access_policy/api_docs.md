@@ -18,7 +18,7 @@ without reconstructing a PowerShell invocation. Discovery has its own headers.
 | `ListFiltered` | List then local Identity/Tag matching | Get's Filter set; no invented server query parameter |
 | `UpdateByIdentity` | Sparse PUT item | `Set-CsApplicationAccessPolicy`; pass `"Global"` explicitly to reproduce omitted Identity's default |
 | `DeleteByIdentity` | DELETE item, no body | `Remove-CsApplicationAccessPolicy` |
-| `AssignToUser` | PATCH user policy | Grant Identity scope; empty policy name emits the captured user-clear request |
+| `AssignToUser` | PATCH user policy | Grant Identity scope; empty policy name emits the user-clear request |
 | `AssignTenantDefault` | PATCH tenant policy | Grant Global scope; force is always a JSON Boolean |
 | `AssignToGroup` | POST group assignment | Grant Group scope; returns 202 acceptance/operation ID separately from 204, without implicit polling |
 
@@ -63,12 +63,13 @@ boundary; this service implements the evidenced native modern HTTP contract.
 It does not invoke PowerShell at runtime, implement a remote runspace fallback,
 or infer tenant eligibility from a missing flight or generic 403/404.
 
-Sources and current limitations: [versioned contract](../../../contracts/endpoints/8.1.0/application-access-policies.json),
-[pinned implementation evidence](../../../docs/implementation/policies/application-access-contract-evidence.md).
-Unit wire tests consume the checked pinned request/dispatch artifact and assert
-ConfigAPI routing/token audience. Live qualification is tracked separately.
+See the [request tests](service_test.go) and
+[acceptance response tests](response_test.go).
+Unit tests check ConfigAPI routing and token audience. Successful response
+fixtures come from the service acceptance tests. Tenant coverage remains tracked
+in the coverage ledger.
 
-The opt-in `TestLabApplicationAccessPolicyCRUD` creates only a random, unassigned
+The opt-in `TestAccApplicationAccessPolicyCRUD` creates only a random, unassigned
 policy, journals intent before creation, verifies non-default create/update
 read-back, checks list membership, deletes it and verifies absence. Cleanup is
 tenant/identity-bound and leaves unresolved private recovery data on failure.

@@ -62,5 +62,5 @@ requirement for a particular equivalent byte spelling is claimed.
 Actual Global reads on 2026-11-21 returned 403 with client-secret and certificate
 credentials. Successful authorization, cloud/flight availability, mutations,
 read-back/cleanup and effective playback/grants remain open. See
-[source evidence](../../../docs/implementation/policies/call-hold-policy-evidence.md)
+[unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/call-hold-policy-lab-acceptance.md).

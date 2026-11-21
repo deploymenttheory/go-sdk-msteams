@@ -12,9 +12,9 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-// TestWorkloadIdentityLab is explicitly enabled only by the manual lab workflow.
+// TestAccWorkloadIdentity is explicitly enabled only by the manual lab workflow.
 // Ordinary go test runs remain offline and never discover developer credentials.
-func TestWorkloadIdentityLab(t *testing.T) {
+func TestAccWorkloadIdentity(t *testing.T) {
 	if os.Getenv("MSTEAMS_LIVE_AUTH") != "1" {
 		t.Skip("live workload authentication is opt-in")
 	}

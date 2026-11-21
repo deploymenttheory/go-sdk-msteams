@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"slices"
 	"strings"
 	"testing"
 
@@ -17,10 +18,10 @@ import (
 func fixtureSettings() resource.Settings {
 	return resource.Settings{Description: new(""), CortanaVoiceInvocationMode: new("FutureMode"), AllowCortanaVoiceInvocation: new(false), AllowCortanaAmbientListening: new(true), AllowCortanaInContextSuggestions: new(false)}
 }
-func TestCortanaPinnedGeneratedRequests(t *testing.T) {
+func TestUnitCortanaTypedGeneratedRequests(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, f := range captures(t) {
+
+	for _, f := range requestInputs(t) {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
 			command, set := getCommand, "Identity"
 			switch f.Operation {
@@ -39,12 +40,15 @@ func TestCortanaPinnedGeneratedRequests(t *testing.T) {
 			}
 			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}}
 			if !f.Canceled {
-				c.Steps = []contracttest.Exchange{discovery(), capturedWire(t, f, command)}
+				c.Steps = []contracttest.Exchange{discovery(t), requestWire(t, f, command)}
 			} else {
 				c.Want.Error = context.Canceled
 			}
 			if f.Method == "GET" && f.Status == 200 && !f.Canceled {
 				c.Want.JSON = json.RawMessage(f.Reply)
+			}
+			if len(c.Steps) != 0 {
+				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsCortanaPolicies
@@ -69,7 +73,7 @@ func TestCortanaPinnedGeneratedRequests(t *testing.T) {
 					o = contracttest.Observation{Value: v, Response: r, Err: e}
 				case "ConfigurationGetConfiguration":
 					id := identity
-					if f.Status >= 400 {
+					if strings.Contains(f.URL, "/configuration/Fixture") {
 						id = "Fixture"
 					}
 					v, r, e := s.GetByIdentity(ctx, id)
@@ -114,49 +118,85 @@ func TestCortanaPinnedGeneratedRequests(t *testing.T) {
 					if !errors.As(o.Err, &api) || api.StatusCode != f.Status || strings.Contains(o.Err.Error(), "Fixture message") {
 						return contracttest.Observation{Err: errors.New("generated error status/redaction changed")}
 					}
-					o.Err = nil
 				}
 				return o
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }
 
-func TestCortanaModernFilterAndWhitespace(t *testing.T) {
+func TestUnitCortanaFiltersUseRealResponses(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	const reply = `[{"Identity":"Other"},{"Identity":"gLoBaL"},{"Identity":"Global"},{"Identity":"Tag:Global"},{"Identity":"Fixture"}]`
-	for _, pattern := range []string{"", "*", "Global", " "} {
-		want := "gLoBaL,Global,Other,Tag:Global,Fixture"
-		name, set := "list", "Identity"
-		if pattern != "" {
-			set = "Filter"
-			switch pattern {
-			case "*":
-				name = "filter-all"
-			case "Global":
-				name = "filter-tag"
-			case " ":
-				name = "filter-whitespace"
-			}
-		}
-		if pattern == "Global" {
-			want = "gLoBaL,Global,Tag:Global"
-		}
-		results = append(results, run(t, contracttest.Case{Name: name, Source: wrapperSource, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(), wire("GET", collection, getCommand, nil, 200, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			s := sdk.TeamsAdminAPI.TeamsCortanaPolicies
-			v, r, e := s.ListFiltered(ctx, pattern)
-			var ids []string
-			for _, x := range v {
-				ids = append(ids, x.Identity)
-			}
-			if e == nil && strings.Join(ids, ",") != want {
-				e = errors.New("modern filter/global-first behavior changed")
-			}
-			return contracttest.Observation{Response: r, Err: e}
-		}}))
+	raw := readResponseFixture(t, "list.json")
+	var rows []json.RawMessage
+	if json.Unmarshal(raw, &rows) != nil {
+		t.Fatal("invalid real list fixture")
 	}
-	evidence(t, results)
+	identities := func(row json.RawMessage) string {
+		var value struct {
+			Identity string `json:"Identity"`
+		}
+		if json.Unmarshal(row, &value) != nil {
+			t.Fatal("invalid real list identity")
+		}
+		return value.Identity
+	}
+	slices.SortStableFunc(rows, func(a, b json.RawMessage) int {
+		left, right := strings.EqualFold(identities(a), "Global"), strings.EqualFold(identities(b), "Global")
+		if left == right {
+			return 0
+		}
+		if left {
+			return -1
+		}
+		return 1
+	})
+	cases := []struct {
+		Name, Pattern, OnlyID string
+		Empty                 bool
+	}{
+		{Name: "list"}, {Name: "all", Pattern: "*"}, {Name: "global", Pattern: "Global", OnlyID: "Global"},
+		{Name: "missing", Pattern: "__sdk_missing_fixture__", Empty: true},
+		{Name: "whitespace", Pattern: " ", Empty: false},
+	}
+	for _, row := range rows {
+		id := identities(row)
+		if strings.HasPrefix(id, "Tag:") && !strings.ContainsAny(id, "*?[]`") {
+			cases = append(cases, struct {
+				Name, Pattern, OnlyID string
+				Empty                 bool
+			}{Name: "tag-prefix", Pattern: strings.TrimPrefix(id, "Tag:"), OnlyID: id})
+			break
+		}
+	}
+	for _, tc := range cases {
+		want := make([]json.RawMessage, 0, len(rows))
+		for _, row := range rows {
+			if !tc.Empty && (tc.OnlyID == "" || strings.EqualFold(identities(row), tc.OnlyID)) {
+				want = append(want, row)
+			}
+		}
+		expected, err := json.Marshal(want)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "real-filter-" + tc.Name, Family: "teams_cortana_policy", Scope: "service", Source: "msteams/teams_admin_api/teams_cortana_policy/testdata/list.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsCortanaPolicy", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				service := sdk.TeamsAdminAPI.TeamsCortanaPolicies
+				if tc.Pattern == "" {
+					value, response, err := service.List(ctx)
+					return contracttest.Observation{Value: value, Response: response, Err: err}
+				}
+				value, response, err := service.ListFiltered(ctx, tc.Pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("real filtering response differs: %v %+v", err, result.Differences())
+		}
+	}
+
 }

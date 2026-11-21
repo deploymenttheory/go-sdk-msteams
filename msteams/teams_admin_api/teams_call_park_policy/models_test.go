@@ -7,7 +7,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
 )
 
-func TestCallParkInt64ProjectionsAndRawPresence(t *testing.T) {
+func TestUnitCallParkInt64ProjectionsAndRawPresence(t *testing.T) {
 	raw := []byte(`{"Identity":"Global","Description":"","AllowCallPark":false,"ParkTimeoutSeconds":-9223372036854775808,"PickupRangeStart":9007199254740993,"PickupRangeEnd":9223372036854775807,"Future":false}`)
 	original := append([]byte(nil), raw...)
 	var value resource.Policy

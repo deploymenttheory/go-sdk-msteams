@@ -13,7 +13,7 @@ func ExampleNewBackgroundImage() {
 	if err != nil {
 		return
 	}
-	// The local value makes no request and does not upload image bytes.
+
 	_, _ = resource.Assets(image)
 }
 

@@ -25,7 +25,7 @@ func (f forbiddenTransport) RoundTrip(*http.Request) (*http.Response, error) {
 	return nil, errors.New("unexpected")
 }
 
-func TestTransportGuardClosesRejectedRequestBodies(t *testing.T) {
+func TestUnitTransportGuardClosesRejectedRequestBodies(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, url, host, token string

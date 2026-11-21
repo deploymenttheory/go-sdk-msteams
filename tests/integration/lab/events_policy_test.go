@@ -82,9 +82,9 @@ func eventsPolicyOracle(t *testing.T, ctx context.Context, tenant string) events
 	return value
 }
 
-// TestLabEventsPolicyReadOnly performs configuration reads only.
+// TestAccEventsPolicyReadOnly performs configuration reads only.
 // Creates, updates, deletes, grants and effective event behavior need separate acceptance.
-func TestLabEventsPolicyReadOnly(t *testing.T) {
+func TestAccEventsPolicyReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -99,6 +99,7 @@ func TestLabEventsPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsEventsPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_events_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		phase := "preparation"
@@ -110,7 +111,8 @@ func TestLabEventsPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("events policy %s Global read failed (HTTP %d); no response payload retained", phase, status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsEventsPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsEventsPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_events_policy", "list", listResponse, nil)
 	selected, selectionErr := globalEventsPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(eventsPolicyProjection(value), eventsPolicyProjection(selected)) {
 		t.Fatal("events policy Global read/list projections differ")
@@ -129,7 +131,7 @@ func TestLabEventsPolicyReadOnly(t *testing.T) {
 	t.Log("selected events policy reads verified; persistence and effective event behavior remain separately qualified")
 }
 
-func TestEventsPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitEventsPolicyOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := map[string]any{}
@@ -178,7 +180,7 @@ func globalEventsPolicy(values []*resource.Policy) (*resource.Policy, error) {
 	}
 	return found, nil
 }
-func TestEventsPolicyGlobalSelection(t *testing.T) {
+func TestUnitEventsPolicyGlobalSelection(t *testing.T) {
 	t.Parallel()
 	global := &resource.Policy{Identity: new("Global")}
 	tagged := &resource.Policy{Identity: new("Tag:Global")}
@@ -202,7 +204,7 @@ func matchesEventsPolicyGetterProjection(value *resource.Policy, settings map[st
 	return json.Unmarshal(eventsPolicyProjection(value), &left) == nil && json.Unmarshal(raw, &right) == nil && reflect.DeepEqual(left, right)
 }
 
-func TestEventsPolicyOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
+func TestUnitEventsPolicyOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{`{"description":"fixture"}`, `{"Description":"earlier","description":"fixture"}`, `{"Description":null,"description":"fixture"}`} {
 		var value resource.Policy

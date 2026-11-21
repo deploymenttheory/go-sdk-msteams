@@ -13,7 +13,7 @@ func (f providerFunc) AcquireToken(ctx context.Context, r TokenRequest) (Token, 
 	return f(ctx, r)
 }
 
-func TestBoundProviderRejectsCrossBindingBeforeCallingSource(t *testing.T) {
+func TestUnitBoundProviderRejectsCrossBindingBeforeCallingSource(t *testing.T) {
 	t.Parallel()
 	binding := testBinding()
 	called := false
@@ -42,7 +42,7 @@ func TestBoundProviderRejectsCrossBindingBeforeCallingSource(t *testing.T) {
 	}
 }
 
-func TestBoundProviderValidatesResultsAndCancellation(t *testing.T) {
+func TestUnitBoundProviderValidatesResultsAndCancellation(t *testing.T) {
 	t.Parallel()
 	for _, test := range []struct {
 		name  string

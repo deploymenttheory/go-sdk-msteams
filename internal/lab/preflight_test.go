@@ -22,7 +22,7 @@ func (f fakeProbe) Do(ctx context.Context, r client.Request, v any) (*resty.Resp
 	return f(ctx, r, v)
 }
 
-func TestPreflightReportsReadAccessWithoutRetainingTenantData(t *testing.T) {
+func TestUnitPreflightReportsReadAccessWithoutRetainingTenantData(t *testing.T) {
 	t.Parallel()
 	calls := 0
 	probe := fakeProbe(func(ctx context.Context, r client.Request, v any) (*resty.Response, error) {
@@ -73,7 +73,7 @@ func TestPreflightReportsReadAccessWithoutRetainingTenantData(t *testing.T) {
 	}
 }
 
-func TestPreflightDisabledCanceledAndTypedNilNeverSend(t *testing.T) {
+func TestUnitPreflightDisabledCanceledAndTypedNilNeverSend(t *testing.T) {
 	t.Parallel()
 	calls := 0
 	probe := fakeProbe(func(context.Context, client.Request, any) (*resty.Response, error) { calls++; return nil, nil })
@@ -94,7 +94,7 @@ func TestPreflightDisabledCanceledAndTypedNilNeverSend(t *testing.T) {
 	}
 }
 
-func TestPreflightDeadlineStopsInFlightProbe(t *testing.T) {
+func TestUnitPreflightDeadlineStopsInFlightProbe(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		calls := 0
 		probe := fakeProbe(func(ctx context.Context, _ client.Request, _ any) (*resty.Response, error) {

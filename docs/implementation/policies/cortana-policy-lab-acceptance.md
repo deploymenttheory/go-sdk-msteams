@@ -1,6 +1,6 @@
 # Teams Cortana policy lab acceptance
 
-On 2026-11-21, TestLabCortanaPolicyReadOnly attempted a modern TeamsCortanaPolicy
+On 2026-11-21, TestAccCortanaPolicyReadOnly attempted a modern TeamsCortanaPolicy
 Global read with the dedicated lab SPN using client-secret and certificate auth.
 Both actual resource reads returned HTTP 403. No response payload, tenant/client
 identifier or credential was retained in the repository. Filter/list and optional

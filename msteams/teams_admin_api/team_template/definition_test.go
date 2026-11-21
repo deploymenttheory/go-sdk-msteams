@@ -3,7 +3,6 @@ package teamtemplate_test
 import (
 	"encoding/json"
 	"errors"
-	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -11,37 +10,38 @@ import (
 	template "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
 )
 
-type modelObservation struct {
+type definitionCase struct {
 	Name  string          `json:"name"`
 	Input json.RawMessage `json:"input"`
 	Wire  json.RawMessage `json:"wire"`
 }
 
-func modelObservations(t *testing.T) []modelObservation {
-	t.Helper()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/core-model-serialization.json")
-	if err != nil {
-		t.Fatal(err)
+func definitionCases() []definitionCase {
+	return []definitionCase{
+		{Name: "template-expanded-sparse", Input: json.RawMessage("{\"DisplayName\":\"Fixture\",\"ShortDescription\":\"Fixture summary\"}"), Wire: json.RawMessage("{\"displayName\":\"Fixture\",\"shortDescription\":\"Fixture summary\"}")},
+		{Name: "template-expanded-empty-arrays-false", Input: json.RawMessage("{\"App\":[],\"Category\":[],\"Channel\":[],\"DisplayName\":\"Fixture\",\"IsMembershipLimitedToOwner\":false,\"ShortDescription\":\"Fixture summary\"}"), Wire: json.RawMessage("{\"apps\":[],\"categories\":[],\"channels\":[],\"displayName\":\"Fixture\",\"isMembershipLimitedToOwners\":false,\"shortDescription\":\"Fixture summary\"}")},
+		{Name: "template-json-body-default-settings", Input: json.RawMessage("\"{\\\"displayName\\\":\\\"Fixture\\\",\\\"shortDescription\\\":\\\"Fixture summary\\\"}\""), Wire: json.RawMessage("{\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":false},\"displayName\":\"Fixture\",\"funSettings\":{\"allowCustomMemes\":false,\"allowGiphy\":false,\"allowStickersAndMemes\":false},\"guestSettings\":{\"allowCreateUpdateChannels\":false,\"allowDeleteChannels\":false},\"memberSettings\":{\"allowAddRemoveApps\":false,\"allowCreatePrivateChannels\":false,\"allowCreateUpdateChannels\":false,\"allowCreateUpdateRemoveConnectors\":false,\"allowCreateUpdateRemoveTabs\":false,\"allowDeleteChannels\":false,\"uploadCustomApp\":false},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":false,\"allowTeamMentions\":false,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":false},\"shortDescription\":\"Fixture summary\"}")},
+		{Name: "template-json-flattened-precedence", Input: json.RawMessage("\"{\\\"teamDefinition\\\":{\\\"displayName\\\":\\\"Definition\\\",\\\"channels\\\":[]},\\\"extendedProperties\\\":{\\\"displayName\\\":\\\"Extended\\\",\\\"shortDescription\\\":\\\"Summary\\\"}}\""), Wire: json.RawMessage("{\"channels\":[],\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":false},\"displayName\":\"Definition\",\"funSettings\":{\"allowCustomMemes\":false,\"allowGiphy\":false,\"allowStickersAndMemes\":false},\"guestSettings\":{\"allowCreateUpdateChannels\":false,\"allowDeleteChannels\":false},\"memberSettings\":{\"allowAddRemoveApps\":false,\"allowCreatePrivateChannels\":false,\"allowCreateUpdateChannels\":false,\"allowCreateUpdateRemoveConnectors\":false,\"allowCreateUpdateRemoveTabs\":false,\"allowDeleteChannels\":false,\"uploadCustomApp\":false},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":false,\"allowTeamMentions\":false,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":false},\"shortDescription\":\"Summary\"}")},
+		{Name: "template-json-tab-configuration-omitted", Input: json.RawMessage("\"{\\\"displayName\\\":\\\"Fixture\\\",\\\"shortDescription\\\":\\\"Summary\\\",\\\"channels\\\":[{\\\"displayName\\\":\\\"General\\\",\\\"tabs\\\":[{\\\"name\\\":\\\"Fixture tab\\\"}]}]}\""), Wire: json.RawMessage("{\"channels\":[{\"displayName\":\"General\",\"tabs\":[{\"name\":\"Fixture tab\"}]}],\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":false},\"displayName\":\"Fixture\",\"funSettings\":{\"allowCustomMemes\":false,\"allowGiphy\":false,\"allowStickersAndMemes\":false},\"guestSettings\":{\"allowCreateUpdateChannels\":false,\"allowDeleteChannels\":false},\"memberSettings\":{\"allowAddRemoveApps\":false,\"allowCreatePrivateChannels\":false,\"allowCreateUpdateChannels\":false,\"allowCreateUpdateRemoveConnectors\":false,\"allowCreateUpdateRemoveTabs\":false,\"allowDeleteChannels\":false,\"uploadCustomApp\":false},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":false,\"allowTeamMentions\":false,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":false},\"shortDescription\":\"Summary\"}")},
+		{Name: "template-json-root-precedence", Input: json.RawMessage("\"{\\\"displayName\\\":\\\"Root\\\",\\\"teamDefinition\\\":{\\\"displayName\\\":\\\"Definition\\\",\\\"shortDescription\\\":\\\"Definition summary\\\"},\\\"extendedProperties\\\":{\\\"displayName\\\":\\\"Extended\\\",\\\"shortDescription\\\":\\\"Extended summary\\\",\\\"description\\\":\\\"Extended description\\\"}}\""), Wire: json.RawMessage("{\"description\":\"Extended description\",\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":false},\"displayName\":\"Root\",\"funSettings\":{\"allowCustomMemes\":false,\"allowGiphy\":false,\"allowStickersAndMemes\":false},\"guestSettings\":{\"allowCreateUpdateChannels\":false,\"allowDeleteChannels\":false},\"memberSettings\":{\"allowAddRemoveApps\":false,\"allowCreatePrivateChannels\":false,\"allowCreateUpdateChannels\":false,\"allowCreateUpdateRemoveConnectors\":false,\"allowCreateUpdateRemoveTabs\":false,\"allowDeleteChannels\":false,\"uploadCustomApp\":false},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":false,\"allowTeamMentions\":false,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":false},\"shortDescription\":\"Definition summary\"}")},
+		{Name: "template-json-root-null-masks-nested", Input: json.RawMessage("\"{\\\"displayName\\\":null,\\\"teamDefinition\\\":{\\\"displayName\\\":\\\"Definition\\\"},\\\"extendedProperties\\\":{\\\"displayName\\\":\\\"Extended\\\"}}\""), Wire: json.RawMessage("{\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":false},\"funSettings\":{\"allowCustomMemes\":false,\"allowGiphy\":false,\"allowStickersAndMemes\":false},\"guestSettings\":{\"allowCreateUpdateChannels\":false,\"allowDeleteChannels\":false},\"memberSettings\":{\"allowAddRemoveApps\":false,\"allowCreatePrivateChannels\":false,\"allowCreateUpdateChannels\":false,\"allowCreateUpdateRemoveConnectors\":false,\"allowCreateUpdateRemoveTabs\":false,\"allowDeleteChannels\":false,\"uploadCustomApp\":false},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":false,\"allowTeamMentions\":false,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":false}}")},
+		{Name: "template-json-null-array-items", Input: json.RawMessage("\"{\\\"apps\\\":[null,{\\\"id\\\":\\\"fixture-app\\\"},null],\\\"categories\\\":[\\\"first\\\",null,\\\"last\\\"],\\\"channels\\\":[null,{\\\"displayName\\\":\\\"General\\\",\\\"tabs\\\":[null,{\\\"name\\\":\\\"Fixture tab\\\"}]}]}\""), Wire: json.RawMessage("{\"apps\":[{\"id\":\"fixture-app\"}],\"categories\":[\"first\",\"last\"],\"channels\":[{\"displayName\":\"General\",\"tabs\":[{\"name\":\"Fixture tab\"}]}],\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":false},\"funSettings\":{\"allowCustomMemes\":false,\"allowGiphy\":false,\"allowStickersAndMemes\":false},\"guestSettings\":{\"allowCreateUpdateChannels\":false,\"allowDeleteChannels\":false},\"memberSettings\":{\"allowAddRemoveApps\":false,\"allowCreatePrivateChannels\":false,\"allowCreateUpdateChannels\":false,\"allowCreateUpdateRemoveConnectors\":false,\"allowCreateUpdateRemoveTabs\":false,\"allowDeleteChannels\":false,\"uploadCustomApp\":false},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":false,\"allowTeamMentions\":false,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":false}}")},
+		{Name: "template-json-empty-tab-configuration", Input: json.RawMessage("\"{\\\"channels\\\":[{\\\"tabs\\\":[{\\\"configuration\\\":{}}]}]}\""), Wire: json.RawMessage("{\"channels\":[{\"tabs\":[]}],\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":false},\"funSettings\":{\"allowCustomMemes\":false,\"allowGiphy\":false,\"allowStickersAndMemes\":false},\"guestSettings\":{\"allowCreateUpdateChannels\":false,\"allowDeleteChannels\":false},\"memberSettings\":{\"allowAddRemoveApps\":false,\"allowCreatePrivateChannels\":false,\"allowCreateUpdateChannels\":false,\"allowCreateUpdateRemoveConnectors\":false,\"allowCreateUpdateRemoveTabs\":false,\"allowDeleteChannels\":false,\"uploadCustomApp\":false},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":false,\"allowTeamMentions\":false,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":false}}")},
+		{Name: "template-json-other-property-types", Input: json.RawMessage("\"{\\\"displayName\\\":7,\\\"description\\\":false,\\\"isMembershipLimitedToOwners\\\":\\\"false\\\",\\\"apps\\\":[7,{\\\"id\\\":7}],\\\"categories\\\":[null,5,\\\"last\\\"],\\\"channels\\\":[4,{\\\"displayName\\\":7,\\\"isFavoriteByDefault\\\":\\\"false\\\",\\\"tabs\\\":[false,{\\\"name\\\":7,\\\"configuration\\\":{\\\"entityId\\\":7}}]}],\\\"funSettings\\\":{\\\"allowGiphy\\\":\\\"true\\\",\\\"giphyContentRating\\\":7}}\""), Wire: json.RawMessage("{\"apps\":[],\"categories\":[\"last\"],\"channels\":[{\"tabs\":[]}],\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":false},\"funSettings\":{\"allowCustomMemes\":false,\"allowGiphy\":false,\"allowStickersAndMemes\":false},\"guestSettings\":{\"allowCreateUpdateChannels\":false,\"allowDeleteChannels\":false},\"memberSettings\":{\"allowAddRemoveApps\":false,\"allowCreatePrivateChannels\":false,\"allowCreateUpdateChannels\":false,\"allowCreateUpdateRemoveConnectors\":false,\"allowCreateUpdateRemoveTabs\":false,\"allowDeleteChannels\":false,\"uploadCustomApp\":false},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":false,\"allowTeamMentions\":false,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":false}}")},
+		{Name: "template-json-null-settings", Input: json.RawMessage("\"{\\\"discoverySettings\\\":null,\\\"funSettings\\\":null,\\\"guestSettings\\\":null,\\\"memberSettings\\\":null,\\\"messagingSettings\\\":null}\""), Wire: json.RawMessage("{\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":false},\"funSettings\":{\"allowCustomMemes\":false,\"allowGiphy\":false,\"allowStickersAndMemes\":false},\"guestSettings\":{\"allowCreateUpdateChannels\":false,\"allowDeleteChannels\":false},\"memberSettings\":{\"allowAddRemoveApps\":false,\"allowCreatePrivateChannels\":false,\"allowCreateUpdateChannels\":false,\"allowCreateUpdateRemoveConnectors\":false,\"allowCreateUpdateRemoveTabs\":false,\"allowDeleteChannels\":false,\"uploadCustomApp\":false},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":false,\"allowTeamMentions\":false,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":false}}")},
+		{Name: "template-json-full-definition", Input: json.RawMessage("\"{\\\"templateId\\\":\\\"fixture-id\\\",\\\"classification\\\":\\\"fixture-classification\\\",\\\"displayName\\\":\\\"Fixture\\\",\\\"description\\\":\\\"\\\",\\\"ownerUserObjectId\\\":\\\"fixture-owner\\\",\\\"specialization\\\":\\\"fixture-specialization\\\",\\\"visibility\\\":\\\"Private\\\",\\\"channels\\\":[{\\\"id\\\":\\\"fixture-channel\\\",\\\"displayName\\\":\\\"General\\\",\\\"description\\\":\\\"\\\",\\\"isFavoriteByDefault\\\":false,\\\"tabs\\\":[{\\\"id\\\":\\\"fixture-tab\\\",\\\"teamsAppId\\\":\\\"fixture-app\\\",\\\"name\\\":\\\"Tab\\\",\\\"sortOrderIndex\\\":\\\"0\\\",\\\"messageId\\\":\\\"fixture-message\\\",\\\"webUrl\\\":\\\"https://example.invalid/tab\\\",\\\"key\\\":\\\"fixture-key\\\",\\\"configuration\\\":{\\\"entityId\\\":\\\"fixture-entity\\\",\\\"contentUrl\\\":\\\"https://example.invalid/content\\\",\\\"removeUrl\\\":\\\"\\\",\\\"websiteUrl\\\":\\\"https://example.invalid/site\\\"}}]}],\\\"memberSettings\\\":{\\\"allowCreateUpdateChannels\\\":true,\\\"allowAddRemoveApps\\\":true,\\\"uploadCustomApp\\\":true,\\\"allowCreateUpdateRemoveTabs\\\":true,\\\"allowCreateUpdateRemoveConnectors\\\":true,\\\"allowCreatePrivateChannels\\\":true},\\\"guestSettings\\\":{\\\"allowCreateUpdateChannels\\\":true},\\\"messagingSettings\\\":{\\\"allowUserEditMessages\\\":true,\\\"allowOwnerDeleteMessages\\\":true,\\\"allowTeamMentions\\\":true},\\\"funSettings\\\":{\\\"allowGiphy\\\":true,\\\"allowCustomMemes\\\":true,\\\"giphyContentRating\\\":\\\"strict\\\"},\\\"discoverySettings\\\":{\\\"showInTeamsSearchAndSuggestions\\\":true},\\\"isMembershipLimitedToOwners\\\":false,\\\"apps\\\":[{\\\"id\\\":\\\"fixture-app\\\"}],\\\"icon\\\":\\\"fixture-icon\\\",\\\"shortDescription\\\":\\\"Summary\\\",\\\"categories\\\":[\\\"fixture-category\\\"],\\\"publishedBy\\\":\\\"fixture-publisher\\\",\\\"uri\\\":\\\"fixture-uri\\\",\\\"futureField\\\":false}\""), Wire: json.RawMessage("{\"apps\":[{\"id\":\"fixture-app\"}],\"categories\":[\"fixture-category\"],\"channels\":[{\"description\":\"\",\"displayName\":\"General\",\"id\":\"fixture-channel\",\"isFavoriteByDefault\":false,\"tabs\":[{\"configuration\":{\"contentUrl\":\"https://example.invalid/content\",\"entityId\":\"fixture-entity\",\"removeUrl\":\"\",\"websiteUrl\":\"https://example.invalid/site\"},\"id\":\"fixture-tab\",\"key\":\"fixture-key\",\"messageId\":\"fixture-message\",\"name\":\"Tab\",\"sortOrderIndex\":\"0\",\"teamsAppId\":\"fixture-app\",\"webUrl\":\"https://example.invalid/tab\"}]}],\"classification\":\"fixture-classification\",\"description\":\"\",\"discoverySettings\":{\"showInTeamsSearchAndSuggestions\":true},\"displayName\":\"Fixture\",\"funSettings\":{\"allowCustomMemes\":true,\"allowGiphy\":true,\"allowStickersAndMemes\":false,\"giphyContentRating\":\"strict\"},\"guestSettings\":{\"allowCreateUpdateChannels\":true,\"allowDeleteChannels\":false},\"icon\":\"fixture-icon\",\"isMembershipLimitedToOwners\":false,\"memberSettings\":{\"allowAddRemoveApps\":true,\"allowCreatePrivateChannels\":true,\"allowCreateUpdateChannels\":true,\"allowCreateUpdateRemoveConnectors\":true,\"allowCreateUpdateRemoveTabs\":true,\"allowDeleteChannels\":false,\"uploadCustomApp\":true},\"messagingSettings\":{\"allowChannelMentions\":false,\"allowOwnerDeleteMessages\":true,\"allowTeamMentions\":true,\"allowUserDeleteMessages\":false,\"allowUserEditMessages\":true},\"ownerUserObjectId\":\"fixture-owner\",\"publishedBy\":\"fixture-publisher\",\"shortDescription\":\"Summary\",\"specialization\":\"fixture-specialization\",\"templateId\":\"fixture-id\",\"uri\":\"fixture-uri\",\"visibility\":\"Private\"}")},
 	}
-	var artifact struct {
-		Version string             `json:"baseline_version"`
-		Cases   []modelObservation `json:"cases"`
-	}
-	if json.Unmarshal(raw, &artifact) != nil || artifact.Version != "8.1.0" {
-		t.Fatal("pinned model observations unavailable")
-	}
-	return artifact.Cases
 }
 
 func equalJSON(t *testing.T, expected, actual []byte) {
 	t.Helper()
 	var want, got any
 	if json.Unmarshal(expected, &want) != nil || json.Unmarshal(actual, &got) != nil || !reflect.DeepEqual(want, got) {
-		t.Fatal("JSON differs from pinned observation; no values printed")
+		t.Fatal("JSON differs from expected local value; no values printed")
 	}
 }
 
-func TestNewDefinition(t *testing.T) {
+func TestUnitNewDefinition(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, display, short string
@@ -68,10 +68,10 @@ func TestNewDefinition(t *testing.T) {
 	}
 }
 
-func TestDefinitionMatchesPinnedModelObservations(t *testing.T) {
+func TestUnitDefinitionSerializationVectors(t *testing.T) {
 	t.Parallel()
 	selected := 0
-	for _, fixture := range modelObservations(t) {
+	for _, fixture := range definitionCases() {
 		if !strings.HasPrefix(fixture.Name, "template-json-") && !strings.HasPrefix(fixture.Name, "template-expanded-") {
 			continue
 		}
@@ -87,7 +87,7 @@ func TestDefinitionMatchesPinnedModelObservations(t *testing.T) {
 				var err error
 				value, err = template.ParseDefinition([]byte(input))
 				if err != nil {
-					t.Fatal("Go Body parser rejected captured model input")
+					t.Fatal("Go Body parser rejected model input")
 				}
 			} else {
 				definition, err := template.NewDefinition("Fixture", "Fixture summary")
@@ -109,11 +109,11 @@ func TestDefinitionMatchesPinnedModelObservations(t *testing.T) {
 		})
 	}
 	if selected < 12 {
-		t.Fatal("expected template observations disappeared")
+		t.Fatal("expected template vectors disappeared")
 	}
 }
 
-func TestParseDefinitionRejectsNonObjectsAndResetsReceiver(t *testing.T) {
+func TestUnitParseDefinitionRejectsNonObjectsAndResetsReceiver(t *testing.T) {
 	t.Parallel()
 	for _, raw := range []string{"", "null", "[]", "true", `"text"`, "{"} {
 		t.Run("invalid "+raw, func(t *testing.T) {

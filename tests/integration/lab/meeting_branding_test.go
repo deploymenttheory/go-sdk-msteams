@@ -76,9 +76,9 @@ func brandingOracle(t *testing.T, ctx context.Context, tenant string) brandingOb
 	return value
 }
 
-// TestLabMeetingBrandingReadOnly never edits Global, creates assets or grants a
+// TestAccMeetingBrandingReadOnly never edits Global, creates assets or grants a
 // policy. Tenant writes and effective assignments need separate acceptance.
-func TestLabMeetingBrandingReadOnly(t *testing.T) {
+func TestAccMeetingBrandingReadOnly(t *testing.T) {
 	cfg, err := lab.Load()
 	if err != nil {
 		t.Fatal("invalid lab enablement")
@@ -93,6 +93,7 @@ func TestLabMeetingBrandingReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "meeting_branding", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -100,7 +101,8 @@ func TestLabMeetingBrandingReadOnly(t *testing.T) {
 		}
 		t.Fatalf("branding Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "meeting_branding", "list", listResponse, nil)
 	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !reflect.DeepEqual(value.RawFields, listed[0].RawFields) {
 		t.Fatal("branding Global read/list observations differ")
 	}
@@ -124,7 +126,7 @@ func TestLabMeetingBrandingReadOnly(t *testing.T) {
 	t.Log("selected branding reads verified; persistence, Premium effects and assignments remain separately qualified")
 }
 
-func TestBrandingOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
+func TestUnitBrandingOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	settings := `{"DefaultTheme":null,"EnableMeetingOptionsThemeOverride":null,"EnableMeetingOptionsBrandedReactionsOverride":false,"EnableNdiAssuranceSlate":false,"EnableMeetingBackgroundImages":false,"RequireBackgroundEffect":null}`

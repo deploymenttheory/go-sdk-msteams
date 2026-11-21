@@ -3,26 +3,24 @@ package teamscustombannertext_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/banner-text-provider.json"
+const source = "msteams/teams_admin_api/teams_custom_banner_text/testdata/list.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/CustomBannerText"
 const relative = "01234567-89ab-cdef-0123-456789abcdef"
 const item = collection + "/configuration/Global/" + relative
 
-const binderSource = "contracts/endpoints/8.1.0/fixtures/banner-text-binding.json"
-const getCommand = "Get-CsTeamsCustomBannerText"
+const binderSource = "msteams/teams_admin_api/teams_custom_banner_text/testdata/list.json"
 const newCommand = "New-CsTeamsCustomBannerText"
 const setCommand = "Set-CsTeamsCustomBannerText"
 const deleteCommand = "Remove-CsTeamsCustomBannerText"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Selector, Identity, ID, Input, Response string
 	Status                                                   int
 	ForceMode                                                int    `json:"force_mode"`
@@ -30,31 +28,726 @@ type capture struct {
 	Observed                                                 struct {
 		Identity string `json:"normalized_identity"`
 		Request  struct {
-			Method, Url, Body, CmdletName   string
-			FailureType                     *string
-			Sends, TokenRequests            int
-			CorrelationIsGuid, HasTargetUri bool
-			MpaCmdlet                       string
-		} `json:"capture"`
+			Method, Url, Body, CmdletName string
+			FailureType                   *string
+		} `json:"request"`
 	} `json:"observed"`
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, err := os.ReadFile("../../../" + source)
-	if err != nil {
-		t.Fatal(err)
+
+	fixture := struct{ Cases []inputVectors }{
+		Cases: []inputVectors{
+			{
+				Name:      "read-identity",
+				Operation: "read",
+				Selector:  "identity",
+				Identity:  "Global/01234567-89ab-cdef-0123-456789abcdef",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "GET",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						CmdletName: "Get-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "read-relative",
+				Operation: "read",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "GET",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						CmdletName: "Get-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "read-extra-slash",
+				Operation: "read",
+				Selector:  "identity",
+				Identity:  "scope /01234567-89ab-cdef-0123-456789abcdef / Child",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "scope /01234567-89ab-cdef-0123-456789abcdef / Child",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "GET",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/scope%20/01234567-89ab-cdef-0123-456789abcdef%20%2F%20Child",
+						CmdletName: "Get-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "list",
+				Operation: "list",
+				Selector:  "default",
+				Identity:  "",
+				ID:        "",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "GET",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+						CmdletName: "Get-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "create-identity",
+				Operation: "create",
+				Selector:  "identity",
+				Identity:  "Global/01234567-89ab-cdef-0123-456789abcdef",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Text\":\"fixture\",\"Description\":\"\"}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "POST",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+						Body:       "{\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\",\n  \"Text\": \"fixture\",\n  \"Description\": \"\",\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\"\n}",
+						CmdletName: "New-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "create-default-id",
+				Operation: "create",
+				Selector:  "default",
+				Identity:  "",
+				ID:        "",
+				Input:     "{\"Text\":\"fixture\"}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/b735f90d-0946-4b90-8e45-56ab483a0b08",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "POST",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+						Body:       "{\n  \"Text\": \"fixture\",\n  \"Identity\": \"Global/b735f90d-0946-4b90-8e45-56ab483a0b08\"\n}",
+						CmdletName: "New-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "create-relative",
+				Operation: "create",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Text\":\"fixture\",\"Description\":\"\"}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "POST",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+						Body:       "{\n  \"Id\": null,\n  \"Text\": \"fixture\",\n  \"Description\": \"\",\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\"\n}",
+						CmdletName: "New-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "create-identity-force",
+				Operation: "create",
+				Selector:  "identity",
+				Identity:  "Global/01234567-89ab-cdef-0123-456789abcdef",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Text\":\"fixture\"}",
+
+				Status:    400,
+				ForceMode: 0,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "POST",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+						Body:       "{\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\",\n  \"Text\": \"fixture\",\n  \"Force\": \"False\",\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\"\n}",
+						CmdletName: "New-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "create-relative-force",
+				Operation: "create",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Text\":\"fixture\"}",
+
+				Status:    400,
+				ForceMode: 1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "POST",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+						Body:       "{\n  \"Id\": null,\n  \"Text\": \"fixture\",\n  \"Force\": \"True\",\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\"\n}",
+						CmdletName: "New-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "create-relative-missing-text",
+				Operation: "create",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						FailureType: new("System.ArgumentNullException"),
+					},
+				},
+			},
+			{
+				Name:      "create-identity-description-null",
+				Operation: "create",
+				Selector:  "identity",
+				Identity:  "Global/01234567-89ab-cdef-0123-456789abcdef",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Text\":\"fixture\",\"Description\":null}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "POST",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+						Body:       "{\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\",\n  \"Text\": \"fixture\",\n  \"Description\": null,\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\"\n}",
+						CmdletName: "New-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "patch-identity",
+				Operation: "patch",
+				Selector:  "identity",
+				Identity:  "Global/01234567-89ab-cdef-0123-456789abcdef",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Text\":\"\",\"Description\":null}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "PATCH",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						Body:       "{\n  \"Identity\": \"read-model-identity\",\n  \"Text\": \"\",\n  \"Description\": null\n}",
+						CmdletName: "Set-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "patch-relative",
+				Operation: "patch",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Text\":\"\",\"Description\":null}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "PATCH",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						Body:       "{\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n  \"Text\": \"\",\n  \"Description\": null\n}",
+						CmdletName: "Set-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "patch-relative-null-id",
+				Operation: "patch",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Description\":\"\"}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "PATCH",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						Body:       "{\n  \"Id\": null,\n  \"Description\": \"\"\n}",
+						CmdletName: "Set-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "patch-relative-description-only",
+				Operation: "patch",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Description\":\"\"}",
+
+				Status:    400,
+				ForceMode: 0,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "PATCH",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						Body:       "{\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n  \"Description\": \"\",\n  \"Force\": \"False\"\n}",
+						CmdletName: "Set-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "patch-identity-force",
+				Operation: "patch",
+				Selector:  "identity",
+				Identity:  "Global/01234567-89ab-cdef-0123-456789abcdef",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Description\":\"\"}",
+
+				Status:    400,
+				ForceMode: 1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "PATCH",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						Body:       "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"Force\": \"True\"\n}",
+						CmdletName: "Set-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "patch-text-null",
+				Operation: "patch",
+				Selector:  "identity",
+				Identity:  "Global/01234567-89ab-cdef-0123-456789abcdef",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{\"Text\":null}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						FailureType: new("System.ArgumentNullException"),
+					},
+				},
+			},
+			{
+				Name:      "delete-identity",
+				Operation: "delete",
+				Selector:  "identity",
+				Identity:  "Global/01234567-89ab-cdef-0123-456789abcdef",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "DELETE",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						Body:       "{\n  \"Identity\": \"Global/01234567-89ab-cdef-0123-456789abcdef\"\n}",
+						CmdletName: "Remove-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "delete-relative",
+				Operation: "delete",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "DELETE",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						Body:       "{\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\"\n}",
+						CmdletName: "Remove-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "delete-relative-force",
+				Operation: "delete",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: 0,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "DELETE",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						Body:       "{\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n  \"Force\": \"False\"\n}",
+						CmdletName: "Remove-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "read-null",
+				Operation: "read",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "GET",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						CmdletName: "Get-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "read-empty",
+				Operation: "read",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:     "GET",
+						Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						CmdletName: "Get-CsTeamsCustomBannerText",
+					},
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Selector:  "default",
+				Identity:  "",
+				ID:        "",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:      "GET",
+						Url:         "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText",
+						CmdletName:  "Get-CsTeamsCustomBannerText",
+						FailureType: new("Newtonsoft.Json.JsonSerializationException"),
+					},
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Selector:  "relative",
+				Identity:  "",
+				ID:        "01234567-89ab-cdef-0123-456789abcdef",
+				Input:     "{}",
+
+				Status:    400,
+				ForceMode: -1,
+				ReadID:    "01234567-89ab-cdef-0123-456789abcdef",
+				Observed: struct {
+					Identity string `json:"normalized_identity"`
+					Request  struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					} `json:"request"`
+				}{
+					Identity: "Global/01234567-89ab-cdef-0123-456789abcdef",
+					Request: struct {
+						Method, Url, Body, CmdletName string
+						FailureType                   *string
+					}{
+						Method:      "GET",
+						Url:         "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/CustomBannerText/configuration/Global/01234567-89ab-cdef-0123-456789abcdef",
+						CmdletName:  "Get-CsTeamsCustomBannerText",
+						FailureType: new("Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException"),
+					},
+				},
+			},
+		},
 	}
-	var fixture struct{ Cases []capture }
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 24 {
-		t.Fatal("invalid banner provider fixture")
-	}
-	for _, c := range fixture.Cases {
-		v := c.Observed.Request
-		if v.TokenRequests != 0 || (v.Sends != 0 && (v.Sends != 1 || !v.CorrelationIsGuid || v.HasTargetUri || v.MpaCmdlet != "true")) {
-			t.Fatal("unsafe/incomplete banner fixture")
-		}
-	}
+
 	return fixture.Cases
 }
 
@@ -85,24 +778,4 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("banner contract %s differs: %v %+v", c.Name, e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("banner-text-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("banner evidence write failed")
-	}
 }

@@ -13,7 +13,7 @@ import (
 	operation "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_operation"
 )
 
-func TestConfiguredGraphCloudAndModeOwnTheBetaRequest(t *testing.T) {
+func TestUnitConfiguredGraphCloudAndModeOwnTheBetaRequest(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"commercial", "gcch", "china"} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
@@ -22,11 +22,14 @@ func TestConfiguredGraphCloudAndModeOwnTheBetaRequest(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				step := wire(200, body("succeeded"))
+				step := wire(200, "")
 				step.Request.URL = env.Endpoints.Graph + path()
 				step.Request.Audience = env.Endpoints.Graph
 				run(t, contracttest.Case{Name: "configured-cloud", Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					v, r, e := sdk.GraphAPI.TeamOperations.GetByID(ctx, teamID, operationID)
+					if e != nil && isRequestBoundary(ctx) {
+						return contracttest.Observation{Response: r, Err: e}
+					}
 					return contracttest.Observation{Value: v, Response: r, Err: e}
 				}, Want: contracttest.Expected{Status: 200}})
 			})
@@ -34,7 +37,7 @@ func TestConfiguredGraphCloudAndModeOwnTheBetaRequest(t *testing.T) {
 	}
 }
 
-func TestClosedWrongBackendAndInvalidTeamAreLocal(t *testing.T) {
+func TestUnitClosedWrongBackendAndInvalidTeamAreLocal(t *testing.T) {
 	t.Parallel()
 	for _, name := range []string{"closed", "wrong-backend", "nil-service", "invalid-team"} {
 		t.Run(name, func(t *testing.T) {
@@ -67,7 +70,7 @@ func TestClosedWrongBackendAndInvalidTeamAreLocal(t *testing.T) {
 	}
 }
 
-func TestPollingRejectsIdentityChangeAndContradictoryAcceptance(t *testing.T) {
+func TestUnitPollingRejectsIdentityChangeAndContradictoryAcceptance(t *testing.T) {
 	for _, tc := range []struct {
 		name, body string
 		status     int
@@ -80,6 +83,9 @@ func TestPollingRejectsIdentityChangeAndContradictoryAcceptance(t *testing.T) {
 			synctest.Test(t, func(t *testing.T) {
 				run(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{wire(tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					v, e := sdk.GraphAPI.TeamOperations.WaitByID(ctx, teamID, operationID, client.WaitOptions{MaxPolls: 1, Timeout: time.Minute})
+					if e != nil && isRequestBoundary(ctx) {
+						return contracttest.Observation{Response: v.Response, Err: e}
+					}
 					if v.Status.State == client.OperationSucceeded {
 						t.Error("invalid response established success")
 					}

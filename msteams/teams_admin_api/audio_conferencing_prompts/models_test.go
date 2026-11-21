@@ -3,7 +3,6 @@ package audioconferencingprompts
 import (
 	"encoding/json"
 	"errors"
-	"os"
 	"reflect"
 	"testing"
 
@@ -12,7 +11,6 @@ import (
 
 const fixtureID = "11111111-1111-1111-1111-111111111111"
 const secondID = "22222222-2222-2222-2222-222222222222"
-const modelSource = "../../../contracts/endpoints/8.1.0/fixtures/audio-conferencing-prompts-models.json"
 
 type observation struct {
 	Failure *string         `json:"failure"`
@@ -37,7 +35,7 @@ func readModels(t *testing.T) struct {
 	Lists []modelCase
 } {
 	t.Helper()
-	var v struct {
+	v := struct {
 		Models       []modelCase
 		Constructors []struct {
 			Kind, Name, ID, Locale string
@@ -48,14 +46,688 @@ func readModels(t *testing.T) struct {
 			Observation            observation
 		}
 		Lists []modelCase
+	}{
+		Models: []modelCase{
+			{
+				Kind:  "configuration",
+				Input: "constructor",
+				Observation: observation{
+					Value: json.RawMessage("{\"Identity\":null,\"Packages\":[],\"Prompts\":[]}"),
+				},
+			},
+			{
+				Kind:  "configuration",
+				Input: "{}",
+				Observation: observation{
+					Value: json.RawMessage("{\"Identity\":null,\"Packages\":[],\"Prompts\":[]}"),
+				},
+			},
+			{
+				Kind:  "configuration",
+				Input: "{\"Identity\":null,\"Prompts\":null,\"Packages\":null}",
+				Observation: observation{
+					Value: json.RawMessage("{\"Identity\":null,\"Packages\":[],\"Prompts\":[]}"),
+				},
+			},
+			{
+				Kind:  "configuration",
+				Input: "{\"Prompts\":[null],\"Packages\":[null]}",
+				Observation: observation{
+					Value: json.RawMessage("{\"Identity\":null,\"Packages\":[null],\"Prompts\":[null]}"),
+				},
+			},
+			{
+				Kind:  "configuration",
+				Input: "{\"Prompts\":[{}],\"prompts\":[{}],\"Packages\":[{}],\"Packages\":[{}]}",
+				Observation: observation{
+					Value: json.RawMessage("{\"Identity\":null,\"Packages\":[{\"DefaultLocale\":null,\"Id\":null,\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":null,\"Id\":null,\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}],\"Prompts\":[{\"AudioPrompt\":null,\"Id\":null,\"Identity\":null,\"Locale\":null,\"Name\":null,\"TextPrompt\":null,\"Type\":null},{\"AudioPrompt\":null,\"Id\":null,\"Identity\":null,\"Locale\":null,\"Name\":null,\"TextPrompt\":null,\"Type\":null}]}"),
+				},
+			},
+			{
+				Kind:  "configuration",
+				Input: "{\"Prompts\":{\"Id\":\"bad-envelope\"}}",
+				Observation: observation{
+					Failure: new("Newtonsoft.Json.JsonSerializationException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "configuration",
+				Input: "{\"Prompts\":[{\"Id\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\"}]}",
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "configuration",
+				Input: "{\"Future\":false}",
+				Observation: observation{
+					Value: json.RawMessage("{\"Identity\":null,\"Packages\":[],\"Prompts\":[]}"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "constructor",
+				Observation: observation{
+					Value: json.RawMessage("{\"AudioPrompt\":null,\"Id\":null,\"Identity\":null,\"Locale\":null,\"Name\":null,\"TextPrompt\":null,\"Type\":null}"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{}",
+				Observation: observation{
+					Value: json.RawMessage("{\"AudioPrompt\":null,\"Id\":null,\"Identity\":null,\"Locale\":null,\"Name\":null,\"TextPrompt\":null,\"Type\":null}"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Identity\":null,\"Name\":null,\"AudioPrompt\":null,\"TextPrompt\":null}",
+				Observation: observation{
+					Value: json.RawMessage("{\"AudioPrompt\":null,\"Id\":null,\"Identity\":null,\"Locale\":null,\"Name\":null,\"TextPrompt\":null,\"Type\":null}"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Id\":null}",
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Type\":null}",
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Locale\":null}",
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Id\":\"\"}",
+				Observation: observation{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Id\":\"future-id\"}",
+				Observation: observation{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Id\":\"11111111-1111-1111-1111-111111111111\"}",
+				Observation: observation{
+					Value: json.RawMessage("{\"AudioPrompt\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":null,\"Locale\":null,\"Name\":null,\"TextPrompt\":null,\"Type\":null}"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Id\":\"ABCDEF12-1234-1234-1234-123456789ABC\"}",
+				Observation: observation{
+					Value: json.RawMessage("{\"AudioPrompt\":null,\"Id\":\"ABCDEF12-1234-1234-1234-123456789ABC\",\"Identity\":null,\"Locale\":null,\"Name\":null,\"TextPrompt\":null,\"Type\":null}"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Id\":\"11111111-1111-1111-1111-111111111111\\n\"}",
+				Observation: observation{
+					Value: json.RawMessage("{\"AudioPrompt\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\\n\",\"Identity\":null,\"Locale\":null,\"Name\":null,\"TextPrompt\":null,\"Type\":null}"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Id\":\"11111111-1111-1111-1111-111111111111\\r\\n\"}",
+				Observation: observation{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Id\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\"}",
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "prompt",
+				Input: "{\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Type\":\"\",\"Locale\":\"future-locale\",\"Name\":\"\",\"AudioPrompt\":\"\",\"TextPrompt\":\"\"}",
+				Observation: observation{
+					Value: json.RawMessage("{\"AudioPrompt\":\"\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":null,\"Locale\":\"future-locale\",\"Name\":\"\",\"TextPrompt\":\"\",\"Type\":\"\"}"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "constructor",
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":null,\"Id\":null,\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{}",
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":null,\"Id\":null,\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"Id\":null}",
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"Id\":\"\"}",
+				Observation: observation{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"Id\":\"future-id\"}",
+				Observation: observation{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"Id\":\"11111111-1111-1111-1111-111111111111\"}",
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"Id\":\"11111111-1111-1111-1111-111111111111\\n\"}",
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\\n\",\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"DefaultLocale\":null}",
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"DefaultLocale\":\"\"}",
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":\"\",\"Id\":null,\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"DefaultLocale\":\"future-locale\",\"Name\":null}",
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":\"future-locale\",\"Id\":null,\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"InboundStartRecordingPrompt\":null,\"InboundEndRecordingPrompt\":null,\"OutboundStartRecordingPrompt\":null,\"OutboundEndRecordingPrompt\":null,\"MeetingStartRecordingPrompt\":null,\"MeetingEndRecordingPrompt\":null}",
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":null,\"Id\":null,\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"InboundStartRecordingPrompt\":[\"a\",\"a\",null,\"\"],\"inboundStartRecordingPrompt\":[\"b\"]}",
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":null,\"Id\":null,\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[\"a\",\"a\",null,\"\",\"b\"],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"InboundStartRecordingPrompt\":{}}",
+				Observation: observation{
+					Failure: new("Newtonsoft.Json.JsonSerializationException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+			{
+				Kind:  "package",
+				Input: "{\"Id\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\"}",
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+		},
+		Constructors: []struct {
+			Kind, Name, ID, Locale string
+			TypeOrLocale           string `json:"type_or_locale"`
+			NullID                 bool   `json:"null_id"`
+			NullTypeOrLocale       bool   `json:"null_type_or_locale"`
+			NullLocale             bool   `json:"null_locale"`
+			Observation            observation
+		}{
+
+			{
+				Kind:             "prompt",
+				Name:             "valid",
+				ID:               "11111111-1111-1111-1111-111111111111",
+				Locale:           "xx-future",
+				TypeOrLocale:     "FutureType",
+				NullID:           false,
+				NullTypeOrLocale: false,
+				NullLocale:       false,
+				Observation: observation{
+					Value: json.RawMessage("{\"AudioPrompt\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":null,\"Locale\":\"xx-future\",\"Name\":null,\"TextPrompt\":null,\"Type\":\"FutureType\"}"),
+				},
+			},
+
+			{
+				Kind:             "prompt",
+				Name:             "empty-fields",
+				ID:               "11111111-1111-1111-1111-111111111111",
+				Locale:           "",
+				TypeOrLocale:     "",
+				NullID:           false,
+				NullTypeOrLocale: false,
+				NullLocale:       false,
+				Observation: observation{
+					Value: json.RawMessage("{\"AudioPrompt\":null,\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":null,\"Locale\":\"\",\"Name\":null,\"TextPrompt\":null,\"Type\":\"\"}"),
+				},
+			},
+
+			{
+				Kind:             "prompt",
+				Name:             "null-id",
+				ID:               "",
+				Locale:           "xx-future",
+				TypeOrLocale:     "FutureType",
+				NullID:           true,
+				NullTypeOrLocale: false,
+				NullLocale:       false,
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+
+			{
+				Kind:             "prompt",
+				Name:             "invalid-id",
+				ID:               "future-id",
+				Locale:           "xx-future",
+				TypeOrLocale:     "FutureType",
+				NullID:           false,
+				NullTypeOrLocale: false,
+				NullLocale:       false,
+				Observation: observation{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+
+			{
+				Kind:             "prompt",
+				Name:             "null-type-or-default-locale",
+				ID:               "11111111-1111-1111-1111-111111111111",
+				Locale:           "xx-future",
+				TypeOrLocale:     "",
+				NullID:           false,
+				NullTypeOrLocale: true,
+				NullLocale:       false,
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+
+			{
+				Kind:             "prompt",
+				Name:             "null-locale",
+				ID:               "11111111-1111-1111-1111-111111111111",
+				Locale:           "",
+				TypeOrLocale:     "FutureType",
+				NullID:           false,
+				NullTypeOrLocale: false,
+				NullLocale:       true,
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+
+			{
+				Kind:             "package",
+				Name:             "valid",
+				ID:               "11111111-1111-1111-1111-111111111111",
+				Locale:           "xx-future",
+				TypeOrLocale:     "FutureType",
+				NullID:           false,
+				NullTypeOrLocale: false,
+				NullLocale:       false,
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":\"FutureType\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+
+			{
+				Kind:             "package",
+				Name:             "empty-fields",
+				ID:               "11111111-1111-1111-1111-111111111111",
+				Locale:           "",
+				TypeOrLocale:     "",
+				NullID:           false,
+				NullTypeOrLocale: false,
+				NullLocale:       false,
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":\"\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+
+			{
+				Kind:             "package",
+				Name:             "null-id",
+				ID:               "",
+				Locale:           "xx-future",
+				TypeOrLocale:     "FutureType",
+				NullID:           true,
+				NullTypeOrLocale: false,
+				NullLocale:       false,
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+
+			{
+				Kind:             "package",
+				Name:             "invalid-id",
+				ID:               "future-id",
+				Locale:           "xx-future",
+				TypeOrLocale:     "FutureType",
+				NullID:           false,
+				NullTypeOrLocale: false,
+				NullLocale:       false,
+				Observation: observation{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+
+			{
+				Kind:             "package",
+				Name:             "null-type-or-default-locale",
+				ID:               "11111111-1111-1111-1111-111111111111",
+				Locale:           "xx-future",
+				TypeOrLocale:     "",
+				NullID:           false,
+				NullTypeOrLocale: true,
+				NullLocale:       false,
+				Observation: observation{
+					Failure: new("System.ArgumentNullException"),
+					Value:   json.RawMessage("null"),
+				},
+			},
+
+			{
+				Kind:             "package",
+				Name:             "null-locale",
+				ID:               "11111111-1111-1111-1111-111111111111",
+				Locale:           "",
+				TypeOrLocale:     "FutureType",
+				NullID:           false,
+				NullTypeOrLocale: false,
+				NullLocale:       true,
+				Observation: observation{
+					Value: json.RawMessage("{\"DefaultLocale\":\"FutureType\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":null,\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":null,\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}"),
+				},
+			},
+		},
+		Lists: []modelCase{
+			{
+				Kind: "prompt",
+				Name: "null",
+				Observation: observation{
+					Values: json.RawMessage("[]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "empty-operators",
+				Observation: observation{
+					Values: json.RawMessage("[]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "replace-duplicates",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "replace-null",
+				Observation: observation{
+					Values: json.RawMessage("[null]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "remove-one",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "remove-two",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "add-existing",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "add-null",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},null]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "remove-null",
+				Observation: observation{
+					Failure: new("System.NullReferenceException"),
+					Values:  json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "remove-and-add",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "remove-from-empty",
+				Observation: observation{
+					Values: json.RawMessage("[]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "null-existing",
+				Observation: observation{
+					Failure: new("System.NullReferenceException"),
+					Values:  json.RawMessage("[null,{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "identity-ignored",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "different-Id",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "different-Name",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "different-AudioPrompt",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "different-TextPrompt",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "different-Type",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "prompt",
+				Name: "different-Locale",
+				Observation: observation{
+					Values: json.RawMessage("[{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"a\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"},{\"AudioPrompt\":\"audio\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"Locale\":\"xx-future\",\"Name\":\"b\",\"TextPrompt\":\"text\",\"Type\":\"FutureType\"}]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "null",
+				Observation: observation{
+					Values: json.RawMessage("[]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "empty-operators",
+				Observation: observation{
+					Values: json.RawMessage("[]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "replace-duplicates",
+				Observation: observation{
+					Values: json.RawMessage("[{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"b\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"b\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "replace-null",
+				Observation: observation{
+					Values: json.RawMessage("[null]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "remove-one",
+				Observation: observation{
+					Failure: new("System.ArgumentException"),
+					Values:  json.RawMessage("[{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"b\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "remove-two",
+				Observation: observation{
+					Failure: new("System.ArgumentException"),
+					Values:  json.RawMessage("[{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"b\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "add-existing",
+				Observation: observation{
+					Values: json.RawMessage("[{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"b\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "add-null",
+				Observation: observation{
+					Values: json.RawMessage("[{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"b\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},null]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "remove-null",
+				Observation: observation{
+					Failure: new("System.ArgumentException"),
+					Values:  json.RawMessage("[{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"b\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "remove-and-add",
+				Observation: observation{
+					Failure: new("System.ArgumentException"),
+					Values:  json.RawMessage("[{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"b\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "remove-from-empty",
+				Observation: observation{
+					Values: json.RawMessage("[]"),
+				},
+			},
+			{
+				Kind: "package",
+				Name: "null-existing",
+				Observation: observation{
+					Failure: new("System.ArgumentException"),
+					Values:  json.RawMessage("[null,{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"a\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]},{\"DefaultLocale\":\"xx-future\",\"Id\":\"11111111-1111-1111-1111-111111111111\",\"Identity\":\"ignored\",\"InboundEndRecordingPrompt\":[],\"InboundStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"Name\":\"b\",\"OutboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[]}]"),
+				},
+			},
+		},
 	}
-	raw, e := os.ReadFile(modelSource)
-	if e != nil {
-		t.Fatal(e)
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Models) != 36 || len(v.Constructors) != 12 || len(v.Lists) != 31 {
-		t.Fatal("incomplete pinned models")
-	}
+
 	return v
 }
 func equalJSON(t *testing.T, got any, want json.RawMessage) {
@@ -72,7 +744,7 @@ func equalJSON(t *testing.T, got any, want json.RawMessage) {
 func configurationDTO(v *Configuration) map[string]any {
 	return map[string]any{"Identity": v.Identity, "Prompts": project(v.Prompts, promptDTO), "Packages": project(v.Packages, packageDTO)}
 }
-func TestPinnedPromptModels(t *testing.T) {
+func TestUnitTypedPromptModels(t *testing.T) {
 	for i, c := range readModels(t).Models {
 		t.Run(c.Kind+"/"+c.Input, func(t *testing.T) {
 			var got any
@@ -112,11 +784,11 @@ func TestPinnedPromptModels(t *testing.T) {
 		})
 	}
 }
-func TestPinnedPromptConstructors(t *testing.T) {
+func TestUnitTypedPromptConstructors(t *testing.T) {
 	for _, c := range readModels(t).Constructors {
 		t.Run(c.Kind+"/"+c.Name, func(t *testing.T) {
 			if c.NullID || c.NullTypeOrLocale || c.Kind == "prompt" && c.NullLocale {
-				// These null arguments cannot be represented by the native string API.
+
 				if c.Observation.Failure == nil {
 					t.Fatal("pinned null constructor unexpectedly succeeds")
 				}
@@ -196,7 +868,7 @@ func packageCase(name string, removed, other *PromptPackage) *PackageEdit {
 		return ChangePackages(nil, []*PromptPackage{removed})
 	}
 }
-func TestPinnedPromptAndPackageEdits(t *testing.T) {
+func TestUnitTypedPromptAndPackageEdits(t *testing.T) {
 	for _, c := range readModels(t).Lists {
 		t.Run(c.Kind+"/"+c.Name, func(t *testing.T) {
 			var got any
@@ -262,7 +934,7 @@ func TestPinnedPromptAndPackageEdits(t *testing.T) {
 		})
 	}
 }
-func TestEditsOwnNestedDataAndRawSnapshots(t *testing.T) {
+func TestUnitEditsOwnNestedDataAndRawSnapshots(t *testing.T) {
 	raw := []byte(`{"Id":"11111111-1111-1111-1111-111111111111","InboundStartRecordingPrompt":["first",null],"Future":{"keep":false}}`)
 	var v PromptPackage
 	if json.Unmarshal(raw, &v) != nil {
@@ -301,7 +973,7 @@ func TestEditsOwnNestedDataAndRawSnapshots(t *testing.T) {
 		t.Fatal("zero edit accepted")
 	}
 }
-func TestRawDuplicatesAndTypedArraysStayIndependent(t *testing.T) {
+func TestUnitRawDuplicatesAndTypedArraysStayIndependent(t *testing.T) {
 	raw := []byte(`{"Prompts":[{}],"prompts":[{}],"Packages":[{"InboundStartRecordingPrompt":["a"],"InboundStartRecordingPrompt":["b"]}],"Future":false}`)
 	original := append([]byte(nil), raw...)
 	var v Configuration

@@ -14,11 +14,11 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_packages"
 )
 
-func TestPackageDocumentedApplicationRestrictionBeforeCredentials(t *testing.T) {
+func TestUnitPackageDocumentedApplicationRestrictionBeforeCredentials(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, cloud := range []string{"commercial", "gcc", "gcch", "dod"} {
-		c := contracttest.Case{Name: "application-mode-" + cloud, Mode: auth.Application, Cloud: cloud, Source: "contracts/endpoints/8.1.0/fixtures/policy-package-mode.json", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		c := contracttest.Case{Name: "application-mode-" + cloud, Mode: auth.Application, Cloud: cloud, Source: "msteams/teams_admin_api/policy_packages/failure_test.go", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			for _, name := range []string{"list", "get", "user-get", "user-recommendations", "create", "update", "delete", "group-assign", "user-grant", "batch-grant"} {
 				o := invoke(name, ctx, sdk)
 				if !errors.Is(o.Err, client.ErrAuthenticationMode) || o.Response != nil {
@@ -27,14 +27,13 @@ func TestPackageDocumentedApplicationRestrictionBeforeCredentials(t *testing.T) 
 			}
 			return contracttest.Observation{}
 		}}
-		results = append(results, run(t, c))
+		run(t, c)
 	}
-	evidence(t, results)
 }
 
-func TestPackageInputContextAndBackendBeforeCredentials(t *testing.T) {
+func TestUnitPackageInputContextAndBackendBeforeCredentials(t *testing.T) {
 	t.Parallel()
-	r := run(t, contracttest.Case{Name: "input-context-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "input-context-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.PolicyPackages
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nid"} {
 			if _, _, e := s.GetByName(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -77,20 +76,19 @@ func TestPackageInputContextAndBackendBeforeCredentials(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{r})
 }
 
-func TestPackageMutationErrorsKeepDataAndNeverReplay(t *testing.T) {
+func TestUnitPackageMutationErrorsKeepDataAndNeverReplay(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, row := range captures(t) {
+
+	for _, row := range requestCases() {
 		if row.Name != "create" && row.Name != "update" && row.Name != "delete" && row.Name != "group-assign" && row.Name != "user-grant" && row.Name != "batch-grant" {
 			continue
 		}
 		for _, status := range []int{401, 403, 429, 503} {
 			f := row
 			f.Status, f.Reply = status, `{"ResponseMessage":"fixture-private"}`
-			c := contracttest.Case{Name: fmt.Sprintf("%s-denial-%d", f.Name, status), Mappings: mapping(f.Name), Steps: []contracttest.Exchange{discovery(), wire(f, mapping(f.Name)[0].Command)}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c := contracttest.Case{Name: fmt.Sprintf("%s-denial-%d", f.Name, status), Mappings: mapping(f.Name), Steps: []contracttest.Exchange{discovery(t), wire(f, mapping(f.Name)[0].Command)}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				o := invoke(f.Name, ctx, sdk)
 				if o.Err == nil || strings.Contains(fmt.Sprintf("%v %#v", o.Err, o.Err), "fixture-private") {
 					o.Err = errors.New("denial lost or leaked a business message")
@@ -107,15 +105,14 @@ func TestPackageMutationErrorsKeepDataAndNeverReplay(t *testing.T) {
 				}
 				return o
 			}}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }
 
-func TestPackageDiscoveryFailureIsNotBusinessResponse(t *testing.T) {
+func TestUnitPackageDiscoveryFailureIsNotBusinessResponse(t *testing.T) {
 	t.Parallel()
-	step := discovery()
+	step := discovery(t)
 	step.Reply.Status = 403
 	step.Reply.Body = []byte(`{"ResponseMessage":"fixture-not-business"}`)
 	c := contracttest.Case{Name: "discovery-denial", Steps: []contracttest.Exchange{step}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -125,15 +122,15 @@ func TestPackageDiscoveryFailureIsNotBusinessResponse(t *testing.T) {
 		}
 		return contracttest.Observation{Response: r, Err: e}
 	}}
-	evidence(t, []contracttest.Result{run(t, c)})
+	run(t, c)
 }
 
-func TestPackageGroupDefaultRankingsMatchExportedWrapper(t *testing.T) {
+func TestUnitPackageDefaultRankingRequest(t *testing.T) {
 	t.Parallel()
-	f := captured{Method: "POST", URL: origin + "/Teams.VerticalPackaging/package/group", Body: []byte(`{"GroupId":"fixture/group","PolicyRankings":[]}`), Status: 200, Reply: `{}`}
-	c := contracttest.Case{Name: "group-default-rankings", Source: "contracts/endpoints/8.1.0/fixtures/policy-package-binding.json", Mappings: mapping("group-assign"), Steps: []contracttest.Exchange{discovery(), wire(f, "Grant-CsGroupPolicyPackageAssignment")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	f := requestCase{Method: "POST", URL: origin + "/Teams.VerticalPackaging/package/group", Body: []byte(`{"GroupId":"fixture/group","PolicyRankings":[]}`), Status: 403}
+	c := contracttest.Case{Want: contracttest.Expected{Error: auth.ErrForbidden}, Name: "group-default-rankings", Source: "msteams/teams_admin_api/policy_packages/failure_test.go", Mappings: mapping("group-assign"), Steps: []contracttest.Exchange{discovery(t), wire(f, "Grant-CsGroupPolicyPackageAssignment")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.PolicyPackages.AssignGroup(ctx, resource.GroupAssignmentRequest{GroupID: "fixture/group"})
 		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}}
-	evidence(t, []contracttest.Result{run(t, c)})
+	run(t, c)
 }

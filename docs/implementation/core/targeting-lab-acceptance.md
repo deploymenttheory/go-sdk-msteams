@@ -6,11 +6,11 @@ token acquisition are not proofs of authorization or application eligibility.
 
 Both prepared cases require `MSTEAMS_LAB_READ_ONLY=1` and the existing private
 `MSTEAMS_LAB_IDENTITY_FILE`. Without opt-in they skip before reading credentials
-or fixture files. `TestLabTargetingPolicyReadOnly` reads Global and a local
+or fixture files. `TestAccTargetingPolicyReadOnly` reads Global and a local
 Global-filtered modern list; it changes no policy/assignment. It does not prove
 modern flight eligibility or unflighted TRPS parity.
 
-`TestLabTargetingHierarchyStatusReadOnly` additionally requires a 0600 non-symlink
+`TestAccTargetingHierarchyStatusReadOnly` additionally requires a 0600 non-symlink
 `MSTEAMS_LAB_HIERARCHY_STATUS_FILE`, containing private JSON `tenant_id`, explicit
 `api_version` (1 or 2), and `request_id`. Tenant must match the selected identity;
 v2 needs the canonical tenant GUID bound to that session. Blank request_id selects
@@ -30,8 +30,8 @@ prepared behavior, not a successful live or exported-command comparison.
 With those private variables explicitly set, select only the intended probe:
 
 ```sh
-go test -count=1 -run '^TestLabTargetingPolicyReadOnly$' ./tests/integration/lab
-go test -count=1 -run '^TestLabTargetingHierarchyStatusReadOnly$' ./tests/integration/lab
+go test -count=1 -run '^TestAccTargetingPolicyReadOnly$' ./tests/integration/lab
+go test -count=1 -run '^TestAccTargetingHierarchyStatusReadOnly$' ./tests/integration/lab
 ```
 
 Upload replaces active tenant-wide hierarchy data. Delete removes that singleton;

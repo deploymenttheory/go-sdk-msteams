@@ -13,7 +13,7 @@ not live tenant qualification. No tenant calls were made.
 call `UpdateByID`; promotion and demotion do not delete the membership. Microsoft
 documents all five operations on this resource. This supersedes the backing-group
 interpretation of `GraphAPI.TeamMembers` in the earlier
-[team wire evidence](team-wire-contract-evidence.md#crud-and-composition-boundary).
+[tests](../../../tests/integration/lab).
 [Resource](https://learn.microsoft.com/en-us/graph/api/resources/conversationmember?view=graph-rest-1.0)
 
 Keep `GraphAPI.GroupMembers` and `GraphAPI.GroupOwners` as separate **relationship**
