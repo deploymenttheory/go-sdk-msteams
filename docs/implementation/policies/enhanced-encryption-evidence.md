@@ -68,14 +68,22 @@ mapped helper. Public PassThru does not bind to the captured mapped grant
 function. Tenant helper Force is Boolean, but this public family exposes no
 Force parameter. No effective clear, polling or assignment guarantee follows.
 
-## Remaining implementation and qualification
+## Native implementation checkpoint and remaining qualification
 
-Implement native modern CRUD/list, explicit create/read-back partial results and
-user/tenant/group grants, all three typed settings, owned Xds projections, root
-wiring, exact mappings, source comparisons, context/input/failure/no-replay tests,
-compiling examples and gated read-only lab support. Keep metadata hints separate
-from proven runtime validation. Preserve generated acceptance statuses and source
-Rank omission versus explicit native priority without guessing server behavior.
+TeamsEnhancedEncryptionPolicies now has native modern CRUD/list, explicit
+create/read-back partial results and user/tenant/group grants, all three typed
+settings, owned Xds projections and root wiring. Initial race tests compare all
+17 generated request observations in synthetic application/delegated modes plus
+four modern filter cases; model tests preserve known/unknown values, owned raw
+snapshots and redacted formatting. Metadata hints remain separate from proven
+runtime validation. Group results retain generated acceptance statuses, and
+Assign distinguishes source Rank omission from explicit native priority.
+
+Before the implementation PR, finish direct source binder/wrapper comparisons,
+partial create/read-back and assignment/discovery failure coverage, no-replay and
+context/input guards, compiling examples/API docs, gated read-only lab support,
+full repository checks and reviewed sanitized artifacts. Exact ledger mappings
+remain in-progress/metadata-only; this checkpoint is not full qualification.
 
 No tenant reads/writes have run for this family. Successful authorization,
 server/cloud/flight availability, write/read-back/cleanup, legacy behavior and
