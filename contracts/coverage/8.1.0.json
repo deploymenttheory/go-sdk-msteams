@@ -4547,37 +4547,85 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/91/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/policy_packages_test.go",
+              "name": "TestLabPolicyPackagesReadOnly"
+            }
+          ]
         },
         {
           "name": "Get1",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/91/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.GetByName"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GetViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/91/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.GetByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPackageInputObjectVariantsUsePackageName"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.GetByName"
+          },
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "The configured dedicated-SPN identity is application mode. TestLabPolicyPackagesReadOnly verified documented local mode rejection before discovery/token acquisition and skipped delegated qualification because no private delegated context is configured. No package request, mutation or permission change ran.",
         "evidence": []
       },
       "exclusion": null
@@ -9133,15 +9181,30 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/197/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.GetForUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.GetForUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9165,15 +9228,30 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/198/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.RecommendationsForUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.RecommendationsForUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -11090,15 +11168,30 @@
         {
           "name": "RequiredPolicyList",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/225/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.AssignGroup"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -13505,15 +13598,30 @@
         {
           "name": "GrantExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/271/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.AssignUsers"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.AssignUsers"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -14722,15 +14830,30 @@
         {
           "name": "NewExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/290/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.SubmitBatch"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.SubmitBatch"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -14995,15 +15118,30 @@
         {
           "name": "RequiredPolicyList",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/296/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19912,22 +20050,51 @@
         {
           "name": "Remove",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/418/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.DeleteByName"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "RemoveViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/418/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPackageInputObjectVariantsUsePackageName"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.DeleteByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.DeleteByName"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -29752,15 +29919,30 @@
         {
           "name": "RequiredPolicyList",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/672/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service.go",
+              "name": "Service.Update"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_test.go",
+              "name": "TestPinnedPackageRequestsAndBusinessFailures"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_packages/service.go",
+            "name": "Service.Update"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
