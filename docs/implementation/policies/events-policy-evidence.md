@@ -62,14 +62,22 @@ Group 202 is accepted by the compiled helper and decoded as the policy model;
 raw HTTP/result metadata must remain available without inventing polling or
 effective assignment semantics.
 
-## Implementation and qualification remaining
+## Native implementation checkpoint and qualification remaining
 
-Implement native compiled CRUD/list, all 25 typed settings, explicit Set read/PATCH
-composition with partial results, user/tenant/group grants and a credential-free
-missing-scope guard mapped to the parameterless set. Add root/allowlist wiring,
-owned snapshots, source comparisons for all nine pairs, input/context/failure and
-no-replay checks, examples/API docs, sanitized artifacts and gated lab/source reads.
-Keep modern mapping metadata distinct from observed dispatch.
+TeamsEventsPolicies now exposes native compiled CRUD/list, all 25 typed settings,
+explicit Set read/PATCH composition with partial results, user/tenant/group grants
+and a credential-free missing-scope guard mapped to the parameterless set. Root
+and allowlist wiring and owned snapshots are included. Initial race tests compare
+all 24 provider requests in synthetic application/delegated modes, all 83 model
+observations, five actual source filter selections and the parameterless grant
+failure. All nine command/set pairs have native symbols and initial comparisons.
+
+Before the implementation PR, complete the remaining public binder comparisons,
+partial update and mutation failure/no-replay/context guards, compiling examples,
+API docs, gated lab/source reads, full repository checks and reviewed sanitized
+artifacts. Ledger rows remain in-progress/metadata-only. Modern mapping metadata
+remains distinct from actual compiled dispatch; this checkpoint is not full
+command or tenant qualification.
 
 No tenant read/write has run for this family. Successful authorization,
 server/cloud availability, updates/read-back/cleanup, grants and effective webinar,
