@@ -1,10 +1,10 @@
 # Audio conferencing custom prompts configuration: pinned evidence
 
-Baseline: MicrosoftTeams 8.1.0. Scope: POL-33 / issue #106. This source checkpoint
-precedes the native service implementation and makes no command coverage claim.
+Baseline: MicrosoftTeams 8.1.0. Scope: POL-33 / issue #106. Native implementation
+uses the source checkpoint below; complete command qualification remains open.
 
 The assigned management surface is Get (Identity/Filter) and Set (Identity).
-The native configuration service will expose GetByIdentity, List, ListFiltered,
+The native configuration service exposes GetByIdentity, List, ListFiltered,
 PatchByIdentity and explicit UpdateByIdentity (read, local edits, sparse PATCH).
 Creation/deletion and assignments require separate evidenced contracts; neither
 is present in this command family. Runtime execution remains native Go.
@@ -103,10 +103,21 @@ does not prove persistence or an effective conferencing experience.
 
 ## Qualification still required
 
-This checkpoint establishes source facts only. Native contract tests, root
-wiring, examples, ledger mappings and opt-in read-only lab support remain part
-of POL-33 implementation. The dedicated lab identity's Teams authorization is
-still unresolved; no successful read, mutation, read-back, restoration, prompt
-playback, role/consent grant or PowerShell/Go tenant comparison is claimed here.
+Native root wiring, typed models, source-model/list tests, provider wire tests,
+owned edit tests, partial update checks, examples, exact ledger mappings and
+opt-in read-only lab support accompany this evidence. Native string constructor
+arguments cannot represent source null inputs; seven representable constructor
+cases execute natively while the five null-argument observations document the
+source boundary. Both actual client-secret and certificate Global reads returned
+403 on 2026-11-21. Filter/list and optional pinned comparison were not reached.
+No successful read, mutation, read-back, restoration, prompt playback,
+role/consent grant or PowerShell/Go tenant comparison is claimed here.
 Arbitrary shell/Newtonsoft coercions, cloud/role/feature availability and all
 write qualification remain open.
+
+The full offline `go test -race -count=1 -shuffle=on ./...`, SDK/examples build,
+vet, capability ledger validation and its ten tests passed on 2026-11-21.
+Both development capture scripts executed successfully; they and the optional
+read oracle also passed PowerShell syntax checks. These checks establish native
+structural behavior separately from live qualification. The ledger retains
+in-progress implementation and metadata-only contract states.
