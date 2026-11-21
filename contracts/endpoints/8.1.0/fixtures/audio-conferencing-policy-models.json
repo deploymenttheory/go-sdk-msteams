@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-audio-conferencing-policy-normalization",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "path": "bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll",
+      "sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll",
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+    }
+  ],
+  "purpose": "Actual pinned PolicyUtils normalization and XdsConfiguration serialization of synthetic MeetingInvitePhoneNumbers bags. No command lifecycle, credentials, discovery or request sender.",
+  "cases": [
+    {
+      "name": "phone-list-omitted",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-scalar",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": [
+          "future-phone"
+        ],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-replacement",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": [
+          "+440000000001",
+          "not-a-phone"
+        ],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-empty-replacement",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": [],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-null-replacement",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": [],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-operators",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": {
+          "Add": [
+            "+440000000001"
+          ],
+          "Remove": [
+            "not-a-phone"
+          ]
+        },
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-empty-operators",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": {},
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-legacy-object-replacement",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": [
+          {
+            "AppId": "future-phone",
+            "Enabled": false
+          }
+        ],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-legacy-object-operators",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": {
+          "Add": [
+            {
+              "AppId": "future-phone",
+              "Enabled": false
+            }
+          ]
+        },
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-replace-operator-rejected",
+      "rejected": true,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": null
+    },
+    {
+      "name": "phone-list-null-item-rejected",
+      "rejected": true,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": null
+    },
+    {
+      "name": "phone-list-empty-string",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": [
+          ""
+        ],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-whitespace-string",
+      "rejected": false,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": {
+        "MeetingInvitePhoneNumbers": [
+          " "
+        ],
+        "Identity": "tag:Fixture"
+      }
+    },
+    {
+      "name": "phone-list-numeric-item-rejected",
+      "rejected": true,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": null
+    },
+    {
+      "name": "phone-list-ps-list-modifier-rejected",
+      "rejected": true,
+      "source": "PolicyUtils.ValidateAndUpdatePsListModifier; XdsConfiguration.DeserializeFromDictionary/ToJsonString",
+      "wire": null
+    }
+  ]
+}
