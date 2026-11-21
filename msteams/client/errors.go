@@ -42,7 +42,7 @@ func (e *APIError) Error() string {
 	}
 	// Do not print even Backend verbatim: this public struct may be caller-created.
 	backend := "unknown"
-	if e.Backend == Graph || e.Backend == TeamsAdmin {
+	if knownBackend(e.Backend) {
 		backend = string(e.Backend)
 	}
 	return fmt.Sprintf("msteams %s request failed (HTTP %d)", backend, e.StatusCode)
@@ -59,8 +59,8 @@ func normalizeError(backend Backend, response *resty.Response) *APIError {
 }
 
 // NewAPIError normalizes a received HTTP or batch-item error without retaining
-// headers/body or printing service messages. Backend should be Graph or
-// TeamsAdmin. Codes and identifiers remain untrusted data for explicit inspection.
+// headers/body or printing service messages. Backend selects a known native
+// service family. Codes and identifiers remain untrusted for explicit inspection.
 func NewAPIError(backend Backend, status int, headers http.Header, body []byte) *APIError {
 	err := &APIError{Backend: backend, StatusCode: status}
 	collectHeaderIDs(err, headers)

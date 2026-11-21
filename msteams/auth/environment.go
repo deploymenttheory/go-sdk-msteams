@@ -6,6 +6,8 @@ import (
 	"net/url"
 	"strings"
 	"unicode"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/internal/serviceprofile"
 )
 
 // Endpoints selects explicit HTTPS service origins and a Teams token audience.
@@ -114,7 +116,16 @@ func validResourceAudience(value string) bool {
 }
 
 func (e Environment) supportsAudience(audience string) bool {
-	return audience == e.Endpoints.Graph || audience == e.Endpoints.TeamsAdminResource
+	if audience == e.Endpoints.Graph || audience == e.Endpoints.TeamsAdminResource {
+		return true
+	}
+	for _, service := range []serviceprofile.Service{serviceprofile.Targeting, serviceprofile.Hierarchy} {
+		profile, ok := serviceprofile.Resolve(service, e.Name)
+		if ok && audience == profile.Audience {
+			return true
+		}
+	}
+	return false
 }
 
 // String avoids printing custom origins from ordinary diagnostics.

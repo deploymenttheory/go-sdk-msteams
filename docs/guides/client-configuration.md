@@ -73,9 +73,11 @@ formatted authentication diagnostics are redacted.
 
 ## HTTP, backend groups and lifecycle
 
-`GraphAPI` and `TeamsAdminAPI` are distinct typed service collections, each bound to the
-same per-client session and its own backend identity. They currently expose the dependency
-scope for future resource constructors; no placeholder REST management methods exist.
+`GraphAPI` and `TeamsAdminAPI` group typed resource services over the same per-client
+session. Each service binds its exact protocol profile. The administration collection
+includes ConfigAPI resources plus separately scoped targeting/hierarchy services;
+`TeamsAdminAPI.Scope()` continues to mean ConfigAPI. Use the hierarchy service's
+native accessors for its own primitives. No placeholder management methods are exposed.
 Scopes are immutable. Different root clients receive separate sessions and default
 transports. Each scope implements `client.Client.Do(ctx, request, result)` for authenticated
 JSON requests. The commercial profile maps Graph to `graph.microsoft.com` and Teams
@@ -121,6 +123,34 @@ Verification covers explicit/environment precedence, malformed overrides, zero-r
 construction, borrowed-resource ownership, credential cloning, independent concurrent
 clients, cancellation and redacted diagnostics. Provider token acquisition and tenant
 conformance are deliberately separate qualification states in the capability ledger.
+
+## Targeting and hierarchy profiles
+
+`TeamsAdminAPI.TargetingPolicies` uses the existing ConfigAPI profile.
+`TeamsAdminAPI.TargetingHierarchy` has independent native v1/v2 primitives and
+explicit upload/status/delete compositions. Its v2 tenant path comes from the
+session's canonical tenant GUID; callers do not pass another tenant per request.
+
+| Protocol | Request origin | Token resource | Closed cloud maps |
+|---|---|---|---|
+| Targeting v1 | retailservices.teams.microsoft.com; GCC uses retailservices.gcc.teams.microsoft.com | https://retailservices.teams.microsoft.com | commercial, GCC |
+| Hierarchy v2 | hierarchy.teams.microsoft.com | https://chatsvcagg.teams.microsoft.com | commercial |
+
+Native providers request the exact resource's `/.default` scope and isolate its
+token/cache from Graph and ConfigAPI. Supplied-token providers need the selected
+resource token explicitly. Known profiles enforce their fixed namespaces before
+acquisition. Existing Graph/ConfigAPI endpoint overrides do not redirect these
+special services, and no unsupported cloud silently falls back to commercial.
+These are evidenced route maps, not claims of deployed features, app eligibility,
+consent or role enforcement. Region.Read.All and other explicit delegated scopes
+still need a separate scope-aware contract.
+
+Hierarchy uploads replace singleton tenant data. Native imports own/close their
+CSV stream, use an explicit wire-size budget, and never replay a write. Composed
+v2 upload creates only after 404 and retains partial preparation/HTTP acceptance
+if import fails. It never deletes the singleton as rollback or polls silently.
+See [hierarchy API documentation](../../msteams/teams_admin_api/targeting_hierarchy/api_docs.md)
+and [policy eligibility](../../msteams/teams_admin_api/targeting_policy/api_docs.md).
 
 ## Supplied tokens and refresh callbacks
 

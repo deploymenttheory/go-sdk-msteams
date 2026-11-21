@@ -46,12 +46,17 @@ audience merely because they share a root collection.
 | Private-channel migration | `https://teams.microsoft.com` | audience `https://templates.teams.microsoft.com`; `/.default` scope |
 
 The first two are separate selectable API versions, not PowerShell-release method
-names. Native providers currently support only Graph and Config API audiences;
-these findings require additional exact-origin/audience profiles and a scoped
+names. At this research revision native providers supported only Graph and Config
+API audiences; these findings required additional exact-origin/audience profiles and a scoped
 delegated-token contract before implementation. In particular, Region.Read.All
 must not be silently rewritten to `.default`. Cache isolation must include any
 scope distinction introduced by that extension. Application mode uses its own
 evidenced eligibility; a delegated scope is not an application permission.
+
+The later [CORE-25 SDK candidate](targeting-sdk-evidence.md) implements the first
+two closed profiles and their existing /.default scope contract. Region-specific
+scopes and the other migration profiles remain separate implementation work.
+This does not promote any cloud, mode or operation to live-qualified status.
 
 GCC's `GetAzureEnvironmentName("TeamsGCC")` itself rejects that name. The targeting
 selector separately accepts TeamsGCC on the existing AzureCloud tuple after

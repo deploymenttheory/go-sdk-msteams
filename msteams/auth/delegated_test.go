@@ -34,6 +34,7 @@ type delegatedService struct {
 	challenge          string
 	deviceExpires      int
 	pending            int
+	extraScopes        map[string]bool
 }
 
 func (s *delegatedService) RoundTrip(r *http.Request) (*http.Response, error) {
@@ -94,7 +95,7 @@ func (s *delegatedService) RoundTrip(r *http.Request) (*http.Response, error) {
 				scope = part
 			}
 		}
-		if scope != GraphAudience+"/.default" && scope != TeamsAdminAudience+"/.default" {
+		if scope != GraphAudience+"/.default" && scope != TeamsAdminAudience+"/.default" && !s.extraScopes[scope] {
 			s.t.Error("wrong resource scope")
 		}
 		switch r.Form.Get("grant_type") {

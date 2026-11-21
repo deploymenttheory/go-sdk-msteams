@@ -14,8 +14,8 @@ try {
     if ($raw.Length -gt 8192) { throw 'Invalid selectors.' }
     $request = $raw | ConvertFrom-Json
     $uuid = '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
-    if ($request.id -notmatch $uuid) { throw 'Explicit team required.' }
-    if ($request.kind -notin @('team','users','channel-users','operation','shared-teams','associated-teams','shared-users')) { throw 'Unknown oracle.' }
+    if ($request.id -notmatch $uuid) { throw 'Explicit identifier required.' }
+    if ($request.kind -notin @('team','users','channel-users','operation','shared-teams','associated-teams','shared-users','targeting-policy','hierarchy-status')) { throw 'Unknown oracle.' }
     $ownedRead = $request.kind -in @('team','users','channel-users')
     if ($ownedRead -and $request.fixture -notmatch '^msteams-sdk-[a-z2-7]{26,64}-(team|migration|membership)$') { throw 'Owned fixture required.' }
     if ($request.kind -eq 'operation' -and [string]::IsNullOrWhiteSpace([string]$request.operation_id)) { throw 'Explicit operation required.' }
@@ -24,6 +24,7 @@ try {
     if ($request.kind -in @('shared-teams','shared-users') -and [string]::IsNullOrWhiteSpace([string]$request.channel)) { throw 'Explicit shared channel required.' }
     if ($request.kind -eq 'shared-users' -and $request.shared_team_id -notmatch $uuid) { throw 'Explicit shared-with team required.' }
     if ($request.kind -eq 'shared-teams' -and -not [string]::IsNullOrEmpty([string]$request.shared_team_id) -and $request.shared_team_id -notmatch $uuid) { throw 'Invalid shared-with team.' }
+    if ($request.kind -eq 'hierarchy-status' -and $request.api_version -notin @('1','2')) { throw 'Explicit hierarchy version required.' }
     $report.stage = 'module'
     $module = $env:MSTEAMS_LAB_MODULE_PATH
     $manifest = Join-Path $module 'MicrosoftTeams.psd1'
@@ -33,6 +34,7 @@ try {
     Import-Module $manifest -Force -WarningAction SilentlyContinue
     $report.stage = 'authentication'
     $identity = Get-Content -LiteralPath $env:MSTEAMS_LAB_IDENTITY_FILE -Raw | ConvertFrom-Json
+    if ($request.kind -in @('targeting-policy','hierarchy-status') -and [string]$request.id -ine [string]$identity.tenant_id) { throw 'Tenant binding differs.' }
     $certificate = [Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromPemFile($identity.certificate_file, $identity.private_key_file)
     Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $identity.tenant_id -ErrorAction Stop -WarningAction SilentlyContinue -InformationAction SilentlyContinue | Out-Null
     $connected = $true
@@ -84,8 +86,36 @@ try {
         }
         return $result
     }
+    function Convert-HierarchyStatusObservation($value) {
+        foreach ($property in @('Id','Status','LastKnownStatus','ErrorMessage','LastUpdatedAt','LastModifiedBy','FileName')) {
+            if ($null -eq $value.PSObject.Properties[$property]) { throw 'Incomplete hierarchy status projection.' }
+        }
+        return @{id=[string]$value.Id; status=$value.Status; last_known_status=$value.LastKnownStatus; error_message=$value.ErrorMessage; last_updated_at=$value.LastUpdatedAt; last_modified_by=$value.LastModifiedBy; filename=$value.FileName}
+    }
+    function Convert-TargetingPolicyObservation($value) {
+        if ($null -eq $value.PSObject.Properties['Identity']) { throw 'Incomplete targeting policy projection.' }
+        $result = @{identity=[string]$value.Identity}
+        $fields = @{
+            CustomTagsMode='custom_tags_mode'; Description='description'; ManageTagsPermissionMode='manage_tags_permission_mode'
+            ShiftBackedTagsMode='shift_backed_tags_mode'; SuggestedPresetTags='suggested_preset_tags'
+            TeamOwnersEditWhoCanManageTagsMode='team_owners_edit_who_can_manage_tags_mode'
+        }
+        foreach ($name in $fields.Keys) {
+            $property = $value.PSObject.Properties[$name]
+            $result[$fields[$name]] = if ($null -eq $property -or $null -eq $property.Value) { $null } else { [string]$property.Value }
+        }
+        return $result
+    }
     $report.stage = 'projection'
-    if ($request.kind -eq 'operation') {
+    if ($request.kind -eq 'hierarchy-status') {
+        $observed = @(Get-TeamTargetingHierarchyStatus -ApiVersion $request.api_version -RequestId $request.request_id -ErrorAction Stop)
+        if ($observed.Count -ne 1) { throw 'Expected one selected hierarchy operation.' }
+        $report = @{success=$true; stage='complete'; hierarchy_status=(Convert-HierarchyStatusObservation $observed[0])}
+    } elseif ($request.kind -eq 'targeting-policy') {
+        $observed = @(Get-CsTeamsTargetingPolicy -Identity Global -ErrorAction Stop)
+        if ($observed.Count -ne 1 -or [string]$observed[0].Identity -ine 'Global') { throw 'Expected Global targeting policy.' }
+        $report = @{success=$true; stage='complete'; targeting_policy=(Convert-TargetingPolicyObservation $observed[0])}
+    } elseif ($request.kind -eq 'operation') {
         $operations = @(Get-Operation -GroupId $request.id -OperationId $request.operation_id -ErrorAction Stop)
         if ($operations.Count -ne 1 -or [string]$operations[0].OperationId -cne $request.operation_id) { throw 'Expected one selected operation.' }
         $report = @{success=$true; stage='complete'; operation=(Convert-OperationObservation $operations[0])}
