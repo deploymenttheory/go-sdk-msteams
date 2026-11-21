@@ -6513,30 +6513,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/120/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service_test.go",
+              "name": "TestEnhancedEncryptionModernFilterAndWhitespace"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/enhanced_encryption_test.go",
+              "name": "TestLabEnhancedEncryptionReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/120/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service_test.go",
+              "name": "TestEnhancedEncryptionPinnedGeneratedRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/enhanced_encryption_test.go",
+              "name": "TestLabEnhancedEncryptionReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern TeamsEnhancedEncryptionPolicy Global reads returned actual resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication; request paths distinguished resource denial from discovery/preparation. Filter/list and optional pinned comparison were not reached. No policy, encryption setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back/cleanup and effective behavior remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -13531,37 +13578,108 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/243/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service_test.go",
+              "name": "TestEnhancedEncryptionPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/composition_test.go",
+              "name": "TestEnhancedEncryptionGroupAcceptanceSurvivesOnlyActualPostResponses"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/243/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service_test.go",
+              "name": "TestEnhancedEncryptionPinnedGeneratedRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/243/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service_test.go",
+              "name": "TestEnhancedEncryptionPinnedGeneratedRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/assignment.go",
+            "name": "Service.Assign"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern TeamsEnhancedEncryptionPolicy Global reads returned actual resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication; request paths distinguished resource denial from discovery/preparation. Filter/list and optional pinned comparison were not reached. No policy, encryption setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back/cleanup and effective behavior remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -19016,23 +19134,54 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/357/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service_test.go",
+              "name": "TestEnhancedEncryptionPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/binding_test.go",
+              "name": "TestEnhancedEncryptionRequestsMatchLayeredBinding"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/composition_test.go",
+              "name": "TestEnhancedEncryptionCreateRetainsSubmissionOnReadBackFailure"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern TeamsEnhancedEncryptionPolicy Global reads returned actual resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication; request paths distinguished resource denial from discovery/preparation. Filter/list and optional pinned comparison were not reached. No policy, encryption setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back/cleanup and effective behavior remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -23638,23 +23787,38 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/469/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service_test.go",
+              "name": "TestEnhancedEncryptionPinnedGeneratedRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern TeamsEnhancedEncryptionPolicy Global reads returned actual resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication; request paths distinguished resource denial from discovery/preparation. Filter/list and optional pinned comparison were not reached. No policy, encryption setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back/cleanup and effective behavior remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -29104,23 +29268,50 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/593/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service_test.go",
+              "name": "TestEnhancedEncryptionPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/binding_test.go",
+              "name": "TestEnhancedEncryptionRequestsMatchLayeredBinding"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_enhanced_encryption_policy/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern TeamsEnhancedEncryptionPolicy Global reads returned actual resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication; request paths distinguished resource denial from discovery/preparation. Filter/list and optional pinned comparison were not reached. No policy, encryption setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back/cleanup and effective behavior remain open.",
         "evidence": []
       },
       "exclusion": null
