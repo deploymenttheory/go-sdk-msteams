@@ -22,12 +22,13 @@ var errTeamOracle = errors.New("pinned PowerShell team read could not be verifie
 const maxTeamOracleBytes = 64 << 10
 
 type teamOracleRequest struct {
-	Kind        string `json:"kind"`
-	ID          string `json:"id"`
-	Fixture     string `json:"fixture"`
-	Owner       string `json:"owner,omitempty"`
-	Channel     string `json:"channel,omitempty"`
-	OperationID string `json:"operation_id,omitempty"`
+	Kind         string `json:"kind"`
+	ID           string `json:"id"`
+	Fixture      string `json:"fixture"`
+	Owner        string `json:"owner,omitempty"`
+	Channel      string `json:"channel,omitempty"`
+	OperationID  string `json:"operation_id,omitempty"`
+	SharedTeamID string `json:"shared_team_id,omitempty"`
 }
 
 type teamOracleProjection struct {
@@ -42,20 +43,23 @@ type teamOracleProjection struct {
 }
 
 type teamOracleUser struct {
-	ID   string  `json:"id"`
-	User *string `json:"user"`
-	Name *string `json:"name"`
-	Role string  `json:"role"`
+	ID       string  `json:"id"`
+	User     *string `json:"user"`
+	Name     *string `json:"name"`
+	Role     string  `json:"role"`
+	TenantID *string `json:"tenant_id,omitempty"`
 }
 
 type teamOracleResponse struct {
-	Success   bool                  `json:"success"`
-	Stage     string                `json:"stage"`
-	Team      *teamOracleProjection `json:"team"`
-	Tenant    *teamOracleProjection `json:"tenant"`
-	User      *teamOracleProjection `json:"user"`
-	Users     []teamOracleUser      `json:"users"`
-	Operation *teamOracleOperation  `json:"operation"`
+	Success         bool                    `json:"success"`
+	Stage           string                  `json:"stage"`
+	Team            *teamOracleProjection   `json:"team"`
+	Tenant          *teamOracleProjection   `json:"tenant"`
+	User            *teamOracleProjection   `json:"user"`
+	Users           []teamOracleUser        `json:"users"`
+	Operation       *teamOracleOperation    `json:"operation"`
+	SharedTeams     []sharedTeamObservation `json:"shared_teams"`
+	AssociatedTeams []sharedTeamObservation `json:"associated_teams"`
 }
 
 // Child stdout is private transient data. No command output, errors, identifiers
@@ -95,7 +99,7 @@ func teamOracleEnabled(t *testing.T) bool {
 
 func decodeTeamOracle(raw []byte, kind string) (teamOracleResponse, error) {
 	var value teamOracleResponse
-	if len(raw) > maxTeamOracleBytes || (kind != "team" && kind != "users" && kind != "channel-users" && kind != "operation") {
+	if len(raw) > maxTeamOracleBytes || (kind != "team" && kind != "users" && kind != "channel-users" && kind != "operation" && kind != "shared-teams" && kind != "associated-teams" && kind != "shared-users") {
 		return value, errTeamOracle
 	}
 	decoder := json.NewDecoder(bytes.NewReader(raw))
@@ -105,6 +109,18 @@ func decodeTeamOracle(raw []byte, kind string) (teamOracleResponse, error) {
 	}
 	var extra any
 	if decoder.Decode(&extra) != io.EOF {
+		return teamOracleResponse{}, errTeamOracle
+	}
+	if kind == "shared-teams" || kind == "associated-teams" {
+		if value.Team != nil || value.Tenant != nil || value.User != nil || value.Users != nil || value.Operation != nil {
+			return teamOracleResponse{}, errTeamOracle
+		}
+		if kind == "shared-teams" && (value.SharedTeams == nil || value.AssociatedTeams != nil) || kind == "associated-teams" && (value.AssociatedTeams == nil || value.SharedTeams != nil) {
+			return teamOracleResponse{}, errTeamOracle
+		}
+		return value, nil
+	}
+	if value.SharedTeams != nil || value.AssociatedTeams != nil {
 		return teamOracleResponse{}, errTeamOracle
 	}
 	if kind == "team" {

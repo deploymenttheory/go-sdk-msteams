@@ -41,3 +41,14 @@ Primary sources reviewed on 2026-11-20:
 [user list](https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-1.0).
 Pinned/native differences are recorded in the
 [membership contract](../../../docs/implementation/core/membership-resource-contract.md).
+
+## Batched principal-name reads
+
+LookupPrincipalNames validates/deduplicates explicit directory UUIDs, then reads
+beta users in groups of at most ten with bounded opaque continuation. It returns
+lowercase UUID keys: a present nil value preserves a returned null/absent UPN,
+while a missing key means no directory result. Empty input performs no HTTP.
+Failures retain only earlier completely validated groups and the last response;
+a failing/ambiguous group is not partially published. Unrequested IDs fail
+validation. Callers retain their initial UPN/email only for absent keys. The
+channel-user and shared-channel projections reuse this supporting operation.

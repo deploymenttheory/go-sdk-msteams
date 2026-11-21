@@ -2,8 +2,6 @@ package channelusermanagement
 
 import (
 	"context"
-	"net/http"
-	"net/url"
 	"sort"
 	"strings"
 
@@ -90,67 +88,25 @@ func (s *Service) List(ctx context.Context, teamID, name string, options ListOpt
 	return result, err
 }
 
-func decodeUsers(data []byte) (client.PageContent[directoryuser.User], error) {
-	return client.DecodeCollection[directoryuser.User](data, "value", "@odata.nextLink")
-}
-
 func (s *Service) enrich(ctx context.Context, items []UserSummary, maxPages int) (*resty.Response, error) {
-	ids := []string{}
-	seen := map[string]bool{}
+	ids := make([]string, 0, len(items))
 	for _, value := range items {
 		if value.UserID == nil {
 			continue
 		}
-		id := strings.ToLower(string(*value.UserID))
+		id := string(*value.UserID)
 		if !directoryID.MatchString(id) {
 			return nil, client.ErrDecode
 		}
-		if !seen[id] {
-			seen[id] = true
-			ids = append(ids, id)
-		}
+		ids = append(ids, id)
 	}
-	var last *resty.Response
-	for start := 0; start < len(ids); start += 10 {
-		end := min(start+10, len(ids))
-		selected := map[string]bool{}
-		clauses := make([]string, 0, end-start)
-		for _, id := range ids[start:end] {
-			selected[id] = true
-			clauses = append(clauses, "id eq '"+id+"'")
-		}
-		req := client.Request{Method: http.MethodGet, Path: []string{"beta", "users"}, Replay: client.ReplaySafe,
-			Header: http.Header{"Accept": {"application/json"}},
-			Query:  url.Values{"$select": {"id,userPrincipalName"}, "$filter": {strings.Join(clauses, " or ")}}}
-		pager, err := client.NewPager(s.scope, req, decodeUsers, client.PagingOptions{Style: client.LinkPaging, MaxPages: maxPages, ExpectedStatus: http.StatusOK})
-		if err != nil {
-			return last, err
-		}
-		listed, err := pager.Collect(ctx)
-		if listed.Response != nil {
-			last = listed.Response
-		}
-		if err != nil {
-			return last, err
-		}
-		names := map[string]*string{}
-		for _, user := range listed.Items {
-			key := strings.ToLower(user.ID)
-			if !selected[key] {
-				return last, client.ErrDecode
-			}
-			if _, exists := names[key]; exists {
-				return last, directoryuser.ErrAmbiguous
-			}
-			names[key] = user.UserPrincipalName
-		}
-		for index, value := range items {
-			if value.UserID != nil {
-				if name, exists := names[strings.ToLower(string(*value.UserID))]; exists {
-					items[index].User = name
-				}
+	names, response, err := s.users.LookupPrincipalNames(ctx, ids, directoryuser.PrincipalNamesOptions{MaxPages: maxPages})
+	for index, value := range items {
+		if value.UserID != nil {
+			if name, exists := names[strings.ToLower(string(*value.UserID))]; exists {
+				items[index].User = name
 			}
 		}
 	}
-	return last, nil
+	return response, err
 }
