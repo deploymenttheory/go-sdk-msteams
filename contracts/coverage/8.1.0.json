@@ -8590,7 +8590,12 @@
               "name": "TestListingLocalValidationAndCurrentUserMode"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         },
         {
           "name": "Identity",
@@ -8623,7 +8628,12 @@
               "name": "TestInvalidInputAndCancellationPerformNoIO"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
@@ -16551,7 +16561,12 @@
               "name": "TestLostCreationResponsesNeverReplayOrBlindlyCompensate"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         },
         {
           "name": "MigrateGroup",
@@ -16592,7 +16607,12 @@
               "name": "TestCreationValidationPrecedesCredentialsAndWrites"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
@@ -20338,7 +20358,12 @@
               "name": "TestDeleteAndPictureUseSourceDerivedPrimitiveMappings"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
@@ -25351,7 +25376,12 @@
               "name": "TestFailuresStopLaterStagesWithoutReplayingOrRollingBack"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
@@ -25458,7 +25488,12 @@
               "name": "TestArchiveValidationStopsBeforeAnyReadOrWrite"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
@@ -25569,7 +25604,12 @@
               "name": "TestDeleteAndPictureUseSourceDerivedPrimitiveMappings"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "name": "TestLabTeamLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
