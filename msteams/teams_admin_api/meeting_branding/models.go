@@ -26,6 +26,9 @@ func (v *BackgroundImage) UnmarshalJSON(data []byte) error {
 	if json.Unmarshal(data, &value) != nil || json.Unmarshal(data, &value.RawFields) != nil || value.RawFields == nil {
 		return client.ErrDecode
 	}
+	if !validReadAsset(data, []string{"Id", "Name", "ImageUri", "Order"}, []string{"ImageUri"}) {
+		return client.ErrDecode
+	}
 	*v = BackgroundImage(value)
 	return nil
 }
@@ -53,6 +56,9 @@ func (v *AssuranceSlate) UnmarshalJSON(data []byte) error {
 	type snapshot AssuranceSlate
 	var value snapshot
 	if json.Unmarshal(data, &value) != nil || json.Unmarshal(data, &value.RawFields) != nil || value.RawFields == nil {
+		return client.ErrDecode
+	}
+	if !validReadAsset(data, []string{"Id", "Name", "NdiImageUri"}, []string{"NdiImageUri"}) {
 		return client.ErrDecode
 	}
 	*v = AssuranceSlate(value)
@@ -85,6 +91,9 @@ func (v *Reaction) UnmarshalJSON(data []byte) error {
 	if json.Unmarshal(data, &value) != nil || json.Unmarshal(data, &value.RawFields) != nil || value.RawFields == nil {
 		return client.ErrDecode
 	}
+	if !validReadAsset(data, []string{"Id", "ReactionImageUrl", "ReactionType"}, []string{"ReactionImageUrl", "ReactionSpriteImageUrl"}) {
+		return client.ErrDecode
+	}
 	*v = Reaction(value)
 	return nil
 }
@@ -100,33 +109,19 @@ func (v Reaction) GoString() string { return v.String() }
 
 // BrandingTheme retains received fields without manufacturing PowerShell model defaults.
 type BrandingTheme struct {
-	Identity                              *string                    `json:"Identity"`
-	DisplayName                           *string                    `json:"DisplayName"`
-	LogoImageLightURI                     *string                    `json:"LogoImageLightUri"`
-	LogoImageDarkURI                      *string                    `json:"LogoImageDarkUri"`
-	BackgroundImageLightURI               *string                    `json:"BackgroundImageLightUri"`
-	BackgroundImageDarkURI                *string                    `json:"BackgroundImageDarkUri"`
-	ChatBackgroundImageLightURI           *string                    `json:"ChatBackgroundImageLightUri"`
-	ChatBackgroundImageDarkURI            *string                    `json:"ChatBackgroundImageDarkUri"`
-	ChatBackgroundImageAlignment          *string                    `json:"ChatBackgroundImageAlignment"`
-	LogoImageLightPreAuthURI              *string                    `json:"LogoImageLightPreAuthUri"`
-	LogoImageDarkPreAuthURI               *string                    `json:"LogoImageDarkPreAuthUri"`
-	MeetingInviteLogoImageLightPreAuthURI *string                    `json:"MeetingInviteLogoImageLightPreAuthUri"`
-	MeetingInviteLogoImageDarkPreAuthURI  *string                    `json:"MeetingInviteLogoImageDarkPreAuthUri"`
-	BackgroundImageLightPreAuthURI        *string                    `json:"BackgroundImageLightPreAuthUri"`
-	BackgroundImageDarkPreAuthURI         *string                    `json:"BackgroundImageDarkPreAuthUri"`
-	BrandAccentColor                      *string                    `json:"BrandAccentColor"`
-	EnableChatBackground                  *bool                      `json:"EnableChatBackground"`
-	DisableOriginalReactions              *bool                      `json:"DisableOriginalReactions"`
-	Enabled                               *bool                      `json:"Enabled"`
-	MeetingReactions                      []*Reaction                `json:"MeetingReactions"`
-	RawFields                             map[string]json.RawMessage `json:"-"`
+	Identity *string `json:"Identity"`
+	ThemeFields
+	MeetingReactions []*Reaction                `json:"MeetingReactions"`
+	RawFields        map[string]json.RawMessage `json:"-"`
 }
 
 func (v *BrandingTheme) UnmarshalJSON(data []byte) error {
 	type snapshot BrandingTheme
 	var value snapshot
 	if json.Unmarshal(data, &value) != nil || json.Unmarshal(data, &value.RawFields) != nil || value.RawFields == nil {
+		return client.ErrDecode
+	}
+	if !validReadAsset(data, []string{"Identity"}, []string{}) {
 		return client.ErrDecode
 	}
 	*v = BrandingTheme(value)
@@ -175,3 +170,26 @@ func (v Policy) MarshalJSON() ([]byte, error) {
 }
 func (Policy) String() string     { return "meeting branding snapshot (redacted)" }
 func (v Policy) GoString() string { return v.String() }
+
+// ThemeFields are nullable local theme options. URI-like strings, color and
+// alignment are open strings in the pinned model setters.
+type ThemeFields struct {
+	DisplayName                           *string `json:"DisplayName"`
+	LogoImageLightURI                     *string `json:"LogoImageLightUri"`
+	LogoImageDarkURI                      *string `json:"LogoImageDarkUri"`
+	BackgroundImageLightURI               *string `json:"BackgroundImageLightUri"`
+	BackgroundImageDarkURI                *string `json:"BackgroundImageDarkUri"`
+	ChatBackgroundImageLightURI           *string `json:"ChatBackgroundImageLightUri"`
+	ChatBackgroundImageDarkURI            *string `json:"ChatBackgroundImageDarkUri"`
+	ChatBackgroundImageAlignment          *string `json:"ChatBackgroundImageAlignment"`
+	LogoImageLightPreAuthURI              *string `json:"LogoImageLightPreAuthUri"`
+	LogoImageDarkPreAuthURI               *string `json:"LogoImageDarkPreAuthUri"`
+	MeetingInviteLogoImageLightPreAuthURI *string `json:"MeetingInviteLogoImageLightPreAuthUri"`
+	MeetingInviteLogoImageDarkPreAuthURI  *string `json:"MeetingInviteLogoImageDarkPreAuthUri"`
+	BackgroundImageLightPreAuthURI        *string `json:"BackgroundImageLightPreAuthUri"`
+	BackgroundImageDarkPreAuthURI         *string `json:"BackgroundImageDarkPreAuthUri"`
+	BrandAccentColor                      *string `json:"BrandAccentColor"`
+	EnableChatBackground                  *bool   `json:"EnableChatBackground"`
+	DisableOriginalReactions              *bool   `json:"DisableOriginalReactions"`
+	Enabled                               *bool   `json:"Enabled"`
+}

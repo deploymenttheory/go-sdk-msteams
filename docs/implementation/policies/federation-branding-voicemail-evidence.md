@@ -447,8 +447,10 @@ For **all three object lists**, A New/Set `UpdateProperties` calls ApplyTo with
 a comparison delegate that throws `ArgumentException` when invoked for removal.
 An element removal that requires comparison therefore fails locally; it is not evidence
 that replacing the entire list or clearing through a replacement array is
-unsupported. The methods do not have the string-list null/IsEmpty guard; a bound
-null modifier can fail locally. Native list-replacement requests and any
+unsupported. The named calls resolve to the compiled Core.PSListModifierHelper extension,
+whose null/empty branch clears the collection. Executed POL-24 observations corrected
+the earlier suggestion that a bound null modifier necessarily fails. Native
+list-replacement requests and any
 read/modify/write convenience operation must remain explicit. No atomic list
 operator payload is emitted by this provider. [A named UpdateProperties methods;
 R serialization.]
