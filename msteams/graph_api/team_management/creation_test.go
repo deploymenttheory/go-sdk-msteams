@@ -338,7 +338,7 @@ func TestCreationTimeoutRetainsIDAndUsesBoundedFreshCleanupContext(t *testing.T)
 
 func TestCreationValidationPrecedesCredentialsAndWrites(t *testing.T) {
 	t.Parallel()
-	for _, name := range []string{"empty-name", "empty-alias", "invalid-template", "class-explicit-visibility", "invalid-visibility", "negative-timeout", "negative-attempts", "negative-interval", "negative-cleanup-timeout", "application-without-owner"} {
+	for _, name := range []string{"empty-name", "empty-alias", "empty-description", "empty-classification", "invalid-template", "class-explicit-visibility", "class-empty-visibility", "invalid-visibility", "negative-timeout", "negative-attempts", "negative-interval", "negative-cleanup-timeout", "application-without-owner"} {
 		mode := auth.Delegated
 		want := client.ErrRequest
 		if name == "application-without-owner" {
@@ -353,10 +353,20 @@ func TestCreationValidationPrecedesCredentialsAndWrites(t *testing.T) {
 			case "empty-alias":
 				empty := ""
 				value.MailNickname = &empty
+			case "empty-description":
+				empty := ""
+				value.Description = &empty
+			case "empty-classification":
+				empty := ""
+				value.Classification = &empty
 			case "invalid-template":
 				value.Template = "standard"
 			case "class-explicit-visibility":
 				visibility := group.Private
+				value.Template = management.EducationClass
+				value.Visibility = &visibility
+			case "class-empty-visibility":
+				visibility := group.Visibility("")
 				value.Template = management.EducationClass
 				value.Visibility = &visibility
 			case "invalid-visibility":
