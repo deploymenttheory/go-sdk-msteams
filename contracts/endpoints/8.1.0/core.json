@@ -547,6 +547,16 @@
       "path": "/fabric/templates/api/channels/privateChannelMigrationStatus",
       "result": "PrivateChannelMigrationStatusResponse; cloud base path varies",
       "evidence": "docs/implementation/core/hierarchy-migration-contract-evidence.md"
+    },
+    {
+      "id": "channels.get",
+      "backend": "graph",
+      "kind": "read",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/channels/{channelID}",
+      "result": "Channel",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "provenance": "current-documentation SDK supporting operation; not an observed pinned command call"
     }
   ],
   "open_questions": {
