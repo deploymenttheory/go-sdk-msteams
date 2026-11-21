@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"os"
 	"testing"
 
@@ -75,6 +76,8 @@ func fixture(t *testing.T, name string) []contracttest.Exchange {
 			ID    string `json:"id"`
 			Steps []struct {
 				Method, Path string
+				Query        [][2]string
+				Headers      map[string]string
 				Body         struct {
 					Kind  string
 					Value json.RawMessage
@@ -100,7 +103,18 @@ func fixture(t *testing.T, name string) []contracttest.Exchange {
 			if step.Body.Kind == "json" {
 				body = string(step.Body.Value)
 			}
-			exchange := wire(step.Method, step.Path, body, step.Response.Status, string(step.Response.JSON))
+			path := step.Path
+			if len(step.Query) != 0 {
+				query := make(url.Values)
+				for _, pair := range step.Query {
+					query.Add(pair[0], pair[1])
+				}
+				path += "?" + query.Encode()
+			}
+			exchange := wire(step.Method, path, body, step.Response.Status, string(step.Response.JSON))
+			for key, value := range step.Headers {
+				exchange.Request.Headers.Set(key, value)
+			}
 			for key, value := range step.Response.Headers {
 				exchange.Reply.Headers.Set(key, value)
 			}
