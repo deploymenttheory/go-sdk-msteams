@@ -82,3 +82,54 @@ func TestBrandingSnapshotsPreserveFuturePresenceAndRedactFormatting(t *testing.T
 		}
 	}
 }
+
+func TestPinnedAssetConstructorSnapshots(t *testing.T) {
+	t.Parallel()
+	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/branding-asset-models.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var capture struct {
+		Cases []struct {
+			Kind     string          `json:"kind"`
+			Rejected bool            `json:"rejected"`
+			Wire     json.RawMessage `json:"wire"`
+		} `json:"cases"`
+	}
+	if json.Unmarshal(raw, &capture) != nil || len(capture.Cases) != 31 {
+		t.Fatal("invalid pinned asset observations")
+	}
+	accepted := 0
+	for _, c := range capture.Cases {
+		if c.Rejected {
+			// Captured setter validation is input for the pending local builders;
+			// snapshot decoding does not claim to implement that validation.
+			continue
+		}
+		accepted++
+		var value any
+		switch c.Kind {
+		case "image":
+			value = new(resource.BackgroundImage)
+		case "slate":
+			value = new(resource.AssuranceSlate)
+		case "reaction":
+			value = new(resource.Reaction)
+		case "theme":
+			value = new(resource.BrandingTheme)
+		default:
+			t.Fatal("unknown captured asset kind")
+		}
+		if json.Unmarshal(c.Wire, value) != nil {
+			t.Fatal("pinned asset could not be decoded")
+		}
+		encoded, err := json.Marshal(value)
+		var want, got any
+		if err != nil || json.Unmarshal(c.Wire, &want) != nil || json.Unmarshal(encoded, &got) != nil || !reflect.DeepEqual(want, got) {
+			t.Fatal("pinned asset projection changed")
+		}
+	}
+	if accepted != 16 {
+		t.Fatal("pinned accepted asset count differs")
+	}
+}
