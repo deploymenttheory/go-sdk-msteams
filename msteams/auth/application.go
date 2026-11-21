@@ -26,6 +26,7 @@ const (
 var (
 	ErrUnsupportedCloud     = errors.New("authentication cloud profile is not supported")
 	ErrUnsupportedAudience  = errors.New("token audience is not supported")
+	ErrUnsupportedScope     = errors.New("token scope is not supported for the selected resource and mode")
 	ErrTokenService         = errors.New("microsoft application token acquisition failed")
 	ErrAuthorityDestination = errors.New("authentication destination is not allowed")
 	tenantGUID              = regexp.MustCompile(`^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$`)
@@ -92,8 +93,8 @@ func (p *ApplicationProvider) AcquireToken(ctx context.Context, request TokenReq
 	if p.refresh == nil {
 		return Token{}, ErrProviderClosed
 	}
-	if !p.environment.supportsAudience(request.Audience) {
-		return Token{}, ErrUnsupportedAudience
+	if err := p.environment.validateResourceRequest(request); err != nil {
+		return Token{}, err
 	}
 	return p.refresh.AcquireToken(ctx, request)
 }

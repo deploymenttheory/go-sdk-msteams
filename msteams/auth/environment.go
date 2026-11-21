@@ -119,13 +119,33 @@ func (e Environment) supportsAudience(audience string) bool {
 	if audience == e.Endpoints.Graph || audience == e.Endpoints.TeamsAdminResource {
 		return true
 	}
-	for _, service := range []serviceprofile.Service{serviceprofile.Targeting, serviceprofile.Hierarchy} {
+	for _, service := range []serviceprofile.Service{serviceprofile.Targeting, serviceprofile.Hierarchy, serviceprofile.PrivateChannelMigration, serviceprofile.Regions} {
 		profile, ok := serviceprofile.Resolve(service, e.Name)
 		if ok && audience == profile.Audience {
 			return true
 		}
 	}
 	return false
+}
+
+// Native acquisition accepts default scopes for established resources and only
+// the exact evidenced delegated scope for region reads. No application grant or
+// broader resource default is inferred from that delegated scope.
+func (e Environment) validateResourceRequest(request TokenRequest) error {
+	if !e.supportsAudience(request.Audience) {
+		return ErrUnsupportedAudience
+	}
+	profile, ok := serviceprofile.Resolve(serviceprofile.Regions, e.Name)
+	if ok && request.Audience == profile.Audience {
+		if request.Mode != Delegated || request.Scope != profile.DelegatedScope {
+			return ErrUnsupportedScope
+		}
+		return nil
+	}
+	if request.Scope != "" {
+		return ErrUnsupportedScope
+	}
+	return nil
 }
 
 // String avoids printing custom origins from ordinary diagnostics.

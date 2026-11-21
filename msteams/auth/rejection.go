@@ -44,8 +44,8 @@ func (p *ApplicationProvider) RefreshAfterRejection(ctx context.Context, request
 	if p.refresh == nil {
 		return Token{}, ErrProviderClosed
 	}
-	if !p.environment.supportsAudience(request.Audience) {
-		return Token{}, ErrUnsupportedAudience
+	if err := p.environment.validateResourceRequest(request); err != nil {
+		return Token{}, err
 	}
 	return p.refresh.RefreshAfterRejection(ctx, request, rejected)
 }

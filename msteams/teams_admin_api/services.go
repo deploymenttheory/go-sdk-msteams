@@ -4,7 +4,10 @@ package teamsadminapi
 import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	applicationaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
+	batchdeployment "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/batch_deployment"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
+	privatechannelmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/private_channel_migration"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
@@ -18,6 +21,9 @@ type Services struct {
 	TeamTemplates             *teamtemplate.Service
 	TargetingPolicies         *targetingpolicy.Service
 	TargetingHierarchy        *targetinghierarchy.Service
+	BatchDeployments          *batchdeployment.Service
+	PrivateChannelMigration   *privatechannelmigration.Service
+	Regions                   *region.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -31,7 +37,15 @@ func NewServices(session *client.Session) (*Services, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Services{scope: scope, ApplicationAccessPolicies: applicationaccesspolicy.NewService(backend), TeamTemplates: teamtemplate.NewService(backend), TargetingPolicies: targetingpolicy.NewService(backend), TargetingHierarchy: hierarchy}, nil
+	migrationScope, err := client.NewScope(client.PrivateChannelMigration, session)
+	if err != nil {
+		return nil, err
+	}
+	regionScope, err := client.NewScope(client.Regions, session)
+	if err != nil {
+		return nil, err
+	}
+	return &Services{scope: scope, ApplicationAccessPolicies: applicationaccesspolicy.NewService(backend), TeamTemplates: teamtemplate.NewService(backend), TargetingPolicies: targetingpolicy.NewService(backend), TargetingHierarchy: hierarchy, BatchDeployments: batchdeployment.NewService(backend), PrivateChannelMigration: privatechannelmigration.NewService(migrationScope), Regions: region.NewService(regionScope)}, nil
 }
 
 // Scope returns the backend dependency shared by this collection's resources.

@@ -54,9 +54,10 @@ scope distinction introduced by that extension. Application mode uses its own
 evidenced eligibility; a delegated scope is not an application permission.
 
 The later [CORE-25 SDK candidate](targeting-sdk-evidence.md) implements the first
-two closed profiles and their existing /.default scope contract. Region-specific
-scopes and the other migration profiles remain separate implementation work.
-This does not promote any cloud, mode or operation to live-qualified status.
+two closed profiles and their existing /.default scope contract. The later
+[CORE-22 SDK candidate](deployment-migration-sdk-evidence.md) adds the region
+delegated scope contract and private-channel migration profile. Neither candidate
+promotes any cloud, mode or operation to live-qualified status.
 
 GCC's `GetAzureEnvironmentName("TeamsGCC")` itself rejects that name. The targeting
 selector separately accepts TeamsGCC on the existing AzureCloud tuple after

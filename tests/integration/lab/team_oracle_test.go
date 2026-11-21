@@ -22,15 +22,16 @@ var errTeamOracle = errors.New("pinned PowerShell team read could not be verifie
 const maxTeamOracleBytes = 64 << 10
 
 type teamOracleRequest struct {
-	Kind         string `json:"kind"`
-	ID           string `json:"id"`
-	Fixture      string `json:"fixture"`
-	Owner        string `json:"owner,omitempty"`
-	Channel      string `json:"channel,omitempty"`
-	OperationID  string `json:"operation_id,omitempty"`
-	SharedTeamID string `json:"shared_team_id,omitempty"`
-	APIVersion   string `json:"api_version,omitempty"`
-	RequestID    string `json:"request_id,omitempty"`
+	Kind            string `json:"kind"`
+	ID              string `json:"id"`
+	Fixture         string `json:"fixture"`
+	Owner           string `json:"owner,omitempty"`
+	Channel         string `json:"channel,omitempty"`
+	OperationID     string `json:"operation_id,omitempty"`
+	SharedTeamID    string `json:"shared_team_id,omitempty"`
+	APIVersion      string `json:"api_version,omitempty"`
+	RequestID       string `json:"request_id,omitempty"`
+	OrchestrationID string `json:"orchestration_id,omitempty"`
 }
 
 type teamOracleProjection struct {
@@ -53,17 +54,19 @@ type teamOracleUser struct {
 }
 
 type teamOracleResponse struct {
-	Success         bool                        `json:"success"`
-	Stage           string                      `json:"stage"`
-	Team            *teamOracleProjection       `json:"team"`
-	Tenant          *teamOracleProjection       `json:"tenant"`
-	User            *teamOracleProjection       `json:"user"`
-	Users           []teamOracleUser            `json:"users"`
-	Operation       *teamOracleOperation        `json:"operation"`
-	SharedTeams     []sharedTeamObservation     `json:"shared_teams"`
-	AssociatedTeams []sharedTeamObservation     `json:"associated_teams"`
-	TargetingPolicy *targetingPolicyObservation `json:"targeting_policy"`
-	HierarchyStatus *hierarchyStatusObservation `json:"hierarchy_status"`
+	Success          bool                         `json:"success"`
+	Stage            string                       `json:"stage"`
+	Team             *teamOracleProjection        `json:"team"`
+	Tenant           *teamOracleProjection        `json:"tenant"`
+	User             *teamOracleProjection        `json:"user"`
+	Users            []teamOracleUser             `json:"users"`
+	Operation        *teamOracleOperation         `json:"operation"`
+	SharedTeams      []sharedTeamObservation      `json:"shared_teams"`
+	AssociatedTeams  []sharedTeamObservation      `json:"associated_teams"`
+	TargetingPolicy  *targetingPolicyObservation  `json:"targeting_policy"`
+	HierarchyStatus  *hierarchyStatusObservation  `json:"hierarchy_status"`
+	BatchStatus      *string                      `json:"batch_status"`
+	PrivateMigration *privateMigrationObservation `json:"private_migration"`
 }
 
 // Child stdout is private transient data. No command output, errors, identifiers
@@ -103,7 +106,7 @@ func teamOracleEnabled(t *testing.T) bool {
 
 func decodeTeamOracle(raw []byte, kind string) (teamOracleResponse, error) {
 	var value teamOracleResponse
-	if len(raw) > maxTeamOracleBytes || (kind != "team" && kind != "users" && kind != "channel-users" && kind != "operation" && kind != "shared-teams" && kind != "associated-teams" && kind != "shared-users" && kind != "targeting-policy" && kind != "hierarchy-status") {
+	if len(raw) > maxTeamOracleBytes || (kind != "team" && kind != "users" && kind != "channel-users" && kind != "operation" && kind != "shared-teams" && kind != "associated-teams" && kind != "shared-users" && kind != "targeting-policy" && kind != "hierarchy-status" && kind != "batch-status" && kind != "private-migration") {
 		return value, errTeamOracle
 	}
 	decoder := json.NewDecoder(bytes.NewReader(raw))
@@ -113,6 +116,18 @@ func decodeTeamOracle(raw []byte, kind string) (teamOracleResponse, error) {
 	}
 	var extra any
 	if decoder.Decode(&extra) != io.EOF {
+		return teamOracleResponse{}, errTeamOracle
+	}
+	if kind == "batch-status" || kind == "private-migration" {
+		if value.Team != nil || value.Tenant != nil || value.User != nil || value.Users != nil || value.Operation != nil || value.SharedTeams != nil || value.AssociatedTeams != nil || value.TargetingPolicy != nil || value.HierarchyStatus != nil {
+			return teamOracleResponse{}, errTeamOracle
+		}
+		if kind == "batch-status" && (value.BatchStatus == nil || value.PrivateMigration != nil) || kind == "private-migration" && (value.PrivateMigration == nil || value.BatchStatus != nil) {
+			return teamOracleResponse{}, errTeamOracle
+		}
+		return value, nil
+	}
+	if value.BatchStatus != nil || value.PrivateMigration != nil {
 		return teamOracleResponse{}, errTeamOracle
 	}
 	if kind == "targeting-policy" || kind == "hierarchy-status" {

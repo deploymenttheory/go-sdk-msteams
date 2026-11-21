@@ -129,7 +129,7 @@ func (s *Scope) transfer(ctx context.Context, request Request, body io.Reader, s
 	if err != nil {
 		return nil, 0, err
 	}
-	token, err := s.session.AcquireToken(operation, profile.audience)
+	token, err := s.session.AcquireTokenScope(operation, profile.audience, profile.scope)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -141,7 +141,7 @@ func (s *Scope) transfer(ctx context.Context, request Request, body io.Reader, s
 			break
 		}
 		controls.release()
-		token, err = s.session.AcquireToken(operation, profile.audience)
+		token, err = s.session.AcquireTokenScope(operation, profile.audience, profile.scope)
 		if err != nil {
 			return nil, 0, err
 		}
