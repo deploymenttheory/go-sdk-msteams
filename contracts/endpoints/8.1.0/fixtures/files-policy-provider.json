@@ -1,0 +1,1009 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-files-policy-provider-and-models",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "exports": [
+    {
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsFilesPolicyCmdlet",
+      "name": "Get-CsTeamsFilesPolicy"
+    },
+    {
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.NewTeamsFilesPolicyCmdlet",
+      "name": "New-CsTeamsFilesPolicy"
+    },
+    {
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTeamsFilesPolicyCmdlet",
+      "name": "Set-CsTeamsFilesPolicy"
+    },
+    {
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.RemoveTeamsFilesPolicyCmdlet",
+      "name": "Remove-CsTeamsFilesPolicy"
+    },
+    {
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GrantTeamsFilesPolicyCmdlet",
+      "name": "Grant-CsTeamsFilesPolicy"
+    }
+  ],
+  "stage": "Actual public exports verified as Core cmdlets. Actual pinned direct HttpRequestHelper with synthetic InvocationInfo, credential-refusing host and memory sender. Client/version/host restored. MPACmdlet factory default supplied. Actual model constructors/setters/Newtonsoft projections for all four string settings. No original command constructor/lifecycle, public binder, scope authorization, credentials, discovery or network. Direct compiled CRUD and grants only.",
+  "cases": [
+    {
+      "operation": "read",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsFilesPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "read",
+      "status": 200,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "{\"Identity\":\"Global\",\"Future\":false,\"NativeFileEntryPoints\":\"Future-NativeFileEntryPoints\",\"SPChannelFilesTab\":\"Future-SPChannelFilesTab\",\"DefaultFileUploadAppId\":\"Future-DefaultFileUploadAppId\",\"FileSharingInChatswithExternalUsers\":\"Future-FileSharingInChatswithExternalUsers\"}",
+      "input": "{}"
+    },
+    {
+      "operation": "list",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsFilesPolicy, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "list-empty",
+      "status": 200,
+      "policy_name": "",
+      "force_mode": -1,
+      "response": "[]",
+      "input": "{}"
+    },
+    {
+      "operation": "create",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"NativeFileEntryPoints\": \"Future-NativeFileEntryPoints\",\n  \"SPChannelFilesTab\": \"Future-SPChannelFilesTab\",\n  \"DefaultFileUploadAppId\": \"Future-DefaultFileUploadAppId\",\n  \"FileSharingInChatswithExternalUsers\": \"Future-FileSharingInChatswithExternalUsers\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsFilesPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "create-all",
+      "status": 201,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "{}",
+      "input": "{\"NativeFileEntryPoints\":\"Future-NativeFileEntryPoints\",\"SPChannelFilesTab\":\"Future-SPChannelFilesTab\",\"DefaultFileUploadAppId\":\"Future-DefaultFileUploadAppId\",\"FileSharingInChatswithExternalUsers\":\"Future-FileSharingInChatswithExternalUsers\"}"
+    },
+    {
+      "operation": "create",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "create-empty",
+      "status": 204,
+      "policy_name": "",
+      "force_mode": -1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "patch",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"NativeFileEntryPoints\": \"Future-NativeFileEntryPoints\",\n  \"SPChannelFilesTab\": \"Future-SPChannelFilesTab\",\n  \"DefaultFileUploadAppId\": \"Future-DefaultFileUploadAppId\",\n  \"FileSharingInChatswithExternalUsers\": \"Future-FileSharingInChatswithExternalUsers\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "patch-all",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "",
+      "input": "{\"NativeFileEntryPoints\":\"Future-NativeFileEntryPoints\",\"SPChannelFilesTab\":\"Future-SPChannelFilesTab\",\"DefaultFileUploadAppId\":\"Future-DefaultFileUploadAppId\",\"FileSharingInChatswithExternalUsers\":\"Future-FileSharingInChatswithExternalUsers\"}"
+    },
+    {
+      "operation": "patch",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"NativeFileEntryPoints\": null,\n  \"SPChannelFilesTab\": null,\n  \"DefaultFileUploadAppId\": null,\n  \"FileSharingInChatswithExternalUsers\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "patch-null",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "",
+      "input": "{\"NativeFileEntryPoints\":null,\"SPChannelFilesTab\":null,\"DefaultFileUploadAppId\":null,\"FileSharingInChatswithExternalUsers\":null}"
+    },
+    {
+      "operation": "patch",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"NativeFileEntryPoints\": \"\",\n  \"SPChannelFilesTab\": \"\",\n  \"DefaultFileUploadAppId\": \"\",\n  \"FileSharingInChatswithExternalUsers\": \"\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "patch-empty",
+      "status": 204,
+      "policy_name": "",
+      "force_mode": -1,
+      "response": "",
+      "input": "{\"NativeFileEntryPoints\":\"\",\"SPChannelFilesTab\":\"\",\"DefaultFileUploadAppId\":\"\",\"FileSharingInChatswithExternalUsers\":\"\"}"
+    },
+    {
+      "operation": "patch",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"NativeFileEntryPoints\": \"\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "patch-force-false",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": 0,
+      "response": "",
+      "input": "{\"NativeFileEntryPoints\":\"\"}"
+    },
+    {
+      "operation": "patch",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"NativeFileEntryPoints\": \"\",\n  \"Force\": \"True\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "patch-force-true",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": 1,
+      "response": "",
+      "input": "{\"NativeFileEntryPoints\":\"\"}"
+    },
+    {
+      "operation": "delete",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "delete",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "delete",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "delete-force-false",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": 0,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "read",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "read-empty",
+      "status": 204,
+      "policy_name": "",
+      "force_mode": -1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "read",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "read-null",
+      "status": 200,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "null",
+      "input": "{}"
+    },
+    {
+      "operation": "list",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "rank": -1,
+      "name": "list-envelope",
+      "status": 200,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "{\"value\":[]}",
+      "input": "{}"
+    },
+    {
+      "operation": "read",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFilesPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      },
+      "rank": -1,
+      "name": "read-denied",
+      "status": 403,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "input": "{}"
+    },
+    {
+      "operation": "user",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsFilesPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"additionalParameters\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "grant-user-null",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "tenant",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsFilesPolicy",
+        "Body": "{\n  \"PolicyName\": null,\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "grant-tenant-null",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": 0,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "group",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsFilesPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "grant-group-null",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "user",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsFilesPolicy",
+        "Body": "{\n  \"policyName\": \"\",\n  \"additionalParameters\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "grant-user-empty",
+      "status": 204,
+      "policy_name": "",
+      "force_mode": -1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "tenant",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsFilesPolicy",
+        "Body": "{\n  \"PolicyName\": \"\",\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": true\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "grant-tenant-empty",
+      "status": 204,
+      "policy_name": "",
+      "force_mode": 1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "group",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsFilesPolicy",
+        "Body": "{\n  \"policyName\": \"\",\n  \"priority\": -1\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": -1,
+      "name": "grant-group-empty",
+      "status": 204,
+      "policy_name": "",
+      "force_mode": -1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "group",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsFilesPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"priority\": 0\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": 0,
+      "name": "grant-group-rank-zero",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "group",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsFilesPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"priority\": 2\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": 2,
+      "name": "grant-group-rank-two",
+      "status": 204,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "",
+      "input": "{}"
+    },
+    {
+      "operation": "group",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsFilesPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"priority\": 2\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsFilesPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsFilesPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "rank": 2,
+      "name": "grant-group-accepted",
+      "status": 202,
+      "policy_name": null,
+      "force_mode": -1,
+      "response": "{\"OperationId\":\"fixture-operation\"}",
+      "input": "{}"
+    }
+  ],
+  "models": [
+    {
+      "name": "constructor",
+      "input": "constructor",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "empty-object",
+      "input": "{}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "all-settings",
+      "input": "{\"NativeFileEntryPoints\":\"Future-NativeFileEntryPoints\",\"SPChannelFilesTab\":\"Future-SPChannelFilesTab\",\"DefaultFileUploadAppId\":\"Future-DefaultFileUploadAppId\",\"FileSharingInChatswithExternalUsers\":\"Future-FileSharingInChatswithExternalUsers\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": "Future-NativeFileEntryPoints",
+          "SPChannelFilesTab": "Future-SPChannelFilesTab",
+          "DefaultFileUploadAppId": "Future-DefaultFileUploadAppId",
+          "FileSharingInChatswithExternalUsers": "Future-FileSharingInChatswithExternalUsers"
+        }
+      }
+    },
+    {
+      "name": "NativeFileEntryPoints-null",
+      "input": "{\"NativeFileEntryPoints\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "NativeFileEntryPoints-empty",
+      "input": "{\"NativeFileEntryPoints\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": "",
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "NativeFileEntryPoints-future",
+      "input": "{\"NativeFileEntryPoints\":\"Future-NativeFileEntryPoints\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": "Future-NativeFileEntryPoints",
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "SPChannelFilesTab-null",
+      "input": "{\"SPChannelFilesTab\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "SPChannelFilesTab-empty",
+      "input": "{\"SPChannelFilesTab\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": "",
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "SPChannelFilesTab-future",
+      "input": "{\"SPChannelFilesTab\":\"Future-SPChannelFilesTab\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": "Future-SPChannelFilesTab",
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "DefaultFileUploadAppId-null",
+      "input": "{\"DefaultFileUploadAppId\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "DefaultFileUploadAppId-empty",
+      "input": "{\"DefaultFileUploadAppId\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": "",
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "DefaultFileUploadAppId-future",
+      "input": "{\"DefaultFileUploadAppId\":\"Future-DefaultFileUploadAppId\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": "Future-DefaultFileUploadAppId",
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "FileSharingInChatswithExternalUsers-null",
+      "input": "{\"FileSharingInChatswithExternalUsers\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "FileSharingInChatswithExternalUsers-empty",
+      "input": "{\"FileSharingInChatswithExternalUsers\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": ""
+        }
+      }
+    },
+    {
+      "name": "FileSharingInChatswithExternalUsers-future",
+      "input": "{\"FileSharingInChatswithExternalUsers\":\"Future-FileSharingInChatswithExternalUsers\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": "Future-FileSharingInChatswithExternalUsers"
+        }
+      }
+    },
+    {
+      "name": "long-native-entry-points",
+      "input": "{\"NativeFileEntryPoints\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "case-duplicate",
+      "input": "{\"NativeFileEntryPoints\":\"first\",\"nativefileentrypoints\":\"second\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": "second",
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "duplicate-null",
+      "input": "{\"SPChannelFilesTab\":\"first\",\"spchannelfilestab\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "NativeFileEntryPoints": null,
+          "SPChannelFilesTab": null,
+          "DefaultFileUploadAppId": null,
+          "FileSharingInChatswithExternalUsers": null
+        }
+      }
+    },
+    {
+      "name": "invalid-string-object",
+      "input": "{\"DefaultFileUploadAppId\":{}}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonReaderException",
+        "value": null
+      }
+    },
+    {
+      "name": "invalid-string-array",
+      "input": "{\"FileSharingInChatswithExternalUsers\":[]}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonReaderException",
+        "value": null
+      }
+    }
+  ]
+}
