@@ -44,7 +44,7 @@ serializes as a string. MPACmdlet, command and GUID correlation headers apply;
 there is no modern forest target. The source's optional New Global comparison
 supports ShouldProcess presentation, so native create needs no implicit read.
 
-Native settings should distinguish omitted/null/empty/false/true. Compiled
+Native settings distinguish omitted/null/empty/false/true. Compiled
 optional string/nullable Boolean binding preserves null. New accepts an empty
 settings body: its predicate can be false, but BaseTpmNew does not reject it. Set
 rejects Identity-only and Force-only via its predicate. Long Description, unknown
@@ -59,27 +59,32 @@ PolicyName remain distinct, unlike the modern mapped string binder. A bound
 Global:false still selects GrantToTenant. The parameterless Identity set has no
 valid grant operation and emits its source error rather than sending a request.
 Group 202 is accepted by the compiled helper and decoded as the policy model;
-raw HTTP/result metadata must remain available without inventing polling or
+raw HTTP/result metadata remain available without inventing polling or
 effective assignment semantics.
 
-## Native implementation checkpoint and qualification remaining
+## Native implementation and qualification remaining
 
 TeamsEventsPolicies now exposes native compiled CRUD/list, all 25 typed settings,
 explicit Set read/PATCH composition with partial results, user/tenant/group grants
 and a credential-free missing-scope guard mapped to the parameterless set. Root
-and allowlist wiring and owned snapshots are included. Initial race tests compare
-all 24 provider requests in synthetic application/delegated modes, all 83 model
-observations, five actual source filter selections and the parameterless grant
-failure. All nine command/set pairs have native symbols and initial comparisons.
+and allowlist wiring and owned snapshots are included. Race tests compare all 24
+provider requests in synthetic application/delegated modes, all 83 model
+observations, all 121 compiled binder/predicate observations, five actual source
+filter selections and the parameterless grant failure. All nine command/set pairs
+have native symbols and selected comparisons.
 
-Before the implementation PR, complete the remaining public binder comparisons,
-partial update and mutation failure/no-replay/context guards, compiling examples,
-API docs, gated lab/source reads, full repository checks and reviewed sanitized
-artifacts. Ledger rows remain in-progress/metadata-only. Modern mapping metadata
-remains distinct from actual compiled dispatch; this checkpoint is not full
-command or tenant qualification.
+Additional tests retain Set preparation and acceptance through denied, empty,
+malformed, throttled and unavailable responses; preserve a null read-model
+Identity; retain signed Int32 group Rank boundaries; reject ambiguous scopes and
+invalid input/context before HTTP; and verify no mutation replay across five
+failure statuses. Compiling examples, API docs and a gated read-only lab harness
+are included. Ledger rows remain in-progress/metadata-only because these selected
+comparisons do not establish complete command coverage. Modern mapping metadata
+remains distinct from actual compiled dispatch.
 
-No tenant read/write has run for this family. Successful authorization,
+On 2026-11-21 actual compiled Global reads returned resource HTTP 403 with both
+client-secret and certificate authentication. No writes ran. See
+[lab acceptance](events-policy-lab-acceptance.md). Successful authorization,
 server/cloud availability, updates/read-back/cleanup, grants and effective webinar,
 townhall, recording/transcription/chat/ECDN/integration behavior remain unqualified.
 Issue #118 stays open. Microsoft binaries and decompiled source remain private.

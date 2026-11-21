@@ -13,6 +13,8 @@ import (
 const source = "contracts/endpoints/8.1.0/fixtures/events-policy-provider.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsEventsPolicy"
+const item = collection + "/configuration/Global"
+const setCommand = "Set-CsTeamsEventsPolicy"
 const scoped = "scope /Fixture / Child"
 
 type capture struct {
