@@ -1,0 +1,483 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "inherited-compiled-education-configuration-binding-and-filter",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll",
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+    },
+    {
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll",
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Owned subclasses inherit original compiled properties/attributes/constructors. Synthetic Begin/Process/End replace source lifecycle solely to return compiled binder values and actual protected AreParametersSpecified. In-process runspace/fixture commands, memory client and credential-refusing host. Actual protected FilterPolicies invoked separately. No original lifecycle, scope authorization, token acquisition, discovery or network. Source model/provider are a separate fixture.",
+  "cases": [
+    {
+      "arguments": {},
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {}
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "list",
+      "command": "Get-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "Identity": "Global"
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Global"
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "identity",
+      "command": "Get-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "Identity": ""
+      },
+      "observed": {
+        "failure": "System.Management.Automation.ValidationMetadataException",
+        "had_errors": false,
+        "output": null,
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "empty-identity",
+      "command": "Get-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "Filter": "Fixture*"
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Filter",
+          "bound": {
+            "Filter": "Fixture*"
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "filter",
+      "command": "Get-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "Filter": ""
+      },
+      "observed": {
+        "failure": "System.Management.Automation.ValidationMetadataException",
+        "had_errors": false,
+        "output": null,
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "empty-filter",
+      "command": "Get-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "Identity": "Global"
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Global"
+          },
+          "specified": false,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": null,
+            "EduGenerativeAIEnhancements": null,
+            "UpdateParentInformation": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "identity-only",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "Identity": "Global",
+        "Force": false
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Global",
+            "Force": {
+              "IsPresent": false
+            }
+          },
+          "specified": false,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": null,
+            "EduGenerativeAIEnhancements": null,
+            "UpdateParentInformation": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "force-only",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "UpdateParentInformation": "Future",
+        "Identity": ""
+      },
+      "observed": {
+        "failure": "System.Management.Automation.ValidationMetadataException",
+        "had_errors": false,
+        "output": null,
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "empty-identity",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "UpdateParentInformation": 0,
+        "Identity": "Global"
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "UpdateParentInformation": "0",
+            "Identity": "Global"
+          },
+          "specified": true,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": null,
+            "EduGenerativeAIEnhancements": null,
+            "UpdateParentInformation": "0"
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "numeric-string",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "ParentGuardianPreferredContactMethod": "FutureContact",
+        "Identity": "Global",
+        "EduGenerativeAIEnhancements": "FutureEnhancement",
+        "UpdateParentInformation": "FutureUpdate"
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "ParentGuardianPreferredContactMethod": "FutureContact",
+            "Identity": "Global",
+            "EduGenerativeAIEnhancements": "FutureEnhancement",
+            "UpdateParentInformation": "FutureUpdate"
+          },
+          "specified": true,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": "FutureContact",
+            "EduGenerativeAIEnhancements": "FutureEnhancement",
+            "UpdateParentInformation": "FutureUpdate"
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "all-settings",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "Force": true,
+        "Identity": "Global",
+        "UpdateParentInformation": ""
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Force": {
+              "IsPresent": true
+            },
+            "Identity": "Global",
+            "UpdateParentInformation": ""
+          },
+          "specified": true,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": null,
+            "EduGenerativeAIEnhancements": null,
+            "UpdateParentInformation": ""
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "force-true",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "ParentGuardianPreferredContactMethod": null,
+        "Identity": "Global"
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "ParentGuardianPreferredContactMethod": null,
+            "Identity": "Global"
+          },
+          "specified": true,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": null,
+            "EduGenerativeAIEnhancements": null,
+            "UpdateParentInformation": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "ParentGuardianPreferredContactMethod-null",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "ParentGuardianPreferredContactMethod": "",
+        "Identity": "Global"
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "ParentGuardianPreferredContactMethod": "",
+            "Identity": "Global"
+          },
+          "specified": true,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": "",
+            "EduGenerativeAIEnhancements": null,
+            "UpdateParentInformation": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "ParentGuardianPreferredContactMethod-empty",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "Identity": "Global",
+        "EduGenerativeAIEnhancements": null
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Global",
+            "EduGenerativeAIEnhancements": null
+          },
+          "specified": true,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": null,
+            "EduGenerativeAIEnhancements": null,
+            "UpdateParentInformation": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "EduGenerativeAIEnhancements-null",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "Identity": "Global",
+        "EduGenerativeAIEnhancements": ""
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Global",
+            "EduGenerativeAIEnhancements": ""
+          },
+          "specified": true,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": null,
+            "EduGenerativeAIEnhancements": "",
+            "UpdateParentInformation": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "EduGenerativeAIEnhancements-empty",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "UpdateParentInformation": null,
+        "Identity": "Global"
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "UpdateParentInformation": null,
+            "Identity": "Global"
+          },
+          "specified": true,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": null,
+            "EduGenerativeAIEnhancements": null,
+            "UpdateParentInformation": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "UpdateParentInformation-null",
+      "command": "Set-CsTeamsEducationConfiguration"
+    },
+    {
+      "arguments": {
+        "UpdateParentInformation": "",
+        "Identity": "Global"
+      },
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "UpdateParentInformation": "",
+            "Identity": "Global"
+          },
+          "specified": true,
+          "settings": {
+            "ParentGuardianPreferredContactMethod": null,
+            "EduGenerativeAIEnhancements": null,
+            "UpdateParentInformation": ""
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "name": "UpdateParentInformation-empty",
+      "command": "Set-CsTeamsEducationConfiguration"
+    }
+  ],
+  "filters": [
+    {
+      "pattern": "",
+      "observed": {
+        "identities": [
+          "global",
+          "Tag:Fixture",
+          "Global",
+          " ",
+          "Global/fixture"
+        ],
+        "sends": 0,
+        "tokens": 0
+      }
+    },
+    {
+      "pattern": "Fixture*",
+      "observed": {
+        "identities": [
+          "Tag:Fixture"
+        ],
+        "sends": 0,
+        "tokens": 0
+      }
+    },
+    {
+      "pattern": " ",
+      "observed": {
+        "identities": [
+          " "
+        ],
+        "sends": 0,
+        "tokens": 0
+      }
+    },
+    {
+      "pattern": "Global",
+      "observed": {
+        "identities": [
+          "global",
+          "Global"
+        ],
+        "sends": 0,
+        "tokens": 0
+      }
+    },
+    {
+      "pattern": "Global/*",
+      "observed": {
+        "identities": [
+          "Global/fixture"
+        ],
+        "sends": 0,
+        "tokens": 0
+      }
+    }
+  ]
+}
