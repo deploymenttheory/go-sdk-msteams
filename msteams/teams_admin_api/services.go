@@ -30,6 +30,7 @@ import (
 	teamscallparkpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
 	teamscallingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_calling_policy"
 	teamschannelspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_channels_policy"
+	teamsclientconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_client_configuration"
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
@@ -37,6 +38,7 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsClientConfigurations               *teamsclientconfiguration.Service
 	TeamsChannelsPolicies                   *teamschannelspolicy.Service
 	TeamsCallingPolicies                    *teamscallingpolicy.Service
 	TeamsCallParkPolicies                   *teamscallparkpolicy.Service
@@ -88,6 +90,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsClientConfigurations:               teamsclientconfiguration.NewService(scope),
 		TeamsChannelsPolicies:                   teamschannelspolicy.NewService(scope),
 		TeamsCallingPolicies:                    teamscallingpolicy.NewService(scope),
 		TeamsCallParkPolicies:                   teamscallparkpolicy.NewService(backend),

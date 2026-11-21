@@ -1,0 +1,1902 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-client-configuration-provider-and-models",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Actual pinned direct HttpRequestHelper with synthetic InvocationInfo, credential-refusing host and memory sender. Client/version/host restored. MPACmdlet factory default supplied. Actual model constructors/setters/Newtonsoft projections for all 17 settings. No command constructor/lifecycle, public parameter binder, credentials, discovery or network. Compiled read/list/PATCH only; no invented create/delete/grant operation.",
+  "cases": [
+    {
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsClientConfiguration",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "read",
+      "status": 200,
+      "name": "read",
+      "input": "{}",
+      "response": "{\"Identity\":\"Global\",\"Future\":false,\"AllowEmailIntoChannel\":false,\"RestrictedSenderList\":\"Future-RestrictedSenderList\",\"AllowDropBox\":false,\"AllowBox\":false,\"AllowGoogleDrive\":false,\"AllowShareFile\":false,\"AllowEgnyte\":false,\"AllowOrganizationTab\":false,\"AllowSkypeBusinessInterop\":false,\"ContentPin\":\"Future-ContentPin\",\"AllowResourceAccountSendMessage\":false,\"ResourceAccountContentAccess\":\"Future-ResourceAccountContentAccess\",\"AllowGuestUser\":false,\"AllowScopedPeopleSearchandAccess\":false,\"AllowRoleBasedChatPermissions\":false,\"ExtendedWorkInfoInPeopleSearch\":false,\"UseUnifiedDomain\":\"Future-UseUnifiedDomain\"}",
+      "force_mode": -1
+    },
+    {
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsClientConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "list",
+      "status": 200,
+      "name": "list-empty",
+      "input": "{}",
+      "response": "[]",
+      "force_mode": -1
+    },
+    {
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"AllowEmailIntoChannel\": false,\n  \"RestrictedSenderList\": \"Future-RestrictedSenderList\",\n  \"AllowDropBox\": false,\n  \"AllowBox\": false,\n  \"AllowGoogleDrive\": false,\n  \"AllowShareFile\": false,\n  \"AllowEgnyte\": false,\n  \"AllowOrganizationTab\": false,\n  \"AllowSkypeBusinessInterop\": false,\n  \"ContentPin\": \"Future-ContentPin\",\n  \"AllowResourceAccountSendMessage\": false,\n  \"ResourceAccountContentAccess\": \"Future-ResourceAccountContentAccess\",\n  \"AllowGuestUser\": false,\n  \"AllowScopedPeopleSearchandAccess\": false,\n  \"AllowRoleBasedChatPermissions\": false,\n  \"ExtendedWorkInfoInPeopleSearch\": false,\n  \"UseUnifiedDomain\": \"Future-UseUnifiedDomain\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "patch",
+      "status": 204,
+      "name": "patch-all",
+      "input": "{\"AllowEmailIntoChannel\":false,\"RestrictedSenderList\":\"Future-RestrictedSenderList\",\"AllowDropBox\":false,\"AllowBox\":false,\"AllowGoogleDrive\":false,\"AllowShareFile\":false,\"AllowEgnyte\":false,\"AllowOrganizationTab\":false,\"AllowSkypeBusinessInterop\":false,\"ContentPin\":\"Future-ContentPin\",\"AllowResourceAccountSendMessage\":false,\"ResourceAccountContentAccess\":\"Future-ResourceAccountContentAccess\",\"AllowGuestUser\":false,\"AllowScopedPeopleSearchandAccess\":false,\"AllowRoleBasedChatPermissions\":false,\"ExtendedWorkInfoInPeopleSearch\":false,\"UseUnifiedDomain\":\"Future-UseUnifiedDomain\"}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"AllowEmailIntoChannel\": null,\n  \"RestrictedSenderList\": null,\n  \"UseUnifiedDomain\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "patch",
+      "status": 204,
+      "name": "patch-null",
+      "input": "{\"RestrictedSenderList\":null,\"AllowEmailIntoChannel\":null,\"UseUnifiedDomain\":null}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"RestrictedSenderList\": \"\",\n  \"ContentPin\": \"\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "patch",
+      "status": 204,
+      "name": "patch-empty",
+      "input": "{\"RestrictedSenderList\":\"\",\"ContentPin\":\"\"}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"RestrictedSenderList\": \"\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "patch",
+      "status": 204,
+      "name": "patch-force-false",
+      "input": "{\"RestrictedSenderList\":\"\"}",
+      "response": "",
+      "force_mode": 0
+    },
+    {
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"RestrictedSenderList\": \"\",\n  \"Force\": \"True\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "patch",
+      "status": 204,
+      "name": "patch-force-true",
+      "input": "{\"RestrictedSenderList\":\"\"}",
+      "response": "",
+      "force_mode": 1
+    },
+    {
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "read",
+      "status": 204,
+      "name": "read-empty",
+      "input": "{}",
+      "response": "",
+      "force_mode": -1
+    },
+    {
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "operation": "read",
+      "status": 200,
+      "name": "read-null",
+      "input": "{}",
+      "response": "null",
+      "force_mode": -1
+    },
+    {
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "operation": "list",
+      "status": 200,
+      "name": "list-envelope",
+      "input": "{}",
+      "response": "{\"value\":[]}",
+      "force_mode": -1
+    },
+    {
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsClientConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      },
+      "operation": "read",
+      "status": 403,
+      "name": "read-denied",
+      "input": "{}",
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "force_mode": -1
+    }
+  ],
+  "models": [
+    {
+      "name": "constructor",
+      "input": "constructor",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "empty-object",
+      "input": "{}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "all-settings",
+      "input": "{\"AllowEmailIntoChannel\":false,\"RestrictedSenderList\":\"Future-RestrictedSenderList\",\"AllowDropBox\":false,\"AllowBox\":false,\"AllowGoogleDrive\":false,\"AllowShareFile\":false,\"AllowEgnyte\":false,\"AllowOrganizationTab\":false,\"AllowSkypeBusinessInterop\":false,\"ContentPin\":\"Future-ContentPin\",\"AllowResourceAccountSendMessage\":false,\"ResourceAccountContentAccess\":\"Future-ResourceAccountContentAccess\",\"AllowGuestUser\":false,\"AllowScopedPeopleSearchandAccess\":false,\"AllowRoleBasedChatPermissions\":false,\"ExtendedWorkInfoInPeopleSearch\":false,\"UseUnifiedDomain\":\"Future-UseUnifiedDomain\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": false,
+          "RestrictedSenderList": "Future-RestrictedSenderList",
+          "AllowDropBox": false,
+          "AllowBox": false,
+          "AllowGoogleDrive": false,
+          "AllowShareFile": false,
+          "AllowEgnyte": false,
+          "AllowOrganizationTab": false,
+          "AllowSkypeBusinessInterop": false,
+          "ContentPin": "Future-ContentPin",
+          "AllowResourceAccountSendMessage": false,
+          "ResourceAccountContentAccess": "Future-ResourceAccountContentAccess",
+          "AllowGuestUser": false,
+          "AllowScopedPeopleSearchandAccess": false,
+          "AllowRoleBasedChatPermissions": false,
+          "ExtendedWorkInfoInPeopleSearch": false,
+          "UseUnifiedDomain": "Future-UseUnifiedDomain"
+        }
+      }
+    },
+    {
+      "name": "AllowEmailIntoChannel-null",
+      "input": "{\"AllowEmailIntoChannel\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowEmailIntoChannel-false",
+      "input": "{\"AllowEmailIntoChannel\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": false,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowEmailIntoChannel-true",
+      "input": "{\"AllowEmailIntoChannel\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": true,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "RestrictedSenderList-null",
+      "input": "{\"RestrictedSenderList\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "RestrictedSenderList-empty",
+      "input": "{\"RestrictedSenderList\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": "",
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "RestrictedSenderList-future",
+      "input": "{\"RestrictedSenderList\":\"Future-RestrictedSenderList\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": "Future-RestrictedSenderList",
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowDropBox-null",
+      "input": "{\"AllowDropBox\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowDropBox-false",
+      "input": "{\"AllowDropBox\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": false,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowDropBox-true",
+      "input": "{\"AllowDropBox\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": true,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowBox-null",
+      "input": "{\"AllowBox\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowBox-false",
+      "input": "{\"AllowBox\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": false,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowBox-true",
+      "input": "{\"AllowBox\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": true,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowGoogleDrive-null",
+      "input": "{\"AllowGoogleDrive\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowGoogleDrive-false",
+      "input": "{\"AllowGoogleDrive\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": false,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowGoogleDrive-true",
+      "input": "{\"AllowGoogleDrive\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": true,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowShareFile-null",
+      "input": "{\"AllowShareFile\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowShareFile-false",
+      "input": "{\"AllowShareFile\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": false,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowShareFile-true",
+      "input": "{\"AllowShareFile\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": true,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowEgnyte-null",
+      "input": "{\"AllowEgnyte\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowEgnyte-false",
+      "input": "{\"AllowEgnyte\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": false,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowEgnyte-true",
+      "input": "{\"AllowEgnyte\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": true,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowOrganizationTab-null",
+      "input": "{\"AllowOrganizationTab\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowOrganizationTab-false",
+      "input": "{\"AllowOrganizationTab\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": false,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowOrganizationTab-true",
+      "input": "{\"AllowOrganizationTab\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": true,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowSkypeBusinessInterop-null",
+      "input": "{\"AllowSkypeBusinessInterop\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowSkypeBusinessInterop-false",
+      "input": "{\"AllowSkypeBusinessInterop\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": false,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowSkypeBusinessInterop-true",
+      "input": "{\"AllowSkypeBusinessInterop\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": true,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "ContentPin-null",
+      "input": "{\"ContentPin\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "ContentPin-empty",
+      "input": "{\"ContentPin\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": "",
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "ContentPin-future",
+      "input": "{\"ContentPin\":\"Future-ContentPin\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": "Future-ContentPin",
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowResourceAccountSendMessage-null",
+      "input": "{\"AllowResourceAccountSendMessage\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowResourceAccountSendMessage-false",
+      "input": "{\"AllowResourceAccountSendMessage\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": false,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowResourceAccountSendMessage-true",
+      "input": "{\"AllowResourceAccountSendMessage\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": true,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "ResourceAccountContentAccess-null",
+      "input": "{\"ResourceAccountContentAccess\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "ResourceAccountContentAccess-empty",
+      "input": "{\"ResourceAccountContentAccess\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": "",
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "ResourceAccountContentAccess-future",
+      "input": "{\"ResourceAccountContentAccess\":\"Future-ResourceAccountContentAccess\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": "Future-ResourceAccountContentAccess",
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowGuestUser-null",
+      "input": "{\"AllowGuestUser\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowGuestUser-false",
+      "input": "{\"AllowGuestUser\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": false,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowGuestUser-true",
+      "input": "{\"AllowGuestUser\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": true,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowScopedPeopleSearchandAccess-null",
+      "input": "{\"AllowScopedPeopleSearchandAccess\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowScopedPeopleSearchandAccess-false",
+      "input": "{\"AllowScopedPeopleSearchandAccess\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": false,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowScopedPeopleSearchandAccess-true",
+      "input": "{\"AllowScopedPeopleSearchandAccess\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": true,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowRoleBasedChatPermissions-null",
+      "input": "{\"AllowRoleBasedChatPermissions\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowRoleBasedChatPermissions-false",
+      "input": "{\"AllowRoleBasedChatPermissions\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": false,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "AllowRoleBasedChatPermissions-true",
+      "input": "{\"AllowRoleBasedChatPermissions\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": true,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "ExtendedWorkInfoInPeopleSearch-null",
+      "input": "{\"ExtendedWorkInfoInPeopleSearch\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "ExtendedWorkInfoInPeopleSearch-false",
+      "input": "{\"ExtendedWorkInfoInPeopleSearch\":false}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": false,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "ExtendedWorkInfoInPeopleSearch-true",
+      "input": "{\"ExtendedWorkInfoInPeopleSearch\":true}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": true,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "UseUnifiedDomain-null",
+      "input": "{\"UseUnifiedDomain\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "UseUnifiedDomain-empty",
+      "input": "{\"UseUnifiedDomain\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": ""
+        }
+      }
+    },
+    {
+      "name": "UseUnifiedDomain-future",
+      "input": "{\"UseUnifiedDomain\":\"Future-UseUnifiedDomain\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": "Future-UseUnifiedDomain"
+        }
+      }
+    },
+    {
+      "name": "long-sender-list",
+      "input": "{\"RestrictedSenderList\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "opaque-sender-text",
+      "input": "{\"RestrictedSenderList\":\"alpha@example.invalid; beta@example.invalid\",\"ContentPin\":\"0000\",\"ResourceAccountContentAccess\":\"FutureAccess\",\"UseUnifiedDomain\":\"FutureMode\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": "alpha@example.invalid; beta@example.invalid",
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": "0000",
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": "FutureAccess",
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": "FutureMode"
+        }
+      }
+    },
+    {
+      "name": "case-duplicate",
+      "input": "{\"RestrictedSenderList\":\"first\",\"restrictedsenderlist\":\"second\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": "second",
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "duplicate-null",
+      "input": "{\"AllowEmailIntoChannel\":true,\"AllowEmailIntoChannel\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "AllowEmailIntoChannel": null,
+          "RestrictedSenderList": null,
+          "AllowDropBox": null,
+          "AllowBox": null,
+          "AllowGoogleDrive": null,
+          "AllowShareFile": null,
+          "AllowEgnyte": null,
+          "AllowOrganizationTab": null,
+          "AllowSkypeBusinessInterop": null,
+          "ContentPin": null,
+          "AllowResourceAccountSendMessage": null,
+          "ResourceAccountContentAccess": null,
+          "AllowGuestUser": null,
+          "AllowScopedPeopleSearchandAccess": null,
+          "AllowRoleBasedChatPermissions": null,
+          "ExtendedWorkInfoInPeopleSearch": null,
+          "UseUnifiedDomain": null
+        }
+      }
+    },
+    {
+      "name": "invalid-boolean-object",
+      "input": "{\"AllowEmailIntoChannel\":{}}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonReaderException",
+        "value": null
+      }
+    },
+    {
+      "name": "invalid-string-array",
+      "input": "{\"RestrictedSenderList\":[]}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonReaderException",
+        "value": null
+      }
+    }
+  ]
+}
