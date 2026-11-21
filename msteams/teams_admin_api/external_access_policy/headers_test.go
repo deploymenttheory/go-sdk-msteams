@@ -50,7 +50,10 @@ func TestCompiledCallsUseFreshCorrelationAndNoForestBootstrap(t *testing.T) {
 	if _, _, err := sdk.TeamsAdminAPI.AssignmentMigrations.GetByID(t.Context(), "fixture-job"); err != nil {
 		t.Fatal(err)
 	}
-	if calls != 4 || len(seen) != 4 {
+	if _, _, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.GetByIdentity(t.Context(), "Global"); err != nil {
+		t.Fatal(err)
+	}
+	if calls != 5 || len(seen) != 5 {
 		t.Fatal("unexpected compiled request count")
 	}
 }

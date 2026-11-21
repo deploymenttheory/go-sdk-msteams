@@ -1,0 +1,895 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-branding-provider-and-local-modifier",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "sma_assembly_version": "7.6.0.500",
+  "stage": "Direct pinned HttpRequestHelper calls with synthetic InvocationInfo; fake host refuses tokens; private client/version/host replaced/restored; memory-only sender. MPACmdlet inserted from factory source. Local modifiers call pinned Core.PSListModifierHelper.ApplyTo with host SMA containers and source delegates. No cmdlet constructors/ProcessRecord, binding, auth, discovery or network.",
+  "cases": [
+    {
+      "operation": "read",
+      "status": 200,
+      "name": "read",
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMeetingBrandingPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "list",
+      "status": 200,
+      "name": "list",
+      "response": "[]",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMeetingBrandingPolicy, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "create",
+      "status": 200,
+      "name": "create",
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"NdiAssuranceSlateImages\": [],\n  \"MeetingBackgroundImages\": [],\n  \"MeetingBrandingThemes\": [],\n  \"DefaultTheme\": \"\",\n  \"EnableMeetingOptionsThemeOverride\": false,\n  \"EnableMeetingOptionsBrandedReactionsOverride\": false,\n  \"EnableNdiAssuranceSlate\": false,\n  \"EnableMeetingBackgroundImages\": false,\n  \"RequireBackgroundEffect\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMeetingBrandingPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "patch",
+      "status": 204,
+      "name": "patch",
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"NdiAssuranceSlateImages\": [],\n  \"MeetingBackgroundImages\": [],\n  \"MeetingBrandingThemes\": [],\n  \"DefaultTheme\": \"\",\n  \"EnableMeetingOptionsThemeOverride\": false,\n  \"EnableMeetingOptionsBrandedReactionsOverride\": false,\n  \"EnableNdiAssuranceSlate\": false,\n  \"EnableMeetingBackgroundImages\": false,\n  \"RequireBackgroundEffect\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "delete",
+      "status": 204,
+      "name": "delete",
+      "response": "",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "user",
+      "status": 200,
+      "name": "user",
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsMeetingBrandingPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"additionalParameters\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMeetingBrandingPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "tenant",
+      "status": 200,
+      "name": "tenant",
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsMeetingBrandingPolicy",
+        "Body": "{\n  \"PolicyName\": \"\",\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMeetingBrandingPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "group",
+      "status": 200,
+      "name": "group",
+      "response": "{\"Identity\":\"fixture-response\"}",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsMeetingBrandingPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMeetingBrandingPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "create",
+      "status": 201,
+      "name": "create-nested",
+      "response": "{\"Identity\":\"Fixture\",\"Future\":false}",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"NdiAssuranceSlateImages\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-slate\",\n      \"Name\": \"Fixture\",\n      \"NdiImageUri\": \"https://example.invalid/slate.png\",\n      \"IsDefault\": false\n    }\n  ],\n  \"MeetingBackgroundImages\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-image\",\n      \"Order\": 0,\n      \"Name\": \"Fixture\",\n      \"IsRequired\": false,\n      \"IsHidden\": null,\n      \"ImageUri\": \"https://example.invalid/background.png\"\n    }\n  ],\n  \"MeetingBrandingThemes\": [\n    {\n      \"MeetingReactions\": [],\n      \"DisplayName\": null,\n      \"LogoImageLightUri\": null,\n      \"LogoImageDarkUri\": null,\n      \"BackgroundImageLightUri\": null,\n      \"BackgroundImageDarkUri\": null,\n      \"EnableChatBackground\": null,\n      \"ChatBackgroundImageLightUri\": null,\n      \"ChatBackgroundImageDarkUri\": null,\n      \"ChatBackgroundImageAlignment\": null,\n      \"LogoImageLightPreAuthUri\": null,\n      \"LogoImageDarkPreAuthUri\": null,\n      \"MeetingInviteLogoImageLightPreAuthUri\": null,\n      \"MeetingInviteLogoImageDarkPreAuthUri\": null,\n      \"BackgroundImageLightPreAuthUri\": null,\n      \"BackgroundImageDarkPreAuthUri\": null,\n      \"BrandAccentColor\": null,\n      \"DisableOriginalReactions\": null,\n      \"Enabled\": false,\n      \"Identity\": \"fixture-theme\"\n    }\n  ],\n  \"DefaultTheme\": \"\",\n  \"EnableMeetingOptionsThemeOverride\": false,\n  \"EnableMeetingOptionsBrandedReactionsOverride\": false,\n  \"EnableNdiAssuranceSlate\": false,\n  \"EnableMeetingBackgroundImages\": false,\n  \"RequireBackgroundEffect\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMeetingBrandingPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": true,
+      "force": false
+    },
+    {
+      "operation": "patch",
+      "status": 204,
+      "name": "patch-nested",
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"NdiAssuranceSlateImages\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-slate\",\n      \"Name\": \"Fixture\",\n      \"NdiImageUri\": \"https://example.invalid/slate.png\",\n      \"IsDefault\": false\n    }\n  ],\n  \"MeetingBackgroundImages\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-image\",\n      \"Order\": 0,\n      \"Name\": \"Fixture\",\n      \"IsRequired\": false,\n      \"IsHidden\": null,\n      \"ImageUri\": \"https://example.invalid/background.png\"\n    }\n  ],\n  \"MeetingBrandingThemes\": [\n    {\n      \"MeetingReactions\": [],\n      \"DisplayName\": null,\n      \"LogoImageLightUri\": null,\n      \"LogoImageDarkUri\": null,\n      \"BackgroundImageLightUri\": null,\n      \"BackgroundImageDarkUri\": null,\n      \"EnableChatBackground\": null,\n      \"ChatBackgroundImageLightUri\": null,\n      \"ChatBackgroundImageDarkUri\": null,\n      \"ChatBackgroundImageAlignment\": null,\n      \"LogoImageLightPreAuthUri\": null,\n      \"LogoImageDarkPreAuthUri\": null,\n      \"MeetingInviteLogoImageLightPreAuthUri\": null,\n      \"MeetingInviteLogoImageDarkPreAuthUri\": null,\n      \"BackgroundImageLightPreAuthUri\": null,\n      \"BackgroundImageDarkPreAuthUri\": null,\n      \"BrandAccentColor\": null,\n      \"DisableOriginalReactions\": null,\n      \"Enabled\": false,\n      \"Identity\": \"fixture-theme\"\n    }\n  ],\n  \"DefaultTheme\": \"\",\n  \"EnableMeetingOptionsThemeOverride\": false,\n  \"EnableMeetingOptionsBrandedReactionsOverride\": false,\n  \"EnableNdiAssuranceSlate\": false,\n  \"EnableMeetingBackgroundImages\": false,\n  \"RequireBackgroundEffect\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": true,
+      "force": false
+    },
+    {
+      "operation": "delete",
+      "status": 204,
+      "name": "delete-force-false",
+      "response": "",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": true
+    },
+    {
+      "operation": "read",
+      "status": 200,
+      "name": "read-null-arrays",
+      "response": "{\"Identity\":\"Global\",\"MeetingBackgroundImages\":null,\"MeetingBrandingThemes\":null,\"NdiAssuranceSlateImages\":null}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMeetingBrandingPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "read",
+      "status": 200,
+      "name": "read-invalid-asset",
+      "response": "{\"Identity\":\"Global\",\"MeetingBackgroundImages\":[{\"Id\":\"fixture\",\"ImageUri\":\"http://example.invalid/a\"}]}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "read",
+      "status": 200,
+      "name": "read-null-asset-id",
+      "response": "{\"Identity\":\"Global\",\"MeetingBackgroundImages\":[{\"Id\":null}]}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "read",
+      "status": 200,
+      "name": "read-null-asset-order",
+      "response": "{\"Identity\":\"Global\",\"MeetingBackgroundImages\":[{\"Order\":null}]}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "read",
+      "status": 200,
+      "name": "read-lowercase-invalid-uri",
+      "response": "{\"Identity\":\"Global\",\"MeetingBackgroundImages\":[{\"imageuri\":\"http://example.invalid/a\"}]}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "read",
+      "status": 200,
+      "name": "read-lowercase-null-theme",
+      "response": "{\"Identity\":\"Global\",\"MeetingBrandingThemes\":[{\"identity\":null}]}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "list",
+      "status": 200,
+      "name": "list-envelope",
+      "response": "{\"value\":[]}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "delete",
+      "status": 403,
+      "name": "delete-denied",
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "read",
+      "status": 204,
+      "name": "read-empty",
+      "response": "",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsMeetingBrandingPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    },
+    {
+      "operation": "group",
+      "status": 202,
+      "name": "group-opaque",
+      "response": "{\"OperationId\":\"fixture-operation\"}",
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsMeetingBrandingPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsMeetingBrandingPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMeetingBrandingPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "nested": false,
+      "force": false
+    }
+  ],
+  "lists": [
+    {
+      "name": "null",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "empty-replace",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "replace",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "b",
+          "b"
+        ]
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "empty-delta",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "add",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "a",
+          "a",
+          "b",
+          "a"
+        ]
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "remove",
+      "empty": false,
+      "observation": {
+        "rejected": true,
+        "ids": [
+          "a",
+          "a",
+          "b"
+        ]
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "remove-missing",
+      "empty": false,
+      "observation": {
+        "rejected": true,
+        "ids": [
+          "a",
+          "a",
+          "b"
+        ]
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "null-item",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          null
+        ]
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "null",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "empty-replace",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "replace",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "b",
+          "b"
+        ]
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "empty-delta",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "add",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "a"
+        ]
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "remove",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "remove-missing",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "null-item",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          null
+        ]
+      },
+      "kind": "policy"
+    },
+    {
+      "name": "null",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "empty-replace",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "replace",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "b",
+          "b"
+        ]
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "empty-delta",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "add",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "a",
+          "a",
+          "a:different",
+          "a"
+        ]
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "remove",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "a",
+          "a:different"
+        ]
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "remove-different",
+      "empty": false,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "a",
+          "a"
+        ]
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "null",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "empty-replace",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "replace",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "b",
+          "b"
+        ]
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "empty-delta",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "add",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": [
+          "a"
+        ]
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "remove",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "reaction"
+    },
+    {
+      "name": "remove-different",
+      "empty": true,
+      "observation": {
+        "rejected": false,
+        "ids": []
+      },
+      "kind": "reaction"
+    }
+  ]
+}
