@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "isolated-enhanced-encryption-public-parameter-binding",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "sources": [
+    {
+      "path": "exports/ProxyCmdletDefinitionsWithHelp.ps1",
+      "sha256": "5a8a5a50081b1c6986b93d5b15723e966a2d22b64459a9c300cb2a1bf69bb3b5"
+    },
+    {
+      "path": "bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll",
+      "sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Unmodified exported New/Set parameter declarations and attributes in a renamed function with a synthetic body returning bound arguments; actual pure XdsConfiguration dictionary serialization. Private calling-mode ValidSet metadata read separately. Inherited property-bag validator IL restricted to the pinned empty nop/br.s-0/ret body, invoked on an uninitialized command solely to observe unchanged future text. No original constructor, export Begin/Process/End, runtime custom-attribute processing, TRPS/flight selection, command lifecycle, credentials or network.",
+  "cases": [
+    {
+      "wire": {
+        "Identity": "Fixture"
+      },
+      "name": "omitted-settings",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture"
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "MeetingEndToEndEncryption": "",
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "name": "empty-strings",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "MeetingEndToEndEncryption": "",
+        "Identity": "Fixture",
+        "Description": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "FutureCalling",
+        "MeetingEndToEndEncryption": "FutureMeeting",
+        "Description": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "Identity": "Fixture"
+      },
+      "name": "future-strings",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "CallingEndtoEndEncryptionEnabledType": "FutureCalling",
+        "MeetingEndToEndEncryption": "FutureMeeting",
+        "Identity": "Fixture",
+        "Description": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "MeetingEndToEndEncryption": "",
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "name": "bound-null-fields",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "MeetingEndToEndEncryption": "",
+        "Identity": "Fixture",
+        "Description": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "0",
+        "Identity": "Fixture"
+      },
+      "name": "numeric-string",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "CallingEndtoEndEncryptionEnabledType": "0"
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "MeetingEndToEndEncryption": "False",
+        "Identity": "Fixture"
+      },
+      "name": "boolean-string",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "MeetingEndToEndEncryption": "False"
+      },
+      "failure_type": null
+    },
+    {
+      "wire": null,
+      "name": "empty-identity",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": null,
+      "failure_type": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "wire": null,
+      "name": "null-identity",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": null,
+      "failure_type": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "wire": {
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "name": "null-Description",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "Description": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "Identity": "Fixture"
+      },
+      "name": "null-CallingEndtoEndEncryptionEnabledType",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "CallingEndtoEndEncryptionEnabledType": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "MeetingEndToEndEncryption": "",
+        "Identity": "Fixture"
+      },
+      "name": "null-MeetingEndToEndEncryption",
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "MeetingEndToEndEncryption": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "Identity": "Fixture"
+      },
+      "name": "omitted-settings",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture"
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "MeetingEndToEndEncryption": "",
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "name": "empty-strings",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "MeetingEndToEndEncryption": "",
+        "Identity": "Fixture",
+        "Description": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "FutureCalling",
+        "MeetingEndToEndEncryption": "FutureMeeting",
+        "Description": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "Identity": "Fixture"
+      },
+      "name": "future-strings",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "CallingEndtoEndEncryptionEnabledType": "FutureCalling",
+        "MeetingEndToEndEncryption": "FutureMeeting",
+        "Identity": "Fixture",
+        "Description": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "MeetingEndToEndEncryption": "",
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "name": "bound-null-fields",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "MeetingEndToEndEncryption": "",
+        "Identity": "Fixture",
+        "Description": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "0",
+        "Identity": "Fixture"
+      },
+      "name": "numeric-string",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "CallingEndtoEndEncryptionEnabledType": "0"
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "MeetingEndToEndEncryption": "False",
+        "Identity": "Fixture"
+      },
+      "name": "boolean-string",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "MeetingEndToEndEncryption": "False"
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "Description": "",
+        "Identity": ""
+      },
+      "name": "empty-identity",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "",
+        "Description": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "Description": "",
+        "Identity": ""
+      },
+      "name": "null-identity",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "",
+        "Description": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "Description": "",
+        "Identity": "Fixture"
+      },
+      "name": "null-Description",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "Description": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "CallingEndtoEndEncryptionEnabledType": "",
+        "Identity": "Fixture"
+      },
+      "name": "null-CallingEndtoEndEncryptionEnabledType",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "CallingEndtoEndEncryptionEnabledType": ""
+      },
+      "failure_type": null
+    },
+    {
+      "wire": {
+        "MeetingEndToEndEncryption": "",
+        "Identity": "Fixture"
+      },
+      "name": "null-MeetingEndToEndEncryption",
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "bound": {
+        "Identity": "Fixture",
+        "MeetingEndToEndEncryption": ""
+      },
+      "failure_type": null
+    }
+  ],
+  "private_metadata": [
+    {
+      "validator_body": "verified-empty-il-nop-branch-ret",
+      "calling_mode_valid_set": [
+        "Disabled",
+        "DisabledUserOverride"
+      ],
+      "command": "New-CsTeamsEnhancedEncryptionPolicy",
+      "property_bag_validator": "Microsoft.Teams.ConfigApi.Cmdlets.TrpsPSCmdlet",
+      "future_value_unchanged": true
+    },
+    {
+      "validator_body": "verified-empty-il-nop-branch-ret",
+      "calling_mode_valid_set": [
+        "Disabled",
+        "DisabledUserOverride"
+      ],
+      "command": "Set-CsTeamsEnhancedEncryptionPolicy",
+      "property_bag_validator": "Microsoft.Teams.ConfigApi.Cmdlets.TrpsPSCmdlet",
+      "future_value_unchanged": true
+    }
+  ]
+}
