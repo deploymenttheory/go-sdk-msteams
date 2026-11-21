@@ -32,7 +32,7 @@ func batchWire(method, path string, body json.RawMessage, status int, text strin
 	}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + deploymentBase + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(text)}}
 }
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
 	c.Family, c.Source = "batch_deployment", "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json"
 	if c.Scope == "" {
@@ -42,6 +42,7 @@ func run(t *testing.T, c contracttest.Case) {
 	if err != nil || !r.Passed() {
 		t.Fatalf("batch deployment %s differs: setup=%v differences=%+v", c.Name, err, r.Differences())
 	}
+	return r
 }
 func testArchive(t *testing.T) deployment.Archive {
 	t.Helper()
@@ -64,7 +65,7 @@ func TestBatchSubmissionUsesSelectedConfigAPIAndRetainsBothIdentities(t *testing
 	t.Parallel()
 	archive := testArchive(t)
 	body := createBody(t, archive)
-	run(t, contracttest.Case{Name: "submit-configapi", Mappings: []contracttest.Mapping{{Command: "New-CsBatchTeamsDeployment", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{discover(), batchWire("POST", "/batchflwdeployment", body, 202, `{"instanceId":"fixture/instance","executionId":"fixture-execution","future":{"v":8}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	result := run(t, contracttest.Case{Name: "submit-configapi", Mappings: []contracttest.Mapping{{Command: "New-CsBatchTeamsDeployment", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{discover(), batchWire("POST", "/batchflwdeployment", body, 202, `{"instanceId":"fixture/instance","executionId":"fixture-execution","future":{"v":8}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, err := sdk.TeamsAdminAPI.BatchDeployments.Create(ctx, deployment.CreateRequest{Archive: archive, UsersToNotify: "fixture@example.invalid"})
 		var value any
 		if v != nil {
@@ -72,16 +73,18 @@ func TestBatchSubmissionUsesSelectedConfigAPIAndRetainsBothIdentities(t *testing
 		}
 		return contracttest.Observation{Value: value, Response: r, Err: err}
 	}, Want: contracttest.Expected{Status: 202, JSON: json.RawMessage(`{"instance":"fixture/instance","execution":"fixture-execution","raw":{"instanceId":"fixture/instance","executionId":"fixture-execution","future":{"v":8}}}`)}})
+	evidence(t, []contracttest.Result{result})
 }
 
 func TestBatchStatusIsOpaqueAndIdentityInputIsNotAURI(t *testing.T) {
 	t.Parallel()
+	var results []contracttest.Result
 	for _, identity := range []bool{false, true} {
 		set := "Get"
 		if identity {
 			set = "GetViaIdentity"
 		}
-		run(t, contracttest.Case{Name: "status-" + strings.ToLower(set), Mappings: []contracttest.Mapping{{Command: "Get-CsBatchTeamsDeploymentStatus", ParameterSet: set}}, Steps: []contracttest.Exchange{discover(), batchWire("GET", "/scenarios/"+url.PathEscape("fixture/instance"), nil, 200, "Completed; raw unparsed state")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		results = append(results, run(t, contracttest.Case{Name: "status-" + strings.ToLower(set), Mappings: []contracttest.Mapping{{Command: "Get-CsBatchTeamsDeploymentStatus", ParameterSet: set}}, Steps: []contracttest.Exchange{discover(), batchWire("GET", "/scenarios/"+url.PathEscape("fixture/instance"), nil, 200, "Completed; raw unparsed state")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			if identity {
 				v, r, err := sdk.TeamsAdminAPI.BatchDeployments.GetByIdentity(ctx, deployment.Identity{OrchestrationID: "fixture/instance"})
 				var value any
@@ -96,8 +99,9 @@ func TestBatchStatusIsOpaqueAndIdentityInputIsNotAURI(t *testing.T) {
 				value = v.Text
 			}
 			return contracttest.Observation{Value: value, Response: r, Err: err}
-		}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`"Completed; raw unparsed state"`)}})
+		}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`"Completed; raw unparsed state"`)}}))
 	}
+	evidence(t, results)
 }
 
 func TestBatchErrorsRemainErrorsAndSubmissionIsNotReplayed(t *testing.T) {
@@ -136,11 +140,12 @@ func TestBatchRejectsInvalidInputBeforeDiscovery(t *testing.T) {
 func TestBatchAcceptedWithoutUsableInstanceKeepsMetadata(t *testing.T) {
 	t.Parallel()
 	archive := testArchive(t)
-	run(t, contracttest.Case{Name: "accepted-missing-instance", Steps: []contracttest.Exchange{discover(), batchWire("POST", "/batchflwdeployment", createBody(t, archive), 202, `{"executionId":"fixture-execution"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	result := run(t, contracttest.Case{Name: "accepted-missing-instance", Steps: []contracttest.Exchange{discover(), batchWire("POST", "/batchflwdeployment", createBody(t, archive), 202, `{"executionId":"fixture-execution"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, err := sdk.TeamsAdminAPI.BatchDeployments.Create(ctx, deployment.CreateRequest{Archive: archive, UsersToNotify: "fixture@example.invalid"})
 		if v == nil || v.ExecutionID == nil || v.RawFields == nil {
 			t.Error("accepted response lost partial identities")
 		}
 		return contracttest.Observation{Response: r, Err: err}
 	}, Want: contracttest.Expected{Status: 202, Error: client.ErrDecode}})
+	evidence(t, []contracttest.Result{result})
 }

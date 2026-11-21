@@ -62,6 +62,9 @@ jobs:
             ${{ runner.temp }}/go-test-artifacts/**/shared-channel-management-service.json
             ${{ runner.temp }}/go-test-artifacts/**/targeting-policy-service.json
             ${{ runner.temp }}/go-test-artifacts/**/targeting-hierarchy-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/batch-deployment-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/multi-geo-region-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/private-channel-migration-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-template-service.json
             ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-service.json
             ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-list-service.json

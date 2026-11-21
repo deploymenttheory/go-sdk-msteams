@@ -124,7 +124,7 @@ construction, borrowed-resource ownership, credential cloning, independent concu
 clients, cancellation and redacted diagnostics. Provider token acquisition and tenant
 conformance are deliberately separate qualification states in the capability ledger.
 
-## Targeting and hierarchy profiles
+## Targeting and migration profiles
 
 `TeamsAdminAPI.TargetingPolicies` uses the existing ConfigAPI profile.
 `TeamsAdminAPI.TargetingHierarchy` has independent native v1/v2 primitives and
@@ -135,15 +135,22 @@ session's canonical tenant GUID; callers do not pass another tenant per request.
 |---|---|---|---|
 | Targeting v1 | retailservices.teams.microsoft.com; GCC uses retailservices.gcc.teams.microsoft.com | https://retailservices.teams.microsoft.com | commercial, GCC |
 | Hierarchy v2 | hierarchy.teams.microsoft.com | https://chatsvcagg.teams.microsoft.com | commercial |
+| Multi-Geo region | teams.cloud.microsoft | https://migrationsvc.teams.microsoft.com | commercial, GCC |
+| Private-channel migration | teams.microsoft.com; gov.teams.microsoft.us; dod.teams.microsoft.us; teams.microsoftonline.cn | templates.teams.microsoft.com; templates.teams.microsoft.us; templates.teams.microsoftonline.cn (HTTPS resources) | commercial, GCC, GCCH, DoD, China |
 
-Native providers request the exact resource's `/.default` scope and isolate its
-token/cache from Graph and ConfigAPI. Supplied-token providers need the selected
-resource token explicitly. Known profiles enforce their fixed namespaces before
+Native providers request the exact resource's `/.default` scope, except Multi-Geo
+region reads, which require delegated mode and exactly
+`https://migrationsvc.teams.microsoft.com/Region.Read.All`. Application region
+reads fail locally before token acquisition. The token/cache key includes the
+exact scope as well as the resource and identity binding. Supplied-token providers
+need the selected resource/scope token explicitly. Known profiles enforce their fixed namespaces before
 acquisition. Existing Graph/ConfigAPI endpoint overrides do not redirect these
 special services, and no unsupported cloud silently falls back to commercial.
 These are evidenced route maps, not claims of deployed features, app eligibility,
-consent or role enforcement. Region.Read.All and other explicit delegated scopes
-still need a separate scope-aware contract.
+consent or role enforcement. Private-channel migration has distinct fixed paths
+for each cloud, including separate commercial/GCC prefixes on the same host.
+See [deployment and migration evidence](../implementation/core/deployment-migration-sdk-evidence.md)
+for the source maps, scope restrictions and outstanding qualification.
 
 Hierarchy uploads replace singleton tenant data. Native imports own/close their
 CSV stream, use an explicit wire-size budget, and never replay a write. Composed
@@ -154,17 +161,21 @@ and [policy eligibility](../../msteams/teams_admin_api/targeting_policy/api_docs
 
 ## Supplied tokens and refresh callbacks
 
-`auth.NewSuppliedTokenProvider(binding, tokens)` copies an audience-keyed token inventory.
+`auth.NewSuppliedTokenProvider(binding, tokens)` copies a token inventory keyed by
+`auth.TokenRequest.TokenKey()`. An empty `Scope` keeps existing audience-only keys;
+an explicit delegated scope uses `audience + " " + scope`. A scoped request never
+falls back to an audience-only entry. `binding.RequestScope(audience, scope)` builds
+the fully bound request; `Session.AcquireTokenScope` forwards it to the provider.
 `auth.NewRefreshProvider(binding, callback, options)` lazily acquires and caches tokens.
 Both implement `auth.Provider`. Each request carries the tenant, cloud, identity, mode
-and exact audience. A mismatch fails before refresh; missing static audiences fail with
+and exact audience/scope. A mismatch fails before refresh; missing static entries fail with
 `auth.ErrTokenMissing`. Static expired tokens return `auth.ErrTokenExpired` without refresh.
 Opaque token metadata is the caller/provider's assertion; the SDK does not prove issuer,
 audience, delegated permissions or server acceptance by decoding a token.
 
 Inject a refresh provider using `WithTokenProvider(binding, provider)`. The callback receives
 the fully bound `auth.TokenRequest` and returns `auth.Token` with an explicit expiry. It
-must honor cancellation and be safe for concurrent requests for different audiences.
+must honor cancellation and be safe for concurrent requests for different audience/scope keys.
 The constructor makes no callback. A positive `RefreshSkew` refreshes ahead of expiration;
 zero accepts any unexpired token. Invalid or already expired callback results are rejected;
 tokens inside the configured refresh window return `auth.ErrTokenExpiresSoon`.

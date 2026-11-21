@@ -52,13 +52,14 @@ type Mapping struct {
 // of a random boundary. JSON, Binary and Multipart are mutually exclusive; nil
 // for all three requires an absent or zero-length body.
 type WireRequest struct {
-	Method    string
-	URL       string
-	Audience  string
-	Headers   http.Header
-	JSON      json.RawMessage
-	Binary    []byte
-	Multipart []MultipartField
+	Method     string
+	URL        string
+	Audience   string
+	TokenScope string
+	Headers    http.Header
+	JSON       json.RawMessage
+	Binary     []byte
+	Multipart  []MultipartField
 }
 
 // MultipartField is a synthetic expected form-data part. Its content is compared
@@ -332,12 +333,12 @@ func (h *harness) AcquireToken(ctx context.Context, request auth.TokenRequest) (
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	h.tokenCalls++
-	if request != h.binding.Request(request.Audience) {
+	if request != h.binding.RequestScope(request.Audience, request.Scope) {
 		h.add("token.binding", "different-value")
 	}
 	for _, step := range h.steps {
-		if step.Request.Audience == request.Audience {
-			return auth.Token{AccessToken: fixtureToken(request.Audience), ExpiresAt: time.Now().Add(time.Hour)}, nil
+		if step.Request.Audience == request.Audience && step.Request.TokenScope == request.Scope {
+			return auth.Token{AccessToken: fixtureToken(request.TokenKey()), ExpiresAt: time.Now().Add(time.Hour)}, nil
 		}
 	}
 	h.add("token.audience", "unexpected-value")
@@ -376,7 +377,7 @@ func compareRequest(want WireRequest, got *http.Request, prefix string) []Differ
 		{name: "path", ok: got.URL.EscapedPath() == expected.EscapedPath()},
 		{name: "query", ok: queryErr == nil && reflect.DeepEqual(actualQuery, expected.Query())},
 		{name: "fragment", ok: got.URL.Fragment == ""},
-		{name: "audience", ok: got.Header.Get("Authorization") == "Bearer "+fixtureToken(want.Audience)},
+		{name: "audience", ok: got.Header.Get("Authorization") == "Bearer "+fixtureToken((auth.TokenRequest{Audience: want.Audience, Scope: want.TokenScope}).TokenKey())},
 	} {
 		if !field.ok {
 			differences = append(differences, Difference{Path: prefix + "." + field.name, Kind: "different-value"})

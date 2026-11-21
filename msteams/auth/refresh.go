@@ -42,7 +42,7 @@ type flight struct {
 	err       error
 }
 
-// RefreshProvider caches independently by tenant, cloud, identity, mode and audience.
+// RefreshProvider caches independently by tenant, cloud, identity, mode, audience and scope.
 // One cancelled waiter does not cancel work still needed by another waiter. When all
 // waiters leave, cancellation reaches the callback; a replacement waits for it to exit.
 type RefreshProvider struct {

@@ -120,7 +120,7 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (response *
 		}
 	}
 
-	token, err := s.session.AcquireToken(operation, profile.audience)
+	token, err := s.session.AcquireTokenScope(operation, profile.audience, profile.scope)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +140,7 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (response *
 				break
 			}
 			controls.release()
-			token, err = s.session.AcquireToken(operation, profile.audience)
+			token, err = s.session.AcquireTokenScope(operation, profile.audience, profile.scope)
 			if err != nil {
 				return response, err
 			}
@@ -173,7 +173,7 @@ func (s *Scope) Do(ctx context.Context, request Request, result any) (response *
 		}
 		if unauthorized {
 			refreshed = true
-			replacement, refreshErr := s.session.RefreshAfterRejection(operation, profile.audience, token)
+			replacement, refreshErr := s.session.RefreshAfterRejectionScope(operation, profile.audience, profile.scope, token)
 			if refreshErr != nil {
 				if errors.Is(refreshErr, auth.ErrRefreshUnsupported) {
 					return response, err

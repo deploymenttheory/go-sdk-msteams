@@ -13,7 +13,8 @@ import (
 // caller-owned; the adapter neither constructs a credential chain nor closes it.
 //
 // Requests are bound to one tenant, cloud, identity and mode. The selected Graph and
-// Teams audiences map to their own /.default scopes, never a scope inferred from
+// Teams audiences map to their own /.default scopes; the region profile instead
+// requires its exact delegated Region.Read.All scope. No scope is inferred from
 // the management API host. The caller must configure the credential for the stated
 // identity, mode and cloud; opaque access tokens are not locally decoded to prove
 // those assertions. Backend services still validate destination authority separately.
@@ -58,12 +59,12 @@ type azureTokenSource struct {
 }
 
 func (s azureTokenSource) AcquireToken(ctx context.Context, request TokenRequest) (Token, error) {
-	if !s.environment.supportsAudience(request.Audience) {
-		return Token{}, ErrUnsupportedAudience
+	if err := s.environment.validateResourceRequest(request); err != nil {
+		return Token{}, err
 	}
 	result, err := s.credential.GetToken(ctx, policy.TokenRequestOptions{
 		TenantID: request.TenantID,
-		Scopes:   []string{request.Audience + "/.default"},
+		Scopes:   []string{request.resourceScope()},
 	})
 	if err != nil {
 		return Token{}, err

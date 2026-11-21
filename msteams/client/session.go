@@ -111,6 +111,12 @@ func (s *Session) Environment() (auth.Environment, error) {
 // session supplies immutable identity fields and cancellation; it never substitutes
 // a token from another audience. Endpoint-to-audience routing belongs to transport.
 func (s *Session) AcquireToken(ctx context.Context, audience string) (auth.Token, error) {
+	return s.AcquireTokenScope(ctx, audience, "")
+}
+
+// AcquireTokenScope requests one exact delegated scope with full cache isolation.
+// Empty scope retains the existing resource-default contract.
+func (s *Session) AcquireTokenScope(ctx context.Context, audience, scope string) (auth.Token, error) {
 	operation, cancel, err := s.Begin(ctx)
 	if err != nil {
 		return auth.Token{}, err
@@ -125,7 +131,7 @@ func (s *Session) AcquireToken(ctx context.Context, audience string) (auth.Token
 	if provider == nil {
 		return auth.Token{}, ErrProviderUnavailable
 	}
-	token, err := provider.AcquireToken(operation, binding.Request(audience))
+	token, err := provider.AcquireToken(operation, binding.RequestScope(audience, scope))
 	s.mu.RLock()
 	closed = s.closed
 	s.mu.RUnlock()
@@ -141,6 +147,11 @@ func (s *Session) AcquireToken(ctx context.Context, audience string) (auth.Token
 // RefreshAfterRejection asks only providers with an explicit noninteractive
 // refresh capability to replace a rejected token for the same audience.
 func (s *Session) RefreshAfterRejection(ctx context.Context, audience string, rejected auth.Token) (auth.Token, error) {
+	return s.RefreshAfterRejectionScope(ctx, audience, "", rejected)
+}
+
+// RefreshAfterRejectionScope retains the exact rejected resource scope.
+func (s *Session) RefreshAfterRejectionScope(ctx context.Context, audience, scope string, rejected auth.Token) (auth.Token, error) {
 	operation, cancel, err := s.Begin(ctx)
 	if err != nil {
 		return auth.Token{}, err
@@ -153,7 +164,7 @@ func (s *Session) RefreshAfterRejection(ctx context.Context, audience string, re
 	if !ok {
 		return auth.Token{}, auth.ErrRefreshUnsupported
 	}
-	token, err := refresher.RefreshAfterRejection(operation, binding.Request(audience), rejected)
+	token, err := refresher.RefreshAfterRejection(operation, binding.RequestScope(audience, scope), rejected)
 	if operation.Err() != nil {
 		return auth.Token{}, operation.Err()
 	}
@@ -237,10 +248,12 @@ func (s *Session) Close() {
 type Backend string
 
 const (
-	Graph      Backend = "graph"
-	TeamsAdmin Backend = "teams-admin"
-	Targeting  Backend = "targeting"
-	Hierarchy  Backend = "hierarchy"
+	Graph                   Backend = "graph"
+	TeamsAdmin              Backend = "teams-admin"
+	Targeting               Backend = "targeting"
+	Hierarchy               Backend = "hierarchy"
+	PrivateChannelMigration Backend = "private-channel-migration"
+	Regions                 Backend = "regions"
 )
 
 // Scope binds a backend service collection to its owning session.
@@ -258,7 +271,7 @@ func NewScope(backend Backend, session *Session) (*Scope, error) {
 }
 
 func knownBackend(backend Backend) bool {
-	return backend == Graph || backend == TeamsAdmin || backend == Targeting || backend == Hierarchy
+	return backend == Graph || backend == TeamsAdmin || backend == Targeting || backend == Hierarchy || backend == PrivateChannelMigration || backend == Regions
 }
 
 // Backend returns the immutable service family.

@@ -1459,26 +1459,75 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/29/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
+              "name": "TestBatchStatusIsOpaqueAndIdentityInputIsNotAURI"
+            },
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
+              "name": "TestBatchErrorsRemainErrorsAndSubmissionIsNotReplayed"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/deployment_migration_test.go",
+              "name": "TestLabBatchDeploymentStatusReadOnly"
+            }
+          ]
         },
         {
           "name": "GetViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/29/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service.go",
+              "name": "Service.GetByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
+              "name": "TestBatchStatusIsOpaqueAndIdentityInputIsNotAURI"
+            },
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
+              "name": "TestBatchErrorsRemainErrorsAndSubmissionIsNotReplayed"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/deployment_migration_test.go",
+              "name": "TestLabBatchDeploymentStatusReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/batch_deployment/service.go",
+            "name": "Service.GetByID"
+          },
+          {
+            "file": "msteams/teams_admin_api/batch_deployment/service.go",
+            "name": "Service.GetByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/deployment-migration-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -8762,19 +8811,53 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/207/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/region/service.go",
+              "name": "Service.GetForUser"
+            },
+            {
+              "file": "msteams/teams_admin_api/region/service.go",
+              "name": "Service.GetForGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/region/service_test.go",
+              "name": "TestRegionUsesExactDelegatedScopeAndDirectEntityRoutes"
+            },
+            {
+              "file": "msteams/teams_admin_api/region/service_test.go",
+              "name": "TestApplicationRegionAndUnqualifiedCloudsRejectBeforeTokens"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/deployment_migration_test.go",
+              "name": "TestLabMultiGeoRegionReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/region/service.go",
+            "name": "Service.GetForUser"
+          },
+          {
+            "file": "msteams/teams_admin_api/region/service.go",
+            "name": "Service.GetForGroup"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/deployment-migration-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -9694,19 +9777,45 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/220/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/private_channel_migration/service.go",
+              "name": "Service.Get"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/private_channel_migration/service_test.go",
+              "name": "TestMigrationUsesExactPinnedCloudPrefixesAndAudiences"
+            },
+            {
+              "file": "msteams/teams_admin_api/private_channel_migration/service_test.go",
+              "name": "TestMigrationProfilesDoNotFallbackAndWrongBackendIsLocal"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/deployment_migration_test.go",
+              "name": "TestLabPrivateChannelMigrationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/private_channel_migration/service.go",
+            "name": "Service.Get"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/deployment-migration-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -13334,19 +13443,52 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/291/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/archive.go",
+              "name": "BuildArchive"
+            },
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/archive_test.go",
+              "name": "TestArchivePreservesOriginalBytesFixedNamesAndReaderOwnership"
+            },
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
+              "name": "TestBatchSubmissionUsesSelectedConfigAPIAndRetainsBothIdentities"
+            },
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
+              "name": "TestBatchErrorsRemainErrorsAndSubmissionIsNotReplayed"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/batch_deployment/archive.go",
+            "name": "BuildArchive"
+          },
+          {
+            "file": "msteams/teams_admin_api/batch_deployment/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/deployment-migration-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",

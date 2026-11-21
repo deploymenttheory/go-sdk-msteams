@@ -91,7 +91,7 @@ func (s *delegatedService) RoundTrip(r *http.Request) (*http.Response, error) {
 		}
 		scope := ""
 		for _, part := range strings.Fields(r.Form.Get("scope")) {
-			if strings.HasSuffix(part, "/.default") {
+			if strings.HasSuffix(part, "/.default") || s.extraScopes[part] {
 				scope = part
 			}
 		}

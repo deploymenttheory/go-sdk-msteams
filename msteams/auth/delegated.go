@@ -91,8 +91,8 @@ func (p *DelegatedProvider) AcquireToken(ctx context.Context, request TokenReque
 	if p.refresh == nil {
 		return Token{}, ErrProviderClosed
 	}
-	if !p.environment.supportsAudience(request.Audience) {
-		return Token{}, ErrUnsupportedAudience
+	if err := p.environment.validateResourceRequest(request); err != nil {
+		return Token{}, err
 	}
 	token, err := p.refresh.AcquireToken(ctx, request)
 	var failure *DelegatedError
@@ -132,7 +132,7 @@ func (p *DelegatedProvider) acquire(ctx context.Context, request TokenRequest) (
 		return Token{}, err
 	}
 	p.authority.resetFailure()
-	scopes := []string{request.Audience + "/.default"}
+	scopes := []string{request.resourceScope()}
 	var result public.AuthResult
 	var err error
 	if account.HomeAccountID != "" {

@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode"
 )
 
 // Binding identifies one authentication session. Cloud is an explicit profile
@@ -26,6 +27,10 @@ type TokenRequest struct {
 	IdentityID string
 	Mode       Mode
 	Audience   string
+	// Scope is one explicit delegated resource scope. Empty preserves the existing
+	// audience + /.default contract. The comparable value participates in cache,
+	// coalescing and rejected-token isolation; no scope is silently substituted.
+	Scope string
 }
 
 // Provider acquires a resource token under the operation's cancellation context.
@@ -60,6 +65,30 @@ func (b Binding) Request(audience string) TokenRequest {
 	return TokenRequest{TenantID: b.TenantID, Cloud: b.Cloud, IdentityID: b.IdentityID, Mode: b.Mode, Audience: audience}
 }
 
+// RequestScope creates a bound request with an exact delegated scope.
+func (b Binding) RequestScope(audience, scope string) TokenRequest {
+	request := b.Request(audience)
+	request.Scope = scope
+	return request
+}
+
+// TokenKey addresses explicitly supplied tokens. Existing audience-only keys
+// remain unchanged; scoped tokens use audience + a space + exact scope. Callers
+// are responsible for the opaque token's actual consent; no JWT is decoded.
+func (r TokenRequest) TokenKey() string {
+	if r.Scope == "" {
+		return r.Audience
+	}
+	return r.Audience + " " + r.Scope
+}
+
+func (r TokenRequest) resourceScope() string {
+	if r.Scope != "" {
+		return r.Scope
+	}
+	return r.Audience + "/.default"
+}
+
 func (b Binding) matches(request TokenRequest) bool {
 	return b == (Binding{TenantID: request.TenantID, Cloud: request.Cloud, IdentityID: request.IdentityID, Mode: request.Mode})
 }
@@ -74,10 +103,13 @@ func validateRequest(ctx context.Context, binding Binding, request TokenRequest)
 	if !binding.matches(request) {
 		return ErrBindingMismatch
 	}
+	if request.Scope != "" && (request.Mode != Delegated || strings.ContainsFunc(request.Scope, func(r rune) bool { return unicode.IsSpace(r) || unicode.IsControl(r) }) || !strings.HasPrefix(request.Scope, request.Audience+"/")) {
+		return ErrInvalidRequest
+	}
 	return nil
 }
 
-// SuppliedTokenProvider owns copied audience-keyed tokens. It never refreshes them
+// SuppliedTokenProvider owns copied TokenKey-addressed tokens. It never refreshes them
 // or tries to determine issuer validity by decoding a JWT; the server is authoritative.
 type SuppliedTokenProvider struct {
 	mu      sync.RWMutex
@@ -115,7 +147,7 @@ func (p *SuppliedTokenProvider) AcquireToken(ctx context.Context, request TokenR
 	if p.closed || p.tokens == nil {
 		return Token{}, ErrProviderClosed
 	}
-	token, ok := p.tokens[request.Audience]
+	token, ok := p.tokens[request.TokenKey()]
 	if !ok {
 		return Token{}, ErrTokenMissing
 	}

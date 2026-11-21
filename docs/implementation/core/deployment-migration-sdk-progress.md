@@ -1,51 +1,13 @@
-# CORE-22 deployment/migration implementation progress
+# CORE-22 deployment and migration implementation status
 
-Issue #77 remains in progress. No tenant request, notification email, directory
-grant or migration/deployment mutation has been performed for this work.
+The candidate now includes batch archive/submission/opaque status, Multi-Geo
+observations with exact delegated scope isolation, and tenant private-channel
+migration reads with fixed cloud prefixes/audiences. Current mappings, scoped
+verification and remaining qualification live in
+[SDK evidence](deployment-migration-sdk-evidence.md). Issue #77 and all live
+qualification stay open; no tenant mutation/notification/grant was performed.
 
-The first candidate component is a pure bounded deployment archive builder in
-`teams_admin_api/batch_deployment`. It writes exactly Teams.csv/Users.csv using
-fast Deflate, preserves original bytes, returns immutable ZIP/Base64 access and
-keeps readers caller-owned. It neither parses CSV nor uses shared temporary
-files/stale archive entries. Combined input and complete ZIP-output budgets are
-explicit local limits, not claimed service limits. Tests cover framing/limits,
-invalid/failed sources, cancellation, byte isolation and concurrent construction.
-
-The native `TeamsAdminAPI.BatchDeployments` candidate now submits once through
-the selected ConfigAPI/discovery adapter and requires 202. It retains both
-instance/execution identities and future fields, including partial metadata when
-an accepted response lacks a usable instance ID. GetByID/GetByIdentity preserve
-opaque text and HTTP metadata. Non-success statuses remain Go errors and retain
-raw response text; Completed has no inferred terminal meaning. Root-client
-offline tests cover exact routing/headers/body, both status parameter branches,
-input/cancellation, accepted decoding failure and unreplayed submissions.
-The integrated full offline race suite, scoped vet and coding-mode lint pass.
-No CORE-22 cross-platform PR qualification is claimed at this checkpoint.
-
-Remaining implementation: region/private-channel migration resources; exact additional profiles and scoped
-token/cache support for delegated Region.Read.All; command/parameter-set ledger,
-source-informed service tests, examples/API docs and gated lab acceptance.
-
-Production routing must use the selected ConfigAPI origin and existing discovery
-header adapter. The generated batch request fixture's
-skypeanalyticsapi-dev.trafficmanager.net authority is pre-callback data; the pinned
-session callback replaces it before sending. Do not publish or use that development
-origin as a credential destination. Source/immutable hashes are recorded in
-[batch evidence](template-policy-deployment-evidence.md#batch-deployment) and
-[routing evidence](policy-routing-evidence.md).
-
-Submission is one POST with DeploymentCsvs (Base64 ZIP) and UsersToNotify. It can
-send notification email and must not be replayed. Preserve instanceId and
-executionId on 202; a status lookup uses instanceId. Status is raw text plus HTTP
-metadata, including named 400/404/500 failures in Go. No structured per-team model,
-waiter terminal grammar or inference that Completed means success is established.
-
-The other two resources have separate service contracts in
-[hierarchy/migration evidence](hierarchy-migration-contract-evidence.md) and the
-versioned special-service profile manifest. Region.Read.All is a delegated scope,
-not /.default or an application permission; Get-MultiGeoRegion is documented
-unsupported in application mode. Private-channel migration has exact cloud base
-prefixes, and its Details field is JSON text. Their profiles are not ConfigAPI
-or Graph, and neither native availability nor authorization is inferred from a
-token. Reuse the CORE-25 closed catalog after its green PR merge, then extend scope
-isolation explicitly; never widen audience acceptance or use a commercial fallback.
+Structured deployment outcome grammar/waits, unevidenced CRUD cells, exact
+consent/RBAC, cloud deployment and consequential acceptance/cleanup remain
+unsettled. Prepared lab cases are read-only and unrun. Region application mode
+is locally rejected; it requires separately provisioned delegated consent.
