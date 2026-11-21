@@ -63,3 +63,17 @@ on 2026-11-21. Authorized reads, cloud/flight availability, service range/timeou
 rules, CRUD read-back/cleanup and effective parking/grants remain unqualified.
 See [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/call-park-policy-lab-acceptance.md).
+
+## Owned CRUD acceptance
+
+`TestAccCallParkPolicyCRUD` creates a uniquely named unassigned policy, verifies
+non-default read-back, updates the description, verifies omitted settings,
+checks list membership, deletes the policy and confirms GET404 plus list absence.
+Created/updated reads are compared with MicrosoftTeams 8.1.0. Certificate and
+client-secret lab runs passed. CI runs both authentication modes and requires
+verified cleanup and two PowerShell comparisons for each workflow.
+
+Seven actual acceptance responses live in `testdata`; `TestUnitOwnedCRUDUsesAcceptanceResponses`
+loads them to exercise requests, typed fields, update behavior, native statuses
+and deleted-resource errors. The description-only update preserves `AllowCallPark: true` and `ParkTimeoutSeconds: 180`. User/tenant/group grants, clear operations, effective client behavior,
+delegated authentication and other clouds remain unqualified.

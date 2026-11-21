@@ -40,7 +40,9 @@
     "tests": [
       "TestAccApplicationAccessPolicyCRUD",
       "TestAccExternalAccessPolicyCRUD",
-      "TestAccCallingPolicyCRUD"
+      "TestAccCallingPolicyCRUD",
+      "TestAccCallHoldPolicyCRUD",
+      "TestAccCallParkPolicyCRUD"
     ]
   },
   "tenant-access-outcomes": {

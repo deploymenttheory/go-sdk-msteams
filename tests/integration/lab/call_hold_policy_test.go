@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -26,14 +27,27 @@ type callHoldPolicyObservation struct {
 	Settings map[string]json.RawMessage `json:"settings"`
 }
 
+var callHoldOwnedIdentity = regexp.MustCompile(`(?i)^(?:tag:)?msteams-sdk-[a-z2-7]{26,64}-call-hold-policy$`)
+
 func decodeCallHoldPolicyOracle(raw []byte, tenant string) (callHoldPolicyObservation, error) {
+	return decodeCallHoldPolicyOracleForIdentity(raw, tenant, "Global")
+}
+
+func decodeCallHoldPolicyOracleForIdentity(raw []byte, tenant, identity string) (callHoldPolicyObservation, error) {
 	var v callHoldPolicyObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
+	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !callHoldOwnedIdentity.MatchString(identity) {
 		return v, errTeamOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
-	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || !strings.EqualFold(v.Identity, "Global") || len(v.Settings) != len(callHoldPolicyScalars) {
+	if d.Decode(&v) != nil {
+		return callHoldPolicyObservation{}, errTeamOracle
+	}
+	identityMatches := strings.EqualFold(v.Identity, "Global")
+	if !strings.EqualFold(identity, "Global") {
+		identityMatches = samePolicyName(v.Identity, identity)
+	}
+	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(callHoldPolicyScalars) {
 		return callHoldPolicyObservation{}, errTeamOracle
 	}
 	var extra any
@@ -51,7 +65,12 @@ func decodeCallHoldPolicyOracle(raw []byte, tenant string) (callHoldPolicyObserv
 
 func callHoldPolicyOracle(t *testing.T, ctx context.Context, tenant string) callHoldPolicyObservation {
 	t.Helper()
-	input, err := json.Marshal(map[string]string{"tenant_id": tenant})
+	return callHoldPolicyOracleForIdentity(t, ctx, tenant, "Global")
+}
+
+func callHoldPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, identity string) callHoldPolicyObservation {
+	t.Helper()
+	input, err := json.Marshal(map[string]string{"tenant_id": tenant, "identity": identity})
 	if err != nil {
 		t.Fatal("invalid call hold policy oracle selector")
 	}
@@ -63,7 +82,7 @@ func callHoldPolicyOracle(t *testing.T, ctx context.Context, tenant string) call
 			cmd.Env = append(cmd.Env, key+"="+value)
 		}
 	}
-	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
+	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
 	var output teamOracleBuffer
 	defer func() { clear(output.data) }()
 	cmd.Stdin = bytes.NewReader(input)
@@ -71,7 +90,7 @@ func callHoldPolicyOracle(t *testing.T, ctx context.Context, tenant string) call
 	if cmd.Run() != nil || output.exceeded {
 		t.Fatal("pinned call hold policy read failed; no output retained")
 	}
-	value, err := decodeCallHoldPolicyOracle(output.data, tenant)
+	value, err := decodeCallHoldPolicyOracleForIdentity(output.data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned call hold policy projection unavailable")
 	}
@@ -192,5 +211,46 @@ func TestUnitCallHoldOracleUsesLastCaseInsensitiveGetterValue(t *testing.T) {
 		if !matchesCallHoldGetterProjection(&value, settings) {
 			t.Fatal("canonical getter comparison used raw key spelling/earlier duplicate")
 		}
+	}
+}
+
+func TestUnitCallHoldOracleRestrictsOwnedIdentity(t *testing.T) {
+	t.Parallel()
+	const tenant = "00000000-0000-4000-8000-000000000003"
+	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-call-hold-policy"
+	raw, err := os.ReadFile("../../../msteams/teams_admin_api/teams_call_hold_policy/testdata/get_global.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var settings map[string]json.RawMessage
+	if json.Unmarshal(raw, &settings) != nil {
+		t.Fatal("invalid acceptance response")
+	}
+	projection := map[string]json.RawMessage{}
+	for _, field := range callHoldPolicyScalars {
+		projection[field] = settings[field]
+	}
+	for _, tc := range []struct {
+		name, selected, returned string
+		valid                    bool
+	}{
+		{"global", "Global", "global", true},
+		{"owned-bare", name, "Tag:" + name, true},
+		{"owned-tagged", "Tag:" + name, name, true},
+		{"foreign-selection", "other-policy", "other-policy", false},
+		{"wrong-owned-policy", name, strings.Replace(name, "aaaa", "bbbb", 1), false},
+		{"tagged-global", "Global", "Tag:Global", false},
+		{"wrong-kind", strings.Replace(name, "call-hold-policy", "calling-policy", 1), name, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			body, err := json.Marshal(map[string]any{"success": true, "tenant_id": tenant, "identity": tc.returned, "settings": projection})
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = decodeCallHoldPolicyOracleForIdentity(body, tenant, tc.selected)
+			if (err == nil) != tc.valid {
+				t.Fatal("oracle accepted a different identity or rejected its owned policy")
+			}
+		})
 	}
 }

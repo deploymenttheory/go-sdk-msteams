@@ -15,9 +15,10 @@ Runs serialize without automatically cancelling an in-flight mutation.
 The certificate/client-secret matrix executes the explicit selections in
 [suites.json](suites.json): authentication, 22 resource read tests, preflight,
 service discovery, three tenant access-outcome checks, and owned unassigned
-application-access, external-access and calling-policy CRUD. Authentication jobs
-run one at a time because concurrent writes to the tenant's policy collection
-can conflict even when resource names differ. Selected tests and child cases must pass. Skips,
+application-access, external-access, calling, call-hold and call-park policy CRUD.
+Authentication jobs run one at a time because concurrent writes to the tenant's
+policy collection can conflict even when resource names differ. Selected tests
+and child cases must pass. Skips,
 missing tests, setup failures and unsuccessful cleanup fail CI. CRUD also requires
 all assertion milestones, two PowerShell comparisons for each selected mutation test and new cleaned journals.
 
@@ -36,12 +37,28 @@ The dedicated lab identity is supplied through these repository secrets:
 - `MSTEAMS_LAB_CERTIFICATE_PEM`
 - `MSTEAMS_LAB_PRIVATE_KEY_PEM`
 - `MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM` (public recovery certificate)
+- `MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID` (dedicated lab audio fixture)
 
 Only the prepare step receives the secret values. It writes private mode-0600
 files under an isolated runner-temp directory. Subsequent tests receive paths,
 explicit enablement and the approved `teams-administrator` access profile. The
 exact MicrosoftTeams 8.1.0 Gallery archive is SHA512-verified using the existing
 baseline tooling before extraction. PowerShell is an oracle for tests only.
+
+Call-hold CRUD references the dedicated `go-sdk-msteams-ci-call-hold.wav` fixture
+uploaded with `Import-CsOnlineAudioFile -ApplicationId TenantGlobal`. This silent
+PCM file remains available for subsequent CI runs; the tests do not assign its
+policies to users. Its receipt is stored in the private lab directory. Local
+identity JSON uses `call_hold_audio_file_id`; CI writes that field from the
+repository secret. The ID is never printed or committed.
+
+If replacing the fixture, first confirm no owned policy references it. Verify
+the replacement with `Get-CsOnlineAudioFile -ApplicationId TenantGlobal`, update
+the private configuration and repo secret, then remove the old fixture using
+`Remove-CsOnlineAudioFile -ApplicationId TenantGlobal -Identity <old-id>`.
+[Microsoft's music-on-hold setup](https://learn.microsoft.com/en-us/microsoftteams/music-on-hold)
+documents this prerequisite. Streaming/audio playback and policy assignment
+remain separate acceptance scenarios.
 
 ## Test results and interrupted-run recovery
 
@@ -100,7 +117,7 @@ Successful reads and mutations for these resources remain pending on issues #95,
 `pending.json` until a suitable tenant or identity is available. No resource
 coverage state is promoted by a passing denial test.
 
-For application-access, external-access and calling-policy journals, run
+For application-access, external-access, calling, call-hold and call-park policy journals, run
 `TestAccRecoverOwnedPolicies` with `MSTEAMS_LAB_RECOVERY_FILE` pointing to the
 private decrypted journal, the same lab identity and normal mutation opt-in.
 It verifies ownership and requires typed GET404 plus list absence after deletion.

@@ -3,6 +3,7 @@ package lab_test
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -59,6 +60,14 @@ func fixtureString(key, parent, value string, replacements map[string]string) st
 		}
 	}
 	switch normalized {
+	case "audiofileid":
+		// Audio uploads can use compact IDs without UUID separators.
+		if len(value) == 32 && !strings.HasPrefix(value, "00000000000040008000") {
+			if _, err := hex.DecodeString(value); err == nil {
+				hash := sha256.Sum256([]byte(strings.ToLower(value)))
+				return fmt.Sprintf("00000000000040008000%x", hash[:6])
+			}
+		}
 	case "message":
 		switch value {
 		case "Type  is not currently enabled in flighting", "Type TeamsAudioConferencingCustomPromptsConfiguration is not currently enabled in flighting":
@@ -316,5 +325,24 @@ func TestUnitResponseFixtureRedactsConfiguredLabelsAndURLFragments(t *testing.T)
 	}
 	if !bytes.Contains(got, []byte("TeamsFilesPolicy")) {
 		t.Fatal("technical schema name changed")
+	}
+}
+
+func TestUnitResponseFixtureRedactsCompactAudioID(t *testing.T) {
+	t.Parallel()
+	const privateID = "123456781234412381231234567890ab"
+	raw, err := fixtureJSON([]byte(`{"AudioFileId":"`+privateID+`"}`), nil)
+	if err != nil || bytes.Contains(raw, []byte(privateID)) {
+		t.Fatal("private audio ID retained")
+	}
+	var value struct {
+		ID string `json:"AudioFileId"`
+	}
+	if json.Unmarshal(raw, &value) != nil || len(value.ID) != 32 {
+		t.Fatal("compact ID representation changed")
+	}
+	again, err := fixtureJSON(raw, nil)
+	if err != nil || !bytes.Equal(again, raw) {
+		t.Fatal("sanitized fixture is not stable")
 	}
 }
