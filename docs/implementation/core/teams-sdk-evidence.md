@@ -3,8 +3,9 @@
 Status: in progress. Native team create/read/settings-update/delete/list,
 create-from-group, archive/unarchive, picture upload and resumable operation
 handling are implemented under `sdk.GraphAPI.Teams`. Supporting group CRUD is
-implemented under `sdk.GraphAPI.Groups`. Paired Get-Team identity, Set-Team and
-Set-TeamArchivedState compositions are implemented under `sdk.GraphAPI.TeamManagement`; remaining
+implemented under `sdk.GraphAPI.Groups`. New-Team creation/migration, paired
+Get-Team identity, Set-Team and Set-TeamArchivedState compositions are implemented
+under `sdk.GraphAPI.TeamManagement`; remaining
 compositions and successful tenant acceptance are required.
 This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81)
 or promote its command coverage.
@@ -72,6 +73,29 @@ distinct from these synthetic SDK executions; reports retain no coverage/live
 promotion. Primary archive/unarchive/operation documentation was reviewed on
 2026-11-21 and is linked in the API notes.
 
+Group-first Create resolves an owner, creates the group with pinned defaults and
+provisioning presets, probes availability, teamifies and returns paired state.
+MigrateGroup has a separate input surface and never owns/deletes the supplied
+group. Actual EDU class/PLC model captures supply the expected request constants.
+Explicit aliases remain unchanged; generated aliases require complete successful
+availability reads, with bounded candidates and paging. Current API guidance
+informs configurable received-404 retries; the pinned five/20-second sequence
+remains separately characterized. Three representative real-root cases emit
+`team-create-service.json`, mapped to both New-Team parameter sets. Mode/cloud
+checks are routing evidence only, not PowerShell app-auth eligibility.
+
+Compensation is limited to this call's confirmed created group. Positive team
+reconciliation retains it; a received rejection plus observed 404 can permit
+cleanup. Response loss, 5xx or decode failures cannot become absence after a
+single 404. Primary and cleanup failures retain separate diagnostics and are
+joined. Foreground timeout preserves identity and uses a separate bounded cleanup
+context when eligible. A successful team is retained after failed enrichment.
+Custom in-memory tests verify dynamic aliases, later-page collisions and lost
+group/team responses without sockets, replay, fabricated IDs or blind deletes.
+These source-derived/synthetic executions do not establish successful tenant
+creation, education provisioning, SharePoint completion or command qualification.
+See the [creation notes](../../../msteams/graph_api/team_management/creation_api_docs.md).
+
 The primary native Giphy payload uses the documented string enum. A test first
 requires the pinned artifact to retain its observed numeric 1, then records the
 explicit native string difference without rewriting the capture. Unknown future
@@ -119,10 +143,8 @@ No response bodies, tenant identifiers, tokens or credentials were recorded in
 the repository. This verifies denial handling; it does not validate successful
 team CRUD, operation completion, provisioning, archive transitions or photos.
 
-Before CORE-28 can close, implement the group-first and enriched PowerShell
-compositions from the [existing decision record](core-composition-evidence.md),
-including owner selection, education-group constants, bounded group
-propagation/reconciliation, owned-resource recovery and partial hydration/list
-behavior. Add the
+Before CORE-28 can close, implement the enriched tenant/user Get-Team list
+compositions and partial hydration behavior from the
+[existing decision record](core-composition-evidence.md). Add the
 service contract reports and journalled tenant acceptance for those paths.
 Successful lab validation and least-privilege access setup remain outstanding.

@@ -31,3 +31,24 @@ func ExampleService_SetArchivedState() {
 	}
 	_ = archive
 }
+
+// Compile-only: resolve credentials and persist private recovery data in the
+// application. Explicit retention leaves cleanup/reconciliation to the caller.
+func ExampleService_Create() {
+	create := func(ctx context.Context, sdk *msteams.Client, ownerID string) (management.CreationResult, error) {
+		alias := "sdk-lab-fixture"
+		return sdk.GraphAPI.TeamManagement.Create(ctx, management.CreateRequest{
+			DisplayName: "SDK lab fixture", MailNickname: &alias, Owner: ownerID,
+			RetainCreatedGroup: true,
+		})
+	}
+	_ = create
+}
+
+func ExampleService_MigrateGroup() {
+	migrate := func(ctx context.Context, sdk *msteams.Client, groupID string) (management.CreationResult, error) {
+		// This workflow never creates or deletes the supplied backing group.
+		return sdk.GraphAPI.TeamManagement.MigrateGroup(ctx, groupID, management.CreationOptions{})
+	}
+	_ = migrate
+}

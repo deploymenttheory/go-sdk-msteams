@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	directoryuser "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/directory_user"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team"
 	"github.com/go-resty/resty/v2"
@@ -27,6 +28,13 @@ const (
 	UnarchiveTeam        Action = "unarchive-team"
 	WaitArchivedState    Action = "wait-archived-state"
 	ConfirmArchivedState Action = "confirm-archived-state"
+	ResolveOwner         Action = "resolve-owner"
+	CheckMailNickname    Action = "check-mail-nickname"
+	CreateGroup          Action = "create-group"
+	GroupAvailability    Action = "group-availability"
+	TeamifyGroup         Action = "teamify-group"
+	ReconcileTeam        Action = "reconcile-team"
+	DeleteCreatedGroup   Action = "delete-created-group"
 )
 
 type State string
@@ -93,14 +101,15 @@ type Service struct {
 	scope  *client.Scope
 	groups *group.Service
 	teams  *team.Service
+	users  *directoryuser.Resolver
 }
 
 // NewService constructs local dependencies on the same Graph scope.
 func NewService(scope *client.Scope) *Service {
-	return &Service{scope: scope, groups: group.NewService(scope), teams: team.NewService(scope)}
+	return &Service{scope: scope, groups: group.NewService(scope), teams: team.NewService(scope), users: directoryuser.NewResolver(scope)}
 }
 
-func (s *Service) begin(ctx context.Context, id string) (context.Context, context.CancelFunc, error) {
+func (s *Service) start(ctx context.Context) (context.Context, context.CancelFunc, error) {
 	if ctx == nil {
 		return nil, nil, client.ErrNilContext
 	}
@@ -113,10 +122,19 @@ func (s *Service) begin(ctx context.Context, id string) (context.Context, contex
 	if s.scope.Backend() != client.Graph {
 		return nil, nil, client.ErrDestination
 	}
+	return s.scope.Session().Begin(ctx)
+}
+
+func (s *Service) begin(ctx context.Context, id string) (context.Context, context.CancelFunc, error) {
+	ctx, stop, err := s.start(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
 	if !directoryID.MatchString(id) {
+		stop()
 		return nil, nil, client.ErrRequest
 	}
-	return s.scope.Session().Begin(ctx)
+	return ctx, stop, nil
 }
 
 func (s *Service) read(ctx context.Context, result *Result) error {

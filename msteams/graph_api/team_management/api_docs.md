@@ -7,6 +7,8 @@ available through `Groups` and `Teams`.
 | Method | 8.1.0 command branch | Ordered stages |
 | --- | --- | --- |
 | `GetByID` | `Get-Team` / Identity | Get group, get team, project both snapshots. |
+| `Create` | `New-Team` / CreateTeam | Resolve owner, create group, wait for availability, teamify, paired readback. |
+| `MigrateGroup` | `New-Team` / MigrateGroup | Read supplied group, teamify with default settings, paired readback; never delete the supplied group. |
 | `UpdateByID` | `Set-Team` | Patch group, patch team settings, get group, get team. |
 | `SetArchivedState` | `Set-TeamArchivedState` | Paired read, state check, submit once, wait, paired readback, state confirmation. |
 
@@ -66,6 +68,8 @@ declares a `2XX` JSON envelope for the team-operation item GET (reviewed blob
 preserved; no HTTP-200-only rule is inferred from the separate beta chat-operation
 documentation. HTTP acceptance cannot establish a successful terminal state.
 
-CORE-28 still requires the tenant/user filter branches of Get-Team, group-first
-New-Team and successful lab acceptance. Native archive/unarchive, resumable
+See the [creation and migration notes](creation_api_docs.md) for pinned group
+presets, generated aliases, propagation controls, ownership and compensation.
+CORE-28 still requires the tenant/user filter branches of Get-Team and successful
+lab acceptance. Native archive/unarchive, resumable
 operation waiting and picture upload remain available separately through Teams.
