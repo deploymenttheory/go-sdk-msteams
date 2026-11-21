@@ -46,10 +46,18 @@ names remain distinct. Global:false still selects the tenant set. Parameterless
 Grant has no valid scope and fails without HTTP. Group 202 is decoded as the
 compiled model, without an inferred polling/effective-assignment guarantee.
 
-This source checkpoint does not yet provide a native files policy service.
-Remaining work includes typed CRUD/list/Set/grants, root wiring, comparisons and
-failure/context/no-replay tests, API docs/examples, gated lab/source reads, ledger
-mappings, full checks and reviewed sanitized artifacts. Issue #120 stays open.
+The initial native service exposes TeamsFilesPolicies with compiled
+CRUD/list/explicit Set composition, all four optional string settings and owned
+raw snapshots, plus user/tenant/group grants and a missing-scope input guard.
+Go field names normalize DefaultFileUploadAppID and
+FileSharingInChatsWithExternalUsers while preserving the exact source JSON tags.
+Initial race comparisons cover all 24 provider requests in both synthetic auth
+modes, all 20 model observations, 37 compiled bindings, five actual filters and
+the parameterless Grant error. All nine command/set pairs have native mappings.
+
+Remaining work includes partial Set and mutation failure/context/no-replay tests,
+API docs/examples, gated lab/source reads, full checks and reviewed sanitized
+artifacts. Issue #120 stays open.
 No tenant read/write has run for this family; successful CRUD, persistence,
 assignment or effective file/upload/external-sharing behavior is unqualified.
 Microsoft binaries and decompiled source remain private.
