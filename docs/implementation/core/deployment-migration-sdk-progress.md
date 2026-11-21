@@ -11,8 +11,18 @@ files/stale archive entries. Combined input and complete ZIP-output budgets are
 explicit local limits, not claimed service limits. Tests cover framing/limits,
 invalid/failed sources, cancellation, byte isolation and concurrent construction.
 
-Remaining implementation: typed ConfigAPI submission and opaque status reads;
-region/private-channel migration resources; exact additional profiles and scoped
+The native `TeamsAdminAPI.BatchDeployments` candidate now submits once through
+the selected ConfigAPI/discovery adapter and requires 202. It retains both
+instance/execution identities and future fields, including partial metadata when
+an accepted response lacks a usable instance ID. GetByID/GetByIdentity preserve
+opaque text and HTTP metadata. Non-success statuses remain Go errors and retain
+raw response text; Completed has no inferred terminal meaning. Root-client
+offline tests cover exact routing/headers/body, both status parameter branches,
+input/cancellation, accepted decoding failure and unreplayed submissions.
+The integrated full offline race suite, scoped vet and coding-mode lint pass.
+No CORE-22 cross-platform PR qualification is claimed at this checkpoint.
+
+Remaining implementation: region/private-channel migration resources; exact additional profiles and scoped
 token/cache support for delegated Region.Read.All; command/parameter-set ledger,
 source-informed service tests, examples/API docs and gated lab acceptance.
 

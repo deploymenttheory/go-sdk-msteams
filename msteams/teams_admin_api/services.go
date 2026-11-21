@@ -4,6 +4,7 @@ package teamsadminapi
 import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	applicationaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
+	batchdeployment "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/batch_deployment"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
@@ -18,6 +19,7 @@ type Services struct {
 	TeamTemplates             *teamtemplate.Service
 	TargetingPolicies         *targetingpolicy.Service
 	TargetingHierarchy        *targetinghierarchy.Service
+	BatchDeployments          *batchdeployment.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -31,7 +33,7 @@ func NewServices(session *client.Session) (*Services, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Services{scope: scope, ApplicationAccessPolicies: applicationaccesspolicy.NewService(backend), TeamTemplates: teamtemplate.NewService(backend), TargetingPolicies: targetingpolicy.NewService(backend), TargetingHierarchy: hierarchy}, nil
+	return &Services{scope: scope, ApplicationAccessPolicies: applicationaccesspolicy.NewService(backend), TeamTemplates: teamtemplate.NewService(backend), TargetingPolicies: targetingpolicy.NewService(backend), TargetingHierarchy: hierarchy, BatchDeployments: batchdeployment.NewService(backend)}, nil
 }
 
 // Scope returns the backend dependency shared by this collection's resources.
