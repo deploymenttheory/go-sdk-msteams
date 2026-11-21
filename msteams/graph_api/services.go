@@ -5,18 +5,25 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	directoryuser "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/directory_user"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
+	grouprelationship "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group_relationship"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team"
 	teammanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_management"
+	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
+	teamusermanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_user_management"
 )
 
 // Services is the typed Graph service collection. Resource fields are added with
 // their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
-	scope          *client.Scope
-	Teams          *team.Service
-	Groups         *group.Service
-	UserResolver   *directoryuser.Resolver
-	TeamManagement *teammanagement.Service
+	scope              *client.Scope
+	Teams              *team.Service
+	Groups             *group.Service
+	TeamMembers        *teammember.Service
+	GroupMembers       *grouprelationship.MemberService
+	GroupOwners        *grouprelationship.OwnerService
+	UserResolver       *directoryuser.Resolver
+	TeamUserManagement *teamusermanagement.Service
+	TeamManagement     *teammanagement.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -25,7 +32,13 @@ func NewServices(session *client.Session) (*Services, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Services{scope: scope, Teams: team.NewService(scope), Groups: group.NewService(scope), UserResolver: directoryuser.NewResolver(scope), TeamManagement: teammanagement.NewService(scope)}, nil
+	return &Services{
+		scope: scope, Teams: team.NewService(scope), Groups: group.NewService(scope),
+		TeamMembers: teammember.NewService(scope), GroupMembers: grouprelationship.NewMemberService(scope),
+		GroupOwners: grouprelationship.NewOwnerService(scope), UserResolver: directoryuser.NewResolver(scope),
+		TeamUserManagement: teamusermanagement.NewService(scope),
+		TeamManagement:     teammanagement.NewService(scope),
+	}, nil
 }
 
 // Scope returns the backend dependency shared by this collection's resources.

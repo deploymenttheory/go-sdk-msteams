@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "fixture_kind": "documentation-derived-native-contract",
+  "reviewed": "2026-11-20",
+  "qualification": "documentation-only",
+  "coverage_claim": false,
+  "live": "not-run",
+  "usage": "Native conversationMember operations selected by the accepted CRUD boundary. These are authored documentation-derived contracts, not captured PowerShell requests or live observations. Add/Get/Remove-TeamUser compositions use separate backing-group relationships.",
+  "decision_record": "docs/implementation/core/membership-resource-contract.md",
+  "operations": [
+    {"id": "team-members.create", "method": "POST", "path": "/v1.0/teams/{teamID}/members", "status": 201, "result": "conversationMember", "source": "https://learn.microsoft.com/en-us/graph/api/team-post-members?view=graph-rest-1.0"},
+    {"id": "team-members.get", "method": "GET", "path": "/v1.0/teams/{teamID}/members/{membershipID}", "status": 200, "result": "conversationMember", "source": "https://learn.microsoft.com/en-us/graph/api/team-get-members?view=graph-rest-1.0"},
+    {"id": "team-members.update", "method": "PATCH", "path": "/v1.0/teams/{teamID}/members/{membershipID}", "status": 200, "result": "updated conversationMember", "source": "https://learn.microsoft.com/en-us/graph/api/team-update-members?view=graph-rest-1.0"},
+    {"id": "team-members.delete", "method": "DELETE", "path": "/v1.0/teams/{teamID}/members/{membershipID}", "status": 204, "result": "no body", "source": "https://learn.microsoft.com/en-us/graph/api/team-delete-members?view=graph-rest-1.0"},
+    {"id": "team-members.list", "method": "GET", "path": "/v1.0/teams/{teamID}/members", "status": 200, "result": "value collection with opaque @odata.nextLink", "source": "https://learn.microsoft.com/en-us/graph/api/team-list-members?view=graph-rest-1.0"}
+  ],
+  "rules": {
+    "identity": "membershipID is opaque and distinct from AAD userId; never decode or synthesize it",
+    "create": "AAD discriminator and selected-cloud user binding; roles may be omitted or explicit []; owner uses [owner]; guest is assigned by server",
+    "update": "only roles are writable; omitted means retained; [] demotes; [owner] promotes; null or [member] is not demotion; guest cannot be promoted",
+    "list": "filter/select/top; default page size 100, maximum 999; preserve nullable AAD fields, unknown subtypes/roles/properties and cross-tenant members",
+    "writes": "never replay ambiguous mutations; create is not asynchronous even though visibility can be delayed",
+    "authority": "application guest addition is unsupported; non-owner write permission does not imply owner authority"
+  }
+}
