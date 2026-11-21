@@ -106,7 +106,7 @@ func TestFilesPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
 		}
 	}
 	if json.Unmarshal(raw, &fixture) != nil {
-		t.Fatal("invalid events binder fixture")
+		t.Fatal("invalid files binder fixture")
 	}
 	found := false
 	for _, x := range fixture.Cases {

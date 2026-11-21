@@ -98,3 +98,5 @@ func evidence(t *testing.T, results []contracttest.Result) {
 		t.Fatal("files policy evidence write failed")
 	}
 }
+
+const item = collection + "/configuration/Global"

@@ -46,18 +46,27 @@ names remain distinct. Global:false still selects the tenant set. Parameterless
 Grant has no valid scope and fails without HTTP. Group 202 is decoded as the
 compiled model, without an inferred polling/effective-assignment guarantee.
 
-The initial native service exposes TeamsFilesPolicies with compiled
+The native service exposes TeamsFilesPolicies with compiled
 CRUD/list/explicit Set composition, all four optional string settings and owned
 raw snapshots, plus user/tenant/group grants and a missing-scope input guard.
 Go field names normalize DefaultFileUploadAppID and
 FileSharingInChatsWithExternalUsers while preserving the exact source JSON tags.
-Initial race comparisons cover all 24 provider requests in both synthetic auth
+Race comparisons cover all 24 provider requests in both synthetic auth
 modes, all 20 model observations, 37 compiled bindings, five actual filters and
 the parameterless Grant error. All nine command/set pairs have native mappings.
 
-Remaining work includes partial Set and mutation failure/context/no-replay tests,
-API docs/examples, gated lab/source reads, full checks and reviewed sanitized
-artifacts. Issue #120 stays open.
-No tenant read/write has run for this family; successful CRUD, persistence,
-assignment or effective file/upload/external-sharing behavior is unqualified.
-Microsoft binaries and decompiled source remain private.
+Additional tests retain Set preparation and acceptance through denied, empty,
+malformed, throttled and unavailable responses; preserve null read-model
+Identity; send signed Int32 group Rank boundaries; reject invalid input/context/
+backend and ambiguous scopes before HTTP; and verify single-send mutations across
+five failure statuses. API docs, a compiling example and a gated read-only
+lab/source comparison harness are included.
+
+Ledger rows remain in-progress/metadata-only because selected offline comparisons
+do not establish full command coverage. Issue #120 stays open. Successful tenant
+CRUD, persistence, assignments and effective file/upload/external-sharing behavior
+remain unqualified. Microsoft binaries and decompiled source remain private.
+
+On 2026-11-21 actual compiled Global reads returned resource HTTP 403 with both
+client-secret and certificate authentication. No writes ran. See
+[lab acceptance](files-policy-lab-acceptance.md).
