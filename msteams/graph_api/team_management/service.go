@@ -18,10 +18,15 @@ var directoryID = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]
 type Action string
 
 const (
-	ReadGroup   Action = "read-group"
-	ReadTeam    Action = "read-team"
-	UpdateGroup Action = "update-group"
-	UpdateTeam  Action = "update-team"
+	ReadGroup            Action = "read-group"
+	ReadTeam             Action = "read-team"
+	UpdateGroup          Action = "update-group"
+	UpdateTeam           Action = "update-team"
+	CheckArchivedState   Action = "check-archived-state"
+	ArchiveTeam          Action = "archive-team"
+	UnarchiveTeam        Action = "unarchive-team"
+	WaitArchivedState    Action = "wait-archived-state"
+	ConfirmArchivedState Action = "confirm-archived-state"
 )
 
 type State string
@@ -29,6 +34,8 @@ type State string
 const (
 	Succeeded   State = "succeeded"
 	Unconfirmed State = "unconfirmed"
+	Accepted    State = "accepted"
+	Blocked     State = "blocked"
 )
 
 type Stage struct {

@@ -89,6 +89,13 @@ type WaitOptions struct {
 	PropagationRules  []PropagationRule
 }
 
+// Validate checks wait bounds and propagation rules without starting a wait or
+// acquiring credentials. Compositions can reject invalid bounds before a write.
+func (o WaitOptions) Validate() error {
+	_, err := normalizeWaitOptions(o)
+	return err
+}
+
 // Operation is a serial polling handle. Calls to Poll and Wait must not overlap;
 // separate operations are independent. No context or worker goroutine is retained.
 type Operation struct {

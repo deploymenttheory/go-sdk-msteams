@@ -21,3 +21,13 @@ func ExampleService_UpdateByID() {
 	}
 	_ = update
 }
+
+// Compile-only: the application supplies credentials and owns recovery records.
+func ExampleService_SetArchivedState() {
+	archive := func(ctx context.Context, sdk *msteams.Client, id string) (management.ArchiveStateResult, error) {
+		// Even on error retain the result privately. An accepted remote operation
+		// can continue after this wait times out. Reconcile rather than resubmit.
+		return sdk.GraphAPI.TeamManagement.SetArchivedState(ctx, id, true, management.ArchiveStateOptions{})
+	}
+	_ = archive
+}

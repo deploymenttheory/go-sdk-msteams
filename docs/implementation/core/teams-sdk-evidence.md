@@ -3,8 +3,8 @@
 Status: in progress. Native team create/read/settings-update/delete/list,
 create-from-group, archive/unarchive, picture upload and resumable operation
 handling are implemented under `sdk.GraphAPI.Teams`. Supporting group CRUD is
-implemented under `sdk.GraphAPI.Groups`. Paired Get-Team identity and Set-Team
-compositions are implemented under `sdk.GraphAPI.TeamManagement`; remaining
+implemented under `sdk.GraphAPI.Groups`. Paired Get-Team identity, Set-Team and
+Set-TeamArchivedState compositions are implemented under `sdk.GraphAPI.TeamManagement`; remaining
 compositions and successful tenant acceptance are required.
 This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81)
 or promote its command coverage.
@@ -54,6 +54,23 @@ the actual empty-container capture, denied stages, mismatched IDs, cancellation,
 closed clients and local validation. These are synthetic SDK executions, not
 runtime cmdlet captures. Reports retain `coverage_claim: false` and live
 qualification `not-run`. See the [paired management notes](../../../msteams/graph_api/team_management/api_docs.md).
+
+The archive-state composition now performs paired pre-read, unknown/unchanged
+state rejection, one archive/unarchive submission, native operation waiting and
+paired confirmation. It distinguishes acceptance, remote completion and observed
+archive state; stale/missing readback is not synthesized into success. A failed
+wait retains the accepted handle, latest snapshot, pre-read and stages without
+replaying the action. Three positive cases emit `team-archive-service.json`,
+mapped to Set-TeamArchivedState/__AllParameterSets. Virtual time checks the
+31-second first-poll cadence and recovery after a shorter timeout, including
+preserving cadence across a second wait. Additional cases exercise cancellation,
+client close, remote/unknown/failed status, poll limits, denied reads, unsafe
+handles, incomplete readback, unchanged/unknown precheck states and local option
+validation. No propagation exception is inferred and no tenant call was made.
+The actual pinned composition submissions and serializer differences remain
+distinct from these synthetic SDK executions; reports retain no coverage/live
+promotion. Primary archive/unarchive/operation documentation was reviewed on
+2026-11-21 and is linked in the API notes.
 
 The primary native Giphy payload uses the documented string enum. A test first
 requires the pinned artifact to retain its observed numeric 1, then records the
@@ -105,7 +122,7 @@ team CRUD, operation completion, provisioning, archive transitions or photos.
 Before CORE-28 can close, implement the group-first and enriched PowerShell
 compositions from the [existing decision record](core-composition-evidence.md),
 including owner selection, education-group constants, bounded group
-propagation/reconciliation, archive-state
-checks, owned-resource recovery and partial hydration/list behavior. Add the
+propagation/reconciliation, owned-resource recovery and partial hydration/list
+behavior. Add the
 service contract reports and journalled tenant acceptance for those paths.
 Successful lab validation and least-privilege access setup remain outstanding.
