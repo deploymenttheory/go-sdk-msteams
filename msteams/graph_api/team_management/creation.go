@@ -48,7 +48,9 @@ func groupTemplate(value GroupTemplate) (GroupTemplate, error) {
 
 func creationVisibility(value CreateRequest) (group.Visibility, error) {
 	if value.Template == EducationClass {
-		if value.Visibility != nil && strings.TrimSpace(string(*value.Visibility)) != "" {
+		// The cmdlet rejects explicit nonblank values, and its ValidateSet
+		// binder rejects blank values. Only omission is valid for EDU_Class.
+		if value.Visibility != nil {
 			return "", client.ErrRequest
 		}
 		return group.HiddenMembership, nil
@@ -266,6 +268,11 @@ func (s *Service) Create(ctx context.Context, value CreateRequest) (CreationResu
 		return result, err
 	}
 	if strings.TrimSpace(value.DisplayName) == "" || value.MailNickname != nil && strings.TrimSpace(*value.MailNickname) == "" {
+		return result, client.ErrRequest
+	}
+	// New-Team marks these optional parameters ValidateNotNullOrEmpty.
+	// Nil omits them; empty update values remain supported separately.
+	if value.Description != nil && *value.Description == "" || value.Classification != nil && *value.Classification == "" {
 		return result, client.ErrRequest
 	}
 	ctx, cancel := context.WithTimeout(ctx, value.Options.Timeout)

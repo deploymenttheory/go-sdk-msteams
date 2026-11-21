@@ -204,3 +204,11 @@ Before CORE-28 can close, finish reviewing command evidence and journalled tenan
 acceptance across the [existing decision record](core-composition-evidence.md),
 including successful resource/composition scenarios.
 Successful lab validation and least-privilege access setup remain outstanding.
+
+The parameter audit also corrected three creation-only local validation gaps.
+Explicit empty description/classification and explicit blank EDU_Class visibility
+previously reached credential acquisition. Controlled zero-I/O cases reproduced
+all three failures, then passed after preflight was aligned with the pinned
+ValidateNotNullOrEmpty/ValidateSet attributes and the class command check. Nil
+optional values remain omitted; Set-Team's empty-value clearing is unchanged and
+continues to pass the composed update tests. No server rejection was fabricated.

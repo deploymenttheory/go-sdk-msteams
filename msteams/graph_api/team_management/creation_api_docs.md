@@ -12,12 +12,15 @@ directory read and does not prove existence or authority. Both initial owner and
 member references bind that user through the selected Graph cloud.
 
 The request creates a Unified group with mail enabled, security disabled and
-Private visibility by default. Explicit description, classification and empty
-strings are retained. Visibility accepts the pinned Public/Private/HiddenMembership
+Private visibility by default. Nil description/classification omit those values;
+explicit empty values fail before owner resolution or any request, matching the
+pinned creation parameter attributes. Update clearing remains a separate input.
+Visibility accepts the pinned Public/Private/HiddenMembership
 values, ignoring input case. Pinned education presets select the captured flags,
 site-app roles and education extension; they do not prove that the tenant supports
-education provisioning. EDU_Class forces HiddenMembership and rejects explicitly
-supplied nonblank visibility. These group presets are distinct from native Teams
+education provisioning. EDU_Class forces HiddenMembership and requires visibility
+to be omitted: its command check rejects nonblank values, and parameter binding
+rejects blank values. These group presets are distinct from native Teams
 template IDs. Original captures are unchanged.
 
 A supplied mail nickname is used directly, without normalization, suffixing or
