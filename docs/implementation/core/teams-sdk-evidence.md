@@ -3,8 +3,8 @@
 Status: in progress. Native team create/read/settings-update/delete/list,
 create-from-group, archive/unarchive, picture upload and resumable operation
 handling are implemented under `sdk.GraphAPI.Teams`. Supporting group CRUD is
-implemented under `sdk.GraphAPI.Groups`. New-Team creation/migration, paired
-Get-Team identity, Set-Team and Set-TeamArchivedState compositions are implemented
+implemented under `sdk.GraphAPI.Groups`. New-Team creation/migration, Get-Team
+identity/enriched listing, Set-Team and Set-TeamArchivedState compositions are implemented
 under `sdk.GraphAPI.TeamManagement`; remaining
 compositions and successful tenant acceptance are required.
 This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81)
@@ -96,6 +96,21 @@ These source-derived/synthetic executions do not establish successful tenant
 creation, education provisioning, SharePoint completion or command qualification.
 See the [creation notes](../../../msteams/graph_api/team_management/creation_api_docs.md).
 
+The enriched listing service now discovers beta team groups or v1 direct joined
+teams, traverses every required source before selection, and retains incomplete
+source prefixes. Combined tenant search uses separate queries and complete-ID
+intersection; user discovery uses directory resolution and paired reads. Tenant
+hydration uses the independently extracted batch engine from PR #238, preserves
+response correlation/input order and retries only throttled items within explicit
+bounds. Successful peers remain retained on later failure/cancellation. Typed
+subrequest errors keep codes/request IDs without printing payloads; a batch's
+outer HTTP 200 cannot hide inner denial. Missing selected filter properties remain
+unknown, and partial discovery never establishes complete absence/intersection.
+Three source-derived cases emit `team-list-service.json` mapped to Get-Team/Filters.
+Additional offline tests cover batch width, mixed/malformed outcomes, statuses,
+normalized diagnostics, exact filtering, throttles, deadlines and client close.
+No live calls were made. See the [listing notes](../../../msteams/graph_api/team_management/list_api_docs.md).
+
 The primary native Giphy payload uses the documented string enum. A test first
 requires the pinned artifact to retain its observed numeric 1, then records the
 explicit native string difference without rewriting the capture. Unknown future
@@ -143,8 +158,7 @@ No response bodies, tenant identifiers, tokens or credentials were recorded in
 the repository. This verifies denial handling; it does not validate successful
 team CRUD, operation completion, provisioning, archive transitions or photos.
 
-Before CORE-28 can close, implement the enriched tenant/user Get-Team list
-compositions and partial hydration behavior from the
-[existing decision record](core-composition-evidence.md). Add the
-service contract reports and journalled tenant acceptance for those paths.
+Before CORE-28 can close, finish remaining command evidence and journalled tenant
+acceptance across the [existing decision record](core-composition-evidence.md),
+including removal/picture mappings and successful resource/composition scenarios.
 Successful lab validation and least-privilege access setup remain outstanding.

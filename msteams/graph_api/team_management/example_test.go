@@ -52,3 +52,15 @@ func ExampleService_MigrateGroup() {
 	}
 	_ = migrate
 }
+
+func ExampleService_List() {
+	list := func(ctx context.Context, sdk *msteams.Client) (management.ListResult, error) {
+		archived := false
+		// On error retain the returned source prefixes, successful items and
+		// failed/unattempted identities; Complete remains false.
+		return sdk.GraphAPI.TeamManagement.List(ctx, management.ListOptions{
+			DisplayName: "Engineering", Archived: &archived, BatchSize: 20,
+		})
+	}
+	_ = list
+}
