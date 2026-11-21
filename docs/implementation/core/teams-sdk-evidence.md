@@ -128,6 +128,16 @@ contract status remains `metadata-only`, and live status remains `not-run` while
 the candidate evidence and remaining acceptance work are reviewed. These links
 do not infer a contract pass or tenant success from green CI alone.
 
+Opt-in `TestLabTeamLifecycle` and `TestLabRecoverTeamLifecycle` are now prepared
+for disposable group-first and migration fixtures. They skip before credential
+loading without all three lab flags, require a private same-tenant owner fixture,
+and use a bound recovery journal with positive paired ownership checks before
+deletion. Offline tests constrain denied/incomplete/ambiguous discovery and
+cleanup. These Go-only scenarios cover lifecycle readbacks, archive transitions
+and valid photo transfer/readback when explicitly run; they are not PowerShell
+comparisons and have not run against the tenant. See the
+[acceptance procedure](team-lifecycle-lab-acceptance.md) for exact scope and limits.
+
 The primary native Giphy payload uses the documented string enum. A test first
 requires the pinned artifact to retain its observed numeric 1, then records the
 explicit native string difference without rewriting the capture. Unknown future
