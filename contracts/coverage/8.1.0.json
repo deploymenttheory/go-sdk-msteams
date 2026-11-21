@@ -6049,30 +6049,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/114/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service_test.go",
+              "name": "TestCortanaModernFilterAndWhitespace"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cortana_policy_test.go",
+              "name": "TestLabCortanaPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/114/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service_test.go",
+              "name": "TestCortanaPinnedGeneratedRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cortana_policy_test.go",
+              "name": "TestLabCortanaPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern Cortana policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, voice setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back, cleanup and effective behavior remain open; feature availability is not inferred from retained baseline exports.",
         "evidence": []
       },
       "exclusion": null
@@ -13088,37 +13135,119 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/240/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service_test.go",
+              "name": "TestCortanaPinnedGeneratedRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cortana_policy_test.go",
+              "name": "TestLabCortanaPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/240/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service_test.go",
+              "name": "TestCortanaPinnedGeneratedRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cortana_policy_test.go",
+              "name": "TestLabCortanaPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/240/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service_test.go",
+              "name": "TestCortanaPinnedGeneratedRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cortana_policy_test.go",
+              "name": "TestLabCortanaPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern Cortana policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, voice setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back, cleanup and effective behavior remain open; feature availability is not inferred from retained baseline exports.",
         "evidence": []
       },
       "exclusion": null
@@ -18439,23 +18568,55 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/351/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service_test.go",
+              "name": "TestCortanaPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/binding_test.go",
+              "name": "TestCortanaNativeRequestsMatchSuccessfulIsolatedBinding"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cortana_policy_test.go",
+              "name": "TestLabCortanaPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern Cortana policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, voice setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back, cleanup and effective behavior remain open; feature availability is not inferred from retained baseline exports.",
         "evidence": []
       },
       "exclusion": null
@@ -23076,23 +23237,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/465/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service_test.go",
+              "name": "TestCortanaPinnedGeneratedRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cortana_policy_test.go",
+              "name": "TestLabCortanaPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern Cortana policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, voice setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back, cleanup and effective behavior remain open; feature availability is not inferred from retained baseline exports.",
         "evidence": []
       },
       "exclusion": null
@@ -28331,23 +28512,55 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/587/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/service_test.go",
+              "name": "TestCortanaPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_cortana_policy/binding_test.go",
+              "name": "TestCortanaNativeRequestsMatchSuccessfulIsolatedBinding"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cortana_policy_test.go",
+              "name": "TestLabCortanaPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_cortana_policy/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern Cortana policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, voice setting, assignment, role, consent or privilege changed. Successful authorization, server/cloud/flight availability, writes/read-back, cleanup and effective behavior remain open; feature availability is not inferred from retained baseline exports.",
         "evidence": []
       },
       "exclusion": null
