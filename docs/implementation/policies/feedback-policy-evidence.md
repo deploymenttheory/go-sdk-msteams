@@ -53,11 +53,18 @@ PATCH/body-bearing DELETE and string Force. Set retains read-model Identity.
 Modern Grant uses forest-target discovery and modern assignment payloads. These
 observations require separate backend wiring in the native service.
 
-This source checkpoint does not yet provide a native feedback policy service.
-Remaining work includes native typed models,
-CRUD/list/Set/grants and root wiring; comparisons and failure/context/no-replay
-tests; API docs/examples; gated lab/source reads; command/set ledger mappings;
-full checks and sanitized CI review. Issue #119 remains open. No tenant read/write
+The initial native checkpoint exposes TeamsFeedbackPolicies with compiled
+CRUD/list/explicit Set composition, all six nullable settings and owned raw
+snapshots, plus separately wired modern user/tenant/group grants. Source-aware
+Assign omits zero Rank while the explicit native group primitive can send zero.
+Initial race comparisons cover all 15 compiled provider cases in synthetic
+application/delegated modes, all seven modern requests in both modes, all 26
+model observations, 36 compiled bindings and five actual source filters. All
+five public commands/eight command-set pairs have native symbol mappings.
+
+Remaining work includes mapped wrapper comparisons, partial Set and grant
+acceptance/failure/context/no-replay tests; API docs/examples; gated lab/source
+reads; full checks and sanitized CI review. Issue #119 remains open. No tenant read/write
 has run for this family, and no successful CRUD, persistence, assignment or
 effective feedback/survey/collection behavior is claimed. Microsoft binaries and
 decompiled source remain private.

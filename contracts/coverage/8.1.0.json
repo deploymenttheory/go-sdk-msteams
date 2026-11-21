@@ -6797,26 +6797,81 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/123/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
+              "name": "TestFeedbackPolicyPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/binding_test.go",
+              "name": "TestFeedbackPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/filter_test.go",
+              "name": "TestFeedbackPolicyFiltersMatchCapturedSource"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/123/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
+              "name": "TestFeedbackPolicyPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/binding_test.go",
+              "name": "TestFeedbackPolicyCapturedCompiledBindings"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-binding.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-wrappers.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-requests.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -13928,33 +13983,106 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/245/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
+              "name": "TestFeedbackPolicyPinnedModernGrant"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/245/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
+              "name": "TestFeedbackPolicyPinnedModernGrant"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/245/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
+              "name": "TestFeedbackPolicyPinnedModernGrant"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/assignment.go",
+            "name": "Service.Assign"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-binding.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-wrappers.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-requests.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -19438,19 +19566,44 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/359/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
+              "name": "TestFeedbackPolicyPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/binding_test.go",
+              "name": "TestFeedbackPolicyCapturedCompiledBindings"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-binding.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-wrappers.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-requests.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -24104,19 +24257,44 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/471/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
+              "name": "TestFeedbackPolicyPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/binding_test.go",
+              "name": "TestFeedbackPolicyCapturedCompiledBindings"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-binding.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-wrappers.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-requests.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -29695,19 +29873,52 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/596/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
+              "name": "TestFeedbackPolicyPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/binding_test.go",
+              "name": "TestFeedbackPolicyCapturedCompiledBindings"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_feedback_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-binding.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-wrappers.json",
+          "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-requests.json"
+        ]
       },
       "live": {
         "status": "not-run",

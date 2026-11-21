@@ -38,6 +38,7 @@ import (
 	teamsenhancedencryptionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_enhanced_encryption_policy"
 	teamseventspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_events_policy"
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
+	teamsfeedbackpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
@@ -52,6 +53,7 @@ type Services struct {
 	TeamsCortanaPolicies                    *teamscortanapolicy.Service
 	TeamsClientConfigurations               *teamsclientconfiguration.Service
 	TeamsChannelsPolicies                   *teamschannelspolicy.Service
+	TeamsFeedbackPolicies                   *teamsfeedbackpolicy.Service
 	TeamsCallingPolicies                    *teamscallingpolicy.Service
 	TeamsCallParkPolicies                   *teamscallparkpolicy.Service
 	TeamsCallHoldPolicies                   *teamscallholdpolicy.Service
@@ -110,6 +112,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsCortanaPolicies:                    teamscortanapolicy.NewService(backend),
 		TeamsClientConfigurations:               teamsclientconfiguration.NewService(scope),
 		TeamsChannelsPolicies:                   teamschannelspolicy.NewService(scope),
+		TeamsFeedbackPolicies:                   teamsfeedbackpolicy.NewService(scope),
 		TeamsCallingPolicies:                    teamscallingpolicy.NewService(scope),
 		TeamsCallParkPolicies:                   teamscallparkpolicy.NewService(backend),
 		TeamsCallHoldPolicies:                   teamscallholdpolicy.NewService(scope),
