@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-policy-package-wrapper-binding",
+  "source": {
+    "path": "custom/Merged_custom_PsExt.ps1",
+    "sha256": "03dbc3a85e12c98dd1807d604782c6a90d0656569541cd9540738825a7fcb255"
+  },
+  "stage": "Unmodified AST-extracted custom functions under telemetry/internal-command stubs. Captures pair parsing and intermediate PowerShell rank values before generated DTO conversion. No real module import, credentials, sender, command lifecycle or network.",
+  "cases": [
+    {
+      "name": "create-delimiters",
+      "command": "create",
+      "input": [
+        " A , B ",
+        "A.B",
+        "A:B",
+        "A;B",
+        "A B",
+        "A\tB"
+      ],
+      "calls": [
+        {
+          "operation": "create",
+          "parameters": {
+            "Identity": "FixturePackage",
+            "PolicyList": [
+              {
+                "PolicyName": "A , B",
+                "PolicyType": ""
+              },
+              {
+                "PolicyName": "B",
+                "PolicyType": "A"
+              },
+              {
+                "PolicyName": "B",
+                "PolicyType": "A"
+              },
+              {
+                "PolicyName": "B",
+                "PolicyType": "A"
+              },
+              {
+                "PolicyName": "B",
+                "PolicyType": "A"
+              },
+              {
+                "PolicyName": "B",
+                "PolicyType": "A"
+              }
+            ],
+            "Description": ""
+          }
+        }
+      ],
+      "failure_type": null
+    },
+    {
+      "name": "update-duplicates",
+      "command": "update",
+      "input": [
+        "Type,Name",
+        "Type,Name"
+      ],
+      "calls": [
+        {
+          "operation": "update",
+          "parameters": {
+            "Identity": "FixturePackage",
+            "PolicyList": [
+              {
+                "PolicyName": "Name",
+                "PolicyType": "Type"
+              },
+              {
+                "PolicyName": "Name",
+                "PolicyType": "Type"
+              }
+            ]
+          }
+        }
+      ],
+      "failure_type": null
+    },
+    {
+      "name": "create-first-split-only",
+      "command": "create",
+      "input": [
+        "Type,,Name",
+        "Type:Name:Child"
+      ],
+      "calls": [
+        {
+          "operation": "create",
+          "parameters": {
+            "Identity": "FixturePackage",
+            "PolicyList": [
+              {
+                "PolicyName": ",Name",
+                "PolicyType": "Type"
+              },
+              {
+                "PolicyName": "Name:Child",
+                "PolicyType": "Type"
+              }
+            ],
+            "Description": ""
+          }
+        }
+      ],
+      "failure_type": null
+    },
+    {
+      "name": "create-empty-pieces",
+      "command": "create",
+      "input": [
+        ",Name",
+        "Type,",
+        ","
+      ],
+      "calls": [
+        {
+          "operation": "create",
+          "parameters": {
+            "Identity": "FixturePackage",
+            "PolicyList": [
+              {
+                "PolicyName": "Name",
+                "PolicyType": ""
+              },
+              {
+                "PolicyName": "",
+                "PolicyType": "Type"
+              },
+              {
+                "PolicyName": "",
+                "PolicyType": ""
+              }
+            ],
+            "Description": ""
+          }
+        }
+      ],
+      "failure_type": null
+    },
+    {
+      "name": "create-missing-delimiter",
+      "command": "create",
+      "input": [
+        "TypeName"
+      ],
+      "calls": [],
+      "failure_type": "System.Management.Automation.RuntimeException"
+    },
+    {
+      "name": "group-integer-ranks",
+      "command": "group",
+      "input": [
+        "Type,0",
+        "Type;-1",
+        "Type:2147483647",
+        "Type -2147483648"
+      ],
+      "calls": [
+        {
+          "operation": "group",
+          "parameters": {
+            "GroupId": "fixture/group",
+            "PackageName": "",
+            "PolicyRankings": [
+              {
+                "Rank": 0,
+                "PolicyType": "Type"
+              },
+              {
+                "Rank": -1,
+                "PolicyType": "Type"
+              },
+              {
+                "Rank": 2147483647,
+                "PolicyType": "Type"
+              },
+              {
+                "Rank": -2147483648,
+                "PolicyType": "Type"
+              }
+            ]
+          }
+        }
+      ],
+      "failure_type": null
+    },
+    {
+      "name": "group-rank-conversions",
+      "command": "group",
+      "input": [
+        "Type,garbage",
+        "Type,",
+        "Type,2147483648",
+        "Type,0x10",
+        "Type,1.5",
+        "Type,1e2",
+        "Type,08"
+      ],
+      "calls": [
+        {
+          "operation": "group",
+          "parameters": {
+            "GroupId": "fixture/group",
+            "PackageName": "",
+            "PolicyRankings": [
+              {
+                "Rank": null,
+                "PolicyType": "Type"
+              },
+              {
+                "Rank": 0,
+                "PolicyType": "Type"
+              },
+              {
+                "Rank": null,
+                "PolicyType": "Type"
+              },
+              {
+                "Rank": 16,
+                "PolicyType": "Type"
+              },
+              {
+                "Rank": 2,
+                "PolicyType": "Type"
+              },
+              {
+                "Rank": 100,
+                "PolicyType": "Type"
+              },
+              {
+                "Rank": 8,
+                "PolicyType": "Type"
+              }
+            ]
+          }
+        }
+      ],
+      "failure_type": null
+    },
+    {
+      "name": "group-missing-delimiter",
+      "command": "group",
+      "input": [
+        "TypeRank"
+      ],
+      "calls": [],
+      "failure_type": "System.Management.Automation.RuntimeException"
+    },
+    {
+      "name": "group-empty-rankings",
+      "command": "group",
+      "input": [],
+      "calls": [
+        {
+          "operation": "group",
+          "parameters": {
+            "GroupId": "fixture/group",
+            "PackageName": "",
+            "PolicyRankings": []
+          }
+        }
+      ],
+      "failure_type": null
+    }
+  ]
+}

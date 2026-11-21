@@ -1,9 +1,10 @@
 # POL-28 policy package contract investigation
 
 Issue #101 owns nine commands and twelve parameter sets in the accepted 8.1.0
-runtime snapshot. This is a source investigation checkpoint, not a native service,
-contract pass or tenant qualification. The default baseline and coverage states
-are unchanged. No policy-package request or mutation has run in the lab.
+runtime snapshot. Native service methods and tests now map that surface, with
+implementation in-progress and contract metadata-only. No full parity or tenant
+qualification is claimed. The default baseline is unchanged; no package request
+or mutation has run in the lab.
 
 The pinned package SHA256 is
 `78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7`.
@@ -29,8 +30,8 @@ Microsoft binaries and decompiled source are not redistributed here.
 
 ## Generated routes and protocol distinctions
 
-All inspected helpers initially target the standard ConfigAPI origin. Generated
-host/header rewriting still needs explicit inspection/capture before implementation.
+All inspected helpers initially target the standard ConfigAPI origin. The native
+service uses the established generated ConfigAPI adapter for forest-header routing.
 These routes are distinct from compiled policy-RP and conditional OCE protocols.
 
 | Helper | Method / relative route |
@@ -111,19 +112,28 @@ tenant probe or proof of other clouds' support. Preserve the distinction between
 this documented restriction and binary wire evidence; do not infer additional
 delegated-only restrictions from a denial or missing feature.
 
+The native guard uses the catalog per command and resolved documentation profile
+before discovery/token acquisition. Unknown documentation profiles stay unqualified.
+Both generated headers and complete routes are validated before discovery; typed
+business-error decoding excludes discovery replies. Native group rankings use typed
+Int32 values rather than silently reproducing arbitrary shell numeric string casts.
+
 The existing dedicated lab identity uses application credentials, so successful
 package tenant qualification needs an appropriate delegated context. It is not
 resolved by granting that SPN more Graph permissions or by interpreting 403 as
 evidence that application mode works. Independent implementation/capture work can
 continue without changing roles, consent or interactive sessions.
+The opt-in TestLabPolicyPackagesReadOnly run confirmed the configured identity's
+local mode rejection and skipped delegated qualification. No package request or
+token acquisition ran. A separately supplied, tenant-bound delegated-token file
+can enable the bounded read path later; absence remains visible as unavailable.
 
-## Next implementation steps
+## Remaining qualification
 
-1. Verify wrapper pair parsing and downstream rank/null binding with isolated
-   helpers; generated request/header/model observations are now captured.
-2. Establish the documented mode guard and its cloud bounds before token acquisition.
-3. Add native custom-package CRUD/list and explicit user/group/batch operations,
-   preserving composition, dictionary presence and typed failure results.
-4. Wire the root collection, all twelve set mappings, compiling examples, offline
-   contracts and opt-in delegated tenant acceptance. Leave unavailable qualification
-   visible without publishing unsupported method stubs or dropping commands.
+1. Complete shell/CLR coercion qualification, especially numeric string ranks;
+   the primary SDK API uses typed entries and preserves rank zero explicitly.
+2. Run delegated list/read projections against the pinned module with tenant-bound
+   fixtures. The existing application identity is not an eligible substitute.
+3. Exercise custom CRUD and group/user/batch assignment on owned disposable fixtures
+   with non-default read-back and cleanup under mutation/consequential gates. Keep
+   partial outcomes and HTTP acceptance separate from effective convergence.
