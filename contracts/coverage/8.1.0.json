@@ -5878,30 +5878,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/111/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/service_test.go",
+              "name": "TestClientConfigurationCompiledFilterDoesNotUseModernWhitespaceRules"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/client_configuration_test.go",
+              "name": "TestLabClientConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/111/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/service_test.go",
+              "name": "TestClientConfigurationPinnedCompiledCRUD"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/client_configuration_test.go",
+              "name": "TestLabClientConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled client configuration Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No configuration, client setting, role, consent or privilege changed. Successful authorization/cloud qualification, updates/read-back, effective behavior and cleanup remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -28153,23 +28200,51 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/584/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/composition_test.go",
+              "name": "TestClientConfigurationSetRetainsPreparationAndAcceptance"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/client_configuration_test.go",
+              "name": "TestLabClientConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_client_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled client configuration Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No configuration, client setting, role, consent or privilege changed. Successful authorization/cloud qualification, updates/read-back, effective behavior and cleanup remain open.",
         "evidence": []
       },
       "exclusion": null

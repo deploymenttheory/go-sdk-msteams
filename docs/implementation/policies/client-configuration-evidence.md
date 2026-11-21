@@ -40,18 +40,16 @@ contains all 17 public settings and no synthesized create/delete/grant calls.
   case variants and later duplicates. Object-valued Boolean and array-valued
   RestrictedSenderList fail. These observations establish actual model behavior,
   not the public PowerShell binder's conversion of every possible input.
-- Native known fields should require actual JSON string/Boolean types and retain
-  unknown fields separately in owned raw snapshots. Set should expose an explicit
+- Native known fields require actual JSON string/Boolean types and retain
+  unknown fields separately in owned raw snapshots. Set exposes an explicit
   read-then-sparse-PATCH composition with partial preparation/acceptance results,
-  alongside a one-request PATCH primitive. Only bound settings should be sent;
+  alongside a one-request PATCH primitive. Only bound settings are sent;
   Force alone is not a setting. No implicit replay, restore, ETag or atomicity
   guarantee follows the helper behavior.
 
 ## Remaining implementation and qualification
 
-Implement native read/list/filter and sparse PATCH/Set composition for all 17
-settings, root wiring, exact mappings, source comparisons, context/backend/input/
-failure coverage, documentation/examples and gated read-only lab support.
+Native read/list/filter and sparse PATCH/Set composition for all 17 settings are present, with root wiring, exact mappings, source comparisons, context/backend/input/failure tests, compiling examples and gated read-only lab support. Provider comparisons use application/delegated synthetic modes; model projections and accepted final settings compose the captured model/helper contracts. This is not public binder or tenant execution evidence. Read models retain owned exact raw snapshots and known typed projections, including later case variants/duplicates. Native JSON requires actual string/Boolean types; arbitrary Newtonsoft primitive coercions remain a declared boundary. Actual lab evidence is recorded in `client-configuration-lab-acceptance.md`.
 Tenant/server/cloud/flight rules and effective email/provider/guest/resource/
 people-search/domain behavior remain unqualified. Issue #112 and full command/
 tenant qualification stay open; these source captures are not live validation.
