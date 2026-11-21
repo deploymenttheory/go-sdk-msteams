@@ -33,6 +33,12 @@ The dedicated commercial lab application is expected to permit organization read
 and deny user reads. The live test checks that deliberately limited access profile;
 it never changes grants or tenant configuration.
 
+After an explicitly approved directory-role assignment, select
+`MSTEAMS_LAB_ACCESS_PROFILE=teams-administrator` to require both reads to be
+available. The default/`organization-only` profile retains the original users-403
+expectation. Unknown profiles fail before credentials are read; responses never
+choose the expected profile automatically.
+
 ## Durable mutation intent and cleanup
 
 Create a journal in an operator-selected private directory **outside the checkout

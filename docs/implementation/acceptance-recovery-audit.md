@@ -52,12 +52,37 @@ Reran the same 25 resource tests with fresh certificate clients and the pinned
 | Privacy configuration | HTTP 403 on the Global read |
 
 The preflight separately failed its outdated users-403 expectation: both Graph
-reads now return 200 after the authorized directory-role assignment. Its expected
-access profile needs an explicit update rather than interpreting the new access
-as a resource failure. None of these read-only passes qualifies mutation actions.
+reads now return 200 after the authorized directory-role assignment. The test now
+accepts an explicit `MSTEAMS_LAB_ACCESS_PROFILE=teams-administrator`; its default
+organization-only profile still requires users-403. Unknown profiles fail before
+credentials are read. None of these read-only passes qualifies mutation actions.
 The private run records the complete selection, outcomes, oracle enablement and
 the tested source revision. Failed cases require diagnosis against the pinned
 module; do not reclassify them as accepted or unavailable without evidence.
+
+### First owned-fixture CRUD acceptance
+
+At source revision `21184cb72e0ce08c35d18084c1a175fd471bf8ce`,
+`TestLabApplicationAccessPolicyCRUD` passed against the tenant with certificate
+authentication and PowerShell 8.1.0 comparison enabled. It created one random,
+unassigned policy, verified non-default create/read-back, changed its description
+while preserving omitted AppIds, found the owned policy in the list and deleted
+it. Both post-create and post-update PowerShell comparisons passed. Cleanup
+verified GET 404 and no owned match in the list; the private recovery journal's
+single entry is `cleaned`.
+
+The [sanitized receipt](../../contracts/acceptance/2026-11-21/application-access-owned-crud.json)
+records this limited result. It does not qualify assignments, every parameter set,
+other authentication flows/clouds or the complete resource ticket. No resource
+ticket closes on this subset of acceptance.
+
+The initial live failures also exposed two defects: the channels oracle used the
+nonexistent `read-channels-policy-policy.ps1` filename, and external-access-policy
+responses contain a named `CommunicationWithExternalOrgs` value that the numeric-only
+Go decoder rejected at HTTP 200. The decoder now accepts the pinned enum's known
+names and numeric values while preserving the original response in RawFields;
+requests retain numeric serialization. Regression tests reproduce the decoder
+failure. The pinned module's direct read succeeds for both resources.
 
 ## Acceptance coverage gaps
 

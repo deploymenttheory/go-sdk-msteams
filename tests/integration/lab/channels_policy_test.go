@@ -60,7 +60,7 @@ func channelsPolicyOracle(t *testing.T, ctx context.Context, tenant string) chan
 		t.Fatal("invalid channels policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-channels-policy-policy.ps1")
+	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-channels-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {

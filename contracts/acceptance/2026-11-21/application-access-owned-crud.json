@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "outcome": "passed",
+  "execution": "live",
+  "scope": "owned-unassigned-application-access-policy-crud",
+  "coverage_claim": false,
+  "revision": "21184cb72e0ce08c35d18084c1a175fd471bf8ce",
+  "completed_at": "2026-11-21T20:03:14.863358+00:00",
+  "baseline_version": "8.1.0",
+  "cloud": "commercial",
+  "auth_method": "certificate",
+  "test": {
+    "file": "tests/integration/lab/application_access_policy_test.go",
+    "name": "TestLabApplicationAccessPolicyCRUD"
+  },
+  "assertions": {
+    "create_non_default_read_back": true,
+    "update_non_default_read_back": true,
+    "omitted_app_ids_preserved": true,
+    "owned_policy_list_match": true,
+    "delete_get_404": true,
+    "delete_list_no_owned_match": true,
+    "pinned_powershell_read_comparisons": 2,
+    "cleanup_journal_entries": 1,
+    "cleanup_journal_entries_cleaned": 1
+  },
+  "not_qualified": [
+    "user/group/tenant assignment and revocation",
+    "complete PowerShell command and parameter-set parity",
+    "other authentication methods",
+    "other resources or clouds",
+    "full release qualification"
+  ]
+}
