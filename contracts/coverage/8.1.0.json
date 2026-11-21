@@ -3764,31 +3764,82 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/80/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/composition_test.go",
+              "name": "TestVoicemailListFilteringAndExactGlobalOrder"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/online_voicemail_test.go",
+              "name": "TestLabOnlineVoicemailReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/80/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/service_test.go",
+              "name": "TestVoicemailCompiledProviderRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/online_voicemail_test.go",
+              "name": "TestLabOnlineVoicemailReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/online-voicemail-sdk-progress.md"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Dedicated-SPN secret and certificate Global reads returned resource HTTP 403; filtered list and optional PowerShell comparison were not reached. Successful qualification remains outstanding; no mode or feature/RBAC cause is inferred.",
+        "evidence": [
+          "docs/implementation/policies/online-voicemail-sdk-progress.md"
+        ]
       },
       "exclusion": null
     },
@@ -10697,33 +10748,142 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/227/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+              "name": "Service.AssignWithPowerShellBinding"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/operation.go",
+              "name": "Service.GetAssignmentOperation"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment_test.go",
+              "name": "TestVoicemailGeneratedAssignmentRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/binding_test.go",
+              "name": "TestVoicemailBindingCompositionMatchesPinnedHelper"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/failure_test.go",
+              "name": "TestVoicemailInvalidInputAndContextFailBeforeTokens"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/227/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+              "name": "Service.AssignWithPowerShellBinding"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment_test.go",
+              "name": "TestVoicemailGeneratedAssignmentRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/binding_test.go",
+              "name": "TestVoicemailBindingCompositionMatchesPinnedHelper"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/failure_test.go",
+              "name": "TestVoicemailInvalidInputAndContextFailBeforeTokens"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/227/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+              "name": "Service.AssignUser"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+              "name": "Service.AssignWithPowerShellBinding"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/assignment_test.go",
+              "name": "TestVoicemailGeneratedAssignmentRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/binding_test.go",
+              "name": "TestVoicemailBindingCompositionMatchesPinnedHelper"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/failure_test.go",
+              "name": "TestVoicemailInvalidInputAndContextFailBeforeTokens"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+            "name": "Service.AssignWithPowerShellBinding"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/operation.go",
+            "name": "Service.GetAssignmentOperation"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/assignment.go",
+            "name": "Service.AssignUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/online-voicemail-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -15376,19 +15536,44 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/323/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/create_delete.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/create_delete.go",
+              "name": "Service.CreateWithGlobalComparison"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/service_test.go",
+              "name": "TestVoicemailCompiledProviderRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/create_delete.go",
+            "name": "Service.Create"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/create_delete.go",
+            "name": "Service.CreateWithGlobalComparison"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/online-voicemail-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -19980,19 +20165,36 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/441/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/create_delete.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/service_test.go",
+              "name": "TestVoicemailCompiledProviderRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/create_delete.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/online-voicemail-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -24404,19 +24606,48 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/554/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/update.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/service_test.go",
+              "name": "TestVoicemailCompiledProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_policy/composition_test.go",
+              "name": "TestVoicemailComposedUpdateRetainsPreparationAndBoundValues"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_policy/update.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/online-voicemail-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",

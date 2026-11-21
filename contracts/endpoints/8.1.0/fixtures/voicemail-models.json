@@ -1,0 +1,341 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-voicemail-model-and-timespan",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Pinned OnlineVoicemailPolicy model setters and Newtonsoft serialization; native TimeSpan ticks cover precision, signs, days and Int64 extrema. No cmdlet processing, file read/upload, credential access or network. No backend recording limit/default is inferred.",
+  "cases": [
+    {
+      "name": "ticks-0",
+      "ticks": 0,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:00:00",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-1",
+      "ticks": 1,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:00:00.0000001",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-2",
+      "ticks": -1,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "-00:00:00.0000001",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-3",
+      "ticks": 9,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:00:00.0000009",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-4",
+      "ticks": 10,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:00:00.0000010",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-5",
+      "ticks": 11,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:00:00.0000011",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-6",
+      "ticks": 9999,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:00:00.0009999",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-7",
+      "ticks": 10000,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:00:00.0010000",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-8",
+      "ticks": 9999999,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:00:00.9999999",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-9",
+      "ticks": 10000000,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:00:01",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-10",
+      "ticks": 900000000,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "00:01:30",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-11",
+      "ticks": 864000000000,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "1.00:00:00",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-12",
+      "ticks": 864000000001,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "1.00:00:00.0000001",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-13",
+      "ticks": 9223372036854775807,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "10675199.02:48:05.4775807",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "ticks-14",
+      "ticks": -9223372036854775808,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": "",
+        "EnableTranscription": false,
+        "ShareData": "FutureValue",
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": "-10675199.02:48:05.4775808",
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": "fixture-audio-reference",
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    },
+    {
+      "name": "null-duration",
+      "ticks": null,
+      "wire": {
+        "Identity": "fixture-policy",
+        "Description": null,
+        "EnableTranscription": null,
+        "ShareData": null,
+        "EnableTranscriptionProfanityMasking": null,
+        "EnableEditingCallAnswerRulesSetting": null,
+        "MaximumRecordingLength": null,
+        "EnableTranscriptionTranslation": null,
+        "PrimarySystemPromptLanguage": null,
+        "SecondarySystemPromptLanguage": null,
+        "PreambleAudioFile": null,
+        "PostambleAudioFile": null,
+        "PreamblePostambleMandatory": null,
+        "EnableVoicemailTriage": null
+      }
+    }
+  ]
+}
