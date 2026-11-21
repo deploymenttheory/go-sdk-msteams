@@ -1,0 +1,533 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-education-configuration-provider-and-models",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "exports": [
+    {
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsEducationConfigurationCmdlet",
+      "name": "Get-CsTeamsEducationConfiguration"
+    },
+    {
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTeamsEducationConfigurationCmdlet",
+      "name": "Set-CsTeamsEducationConfiguration"
+    }
+  ],
+  "stage": "Actual pinned public export types and direct HttpRequestHelper with synthetic InvocationInfo, credential-refusing host and memory sender. Client/version/host restored. MPACmdlet factory default supplied. Actual model constructors/setters/Newtonsoft projections for all three settings. No original command constructor/lifecycle, public binder, scope authorization, credentials, discovery or network. Compiled read/list/PATCH only.",
+  "cases": [
+    {
+      "force_mode": -1,
+      "status": 200,
+      "operation": "read",
+      "name": "read",
+      "input": "{}",
+      "response": "{\"Identity\":\"Global\",\"Future\":false,\"ParentGuardianPreferredContactMethod\":\"FutureContact\",\"EduGenerativeAIEnhancements\":\"FutureEnhancement\",\"UpdateParentInformation\":\"FutureUpdate\"}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsEducationConfiguration",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      }
+    },
+    {
+      "force_mode": -1,
+      "status": 200,
+      "operation": "list",
+      "name": "list-empty",
+      "input": "{}",
+      "response": "[]",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsEducationConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      }
+    },
+    {
+      "force_mode": -1,
+      "status": 204,
+      "operation": "patch",
+      "name": "patch-all",
+      "input": "{\"ParentGuardianPreferredContactMethod\":\"FutureContact\",\"EduGenerativeAIEnhancements\":\"FutureEnhancement\",\"UpdateParentInformation\":\"FutureUpdate\"}",
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentGuardianPreferredContactMethod\": \"FutureContact\",\n  \"EduGenerativeAIEnhancements\": \"FutureEnhancement\",\n  \"UpdateParentInformation\": \"FutureUpdate\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      }
+    },
+    {
+      "force_mode": -1,
+      "status": 204,
+      "operation": "patch",
+      "name": "patch-null",
+      "input": "{\"ParentGuardianPreferredContactMethod\":null,\"EduGenerativeAIEnhancements\":null,\"UpdateParentInformation\":null}",
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentGuardianPreferredContactMethod\": null,\n  \"EduGenerativeAIEnhancements\": null,\n  \"UpdateParentInformation\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      }
+    },
+    {
+      "force_mode": -1,
+      "status": 204,
+      "operation": "patch",
+      "name": "patch-empty",
+      "input": "{\"ParentGuardianPreferredContactMethod\":\"\",\"EduGenerativeAIEnhancements\":\"\",\"UpdateParentInformation\":\"\"}",
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"ParentGuardianPreferredContactMethod\": \"\",\n  \"EduGenerativeAIEnhancements\": \"\",\n  \"UpdateParentInformation\": \"\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      }
+    },
+    {
+      "force_mode": 0,
+      "status": 204,
+      "operation": "patch",
+      "name": "patch-force-false",
+      "input": "{\"UpdateParentInformation\":\"\"}",
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"UpdateParentInformation\": \"\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      }
+    },
+    {
+      "force_mode": 1,
+      "status": 204,
+      "operation": "patch",
+      "name": "patch-force-true",
+      "input": "{\"UpdateParentInformation\":\"\"}",
+      "response": "",
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"UpdateParentInformation\": \"\",\n  \"Force\": \"True\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      }
+    },
+    {
+      "force_mode": -1,
+      "status": 204,
+      "operation": "read",
+      "name": "read-empty",
+      "input": "{}",
+      "response": "",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      }
+    },
+    {
+      "force_mode": -1,
+      "status": 200,
+      "operation": "read",
+      "name": "read-null",
+      "input": "{}",
+      "response": "null",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      }
+    },
+    {
+      "force_mode": -1,
+      "status": 200,
+      "operation": "list",
+      "name": "list-envelope",
+      "input": "{}",
+      "response": "{\"value\":[]}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      }
+    },
+    {
+      "force_mode": -1,
+      "status": 403,
+      "operation": "read",
+      "name": "read-denied",
+      "input": "{}",
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsEducationConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsEducationConfiguration",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      }
+    }
+  ],
+  "models": [
+    {
+      "name": "constructor",
+      "input": "constructor",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "empty-object",
+      "input": "{}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "all-settings",
+      "input": "{\"ParentGuardianPreferredContactMethod\":\"FutureContact\",\"EduGenerativeAIEnhancements\":\"FutureEnhancement\",\"UpdateParentInformation\":\"FutureUpdate\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": "FutureContact",
+          "EduGenerativeAIEnhancements": "FutureEnhancement",
+          "UpdateParentInformation": "FutureUpdate"
+        }
+      }
+    },
+    {
+      "name": "ParentGuardianPreferredContactMethod-null",
+      "input": "{\"ParentGuardianPreferredContactMethod\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "ParentGuardianPreferredContactMethod-empty",
+      "input": "{\"ParentGuardianPreferredContactMethod\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": "",
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "ParentGuardianPreferredContactMethod-future",
+      "input": "{\"ParentGuardianPreferredContactMethod\":\"Future-ParentGuardianPreferredContactMethod\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": "Future-ParentGuardianPreferredContactMethod",
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "EduGenerativeAIEnhancements-null",
+      "input": "{\"EduGenerativeAIEnhancements\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "EduGenerativeAIEnhancements-empty",
+      "input": "{\"EduGenerativeAIEnhancements\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": "",
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "EduGenerativeAIEnhancements-future",
+      "input": "{\"EduGenerativeAIEnhancements\":\"Future-EduGenerativeAIEnhancements\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": "Future-EduGenerativeAIEnhancements",
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "UpdateParentInformation-null",
+      "input": "{\"UpdateParentInformation\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "UpdateParentInformation-empty",
+      "input": "{\"UpdateParentInformation\":\"\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": ""
+        }
+      }
+    },
+    {
+      "name": "UpdateParentInformation-future",
+      "input": "{\"UpdateParentInformation\":\"Future-UpdateParentInformation\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": "Future-UpdateParentInformation"
+        }
+      }
+    },
+    {
+      "name": "long-contact",
+      "input": "{\"ParentGuardianPreferredContactMethod\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "case-duplicate",
+      "input": "{\"UpdateParentInformation\":\"first\",\"updateparentinformation\":\"second\"}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": "second"
+        }
+      }
+    },
+    {
+      "name": "duplicate-null",
+      "input": "{\"EduGenerativeAIEnhancements\":\"earlier\",\"edugenerativeaienhancements\":null}",
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "ParentGuardianPreferredContactMethod": null,
+          "EduGenerativeAIEnhancements": null,
+          "UpdateParentInformation": null
+        }
+      }
+    },
+    {
+      "name": "invalid-string-array",
+      "input": "{\"ParentGuardianPreferredContactMethod\":[]}",
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonReaderException",
+        "value": null
+      }
+    }
+  ]
+}
