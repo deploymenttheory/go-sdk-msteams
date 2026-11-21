@@ -5,6 +5,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	applicationaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
+	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
 )
 
@@ -14,6 +15,7 @@ type Services struct {
 	scope                     *client.Scope
 	ApplicationAccessPolicies *applicationaccesspolicy.Service
 	TeamTemplates             *teamtemplate.Service
+	TargetingPolicies         *targetingpolicy.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -23,7 +25,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	backend := configapi.New(scope)
-	return &Services{scope: scope, ApplicationAccessPolicies: applicationaccesspolicy.NewService(backend), TeamTemplates: teamtemplate.NewService(backend)}, nil
+	return &Services{scope: scope, ApplicationAccessPolicies: applicationaccesspolicy.NewService(backend), TeamTemplates: teamtemplate.NewService(backend), TargetingPolicies: targetingpolicy.NewService(backend)}, nil
 }
 
 // Scope returns the backend dependency shared by this collection's resources.
