@@ -2,9 +2,10 @@
 
 Issue #104 owns five commands and nine exact parameter sets: Get (Filter,
 Identity), New/Set/Remove (Identity), and Grant (GrantToUser, GrantToGroup,
-GrantToTenant, Identity). This source/capture checkpoint establishes no native
-service, contract pass or successful tenant qualification. Coverage states and
-the immutable runtime snapshot remain unchanged.
+GrantToTenant, Identity). Native CRUD, explicit Set composition and three scoped
+assignment methods now cover all nine mapped sets. Coverage remains in-progress
+and metadata-only; full command/tenant qualification is not claimed. The immutable
+runtime snapshot remains unchanged.
 
 The accepted package is MicrosoftTeams 8.1.0, SHA256
 `78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7`.
@@ -45,7 +46,7 @@ Int32 and the captured negative value is sent as priority; no backend range is
 inferred. User and group identities are escaped as whole path segments. The
 fourth Grant/Identity parameter set exposes no management parameters. The base
 switch cannot select a grant for it and reports an error; the native selection
-validator should reject an empty/mixed scope before credentials or HTTP, rather
+validator rejects an empty/mixed scope before credentials or HTTP, rather
 than inventing a fourth assignment endpoint.
 
 ## Model and list behavior
@@ -79,20 +80,44 @@ Case matters: a and A differ. Source bound-property serialization includes all
 known child DTO fields, not future received properties. Native snapshots and
 mutation inputs must preserve that distinction.
 
-## Implementation sequence and remaining qualification
+## Native implementation and remaining qualification
 
-Implement typed snapshots and ordered readonly-list decoding first, with pure
-owned catalog-entry/list builders and explicit omission/null/empty semantics.
-Then expose native Create/Get/List/Update/Delete, local filtering, sparse PATCH,
-explicit Set read/edit/PATCH composition, and user/group/tenant assignment. Add
-only the named resource to the compiled adapter and wire its root collection.
-Keep source free-form catalog modes open for future values.
+TeamsAdminAPI.TeamsAppPermissionPolicies exposes Create/Get/List/Update/Delete,
+local filtering, sparse PATCH, explicit Set read/edit/PATCH composition and
+user/group/tenant assignment. Typed snapshots process readonly catalog properties
+in order; RawJSON preserves original duplicates and future data while RawFields
+provides last-occurrence inspection. Separate requests project known DTO fields.
+Owned catalog-entry/list builders preserve source Id equality and list semantics.
+Only the named resource was added to the compiled adapter; transport/auth behavior
+is unchanged. Catalog mode strings remain open for future values.
 
-Map every one of the nine sets to compiling symbols and source-backed tests.
-Cover no-HTTP invalid grant selection, input/context/backend guards, the three
-catalogs' setter and duplicate-property semantics, DTO projection, partial update
-preparation, status/redaction and no mutation replay. Add bounded opt-in reads
-and separately owned write/read-back/cleanup scenarios. These observations do
-not establish tenant roles, migration/feature availability, cloud support, full
-shell/Newtonsoft conversions or effective app access. No lab request, policy or
-assignment write, role or consent change has run for this family.
+Every one of the nine sets maps to compiling symbols and source-backed tests.
+All eighteen request fixtures run in application/delegated synthetic modes.
+Model tests compare all ten policy, twenty-one app and twenty-one list observations,
+including canonical CLR projections separately from raw received presence. Local
+grant selection, input/context/backend guards, all three catalogs' duplicate
+append/null/setter rules, DTO projection, update preparation, status/redaction and
+single-send mutation failures are covered. Structural reports keep coverage_claim
+false and live not-run; these are not full parity or live passes.
+
+Actual Global reads on 2026-11-21 returned resource HTTP 403 using the existing
+dedicated lab SPN in both client-secret and certificate modes. Filter/list and
+optional pinned PowerShell comparison were not reached. No payload was retained
+and no policy, assignment, app, role or consent changed. Get's ledger live state is
+unavailable; writes remain not-run. The opt-in read harness can compare known
+nullable fields and three catalogs with a tenant-bound hash-checked module when
+access is available.
+
+Successful tenant roles, migration/feature availability, cloud support, full
+shell/Newtonsoft conversions, writes/read-back/cleanup and effective app access
+remain unqualified under #104. Native response fields require their Go types;
+raw presence differs from CLR presentation, and conservative identity validation
+does not claim every shell string. Future write acceptance requires owned policy
+and principal fixtures with an authorized journal and restoration/cleanup plan.
+
+Local verification on 2026-11-21 passed the full offline race/shuffle suite,
+SDK/examples build, vet, lint with zero issues, ledger validation and its ten
+validator tests. All three PowerShell scripts parse. The lab comparison selects
+Global by identity and permits extra Tag:Global filter matches, with a regression
+test for ambiguous/missing Global selections. Revision-bound structural artifacts
+are reviewed independently of the unchanged qualification states.

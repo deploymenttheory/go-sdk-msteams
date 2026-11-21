@@ -5088,30 +5088,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/101/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service_test.go",
+              "name": "TestAppPermissionFilteringKeepsGlobalAndLiteralWhitespace"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/app_permission_policy_test.go",
+              "name": "TestLabAppPermissionPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/101/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service_test.go",
+              "name": "TestAppPermissionPinnedProviderRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/app_permission_policy_test.go",
+              "name": "TestLabAppPermissionPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, the opt-in Global app-permission policy read returned resource HTTP 403 using the dedicated lab SPN in client-secret and certificate modes. Filtered-list and optional pinned PowerShell comparison were not reached. No policy, assignment, app, role or consent changed. Successful tenant/RBAC/cloud/feature qualification remains open.",
         "evidence": []
       },
       "exclusion": null
@@ -11636,36 +11683,105 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/230/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service_test.go",
+              "name": "TestAppPermissionPinnedProviderRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/230/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service_test.go",
+              "name": "TestAppPermissionPinnedProviderRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/230/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service_test.go",
+              "name": "TestAppPermissionPinnedProviderRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/230/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/failure_test.go",
+              "name": "TestAppPermissionGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/assignment.go",
+            "name": "Service.AssignUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -16948,15 +17064,30 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/339/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service_test.go",
+              "name": "TestAppPermissionPinnedProviderRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21490,15 +21621,30 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/454/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service_test.go",
+              "name": "TestAppPermissionPinnedProviderRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26383,15 +26529,46 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/574/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/service_test.go",
+              "name": "TestAppPermissionPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/composition_test.go",
+              "name": "TestAppPermissionUpdateRetainsPreparationAndAcceptance"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_app_permission_policy/composition_test.go",
+              "name": "TestAppPermissionUpdatesEachReadonlyCatalogWithoutRawReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_app_permission_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
