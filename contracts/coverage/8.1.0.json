@@ -13780,19 +13780,40 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/299/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains.go",
+              "name": "NewAllowAllKnownDomains"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains_test.go",
+              "name": "TestDomainConstructorsAreLocal"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains_test.go",
+              "name": "TestAllowListOwnsOriginalOrderAndRejectsInvalidZeroChoice"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_federation_configuration/domains.go",
+            "name": "NewAllowAllKnownDomains"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -13812,19 +13833,40 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/300/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains.go",
+              "name": "NewAllowList"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains_test.go",
+              "name": "TestDomainConstructorsAreLocal"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains_test.go",
+              "name": "TestAllowListOwnsOriginalOrderAndRejectsInvalidZeroChoice"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_federation_configuration/domains.go",
+            "name": "NewAllowList"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -13844,19 +13886,40 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/301/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains.go",
+              "name": "NewDomainPattern"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains_test.go",
+              "name": "TestDomainConstructorsAreLocal"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains_test.go",
+              "name": "TestAllowListOwnsOriginalOrderAndRejectsInvalidZeroChoice"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_federation_configuration/domains.go",
+            "name": "NewDomainPattern"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/federation-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
