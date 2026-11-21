@@ -5792,30 +5792,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/110/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service_test.go",
+              "name": "TestChannelsPolicyCompiledFilterDoesNotUseModernWhitespaceRules"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channels_policy_test.go",
+              "name": "TestLabChannelsPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/110/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service_test.go",
+              "name": "TestChannelsPolicyPinnedCompiledCRUD"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channels_policy_test.go",
+              "name": "TestLabChannelsPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled channels policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, channel setting, assignment, role or consent changed. Successful authorization/cloud qualification, writes/read-back, effective behavior and cleanup remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -12844,37 +12891,95 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/238/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service_test.go",
+              "name": "TestChannelsPolicyPinnedModernGrant"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channels_policy_test.go",
+              "name": "TestLabChannelsPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/238/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service_test.go",
+              "name": "TestChannelsPolicyPinnedModernGrant"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channels_policy_test.go",
+              "name": "TestLabChannelsPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/238/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service_test.go",
+              "name": "TestChannelsPolicyPinnedModernGrant"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channels_policy_test.go",
+              "name": "TestLabChannelsPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled channels policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, channel setting, assignment, role or consent changed. Successful authorization/cloud qualification, writes/read-back, effective behavior and cleanup remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -18132,23 +18237,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/347/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service_test.go",
+              "name": "TestChannelsPolicyPinnedCompiledCRUD"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channels_policy_test.go",
+              "name": "TestLabChannelsPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled channels policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, channel setting, assignment, role or consent changed. Successful authorization/cloud qualification, writes/read-back, effective behavior and cleanup remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -22781,23 +22906,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/462/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service_test.go",
+              "name": "TestChannelsPolicyPinnedCompiledCRUD"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channels_policy_test.go",
+              "name": "TestLabChannelsPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled channels policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, channel setting, assignment, role or consent changed. Successful authorization/cloud qualification, writes/read-back, effective behavior and cleanup remain open.",
         "evidence": []
       },
       "exclusion": null
@@ -27944,23 +28089,55 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/583/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/service_test.go",
+              "name": "TestChannelsPolicyPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_channels_policy/composition_test.go",
+              "name": "TestChannelsPolicySetRetainsPreparationAndAcceptance"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channels_policy_test.go",
+              "name": "TestLabChannelsPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_channels_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled channels policy Global reads returned resource HTTP 403 with the dedicated lab SPN using client-secret and certificate authentication. Filter/list and optional pinned comparison were not reached. No policy, channel setting, assignment, role or consent changed. Successful authorization/cloud qualification, writes/read-back, effective behavior and cleanup remain open.",
         "evidence": []
       },
       "exclusion": null
