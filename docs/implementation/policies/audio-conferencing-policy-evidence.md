@@ -1,7 +1,7 @@
 # Audio conferencing policy: selected modern contract
 
-POL-34 / issue #107, MicrosoftTeams 8.1.0, checked 2026-11-21. This source
-checkpoint establishes selected modern REST behavior and makes no complete
+POL-34 / issue #107, MicrosoftTeams 8.1.0, checked 2026-11-21. The source
+checkpoint below establishes selected modern REST behavior and makes no complete
 command or live qualification claim.
 
 ## Exported implementation and selection
@@ -116,8 +116,29 @@ Grant function, including bound false; this is a recorded baseline failure.
 
 ## Outstanding qualification
 
-Native implementation, root wiring, examples, exact ledger mappings and opt-in
-lab checks follow this checkpoint. No successful tenant read, mutation,
-read-back, cleanup, effective meeting invite change, privilege grant or pinned
-PowerShell/Go tenant comparison is claimed. Auth, role/cloud/flight deployment,
-server-side operators and omission semantics require separate qualification.
+Native CRUD/list/filter, explicit create/read-back, scoped grants, owned server
+list changes, raw-preserving models, root wiring, examples, exact ledger mappings
+and opt-in lab checks accompany this checkpoint. Native tests compare the
+representable list forms against the normalization fixture. PowerShell-only
+Replace-operator/PSListModifier input containers have no native constructor;
+zero native changes are separately rejected without dispatch.
+
+The group-acceptance review found discovery HTTP 202 could be mistaken for
+assignment acceptance. A regression first reproduced that failure; the fix
+requires actual POST response metadata before retaining acceptance on a decoding
+error. Tests cover valid/malformed discovery 202, actual accepted malformed/empty
+POSTs, sparse/default Global updates, Rank-zero omission, partial create/read-back,
+credential-free guards and single-send mutation failures.
+
+Actual client-secret and certificate Global reads returned resource 403 on
+2026-11-21. Filter/list and optional pinned comparison were not reached. No
+successful tenant read, mutation, read-back, cleanup, effective meeting invite
+change, privilege grant or pinned PowerShell/Go tenant comparison is claimed.
+Auth, role/cloud/flight deployment, server-side operators and omission semantics
+require separate qualification. The ledger stays in-progress/metadata-only.
+
+The full offline race/shuffle suite, SDK/examples build, vet, scoped lint (zero
+issues), ledger validation and its ten tests passed on 2026-11-21. All three
+development captures executed successfully; they and the optional read oracle
+also passed PowerShell syntax checks. Exact-revision structural reports and CI
+artifacts are reviewed separately; these checks do not establish live parity.

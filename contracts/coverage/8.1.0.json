@@ -5370,30 +5370,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/104/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service_test.go",
+              "name": "TestAudioPolicyModernFilterAndWhitespace"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/audio_conferencing_policy_test.go",
+              "name": "TestLabAudioConferencingPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/104/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service_test.go",
+              "name": "TestAudioPolicyPinnedGeneratedRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/audio_conferencing_policy_test.go",
+              "name": "TestLabAudioConferencingPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern audio conferencing policy Global reads returned resource HTTP 403 with the dedicated lab SPN in client-secret and certificate modes. Filter/list and optional pinned PowerShell comparison were not reached. No policies, assignments, effective invite settings, roles or consent changed. Successful authorization/cloud/flight qualification remains open.",
         "evidence": []
       },
       "exclusion": null
@@ -12021,29 +12068,112 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/232/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service_test.go",
+              "name": "TestAudioPolicyPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/failure_test.go",
+              "name": "TestAudioPolicyMutationErrorsNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/phase_test.go",
+              "name": "TestAudioPolicyDiscoveryCannotEstablishAssignmentAcceptance"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/composition_test.go",
+              "name": "TestAudioPolicyGroupAcceptanceSurvivesOnlyActualPostResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/composition_test.go",
+              "name": "TestAudioPolicyGrantRankAndSparseGlobalComposition"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/232/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service_test.go",
+              "name": "TestAudioPolicyPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/failure_test.go",
+              "name": "TestAudioPolicyMutationErrorsNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/232/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service_test.go",
+              "name": "TestAudioPolicyPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/failure_test.go",
+              "name": "TestAudioPolicyMutationErrorsNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -17321,15 +17451,42 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/341/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service_test.go",
+              "name": "TestAudioPolicyPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/composition_test.go",
+              "name": "TestAudioPolicyCreateRetainsSubmissionOnReadBackFailure"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21893,15 +22050,34 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/456/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service_test.go",
+              "name": "TestAudioPolicyPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/failure_test.go",
+              "name": "TestAudioPolicyMutationErrorsNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26939,15 +27115,42 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/577/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service_test.go",
+              "name": "TestAudioPolicyPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/composition_test.go",
+              "name": "TestAudioPolicyGrantRankAndSparseGlobalComposition"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_audio_conferencing_policy/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
