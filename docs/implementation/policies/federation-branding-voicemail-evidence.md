@@ -243,8 +243,8 @@ The PowerShell compositions matter:
   R bound-parameter resolver.]
 * **Remove:** mandatory nonempty Identity (pipeline by property name accepted)
   and optional Force. It performs `ShouldProcess` before token acquisition and
-  DELETEs with an **application/json body**, ordinarily `{}`; it does not GET
-  first. Bound request controls may add fields. [R
+  DELETEs with an **application/json body** containing the bound `Identity`;
+  it does not GET first. Bound Force adds its string-valued control. [R
   `BaseTpmRemoveCmdlet.ProcessRecord`; `HttpRequestHelper.RemoveAsync`.]
 
 New and Set can make their comparison/current-object GET before a `WhatIf`
@@ -755,7 +755,7 @@ object versus bare-array reads; generated PUT versus provider PATCH; escaped
 scope/name identities; sparse omitted/false/null properties; provider full-array
 read/modify/write versus generated Add/Remove operators; numeric external enum;
 voicemail TimeSpan strings; nested branding nulls/arrays; bound Force's differing
-CRUD/tenant-Grant types and casing; DELETE `{}`; all three assignment scopes and
+CRUD/tenant-Grant types and casing; DELETE's bound Identity/Force body; all three assignment scopes and
 the compiled no-scope parameter-set error; generated 202/204 with no automatic
 poll; warnings/raw/non-JSON errors; and no mutation replay after ambiguous send.
 Mark source-derived fixtures, isolated in-memory observations and live captures
