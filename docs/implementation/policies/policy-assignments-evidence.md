@@ -3,8 +3,10 @@
 Issue #100 covers fourteen commands. Six appear in the default, unauthenticated
 8.1.0 runtime snapshot; eight are conditional OCE declarations. Neither a missing
 default export nor an OCE declaration removes a command from SDK scope. This is a
-source investigation checkpoint, not a completed service, contract pass or live
-qualification. The immutable baseline and coverage states are unchanged.
+source and ordinary-service checkpoint, not completed ticket parity, a contract
+pass or live qualification. The immutable default baseline is unchanged. Native
+ordinary methods are in-progress; the conditional sets have supplemental metadata
+without implementation claims.
 
 ## Pinned inputs
 
@@ -22,8 +24,8 @@ Relevant packaged file SHA256 values:
 
 Assembly inspection uses ILSpy locally, without importing a privileged module,
 constructing commands, calling ProcessRecord, acquiring tokens or making requests.
-Source facts below need executable metadata/request captures before ledger mapping.
-Microsoft binaries and decompiled source are not redistributed here.
+Static metadata and generated request/model captures now accompany these source
+facts. Microsoft binaries and decompiled source are not redistributed here.
 
 ## Ordinary generated commands
 
@@ -38,20 +40,27 @@ The accepted runtime snapshot establishes these exact command/set identities:
 | New-CsGroupPolicyAssignment | NewExpanded |
 | Remove-CsGroupPolicyAssignment | Remove |
 
+The native service exposes group CRUD/list, user effective reads, batch submission,
+batch list and detailed status reads. Group update is additionally backed by the
+pinned GroupSetPolicyAssignment helper, without an exported baseline-command claim.
 Group lookup distinguishes group plus policy type, group-only and policy-type-only.
 User lookup has a string identity and an InputObject variant. Batch creation carries
 an identity array, policy type/name, operation name and additional parameters. Group
 creation carries rank and PassThru; removal also carries PassThru. Generated DTO
 presence, callbacks, wrapper coercions and response projections must be inspected
 separately. Existing voicemail operation reads do not qualify these owned commands.
+The exported user InputObject command calls UserGetPolicyAssignment with its
+InputObject.Identity field; the native UserIdentity adapter follows that path,
+without treating the field as a URI.
 
 ## Conditional OCE commands
 
 The root manifest groups all eight names under its MPA OCE comment. The root loader
 selects OCE when MSTeamsContextInternal is IsOCEModule; even its Core branch points
 to the packaged net472 OCE assembly. The inspected netcoreapp3.1 sibling contains
-the following Cmdlet/Parameter attributes. Cross-target equivalence remains to be
-checked before treating these as the loader's executable signatures.
+the following Cmdlet/Parameter attributes. Fresh static CmdletInfo captures on
+both target assemblies now match exactly: eight commands and fifteen sets. This
+is reflection on one host, not Windows execution or privileged-session support.
 
 | Command | Declared command-specific parameters / sets |
 |---|---|
@@ -67,7 +76,9 @@ checked before treating these as the loader's executable signatures.
 All inherit a required Tenant Guid (aliases TenantId, Domain, TenantDomain) and
 optional Environment from IC3DirectoryTorusCmdletBase. The attribute alias Domain
 does not make the underlying Guid a DNS-domain input. Region and Environment enum
-values and default all-parameter set names still need executable metadata capture.
+values and default all-parameter set names are retained in the supplemental
+metadata captures, including __AllParameterSets. They remain distinct from the
+immutable unauthenticated default-session snapshot.
 
 The base obtains a ConfigAPI token from the host and initializes X-MS-Tenant-Id and
 a fresh X-MS-Correlation-Id. RestClient sends a Bearer token directly to the selected
@@ -109,19 +120,52 @@ Refresh has no request body and substitutes an omitted UserId with Guid.Empty.
 The source interpolates string policy types directly; native code must encode path
 and query components separately while preserving routing and omission semantics.
 
+## Executable observations and native checks
+
+[Metadata capture](../../../tools/contracts/capture-policy-assignment-metadata.ps1)
+loads the ordinary dependency profile, then inspects static CmdletInfo metadata
+from a hash-checked target assembly in a fresh process. It never activates an OCE
+profile or constructs an OCE command. The two fixtures retain exact target hashes,
+parameter types, mandatory flags, aliases, enum values and all fifteen set names.
+
+[Generated request capture](../../../tools/contracts/capture-policy-assignment-requests.ps1)
+records twenty-five actual generated helper calls with an injected in-memory sender
+and synthetic callbacks, before host/header rewriting. It covers escaping,
+filter omission, group PUT/PATCH/DELETE, batch POST, nullable/zero/empty DTOs,
+dictionary projection, successful decode failures and forbidden responses.
+[Model capture](../../../tools/contracts/capture-policy-assignment-models.ps1)
+adds fourteen generated model projections. SourceEntry uses Reference for its
+source identity; no groupId field or local precedence ordering is fabricated.
+
+Native tests consume the twenty-five request captures in both synthetic token
+modes. They check nullable/empty/zero fields, nested source/user outcomes, raw future
+data, no mutation replay, normalized denials, local validation before credentials,
+wrong backend and cancellation. An invalid accepted OperationId retains HTTP
+acceptance but does not produce an empty usable handle. DTO/read tests and compiling
+examples complement the request checks; they do not establish complete shell binding
+or tenant qualification. Additional JSON dictionaries follow the captured generated
+projection, including omitted object nulls and string "null" array entries.
+
+The dedicated lab SPN ran TestLabPolicyAssignmentsReadOnly with secret and certificate
+authentication. Both completed discovery, then the assignment-list endpoint returned
+HTTP 403. No per-ID read was reached. No batch, group write, OCE action or permission
+change ran. No authentication-mode or feature-availability conclusion follows.
+
 ## Remaining implementation sequence
 
-1. Capture both OCE assembly metadata and compare command signatures across targets;
-   preserve conditional provenance separately from the immutable default observation.
-2. Inspect generated assignment DTOs and send/callback methods, plus wrapper bindings;
-   capture requests and model projections using isolated, in-memory senders.
-3. Implement typed native services for ordinary and explicit OCE operations using
+1. Capture OCE direct sender/model behavior and the environment/region tables using
+   isolated, in-memory senders. Preserve conditional provenance separately from the
+   immutable default observation.
+2. Finish shell binding/coercion and additional CLR/Hashtable input qualification;
+   the native low-level group DTO methods also permit an empty body, unlike the
+   exported create command's required name binding.
+3. Implement typed native services for explicit OCE operations using
    existing audience/destination controls. Preserve per-region failures, rank, direct
    and effective assignment provenance, and per-user batch outcomes.
-4. Wire the root client, exact command/set mappings, compiling examples, offline
-   contracts and opt-in tenant tests. Keep submission acceptance separate from
+4. Extend root-client mappings, examples, offline contracts and opt-in tenant tests
+   to every conditional operation. Keep submission acceptance separate from
    completed processing or effective policy state; do not replay mutations implicitly.
 
-No tenant request or mutation ran during this investigation. OCE contributor
+No tenant mutation ran during this investigation. OCE contributor
 eligibility, mode support, cloud availability, successful reads and consequential
 operations remain unqualified.

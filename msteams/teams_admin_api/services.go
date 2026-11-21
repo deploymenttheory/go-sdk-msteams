@@ -13,6 +13,7 @@ import (
 	meetingbranding "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
 	onlinevoicemailpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
 	voicemailvalidation "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_validation_configuration"
+	policyassignments "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 	privatechannelmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/private_channel_migration"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
@@ -25,6 +26,7 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	PolicyAssignments                       *policyassignments.Service
 	OnlineVoicemailValidationConfigurations *voicemailvalidation.Service
 	OnlineVoicemailPolicies                 *onlinevoicemailpolicy.Service
 	MeetingBrandingPolicies                 *meetingbranding.Service
@@ -64,6 +66,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		PolicyAssignments:                       policyassignments.NewService(scope),
 		scope:                                   scope,
 		OnlineVoicemailValidationConfigurations: voicemailvalidation.NewService(scope),
 		OnlineVoicemailPolicies:                 onlinevoicemailpolicy.NewService(scope),
