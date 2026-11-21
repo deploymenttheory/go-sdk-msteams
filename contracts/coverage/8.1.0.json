@@ -13097,12 +13097,7 @@
               "name": "TestCallingPolicyPinnedProviderRequests"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/calling_policy_test.go",
-              "name": "TestLabCallingPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         },
         {
           "name": "GrantToTenant",
@@ -13119,12 +13114,7 @@
               "name": "TestCallingPolicyPinnedProviderRequests"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/calling_policy_test.go",
-              "name": "TestLabCallingPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         },
         {
           "name": "GrantToUser",
@@ -13141,12 +13131,7 @@
               "name": "TestCallingPolicyPinnedProviderRequests"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/calling_policy_test.go",
-              "name": "TestLabCallingPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         },
         {
           "name": "Identity",
@@ -13163,12 +13148,7 @@
               "name": "TestCallingPolicyGrantRequiresOneExplicitScope"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/calling_policy_test.go",
-              "name": "TestLabCallingPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -13409,12 +13389,7 @@
               "name": "TestChannelsPolicyPinnedModernGrant"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/channels_policy_test.go",
-              "name": "TestLabChannelsPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         },
         {
           "name": "GrantToTenant",
@@ -13431,12 +13406,7 @@
               "name": "TestChannelsPolicyPinnedModernGrant"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/channels_policy_test.go",
-              "name": "TestLabChannelsPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         },
         {
           "name": "Identity",
@@ -13453,12 +13423,7 @@
               "name": "TestChannelsPolicyPinnedModernGrant"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/channels_policy_test.go",
-              "name": "TestLabChannelsPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -13563,12 +13528,7 @@
               "name": "TestCortanaPinnedGeneratedRequests"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/cortana_policy_test.go",
-              "name": "TestLabCortanaPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         },
         {
           "name": "GrantToTenant",
@@ -13589,12 +13549,7 @@
               "name": "TestCortanaPinnedGeneratedRequests"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/cortana_policy_test.go",
-              "name": "TestLabCortanaPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         },
         {
           "name": "Identity",
@@ -13615,12 +13570,7 @@
               "name": "TestCortanaPinnedGeneratedRequests"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/cortana_policy_test.go",
-              "name": "TestLabCortanaPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -19102,12 +19052,7 @@
               "name": "TestCallingPolicyPinnedProviderRequests"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/calling_policy_test.go",
-              "name": "TestLabCallingPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -19249,12 +19194,7 @@
               "name": "TestChannelsPolicyPinnedCompiledCRUD"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/channels_policy_test.go",
-              "name": "TestLabChannelsPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -19412,12 +19352,7 @@
               "name": "TestCortanaNativeRequestsMatchSuccessfulIsolatedBinding"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/cortana_policy_test.go",
-              "name": "TestLabCortanaPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -23976,12 +23911,7 @@
               "name": "TestCallingPolicyPinnedProviderRequests"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/calling_policy_test.go",
-              "name": "TestLabCallingPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -24111,12 +24041,7 @@
               "name": "TestChannelsPolicyPinnedCompiledCRUD"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/channels_policy_test.go",
-              "name": "TestLabChannelsPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -24234,12 +24159,7 @@
               "name": "TestCortanaPinnedGeneratedRequests"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/cortana_policy_test.go",
-              "name": "TestLabCortanaPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -29296,12 +29216,7 @@
               "name": "TestCallingPolicySetRetainsPreparationAndAcceptance"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/calling_policy_test.go",
-              "name": "TestLabCallingPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -29455,12 +29370,7 @@
               "name": "TestChannelsPolicySetRetainsPreparationAndAcceptance"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/channels_policy_test.go",
-              "name": "TestLabChannelsPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -29515,12 +29425,7 @@
               "name": "TestClientConfigurationSetRetainsPreparationAndAcceptance"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/client_configuration_test.go",
-              "name": "TestLabClientConfigurationReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {
@@ -29650,12 +29555,7 @@
               "name": "TestCortanaNativeRequestsMatchSuccessfulIsolatedBinding"
             }
           ],
-          "live_tests": [
-            {
-              "file": "tests/integration/lab/cortana_policy_test.go",
-              "name": "TestLabCortanaPolicyReadOnly"
-            }
-          ]
+          "live_tests": []
         }
       ],
       "implementation": {

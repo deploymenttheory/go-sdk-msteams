@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	policy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
 )
 
@@ -34,13 +35,10 @@ func (h policyCleanup) Resolve(ctx context.Context, entry lab.Entry) (string, er
 			count++
 		}
 	}
-	if count > 1 {
+	if count != 1 {
 		return "", lab.ErrUnresolved
 	}
-	if count == 1 {
-		return entry.Fixture, nil
-	}
-	return "", nil
+	return entry.Fixture, nil
 }
 
 func (h policyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
@@ -48,11 +46,28 @@ func (h policyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 		return lab.ErrUnresolved
 	}
 	_, err := h.service.DeleteByIdentity(ctx, entry.ResourceID)
-	var apiError *client.APIError
-	if errors.As(err, &apiError) && apiError.StatusCode == 404 {
-		return nil
+	if err != nil && !isHTTP(err, 404) {
+		return err
 	}
-	return err
+	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
+		if err == nil {
+			return false, nil
+		}
+		if !isHTTP(err, 404) {
+			return false, err
+		}
+		items, _, err := h.service.List(ctx)
+		if err != nil {
+			return false, err
+		}
+		for _, item := range items {
+			if samePolicyName(item.Identity, entry.Fixture) {
+				return false, nil
+			}
+		}
+		return true, nil
+	})
 }
 
 func (policyCleanup) Restore(context.Context, lab.Entry) error { return lab.ErrUnresolved }
@@ -67,6 +82,7 @@ func comparePowerShellPolicy(t *testing.T, ctx context.Context, name, descriptio
 		t.Fatal("explicit pinned PowerShell module path is required")
 	}
 	command := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-application-access-policy.ps1")
+	command.WaitDelay = time.Second
 	command.Env = []string{}
 	for _, key := range []string{"PATH", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -74,9 +90,10 @@ func comparePowerShellPolicy(t *testing.T, ctx context.Context, name, descriptio
 		}
 	}
 	command.Env = append(command.Env, "MSTEAMS_LAB_MODULE_PATH="+module, "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"), "MSTEAMS_LAB_POLICY_FIXTURE="+name)
-	output, err := command.Output()
-	defer clear(output)
-	if err != nil {
+	var output teamOracleBuffer
+	command.Stdout, command.Stderr = &output, io.Discard
+	defer func() { clear(output.data) }()
+	if command.Run() != nil || output.exceeded {
 		t.Fatal("pinned PowerShell read oracle failed; no output retained")
 	}
 	var observed struct {
@@ -85,7 +102,7 @@ func comparePowerShellPolicy(t *testing.T, ctx context.Context, name, descriptio
 		AppIDs      []string `json:"app_ids"`
 		Description string   `json:"description"`
 	}
-	if json.Unmarshal(output, &observed) != nil || !observed.Success {
+	if json.Unmarshal(output.data, &observed) != nil || !observed.Success {
 		t.Fatal("pinned PowerShell could not read the owned fixture")
 	}
 	if !samePolicyName(observed.Identity, name) || observed.Description != description || len(observed.AppIDs) != 1 || observed.AppIDs[0] != appID {
@@ -150,12 +167,16 @@ func TestLabApplicationAccessPolicyCRUD(t *testing.T) {
 	if _, err := service.UpdateByIdentity(ctx, name, policy.UpdateRequest{Description: &updated}); err != nil {
 		t.Fatal("live policy update failed")
 	}
-	read, _, err := service.GetByIdentity(ctx, name)
-	if err != nil {
-		t.Fatal("live policy update read-back failed")
-	}
-	if read.Description == nil || *read.Description != updated || len(read.AppIDs) != 1 || read.AppIDs[0] != appID {
-		t.Fatal("sparse update changed an omitted field or lost the non-default update")
+	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+		read, _, err := service.GetByIdentity(ctx, name)
+		if err != nil {
+			return false, err
+		}
+		matches := read != nil && read.Description != nil && *read.Description == updated
+		preserved := read != nil && len(read.AppIDs) == 1 && read.AppIDs[0] == appID
+		return matches && preserved, nil
+	}); err != nil {
+		t.Fatal("non-default policy update and omitted-field preservation did not converge")
 	}
 	t.Log("policy update/read-back and omission: passed")
 	comparePowerShellPolicy(t, ctx, name, updated, appID)
@@ -173,13 +194,8 @@ func TestLabApplicationAccessPolicyCRUD(t *testing.T) {
 		t.Fatal("owned policy was missing/ambiguous in live list")
 	}
 	t.Log("policy list: passed")
-	if _, err := service.DeleteByIdentity(ctx, name); err != nil {
-		t.Fatal("live policy delete failed")
-	}
-	_, _, err = service.GetByIdentity(ctx, name)
-	var apiError *client.APIError
-	if !errors.As(err, &apiError) || apiError.StatusCode != 404 {
-		t.Fatal("deleted policy absence was not verified")
+	if err := (policyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: name}); err != nil {
+		t.Fatal("policy deletion and independent read/list absence were not verified")
 	}
 	t.Log("policy delete/absence: passed")
 	// Cleanup deliberately runs again; its handler accepts a verified 404. The
