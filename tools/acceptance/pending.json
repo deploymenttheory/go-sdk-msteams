@@ -78,5 +78,17 @@
   "TestAccTeamTemplateRecover": {
     "file": "tests/integration/lab/team_template_test.go",
     "reason": "Requires an explicit private interrupted-run journal and same-tenant fixture recovery; operator-selected recovery is not a fresh CI CRUD scenario."
+  },
+  "TestAccAssignmentMigrationReadOnly": {
+    "file": "tests/integration/lab/assignment_migration_test.go",
+    "reason": "Successful migration reads require a tenant where the service is enabled. This lab returns PolicyRP 40003 (type not enabled in flighting); pinned PowerShell returns its no-status message. Capability-denial acceptance runs separately; issue #95 remains open."
+  },
+  "TestAccAudioConferencingPromptsReadOnly": {
+    "file": "tests/integration/lab/audio_conferencing_prompts_test.go",
+    "reason": "Successful custom-prompt reads require this resource type to be enabled. SDK and pinned PowerShell both return PolicyRP 40003 in the current tenant. Capability-denial acceptance runs separately; issue #106 remains open."
+  },
+  "TestAccPrivacyConfigurationReadOnly": {
+    "file": "tests/integration/lab/privacy_configuration_test.go",
+    "reason": "Successful privacy reads require an identity authorized for that resource. The approved Teams Administrator application receives PolicyRP 40301 in both SDK and pinned PowerShell. Authorization-denial acceptance runs separately; issue #102 remains open."
   }
 }

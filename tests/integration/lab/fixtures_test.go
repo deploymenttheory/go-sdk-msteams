@@ -59,7 +59,13 @@ func fixtureString(key, parent, value string, replacements map[string]string) st
 		}
 	}
 	switch normalized {
-	case "description", "displayname", "brandeddisplayname", "labelforallowedacsusers", "label", "text", "textprompt", "message":
+	case "message":
+		switch value {
+		case "Type  is not currently enabled in flighting", "Type TeamsAudioConferencingCustomPromptsConfiguration is not currently enabled in flighting":
+			return value
+		}
+		return "Fixture message"
+	case "description", "displayname", "brandeddisplayname", "labelforallowedacsusers", "label", "text", "textprompt":
 		if value != "SDK lab non-default initial description" && value != "SDK lab non-default updated description" {
 			return "Fixture " + normalized
 		}

@@ -13,9 +13,7 @@
       "TestAccAppPermissionPolicyReadOnly",
       "TestAccAppSetupPolicyReadOnly",
       "TestAccApplicationMeetingConfigurationReadOnly",
-      "TestAccAssignmentMigrationReadOnly",
       "TestAccAudioConferencingPolicyReadOnly",
-      "TestAccAudioConferencingPromptsReadOnly",
       "TestAccBannerTextReadOnly",
       "TestAccCallHoldPolicyReadOnly",
       "TestAccCallParkPolicyReadOnly",
@@ -32,7 +30,6 @@
       "TestAccFilesPolicyReadOnly",
       "TestAccMeetingBrandingReadOnly",
       "TestAccOnlineVoicemailReadOnly",
-      "TestAccPrivacyConfigurationReadOnly",
       "TestAccRecordingMessagesReadOnly",
       "TestAccVoicemailValidationReadOnly"
     ]
@@ -42,6 +39,14 @@
     "mutation": true,
     "tests": [
       "TestAccApplicationAccessPolicyCRUD"
+    ]
+  },
+  "tenant-access-outcomes": {
+    "package": "./tests/integration/lab",
+    "tests": [
+      "TestAccAssignmentMigrationCapabilityUnavailable",
+      "TestAccAudioConferencingPromptsCapabilityUnavailable",
+      "TestAccPrivacyConfigurationAuthorizationDenied"
     ]
   }
 }
