@@ -5495,30 +5495,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/106/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service_test.go",
+              "name": "TestCallHoldCompiledFilterDoesNotUseModernWhitespaceRules"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_hold_policy_test.go",
+              "name": "TestLabCallHoldPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/106/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service_test.go",
+              "name": "TestCallHoldPinnedCompiledCRUD"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_hold_policy_test.go",
+              "name": "TestLabCallHoldPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in compiled call hold policy Global reads returned resource HTTP 403 using the dedicated lab SPN in client-secret and certificate modes. Filter/list and optional pinned PowerShell comparison were not reached. No policy, playback, assignment, role or consent changed. Successful authorization/cloud/feature qualification remains open.",
         "evidence": []
       },
       "exclusion": null
@@ -12250,29 +12297,124 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/234/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service_test.go",
+              "name": "TestCallHoldPinnedModernGrant"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/composition_test.go",
+              "name": "TestCallHoldInterleavesProtocolsWithoutHeaderLeakage"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/failure_test.go",
+              "name": "TestCallHoldAllMutationErrorsAreSingleSend"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/phase_test.go",
+              "name": "TestCallHoldDiscoveryCannotEstablishAssignmentAcceptance"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/acceptance_test.go",
+              "name": "TestCallHoldGroupAcceptanceSurvivesOnlyActualPostResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/failure_test.go",
+              "name": "TestCallHoldGrantOmitsZeroRankLikeMappedWrapper"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/234/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service_test.go",
+              "name": "TestCallHoldPinnedModernGrant"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/composition_test.go",
+              "name": "TestCallHoldInterleavesProtocolsWithoutHeaderLeakage"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/failure_test.go",
+              "name": "TestCallHoldAllMutationErrorsAreSingleSend"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/234/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service_test.go",
+              "name": "TestCallHoldPinnedModernGrant"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/composition_test.go",
+              "name": "TestCallHoldInterleavesProtocolsWithoutHeaderLeakage"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/failure_test.go",
+              "name": "TestCallHoldAllMutationErrorsAreSingleSend"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -17542,15 +17684,30 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/343/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service_test.go",
+              "name": "TestCallHoldPinnedCompiledCRUD"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -22133,15 +22290,34 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/458/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service_test.go",
+              "name": "TestCallHoldPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/failure_test.go",
+              "name": "TestCallHoldAllMutationErrorsAreSingleSend"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27206,15 +27382,42 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/579/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/service_test.go",
+              "name": "TestCallHoldPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_hold_policy/composition_test.go",
+              "name": "TestCallHoldSetRetainsPreparationAndAcceptance"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_hold_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
