@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"slices"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/listchange"
 )
 
 // ErrInput identifies invalid local request construction without retaining input.
@@ -61,98 +63,44 @@ func (p Policy) MarshalJSON() ([]byte, error) {
 }
 
 // ListChange describes replacement or an Add/Remove delta. Constructors copy input.
-// Its zero value is invalid; an omitted *ListChange leaves AppIds absent.
-type ListChange struct {
-	replacement any
-	add         any
-	remove      any
-	delta       bool
-	valid       bool
-}
+// The zero value is invalid; nil omits the setting entirely.
+type ListChange struct{ change *listchange.Change }
 
-// ReplaceAppIDs replaces the list; nil and empty both emit an explicit [].
+// ReplaceAppIDs replaces the list; nil/empty emits an explicit [].
 func ReplaceAppIDs(ids []string) *ListChange {
-	return &ListChange{replacement: append([]string{}, ids...), valid: true}
+	return &ListChange{change: listchange.ReplaceStrings(ids)}
 }
 
-// ChangeAppIDs emits Add/Remove operators, omitting an empty operator. Both empty emits {}.
+// ChangeAppIDs emits Add/Remove arrays, omitting empty operators. Both empty emits {}.
 func ChangeAppIDs(add, remove []string) *ListChange {
-	change := &ListChange{delta: true, valid: true}
-	if len(add) > 0 {
-		change.add = slices.Clone(add)
-	}
-	if len(remove) > 0 {
-		change.remove = slices.Clone(remove)
-	}
-	return change
+	return &ListChange{change: listchange.DeltaStrings(add, remove)}
 }
 
-// LegacyAppIDs preserves the pinned helper's object-item compatibility branch.
-// Each item must be a JSON object. Serialization metadata is removed, not sent.
-// Local acceptance does not establish backend acceptance of an object as an app ID.
+// LegacyAppIDs preserves object-item compatibility after removing legacy metadata.
+// It does not establish backend acceptance of an object as an application ID.
 func LegacyAppIDs(items []json.RawMessage) (*ListChange, error) {
-	result, err := legacyItems(items)
+	change, err := listchange.ReplaceObjects(items)
 	if err != nil {
-		return nil, err
+		return nil, ErrInput
 	}
-	return &ListChange{replacement: result, valid: true}, nil
+	return &ListChange{change: change}, nil
 }
 
 // ChangeLegacyAppIDs emits object-item Add/Remove deltas without legacy metadata.
 func ChangeLegacyAppIDs(add, remove []json.RawMessage) (*ListChange, error) {
-	addItems, err := legacyItems(add)
+	change, err := listchange.DeltaObjects(add, remove)
 	if err != nil {
-		return nil, err
+		return nil, ErrInput
 	}
-	removeItems, err := legacyItems(remove)
-	if err != nil {
-		return nil, err
-	}
-	change := &ListChange{delta: true, valid: true}
-	if len(addItems) > 0 {
-		change.add = addItems
-	}
-	if len(removeItems) > 0 {
-		change.remove = removeItems
-	}
-	return change, nil
-}
-
-func legacyItems(items []json.RawMessage) ([]json.RawMessage, error) {
-	result := make([]json.RawMessage, 0, len(items))
-	for _, item := range items {
-		var fields map[string]json.RawMessage
-		if json.Unmarshal(item, &fields) != nil || fields == nil {
-			return nil, ErrInput
-		}
-		for _, key := range []string{"XsAnyElements", "XsAnyAttributes", "DataSource", "Key", "ScopeClass", "Anchor", "Element", "TypedIdentity"} {
-			delete(fields, key)
-		}
-		encoded, err := json.Marshal(fields)
-		if err != nil {
-			return nil, ErrInput
-		}
-		result = append(result, encoded)
-	}
-	return result, nil
+	return &ListChange{change: change}, nil
 }
 
 // MarshalJSON retains replacement/delta and empty/omitted distinctions.
-func (c ListChange) MarshalJSON() ([]byte, error) {
-	if !c.valid {
+func (v ListChange) MarshalJSON() ([]byte, error) {
+	if v.change == nil {
 		return nil, ErrInput
 	}
-	if !c.delta {
-		return json.Marshal(c.replacement)
-	}
-	body := make(map[string]any)
-	if c.add != nil {
-		body["Add"] = c.add
-	}
-	if c.remove != nil {
-		body["Remove"] = c.remove
-	}
-	return json.Marshal(body)
+	return v.change.MarshalJSON()
 }
 
 // CreateRequest and UpdateRequest are write models, separate from Policy responses.
