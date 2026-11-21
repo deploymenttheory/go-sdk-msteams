@@ -56,9 +56,14 @@ Global item/filtered-list observations and optionally compares Identity/string
 AppIDs with the pinned certificate-authenticated PowerShell read. Its opt-in gate
 runs before credential access; child output is bounded, transient and never
 retained. The dedicated lab identity still needs the separately requested role
-approval. Existing 403 observations for other ConfigAPI resources do not prove
-the sole cause or this resource's authorization. No role/grant/browser changes
-or tenant configuration writes were performed for this candidate.
+approval. On 2026-11-21, isolated native Global reads were attempted with that
+existing SPN using both client-secret and certificate authentication. For both
+methods, service discovery returned HTTP 200 and the actual configuration GET
+returned HTTP 403. Only fixed-stage status/boolean metadata was recorded; no
+payloads, tokens or identifiers were retained. These are authorization
+observations, not successful resource or exported-command qualification; 403
+does not prove its sole cause. No role/grant/browser changes or tenant
+configuration writes were performed for this candidate.
 
 Successful read/write permissions, modern flight/legacy eligibility, cloud
 deployment, exported wrapper confirmation semantics and consequential update
