@@ -1429,22 +1429,47 @@
         {
           "name": "GetBatchOperationDefinition",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/0/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+              "name": "Service.GetOCEBatchDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch_test.go",
+              "name": "TestOCERegionalLookupPreservesAttemptsAndSourceOrder"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GetBatchOperationDefinitionForRegion",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/0/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+              "name": "Service.GetOCEBatchDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+            "name": "Service.GetOCEBatchDefinition"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1468,44 +1493,98 @@
         {
           "name": "GetAllBatchOperationStatus",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/1/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+              "name": "Service.ListOCEBatchStatuses"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch_test.go",
+              "name": "TestOCERegionalListRetainsPartialResultsAndFailures"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/policy_assignments_test.go",
+              "name": "TestLabPolicyAssignmentsOCEReadOnly"
+            }
+          ]
         },
         {
           "name": "GetAllBatchOperationStatusForRegion",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/1/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+              "name": "Service.ListOCEBatchStatuses"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GetBatchOperationStatus",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/1/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+              "name": "Service.GetOCEBatchStatus"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch_test.go",
+              "name": "TestOCERegionalLookupPreservesAttemptsAndSourceOrder"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GetBatchOperationStatusForRegion",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/1/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+              "name": "Service.GetOCEBatchStatus"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+            "name": "Service.GetOCEBatchStatus"
+          },
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+            "name": "Service.ListOCEBatchStatuses"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "Dedicated-SPN client-secret and certificate TestLabPolicyAssignmentsOCEReadOnly runs each made three regional status attempts in the authenticating tenant and ended with HTTP 403. Other sets, comparisons and all OCE actions remain unrun; no contributor elevation, privileged profile or tenant mutation occurred.",
         "evidence": []
       },
       "exclusion": null
@@ -2219,36 +2298,93 @@
         {
           "name": "GetAllGroupPolicyAssignments",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/3/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+              "name": "Service.ListOCEGroups"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GetGroupPolicyAssignment",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/3/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+              "name": "Service.GetOCEGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GetGroupPolicyAssignments",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/3/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+              "name": "Service.ListOCEGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GetPolicyAssignmentForGroups",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/3/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+              "name": "Service.ListOCEGroupsByPolicy"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+            "name": "Service.GetOCEGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+            "name": "Service.ListOCEGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+            "name": "Service.ListOCEGroups"
+          },
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+            "name": "Service.ListOCEGroupsByPolicy"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9216,15 +9352,30 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/4/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+              "name": "Service.ListOCEGroupMembers"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+            "name": "Service.ListOCEGroupMembers"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9248,15 +9399,30 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/5/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+              "name": "Service.ListOCEUserMembership"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+            "name": "Service.ListOCEUserMembership"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -13672,15 +13838,30 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/6/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+              "name": "Service.RefreshOCEGroupUsers"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+            "name": "Service.RefreshOCEGroupUsers"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -13728,15 +13909,30 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/2/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+              "name": "Service.ReprocessOCEBatch"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_batch.go",
+            "name": "Service.ReprocessOCEBatch"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -13760,15 +13956,30 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce-net472-metadata.json#/commands/7/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+              "name": "Service.ReprocessOCEGroupAssignment"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
+              "name": "TestPinnedOCEDirectRequests"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_service.go",
+            "name": "Service.ReprocessOCEGroupAssignment"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",

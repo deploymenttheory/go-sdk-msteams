@@ -4,6 +4,8 @@ import (
 	"context"
 	"strings"
 	"testing"
+
+	policyassignments "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 )
 
 // TestLabPolicyAssignmentsReadOnly never submits batches, edits group rank,
@@ -40,4 +42,33 @@ func TestLabPolicyAssignmentsReadOnly(t *testing.T) {
 		checked++
 	}
 	t.Logf("ordinary assignment list and %d selected reads observed; writes, OCE and effective assignment convergence remain separately qualified", checked)
+}
+
+// TestLabPolicyAssignmentsOCEReadOnly uses the authenticating lab tenant as the
+// explicit OCE target. It only lists regional status; no privileged PowerShell
+// profile, contributor elevation, refresh or reprocessing action runs.
+func TestLabPolicyAssignmentsOCEReadOnly(t *testing.T) {
+	cfg := targetingReadOnly(t)
+	sdk, binding, _ := labSDKClient(t)
+	tenant, _, ok := strings.Cut(binding, "|")
+	if !ok || !labDirectoryID.MatchString(tenant) {
+		t.Fatal("canonical OCE lab tenant binding required")
+	}
+	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
+	defer stop()
+	value, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListOCEBatchStatuses(ctx, policyassignments.OCEContext{TenantID: tenant}, nil)
+	if err != nil {
+		status, attempts := 0, 0
+		if response != nil {
+			status = response.StatusCode()
+		}
+		if value != nil {
+			attempts = len(value.Attempts)
+		}
+		t.Fatalf("OCE regional status list unavailable (last HTTP %d, attempts %d); no payload retained", status, attempts)
+	}
+	if value == nil {
+		t.Fatal("OCE regional status list returned no observation")
+	}
+	t.Logf("OCE status list observed across %d regional attempts; no actions or eligibility changes ran", len(value.Attempts))
 }

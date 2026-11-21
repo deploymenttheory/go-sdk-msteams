@@ -60,9 +60,53 @@ All methods propagate context and return Resty response metadata. Errors omit
 service messages from diagnostic formatting; inspect response bodies deliberately.
 401/403 do not establish unsupported authentication or a missing tenant feature.
 
-This is an ordinary-protocol implementation checkpoint for issue #100. Eight OCE
-commands, their fifteen conditional sets, privileged-mode eligibility, binding
-details, cloud support and successful tenant CRUD are still unqualified. Their
-distinct regional/direct protocol must not be routed through the generated job
-adapter. [Pinned evidence](../../../docs/implementation/policies/policy-assignments-evidence.md)
-records the exact captures and remaining work.
+## Conditional OCE operations
+
+All OCE methods require an explicit OCEContext.TenantID in canonical Guid form.
+Environment defaults to the profile matching the session's fixed origin. Explicit
+environments must match that origin and cannot change credential destinations.
+The eight source profiles and their regional order are retained. Custom sessions
+can supply the corresponding trusted origin/authority/audience tuple. Routing
+availability is not evidence of contributor eligibility, auth-mode or cloud support.
+
+| Methods | Conditional baseline command |
+|---|---|
+| GetOCEBatchStatus, ListOCEBatchStatuses | Get-CsBatchOperationStatus |
+| GetOCEBatchDefinition | Get-CsBatchOperationDefinition |
+| ReprocessOCEBatch | Invoke-CsReprocessBatchOperation |
+| GetOCEGroup, ListOCEGroup, ListOCEGroupsByPolicy, ListOCEGroups | Get-CsGroupPolicyAssignments |
+| ListOCEGroupMembers | Get-GPAGroupMembers |
+| ListOCEUserMembership | Get-GPAUserMembership |
+| RefreshOCEGroupUsers | Invoke-CsRefreshGroupUsers |
+| ReprocessOCEGroupAssignment | Invoke-CsReprocessGroupPolicyAssignment |
+
+The direct OCE sender adds target-tenant and correlation headers. It never performs
+forest discovery or adds MPACmdlet/generated command-name headers. One correlation
+is shared across a regional operation; a new operation gets a fresh UUID. Each
+request makes one attempt, including GET, so regional fallback retains failures.
+
+An explicit region selects one batch request. Nil on a status/definition lookup
+searches the source region order and stops at the first HTTP 200, retaining earlier
+failed attempts. Nil on a status list gathers every region, retaining partial values
+and per-attempt errors; the returned error joins failures. A malformed successful
+response stops processing. Native Region annotations identify the actual request,
+while RawFields retains the original wire object separately.
+
+OCE GPA reads/actions accept the sender's 200/201/202/204 set. HTTP 206 is rejected
+before the command layer's broader success check. GPA reference responses can be
+empty or JSON null; regional snapshots/lists require a decoded object/array.
+Regional status/definition reads require 200. Reprocessing requires 202 and a Guid
+string, with acceptance retained if decoding fails; it does not use a generated
+operation-ID object envelope. No implicit wait or completion inference is included.
+
+Refresh always includes userId and policyType query keys. Omitted UserID becomes
+Guid.Empty and omitted PolicyType becomes an empty value. All=false/true uses the
+source's False/True spelling. Path/query values are encoded separately rather than
+copying unsafe raw interpolation. Refresh and reprocessing are explicit consequential
+actions; no read or ordinary mutation invokes them or elevates eligibility.
+
+Issue #100 remains in-progress for full qualification. Native methods/tests map all
+fourteen commands and twenty-five sets. Successful tenant CRUD, OCE eligibility,
+complete shell binding/coercion and cloud behavior remain unqualified.
+[Pinned evidence](../../../docs/implementation/policies/policy-assignments-evidence.md)
+records the captures, actual lab denials and remaining work.

@@ -53,3 +53,21 @@ func ExampleService_CreateBatch() {
 	}
 	_ = use
 }
+
+func ExampleService_ListOCEBatchStatuses() {
+	use := func(ctx context.Context, sdk *msteams.Client, targetTenant string) error {
+		result, _, err := sdk.TeamsAdminAPI.PolicyAssignments.ListOCEBatchStatuses(ctx, resource.OCEContext{TenantID: targetTenant}, nil)
+		// A failing region does not erase successful results from other regions.
+		if result != nil {
+			for _, attempt := range result.Attempts {
+				_ = attempt.Err
+			}
+			for _, status := range result.Values {
+				_ = status.Region
+				_ = status.UserState
+			}
+		}
+		return err
+	}
+	_ = use // Explicit read only; no OCE actions or eligibility changes.
+}

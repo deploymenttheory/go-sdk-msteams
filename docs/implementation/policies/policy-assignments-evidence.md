@@ -3,10 +3,10 @@
 Issue #100 covers fourteen commands. Six appear in the default, unauthenticated
 8.1.0 runtime snapshot; eight are conditional OCE declarations. Neither a missing
 default export nor an OCE declaration removes a command from SDK scope. This is a
-source and ordinary-service checkpoint, not completed ticket parity, a contract
-pass or live qualification. The immutable default baseline is unchanged. Native
-ordinary methods are in-progress; the conditional sets have supplemental metadata
-without implementation claims.
+native-service implementation with qualification in progress, not completed ticket
+parity, a contract pass or live qualification. The immutable default baseline is
+unchanged. Native methods/tests map all fourteen commands and twenty-five sets;
+conditional signatures retain their supplemental provenance.
 
 ## Pinned inputs
 
@@ -114,11 +114,13 @@ adds Region to decoded status/definition results. Reprocessing requires HTTP 202
 parses the response as a quoted Guid; it does not wait for completion. These are
 distinct from generated policy-assignment operations and their operation-ID DTO.
 
-GPA uses any successful HTTP status, then Newtonsoft JSON decoding into a single
+GPA's command layer checks any successful HTTP status, then decodes into a single
 assignment, assignment list, member list, membership list or string action result.
 Refresh has no request body and substitutes an omitted UserId with Guid.Empty.
 The source interpolates string policy types directly; native code must encode path
 and query components separately while preserving routing and omission semantics.
+The direct sender's whitelist narrows success to 200/201/202/204. Captured HTTP 206
+fails before the broader command check; native code preserves this distinction.
 
 ## Executable observations and native checks
 
@@ -137,6 +139,14 @@ dictionary projection, successful decode failures and forbidden responses.
 adds fourteen generated model projections. SourceEntry uses Reference for its
 source identity; no groupId field or local precedence ordering is fabricated.
 
+[OCE capture](../../../tools/contracts/capture-policy-assignment-oce.ps1) records
+eighteen actual direct sender requests, twelve Newtonsoft model observations and
+all eight environment/region tables. A synthetic command runtime consumes verbose
+and warnings. The OCE base constructor reads only its hash-checked settings; suffix
+lookup, InitializeHeaders and RestClient execute with a synthetic token and memory
+HttpClient. The cached client/global JSON defaults are restored. No credential host,
+InitializeServiceParameters, command lifecycle, privileged profile or network runs.
+
 Native tests consume the twenty-five request captures in both synthetic token
 modes. They check nullable/empty/zero fields, nested source/user outcomes, raw future
 data, no mutation replay, normalized denials, local validation before credentials,
@@ -146,25 +156,33 @@ examples complement the request checks; they do not establish complete shell bin
 or tenant qualification. Additional JSON dictionaries follow the captured generated
 projection, including omitted object nulls and string "null" array entries.
 
+OCE tests consume its eighteen requests in both synthetic modes and check regional
+fallback, complete failure histories, partial lists, malformed-success stopping,
+nullable GPA responses and no action replay. Direct calls intentionally make one
+attempt per region rather than inheriting shared GET retries. Header tests prove
+one correlation per operation, reused across regional attempts, with no generated
+forest/MPA headers. Region annotations come from the request. Scope/origin checks
+reject an operation's attempt to change clouds before credentials are acquired.
+
 The dedicated lab SPN ran TestLabPolicyAssignmentsReadOnly with secret and certificate
 authentication. Both completed discovery, then the assignment-list endpoint returned
 HTTP 403. No per-ID read was reached. No batch, group write, OCE action or permission
 change ran. No authentication-mode or feature-availability conclusion follows.
+TestLabPolicyAssignmentsOCEReadOnly then ran with both credential modes, using the
+authenticating lab tenant as its target. Each made three regional status attempts
+and ended with HTTP 403. No OCE action or eligibility change ran. Successful OCE
+qualification remains unavailable; no mode/feature restriction is inferred.
 
-## Remaining implementation sequence
+## Remaining qualification
 
-1. Capture OCE direct sender/model behavior and the environment/region tables using
-   isolated, in-memory senders. Preserve conditional provenance separately from the
-   immutable default observation.
-2. Finish shell binding/coercion and additional CLR/Hashtable input qualification;
+1. Finish shell binding/coercion and additional CLR/Hashtable input qualification;
    the native low-level group DTO methods also permit an empty body, unlike the
    exported create command's required name binding.
-3. Implement typed native services for explicit OCE operations using
-   existing audience/destination controls. Preserve per-region failures, rank, direct
-   and effective assignment provenance, and per-user batch outcomes.
-4. Extend root-client mappings, examples, offline contracts and opt-in tenant tests
-   to every conditional operation. Keep submission acceptance separate from
-   completed processing or effective policy state; do not replay mutations implicitly.
+2. Compare available tenant list/read projections against the pinned PowerShell
+   module, using explicit group/user fixtures and the correct OCE eligibility.
+3. Exercise owned disposable group/batch fixtures with non-default read-back and
+   cleanup under the mutation/consequential gates. Keep HTTP acceptance separate
+   from completed processing, per-user outcomes and effective policy convergence.
 
 No tenant mutation ran during this investigation. OCE contributor
 eligibility, mode support, cloud availability, successful reads and consequential
