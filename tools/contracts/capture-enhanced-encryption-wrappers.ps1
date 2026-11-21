@@ -84,6 +84,9 @@ Observe 'filter-tag-prefix' {Get-CsConfigurationModern -ConfigType TeamsEnhanced
 Observe 'create-readback' {New-CsConfigurationModern -ConfigType TeamsEnhancedEncryptionPolicy -PropertyBag @{Identity='Fixture';Description='';CallingEndtoEndEncryptionEnabledType='FutureCalling';MeetingEndToEndEncryption='FutureMeeting'}}
 Observe 'create-failure-stops-readback' {$state.failCreate=$true;New-CsConfigurationModern -ConfigType TeamsEnhancedEncryptionPolicy -PropertyBag @{Identity='Fixture'}}
 Observe 'update-omitted-identity-global' {Set-CsConfigurationModern -ConfigType TeamsEnhancedEncryptionPolicy -PropertyBag @{CallingEndtoEndEncryptionEnabledType='FutureCalling'}}
+Observe 'update-empty-identity-retained' {Set-CsConfigurationModern -ConfigType TeamsEnhancedEncryptionPolicy -PropertyBag @{Identity='';Description=''}}
+Observe 'update-null-identity-retained' {Set-CsConfigurationModern -ConfigType TeamsEnhancedEncryptionPolicy -PropertyBag @{Identity=$null;Description=''}}
+Observe 'update-whitespace-identity-retained' {Set-CsConfigurationModern -ConfigType TeamsEnhancedEncryptionPolicy -PropertyBag @{Identity=' ';Description=''}}
 Observe 'update-encryption-fields' {Set-CsConfigurationModern -ConfigType TeamsEnhancedEncryptionPolicy -PropertyBag @{Identity='Fixture';Description='';CallingEndtoEndEncryptionEnabledType='FutureCalling';MeetingEndToEndEncryption='FutureMeeting'}}
 Observe 'filter-whitespace-returns-all' {Get-CsConfigurationModern -ConfigType TeamsEnhancedEncryptionPolicy -Filter ' '}
 Observe 'identity-whitespace-selects-collection' {Get-CsConfigurationModern -ConfigType TeamsEnhancedEncryptionPolicy -Identity ' '}

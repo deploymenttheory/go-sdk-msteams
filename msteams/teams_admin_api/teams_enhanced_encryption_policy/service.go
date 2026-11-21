@@ -40,7 +40,7 @@ func (s *Service) ready(ctx context.Context) error {
 	return nil
 }
 func validIdentity(v string) bool {
-	return strings.TrimSpace(v) != "" && v != "." && v != ".." && !strings.ContainsRune(v, '\\') && !strings.ContainsFunc(v, unicode.IsControl)
+	return v != "" && v != "." && v != ".." && !strings.ContainsRune(v, '\\') && !strings.ContainsFunc(v, unicode.IsControl)
 }
 func path(id string) []string {
 	p := []string{"Skype.Policy", "configurations", resourceName}

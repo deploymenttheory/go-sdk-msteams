@@ -11,7 +11,7 @@ for eight exact command/set pairs.
 
 capture-enhanced-encryption-wrappers.ps1 verifies the pinned wrapper source and
 all five mappings, then executes unchanged mapped AST functions under synthetic
-telemetry/in-memory internal-command seams. Its fixture contains 22 observations
+telemetry/in-memory internal-command seams. Its fixture contains 25 observations
 for ordering/filtering, whitespace, create/read-back, sparse/default updates,
 delete and grants. Five expected failures cover create failure, missing grant
 scope/name and both PassThru forms. No exported Trps processing, flights,
@@ -19,8 +19,8 @@ credentials or network run.
 
 capture-enhanced-encryption-requests.ps1 pins the private assembly and invokes
 actual generated configuration/grant helpers with actual DTOs and a memory sender.
-Seventeen observations cover list/read and escaped identity, POST 201, sparse PUT
-204 including Identity-only and empty strings, bodyless DELETE 204, failure
+Eighteen observations cover list/read and escaped identity, POST 201, sparse PUT
+204 including Identity-only, empty strings and a literal whitespace selector, bodyless DELETE 204, failure
 decoding, pre-cancellation and grants. All non-canceled cases send once; the
 pre-canceled case sends zero times. Session discovery/header rewrite and the
 production pipeline remain separate from this source request seam.
@@ -31,6 +31,10 @@ and performs actual pure Xds dictionary serialization. Twenty-two observations
 yield 20 successes and two mandatory New Identity validation failures. Optional
 strings bind null to empty and coerce numeric/Boolean input to strings. This seam
 does not execute the original export lifecycle or runtime attribute processor.
+Eight separate private-Identity binder observations reuse actual private parameter
+and validation attributes in a synthetic RuntimeDefinedParameter binder, without
+constructing/processing the original command. Null/empty reject for New and Set;
+whitespace and a selected identity bind successfully.
 
 The same artifact separately records actual private calling-mode ValidSet metadata
 and invokes only the inherited property-bag validator after verifying its exact
@@ -55,10 +59,13 @@ preview/breaking-change messages; it does not turn this metadata into ValidateSe
 
 Modern create has a one-POST primitive and explicit POST/Get composition; failure
 stops read-back. PUT is sparse and permits Identity-only; omitted Identity maps
-to Global in the mapped helper. Whitespace Get/filter selects the collection,
-with stable case-insensitive Global-first ordering. Typed native explicit
-identity operations should reject invalid selectors and expose List/default
-operations separately.
+to Global in the mapped helper. Bound empty/null/whitespace Identity is retained
+by that helper instead of becoming Global; private validation rejects empty/null
+before that path. The source generated PUT preserves a literal whitespace route,
+and native explicit selectors preserve it too. Whitespace Get/filter selection
+uses the collection, with stable case-insensitive Global-first ordering. Native
+explicit identity methods select one escaped component; List/default methods
+provide the mapped selection/default behavior separately.
 
 User/tenant assignments PATCH and require HTTP 200. Group assignment POST
 distinguishes 202 acceptance from 204. Null PolicyName becomes an empty string
@@ -68,24 +75,26 @@ mapped helper. Public PassThru does not bind to the captured mapped grant
 function. Tenant helper Force is Boolean, but this public family exposes no
 Force parameter. No effective clear, polling or assignment guarantee follows.
 
-## Native implementation checkpoint and remaining qualification
+## Native implementation and remaining qualification
 
 TeamsEnhancedEncryptionPolicies now has native modern CRUD/list, explicit
 create/read-back partial results and user/tenant/group grants, all three typed
-settings, owned Xds projections and root wiring. Initial race tests compare all
-17 generated request observations in synthetic application/delegated modes plus
-four modern filter cases; model tests preserve known/unknown values, owned raw
+settings, owned Xds projections and root wiring. Tests compare all
+18 generated request observations in synthetic application/delegated modes plus
+four modern filter cases and all 22 layered binding cases; model tests preserve known/unknown values, owned raw
 snapshots and redacted formatting. Metadata hints remain separate from proven
 runtime validation. Group results retain generated acceptance statuses, and
 Assign distinguishes source Rank omission from explicit native priority.
 
-Before the implementation PR, finish direct source binder/wrapper comparisons,
-partial create/read-back and assignment/discovery failure coverage, no-replay and
-context/input guards, compiling examples/API docs, gated read-only lab support,
-full repository checks and reviewed sanitized artifacts. Exact ledger mappings
-remain in-progress/metadata-only; this checkpoint is not full qualification.
+Partial create/read-back, assignment/discovery failures, no-replay and context/input
+guards, a compiling example, API documentation and gated read-only lab support
+are included. Exact ledger mappings remain in-progress/metadata-only. The source
+seams and offline artifacts do not establish complete public command lifecycle
+or tenant qualification.
 
-No tenant reads/writes have run for this family. Successful authorization,
+Actual opt-in Global resource reads returned HTTP 403 in both client-secret and
+certificate modes on 2026-11-21. No policy, assignment, role or consent changed.
+See the [lab acceptance record](enhanced-encryption-lab-acceptance.md). Successful authorization,
 server/cloud/flight availability, write/read-back/cleanup, legacy behavior and
 effective encryption/assignment behavior remain unqualified. Issue #117 stays
 open; the captures do not establish full command or tenant qualification.

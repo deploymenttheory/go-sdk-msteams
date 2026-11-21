@@ -38,6 +38,8 @@ Observe 'policy-malformed-error' 'ConfigurationGetConfiguration' @('TeamsEnhance
 Observe 'policy-pre-canceled' 'ConfigurationGetConfigurations' @('TeamsEnhancedEncryptionPolicy',$null,$null) 200 '[]' $true
 $minimal = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration]::DeserializeFromDictionary(@{Identity='Global'})
 Observe 'policy-identity-only-put' 'ConfigurationUpdateConfiguration' @('TeamsEnhancedEncryptionPolicy','Global',$null,$null,$minimal) 204 ''
+$whitespace = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration]::DeserializeFromDictionary(@{Identity=' ';Description=''})
+Observe 'policy-whitespace-put' 'ConfigurationUpdateConfiguration' @('TeamsEnhancedEncryptionPolicy',' ',$null,$null,$whitespace) 204 ''
 $edge = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration]::DeserializeFromDictionary(@{Identity='Global';Description='';CallingEndtoEndEncryptionEnabledType='';MeetingEndToEndEncryption=''})
 Observe 'policy-empty-string-put' 'ConfigurationUpdateConfiguration' @('TeamsEnhancedEncryptionPolicy','Global',$null,$null,$edge) 204 ''
 $userGrant = [Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.SingleGrantUserRequest]::new()

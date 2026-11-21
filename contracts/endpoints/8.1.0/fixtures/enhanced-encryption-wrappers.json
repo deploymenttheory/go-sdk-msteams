@@ -5,8 +5,8 @@
   "captured_at": "2026-11-21",
   "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
   "source": {
-    "path": "custom/Merged_custom_PsExt.ps1",
-    "sha256": "03dbc3a85e12c98dd1807d604782c6a90d0656569541cd9540738825a7fcb255"
+    "sha256": "03dbc3a85e12c98dd1807d604782c6a90d0656569541cd9540738825a7fcb255",
+    "path": "custom/Merged_custom_PsExt.ps1"
   },
   "methods": [
     "Sort-GlobalFirst",
@@ -27,14 +27,6 @@
   ],
   "cases": [
     {
-      "calls": [
-        {
-          "parameters": {
-            "ConfigType": "TeamsEnhancedEncryptionPolicy"
-          },
-          "operation": "get"
-        }
-      ],
       "output_identities": [
         "gLoBaL",
         "Global",
@@ -42,10 +34,6 @@
         "Tag:Global",
         "Fixture"
       ],
-      "failure_type": null,
-      "name": "list-global-first"
-    },
-    {
       "calls": [
         {
           "parameters": {
@@ -54,6 +42,10 @@
           "operation": "get"
         }
       ],
+      "name": "list-global-first",
+      "failure_type": null
+    },
+    {
       "output_identities": [
         "gLoBaL",
         "Global",
@@ -61,10 +53,6 @@
         "Tag:Global",
         "Fixture"
       ],
-      "failure_type": null,
-      "name": "filter-global-first"
-    },
-    {
       "calls": [
         {
           "parameters": {
@@ -73,15 +61,30 @@
           "operation": "get"
         }
       ],
+      "name": "filter-global-first",
+      "failure_type": null
+    },
+    {
       "output_identities": [
         "gLoBaL",
         "Global",
         "Tag:Global"
       ],
-      "failure_type": null,
-      "name": "filter-tag-prefix"
+      "calls": [
+        {
+          "parameters": {
+            "ConfigType": "TeamsEnhancedEncryptionPolicy"
+          },
+          "operation": "get"
+        }
+      ],
+      "name": "filter-tag-prefix",
+      "failure_type": null
     },
     {
+      "output_identities": [
+        "Fixture"
+      ],
       "calls": [
         {
           "parameters": {
@@ -104,13 +107,11 @@
           "operation": "get"
         }
       ],
-      "output_identities": [
-        "Fixture"
-      ],
-      "failure_type": null,
-      "name": "create-readback"
+      "name": "create-readback",
+      "failure_type": null
     },
     {
+      "output_identities": [],
       "calls": [
         {
           "parameters": {
@@ -123,11 +124,11 @@
           "operation": "create"
         }
       ],
-      "output_identities": [],
-      "failure_type": "System.Management.Automation.RuntimeException",
-      "name": "create-failure-stops-readback"
+      "name": "create-failure-stops-readback",
+      "failure_type": "System.Management.Automation.RuntimeException"
     },
     {
+      "output_identities": [],
       "calls": [
         {
           "parameters": {
@@ -141,11 +142,65 @@
           "operation": "update"
         }
       ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "update-omitted-identity-global"
+      "name": "update-omitted-identity-global",
+      "failure_type": null
     },
     {
+      "output_identities": [],
+      "calls": [
+        {
+          "parameters": {
+            "ConfigType": "TeamsEnhancedEncryptionPolicy",
+            "ConfigName": "",
+            "Body": {
+              "Identity": "",
+              "Description": ""
+            }
+          },
+          "operation": "update"
+        }
+      ],
+      "name": "update-empty-identity-retained",
+      "failure_type": null
+    },
+    {
+      "output_identities": [],
+      "calls": [
+        {
+          "parameters": {
+            "ConfigType": "TeamsEnhancedEncryptionPolicy",
+            "ConfigName": null,
+            "Body": {
+              "Identity": null,
+              "Description": ""
+            }
+          },
+          "operation": "update"
+        }
+      ],
+      "name": "update-null-identity-retained",
+      "failure_type": null
+    },
+    {
+      "output_identities": [],
+      "calls": [
+        {
+          "parameters": {
+            "ConfigType": "TeamsEnhancedEncryptionPolicy",
+            "ConfigName": " ",
+            "Body": {
+              "Identity": " ",
+              "Description": ""
+            }
+          },
+          "operation": "update"
+        }
+      ],
+      "name": "update-whitespace-identity-retained",
+      "failure_type": null
+    },
+    {
+      "output_identities": [],
       "calls": [
         {
           "parameters": {
@@ -161,49 +216,49 @@
           "operation": "update"
         }
       ],
+      "name": "update-encryption-fields",
+      "failure_type": null
+    },
+    {
+      "output_identities": [
+        "gLoBaL",
+        "Global",
+        "Other",
+        "Tag:Global",
+        "Fixture"
+      ],
+      "calls": [
+        {
+          "parameters": {
+            "ConfigType": "TeamsEnhancedEncryptionPolicy"
+          },
+          "operation": "get"
+        }
+      ],
+      "name": "filter-whitespace-returns-all",
+      "failure_type": null
+    },
+    {
+      "output_identities": [
+        "gLoBaL",
+        "Global",
+        "Other",
+        "Tag:Global",
+        "Fixture"
+      ],
+      "calls": [
+        {
+          "parameters": {
+            "ConfigType": "TeamsEnhancedEncryptionPolicy"
+          },
+          "operation": "get"
+        }
+      ],
+      "name": "identity-whitespace-selects-collection",
+      "failure_type": null
+    },
+    {
       "output_identities": [],
-      "failure_type": null,
-      "name": "update-encryption-fields"
-    },
-    {
-      "calls": [
-        {
-          "parameters": {
-            "ConfigType": "TeamsEnhancedEncryptionPolicy"
-          },
-          "operation": "get"
-        }
-      ],
-      "output_identities": [
-        "gLoBaL",
-        "Global",
-        "Other",
-        "Tag:Global",
-        "Fixture"
-      ],
-      "failure_type": null,
-      "name": "filter-whitespace-returns-all"
-    },
-    {
-      "calls": [
-        {
-          "parameters": {
-            "ConfigType": "TeamsEnhancedEncryptionPolicy"
-          },
-          "operation": "get"
-        }
-      ],
-      "output_identities": [
-        "gLoBaL",
-        "Global",
-        "Other",
-        "Tag:Global",
-        "Fixture"
-      ],
-      "failure_type": null,
-      "name": "identity-whitespace-selects-collection"
-    },
-    {
       "calls": [
         {
           "parameters": {
@@ -216,11 +271,11 @@
           "operation": "update"
         }
       ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "update-explicit-identity"
+      "name": "update-explicit-identity",
+      "failure_type": null
     },
     {
+      "output_identities": [],
       "calls": [
         {
           "parameters": {
@@ -230,11 +285,11 @@
           "operation": "delete"
         }
       ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "delete"
+      "name": "delete",
+      "failure_type": null
     },
     {
+      "output_identities": [],
       "calls": [
         {
           "parameters": {
@@ -246,11 +301,11 @@
           "operation": "assign-user"
         }
       ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "grant-user"
+      "name": "grant-user",
+      "failure_type": null
     },
     {
+      "output_identities": [],
       "calls": [
         {
           "parameters": {
@@ -262,11 +317,11 @@
           "operation": "assign-user"
         }
       ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "clear-user"
+      "name": "clear-user",
+      "failure_type": null
     },
     {
+      "output_identities": [],
       "calls": [
         {
           "parameters": {
@@ -278,95 +333,94 @@
           "operation": "assign-tenant"
         }
       ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "grant-tenant"
+      "name": "grant-tenant",
+      "failure_type": null
     },
     {
+      "output_identities": [],
       "calls": [
         {
           "parameters": {
-            "PolicyName": "Fixture",
-            "GroupId": "fixture/group",
-            "PolicyType": "TeamsEnhancedEncryptionPolicy"
-          },
-          "operation": "assign-group"
-        }
-      ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "grant-group-rank-omitted"
-    },
-    {
-      "calls": [
-        {
-          "parameters": {
-            "PolicyName": "Fixture",
-            "GroupId": "fixture/group",
-            "PolicyType": "TeamsEnhancedEncryptionPolicy"
-          },
-          "operation": "assign-group"
-        }
-      ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "grant-group-rank-zero"
-    },
-    {
-      "calls": [
-        {
-          "parameters": {
-            "PolicyName": "Fixture",
             "GroupId": "fixture/group",
             "PolicyType": "TeamsEnhancedEncryptionPolicy",
-            "Rank": 2
+            "PolicyName": "Fixture"
           },
           "operation": "assign-group"
         }
       ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "grant-group-rank-two"
+      "name": "grant-group-rank-omitted",
+      "failure_type": null
     },
     {
+      "output_identities": [],
       "calls": [
         {
           "parameters": {
-            "PolicyName": "Fixture",
             "GroupId": "fixture/group",
             "PolicyType": "TeamsEnhancedEncryptionPolicy",
-            "Rank": -1
+            "PolicyName": "Fixture"
           },
           "operation": "assign-group"
         }
       ],
-      "output_identities": [],
-      "failure_type": null,
-      "name": "grant-group-rank-negative"
+      "name": "grant-group-rank-zero",
+      "failure_type": null
     },
     {
-      "calls": [],
       "output_identities": [],
-      "failure_type": "System.Management.Automation.ParameterBindingException",
-      "name": "grant-missing-policy-name"
+      "calls": [
+        {
+          "parameters": {
+            "GroupId": "fixture/group",
+            "Rank": 2,
+            "PolicyType": "TeamsEnhancedEncryptionPolicy",
+            "PolicyName": "Fixture"
+          },
+          "operation": "assign-group"
+        }
+      ],
+      "name": "grant-group-rank-two",
+      "failure_type": null
     },
     {
-      "calls": [],
       "output_identities": [],
-      "failure_type": "System.Management.Automation.ParameterBindingException",
-      "name": "grant-missing-scope"
+      "calls": [
+        {
+          "parameters": {
+            "GroupId": "fixture/group",
+            "Rank": -1,
+            "PolicyType": "TeamsEnhancedEncryptionPolicy",
+            "PolicyName": "Fixture"
+          },
+          "operation": "assign-group"
+        }
+      ],
+      "name": "grant-group-rank-negative",
+      "failure_type": null
     },
     {
-      "calls": [],
       "output_identities": [],
-      "failure_type": "System.Management.Automation.ParameterBindingException",
-      "name": "grant-passthru-true-rejected"
+      "calls": [],
+      "name": "grant-missing-policy-name",
+      "failure_type": "System.Management.Automation.ParameterBindingException"
     },
     {
-      "calls": [],
       "output_identities": [],
-      "failure_type": "System.Management.Automation.ParameterBindingException",
-      "name": "grant-passthru-false-rejected"
+      "calls": [],
+      "name": "grant-missing-scope",
+      "failure_type": "System.Management.Automation.ParameterBindingException"
+    },
+    {
+      "output_identities": [],
+      "calls": [],
+      "name": "grant-passthru-true-rejected",
+      "failure_type": "System.Management.Automation.ParameterBindingException"
+    },
+    {
+      "output_identities": [],
+      "calls": [],
+      "name": "grant-passthru-false-rejected",
+      "failure_type": "System.Management.Automation.ParameterBindingException"
     }
   ]
 }

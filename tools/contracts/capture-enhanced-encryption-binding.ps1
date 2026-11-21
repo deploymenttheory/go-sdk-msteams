@@ -16,6 +16,7 @@ $ast=[Management.Automation.Language.Parser]::ParseFile((Join-Path $ModulePath $
 if($parseErrors.Count){throw 'Pinned export parse failed.'}
 $cases=[Collections.Generic.List[object]]::new()
 $privateMetadata=[Collections.Generic.List[object]]::new()
+$privateIdentityBindings=[Collections.Generic.List[object]]::new()
 foreach($verb in @('New','Set')){
  $command="$verb-CsTeamsEnhancedEncryptionPolicy"
  $type=[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration].Assembly.GetType("Microsoft.Teams.ConfigApi.Cmdlets.${verb}CsTeamsEnhancedEncryptionPolicy",$true)
@@ -30,6 +31,25 @@ foreach($verb in @('New','Set')){
  $instance=[Runtime.CompilerServices.RuntimeHelpers]::GetUninitializedObject($type)
  $instance.ValidateAndUpdatePropertyBagParams($bag)
  $privateMetadata.Add(@{command=$command;calling_mode_valid_set=@($attribute[0].ValidSet);property_bag_validator=$method.DeclaringType.FullName;validator_body='verified-empty-il-nop-branch-ret';future_value_unchanged=($bag.Count -eq 1 -and $bag['CallingEndtoEndEncryptionEnabledType'] -ceq 'FutureCalling')})
+ $script:identityAttributes=[Collections.ObjectModel.Collection[Attribute]]::new()
+ foreach($a in $type.GetProperty('Identity').GetCustomAttributes($true)){
+  if($a -is [Management.Automation.ParameterAttribute] -or $a -is [Management.Automation.ValidateArgumentsAttribute]){$script:identityAttributes.Add($a)}
+ }
+ function Invoke-EncryptionPrivateIdentityFixture {
+  [CmdletBinding(DefaultParameterSetName='Identity')]param()
+  dynamicparam {
+   $parameters=[Management.Automation.RuntimeDefinedParameterDictionary]::new()
+   $parameters.Add('Identity',[Management.Automation.RuntimeDefinedParameter]::new('Identity',[string],$script:identityAttributes))
+   return $parameters
+  }
+  process {'accepted'}
+ }
+ foreach($case in @(@{name='null';value=$null},@{name='empty';value=''},@{name='whitespace';value=' '},@{name='selected';value='Fixture'})){
+  $failure=$null
+  try{$null=Invoke-EncryptionPrivateIdentityFixture -Identity $case.value}catch{$failure=$_.Exception.GetBaseException().GetType().FullName}
+  $privateIdentityBindings.Add(@{command=$command;name=$case.name;failure_type=$failure})
+ }
+ Remove-Item Function:Invoke-EncryptionPrivateIdentityFixture
  $definition=$ast.Find({param($node)$node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $command},$true)
  if($null -eq $definition){throw 'Pinned export missing.'}
  $attributes=($definition.Body.ParamBlock.Attributes|ForEach-Object{$_.Extent.Text}) -join "`n"
@@ -67,7 +87,7 @@ foreach($verb in @('New','Set')){
  schema_version=1;baseline_version='8.1.0';captured_at=[DateTime]::UtcNow.ToString('yyyy-MM-dd')
  qualification='isolated-enhanced-encryption-public-parameter-binding';package_sha256='78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7'
  sources=$sources;host_powershell_version=$PSVersionTable.PSVersion.ToString()
- stage='Unmodified exported New/Set parameter declarations and attributes in a renamed function with a synthetic body returning bound arguments; actual pure XdsConfiguration dictionary serialization. Private calling-mode ValidSet metadata read separately. Inherited property-bag validator IL restricted to the pinned empty nop/br.s-0/ret body, invoked on an uninitialized command solely to observe unchanged future text. No original constructor, export Begin/Process/End, runtime custom-attribute processing, TRPS/flight selection, command lifecycle, credentials or network.'
- cases=$cases.ToArray();private_metadata=$privateMetadata.ToArray()
+ stage='Unmodified exported New/Set parameter declarations and attributes in a renamed function with a synthetic body returning bound arguments; actual pure XdsConfiguration dictionary serialization. Private calling-mode ValidSet metadata read separately; actual private Identity parameter/validation attributes are reused in a synthetic RuntimeDefinedParameter binder without original command construction or processing. Inherited property-bag validator IL restricted to the pinned empty nop/br.s-0/ret body, invoked on an uninitialized command solely to observe unchanged future text. No original constructor, export Begin/Process/End, runtime custom-attribute processing, TRPS/flight selection, command lifecycle, credentials or network.'
+ cases=$cases.ToArray();private_metadata=$privateMetadata.ToArray();private_identity_bindings=$privateIdentityBindings.ToArray()
 }|ConvertTo-Json -Depth 25|Set-Content -LiteralPath $OutputPath -Encoding utf8
 "enhanced encryption isolated binding observations: $($cases.Count)"

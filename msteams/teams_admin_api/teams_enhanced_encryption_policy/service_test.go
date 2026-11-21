@@ -59,6 +59,9 @@ func TestEnhancedEncryptionPinnedGeneratedRequests(t *testing.T) {
 				if f.Name == "policy-identity-only-put" {
 					targetID, settings = "Global", resource.Settings{}
 				}
+				if f.Name == "policy-whitespace-put" {
+					targetID, settings = " ", resource.Settings{Description: new("")}
+				}
 				if f.Name == "policy-empty-string-put" {
 					targetID = "Global"
 					settings = resource.Settings{Description: new(""), CallingEndToEndEncryptionEnabledType: new(""), MeetingEndToEndEncryption: new("")}

@@ -13,10 +13,12 @@ import (
 )
 
 const source = "contracts/endpoints/8.1.0/fixtures/enhanced-encryption-requests.json"
+const modelSource = "contracts/endpoints/8.1.0/fixtures/enhanced-encryption-binding.json"
 const wrapperSource = "contracts/endpoints/8.1.0/fixtures/enhanced-encryption-wrappers.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const forest = "https://forest.fixture.invalid/"
 const collection = "/Skype.Policy/configurations/TeamsEnhancedEncryptionPolicy"
+const item = collection + "/configuration/Global"
 const identity = "tag:Fixture / Policy"
 const getCommand = "Get-CsTeamsEnhancedEncryptionPolicy"
 const newCommand = "New-CsTeamsEnhancedEncryptionPolicy"
@@ -41,7 +43,7 @@ func captures(t *testing.T) []requestCapture {
 		t.Fatal(e)
 	}
 	var v struct{ Cases []requestCapture }
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 17 {
+	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 18 {
 		t.Fatal("incomplete generated enhanced encryption policy fixture")
 	}
 	for _, c := range v.Cases {
