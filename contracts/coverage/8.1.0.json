@@ -3886,31 +3886,90 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/82/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/composition_test.go",
+              "name": "TestValidationListFilteringAndGlobalOrder"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service_test.go",
+              "name": "TestValidationPinnedProviderRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/voicemail_validation_test.go",
+              "name": "TestLabVoicemailValidationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/82/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/composition_test.go",
+              "name": "TestValidationListFilteringAndGlobalOrder"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service_test.go",
+              "name": "TestValidationPinnedProviderRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/voicemail_validation_test.go",
+              "name": "TestLabVoicemailValidationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/voicemail-validation-sdk-progress.md"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Dedicated-SPN secret and certificate Global reads returned resource HTTP 403; filtered list and optional PowerShell comparison were not reached. Successful qualification remains outstanding; no mode or feature/RBAC cause is inferred.",
+        "evidence": [
+          "docs/implementation/policies/voicemail-validation-sdk-progress.md"
+        ]
       },
       "exclusion": null
     },
@@ -24699,19 +24758,52 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/556/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/update.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service_test.go",
+              "name": "TestValidationPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/composition_test.go",
+              "name": "TestValidationComposedUpdateRetainsPreparationAndOmission"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/failure_test.go",
+              "name": "TestValidationInputAndContextRejectBeforeTokens"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/update.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/voicemail-validation-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
