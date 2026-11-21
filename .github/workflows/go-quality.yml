@@ -58,6 +58,8 @@ jobs:
             ${{ runner.temp }}/go-test-artifacts/**/channel-member-service.json
             ${{ runner.temp }}/go-test-artifacts/**/channel-user-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-operation-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/shared-channel-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/shared-channel-management-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-template-service.json
             ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-service.json
             ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-list-service.json
