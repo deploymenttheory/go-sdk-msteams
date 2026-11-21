@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "fixture_kind": "documentation-derived-native-contract",
+  "reviewed": "2026-11-20",
+  "qualification": "documentation-only",
+  "coverage_claim": false,
+  "live": "not-run",
+  "usage": "Native supporting group operations. Group creation does not teamify a group. Pinned creation/property serializer captures remain separate unchanged evidence; this inventory is not a tenant recording or command-parity claim.",
+  "operations": [
+    {"id": "groups.create", "method": "POST", "path": "/v1.0/groups", "status": 201, "source": "https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-1.0"},
+    {"id": "groups.get", "method": "GET", "path": "/v1.0/groups/{groupID}", "status": 200, "source": "https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-1.0"},
+    {"id": "groups.update", "method": "PATCH", "path": "/v1.0/groups/{groupID}", "status": 204, "scope": "displayName/description/classification/visibility/mailNickname only", "source": "https://learn.microsoft.com/en-us/graph/api/group-update?view=graph-rest-1.0"},
+    {"id": "groups.delete", "method": "DELETE", "path": "/v1.0/groups/{groupID}", "status": 204, "source": "https://learn.microsoft.com/en-us/graph/api/group-delete?view=graph-rest-1.0"},
+    {"id": "groups.list", "method": "GET", "path": "/v1.0/groups", "status": 200, "source": "https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-1.0"},
+    {"id": "groups.list-beta", "method": "GET", "path": "/beta/groups", "status": 200, "source": "https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-beta"}
+  ],
+  "rules": {
+    "create": "201 resource; required displayName/mailNickname/mailEnabled/securityEnabled; no implicit team or owner resolution; at most 20 initial relationships",
+    "references": "user directory IDs become selected-cloud /v1.0/users/{id} bindings; nil omits the reference property and explicit empty stays []",
+    "properties": "preserve omitted and explicit empty values; no read-snapshot resend",
+    "list": "one page with opaque next link; top default 100 and maximum 999; count/expand/filter/orderby/search/select/top; no skip; advanced-query header/count explicitly selected",
+    "mutations": "never replay or infer absence/ownership from failures; propagation and compensation belong to explicit compositions"
+  }
+}

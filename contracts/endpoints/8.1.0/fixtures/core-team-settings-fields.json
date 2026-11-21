@@ -1,0 +1,486 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "qualification": "offline-model-serialization",
+  "captured_at": "2026-11-21",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assembly": {
+    "path": "netcoreapp3.1/Microsoft.Teams.PowerShell.TeamsCmdlets.dll",
+    "sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24"
+  },
+  "methods": [
+    "Model.TeamSettings.ToTeam",
+    "Utils.HttpUtilities.JsonSerializerSettings"
+  ],
+  "purpose": "Actual isolated model-field serialization; not live server acceptance or command execution.",
+  "cases": [
+    {
+      "parameter": "AllowCreateUpdateChannels",
+      "value": false,
+      "wire": {
+        "memberSettings": {
+          "allowCreateUpdateChannels": false
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowCreateUpdateChannels",
+      "value": true,
+      "wire": {
+        "memberSettings": {
+          "allowCreateUpdateChannels": true
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowDeleteChannels",
+      "value": false,
+      "wire": {
+        "memberSettings": {
+          "allowDeleteChannels": false
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowDeleteChannels",
+      "value": true,
+      "wire": {
+        "memberSettings": {
+          "allowDeleteChannels": true
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowAddRemoveApps",
+      "value": false,
+      "wire": {
+        "memberSettings": {
+          "allowAddRemoveApps": false
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowAddRemoveApps",
+      "value": true,
+      "wire": {
+        "memberSettings": {
+          "allowAddRemoveApps": true
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowCreateUpdateRemoveTabs",
+      "value": false,
+      "wire": {
+        "memberSettings": {
+          "allowCreateUpdateRemoveTabs": false
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowCreateUpdateRemoveTabs",
+      "value": true,
+      "wire": {
+        "memberSettings": {
+          "allowCreateUpdateRemoveTabs": true
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowCreateUpdateRemoveConnectors",
+      "value": false,
+      "wire": {
+        "memberSettings": {
+          "allowCreateUpdateRemoveConnectors": false
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowCreateUpdateRemoveConnectors",
+      "value": true,
+      "wire": {
+        "memberSettings": {
+          "allowCreateUpdateRemoveConnectors": true
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowCreatePrivateChannels",
+      "value": false,
+      "wire": {
+        "memberSettings": {
+          "allowCreatePrivateChannels": false
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowCreatePrivateChannels",
+      "value": true,
+      "wire": {
+        "memberSettings": {
+          "allowCreatePrivateChannels": true
+        },
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowGuestCreateUpdateChannels",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {
+          "allowCreateUpdateChannels": false
+        },
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowGuestCreateUpdateChannels",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {
+          "allowCreateUpdateChannels": true
+        },
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowGuestDeleteChannels",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {
+          "allowDeleteChannels": false
+        },
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowGuestDeleteChannels",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {
+          "allowDeleteChannels": true
+        },
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowUserEditMessages",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowUserEditMessages": false
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowUserEditMessages",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowUserEditMessages": true
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowUserDeleteMessages",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowUserDeleteMessages": false
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowUserDeleteMessages",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowUserDeleteMessages": true
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowOwnerDeleteMessages",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowOwnerDeleteMessages": false
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowOwnerDeleteMessages",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowOwnerDeleteMessages": true
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowTeamMentions",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowTeamMentions": false
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowTeamMentions",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowTeamMentions": true
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowChannelMentions",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowChannelMentions": false
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowChannelMentions",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {
+          "allowChannelMentions": true
+        },
+        "funSettings": {},
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowGiphy",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {
+          "allowGiphy": false
+        },
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowGiphy",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {
+          "allowGiphy": true
+        },
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowStickersAndMemes",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {
+          "allowStickersAndMemes": false
+        },
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowStickersAndMemes",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {
+          "allowStickersAndMemes": true
+        },
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowCustomMemes",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {
+          "allowCustomMemes": false
+        },
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "AllowCustomMemes",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {
+          "allowCustomMemes": true
+        },
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "ShowInTeamsSearchAndSuggestions",
+      "value": false,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {
+          "showInTeamsSearchAndSuggestions": false
+        }
+      }
+    },
+    {
+      "parameter": "ShowInTeamsSearchAndSuggestions",
+      "value": true,
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {},
+        "discoverySettings": {
+          "showInTeamsSearchAndSuggestions": true
+        }
+      }
+    },
+    {
+      "parameter": "GiphyContentRating",
+      "value": "moderate",
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {
+          "giphyContentRating": 1
+        },
+        "discoverySettings": {}
+      }
+    },
+    {
+      "parameter": "GiphyContentRating",
+      "value": "strict",
+      "wire": {
+        "memberSettings": {},
+        "guestSettings": {},
+        "messagingSettings": {},
+        "funSettings": {
+          "giphyContentRating": 0
+        },
+        "discoverySettings": {}
+      }
+    }
+  ]
+}
