@@ -7030,37 +7030,103 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/147/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_test.go",
+              "name": "TestRecordingListFilterKeepsSourceSelection"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/recording_messages_test.go",
+              "name": "TestLabRecordingMessagesReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/147/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_test.go",
+              "name": "TestRecordingPinnedProviderRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/recording_messages_test.go",
+              "name": "TestLabRecordingMessagesReadOnly"
+            }
+          ]
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/147/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_test.go",
+              "name": "TestRecordingPinnedProviderRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/recording_messages_test.go",
+              "name": "TestLabRecordingMessagesReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, the opt-in recording-message collection read returned resource HTTP 403 using the dedicated lab SPN in client-secret and certificate modes. Bounded identity reads and optional pinned PowerShell comparison were not reached. No message, policy, assignment, role or consent was changed. Successful tenant/RBAC/cloud qualification remains open.",
         "evidence": []
       },
       "exclusion": null
@@ -18202,22 +18268,63 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/376/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_test.go",
+              "name": "TestRecordingPinnedProviderRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/376/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.CreateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_test.go",
+              "name": "TestRecordingPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/auto_create_test.go",
+              "name": "TestRecordingAutoCreateRetainsFreshIDWithoutReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.CreateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.CreateByID"
+          },
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -18241,15 +18348,30 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/377/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/builders.go",
+              "name": "NewLocalization"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/composition_test.go",
+              "name": "TestRecordingLocalBuilderHasNoCredentialsOrHTTP"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/recording_messages/builders.go",
+            "name": "NewLocalization"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -22359,22 +22481,55 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/484/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_test.go",
+              "name": "TestRecordingPinnedProviderRequests"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/484/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_test.go",
+              "name": "TestRecordingPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/failure_test.go",
+              "name": "TestRecordingMutationErrorsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.DeleteByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27732,22 +27887,75 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/618/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/update.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_test.go",
+              "name": "TestRecordingPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/composition_test.go",
+              "name": "TestRecordingComposedListEditUsesDTOProjection"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/618/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/update.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service.go",
+              "name": "Service.PatchByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_test.go",
+              "name": "TestRecordingPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/composition_test.go",
+              "name": "TestRecordingComposedUpdateKeepsReadIDAndFailurePreparation"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/recording_messages/update.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/recording_messages/update.go",
+            "name": "Service.UpdateByID"
+          },
+          {
+            "file": "msteams/teams_admin_api/recording_messages/service.go",
+            "name": "Service.PatchByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",

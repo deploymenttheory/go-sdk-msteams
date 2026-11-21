@@ -17,6 +17,7 @@ import (
 	policypackages "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_packages"
 	privacyconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/privacy_configuration"
 	privatechannelmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/private_channel_migration"
+	recordingmessages "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/recording_messages"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
@@ -28,6 +29,7 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	RecordingMessages                       *recordingmessages.Service
 	PrivacyConfigurations                   *privacyconfiguration.Service
 	PolicyPackages                          *policypackages.Service
 	PolicyAssignments                       *policyassignments.Service
@@ -70,6 +72,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		RecordingMessages:                       recordingmessages.NewService(scope),
 		PrivacyConfigurations:                   privacyconfiguration.NewService(scope),
 		PolicyPackages:                          policypackages.NewService(scope),
 		PolicyAssignments:                       policyassignments.NewService(scope),

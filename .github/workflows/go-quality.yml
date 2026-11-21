@@ -77,6 +77,7 @@ jobs:
             ${{ runner.temp }}/go-test-artifacts/**/policy-assignment-service.json
             ${{ runner.temp }}/go-test-artifacts/**/policy-package-service.json
             ${{ runner.temp }}/go-test-artifacts/**/privacy-configuration-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/recording-message-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-template-service.json
             ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-service.json
             ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-list-service.json

@@ -1,0 +1,424 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-recording-message-models",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Actual pinned model constructors/setters/Newtonsoft projections and Core PSListModifierHelper.ApplyTo using the seven-field source comparator. No command lifecycle, credentials, discovery or request sender is invoked.",
+  "models": [
+    {
+      "observation": {
+        "failure": "System.ArgumentNullException",
+        "value": null
+      },
+      "name": "language-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Language": "",
+          "InitiatorImplicit": null,
+          "ParticipantImplicit": null,
+          "InitiatorExplicit": null,
+          "ParticipantExplicitRequested": null,
+          "ParticipantExplicitProvided": null,
+          "AgreementDialogue": null
+        }
+      },
+      "name": "language-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Language": " ",
+          "InitiatorImplicit": null,
+          "ParticipantImplicit": null,
+          "InitiatorExplicit": null,
+          "ParticipantExplicitRequested": null,
+          "ParticipantExplicitProvided": null,
+          "AgreementDialogue": null
+        }
+      },
+      "name": "language-space"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Language": "Future-Language",
+          "InitiatorImplicit": null,
+          "ParticipantImplicit": null,
+          "InitiatorExplicit": null,
+          "ParticipantExplicitRequested": null,
+          "ParticipantExplicitProvided": null,
+          "AgreementDialogue": null
+        }
+      },
+      "name": "language-future"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "Language": null,
+          "InitiatorImplicit": null,
+          "ParticipantImplicit": null,
+          "InitiatorExplicit": null,
+          "ParticipantExplicitRequested": null,
+          "ParticipantExplicitProvided": null,
+          "AgreementDialogue": null
+        }
+      },
+      "name": "localization-absent"
+    },
+    {
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      },
+      "name": "localization-null-language"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "RecordingAndTranscriptionLocalizationCustomMessage": [],
+          "Id": null,
+          "Description": null
+        }
+      },
+      "name": "message-absent"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "RecordingAndTranscriptionLocalizationCustomMessage": [],
+          "Id": null,
+          "Description": null
+        }
+      },
+      "name": "message-null-id"
+    },
+    {
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "name": "message-empty-id"
+    },
+    {
+      "observation": {
+        "failure": "XsdClassGenerator.PropertyArgumentException",
+        "value": null
+      },
+      "name": "message-invalid-id"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "RecordingAndTranscriptionLocalizationCustomMessage": [],
+          "Id": "00000000-0000-4000-8000-000000000031\n",
+          "Description": null
+        }
+      },
+      "name": "message-id-final-lf"
+    },
+    {
+      "observation": {
+        "failure": "Newtonsoft.Json.JsonSerializationException",
+        "value": null
+      },
+      "name": "message-null-collection"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "value": {
+          "Identity": null,
+          "RecordingAndTranscriptionLocalizationCustomMessage": [],
+          "Id": null,
+          "Description": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      },
+      "name": "message-long-description"
+    }
+  ],
+  "lists": [
+    {
+      "observation": {
+        "failure": null,
+        "values": []
+      },
+      "name": "null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "values": []
+      },
+      "name": "empty-operators"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "values": []
+      },
+      "name": "replace-empty"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "fixture-second",
+            "Language": "en-US",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-second",
+            "Language": "en-US",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-lower",
+            "Language": "en-us",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          }
+        ]
+      },
+      "name": "replace-duplicates"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "values": [
+          null
+        ]
+      },
+      "name": "replace-null"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "fixture-second",
+            "Language": "en-US",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-lower",
+            "Language": "en-us",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-different",
+            "Language": "en-US",
+            "InitiatorImplicit": "b",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          }
+        ]
+      },
+      "name": "remove-one"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "fixture-lower",
+            "Language": "en-us",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-different",
+            "Language": "en-US",
+            "InitiatorImplicit": "b",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          }
+        ]
+      },
+      "name": "remove-two"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "fixture-first",
+            "Language": "en-US",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-second",
+            "Language": "en-US",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-lower",
+            "Language": "en-us",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-different",
+            "Language": "en-US",
+            "InitiatorImplicit": "b",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-second",
+            "Language": "en-US",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-second",
+            "Language": "en-US",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          }
+        ]
+      },
+      "name": "add-existing"
+    },
+    {
+      "observation": {
+        "failure": null,
+        "values": [
+          {
+            "Identity": "fixture-second",
+            "Language": "en-US",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-lower",
+            "Language": "en-us",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-different",
+            "Language": "en-US",
+            "InitiatorImplicit": "b",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          },
+          {
+            "Identity": "fixture-second",
+            "Language": "en-US",
+            "InitiatorImplicit": "a",
+            "ParticipantImplicit": null,
+            "InitiatorExplicit": null,
+            "ParticipantExplicitRequested": null,
+            "ParticipantExplicitProvided": null,
+            "AgreementDialogue": null
+          }
+        ]
+      },
+      "name": "remove-and-add"
+    }
+  ]
+}
