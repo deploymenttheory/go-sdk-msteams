@@ -45,7 +45,7 @@ func (s *Resource[T]) Ready(ctx context.Context) error {
 		return client.ErrRequest
 	}
 	switch s.name {
-	case "ExternalAccessPolicy", "TeamsAcsFederationConfiguration", "TeamsExternalAccessConfiguration", "TeamsMeetingBrandingPolicy", "OnlineVoicemailPolicy", "OnlineVoicemailValidationConfiguration", "PrivacyConfiguration", "TeamsRecordingAndTranscriptionCustomMessage", "TeamsAppPermissionPolicy", "TeamsAppSetupPolicy", "TeamsAudioConferencingCustomPromptsConfiguration", "TeamsCallHoldPolicy", "TeamsCallingPolicy":
+	case "ExternalAccessPolicy", "TeamsAcsFederationConfiguration", "TeamsExternalAccessConfiguration", "TeamsMeetingBrandingPolicy", "OnlineVoicemailPolicy", "OnlineVoicemailValidationConfiguration", "PrivacyConfiguration", "TeamsRecordingAndTranscriptionCustomMessage", "TeamsAppPermissionPolicy", "TeamsAppSetupPolicy", "TeamsAudioConferencingCustomPromptsConfiguration", "TeamsCallHoldPolicy", "TeamsCallingPolicy", "TeamsChannelsPolicy":
 	default:
 		return client.ErrDestination
 	}

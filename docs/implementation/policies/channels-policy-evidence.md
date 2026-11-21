@@ -8,7 +8,7 @@ different protocol and parameter contract.
 
 Get has Filter/Identity sets; New/Set/Remove have Identity sets. Exported Grant
 has GrantToGroup, GrantToTenant and Identity, for eight exact command/set pairs.
-No native implementation or tenant parity is established by discovery alone.
+Native symbols and tests cover the selected behavior below. Discovery and offline results do not establish complete command/tenant qualification.
 
 ## Capture seams
 
@@ -67,7 +67,4 @@ SDK dependency. No Microsoft binaries or decompiled source are committed.
 
 ## Remaining work
 
-Implement native compiled CRUD/list, explicit Set Get/PATCH composition, typed
-presence-aware settings and modern grants, with source comparisons, context and
-backend/input/failure tests. Record actual lab evidence separately. Full command
-and tenant qualification and issue #111 remain open.
+Native compiled CRUD/list, explicit Set Get/PATCH composition, all 20 typed presence-aware settings and modern grants are present. Tests compare source provider/generated requests and models, accepted final settings in sparse requests, protocol/header isolation, partial Set results, all mutation errors, context/backend/input guards and actual POST versus discovery acceptance. Accepted model settings compose captured model and helper behavior; they are not a source binder/tenant execution claim. Actual lab evidence is recorded in `channels-policy-lab-acceptance.md`. Full command and tenant qualification and issue #111 remain open.

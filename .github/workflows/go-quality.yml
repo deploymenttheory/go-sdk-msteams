@@ -85,6 +85,7 @@ jobs:
             ${{ runner.temp }}/go-test-artifacts/**/call-hold-service.json
             ${{ runner.temp }}/go-test-artifacts/**/call-park-service.json
             ${{ runner.temp }}/go-test-artifacts/**/calling-policy-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/channels-policy-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-template-service.json
             ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-service.json
             ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-list-service.json
