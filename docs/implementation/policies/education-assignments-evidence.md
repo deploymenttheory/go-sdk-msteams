@@ -54,14 +54,22 @@ predicate rejects Identity-only and Force-only calls and accepts a bound null
 setting. Get bound empty Identity/Filter and Set empty Identity reject. These
 binder observations are separate from model validation and server constraints.
 
-## Implementation and qualification still required
+## Native implementation checkpoint and remaining qualification
 
-Implement native Get/List/Filter and sparse PATCH plus explicit Set read/PATCH
-composition, typed presence-aware settings and owned snapshots, sequential URL
-setter validation, failure/replay/context guards, compiling examples and API docs.
-Keep any native strict JSON/string boundary explicit instead of claiming arbitrary
-PowerShell object coercion. Add exact command/set ledger mappings, sanitized
-contract artifacts, and gated read-only lab/source projection comparison.
+TeamsEducationAssignmentsAppPolicies now has native Get/List/Filter, sparse PATCH
+and explicit Set read/PATCH composition. Typed settings preserve presence, models
+own snapshots and validate URL setters sequentially, and update results retain
+read preparation and HTTP acceptance on failure. Ordinary policy/settings/result
+formatting is redacted, including the API key. Native JSON strings remain strict;
+arbitrary PowerShell object coercion is a separately captured shell behavior.
+Targeted race tests pass for actual provider requests in synthetic application
+and delegated modes, all model observations, local filtering, composed partial
+updates, denial/throttling/non-replay, redaction and context/input guards.
+
+Before the implementation PR, finish compiling examples and API docs, source
+binder/filter comparisons, sanitized exact-revision artifacts, gated read-only
+lab/source projection comparison and full repository checks. Ledger mappings
+remain in-progress/metadata-only; no successful tenant coverage is inferred.
 
 No tenant read or write has run for this family. Successful authorization, server
 validation, updates/read-back/restoration, cloud coverage and effective assignment

@@ -6247,22 +6247,59 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/116/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service_test.go",
+              "name": "TestEducationAssignmentsCompiledFilterDoesNotUseModernWhitespaceRules"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/116/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service_test.go",
+              "name": "TestEducationAssignmentsPinnedCompiledCRUD"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -28804,15 +28841,42 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/589/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service_test.go",
+              "name": "TestEducationAssignmentsPinnedCompiledCRUD"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/composition_test.go",
+              "name": "TestEducationAssignmentsSetKeepsPreparationAndAcceptance"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_education_assignments_app_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
