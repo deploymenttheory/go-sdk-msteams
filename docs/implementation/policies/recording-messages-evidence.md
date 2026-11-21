@@ -2,9 +2,10 @@
 
 Issue #103 owns five baseline commands and ten exact parameter sets: Get (Filter,
 Identity, ParentAndRelativeKey), New/Set/Remove (Identity and ParentAndRelativeKey),
-and the local localization builder (Identity). This source/capture checkpoint
-establishes no native service, contract pass or tenant qualification. Coverage
-states and the immutable runtime snapshot remain unchanged.
+and the local localization builder (Identity). Native CRUD, explicit Set
+composition and local builders now implement all ten mapped sets. The coverage
+ledger remains in-progress and metadata-only, without claiming full command or
+tenant qualification. The immutable runtime snapshot remains unchanged.
 
 The accepted 8.1.0 package SHA256 is
 `78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7`.
@@ -87,19 +88,46 @@ ordinal and includes all seven language/text fields; Identity is excluded. Thus
 two entries with different Identity values can match, while en-US and en-us differ.
 Null-element comparisons and mixed/nested shell conversions need further coverage.
 
-## Native implementation sequence
+## Native implementation and qualification
 
-Implement the typed snapshots and pure localization/list builders first, including
-captured setter rules, received presence/future data and request DTO projection.
-Then expose native Create/Get/List/Update/Delete with explicit Identity/Id entry
-points and retained generated-ID preparation, rather than silently normalizing
-their distinct wire bodies. Add explicit read/modify/PATCH composition for list
-edits; keep sparse native operations available, with preparation and HTTP
-acceptance separate from persisted/effective state.
+TeamsAdminAPI.RecordingMessages exposes typed snapshots, pure localization/list
+builders and Create/Get/List/Update/Delete with explicit Identity/Id entry points.
+Create retains its chosen UUID/identity if submission fails. Update performs an
+explicit read/local edit/PATCH composition; sparse native PATCH remains available.
+Preparation and HTTP acceptance stay separate from persisted/effective state.
+PatchByID requires an explicit BodyID rather than guessing the read-model value
+from a potentially different route ID. UpdateByID supplies it from the read.
 
-Map all ten sets to compiling symbols and exact request/model/builder tests,
-including no-HTTP builders, no mutation replay, failure/cancellation and partial
-preparation. Add a bounded opt-in lab read and separate owned write/read-back/
-cleanup scenarios. Full shell coercion, presentation, cloud/permission support,
-successful tenant writes and effective recording/transcription behavior remain
-unqualified. No lab request or permission change has run for this family.
+All ten sets map to compiling symbols and exact request/model/builder tests.
+Tests compare fifteen deterministic provider cases in application/delegated
+synthetic modes, all thirteen model observations and nine list observations.
+The injected auto-ID fixture is supplemented by a native memory-sender test
+checking fresh UUIDs, unbound Id omission, separate correlation IDs, retained
+selection/acceptance on denial or malformed success, and exactly one send per
+submission. Compositions keep a read-model Id that differs from the requested
+route, preserve Before/response metadata, omit unbound fields and project known
+DTO fields without forwarding future response data. No-HTTP builders, local
+guards, status/redaction, mutation replay prevention and all seven equality fields
+are covered. Structural reports retain coverage_claim false and live not-run.
+
+On 2026-11-21, actual collection reads using the existing dedicated lab SPN
+returned resource HTTP 403 in both client-secret and certificate modes. Bounded
+identity reads and optional pinned PowerShell comparison were not reached. No
+payload was retained and no message, policy, assignment, role or consent changed.
+The Get ledger row records unavailable live qualification; writes remain not-run.
+The read harness can compare at most five selected records with a tenant-bound,
+hash-checked PowerShell projection when access is available.
+
+Full shell/Newtonsoft coercion, presentation, mixed/nested shell collection
+conversions, cloud/permission support, successful tenant writes/read-back/cleanup
+and effective recording/transcription behavior remain unqualified under #103.
+Native response fields require their Go types; raw presence is retained rather
+than presenting every CLR default. Conservative shared identity/destination
+validation is not a claim to accept every shell string. Future write acceptance
+needs owned records and an authorized journal/cleanup plan.
+
+Local verification on 2026-11-21 passed the full offline race/shuffle suite,
+SDK/examples build, vet, scoped lint with zero issues, ledger validation and its
+ten validator tests. All three recording PowerShell scripts parse. Exact-head
+and cross-platform structural artifacts retain separate qualification flags;
+these checks do not promote any command to a full parity or live pass.
