@@ -15,8 +15,9 @@ try {
     $request = $raw | ConvertFrom-Json
     $uuid = '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
     if ($request.id -notmatch $uuid -or $request.fixture -notmatch '^msteams-sdk-[a-z2-7]{26,64}-(team|migration|membership)$') { throw 'Owned fixture required.' }
-    if ($request.kind -notin @('team','users')) { throw 'Unknown oracle.' }
+    if ($request.kind -notin @('team','users','channel-users')) { throw 'Unknown oracle.' }
     if ($request.kind -eq 'team' -and $request.owner -notmatch $uuid) { throw 'Explicit owner required.' }
+    if ($request.kind -eq 'channel-users' -and [string]::IsNullOrWhiteSpace([string]$request.channel)) { throw 'Explicit channel required.' }
     $report.stage = 'module'
     $module = $env:MSTEAMS_LAB_MODULE_PATH
     $manifest = Join-Path $module 'MicrosoftTeams.psd1'
@@ -58,7 +59,14 @@ try {
         $report = @{success=$true; stage='complete'; team=$team; tenant=(Convert-TeamObservation $tenant[0]); user=(Convert-TeamObservation $user[0])}
     } else {
         $users = @()
-        foreach ($value in @(Get-TeamUser -GroupId $request.id -ErrorAction Stop)) {
+        $members = @(
+            if ($request.kind -eq 'channel-users') {
+                Get-TeamChannelUser -GroupId $request.id -DisplayName $request.channel -ErrorAction Stop
+            } else {
+                Get-TeamUser -GroupId $request.id -ErrorAction Stop
+            }
+        )
+        foreach ($value in $members) {
             $users += Convert-TeamUserObservation $value
         }
         $report = @{success=$true; stage='complete'; users=@($users)}

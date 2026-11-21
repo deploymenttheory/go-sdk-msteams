@@ -59,7 +59,7 @@ class ModelEvidenceTests(unittest.TestCase):
 
     def test_inventory_retains_complete_assignment_and_unresolved_state(self):
         value = models.read(models.CONTRACT)
-        self.assertEqual(models.validate_inventory(value), (40, 61))
+        self.assertEqual(models.validate_inventory(value), (40, 63))
         mutations = [
             lambda v: v['commands'].pop(),
             lambda v: v['commands'][0]['parameter_sets'].clear(),

@@ -26,6 +26,7 @@ type teamOracleRequest struct {
 	ID      string `json:"id"`
 	Fixture string `json:"fixture"`
 	Owner   string `json:"owner,omitempty"`
+	Channel string `json:"channel,omitempty"`
 }
 
 type teamOracleProjection struct {
@@ -92,7 +93,7 @@ func teamOracleEnabled(t *testing.T) bool {
 
 func decodeTeamOracle(raw []byte, kind string) (teamOracleResponse, error) {
 	var value teamOracleResponse
-	if len(raw) > maxTeamOracleBytes || (kind != "team" && kind != "users") {
+	if len(raw) > maxTeamOracleBytes || (kind != "team" && kind != "users" && kind != "channel-users") {
 		return value, errTeamOracle
 	}
 	decoder := json.NewDecoder(bytes.NewReader(raw))

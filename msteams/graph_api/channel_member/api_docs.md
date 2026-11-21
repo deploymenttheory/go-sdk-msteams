@@ -41,9 +41,11 @@ that is not proof that an earlier creation did not happen.
 These native contracts use documented empty/owner roles and configured-cloud
 bindings. Pinned PowerShell sent `["member"]`, retained supplied Owner casing,
 used commercial binding strings and synthesized private membership IDs. The
-native resource API does not claim byte-equivalence to those variants. The three
-channel-name/user PowerShell compositions and their UPN enrichment/projection
-remain outstanding in CORE-20; native CRUD alone does not complete that ticket.
+native resource API does not claim byte-equivalence to those variants.
+`GraphAPI.ChannelUserManagement` composes the three channel-name/user operations
+with explicit add/promote/demote/delete selection and UPN enrichment. Its
+[API notes](../channel_user_management/api_docs.md) document the remaining
+PowerShell differences and qualification limits. CORE-20 remains open.
 No live acceptance or unsupported-feature claim is made.
 
 Sources reviewed 2026-11-21:

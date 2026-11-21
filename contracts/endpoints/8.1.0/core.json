@@ -557,6 +557,26 @@
       "result": "Channel",
       "evidence": "docs/implementation/core/channel-contract-evidence.md",
       "provenance": "current-documentation SDK supporting operation; not an observed pinned command call"
+    },
+    {
+      "id": "channel-members.get",
+      "backend": "graph",
+      "kind": "read",
+      "method": "GET",
+      "path": "/beta/teams/{teamID}/channels/{channelID}/members/{memberID}",
+      "result": "ConversationMember",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "provenance": "current-documentation SDK supporting operation; not an observed pinned command call"
+    },
+    {
+      "id": "users.channel-enrichment",
+      "backend": "graph",
+      "kind": "list",
+      "method": "GET",
+      "path": "/beta/users",
+      "result": "Page<User>; selected directory IDs enriched in groups of at most ten",
+      "evidence": "docs/implementation/core/channel-contract-evidence.md",
+      "provenance": "pinned GetUpnForUsers directory-read family; SDK uses conventional distinct-ID chunking and bounded opaque continuations"
     }
   ],
   "open_questions": {
@@ -897,7 +917,8 @@
       ],
       "operation_refs": [
         "channels.list",
-        "channel-members.list"
+        "channel-members.list",
+        "users.channel-enrichment"
       ],
       "evidence": "docs/implementation/core/channel-contract-evidence.md",
       "open_questions": [
