@@ -14,6 +14,8 @@ func TestTeamOracleRejectsIncompleteOrPollutedReports(t *testing.T) {
 	}{
 		{name: "team", kind: "team", body: `{"success":true,"stage":"complete","team":{"id":"fixture","archived":false},"tenant":{"id":"fixture"},"user":{"id":"fixture"}}`, valid: true},
 		{name: "empty-user-collection", kind: "users", body: `{"success":true,"stage":"complete","users":[]}`, valid: true},
+		{name: "channel-users", kind: "channel-users", body: `{"success":true,"stage":"complete","users":[]}`, valid: true},
+		{name: "missing-channel-users", kind: "channel-users", body: `{"success":true,"stage":"complete"}`},
 		{name: "nullable-user-fields", kind: "users", body: `{"success":true,"stage":"complete","users":[{"id":"fixture","user":null,"name":null,"role":"owner"}]}`, valid: true},
 		{name: "unknown-output", kind: "team", body: `{"success":true,"stage":"complete","private-token-canary":"secret"}`},
 		{name: "failed-command", kind: "team", body: `{"success":false,"stage":"read"}`},

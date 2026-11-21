@@ -30,19 +30,93 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/0/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/channel_user_management/service.go",
+              "name": "Service.Add"
+            },
+            {
+              "file": "msteams/graph_api/channel/names.go",
+              "name": "Service.ResolveByDisplayName"
+            },
+            {
+              "file": "msteams/graph_api/channel_member/service.go",
+              "name": "Service.ListAll"
+            },
+            {
+              "file": "msteams/graph_api/channel_member/service.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/graph_api/channel_member/service.go",
+              "name": "Service.PromoteOwner"
+            },
+            {
+              "file": "msteams/graph_api/channel_member/resolution.go",
+              "name": "Service.ResolveByUser"
+            },
+            {
+              "file": "msteams/graph_api/directory_user/resolver.go",
+              "name": "Resolver.Resolve"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/channel_user_management/service_test.go",
+              "name": "TestAddRemoveAndOwnerCompositions"
+            },
+            {
+              "file": "msteams/graph_api/channel_user_management/service_test.go",
+              "name": "TestFailuresStopBeforeFurtherChanges"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channel_membership_test.go",
+              "name": "TestLabChannelMembershipCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/channel_user_management/service.go",
+            "name": "Service.Add"
+          },
+          {
+            "file": "msteams/graph_api/channel/names.go",
+            "name": "Service.ResolveByDisplayName"
+          },
+          {
+            "file": "msteams/graph_api/channel_member/service.go",
+            "name": "Service.ListAll"
+          },
+          {
+            "file": "msteams/graph_api/channel_member/service.go",
+            "name": "Service.Create"
+          },
+          {
+            "file": "msteams/graph_api/channel_member/service.go",
+            "name": "Service.PromoteOwner"
+          },
+          {
+            "file": "msteams/graph_api/channel_member/resolution.go",
+            "name": "Service.ResolveByUser"
+          },
+          {
+            "file": "msteams/graph_api/directory_user/resolver.go",
+            "name": "Resolver.Resolve"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/channel-members-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -9014,19 +9088,61 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/214/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/channel_user_management/list.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/graph_api/channel/names.go",
+              "name": "Service.ResolveByDisplayName"
+            },
+            {
+              "file": "msteams/graph_api/channel_member/service.go",
+              "name": "Service.ListAll"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/channel_user_management/list_test.go",
+              "name": "TestListRoleOrderPresenceAndPagedEnrichment"
+            },
+            {
+              "file": "msteams/graph_api/channel_user_management/list_test.go",
+              "name": "TestEnrichmentFailureNeverProducesACompleteList"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channel_membership_test.go",
+              "name": "TestLabChannelMembershipCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/channel_user_management/list.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/graph_api/channel/names.go",
+            "name": "Service.ResolveByDisplayName"
+          },
+          {
+            "file": "msteams/graph_api/channel_member/service.go",
+            "name": "Service.ListAll"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/channel-members-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -21255,19 +21371,93 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/518/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/channel_user_management/service.go",
+              "name": "Service.Remove"
+            },
+            {
+              "file": "msteams/graph_api/channel/names.go",
+              "name": "Service.ResolveByDisplayName"
+            },
+            {
+              "file": "msteams/graph_api/channel_member/service.go",
+              "name": "Service.ListAll"
+            },
+            {
+              "file": "msteams/graph_api/channel_member/service.go",
+              "name": "Service.DemoteOwner"
+            },
+            {
+              "file": "msteams/graph_api/channel_member/service.go",
+              "name": "Service.DeleteByID"
+            },
+            {
+              "file": "msteams/graph_api/channel_member/resolution.go",
+              "name": "Service.ResolveByUser"
+            },
+            {
+              "file": "msteams/graph_api/directory_user/resolver.go",
+              "name": "Resolver.Resolve"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/channel_user_management/service_test.go",
+              "name": "TestAddRemoveAndOwnerCompositions"
+            },
+            {
+              "file": "msteams/graph_api/channel_user_management/service_test.go",
+              "name": "TestFailuresStopBeforeFurtherChanges"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/channel_membership_test.go",
+              "name": "TestLabChannelMembershipCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/channel_user_management/service.go",
+            "name": "Service.Remove"
+          },
+          {
+            "file": "msteams/graph_api/channel/names.go",
+            "name": "Service.ResolveByDisplayName"
+          },
+          {
+            "file": "msteams/graph_api/channel_member/service.go",
+            "name": "Service.ListAll"
+          },
+          {
+            "file": "msteams/graph_api/channel_member/service.go",
+            "name": "Service.DemoteOwner"
+          },
+          {
+            "file": "msteams/graph_api/channel_member/service.go",
+            "name": "Service.DeleteByID"
+          },
+          {
+            "file": "msteams/graph_api/channel_member/resolution.go",
+            "name": "Service.ResolveByUser"
+          },
+          {
+            "file": "msteams/graph_api/directory_user/resolver.go",
+            "name": "Resolver.Resolve"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/channel-members-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
