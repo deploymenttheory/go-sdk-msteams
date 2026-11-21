@@ -19,7 +19,10 @@ Each case provides:
 - Curated name, resource family, repository contract reference and exact
   command/parameter-set mappings. `Scope` is `service`, `primitive` or `local`.
 - Ordered `Exchange` attempts, each with method, full escaped HTTPS URL, audience,
-  selected headers and JSON body, followed by its synthetic response.
+  selected headers and either a JSON body or exact binary bytes, followed by its
+  synthetic response. `WireRequest.JSON` and `WireRequest.Binary` are mutually
+  exclusive. Both nil require no body; a non-nil empty binary slice requires zero
+  bytes. Binary assertions preserve all bytes and never parse or normalize JSON.
 - An `Invoke(context.Context, *msteams.Client) Observation` callback adapting the
   actual service value, Resty response and error.
 - An `Expected` result selecting JSON value, raw response bytes, status, headers,

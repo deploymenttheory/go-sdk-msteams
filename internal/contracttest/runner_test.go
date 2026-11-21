@@ -1,6 +1,7 @@
 package contracttest
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -249,6 +250,7 @@ func TestRunInvalidFixtureNeverInvokes(t *testing.T) {
 		{name: "local http", edit: func(c *Case) { c.Scope = "local" }},
 		{name: "invalid query", edit: func(c *Case) { c.Steps[0].Request.URL += "&bad=%zz" }},
 		{name: "invalid json", edit: func(c *Case) { c.Steps[0].Request.JSON = json.RawMessage(`{`) }},
+		{name: "ambiguous body", edit: func(c *Case) { c.Steps[0].Request.Binary = []byte{} }},
 		{name: "invalid result json", edit: func(c *Case) { c.Want.JSON = json.RawMessage(`{`) }},
 		{name: "invalid command", edit: func(c *Case) { c.Mappings[0].Command = "not a command" }},
 		{name: "invalid response status", edit: func(c *Case) { c.Steps[0].Reply.Status = 0 }},
@@ -307,5 +309,54 @@ func TestCompareRequestPreservesNoBodyVersusJSONNull(t *testing.T) {
 	want := WireRequest{Method: http.MethodGet, URL: request.URL.String(), Audience: auth.GraphAudience}
 	if differences := compareRequest(want, request, "request[0]"); len(differences) != 1 || differences[0].Kind != "unexpected-body" {
 		t.Fatalf("JSON null collapsed into absent body: %+v", differences)
+	}
+}
+
+func binaryCase(payload []byte) Case {
+	return Case{Name: "binary-upload", Family: "transfer", Scope: "primitive",
+		Source: "contracts/endpoints/8.1.0/core.json#/operations",
+		Steps: []Exchange{{Request: WireRequest{Method: http.MethodPut,
+			URL:      "https://graph.microsoft.com/v1.0/groups/fixture/photo/$value",
+			Audience: auth.GraphAudience, Headers: http.Header{"Content-Type": {"image/jpeg"}},
+			Binary: bytes.Clone(payload)}, Reply: Reply{Status: http.StatusNoContent}}},
+		Want: Expected{Status: http.StatusNoContent},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) Observation {
+			response, err := sdk.GraphAPI.Scope().Upload(ctx, client.Request{
+				Method: http.MethodPut, Path: []string{"v1.0", "groups", "fixture", "photo", "$value"}},
+				io.NopCloser(bytes.NewReader(payload)), "image/jpeg", 1024, nil)
+			return Observation{Response: response, Err: err}
+		}}
+}
+
+func TestRunBinaryComparesExactBytesWithoutNormalization(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		name    string
+		actual  []byte
+		want    []byte
+		matches bool
+	}{
+		{name: "opaque bytes", actual: []byte{0xff, 0x00, 0x80, 0x0a}, want: []byte{0xff, 0x00, 0x80, 0x0a}, matches: true},
+		{name: "empty bytes", actual: []byte{}, want: []byte{}, matches: true},
+		{name: "changed byte", actual: []byte{0xff, 0x00}, want: []byte{0xff, 0x01}},
+		{name: "truncated bytes", actual: []byte{0xff}, want: []byte{0xff, 0x00}},
+		{name: "unexpected payload", actual: []byte{0xff}, want: []byte{}},
+		{name: "json whitespace remains significant", actual: []byte(`{"a":1}`), want: []byte(`{ "a":1 }`)},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			c := binaryCase(tc.actual)
+			c.Steps[0].Request.Binary = tc.want
+			result, err := Run(t.Context(), c)
+			if err != nil || result.Passed() != tc.matches || result.httpCalls != 1 {
+				t.Fatal("binary comparison changed bytes, skipped or replayed upload")
+			}
+			if !tc.matches {
+				differences := result.Differences()
+				if len(differences) != 1 || differences[0] != (Difference{Path: "request[0].body", Kind: "different-value"}) {
+					t.Fatal("binary mismatch exposed payload or lost structural difference")
+				}
+			}
+		})
 	}
 }

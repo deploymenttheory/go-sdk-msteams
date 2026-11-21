@@ -3,6 +3,7 @@ package contracttest
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -57,6 +58,30 @@ func TestWriteEvidence(t *testing.T) {
 	}
 	if strings.Contains(fmt.Sprintf("%+v %#v %+v", c, passed, Observation{Value: "private-token-canary"}), "private-token-canary") {
 		t.Fatal("formatted runner values leaked observation content")
+	}
+}
+
+func TestWriteEvidenceOmitsBinaryPayloads(t *testing.T) {
+	t.Parallel()
+	payload := []byte("private-binary-canary\x00\xff")
+	c := binaryCase(payload)
+	passed := requirePass(t, c)
+	c.Steps[0].Request.Binary = []byte("private-expected-canary")
+	failed, err := Run(t.Context(), c)
+	if err != nil || failed.Passed() {
+		t.Fatal("binary difference did not fail")
+	}
+	var output bytes.Buffer
+	if err := WriteEvidence(&output, strings.Repeat("a", 40), []Result{passed}); err != nil {
+		t.Fatal(err)
+	}
+	if err := WriteEvidence(&output, strings.Repeat("a", 40), []Result{failed}); err != nil {
+		t.Fatal(err)
+	}
+	for _, value := range []string{"private-binary-canary", "private-expected-canary", base64.StdEncoding.EncodeToString(payload)} {
+		if strings.Contains(output.String(), value) {
+			t.Fatal("binary payload reached structural evidence")
+		}
 	}
 }
 
