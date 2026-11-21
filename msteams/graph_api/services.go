@@ -3,6 +3,7 @@ package graphapi
 
 import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	channelmember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_member"
 	directoryuser "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/directory_user"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
 	grouprelationship "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group_relationship"
@@ -19,6 +20,7 @@ type Services struct {
 	Teams              *team.Service
 	Groups             *group.Service
 	TeamMembers        *teammember.Service
+	ChannelMembers     *channelmember.Service
 	GroupMembers       *grouprelationship.MemberService
 	GroupOwners        *grouprelationship.OwnerService
 	UserResolver       *directoryuser.Resolver
@@ -33,7 +35,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
-		scope: scope, Teams: team.NewService(scope), Groups: group.NewService(scope),
+		scope: scope, ChannelMembers: channelmember.NewService(scope), Teams: team.NewService(scope), Groups: group.NewService(scope),
 		TeamMembers: teammember.NewService(scope), GroupMembers: grouprelationship.NewMemberService(scope),
 		GroupOwners: grouprelationship.NewOwnerService(scope), UserResolver: directoryuser.NewResolver(scope),
 		TeamUserManagement: teamusermanagement.NewService(scope),
