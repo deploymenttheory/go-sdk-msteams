@@ -23,6 +23,15 @@ validator appears in these setters. Source model comparisons accept a long mode
 string and case-insensitive duplicate names. Wrong Boolean objects/string arrays
 fail. Public command binding remains a separate seam.
 
+The inherited compiled binding capture records 36 CRUD binder/predicate cases
+(32 successes and four validation failures), plus five actual protected Get
+filter selections. Owned subclasses inherit original properties, attributes and
+constructors, replace Begin/Process/End with synthetic output, and invoke actual
+protected New/Set setting predicates. Every observation has zero sends/token
+requests under the restored memory client/credential-refusing host. New's
+Identity-only predicate is false but its base processing permits create; Set
+requires a bound setting. No compiled Grant class is invoked.
+
 The isolated pinned Grant-CsTeamsPolicy wrapper capture verifies the command
 mapping and records 11 observations through a synthetic telemetry host and
 in-memory internal commands. User/tenant/group forwarding, null-to-empty policy
@@ -45,7 +54,7 @@ Modern Grant uses forest-target discovery and modern assignment payloads. These
 observations require separate backend wiring in the native service.
 
 This source checkpoint does not yet provide a native feedback policy service.
-Remaining work includes compiled binding/filter observations; native typed models,
+Remaining work includes native typed models,
 CRUD/list/Set/grants and root wiring; comparisons and failure/context/no-replay
 tests; API docs/examples; gated lab/source reads; command/set ledger mappings;
 full checks and sanitized CI review. Issue #119 remains open. No tenant read/write
