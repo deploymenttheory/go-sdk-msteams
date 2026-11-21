@@ -4641,30 +4641,85 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/92/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
+              "name": "TestPrivacyListFilteringAndGlobalOrder"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
+              "name": "TestPrivacyWhitespaceFilterRemainsLiteral"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/privacy_configuration_test.go",
+              "name": "TestLabPrivacyConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/92/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/service_test.go",
+              "name": "TestPrivacyPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/failure_test.go",
+              "name": "TestPrivacyEmptyAndNullReadPresentation"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/privacy_configuration_test.go",
+              "name": "TestLabPrivacyConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, the opt-in Global read returned resource HTTP 403 using the existing dedicated lab SPN in both client-secret and certificate modes. List and optional pinned PowerShell comparison were not reached. No privacy setting, role or consent was changed. Successful tenant/RBAC/cloud qualification remains open.",
         "evidence": []
       },
       "exclusion": null
@@ -25841,15 +25896,50 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/567/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/service_test.go",
+              "name": "TestPrivacyPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
+              "name": "TestPrivacyComposedUpdateRetainsPreparationAndOmission"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/failure_test.go",
+              "name": "TestPrivacyPatchErrorsKeepStatusAndNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
+              "name": "TestPrivacyUpdateKeepsMissingBodyIdentity"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/privacy_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",

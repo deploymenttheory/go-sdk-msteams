@@ -45,7 +45,7 @@ func (s *Resource[T]) Ready(ctx context.Context) error {
 		return client.ErrRequest
 	}
 	switch s.name {
-	case "ExternalAccessPolicy", "TeamsAcsFederationConfiguration", "TeamsExternalAccessConfiguration", "TeamsMeetingBrandingPolicy", "OnlineVoicemailPolicy", "OnlineVoicemailValidationConfiguration":
+	case "ExternalAccessPolicy", "TeamsAcsFederationConfiguration", "TeamsExternalAccessConfiguration", "TeamsMeetingBrandingPolicy", "OnlineVoicemailPolicy", "OnlineVoicemailValidationConfiguration", "PrivacyConfiguration":
 	default:
 		return client.ErrDestination
 	}
@@ -155,7 +155,7 @@ func (s *Resource[T]) ListFiltered(ctx context.Context, pattern, command string)
 	if err := s.Ready(ctx); err != nil {
 		return nil, nil, err
 	}
-	if strings.TrimSpace(pattern) == "" {
+	if pattern == "" {
 		return s.List(ctx, command)
 	}
 	plain, err := policyfilter.Compile(pattern)
