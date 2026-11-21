@@ -97,6 +97,12 @@ captures of PowerShell commands. Reports retain `coverage_claim: false` and
 live qualification `not-run`; no command ledger promotion or tenant writes
 were made. Successful journalled lab qualification remains outstanding.
 
+The coverage ledger now links all three command parameter sets to their actual
+composition methods, resolver/reference constituents and contract tests. It also
+links the prepared opt-in acceptance entry point without implying execution.
+Implementation stays `in-progress`, contract status stays `metadata-only`, and
+live status stays `not-run` pending evidence review and tenant qualification.
+
 Opt-in `TestLabTeamMembershipCRUD` and `TestLabRecoverTeamMembership` entry points
 are prepared for native CRUD/role observations and backing-reference compositions
 on a new disposable team. They require all three lab flags, same-tenant distinct

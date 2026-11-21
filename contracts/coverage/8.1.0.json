@@ -86,15 +86,87 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/1/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_user_management/service.go",
+              "name": "Service.Add"
+            },
+            {
+              "file": "msteams/graph_api/directory_user/resolver.go",
+              "name": "Resolver.Resolve"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.AddReference"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.ListAll"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.AddReference"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.ListAll"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestAddCompositionStagesAndCorrectedPreflight"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestAddCompletePreflightAndResolvedIdentity"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestCompositionInvalidInputAndCancellationAreLocal"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestCompositionMappingsExistInPinnedRuntime"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_membership_test.go",
+              "name": "TestLabTeamMembershipCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_user_management/service.go",
+            "name": "Service.Add"
+          },
+          {
+            "file": "msteams/graph_api/directory_user/resolver.go",
+            "name": "Resolver.Resolve"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.AddReference"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.ListAll"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.AddReference"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.ListAll"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -102,7 +174,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Prepared opt-in journalled acceptance has not run. Dedicated identity prerequisite discovery was forbidden; native membership and reference mutations remain unqualified.",
         "evidence": []
       },
       "exclusion": null
@@ -8825,15 +8897,59 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/219/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_user_management/list.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.ListAll"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.ListAll"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestListCompositionOwnerPrecedenceProjectionAndFilters"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestListCompositionPreservesOwnerPrefixOnMemberReadFailure"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestCompositionMappingsExistInPinnedRuntime"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_membership_test.go",
+              "name": "TestLabTeamMembershipCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_user_management/list.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.ListAll"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.ListAll"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8841,7 +8957,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Prepared opt-in journalled acceptance has not run. Dedicated identity prerequisite discovery was forbidden; native membership and reference mutations remain unqualified.",
         "evidence": []
       },
       "exclusion": null
@@ -20260,15 +20376,87 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/521/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/team_user_management/service.go",
+              "name": "Service.Remove"
+            },
+            {
+              "file": "msteams/graph_api/directory_user/resolver.go",
+              "name": "Resolver.Resolve"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.RemoveReference"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/members.go",
+              "name": "MemberService.ListAll"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.RemoveReference"
+            },
+            {
+              "file": "msteams/graph_api/group_relationship/owners.go",
+              "name": "OwnerService.ListAll"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestRemoveCompositionPreservesLastOwnerAndPartialWrites"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestRemoveReadsAllOwnersBeforeLastOwnerGuard"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/service_test.go",
+              "name": "TestCompositionInvalidInputAndCancellationAreLocal"
+            },
+            {
+              "file": "msteams/graph_api/team_user_management/list_test.go",
+              "name": "TestCompositionMappingsExistInPinnedRuntime"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_membership_test.go",
+              "name": "TestLabTeamMembershipCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/team_user_management/service.go",
+            "name": "Service.Remove"
+          },
+          {
+            "file": "msteams/graph_api/directory_user/resolver.go",
+            "name": "Resolver.Resolve"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.RemoveReference"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/members.go",
+            "name": "MemberService.ListAll"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.RemoveReference"
+          },
+          {
+            "file": "msteams/graph_api/group_relationship/owners.go",
+            "name": "OwnerService.ListAll"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20276,7 +20464,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Prepared opt-in journalled acceptance has not run. Dedicated identity prerequisite discovery was forbidden; native membership and reference mutations remain unqualified.",
         "evidence": []
       },
       "exclusion": null
