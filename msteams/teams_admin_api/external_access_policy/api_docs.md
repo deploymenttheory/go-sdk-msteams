@@ -52,5 +52,9 @@ remain distinct. Group Rank is Int32 with no invented backend range. Assign's
 zero/mixed scope rejects locally; it is not a fourth assignment type. Clear,
 default/effective-policy and group propagation semantics remain unqualified.
 
-Exact RBAC/consent, cloud feature deployment and successful app/delegated service
-behavior remain unqualified. [unit tests](service_test.go).
+Owned, unassigned create/read/update/list/delete is tested against the lab with
+certificate and client-secret authentication, including non-default persistence,
+omitted-field preservation, PowerShell comparisons and independent cleanup.
+[Fixture-backed CRUD unit tests](service_crud_response_test.go) use those actual
+responses. Assignment, effective-policy, delegated and other-cloud behavior
+remain unqualified; issue #96 stays open.

@@ -113,3 +113,25 @@ func TestUnitApplicationPolicyCleanupVerifiesAbsenceAfterDelete(t *testing.T) {
 		})
 	}
 }
+
+func TestUnitPolicyNamesNormalizeTagOnEitherSide(t *testing.T) {
+	t.Parallel()
+	for _, test := range []struct {
+		name, left, right string
+		want              bool
+	}{
+		{"plain", "Fixture", "fixture", true},
+		{"left-tag", "Tag:Fixture", "fixture", true},
+		{"right-tag", "fixture", "TAG:Fixture", true},
+		{"both-tags", "Tag:Fixture", "tag:fixture", true},
+		{"different", "Tag:Other", "Tag:Fixture", false},
+		{"no-whitespace-trim", " Fixture", "Fixture", false},
+		{"single-tag-only", "Tag:Tag:Fixture", "Fixture", false},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			if samePolicyName(test.left, test.right) != test.want {
+				t.Fatal("policy identity normalization differs")
+			}
+		})
+	}
+}

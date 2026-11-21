@@ -62,10 +62,11 @@ selection rejects before credentials/HTTP. Mutations never replay; there is no
 implicit polling, restoration or elevation. Backend clear/effect semantics need
 separate qualification.
 
-## Evidence
+## Testing
 
-Pinned source capture, selected offline comparisons and actual read-only lab
-results are recorded in [unit tests](service_test.go)
-and [lab acceptance](../../../docs/implementation/policies/calling-policy-lab-acceptance.md).
-All five commands and nine parameter sets have mappings. Issue #110 remains open:
-full command coverage and successful tenant CRUD qualification are not claimed.
+[Fixture-backed CRUD unit tests](service_crud_response_test.go) load the actual
+responses from the owned unassigned-policy acceptance workflow. Certificate and
+client-secret runs verify non-default creation, sparse updates, omitted-field
+preservation, listing, deletion and independent absence, with PowerShell reads.
+All five commands and nine parameter sets retain their mappings. Issue #110 stays
+open for assignment, effective-policy and remaining mode/parameter qualification.

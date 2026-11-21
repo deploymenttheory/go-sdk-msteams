@@ -1,0 +1,22 @@
+{
+  "AllowedExternalDomains": [],
+  "BlockedExternalDomains": [],
+  "Description": "SDK lab non-default updated description",
+  "EnableFederationAccess": false,
+  "EnableXmppAccess": false,
+  "EnablePublicCloudAudioVideoAccess": true,
+  "EnableTeamsSmsAccess": true,
+  "EnableOutsideAccess": true,
+  "EnableAcsFederationAccess": true,
+  "EnableTeamsConsumerAccess": true,
+  "EnableTeamsConsumerInbound": true,
+  "RestrictTeamsConsumerAccessToExternalUserProfiles": false,
+  "FederatedBilateralChats": false,
+  "CommunicationWithExternalOrgs": "OrganizationDefault",
+  "Identity": "fixture-policy",
+  "SchemaVersion": "0.0.1",
+  "ConfigId": "fixture-config-a8b62c2f",
+  "ConfigMetadata": {
+    "Authority": "Tenant"
+  }
+}

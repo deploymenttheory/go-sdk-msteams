@@ -23,10 +23,6 @@
     "file": "tests/integration/lab/deployment_migration_test.go",
     "reason": "Requires an explicit delegated identity/scoped token fixture; application credentials must not substitute for the required mode."
   },
-  "TestAccExternalAccessPolicyCRUD": {
-    "file": "tests/integration/lab/external_access_policy_test.go",
-    "reason": "Cleanup/oracle reliability gaps and complete owned-fixture tenant acceptance remain on the resource ticket before enabling additional CI mutations."
-  },
   "TestAccPolicyAssignmentsReadOnly": {
     "file": "tests/integration/lab/policy_assignments_test.go",
     "reason": "Additional assignment/OCE/targeting tenant scenarios have not been qualified; empty discovery responses do not establish action acceptance."
@@ -90,5 +86,9 @@
   "TestAccPrivacyConfigurationReadOnly": {
     "file": "tests/integration/lab/privacy_configuration_test.go",
     "reason": "Successful privacy reads require an identity authorized for that resource. The approved Teams Administrator application receives PolicyRP 40301 in both SDK and pinned PowerShell. Authorization-denial acceptance runs separately; issue #102 remains open."
+  },
+  "TestAccRecoverOwnedPolicies": {
+    "file": "tests/integration/lab/owned_policy_recovery_test.go",
+    "reason": "Operator-selected recovery for interrupted owned-policy tests. Requires a decrypted private journal and matching tenant/cloud/client binding; normal CI has no recovery-file selection."
   }
 }
