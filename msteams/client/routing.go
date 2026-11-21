@@ -7,6 +7,8 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
+
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/internal/serviceprofile"
 )
 
@@ -15,6 +17,10 @@ var ErrDestination = errors.New("destination is not allowed for this backend and
 
 // ErrRequest means local request construction failed. Its text never includes input.
 var ErrRequest = errors.New("invalid backend request")
+
+// ErrAuthenticationMode means a profile's evidenced authentication requirement
+// failed locally, before any token acquisition or service request.
+var ErrAuthenticationMode = errors.New("backend requires delegated authentication")
 
 // ValidateRequest checks a request's method, destination and headers without
 // acquiring credentials or sending it. Batch adapters use the same route boundary
@@ -44,6 +50,7 @@ type routeProfile struct {
 	audience string
 	graph    bool
 	prefix   string
+	scope    string
 }
 
 func (s *Scope) profile() (routeProfile, error) {
@@ -58,16 +65,25 @@ func (s *Scope) profile() (routeProfile, error) {
 		return routeProfile{host: strings.TrimPrefix(environment.Endpoints.Graph, "https://"), audience: environment.Endpoints.Graph, graph: true}, nil
 	case TeamsAdmin:
 		return routeProfile{host: strings.TrimPrefix(environment.Endpoints.TeamsAdmin, "https://"), audience: environment.Endpoints.TeamsAdminResource}, nil
-	case Targeting, Hierarchy:
+	case Targeting, Hierarchy, PrivateChannelMigration, Regions:
 		service := serviceprofile.Targeting
 		if s.backend == Hierarchy {
 			service = serviceprofile.Hierarchy
+		}
+		if s.backend == PrivateChannelMigration {
+			service = serviceprofile.PrivateChannelMigration
+		}
+		if s.backend == Regions {
+			if s.session.binding.Mode != auth.Delegated {
+				return routeProfile{}, ErrAuthenticationMode
+			}
+			service = serviceprofile.Regions
 		}
 		profile, ok := serviceprofile.Resolve(service, environment.Name)
 		if !ok {
 			return routeProfile{}, ErrDestination
 		}
-		return routeProfile{host: strings.TrimPrefix(profile.Origin, "https://"), audience: profile.Audience, prefix: profile.PathPrefix}, nil
+		return routeProfile{host: strings.TrimPrefix(profile.Origin, "https://"), audience: profile.Audience, prefix: profile.PathPrefix, scope: profile.DelegatedScope}, nil
 	default:
 		return routeProfile{}, ErrDestination
 	}

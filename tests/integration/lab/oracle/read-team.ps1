@@ -15,7 +15,7 @@ try {
     $request = $raw | ConvertFrom-Json
     $uuid = '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
     if ($request.id -notmatch $uuid) { throw 'Explicit identifier required.' }
-    if ($request.kind -notin @('team','users','channel-users','operation','shared-teams','associated-teams','shared-users','targeting-policy','hierarchy-status')) { throw 'Unknown oracle.' }
+    if ($request.kind -notin @('team','users','channel-users','operation','shared-teams','associated-teams','shared-users','targeting-policy','hierarchy-status','batch-status','private-migration')) { throw 'Unknown oracle.' }
     $ownedRead = $request.kind -in @('team','users','channel-users')
     if ($ownedRead -and $request.fixture -notmatch '^msteams-sdk-[a-z2-7]{26,64}-(team|migration|membership)$') { throw 'Owned fixture required.' }
     if ($request.kind -eq 'operation' -and [string]::IsNullOrWhiteSpace([string]$request.operation_id)) { throw 'Explicit operation required.' }
@@ -25,6 +25,7 @@ try {
     if ($request.kind -eq 'shared-users' -and $request.shared_team_id -notmatch $uuid) { throw 'Explicit shared-with team required.' }
     if ($request.kind -eq 'shared-teams' -and -not [string]::IsNullOrEmpty([string]$request.shared_team_id) -and $request.shared_team_id -notmatch $uuid) { throw 'Invalid shared-with team.' }
     if ($request.kind -eq 'hierarchy-status' -and $request.api_version -notin @('1','2')) { throw 'Explicit hierarchy version required.' }
+    if ($request.kind -eq 'batch-status' -and [string]::IsNullOrWhiteSpace([string]$request.orchestration_id)) { throw 'Explicit orchestration required.' }
     $report.stage = 'module'
     $module = $env:MSTEAMS_LAB_MODULE_PATH
     $manifest = Join-Path $module 'MicrosoftTeams.psd1'
@@ -34,7 +35,7 @@ try {
     Import-Module $manifest -Force -WarningAction SilentlyContinue
     $report.stage = 'authentication'
     $identity = Get-Content -LiteralPath $env:MSTEAMS_LAB_IDENTITY_FILE -Raw | ConvertFrom-Json
-    if ($request.kind -in @('targeting-policy','hierarchy-status') -and [string]$request.id -ine [string]$identity.tenant_id) { throw 'Tenant binding differs.' }
+    if ($request.kind -in @('targeting-policy','hierarchy-status','batch-status','private-migration') -and [string]$request.id -ine [string]$identity.tenant_id) { throw 'Tenant binding differs.' }
     $certificate = [Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromPemFile($identity.certificate_file, $identity.private_key_file)
     Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $identity.tenant_id -ErrorAction Stop -WarningAction SilentlyContinue -InformationAction SilentlyContinue | Out-Null
     $connected = $true
@@ -107,7 +108,18 @@ try {
         return $result
     }
     $report.stage = 'projection'
-    if ($request.kind -eq 'hierarchy-status') {
+    if ($request.kind -eq 'batch-status') {
+        $observed = @(Get-CsBatchTeamsDeploymentStatus -OrchestrationId $request.orchestration_id -ErrorAction Stop)
+        if ($observed.Count -ne 1 -or $observed[0] -isnot [string]) { throw 'Expected one opaque status string.' }
+        $report = @{success=$true; stage='complete'; batch_status=[string]$observed[0]}
+    } elseif ($request.kind -eq 'private-migration') {
+        $observed = @(Get-TenantPrivateChannelMigrationStatus -ErrorAction Stop)
+        if ($observed.Count -ne 1 -or [string]$observed[0].TenantId -ine [string]$identity.tenant_id) { throw 'Expected bound tenant migration observation.' }
+        foreach ($property in @('TenantId','MigrationStatus','Details')) {
+            if ($null -eq $observed[0].PSObject.Properties[$property]) { throw 'Incomplete migration projection.' }
+        }
+        $report = @{success=$true; stage='complete'; private_migration=@{tenant_id=$observed[0].TenantId; status=$observed[0].MigrationStatus; details=$observed[0].Details}}
+    } elseif ($request.kind -eq 'hierarchy-status') {
         $observed = @(Get-TeamTargetingHierarchyStatus -ApiVersion $request.api_version -RequestId $request.request_id -ErrorAction Stop)
         if ($observed.Count -ne 1) { throw 'Expected one selected hierarchy operation.' }
         $report = @{success=$true; stage='complete'; hierarchy_status=(Convert-HierarchyStatusObservation $observed[0])}

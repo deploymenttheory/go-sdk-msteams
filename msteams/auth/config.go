@@ -63,7 +63,7 @@ type Config struct {
 	PrivateKey          []byte
 	PFX                 []byte // alternative to Certificate and PrivateKey PEM
 	PFXPassword         []byte
-	AccessTokens        map[string]Token // audience -> token; never positional
+	AccessTokens        map[string]Token // TokenRequest.TokenKey -> token; never positional
 	TokenMode           Mode             // required for supplied tokens and external providers
 	IdentityID          string           // required for token cache isolation
 	Provider            Provider         // borrowed; only for ExternalProvider

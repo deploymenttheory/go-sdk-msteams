@@ -1,0 +1,32 @@
+# Batch deployments
+
+Candidate native resource for the batch-deployment portion of CORE-22; the ticket
+also owns migration reads that remain in progress. `BuildArchive` is a pure
+context-aware constructor for exactly Teams.csv and Users.csv, using fast Deflate
+and original input bytes. It uses explicit combined input/ZIP budgets, returns
+independently copied bytes or Base64, and leaves readers caller-owned. It performs
+no CSV parsing, filesystem operations or shared archive update. Reader operations
+must return promptly or honor caller cancellation.
+
+`sdk.TeamsAdminAPI.BatchDeployments.Create` sends that archive as DeploymentCsvs
+and the supplied UsersToNotify string. It uses selected ConfigAPI routing,
+same-origin service discovery, forest header and Teams audience. The generated
+fixture's development trafficmanager authority is replaced by the pinned session
+callback before transmission and is never a native credential destination.
+Create expects 202, retains instanceId/executionId and unknown fields, and returns
+response/partial data if accepted output lacks a usable instance ID.
+
+Submission can create/manage teams and send notification email. It is sent once,
+without automatic read-back, retry, polling or compensation. HTTP acceptance is
+not completed deployment. The opaque instance ID addresses GetByID; InputObject
+convenience maps to typed Identity/GetByIdentity using the same escaped selector,
+never arbitrary URI forwarding. Status remains original text plus HTTP metadata.
+Named 400/404/500 responses remain errors in Go, with raw text in the response.
+No structured per-team model or inference that Completed means success is made.
+No List/Update/Delete/cancel contract is established for this orchestration.
+
+See [pinned routing/serialization evidence](../../../docs/implementation/core/template-policy-deployment-evidence.md#batch-deployment)
+and [implementation progress](../../../docs/implementation/core/deployment-migration-sdk-progress.md).
+Documentation-only service limits, exact grants/cloud deployment, live behavior
+and consequential acceptance remain separately qualified. This candidate has
+made no tenant request or notification email and claims no complete issue parity.

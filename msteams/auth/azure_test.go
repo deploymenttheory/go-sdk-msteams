@@ -24,6 +24,42 @@ func azureBinding() auth.Binding {
 	return auth.Binding{TenantID: "fixture.onmicrosoft.com", Cloud: "commercial", IdentityID: "fixture-user", Mode: auth.Delegated}
 }
 
+func TestAzureCredentialPreservesRegionScopeAndMigrationResource(t *testing.T) {
+	t.Parallel()
+	const audience = "https://migrationsvc.teams.microsoft.com"
+	const scope = audience + "/Region.Read.All"
+	for _, cloud := range []string{"commercial", "gcc"} {
+		t.Run(cloud, func(t *testing.T) {
+			binding := azureBinding()
+			binding.Cloud = cloud
+			var calls []policy.TokenRequestOptions
+			provider, err := auth.NewAzureTokenProvider(binding, azureCredentialFunc(func(_ context.Context, options policy.TokenRequestOptions) (azcore.AccessToken, error) {
+				calls = append(calls, options)
+				return azcore.AccessToken{Token: "fixture", ExpiresOn: time.Now().Add(time.Hour)}, nil
+			}))
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, rejected := range []auth.TokenRequest{binding.Request(audience), binding.RequestScope(audience, audience+"/.default"), binding.RequestScope(audience, audience+"/Region.ReadWrite.All")} {
+				if _, err := provider.AcquireToken(t.Context(), rejected); !errors.Is(err, auth.ErrUnsupportedScope) {
+					t.Fatal("region scope widening reached credential")
+				}
+			}
+			if len(calls) != 0 {
+				t.Fatal("rejected scope acquired a token")
+			}
+			for _, request := range []auth.TokenRequest{binding.RequestScope(audience, scope), binding.Request("https://templates.teams.microsoft.com")} {
+				if _, err := provider.AcquireToken(t.Context(), request); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if len(calls) != 2 || calls[0].TenantID != binding.TenantID || !reflect.DeepEqual(calls[0].Scopes, []string{scope}) || !reflect.DeepEqual(calls[1].Scopes, []string{"https://templates.teams.microsoft.com/.default"}) {
+				t.Fatal("borrowed credential received a changed tenant/resource/scope")
+			}
+		})
+	}
+}
+
 func TestAzureCredentialCustomEnvironmentBinding(t *testing.T) {
 	t.Parallel()
 	endpoints := &auth.Endpoints{Authority: "https://identity.example.test", Graph: "https://graph.example.test", TeamsAdmin: "https://teams.example.test", TeamsAdminResource: "api://teams.example.test"}
