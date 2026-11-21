@@ -48,17 +48,28 @@ a modern forest target. A collection envelope fails separately from resource
 denial; empty/null reads and accepted empty PATCH responses retain their actual
 source result shapes.
 
-## Implementation and qualification remaining
+## Native implementation and qualification remaining
 
-Implement native read/list/filter and sparse PATCH plus explicit Set read/PATCH
-composition, typed presence-aware fields and owned raw snapshots, input/context
-and no-replay guards, examples and API docs. Compare source provider, binding,
-model and filter observations and map all three command/set pairs in the ledger.
-Add sanitized contract artifacts and gated bounded tenant-bound read-only/source
-comparisons. Mutations must retain partial preparation/HTTP acceptance without
-fabricating read-back or replaying an update.
+TeamsEducationConfigurations now exposes native read/list/filter and sparse PATCH
+plus explicit Set read/PATCH composition. Presence-aware fields, owned snapshots,
+input/context and no-replay guards, an example and API docs accompany source
+provider/binding/model/filter comparisons and all three command/set mappings.
+Mutations retain partial read preparation and HTTP acceptance without fabricated
+read-back or replay. Ordinary model/settings/result formatting is redacted; raw
+snapshots/responses remain caller-owned sensitive configuration. Native strings
+and JSON remain typed; the source binder's numeric coercion is tested through
+its captured typed bound value rather than added to the Go API.
 
-No tenant read or write has run for this family. Successful authorization, server
-validation, setting updates/read-back/restoration, cloud coverage and effective
-parent contact, generative AI and parent information behavior remain unqualified.
-Issue #116 stays open. Microsoft binaries and decompiled source remain private.
+The read-only lab/source harness gates credentials, bounds execution/output,
+requires complete typed getter projections and binds the optional pinned source
+oracle to the selected tenant. Ledger rows remain in-progress/metadata-only;
+offline artifacts do not establish successful tenant coverage or complete public
+command lifecycle parity.
+
+Actual opt-in Global lab reads returned HTTP 403 in client-secret and certificate
+modes on 2026-11-21. No tenant writes, roles or consent changes ran. Successful
+authorization, server validation, setting updates/read-back/restoration, cloud
+coverage and effective parent contact, generative AI and parent information
+behavior remain unqualified. See the
+[lab acceptance record](education-configuration-lab-acceptance.md). Issue #116
+stays open. Microsoft binaries and decompiled source remain private.

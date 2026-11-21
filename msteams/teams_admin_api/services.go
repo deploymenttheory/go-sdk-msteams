@@ -34,6 +34,7 @@ import (
 	teamscortanapolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_cortana_policy"
 	teamscustombannertext "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_custom_banner_text"
 	teamseducationassignmentsapppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_education_assignments_app_policy"
+	teamseducationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_education_configuration"
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
@@ -41,6 +42,7 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsEducationConfigurations            *teamseducationconfiguration.Service
 	TeamsEducationAssignmentsAppPolicies    *teamseducationassignmentsapppolicy.Service
 	TeamsCustomBannerTexts                  *teamscustombannertext.Service
 	TeamsCortanaPolicies                    *teamscortanapolicy.Service
@@ -96,6 +98,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsEducationConfigurations:            teamseducationconfiguration.NewService(scope),
 		TeamsEducationAssignmentsAppPolicies:    teamseducationassignmentsapppolicy.NewService(scope),
 		TeamsCustomBannerTexts:                  teamscustombannertext.NewService(scope),
 		TeamsCortanaPolicies:                    teamscortanapolicy.NewService(backend),
