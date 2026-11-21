@@ -16559,6 +16559,14 @@
             {
               "file": "msteams/graph_api/team_management/creation_alias_test.go",
               "name": "TestLostCreationResponsesNeverReplayOrBlindlyCompensate"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_settings_test.go",
+              "name": "TestSettingsInputsCoverBothPinnedApplicationParameterSets"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_settings_test.go",
+              "name": "TestCreationAndUpdatePreserveEveryPinnedSettingsField"
             }
           ],
           "live_tests": [
@@ -25374,6 +25382,14 @@
             {
               "file": "msteams/graph_api/team_management/service_test.go",
               "name": "TestFailuresStopLaterStagesWithoutReplayingOrRollingBack"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_settings_test.go",
+              "name": "TestSettingsInputsCoverBothPinnedApplicationParameterSets"
+            },
+            {
+              "file": "msteams/graph_api/team_management/creation_settings_test.go",
+              "name": "TestCreationAndUpdatePreserveEveryPinnedSettingsField"
             }
           ],
           "live_tests": [
