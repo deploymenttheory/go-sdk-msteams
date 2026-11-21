@@ -61,7 +61,8 @@ func TestEducationAssignmentsCapturedBindingValues(t *testing.T) {
 		if json.Unmarshal(bound["Filter"], &pattern) != nil {
 			pattern = ""
 		}
-		c := contracttest.Case{Name: "binding-" + strings.ToLower(f.Name), Source: bindingSource, Mappings: []contracttest.Mapping{{Command: f.Command, ParameterSet: set}}}
+		verb, _, _ := strings.Cut(f.Command, "-")
+		c := contracttest.Case{Name: "binding-" + strings.ToLower(verb+"-"+f.Name), Source: bindingSource, Mappings: []contracttest.Mapping{{Command: f.Command, ParameterSet: set}}}
 		var settings resource.Settings
 		controls := policy.Controls{}
 		if f.Command == setCommand {
