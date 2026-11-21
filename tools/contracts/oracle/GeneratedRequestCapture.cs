@@ -19,6 +19,7 @@ namespace TeamsContractOracle
         public string GeneratedUrl { get; set; }
         public string ContentType { get; set; }
         public string RequestBody { get; set; }
+        public Dictionary<string, string[]> RequestHeaders { get; set; }
         public string Handler { get; set; }
         public string DecodedType { get; set; }
         public bool? DecodedNull { get; set; }
@@ -41,6 +42,7 @@ namespace TeamsContractOracle
             Result.GeneratedUrl = request.RequestUri.AbsoluteUri;
             Result.ContentType = request.Content?.Headers.ContentType?.ToString();
             Result.RequestBody = request.Content == null ? null : await request.Content.ReadAsStringAsync();
+            Result.RequestHeaders = request.Headers.ToDictionary(pair => pair.Key, pair => pair.Value.ToArray(), StringComparer.OrdinalIgnoreCase);
             return new HttpResponseMessage((HttpStatusCode)status) { Content = new StringContent(body ?? "", System.Text.Encoding.UTF8, "application/json") };
         }
     }

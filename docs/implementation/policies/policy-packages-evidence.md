@@ -47,9 +47,8 @@ These routes are distinct from compiled policy-RP and conditional OCE protocols.
 | BatchPolicyPackageNewAssignmentOperation | POST /Teams.VerticalPackaging/package/operation/batchpackage |
 
 User reads and recommendations carry their user identifier in the `user` request
-header, not a path/query parameter. A request capture must retain this header;
-the existing shared sender currently captures only method/URL/body. User-specific
-recommendations otherwise share the general package-list route.
+header, not a path/query parameter. The request capture now retains this header;
+user-specific recommendations otherwise share the general package-list route.
 
 Generated callback signatures distinguish ordinary 400/404/500 error models from
 success data. Group and synchronous user grants additionally expose 520/521 handlers.
@@ -82,6 +81,26 @@ error container has a known LegacyUser array, rather than an arbitrary user-key
 dictionary. Expose that typed field while retaining unknown future object members;
 do not infer that current generated properties exhaust possible server data.
 
+## Executable request/model observations
+
+[Request capture](../../../tools/contracts/capture-policy-package-requests.ps1)
+now records twenty-three actual generated calls with synthetic callbacks and an
+in-memory sender, before host/header rewriting. It retains user headers, DTO casing,
+collection PUT updates, nullable package/default rank, distinct accepted/created
+responses, partial business failures, malformed success and missing operation IDs.
+The 521 user-grant response selects the generated on520 handler; native error handling
+must retain the original HTTP status rather than deriving it from the callback name.
+
+[Model capture](../../../tools/contracts/capture-policy-package-models.ps1) adds
+eighteen pinned projections. Rank is serialized as zero for missing or null input;
+the known LegacyUser error container drops unknown generated properties. Native
+read models must preserve raw future data in addition to typed known fields.
+
+The shared development sender gained a credential-refusing request-header capture.
+Re-running the existing voicemail assignment capture preserved all fourteen accepted
+observations exactly. Neither new oracle performs authentication, command processing,
+discovery or network I/O. Production SDK code is not implemented by these captures.
+
 ## Authentication evidence
 
 The existing capability catalog records a separately dated application-authentication
@@ -100,8 +119,8 @@ continue without changing roles, consent or interactive sessions.
 
 ## Next implementation steps
 
-1. Capture generated request headers/body/status callbacks and model projections;
-   verify wrapper pair parsing and rank/null binding with isolated helpers.
+1. Verify wrapper pair parsing and downstream rank/null binding with isolated
+   helpers; generated request/header/model observations are now captured.
 2. Establish the documented mode guard and its cloud bounds before token acquisition.
 3. Add native custom-package CRUD/list and explicit user/group/batch operations,
    preserving composition, dictionary presence and typed failure results.
