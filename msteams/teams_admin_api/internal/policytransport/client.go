@@ -62,5 +62,9 @@ func (s *Client) Do(ctx context.Context, command, method string, path []string, 
 	if encoded := query.Encode(); encoded != "" {
 		destination += "?" + encoded
 	}
-	return s.scope.Do(ctx, client.Request{Method: method, URL: destination, Header: h, Body: body, Replay: replay}, nil)
+	response, err := s.scope.Do(ctx, client.Request{Method: method, URL: destination, Header: h, Body: body, Replay: replay}, nil)
+	if response != nil {
+		err = classifyError(err, response.StatusCode(), response.Body())
+	}
+	return response, err
 }

@@ -68,6 +68,23 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertIn('1 child tests skip', output.getvalue())
         self.assertNotIn('private-identifier', output.getvalue())
 
+    def test_denial_suite_reports_the_verified_access_outcome(self):
+        report = ci.evaluate([
+            {'Test': 'TestAccPromptsCapabilityUnavailable', 'Action': 'output', 'Output': 'confirmed capability denial: HTTP 400, PolicyRP 40003; private-response'},
+            {'Test': 'TestAccPromptsCapabilityUnavailable', 'Action': 'pass'},
+        ], ['TestAccPromptsCapabilityUnavailable'], 0)
+        report.update(suite='tenant-access-outcomes', auth_method='certificate')
+        with tempfile.TemporaryDirectory() as directory:
+            summary = Path(directory) / 'summary.md'
+            output = io.StringIO()
+            with patch.dict(os.environ, {'GITHUB_STEP_SUMMARY': str(summary)}), contextlib.redirect_stdout(output):
+                ci.print_report(report)
+                ci.write_summary([report])
+            self.assertIn('verified HTTP 400; PolicyRP 40003', output.getvalue())
+            self.assertIn('Denial check', summary.read_text())
+            self.assertIn('| pass | 400 | 40003 |', summary.read_text())
+            self.assertNotIn('private-response', output.getvalue() + summary.read_text())
+
     def test_crud_pass_requires_both_oracle_comparisons(self):
         test = 'TestAccApplicationAccessPolicyCRUD'
         events = [{'Test': test, 'Action': 'pass'}]

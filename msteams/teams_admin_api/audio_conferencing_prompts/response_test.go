@@ -49,7 +49,8 @@ func TestUnitGetGlobalResponseFixtureError(t *testing.T) {
 	t.Parallel()
 	raw := readResponseFixture(t, "get_global_400.json")
 	var envelope struct {
-		Code string `json:"code"`
+		Code      string `json:"code"`
+		ErrorCode int    `json:"errorCode"`
 	}
 	if err := json.Unmarshal(raw, &envelope); err != nil {
 		t.Fatal(err)
@@ -61,11 +62,11 @@ func TestUnitGetGlobalResponseFixtureError(t *testing.T) {
 	result, err := contracttest.Run(t.Context(), contracttest.Case{
 		Name: "get-global-400", Family: "audio_conferencing_prompts", Scope: "service", Source: "msteams/teams_admin_api/audio_conferencing_prompts/testdata/get_global_400.json",
 		Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration/configuration/Global", 400, raw),
-		Want:  contracttest.Expected{Status: 400, Body: raw, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400, Codes: codes}},
+		Want:  contracttest.Expected{Status: 400, Body: raw, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			value, response, err := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.GetByIdentity(ctx, "Global")
 			var apiErr *client.APIError
-			if value != nil || !errors.As(err, &apiErr) || apiErr.StatusCode != 400 {
+			if value != nil || !errors.As(err, &apiErr) || apiErr.StatusCode != 400 || !errors.Is(err, auth.ErrTenantCapabilityUnavailable) {
 				t.Fatal("actual error response did not remain a typed API failure")
 			}
 			return contracttest.Observation{Response: response, Err: err}

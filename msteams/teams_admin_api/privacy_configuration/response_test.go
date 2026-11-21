@@ -49,7 +49,8 @@ func TestUnitGetGlobalResponseFixtureError(t *testing.T) {
 	t.Parallel()
 	raw := readResponseFixture(t, "get_global_403.json")
 	var envelope struct {
-		Code string `json:"code"`
+		Code      string `json:"code"`
+		ErrorCode int    `json:"errorCode"`
 	}
 	if err := json.Unmarshal(raw, &envelope); err != nil {
 		t.Fatal(err)
@@ -61,7 +62,7 @@ func TestUnitGetGlobalResponseFixtureError(t *testing.T) {
 	result, err := contracttest.Run(t.Context(), contracttest.Case{
 		Name: "get-global-403", Family: "privacy_configuration", Scope: "service", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json",
 		Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/PrivacyConfiguration/configuration/Global", 403, raw),
-		Want:  contracttest.Expected{Status: 403, Body: raw, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes}},
+		Want:  contracttest.Expected{Status: 403, Body: raw, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			value, response, err := sdk.TeamsAdminAPI.PrivacyConfigurations.GetByIdentity(ctx, "Global")
 			var apiErr *client.APIError

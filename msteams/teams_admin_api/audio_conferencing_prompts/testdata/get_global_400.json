@@ -1,6 +1,6 @@
 {
   "code": "ClientError",
-  "message": "Fixture message",
-  "action": "Please refer to documentation. CorrelationId: 00000000-0000-4000-8000-fa1b86d75c29",
+  "message": "Type TeamsAudioConferencingCustomPromptsConfiguration is not currently enabled in flighting",
+  "action": "Please refer to documentation. CorrelationId: 00000000-0000-4000-8000-2b70470c9215",
   "errorCode": 40003
 }

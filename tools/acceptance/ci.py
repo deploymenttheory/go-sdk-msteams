@@ -110,6 +110,7 @@ def evaluate(events, expected, process_exit, require_crud=False):
     markers = []
     child_counts = {'pass': 0, 'fail': 0, 'skip': 0}
     http_statuses = {name: [] for name in expected}
+    service_codes = {name: [] for name in expected}
     for event in events:
         test = event.get('Test', '')
         action = event.get('Action')
@@ -120,6 +121,7 @@ def evaluate(events, expected, process_exit, require_crud=False):
         owner = test.split('/', 1)[0]
         if owner in http_statuses and action == 'output':
             http_statuses[owner].extend(int(value) for value in re.findall(r'HTTP (\d{3})\b', event.get('Output', '')))
+            service_codes[owner].extend(int(value) for value in re.findall(r'PolicyRP (\d+)\b', event.get('Output', '')))
         if test == 'TestAccApplicationAccessPolicyCRUD' and action == 'output':
             for marker in PROOF_MARKERS + [ORACLE_MARKER]:
                 if marker in event.get('Output', ''):
@@ -133,6 +135,7 @@ def evaluate(events, expected, process_exit, require_crud=False):
         'outcome': 'passed' if passed else 'failed', 'tests': tests,
         'child_outcomes': child_counts, 'process_exit': process_exit,
         'http_statuses': {name: sorted(set(values)) for name, values in http_statuses.items() if values},
+        'service_error_codes': {name: sorted(set(values)) for name, values in service_codes.items() if values},
         'crud_assertions_observed': {marker: marker in markers for marker in PROOF_MARKERS} if require_crud else {},
         'crud_powershell_comparisons': markers.count(ORACLE_MARKER),
     }
@@ -207,6 +210,12 @@ def print_report(report):
         if os.environ.get('GITHUB_ACTIONS') == 'true':
             print('::error title=' + test['name'] + '::' + detail, flush=True)
 
+    if report['suite'] == 'tenant-access-outcomes':
+        for test in report['tests']:
+            if test['outcome'] == 'pass':
+                statuses = ', '.join(map(str, report.get('http_statuses', {}).get(test['name'], [])))
+                codes = ', '.join(map(str, report.get('service_error_codes', {}).get(test['name'], [])))
+                print(f"PASS {test['name']}: verified HTTP {statuses}; PolicyRP {codes}", flush=True)
     if report.get('process_exit', 0):
         print(f"FAIL {report['suite']}: go test exited {report['process_exit']}", flush=True)
     children = report.get('child_outcomes', {})
@@ -238,6 +247,16 @@ def write_summary(reports):
                 failed.append(f"| {report['auth_method']} | `{test['name']}` | {detail} |")
     if failed:
         lines += ['', '| Auth | Failed test | Result |', '|---|---|---|'] + failed
+    access = []
+    for report in reports:
+        if report['suite'] != 'tenant-access-outcomes':
+            continue
+        for test in report['tests']:
+            statuses = ', '.join(map(str, report.get('http_statuses', {}).get(test['name'], [])))
+            codes = ', '.join(map(str, report.get('service_error_codes', {}).get(test['name'], [])))
+            access.append(f"| {report['auth_method']} | `{test['name']}` | {test['outcome']} | {statuses} | {codes} |")
+    if access:
+        lines += ['', '### Tenant access outcomes', '', '| Auth | Denial check | Result | HTTP | PolicyRP |', '|---|---|---|---|---|'] + access
     if os.environ.get('GITHUB_STEP_SUMMARY'):
         with Path(os.environ['GITHUB_STEP_SUMMARY']).open('a') as stream:
             stream.write('\n'.join(lines) + '\n')

@@ -1,6 +1,6 @@
 {
   "code": "ClientError",
-  "message": "Fixture message",
-  "action": "Please refer to documentation. CorrelationId: 00000000-0000-4000-8000-51d832cf552e",
+  "message": "Type  is not currently enabled in flighting",
+  "action": "Please refer to documentation. CorrelationId: 00000000-0000-4000-8000-2355ffb5bb1d",
   "errorCode": 40003
 }

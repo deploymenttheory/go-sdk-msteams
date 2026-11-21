@@ -13,20 +13,16 @@ does not use `pull_request_target` or execute fork code with privileged credenti
 Runs serialize without automatically cancelling an in-flight mutation.
 
 The certificate/client-secret matrix executes the explicit selections in
-[suites.json](suites.json): authentication, 25 resource read tests, preflight and service discovery,
-and owned unassigned application-access-policy CRUD. The runner requires the
-selected top-level tests and their child cases to pass. Skips, missing test names,
-failed processes, missing credentials and disabled/unreached CRUD oracle checks
-fail acceptance. CRUD additionally requires all assertion milestones, two pinned
-PowerShell comparisons and a new recovery journal whose entries are cleaned.
+[suites.json](suites.json): authentication, 22 resource read tests, preflight,
+service discovery, three tenant access-outcome checks, and owned unassigned
+application-access-policy CRUD. Selected tests and child cases must pass. Skips,
+missing tests, setup failures and unsuccessful cleanup fail CI. CRUD also requires
+all assertion milestones, two PowerShell comparisons and a new cleaned journal.
 
-The remaining 20 acceptance tests require additional fixtures, permission/mode
-qualification, reliability fixes or the separate workload-authentication workflow.
-They remain explicit in `pending.json`; a green selection is not full SDK parity
-and does not complete their resource tickets. Known failed resource reads remain
-failures in CI until resolved or explicitly dispositioned; they are not silently
-skipped. The first supported release still requires the complete qualification
-and coverage gates.
+The remaining 23 acceptance tests are listed in `pending.json` with their missing
+fixtures, permissions, capabilities or execution mode. Resource tickets stay open
+until their successful operations are qualified. The first supported release
+requires complete command and parameter-set qualification.
 
 ## Repository secrets
 
@@ -88,3 +84,16 @@ and request behavior. Ordinary CI reads the fixtures and never rewrites them.
 An empty HTTP body stays empty; error responses retain their actual status.
 Refresh fixtures using the relevant tenant test with its normal lab enablement
 and credentials. Review the diff for tenant information before committing.
+
+## Tenant access outcomes
+
+The current lab returns PolicyRP 40003 for assignment migration and custom audio
+prompts, and 40301 for privacy configuration. The access-outcome tests verify the
+specific SDK error, retain its HTTP diagnostics and compare the actual PowerShell
+8.1.0 result. Authentication/setup errors and any different service response fail
+these tests. Changes in tenant access therefore trigger requalification.
+
+Successful reads and mutations for these resources remain pending on issues #95,
+#106 and #102. The original successful-read TestAcc tests remain registered in
+`pending.json` until a suitable tenant or identity is available. No resource
+coverage state is promoted by a passing denial test.

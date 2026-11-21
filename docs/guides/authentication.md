@@ -43,6 +43,11 @@ At the operation boundary, use `errors.Is` with `auth.ErrUnauthenticated` and
 itself. `ErrUnsupportedOperationMode` and `ErrTenantCapabilityUnavailable` are
 reserved for resource-specific evidence; generic response text does not trigger
 them. Keep `errors.As` access to `*client.APIError` for status and diagnostic codes.
+`ServiceErrorCodes` retains numeric PolicyRP `errorCode` values independently of
+string `Codes`. The compiled PolicyRP adapter recognizes HTTP 400 / `ClientError`
+/ 40003 together with the explicit type-flighting message as
+`ErrTenantCapabilityUnavailable`, preserving the original API error. Generic 400s,
+403s and arbitrary unsupported-feature text retain their original classifications.
 
 The capability catalog keeps source dates and documented permission boundaries.
 Resource tickets track the authorization and acceptance tests still required.

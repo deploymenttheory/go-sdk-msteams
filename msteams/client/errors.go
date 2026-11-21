@@ -17,6 +17,7 @@ type APIError struct {
 	Backend            Backend
 	StatusCode         int
 	Codes              []string
+	ServiceErrorCodes  []int
 	RequestIDs         []string
 	ClientRequestIDs   []string
 	CorrelationIDs     []string
@@ -105,18 +106,23 @@ func collectErrorObject(err *APIError, raw json.RawMessage, depth int) {
 		return
 	}
 	var object struct {
-		Code            string          `json:"code"`
-		RequestID       string          `json:"request-id"`
-		ClientRequestID string          `json:"client-request-id"`
-		OperationID     string          `json:"operationId"`
-		Diagnostics     json.RawMessage `json:"diagnostics"`
-		Message         json.RawMessage `json:"message"`
-		InnerError      json.RawMessage `json:"innerError"`
+		Code             string          `json:"code"`
+		ServiceErrorCode json.RawMessage `json:"errorCode"`
+		RequestID        string          `json:"request-id"`
+		ClientRequestID  string          `json:"client-request-id"`
+		OperationID      string          `json:"operationId"`
+		Diagnostics      json.RawMessage `json:"diagnostics"`
+		Message          json.RawMessage `json:"message"`
+		InnerError       json.RawMessage `json:"innerError"`
 	}
 	if json.Unmarshal(raw, &object) != nil {
 		return
 	}
 	err.Codes = appendUnique(err.Codes, object.Code)
+	var serviceCode int
+	if len(object.ServiceErrorCode) != 0 && string(object.ServiceErrorCode) != "null" && json.Unmarshal(object.ServiceErrorCode, &serviceCode) == nil {
+		err.ServiceErrorCodes = appendUniqueInt(err.ServiceErrorCodes, serviceCode)
+	}
 	err.RequestIDs = appendUnique(err.RequestIDs, object.RequestID)
 	err.ClientRequestIDs = appendUnique(err.ClientRequestIDs, object.ClientRequestID)
 	err.OperationIDs = appendUnique(err.OperationIDs, object.OperationID)
@@ -152,6 +158,15 @@ func appendUnique(values []string, value string) []string {
 	if value == "" {
 		return values
 	}
+	for _, existing := range values {
+		if existing == value {
+			return values
+		}
+	}
+	return append(values, value)
+}
+
+func appendUniqueInt(values []int, value int) []int {
 	for _, existing := range values {
 		if existing == value {
 			return values
