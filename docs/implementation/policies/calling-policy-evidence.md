@@ -19,7 +19,7 @@ The promoted `calling-policy-provider.json` contains 21 provider cases and 144
 actual model constructor/setter/Newtonsoft observations. Every provider case made
 one memory dispatch and zero token requests. All 39 public settings are present
 in the all-settings create/PATCH cases; the capture script checks model types.
-The native implementation and contract comparisons are still pending.
+The native implementation compares all provider cases in application and delegated synthetic modes, known model projections, and accepted final settings in sparse native requests. These comparisons establish selected offline behavior and do not claim complete command/tenant qualification.
 
 ## Selected contract
 
@@ -51,8 +51,5 @@ The native implementation and contract comparisons are still pending.
 
 ## Remaining qualification
 
-Implement native CRUD/list, explicit Set Get/PATCH composition, grants, typed
-presence-aware settings, local model validation and offline comparisons. Record
-opt-in lab evidence separately. The dedicated lab identity still lacks Teams
-resource authorization; no role/consent or tenant mutation is part of this capture.
+Native CRUD/list, explicit Set Get/PATCH composition, compiled grants, all 39 typed presence-aware settings, local model validation and offline comparisons are present. Native JSON decoding requires actual string/Boolean/Int64 types and rejects coercible strings/fractions; typed requests can express the accepted final values. Raw snapshots retain unknown fields and exact numbers. Full writes/read-back, cleanup, feature/cloud availability and effective calling behavior remain unqualified. Read-only lab evidence is recorded separately in `calling-policy-lab-acceptance.md`. The dedicated lab identity still lacks Teams resource authorization; no role/consent or tenant mutation was applied.
 Keep issue #110 and full qualification open until the remaining evidence exists.
