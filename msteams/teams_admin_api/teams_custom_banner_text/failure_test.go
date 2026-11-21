@@ -17,7 +17,7 @@ import (
 
 func TestUnitBannerMutationsNeverReplayInEitherSelector(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, byID := range []bool{false, true} {
 		for _, op := range []string{"create", "patch", "delete"} {
 			for _, status := range []int{400, 401, 403, 429, 503} {
@@ -40,7 +40,7 @@ func TestUnitBannerMutationsNeverReplayInEitherSelector(t *testing.T) {
 						body = `{"Id":"` + relative + `"}`
 					}
 				}
-				results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-%s-%d", strings.ToLower(set), op, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, contracttest.Case{Name: fmt.Sprintf("%s-%s-%d", strings.ToLower(set), op, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					s := sdk.TeamsAdminAPI.TeamsCustomBannerTexts
 					var o contracttest.Observation
 					switch op {
@@ -78,15 +78,14 @@ func TestUnitBannerMutationsNeverReplayInEitherSelector(t *testing.T) {
 					}
 					o.Err = nil
 					return o
-				}}))
+				}})
 			}
 		}
 	}
-	evidence(t, results)
 }
 func TestUnitBannerLocalInputContextAndBackendGuards(t *testing.T) {
 	t.Parallel()
-	r := run(t, contracttest.Case{Name: "local-input-context-backend", Source: binderSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "local-input-context-backend", Source: binderSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCustomBannerTexts
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -135,5 +134,4 @@ func TestUnitBannerLocalInputContextAndBackendGuards(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{r})
 }

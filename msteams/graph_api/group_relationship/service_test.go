@@ -45,9 +45,9 @@ func runCase(t *testing.T, c contracttest.Case) contracttest.Result {
 		c.Scope = "service"
 	}
 	if c.Source == "" {
-		c.Source = "contracts/endpoints/8.1.0/core.json"
+		c.Source = "msteams/graph_api/group_relationship/service_test.go"
 	}
-	result, err := contracttest.Run(t.Context(), c)
+	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -164,7 +164,7 @@ func TestUnitReferenceListPreservesLimitedAndFutureObjects(t *testing.T) {
 	for _, kind := range []string{"members", "owners"} {
 		t.Run(kind, func(t *testing.T) {
 			body := `{"value":[{"id":"` + string(objectID) + `","@odata.type":"#microsoft.graph.user","displayName":null,"userPrincipalName":null,"userType":null,"future":{"flag":false}}],"@odata.nextLink":"https://foreign.invalid/opaque","futurePage":7}`
-			runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/groups/"+groupID+"/"+kind+"?$select=id%2CdisplayName%2CuserPrincipalName%2CuserType", "", 200, body)},
+			runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/groups/"+groupID+"/"+kind+"?$select=id%2CdisplayName%2CuserPrincipalName%2CuserType", "", 200, "")},
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					page, response, err := service(sdk, kind).List(ctx, groupID, relation.ListOptions{Select: []string{"id", "displayName", "userPrincipalName", "userType"}})
 					var data any
@@ -189,8 +189,8 @@ func TestUnitReferencePagingIsOpaqueAndRetainsHeader(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
 		path := "/v1.0/groups/" + groupID + "/" + kind
-		first := wire("GET", auth.GraphAudience, path+"?$count=true&$filter=displayName+eq+%27fixture%27&$top=1", "", 200, `{"value":[{"id":"`+string(objectID)+`"}],"@odata.nextLink":"`+auth.GraphAudience+path+`?$skiptoken=opaque%2B%2F%3D"}`)
-		second := wire("GET", auth.GraphAudience, path+"?$skiptoken=opaque%2B%2F%3D", "", 200, `{"value":[]}`)
+		first := wire("GET", auth.GraphAudience, path+"?$count=true&$filter=displayName+eq+%27fixture%27&$top=1", "", 200, "")
+		second := wire("GET", auth.GraphAudience, path+"?$skiptoken=opaque%2B%2F%3D", "", 200, "")
 		first.Request.Headers.Set("ConsistencyLevel", "eventual")
 		second.Request.Headers.Set("ConsistencyLevel", "eventual")
 		runCase(t, contracttest.Case{Name: "opaque-pages", Steps: []contracttest.Exchange{first, second}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -298,7 +298,7 @@ func TestUnitReferenceValidationDoesNotAcquireCredentials(t *testing.T) {
 func TestUnitReferenceUnexpectedSuccessPreservesMetadata(t *testing.T) {
 	t.Parallel()
 	for _, kind := range []string{"members", "owners"} {
-		runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("DELETE", auth.GraphAudience, "/v1.0/groups/"+groupID+"/"+kind+"/"+string(objectID)+"/$ref", "", 200, `{}`)},
+		runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("DELETE", auth.GraphAudience, "/v1.0/groups/"+groupID+"/"+kind+"/"+string(objectID)+"/$ref", "", 200, "")},
 			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				response, err := service(sdk, kind).RemoveReference(ctx, groupID, objectID)
 				return contracttest.Observation{Response: response, Err: err}

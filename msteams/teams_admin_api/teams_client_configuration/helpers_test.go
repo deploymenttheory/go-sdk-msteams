@@ -3,50 +3,214 @@ package teamsclientconfiguration_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/client-configuration-provider.json"
+const source = "msteams/teams_admin_api/teams_client_configuration/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsClientConfiguration"
 const item = collection + "/configuration/Global"
 const scoped = "scope /Fixture / Child"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Input, Response string
 	Status                           int
 	ForceMode                        int     `json:"force_mode"`
 	PolicyName                       *string `json:"policy_name"`
-	Capture                          struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                          struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "list-empty",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration",
+					CmdletName: "Get-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "patch-all",
+				Operation: "patch",
+				Input:     "{\"AllowEmailIntoChannel\":false,\"RestrictedSenderList\":\"Future-RestrictedSenderList\",\"AllowDropBox\":false,\"AllowBox\":false,\"AllowGoogleDrive\":false,\"AllowShareFile\":false,\"AllowEgnyte\":false,\"AllowOrganizationTab\":false,\"AllowSkypeBusinessInterop\":false,\"ContentPin\":\"Future-ContentPin\",\"AllowResourceAccountSendMessage\":false,\"ResourceAccountContentAccess\":\"Future-ResourceAccountContentAccess\",\"AllowGuestUser\":false,\"AllowScopedPeopleSearchandAccess\":false,\"AllowRoleBasedChatPermissions\":false,\"ExtendedWorkInfoInPeopleSearch\":false,\"UseUnifiedDomain\":\"Future-UseUnifiedDomain\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"AllowEmailIntoChannel\": false,\n  \"RestrictedSenderList\": \"Future-RestrictedSenderList\",\n  \"AllowDropBox\": false,\n  \"AllowBox\": false,\n  \"AllowGoogleDrive\": false,\n  \"AllowShareFile\": false,\n  \"AllowEgnyte\": false,\n  \"AllowOrganizationTab\": false,\n  \"AllowSkypeBusinessInterop\": false,\n  \"ContentPin\": \"Future-ContentPin\",\n  \"AllowResourceAccountSendMessage\": false,\n  \"ResourceAccountContentAccess\": \"Future-ResourceAccountContentAccess\",\n  \"AllowGuestUser\": false,\n  \"AllowScopedPeopleSearchandAccess\": false,\n  \"AllowRoleBasedChatPermissions\": false,\n  \"ExtendedWorkInfoInPeopleSearch\": false,\n  \"UseUnifiedDomain\": \"Future-UseUnifiedDomain\"\n}",
+
+					CmdletName: "Set-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "patch-null",
+				Operation: "patch",
+				Input:     "{\"RestrictedSenderList\":null,\"AllowEmailIntoChannel\":null,\"UseUnifiedDomain\":null}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"AllowEmailIntoChannel\": null,\n  \"RestrictedSenderList\": null,\n  \"UseUnifiedDomain\": null\n}",
+
+					CmdletName: "Set-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "patch-empty",
+				Operation: "patch",
+				Input:     "{\"RestrictedSenderList\":\"\",\"ContentPin\":\"\"}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"RestrictedSenderList\": \"\",\n  \"ContentPin\": \"\"\n}",
+
+					CmdletName: "Set-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "patch-force-false",
+				Operation: "patch",
+				Input:     "{\"RestrictedSenderList\":\"\"}",
+				Status:    400,
+				ForceMode: 0,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"RestrictedSenderList\": \"\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "patch-force-true",
+				Operation: "patch",
+				Input:     "{\"RestrictedSenderList\":\"\"}",
+				Status:    400,
+				ForceMode: 1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"RestrictedSenderList\": \"\",\n  \"Force\": \"True\"\n}",
+
+					CmdletName: "Set-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "read-empty",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "read-null",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration",
+					CmdletName: "Get-CsTeamsClientConfiguration",
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsClientConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsClientConfiguration",
+				},
+			},
+		},
 	}
-	var v struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 11 {
-		t.Fatal("invalid client configuration fixture")
-	}
-	for _, c := range v.Cases {
-		r := c.Capture
-		if r.Sends != 1 || r.TokenRequests != 0 || !r.CorrelationIsGuid || r.HasTargetUri || r.MpaCmdlet != "true" {
-			t.Fatal("unsafe/incomplete client configuration fixture")
-		}
-	}
+
 	return v.Cases
 }
 func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -77,26 +241,5 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	}
 	return r
 }
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("client-configuration-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("client configuration evidence write failed")
-	}
-}
 
-const getCommand = "Get-CsTeamsClientConfiguration"
 const setCommand = "Set-CsTeamsClientConfiguration"

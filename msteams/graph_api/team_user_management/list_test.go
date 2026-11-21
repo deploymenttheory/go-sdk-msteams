@@ -32,7 +32,7 @@ func listed(value management.ListResult, err error) contracttest.Observation {
 
 func TestUnitListCompositionOwnerPrecedenceProjectionAndFilters(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	owners := `{"value":[{"id":"` + userID + `","displayName":"Owner","userPrincipalName":"owner@example.invalid","userType":"Member"}]}`
 	members := `{"value":[{"id":"` + guestID + `","displayName":"Guest","userPrincipalName":"guest@example.invalid","userType":"gUeSt"},{"id":"` + userID + `","displayName":"Owner","userPrincipalName":"owner@example.invalid","userType":"Member"},{"id":"` + otherID + `","displayName":"Member","userPrincipalName":"member@example.invalid","userType":"Member"},{"id":"` + unknownID + `","displayName":null,"userPrincipalName":null,"userType":null}]}`
 	owner := `{"id":"` + userID + `","role":"owner","native_user_type":"Member","name":"Owner","user":"owner@example.invalid"}`
@@ -58,13 +58,12 @@ func TestUnitListCompositionOwnerPrecedenceProjectionAndFilters(t *testing.T) {
 			if tc.members {
 				steps = append(steps, listRead("members", members))
 			}
-			results = append(results, runCase(t, "Get-TeamUser", contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, "Get-TeamUser", contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				return listed(sdk.GraphAPI.TeamUserManagement.List(ctx, groupID, management.ListOptions{Role: tc.role}))
 			},
-				Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"items":` + tc.items + `,"complete":true,"stages":` + tc.stages + `}`)}}))
+				Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"items":` + tc.items + `,"complete":true,"stages":` + tc.stages + `}`)}})
 		})
 	}
-	evidence(t, "team-user-list-service.json", results)
 }
 
 func TestUnitListCompositionPreservesOwnerPrefixOnMemberReadFailure(t *testing.T) {

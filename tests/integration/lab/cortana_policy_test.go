@@ -101,6 +101,7 @@ func TestAccCortanaPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsCortanaPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_cortana_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -108,7 +109,8 @@ func TestAccCortanaPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("Cortana policy Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsCortanaPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsCortanaPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_cortana_policy", "list", listResponse, nil)
 	selected, selectionErr := globalCortanaPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("Cortana policy Global selection differs")

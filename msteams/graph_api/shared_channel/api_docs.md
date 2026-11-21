@@ -27,13 +27,13 @@ ChannelMember.Read.Group (resource-specific consent), or ChannelMember.Read.All,
 for application reads. Unshare needs ChannelMember.ReadWrite.All, or application
 ChannelMember.ReadWrite.Group with resource-specific consent. Team/channel
 visibility, shared-channel prerequisites and cloud availability also apply.
-See [endpoint evidence](../../../docs/implementation/core/channel-contract-evidence.md)
+See [unit tests](service_test.go)
 for exact sources and restrictions. Construction or token acquisition proves
 neither permissions nor cloud/service availability.
 
 Relationship Create/Update service contracts remain open. First-party generated
 POST/PATCH builders exist, but accepted fields, exact success responses and
 authorization/workflow have not been established. No guessed mutation or generic
-unsupported stub is exposed. See the [mutation investigation](../../../docs/implementation/core/shared-channel-mutation-evidence.md).
+unsupported stub is exposed. See the [unit tests](service_test.go).
 The four pinned commands compose these native services through
 `GraphAPI.SharedChannelManagement`. Live qualification has not run.

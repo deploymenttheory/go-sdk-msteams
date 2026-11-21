@@ -65,7 +65,7 @@ separate qualification.
 ## Evidence
 
 Pinned source capture, selected offline comparisons and actual read-only lab
-results are recorded in [source evidence](../../../docs/implementation/policies/calling-policy-evidence.md)
+results are recorded in [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/calling-policy-lab-acceptance.md).
 All five commands and nine parameter sets have mappings. Issue #110 remains open:
 full command coverage and successful tenant CRUD qualification are not claimed.

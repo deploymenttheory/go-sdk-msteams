@@ -17,7 +17,7 @@ func TestUnitExternalTenantCreationPreservesExplicitTenant(t *testing.T) {
 	path := "/beta/teams/" + teamID + "/channels/19:channel%2Fopaque@thread.tacv2/members"
 	body := `{"@odata.type":"#microsoft.graph.aadUserConversationMember","roles":[],"tenantId":"` + tenant + `","user@odata.bind":"https://graph.microsoft.com/beta/users('` + userID + `')"}`
 	raw := resourceJSON(`[]`)
-	nativeCase(t, contracttest.Case{Name: "external-tenant", Steps: []contracttest.Exchange{wire("POST", auth.GraphAudience, path, body, 201, raw)},
+	nativeCase(t, contracttest.Case{Name: "external-tenant", Steps: []contracttest.Exchange{wire("POST", auth.GraphAudience, path, body, 201, "")},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, channelID, channelmember.CreateRequest{UserID: userID, TenantID: &tenant}))
 		}, Want: contracttest.Expected{Status: 201, JSON: expectedSnapshot(`[]`, raw)}})

@@ -3,28 +3,115 @@ package teamsaudioconferencingpolicy_test
 import (
 	"encoding/json"
 	"errors"
-	"os"
 	"reflect"
 	"testing"
 
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
 )
 
-func TestUnitAudioPolicyPinnedListNormalization(t *testing.T) {
-	raw, e := os.ReadFile("../../../" + modelSource)
-	if e != nil {
-		t.Fatal(e)
-	}
-	var fixture struct {
+func TestUnitAudioPolicyTypedListNormalization(t *testing.T) {
+
+	fixture := struct {
 		Cases []struct {
 			Name     string
 			Rejected bool
 			Wire     json.RawMessage
 		}
+	}{
+		Cases: []struct {
+			Name     string
+			Rejected bool
+			Wire     json.RawMessage
+		}{
+
+			{
+				Name:     "phone-list-omitted",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\"}"),
+			},
+
+			{
+				Name:     "phone-list-scalar",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":[\"future-phone\"]}"),
+			},
+
+			{
+				Name:     "phone-list-replacement",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":[\"+440000000001\",\"not-a-phone\"]}"),
+			},
+
+			{
+				Name:     "phone-list-empty-replacement",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":[]}"),
+			},
+
+			{
+				Name:     "phone-list-null-replacement",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":[]}"),
+			},
+
+			{
+				Name:     "phone-list-operators",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":{\"Add\":[\"+440000000001\"],\"Remove\":[\"not-a-phone\"]}}"),
+			},
+
+			{
+				Name:     "phone-list-empty-operators",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":{}}"),
+			},
+
+			{
+				Name:     "phone-list-legacy-object-replacement",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":[{\"AppId\":\"future-phone\",\"Enabled\":false}]}"),
+			},
+
+			{
+				Name:     "phone-list-legacy-object-operators",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":{\"Add\":[{\"AppId\":\"future-phone\",\"Enabled\":false}]}}"),
+			},
+
+			{
+				Name:     "phone-list-replace-operator-rejected",
+				Rejected: true,
+			},
+
+			{
+				Name:     "phone-list-null-item-rejected",
+				Rejected: true,
+			},
+
+			{
+				Name:     "phone-list-empty-string",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":[\"\"]}"),
+			},
+
+			{
+				Name:     "phone-list-whitespace-string",
+				Rejected: false,
+				Wire:     json.RawMessage("{\"Identity\":\"tag:Fixture\",\"MeetingInvitePhoneNumbers\":[\" \"]}"),
+			},
+
+			{
+				Name:     "phone-list-numeric-item-rejected",
+				Rejected: true,
+			},
+
+			{
+				Name:     "phone-list-ps-list-modifier-rejected",
+				Rejected: true,
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 15 {
-		t.Fatal("incomplete normalization fixture")
-	}
+
 	legacy := json.RawMessage(`{"AppId":"future-phone","DataSource":"fixture-source","Key":"fixture-key","Enabled":false}`)
 	for _, c := range fixture.Cases {
 		t.Run(c.Name, func(t *testing.T) {
@@ -55,8 +142,7 @@ func TestUnitAudioPolicyPinnedListNormalization(t *testing.T) {
 			case "phone-list-whitespace-string":
 				value = resource.ReplacePhoneNumbers(" ")
 			case "phone-list-replace-operator-rejected", "phone-list-ps-list-modifier-rejected":
-				// These PowerShell-only input containers have no native constructor.
-				// A malformed native change likewise cannot produce a request payload.
+
 				value = new(resource.ListChange)
 			default:
 				t.Fatal("unknown source input")

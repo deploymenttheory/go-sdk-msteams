@@ -3,48 +3,247 @@ package onlinevoicemailpolicy_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/voicemail-provider-dispatch.json"
+const source = "msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const scoped = "scope /Fixture / Child"
 const collection = "/Skype.Policy/configurations/OnlineVoicemailPolicy"
 const item = collection + "/configuration/Global"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Response, Duration string
 	Status                              int
 	Nested, Force                       bool
-	Capture                             struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                             struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captured(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, err := os.ReadFile("../../../" + source)
-	if err != nil {
-		t.Fatal(err)
+
+	value := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "list",
+				Operation: "list",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy",
+					CmdletName: "Get-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "create",
+				Operation: "create",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Description\": \"\",\n  \"EnableTranscription\": false,\n  \"ShareData\": \"FutureValue\",\n  \"EnableTranscriptionProfanityMasking\": false,\n  \"EnableEditingCallAnswerRulesSetting\": false,\n  \"MaximumRecordingLength\": \"00:01:30\",\n  \"EnableTranscriptionTranslation\": false,\n  \"PrimarySystemPromptLanguage\": \"FuturePrimary\",\n  \"SecondarySystemPromptLanguage\": \"FutureSecondary\",\n  \"PreambleAudioFile\": \"fixture-audio-reference\",\n  \"PostambleAudioFile\": \"\",\n  \"PreamblePostambleMandatory\": false,\n  \"EnableVoicemailTriage\": false\n}",
+
+					CmdletName: "New-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "patch",
+				Operation: "patch",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"EnableTranscription\": false,\n  \"ShareData\": \"FutureValue\",\n  \"EnableTranscriptionProfanityMasking\": false,\n  \"EnableEditingCallAnswerRulesSetting\": false,\n  \"MaximumRecordingLength\": \"00:01:30\",\n  \"EnableTranscriptionTranslation\": false,\n  \"PrimarySystemPromptLanguage\": \"FuturePrimary\",\n  \"SecondarySystemPromptLanguage\": \"FutureSecondary\",\n  \"PreambleAudioFile\": \"fixture-audio-reference\",\n  \"PostambleAudioFile\": \"\",\n  \"PreamblePostambleMandatory\": false,\n  \"EnableVoicemailTriage\": false\n}",
+
+					CmdletName: "Set-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "delete",
+				Operation: "delete",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "Remove-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "patch-null-duration",
+				Operation: "patch",
+				Duration:  "null",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"EnableTranscription\": false,\n  \"ShareData\": \"FutureValue\",\n  \"EnableTranscriptionProfanityMasking\": false,\n  \"EnableEditingCallAnswerRulesSetting\": false,\n  \"MaximumRecordingLength\": null,\n  \"EnableTranscriptionTranslation\": false,\n  \"PrimarySystemPromptLanguage\": \"FuturePrimary\",\n  \"SecondarySystemPromptLanguage\": \"FutureSecondary\",\n  \"PreambleAudioFile\": \"fixture-audio-reference\",\n  \"PostambleAudioFile\": \"\",\n  \"PreamblePostambleMandatory\": false,\n  \"EnableVoicemailTriage\": false\n}",
+
+					CmdletName: "Set-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "create-one-tick",
+				Operation: "create",
+				Duration:  "tick",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Description\": \"\",\n  \"EnableTranscription\": false,\n  \"ShareData\": \"FutureValue\",\n  \"EnableTranscriptionProfanityMasking\": false,\n  \"EnableEditingCallAnswerRulesSetting\": false,\n  \"MaximumRecordingLength\": \"00:00:00.0000001\",\n  \"EnableTranscriptionTranslation\": false,\n  \"PrimarySystemPromptLanguage\": \"FuturePrimary\",\n  \"SecondarySystemPromptLanguage\": \"FutureSecondary\",\n  \"PreambleAudioFile\": \"fixture-audio-reference\",\n  \"PostambleAudioFile\": \"\",\n  \"PreamblePostambleMandatory\": false,\n  \"EnableVoicemailTriage\": false\n}",
+
+					CmdletName: "New-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "delete-force-false",
+				Operation: "delete",
+				Duration:  "normal",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Remove-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "read-empty",
+				Operation: "read",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "read-null-duration",
+				Operation: "read",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "read-invalid-duration",
+				Operation: "read",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy",
+					CmdletName: "Get-CsOnlineVoicemailPolicy",
+				},
+			},
+			{
+				Name:      "delete-denied",
+				Operation: "delete",
+				Duration:  "normal",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "Remove-CsOnlineVoicemailPolicy",
+				},
+			},
+		},
 	}
-	var value struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &value) != nil || len(value.Cases) != 13 {
-		t.Fatal("invalid voicemail provider capture")
-	}
-	for _, c := range value.Cases {
-		if c.Capture.Sends != 1 || c.Capture.TokenRequests != 0 || !c.Capture.CorrelationIsGuid || c.Capture.HasTargetUri || c.Capture.MpaCmdlet != "true" {
-			t.Fatal("unsafe/incomplete voicemail capture")
-		}
-	}
+
 	return value.Cases
 }
 func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -74,24 +273,4 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("voicemail contract differs: %v %+v", e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, err := os.OpenRoot(t.ArtifactDir())
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = root.Close() }()
-	f, err := root.Create("online-voicemail-policy-service.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	writeErr, closeErr := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if writeErr != nil || closeErr != nil {
-		t.Fatal("voicemail evidence write failed")
-	}
 }

@@ -362,7 +362,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/CALL-01.md",
-      "body_sha256": "7d21a93a05a9b2a8ded9c4dae82e5eac92f61cacb56914f1d6f91966be7d4e69"
+      "body_sha256": "c64ab25c1e41e621a0bb068a84bdce373408bf3165c62e1f809368a1c12fc020"
     },
     {
       "id": "CALL-02",
@@ -381,7 +381,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/CALL-02.md",
-      "body_sha256": "1aab50a4054e5b6157bc196168e0f1d5673ee0f69a827043faa8d861c17047b7"
+      "body_sha256": "633e917f0dd6c531ecb86362fbdcd3b617fc3746afe128fc7c383a9f0f9374b7"
     },
     {
       "id": "CALL-03",
@@ -400,7 +400,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/CALL-03.md",
-      "body_sha256": "c35ff08dad4a4ae22a8f2cbb5a47df5ec0838b4c308e2885209fb3d71232fad3"
+      "body_sha256": "67fed8ffa65407d525a4e980bf3476f12a33dc81ded43f90794626af13be447b"
     },
     {
       "id": "CALL-15",
@@ -636,7 +636,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/CORE-01.md",
-      "body_sha256": "14188bf34bc04f8c703c6ee300eec325fe0f977e50887094e2cd2b44b741c5a5"
+      "body_sha256": "6e5b58988debd36aa7fbe4275a9d3ccbd7a383cf09b0e1c52ec1a68c09a407ca"
     },
     {
       "id": "CORE-15",
@@ -1321,7 +1321,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/EXT-01.md",
-      "body_sha256": "a4ca39a20407bb858ba730b1c31a52d9910d4c1786d2d5a3500dae312749b479"
+      "body_sha256": "d190c0c79c2cd72bfb375a1d50d67ab9201fd5465abf428b08a02cd25c2d3543"
     },
     {
       "id": "EXT-02",
@@ -1340,7 +1340,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/EXT-02.md",
-      "body_sha256": "c64abe16ba1ed42fc72ada93f55f0a988db98005d167ed5c67439c635a2d7d1e"
+      "body_sha256": "4fd8406375bfb2d90a99abda75850e7ae5bad1a89ef4bb3ca6aa22a54a4d517c"
     },
     {
       "id": "EXT-03",
@@ -1359,7 +1359,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/EXT-03.md",
-      "body_sha256": "eb972e492a794aded6e3d02dc66e39a24c02b7e41b363c0a7d561539fee01b14"
+      "body_sha256": "940a49714a1145a632d0ff40c3180a0f372c3e77888b62236db180d165688cbe"
     },
     {
       "id": "EXT-15",
@@ -1811,7 +1811,7 @@
         "LAB-01"
       ],
       "body_file": "docs/implementation/backlog/issues/LAB-02.md",
-      "body_sha256": "eda73616f00a3d788718bb50e838a56606f2c3618e688a7d3e27f3d002877bf0"
+      "body_sha256": "463ecaf054e2f9797c42f7429f93db1cf88309dafeab32809df33961cffb1a2a"
     },
     {
       "id": "LAB-03",
@@ -1853,7 +1853,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/POL-01.md",
-      "body_sha256": "7241499febac4b4662e7e84cc4d943b81da4dc56ef9ae2630b733cb95e58ea9f"
+      "body_sha256": "129a436a73a8dc571ddd35e3331df22a7497daa824b25742e2edecc56e9ab0ae"
     },
     {
       "id": "POL-02",
@@ -1872,7 +1872,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/POL-02.md",
-      "body_sha256": "9cf8ff09573b5899bb6f3f74ab2fb3d2db868f31660b40355a231afc3943de75"
+      "body_sha256": "2907658406a3dc81cdebe8e3a6a28decb8765bd32ece521dad64e669f958d35a"
     },
     {
       "id": "POL-03",
@@ -1891,7 +1891,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/POL-03.md",
-      "body_sha256": "991c3395d58c579ef2d7f47e90a9fcde560da64fdfa9e90eb16d898a1755e188"
+      "body_sha256": "b3518208b8e49ebba0407ecdf27fedf189ac59b4baf6cf58dc13b21bb15a25a7"
     },
     {
       "id": "POL-04",
@@ -1910,7 +1910,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/POL-04.md",
-      "body_sha256": "3a13545873101e3a9230b02e798c9429fbbabc960ae42b562fed9c7081a026e0"
+      "body_sha256": "f1e6c55c6570e31a6902335e635bdacdbb0e2c59ef04173339d44b37c9cd1e25"
     },
     {
       "id": "POL-05",
@@ -1929,7 +1929,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/POL-05.md",
-      "body_sha256": "773ae3d9ea2cd58a6626f181e4f057e88ddd8215d7426a6e222a913f9dec4b26"
+      "body_sha256": "773e505e8cbaa771ac06372e1b48817705c77c8d7d241234b653f85658bcb5ba"
     },
     {
       "id": "POL-06",
@@ -1948,7 +1948,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/POL-06.md",
-      "body_sha256": "7a3caaab0e3c03f2d775f68d3d75cc9435e0202777b5284f1a6ae227ef71b73f"
+      "body_sha256": "3a450f45637d8323dbbab808b9edcdca33268bc78f41e9c7c03d4306c23304d4"
     },
     {
       "id": "POL-07",
@@ -1967,7 +1967,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/POL-07.md",
-      "body_sha256": "dd1c75700ba94f2efc33dd526f258817dac71a35bc3666fedf645716a2b02de8"
+      "body_sha256": "047ce52721f488eb5db02740d7251ea35abaf89e9aab9a3c404ac0c2ec2758be"
     },
     {
       "id": "POL-08",
@@ -1986,7 +1986,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/POL-08.md",
-      "body_sha256": "e593b3edc96e8b99b21201460b80f708a859d66af9185766053dbb5222aa68a5"
+      "body_sha256": "a2a9e57b47470aad0f665f76cba98aa59bfad81ba8af93e7aaad1ebf65895c9a"
     },
     {
       "id": "POL-15",
@@ -3562,7 +3562,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/VOICE-01.md",
-      "body_sha256": "5ed4daca14cd1e8e34dc760060a8bbcae1fe6b2adc69a9338f6e6f65289fc63b"
+      "body_sha256": "d75bad967695431a0afb72a991e8aa5b87cf9e1ebd3b338ffaf9db278e11178f"
     },
     {
       "id": "VOICE-02",
@@ -3581,7 +3581,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/VOICE-02.md",
-      "body_sha256": "7887619a764b18a322e7fd9cd04c3a6581bdbba4af5a5a89401913a3e6953612"
+      "body_sha256": "1568df80c64c888f8c53fc9ee532c28ce016d33945a7ad661181fc6dfabfc07b"
     },
     {
       "id": "VOICE-03",
@@ -3600,7 +3600,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/VOICE-03.md",
-      "body_sha256": "151706b7817c218f7c8639f9d3349ca084571c51806dbd3c4c4d94f22be9462d"
+      "body_sha256": "23dc7df4e897edb9491b007640407f845635afa8330ab32a4134feb6b683522c"
     },
     {
       "id": "VOICE-04",
@@ -3619,7 +3619,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/VOICE-04.md",
-      "body_sha256": "ebf5374a02993d0a6a39f97d2380cf039834a912957efc8e3b17962e527bfa79"
+      "body_sha256": "d22b2b55111940ecbafa928550520a240dd5ddeedd3442924d29ed4437210b67"
     },
     {
       "id": "VOICE-05",
@@ -3638,7 +3638,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/VOICE-05.md",
-      "body_sha256": "e6ce17038251c89b7335daf3c3d6e2b52926afe59d5c2406492cdc98c08fb3e8"
+      "body_sha256": "7521e4d7a5b2d3400dc1e360d04ad4ee2e7800c3d2d1b45f22bca5772731284e"
     },
     {
       "id": "VOICE-06",
@@ -3657,7 +3657,7 @@
         "BASE-02"
       ],
       "body_file": "docs/implementation/backlog/issues/VOICE-06.md",
-      "body_sha256": "41f861cf822803054581fea74c0815da09c79852c7efa3b122c81108e2171426"
+      "body_sha256": "a79cdf3069dab378a1af48e2006b71517bddb32ed6c37fd9c17e55a43d25fd27"
     },
     {
       "id": "VOICE-15",

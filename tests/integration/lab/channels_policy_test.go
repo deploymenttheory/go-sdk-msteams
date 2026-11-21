@@ -99,6 +99,7 @@ func TestAccChannelsPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsChannelsPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_channels_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -106,7 +107,8 @@ func TestAccChannelsPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("channels policy Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsChannelsPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsChannelsPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_channels_policy", "list", listResponse, nil)
 	selected, selectionErr := globalChannelsPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(channelsProjection(value), channelsProjection(selected)) {
 		t.Fatal("channels Global read/list projections differ")

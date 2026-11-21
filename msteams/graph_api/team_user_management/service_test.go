@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"os"
+
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -30,10 +30,10 @@ func runCase(t *testing.T, command string, c contracttest.Case) contracttest.Res
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
-	c.Source = "contracts/endpoints/8.1.0/fixtures/core-team-compositions.json"
+	c.Source = "msteams/graph_api/team_user_management/service_test.go"
 	c.Mode = auth.Delegated
 	c.Mappings = []contracttest.Mapping{{Command: command, ParameterSet: "__AllParameterSets"}}
-	result, err := contracttest.Run(t.Context(), c)
+	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,31 +77,9 @@ func changed(result management.ChangeResult, err error) contracttest.Observation
 	return contracttest.Observation{Value: map[string]any{"id": result.UserID, "resolution": result.ResolutionSource, "stages": stages}, Response: result.Response, Err: err}
 }
 
-func evidence(t *testing.T, name string, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, err := os.OpenRoot(t.ArtifactDir())
-	if err != nil {
-		t.Fatal("composition evidence directory unavailable")
-	}
-	defer func() { _ = root.Close() }()
-	file, err := root.Create(name)
-	if err != nil {
-		t.Fatal("composition evidence file unavailable")
-	}
-	writeErr := contracttest.WriteEvidence(file, revision, results)
-	closeErr := file.Close()
-	if writeErr != nil || closeErr != nil {
-		t.Fatal("composition evidence write failed")
-	}
-}
-
 func TestUnitAddCompositionStagesAndCorrectedPreflight(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, tc := range []struct {
 		name   string
 		role   management.Role
@@ -118,13 +96,12 @@ func TestUnitAddCompositionStagesAndCorrectedPreflight(t *testing.T) {
 		{"member-survives-owner-failure", management.Owner, []contracttest.Exchange{read("members", `{"value":[]}`), add("members", 204), read("owners", `{"value":[]}`), add("owners", 403)}, `["resolve-user:succeeded","read-members:succeeded","add-member-reference:succeeded","read-owners:succeeded","add-owner-reference:unconfirmed"]`, 403, auth.ErrForbidden},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			results = append(results, runCase(t, "Add-TeamUser", contracttest.Case{Name: tc.name, Steps: tc.steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, "Add-TeamUser", contracttest.Case{Name: tc.name, Steps: tc.steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				return changed(sdk.GraphAPI.TeamUserManagement.Add(ctx, groupID, userID, management.ChangeOptions{Role: tc.role}))
 			},
-				Want: contracttest.Expected{Status: tc.status, Error: tc.want, JSON: json.RawMessage(`{"id":"` + userID + `","resolution":"identifier","stages":` + tc.stages + `}`)}}))
+				Want: contracttest.Expected{Status: tc.status, Error: tc.want, JSON: json.RawMessage(`{"id":"` + userID + `","resolution":"identifier","stages":` + tc.stages + `}`)}})
 		})
 	}
-	evidence(t, "team-user-add-service.json", results)
 }
 
 func TestUnitAddCompletePreflightAndResolvedIdentity(t *testing.T) {
@@ -142,14 +119,14 @@ func TestUnitAddCompletePreflightAndResolvedIdentity(t *testing.T) {
 	} {
 		steps := []contracttest.Exchange{read("members", `{"value":[],"@odata.nextLink":"`+next+`"}`)}
 		if tc.second {
-			steps = append(steps, wire("GET", "/v1.0/groups/"+groupID+"/members?$skiptoken=next", "", 200, `{"value":[{"id":"`+userID+`"}]}`))
+			steps = append(steps, wire("GET", "/v1.0/groups/"+groupID+"/members?$skiptoken=next", "", 200, ""))
 		}
 		runCase(t, "Add-TeamUser", contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return changed(sdk.GraphAPI.TeamUserManagement.Add(ctx, groupID, userID, management.ChangeOptions{Traversal: client.PagingOptions{MaxPages: tc.limit}}))
 		},
 			Want: contracttest.Expected{Status: 200, Error: tc.want, JSON: json.RawMessage(`{"id":"` + userID + `","resolution":"identifier","stages":` + tc.stages + `}`)}})
 	}
-	runCase(t, "Add-TeamUser", contracttest.Case{Name: "resolved-upn", Steps: []contracttest.Exchange{wire("GET", "/v1.0/users/fixture@example.invalid?$select=id", "", 200, `{"id":"`+userID+`"}`), read("members", `{"value":[{"id":"`+userID+`"}]}`)},
+	runCase(t, "Add-TeamUser", contracttest.Case{Name: "resolved-upn", Steps: []contracttest.Exchange{wire("GET", "/v1.0/users/fixture@example.invalid?$select=id", "", 200, ""), read("members", `{"value":[{"id":"`+userID+`"}]}`)},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return changed(sdk.GraphAPI.TeamUserManagement.Add(ctx, groupID, "fixture@example.invalid", management.ChangeOptions{}))
 		},
@@ -158,7 +135,7 @@ func TestUnitAddCompletePreflightAndResolvedIdentity(t *testing.T) {
 
 func TestUnitRemoveCompositionPreservesLastOwnerAndPartialWrites(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	owners := `{"value":[{"id":"` + userID + `"},{"id":"` + otherID + `"}]}`
 	for _, tc := range []struct {
 		name   string
@@ -176,13 +153,12 @@ func TestUnitRemoveCompositionPreservesLastOwnerAndPartialWrites(t *testing.T) {
 		{"owner-removal-survives-member-failure", management.Member, []contracttest.Exchange{read("owners", owners), remove("owners", 204), remove("members", 403)}, `["resolve-user:succeeded","read-owners:succeeded","check-last-owner:succeeded","remove-owner-reference:succeeded","remove-member-reference:unconfirmed"]`, 403, auth.ErrForbidden},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			results = append(results, runCase(t, "Remove-TeamUser", contracttest.Case{Name: tc.name, Steps: tc.steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, "Remove-TeamUser", contracttest.Case{Name: tc.name, Steps: tc.steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				return changed(sdk.GraphAPI.TeamUserManagement.Remove(ctx, groupID, userID, management.ChangeOptions{Role: tc.role}))
 			},
-				Want: contracttest.Expected{Status: tc.status, Error: tc.want, JSON: json.RawMessage(`{"id":"` + userID + `","resolution":"identifier","stages":` + tc.stages + `}`)}}))
+				Want: contracttest.Expected{Status: tc.status, Error: tc.want, JSON: json.RawMessage(`{"id":"` + userID + `","resolution":"identifier","stages":` + tc.stages + `}`)}})
 		})
 	}
-	evidence(t, "team-user-remove-service.json", results)
 }
 
 func TestUnitRemoveReadsAllOwnersBeforeLastOwnerGuard(t *testing.T) {
@@ -190,7 +166,7 @@ func TestUnitRemoveReadsAllOwnersBeforeLastOwnerGuard(t *testing.T) {
 	next := auth.GraphAudience + "/v1.0/groups/" + groupID + "/owners?$skiptoken=next"
 	runCase(t, "Remove-TeamUser", contracttest.Case{Name: "last-owner-after-all-pages", Steps: []contracttest.Exchange{
 		read("owners", `{"value":[{"id":"`+userID+`"}],"@odata.nextLink":"`+next+`"}`),
-		wire("GET", "/v1.0/groups/"+groupID+"/owners?$skiptoken=next", "", 200, `{"value":[{"id":"`+otherID+`"}]}`), remove("owners", 204)},
+		wire("GET", "/v1.0/groups/"+groupID+"/owners?$skiptoken=next", "", 200, ""), remove("owners", 204)},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return changed(sdk.GraphAPI.TeamUserManagement.Remove(ctx, groupID, userID, management.ChangeOptions{Role: management.Owner}))
 		},

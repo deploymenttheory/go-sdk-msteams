@@ -1,4 +1,4 @@
-name: Tenant acceptance
+name: Acceptance tests
 
 on:
   pull_request:
@@ -16,10 +16,11 @@ concurrency:
 env:
   GOFLAGS: -mod=readonly
   GOTOOLCHAIN: local
+  PYTHONUNBUFFERED: '1'
 
 jobs:
   lab:
-    name: Lab (${{ matrix.auth }})
+    name: TestAcc (${{ matrix.auth }})
     if: >-
       github.event_name != 'pull_request' ||
       (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
@@ -38,11 +39,11 @@ jobs:
       - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5
         with:
           go-version-file: go.mod
-      - name: Verify test categories and acceptance guards
+      - name: Check TestUnit and TestAcc names
         run: |
           python3 tools/acceptance/ci.py check-names
           python3 -m unittest discover -s tools/acceptance/tests -v
-      - name: Prepare private identity and checksum-pinned PowerShell oracle
+      - name: Load repository secrets and MicrosoftTeams 8.1.0
         env:
           MSTEAMS_LAB_TENANT_ID: ${{ secrets.MSTEAMS_LAB_TENANT_ID }}
           MSTEAMS_LAB_CLIENT_ID: ${{ secrets.MSTEAMS_LAB_CLIENT_ID }}
@@ -51,12 +52,12 @@ jobs:
           MSTEAMS_LAB_PRIVATE_KEY_PEM: ${{ secrets.MSTEAMS_LAB_PRIVATE_KEY_PEM }}
           MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM: ${{ secrets.MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM }}
         run: python3 tools/acceptance/ci.py prepare
-      - name: Run real authentication, resource reads and owned-policy CRUD
+      - name: Run TestAcc tests
         run: python3 tools/acceptance/ci.py run --report-directory "$RUNNER_TEMP/acceptance-report"
-      - name: Seal recovery journals and remove private runner files
+      - name: Save recovery journals and remove credentials
         if: always() && env.MSTEAMS_LAB_PRIVATE_DIRECTORY != ''
         run: python3 tools/acceptance/ci.py finalize --report-directory "$RUNNER_TEMP/acceptance-report"
-      - name: Retain structural results and encrypted recovery
+      - name: Upload test results
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
@@ -67,16 +68,35 @@ jobs:
           if-no-files-found: error
           retention-days: 14
   result:
-    name: Acceptance result
+    name: TestAcc result
     if: always()
     needs: [lab]
+    permissions:
+      contents: read
+      actions: read
     runs-on: ubuntu-latest
     steps:
-      - name: Require executed successful acceptance on a trusted source
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - name: Download test results
+        if: needs.lab.result != 'skipped'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+          REPOSITORY: ${{ github.repository }}
+        run: gh run download "$RUN_ID" --repo "$REPOSITORY" --pattern 'tenant-acceptance-*' --dir "$RUNNER_TEMP/test-results"
+      - name: Show failed tests
+        if: always()
         env:
           LAB_RESULT: ${{ needs.lab.result }}
         run: |
+          if [ "$LAB_RESULT" = skipped ]; then
+            echo "::error::TestAcc did not run for this PR source. Run from a trusted repository branch."
+            exit 1
+          fi
+          python3 tools/acceptance/ci.py summarize --report-directory "$RUNNER_TEMP/test-results"
           if [ "$LAB_RESULT" != success ]; then
-            echo "Tenant acceptance did not pass. Missing credentials, unavailable fixtures, skips and failures do not qualify the selected operations."
+            echo "::error::A TestAcc job failed during setup, tests or cleanup. See its failed step."
             exit 1
           fi

@@ -4,21 +4,18 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"os"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_custom_banner_text"
 )
 
-func TestUnitBannerModelSettersMatchPinnedSource(t *testing.T) {
+func TestUnitBannerModelSettersMatchTypedSource(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../" + source)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var fixture struct {
+
+	fixture := struct {
 		Models []struct {
 			Input       string
 			Observation struct {
@@ -26,10 +23,187 @@ func TestUnitBannerModelSettersMatchPinnedSource(t *testing.T) {
 				Value   json.RawMessage
 			}
 		}
+	}{
+		Models: []struct {
+			Input       string
+			Observation struct {
+				Failure *string
+				Value   json.RawMessage
+			}
+		}{
+
+			{
+				Input: "constructor",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":null,\"Identity\":null,\"Text\":null}"),
+				},
+			},
+
+			{
+				Input: "text-constructor-null",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Input: "text-constructor-empty",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":null,\"Identity\":null,\"Text\":\"\"}"),
+				},
+			},
+
+			{
+				Input: "{}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":null,\"Identity\":null,\"Text\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"Text\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Input: "{\"Text\":\"\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":null,\"Identity\":null,\"Text\":\"\"}"),
+				},
+			},
+
+			{
+				Input: "{\"Description\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":null,\"Identity\":null,\"Text\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"Description\":\"\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":\"\",\"Id\":null,\"Identity\":null,\"Text\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"Id\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":null,\"Identity\":null,\"Text\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"Id\":\"\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+				},
+			},
+
+			{
+				Input: "{\"Id\":\"01234567-89AB-CDEF-0123-456789abcdef\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":\"01234567-89AB-CDEF-0123-456789abcdef\",\"Identity\":null,\"Text\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"Id\":\"01234567-89ab-cdef-0123-456789abcdef\\n\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":\"01234567-89ab-cdef-0123-456789abcdef\\n\",\"Identity\":null,\"Text\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"Id\":\"{01234567-89ab-cdef-0123-456789abcdef}\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+				},
+			},
+
+			{
+				Input: "{\"Text\":\"first\",\"text\":\"second\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":null,\"Identity\":null,\"Text\":\"second\"}"),
+				},
+			},
+
+			{
+				Input: "{\"Text\":\"first\",\"Text\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Input: "{\"Text\":[]}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("Newtonsoft.Json.JsonReaderException"),
+				},
+			},
+
+			{
+				Input: "{\"Text\":\"" + strings.Repeat("x", 2000) + "\",\"Description\":\"" + strings.Repeat("x", 2000) + "\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":\"" + strings.Repeat("x", 2000) + "\",\"Id\":null,\"Identity\":null,\"Text\":\"" + strings.Repeat("x", 2000) + "\"}"),
+				},
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Models) != 17 {
-		t.Fatal("invalid model observations")
-	}
+
 	for _, m := range fixture.Models {
 		t.Run(m.Input, func(t *testing.T) {
 			var value resource.Banner

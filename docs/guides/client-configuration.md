@@ -54,7 +54,7 @@ for their intended concurrent use. The SDK does not shut them down.
 |---|---|
 | `MSTEAMS_AUTH_METHOD` | Explicit method string from `auth.Method` |
 | `MSTEAMS_TENANT_ID` | Tenant binding |
-| `MSTEAMS_CLOUD` | Named endpoint profile, defaults to `commercial`; see [environment mapping](../implementation/auth/session-evidence.md) |
+| `MSTEAMS_CLOUD` | Named endpoint profile, defaults to `commercial`; see [tests](../../msteams/auth) |
 | `MSTEAMS_CLIENT_ID` | Application or user-assigned managed identity client ID |
 | `MSTEAMS_CLIENT_SECRET` | Client-secret material |
 | `MSTEAMS_USERNAME`, `MSTEAMS_PASSWORD` | Password-flow material |
@@ -101,8 +101,8 @@ Transport/decode failures use safe sentinel errors and context cancellation is p
 Retry controls are described below. Scope.Upload and Scope.Download provide explicit
 bounded stream transfers; Scope.UploadMultipart handles ordered form-data parts. Stream
 operations consume their sources once and reject automatic replay. See the
-[payload contract](../implementation/http/payload-evidence.md) for ownership and batch results.
-See [HTTP-01 evidence and tests](../implementation/http/routing-evidence.md).
+[transfer tests](../../msteams/client/transfer_test.go) and
+[batch tests](../../msteams/client/batch_test.go) for ownership and result handling.
 
 HTTP timeout defaults to 30 seconds. An injected client's positive timeout is retained
 unless explicitly overridden. Negative injected timeouts are rejected unless replaced
@@ -149,7 +149,7 @@ special services, and no unsupported cloud silently falls back to commercial.
 These are evidenced route maps, not claims of deployed features, app eligibility,
 consent or role enforcement. Private-channel migration has distinct fixed paths
 for each cloud, including separate commercial/GCC prefixes on the same host.
-See [deployment and migration evidence](../implementation/core/deployment-migration-sdk-evidence.md)
+See [tests](../../tests/integration/lab)
 for the source maps, scope restrictions and outstanding qualification.
 
 Hierarchy uploads replace singleton tenant data. Native imports own/close their
@@ -244,7 +244,7 @@ two minutes. Token-service errors match `auth.ErrTokenService`; library response
 credential diagnostics are not exposed, including through unwrapping. Certificate errors match
 `ErrInvalidCertificate`, `ErrCertificateExpired` or `ErrCertificateNotYetValid` in package auth.
 The standalone [provider example](../../msteams/auth/application_example_test.go) demonstrates
-ownership without authenticating. See [AUTH-02 evidence and prerequisites](../implementation/auth/client-credentials-evidence.md)
+ownership without authenticating. See [tests](../../msteams/auth)
 for app registration/consent, role categories, tested contracts and remaining live qualification.
 
 ## Reusing an Azure Identity credential
@@ -314,7 +314,7 @@ WS-Trust 2005. Browser/device methods and a caller-configured Azure credential r
 explicit alternatives. Windows WAM is not required by these portable browser/device flows.
 
 The provider owns its account/cache and copied configuration. SDK close releases these
-references; it does not revoke server tokens. [AUTH-03 evidence](../implementation/auth/delegated-evidence.md)
+references; it does not revoke server tokens. [tests](../../msteams/auth)
 distinguishes offline verification from pending tenant qualification.
 
 ## Request budgets and retries
@@ -329,7 +329,7 @@ retries an operation based on its HTTP method alone. Safe retries honor `Retry-A
 use bounded jittered backoff and retain cancellation. A valid server delay exceeding
 the remaining budget returns an error rather than retrying early. Token replacement
 on 401 additionally requires operation opt-in and a provider with noninteractive refresh
-support. See [request execution evidence](../implementation/http-retry-evidence.md).
+support. See [tests](../../msteams/client).
 
 ## Managed identity and workload federation
 
@@ -367,7 +367,7 @@ The compiled [provider examples](../../msteams/auth/workload_example_test.go) pe
 network activity. The manual `Workload authentication lab` GitHub workflow exercises
 both assertion sources on Linux, macOS and Windows after explicitly configuring lab
 federation. It uses ephemeral OIDC assertions and a read-only Graph request. See
-[AUTH-04 evidence and limits](../implementation/auth/machine-identity-evidence.md).
+[tests](../../msteams/auth).
 
 ## Page-wise and aggregate lists
 
@@ -382,7 +382,7 @@ Always check the returned error before treating an aggregate as complete: failur
 preserve the collected prefix and last HTTP response. Defaults bound traversal to 1,000
 pages and aggregation to 100,000 items. Consume each pager serially; separate pagers may
 run concurrently. Original query/header/body values are copied during construction.
-See [pagination evidence](../implementation/http/pagination-evidence.md) for protocol
+See [tests](../../msteams/client) for protocol
 mappings, limit behavior and tests.
 
 ## Authentication capability reporting
@@ -408,5 +408,5 @@ URLs, headers, bodies, credentials, tenant identifiers and untrusted error text.
 response inspection remains available to callers. The SDK never shuts down borrowed
 logging/tracing dependencies or configures a global provider.
 
-See [observability evidence](../implementation/http/observability-evidence.md) for the
+See [tests](../../msteams/client) for the
 configuration ownership contract, redaction fields and executable test mapping.

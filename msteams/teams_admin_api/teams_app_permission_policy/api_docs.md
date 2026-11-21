@@ -68,5 +68,5 @@ snapshots and responses remain caller-owned sensitive data.
 Application/delegated synthetic fixtures establish routing, not successful tenant
 RBAC, migration/feature availability or cloud support. Full shell/Newtonsoft
 coercion, writes/read-back/cleanup and effective access remain unqualified under
-#104. See [evidence](../../../docs/implementation/policies/teams-app-permission-policy-evidence.md)
+#104. See [unit tests](service_test.go)
 and the [lab plan](../../../docs/implementation/policies/teams-app-permission-policy-lab-acceptance.md).

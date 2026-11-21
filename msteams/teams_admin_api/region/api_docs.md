@@ -26,5 +26,5 @@ selected account across resources. Opaque tokens are not decoded to infer consen
 
 The SDK retains successful HTTP/model metadata and typed HTTP failures. No live
 mode/consent/region/tenant behavior is qualified by offline tests. See
-[source profile/scope evidence](../../../docs/implementation/core/hierarchy-migration-contract-evidence.md)
-and [current implementation progress](../../../docs/implementation/core/deployment-migration-sdk-progress.md).
+[unit tests](service_test.go)
+and [unit tests](service_test.go).

@@ -97,6 +97,7 @@ func TestAccAudioConferencingPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsAudioConferencingPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_audio_conferencing_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -104,7 +105,8 @@ func TestAccAudioConferencingPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("audio conferencing policy Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsAudioConferencingPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsAudioConferencingPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_audio_conferencing_policy", "list", listResponse, nil)
 	selected, selectionErr := globalAudioConferencingPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("audio policy Global selection differs")

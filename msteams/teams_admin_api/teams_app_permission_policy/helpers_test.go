@@ -3,51 +3,337 @@ package teamsapppermissionpolicy_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/app-permission-provider.json"
-const sourceModels = "contracts/endpoints/8.1.0/fixtures/app-permission-models.json"
+const source = "msteams/teams_admin_api/teams_app_permission_policy/testdata/get_global.json"
+const sourceModels = "msteams/teams_admin_api/teams_app_permission_policy/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsAppPermissionPolicy"
 const item = collection + "/configuration/Global"
 const scoped = "scope /Fixture / Child"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Fields, Response string
 	Status                            int
 	Force                             bool
 	PolicyName                        *string `json:"policy_name"`
-	Capture                           struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                           struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "list",
+				Operation: "list",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy",
+					CmdletName: "Get-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "create",
+				Operation: "create",
+				Fields:    "all",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"DefaultCatalogApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-default\"\n    }\n  ],\n  \"GlobalCatalogApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-global\"\n    }\n  ],\n  \"PrivateCatalogApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-private\"\n    }\n  ],\n  \"Description\": \"\",\n  \"DefaultCatalogAppsType\": \"FutureDefaultMode\",\n  \"GlobalCatalogAppsType\": \"\",\n  \"PrivateCatalogAppsType\": null,\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "New-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "create-empty-settings",
+				Operation: "create",
+				Fields:    "none",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "New-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "patch",
+				Operation: "patch",
+				Fields:    "all",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"DefaultCatalogApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-default\"\n    }\n  ],\n  \"GlobalCatalogApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-global\"\n    }\n  ],\n  \"PrivateCatalogApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-private\"\n    }\n  ],\n  \"Description\": \"\",\n  \"DefaultCatalogAppsType\": \"FutureDefaultMode\",\n  \"GlobalCatalogAppsType\": \"\",\n  \"PrivateCatalogAppsType\": null,\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "patch-empty-lists",
+				Operation: "patch",
+				Fields:    "empty-lists",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"DefaultCatalogApps\": [],\n  \"GlobalCatalogApps\": [],\n  \"PrivateCatalogApps\": [],\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "patch-scalar-only",
+				Operation: "patch",
+				Fields:    "description",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"DefaultCatalogAppsType\": \"FutureDefaultMode\",\n  \"GlobalCatalogAppsType\": \"\",\n  \"PrivateCatalogAppsType\": null,\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "delete",
+				Operation: "delete",
+				Fields:    "none",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Remove-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "grant-user",
+				Operation: "user",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsAppPermissionPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"additionalParameters\": null\n}",
+
+					CmdletName: "Grant-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "grant-tenant",
+				Operation: "tenant",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsAppPermissionPolicy",
+					Body:   "{\n  \"PolicyName\": null,\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+
+					CmdletName: "Grant-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "grant-group",
+				Operation: "group",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsAppPermissionPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+
+					CmdletName: "Grant-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:       "grant-user-empty",
+				Operation:  "user",
+				Fields:     "none",
+				Status:     400,
+				Force:      false,
+				PolicyName: new(""),
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsAppPermissionPolicy",
+					Body:   "{\n  \"policyName\": \"\",\n  \"additionalParameters\": null\n}",
+
+					CmdletName: "Grant-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:       "grant-tenant-empty",
+				Operation:  "tenant",
+				Fields:     "none",
+				Status:     400,
+				Force:      false,
+				PolicyName: new(""),
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsAppPermissionPolicy",
+					Body:   "{\n  \"PolicyName\": \"\",\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+
+					CmdletName: "Grant-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:       "grant-group-empty",
+				Operation:  "group",
+				Fields:     "none",
+				Status:     400,
+				Force:      false,
+				PolicyName: new(""),
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsAppPermissionPolicy",
+					Body:   "{\n  \"policyName\": \"\",\n  \"priority\": -1\n}",
+
+					CmdletName: "Grant-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "read-null-catalogs",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "read-null-app-id",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy",
+					CmdletName: "Get-CsTeamsAppPermissionPolicy",
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppPermissionPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppPermissionPolicy",
+				},
+			},
+		},
 	}
-	var v struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 18 {
-		t.Fatal("invalid app permission fixture")
-	}
-	for _, c := range v.Cases {
-		r := c.Capture
-		if r.Sends != 1 || r.TokenRequests != 0 || !r.CorrelationIsGuid || r.HasTargetUri || r.MpaCmdlet != "true" {
-			t.Fatal("unsafe/incomplete app permission fixture")
-		}
-	}
+
 	return v.Cases
 }
 func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -77,24 +363,4 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("app permission contract differs: %v %+v", e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("app-permission-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("app permission evidence write failed")
-	}
 }

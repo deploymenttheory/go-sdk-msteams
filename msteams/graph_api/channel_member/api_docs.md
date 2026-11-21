@@ -54,4 +54,4 @@ Sources reviewed 2026-11-21:
 [get](https://learn.microsoft.com/en-us/graph/api/channel-get-members?view=graph-rest-beta),
 [update](https://learn.microsoft.com/en-us/graph/api/channel-update-members?view=graph-rest-beta),
 [delete](https://learn.microsoft.com/en-us/graph/api/channel-delete-members?view=graph-rest-beta),
-[pinned evidence](../../../docs/implementation/core/channel-contract-evidence.md).
+[unit tests](service_test.go).

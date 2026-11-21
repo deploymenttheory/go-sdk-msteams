@@ -3,7 +3,6 @@ package policy_test
 import (
 	"encoding/json"
 	"errors"
-	"os"
 	"reflect"
 	"testing"
 
@@ -44,24 +43,21 @@ func TestUnitFieldPreservesOmittedNullFalseAndEmpty(t *testing.T) {
 	}
 }
 
-func TestUnitCompiledListEditsMatchObservedHostBehavior(t *testing.T) {
+func TestUnitListEditsPreserveOrderDuplicatesAndCase(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-provider-dispatch.json")
-	if err != nil {
-		t.Fatal(err)
+	cases := []struct {
+		Name   string
+		Values []string
+	}{
+		{Name: "null", Values: []string{}},
+		{Name: "empty-operators", Values: []string{}},
+		{Name: "replacement", Values: []string{"b", "b", ""}},
+		{Name: "remove-one", Values: []string{"a", "A", "b"}},
+		{Name: "remove-missing", Values: []string{"a", "a", "A", "b"}},
+		{Name: "add-existing", Values: []string{"a", "a", "A", "b", "a", "c", "c"}},
+		{Name: "remove-and-add", Values: []string{"a", "A", "b", "a"}},
 	}
-	var fixture struct {
-		Lists []struct {
-			Name        string `json:"name"`
-			Observation struct {
-				Values []string `json:"values"`
-			} `json:"observation"`
-		} `json:"lists"`
-	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Lists) != 7 {
-		t.Fatal("invalid pinned modifier observations")
-	}
-	for _, c := range fixture.Lists {
+	for _, c := range cases {
 		var edit *policy.ListEdit
 		switch c.Name {
 		case "null":
@@ -88,7 +84,7 @@ func TestUnitCompiledListEditsMatchObservedHostBehavior(t *testing.T) {
 		}
 		encoded, err := json.Marshal(value)
 		var actual []string
-		if err != nil || json.Unmarshal(encoded, &actual) != nil || !reflect.DeepEqual(actual, c.Observation.Values) || !reflect.DeepEqual(current, []string{"a", "a", "A", "b"}) {
+		if err != nil || json.Unmarshal(encoded, &actual) != nil || !reflect.DeepEqual(actual, c.Values) || !reflect.DeepEqual(current, []string{"a", "a", "A", "b"}) {
 			t.Fatal("compiled modifier differs or mutates current state")
 		}
 	}

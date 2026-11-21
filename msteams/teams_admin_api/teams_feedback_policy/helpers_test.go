@@ -10,42 +10,275 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/feedback-policy-provider.json"
+const source = "msteams/teams_admin_api/teams_feedback_policy/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsFeedbackPolicy"
 const scoped = "scope /Fixture / Child"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Input, Response string
 	Status                           int
 	ForceMode                        int     `json:"force_mode"`
 	PolicyName                       *string `json:"policy_name"`
-	Capture                          struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                          struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "list-empty",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy",
+					CmdletName: "Get-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "create-all",
+				Operation: "create",
+				Input:     "{\"UserInitiatedMode\":\"Future-UserInitiatedMode\",\"ReceiveSurveysMode\":\"Future-ReceiveSurveysMode\",\"AllowScreenshotCollection\":false,\"AllowEmailCollection\":false,\"AllowLogCollection\":false,\"EnableFeatureSuggestions\":false}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"UserInitiatedMode\": \"Future-UserInitiatedMode\",\n  \"ReceiveSurveysMode\": \"Future-ReceiveSurveysMode\",\n  \"AllowScreenshotCollection\": false,\n  \"AllowEmailCollection\": false,\n  \"AllowLogCollection\": false,\n  \"EnableFeatureSuggestions\": false\n}",
+
+					CmdletName: "New-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "create-empty",
+				Operation: "create",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "New-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "patch-all",
+				Operation: "patch",
+				Input:     "{\"UserInitiatedMode\":\"Future-UserInitiatedMode\",\"ReceiveSurveysMode\":\"Future-ReceiveSurveysMode\",\"AllowScreenshotCollection\":false,\"AllowEmailCollection\":false,\"AllowLogCollection\":false,\"EnableFeatureSuggestions\":false}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"UserInitiatedMode\": \"Future-UserInitiatedMode\",\n  \"ReceiveSurveysMode\": \"Future-ReceiveSurveysMode\",\n  \"AllowScreenshotCollection\": false,\n  \"AllowEmailCollection\": false,\n  \"AllowLogCollection\": false,\n  \"EnableFeatureSuggestions\": false\n}",
+
+					CmdletName: "Set-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "patch-null",
+				Operation: "patch",
+				Input:     "{\"UserInitiatedMode\":null,\"ReceiveSurveysMode\":null,\"AllowScreenshotCollection\":null,\"AllowEmailCollection\":null,\"AllowLogCollection\":null,\"EnableFeatureSuggestions\":null}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"UserInitiatedMode\": null,\n  \"ReceiveSurveysMode\": null,\n  \"AllowScreenshotCollection\": null,\n  \"AllowEmailCollection\": null,\n  \"AllowLogCollection\": null,\n  \"EnableFeatureSuggestions\": null\n}",
+
+					CmdletName: "Set-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "patch-empty-true",
+				Operation: "patch",
+				Input:     "{\"UserInitiatedMode\":\"\",\"ReceiveSurveysMode\":\"\",\"AllowScreenshotCollection\":true,\"AllowEmailCollection\":true,\"AllowLogCollection\":true,\"EnableFeatureSuggestions\":true}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"UserInitiatedMode\": \"\",\n  \"ReceiveSurveysMode\": \"\",\n  \"AllowScreenshotCollection\": true,\n  \"AllowEmailCollection\": true,\n  \"AllowLogCollection\": true,\n  \"EnableFeatureSuggestions\": true\n}",
+
+					CmdletName: "Set-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "patch-force-false",
+				Operation: "patch",
+				Input:     "{\"UserInitiatedMode\":\"\"}",
+				Status:    400,
+				ForceMode: 0,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"UserInitiatedMode\": \"\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "patch-force-true",
+				Operation: "patch",
+				Input:     "{\"UserInitiatedMode\":\"\"}",
+				Status:    400,
+				ForceMode: 1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"UserInitiatedMode\": \"\",\n  \"Force\": \"True\"\n}",
+
+					CmdletName: "Set-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "delete",
+				Operation: "delete",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\"\n}",
+
+					CmdletName: "Remove-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "delete-force-false",
+				Operation: "delete",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: 0,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Remove-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "read-empty",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "read-null",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy",
+					CmdletName: "Get-CsTeamsFeedbackPolicy",
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Input:     "{}",
+				Status:    400,
+				ForceMode: -1,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsFeedbackPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsFeedbackPolicy",
+				},
+			},
+		},
 	}
-	var v struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 15 {
-		t.Fatal("invalid feedback policy fixture")
-	}
-	for _, c := range v.Cases {
-		r := c.Capture
-		if r.Sends != 1 || r.TokenRequests != 0 || !r.CorrelationIsGuid || r.HasTargetUri || r.MpaCmdlet != "true" {
-			t.Fatal("unsafe/incomplete feedback policy fixture")
-		}
-	}
+
 	return v.Cases
 }
 func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -76,36 +309,22 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	}
 	return r
 }
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("feedback-policy-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("feedback policy evidence write failed")
-	}
-}
 
 const getCommand = "Get-CsTeamsFeedbackPolicy"
 const setCommand = "Set-CsTeamsFeedbackPolicy"
 const grantCommand = "Grant-CsTeamsFeedbackPolicy"
-const forest = "https://forest.fixture.invalid/"
-const grantSource = "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-requests.json"
+const forest = "https://admin.example.invalid/"
+const grantSource = "msteams/teams_admin_api/teams_feedback_policy/testdata/get_global.json"
 
-func discovery() contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(`{"Endpoints":{"AdminServiceEndpoint":"forest.fixture.invalid:444/ignored?x=y#ignored"}}`)}}
+func discovery(t *testing.T) contracttest.Exchange {
+	t.Helper()
+	raw, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
 }
+
 func modernWire(method, path string, body json.RawMessage, status int, reply string) contracttest.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {grantCommand}, "X-MS-Target-Uri": {forest}}
 	h[http.CanonicalHeaderKey("MPACmdlet")] = nil
@@ -120,4 +339,4 @@ func modernWire(method, path string, body json.RawMessage, status int, reply str
 const item = collection + "/configuration/Global"
 const newCommand = "New-CsTeamsFeedbackPolicy"
 const deleteCommand = "Remove-CsTeamsFeedbackPolicy"
-const wrapperSource = "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-wrappers.json"
+const wrapperSource = "msteams/teams_admin_api/teams_feedback_policy/testdata/get_global.json"

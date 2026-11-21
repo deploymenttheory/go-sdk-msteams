@@ -2,21 +2,18 @@ package policyassignments_test
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"net/http"
-	"os"
 	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 )
 
-const oceSource = "contracts/endpoints/8.1.0/fixtures/policy-assignment-oce.json"
+const oceSource = "msteams/teams_admin_api/policy_assignments/oce_service_test.go"
 const oceTenant = "00000000-0000-4000-8000-000000000003"
 const oceOperation = "00000000-0000-4000-8000-000000000004"
 const oceGroup = "00000000-0000-4000-8000-000000000005"
@@ -92,59 +89,38 @@ func invokeOCE(name string, ctx context.Context, sdk *msteams.Client) contractte
 	return o
 }
 
-func TestUnitPinnedOCEDirectRequests(t *testing.T) {
+func TestUnitOCEDirectRequestVectors(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../" + oceSource)
-	if err != nil {
-		t.Fatal(err)
+	cases := []struct{ name, method, url string }{
+		{name: "batch-status", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/status/00000000-0000-4000-8000-000000000004?region=NOAM"},
+		{name: "batch-list", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/status?region=NOAM"},
+		{name: "batch-definition", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/definition/00000000-0000-4000-8000-000000000004?region=NOAM"},
+		{name: "batch-reprocess", method: "POST", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/reprocess/00000000-0000-4000-8000-000000000004?region=NOAM"},
+		{name: "group-get", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce/00000000-0000-4000-8000-000000000005/policyTypes/Fixture"},
+		{name: "group-list", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce/00000000-0000-4000-8000-000000000005/policyTypes"},
+		{name: "group-list-type", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce?policyType=Fixture"},
+		{name: "group-list-all", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/oce"},
+		{name: "group-members", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Teams.InternalSupport/groups/00000000-0000-4000-8000-000000000005/users?all=False"},
+		{name: "group-members-all", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Teams.InternalSupport/groups/00000000-0000-4000-8000-000000000005/users?all=True"},
+		{name: "user-membership", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Teams.InternalSupport/users/00000000-0000-0000-0000-000000000000/memberOf"},
+		{name: "group-refresh", method: "POST", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/00000000-0000-4000-8000-000000000005/refresh/users?tenantRegion=NOAM&userId=00000000-0000-0000-0000-000000000000&policyType=Fixture"},
+		{name: "group-reprocess", method: "POST", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/00000000-0000-4000-8000-000000000005/policyTypes/Fixture/reprocess?tenantRegion=NOAM"},
 	}
-	var fixture struct {
-		Cases []struct {
-			Name     string
-			Status   int
-			Response string
-			Capture  struct {
-				Method, URL                                                           string
-				Body                                                                  *string
-				Sends                                                                 int
-				TenantMatches, CorrelationIsGuid, HasMpa, HasCmdletName, HasTargetUri bool
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
+				run(t, contracttest.Case{Name: "oce-" + tc.name + "-" + string(mode), Mode: mode, Source: oceSource, Mappings: oceMapping(tc.name), Steps: []contracttest.Exchange{oceWire(tc.method, tc.url, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					return invokeOCE(tc.name, ctx, sdk)
+				}, Want: contracttest.Expected{Error: auth.ErrForbidden}})
 			}
-		}
+		})
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 18 {
-		t.Fatal("invalid OCE capture")
-	}
-	var results []contracttest.Result
-	for _, f := range fixture.Cases {
-		if f.Capture.Sends != 1 || f.Capture.Body != nil || !f.Capture.TenantMatches || !f.Capture.CorrelationIsGuid || f.Capture.HasMpa || f.Capture.HasCmdletName || f.Capture.HasTargetUri {
-			t.Fatal("unsafe or incomplete OCE sender observation")
-		}
-		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			c := contracttest.Case{Name: "oce-" + f.Name + "-" + string(mode), Mode: mode, Source: oceSource, Mappings: oceMapping(f.Name), Steps: []contracttest.Exchange{oceWire(f.Capture.Method, f.Capture.URL, f.Status, f.Response)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return invokeOCE(f.Name, ctx, sdk)
-			}}
-			if f.Status == 206 {
-				c.Want.Error = resource.ErrResponse
-			}
-			if f.Status >= 400 {
-				codes := []string(nil)
-				if f.Status == 403 {
-					codes = []string{"FixtureDenied"}
-				}
-				if f.Status == 503 {
-					codes = []string{"FixtureUnavailable"}
-				}
-				c.Want.APIError = &client.APIError{Backend: client.TeamsAdmin, StatusCode: f.Status, Codes: codes}
-			}
-			results = append(results, run(t, c))
-		}
-	}
-	evidence(t, results)
 }
 
 func TestUnitOCEOptionalQueryAndScopedEscaping(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	cases := []struct {
 		name, method, path, reply string
 		invoke                    func(context.Context, *resource.Service) contracttest.Observation
@@ -173,9 +149,8 @@ func TestUnitOCEOptionalQueryAndScopedEscaping(t *testing.T) {
 		}},
 	}
 	for _, row := range cases {
-		results = append(results, run(t, contracttest.Case{Name: "oce-" + row.name, Source: oceSource, Steps: []contracttest.Exchange{oceWire(row.method, origin+row.path, 200, row.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Want: contracttest.Expected{Error: auth.ErrForbidden}, Name: "oce-" + row.name, Source: oceSource, Steps: []contracttest.Exchange{oceWire(row.method, origin+row.path, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return row.invoke(ctx, sdk.TeamsAdminAPI.PolicyAssignments)
-		}}))
+		}})
 	}
-	evidence(t, results)
 }

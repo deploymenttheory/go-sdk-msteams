@@ -186,6 +186,7 @@ func TestAccAppSetupPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, e := sdk.TeamsAdminAPI.TeamsAppSetupPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_app_setup_policy", "get_global", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -193,7 +194,8 @@ func TestAccAppSetupPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("app setup Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, e := sdk.TeamsAdminAPI.TeamsAppSetupPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, e := sdk.TeamsAdminAPI.TeamsAppSetupPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_app_setup_policy", "list", listResponse, nil)
 	selected, selectionErr := globalAppSetupPolicy(listed)
 	if e != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(appSetupProjection(value), appSetupProjection(selected)) {
 		t.Fatal("setup Global read/list projections differ")

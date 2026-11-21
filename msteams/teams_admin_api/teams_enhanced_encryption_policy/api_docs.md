@@ -62,6 +62,6 @@ validation and headers. The family uses modern headers without MPACmdlet. Native
 API methods are independent of PowerShell release numbers and internal flight
 switches. Synthetic application/delegated comparisons establish wire behavior,
 not tenant authorization, persistence or effective encryption. See
-[source evidence](../../../docs/implementation/policies/enhanced-encryption-evidence.md)
+[unit tests](service_test.go)
 and the [lab acceptance record](../../../docs/implementation/policies/enhanced-encryption-lab-acceptance.md).
 Issue #117 and full command/tenant qualification remain open.

@@ -58,7 +58,7 @@ offers the Boolean accepted by the captured underlying tenant helper. PassThru a
 omitted required helper arguments fail at the source binding boundary and are
 not exposed as native operations. Mutations never replay automatically.
 
-See [source evidence](../../../docs/implementation/policies/feedback-policy-evidence.md)
+See [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/feedback-policy-lab-acceptance.md).
 All five commands/eight sets have native mappings. Issue #119 remains open for
 full command and successful tenant qualification.

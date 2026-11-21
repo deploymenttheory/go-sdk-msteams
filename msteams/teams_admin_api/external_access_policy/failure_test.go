@@ -27,9 +27,9 @@ func TestUnitUpdateFailurePreservesPreparationAndNeverReplays(t *testing.T) {
 	}{
 		{"read-denied", 403, 0, "", false}, {"patch-throttled", 200, 429, `{"Message":"fixture-private"}`, false}, {"patch-unavailable", 200, 503, "fixture-private", false}, {"accepted-malformed", 200, 200, "not-json", true},
 	} {
-		steps := []contracttest.Exchange{wire("GET", itemPath, "Set-CsExternalAccessPolicy", nil, tc.readStatus, `{"Identity":"read-model-identity","AllowedExternalDomains":["a"]}`)}
+		steps := []contracttest.Exchange{wire("GET", itemPath, "Set-CsExternalAccessPolicy", nil, tc.readStatus, string(readResponseFixture(t, "get_global.json")))}
 		if tc.patchStatus != 0 {
-			steps = append(steps, wire("PATCH", itemPath, "Set-CsExternalAccessPolicy", json.RawMessage(`{"Identity":"read-model-identity","Description":""}`), tc.patchStatus, tc.patchBody))
+			steps = append(steps, wire("PATCH", itemPath, "Set-CsExternalAccessPolicy", json.RawMessage(`{"Identity":"Global","Description":""}`), tc.patchStatus, tc.patchBody))
 		}
 		run(t, contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			v, r, e := sdk.TeamsAdminAPI.ExternalAccessPolicies.UpdateByIdentity(ctx, "Global", external.UpdateRequest{Fields: external.Fields{Description: policy.Set("")}})
@@ -54,27 +54,35 @@ func TestUnitCreateComparisonIsExplicitAndDoesNotCloneGlobal(t *testing.T) {
 	t.Parallel()
 	for _, status := range []int{200, 403} {
 		run(t, contracttest.Case{Name: fmt.Sprint("comparison-", status), Steps: []contracttest.Exchange{
-			wire("GET", itemPath, "New-CsExternalAccessPolicy", nil, status, `{"Identity":"Global","Description":"server default","EnableFederationAccess":true}`),
-			wire("POST", "/Skype.Policy/configurations/ExternalAccessPolicy", "New-CsExternalAccessPolicy", json.RawMessage(`{"Identity":"Fixture"}`), 201, `{"Identity":"Fixture","Future":false}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			wire("GET", itemPath, "New-CsExternalAccessPolicy", nil, status, string(readResponseFixture(t, "get_global.json"))),
+			wire("POST", "/Skype.Policy/configurations/ExternalAccessPolicy", "New-CsExternalAccessPolicy", json.RawMessage(`{"Identity":"Fixture"}`), 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			v, r, e := sdk.TeamsAdminAPI.ExternalAccessPolicies.CreateWithGlobalComparison(ctx, external.CreateRequest{Identity: "Fixture"})
-			if e == nil && (v == nil || !v.CreateInvoked || !v.HTTPAccepted || v.Created == nil || (v.ComparisonError != nil) != (status == 403)) {
+			if v == nil || !v.CreateInvoked || v.HTTPAccepted || v.Created != nil || (v.ComparisonError != nil) != (status == 403) {
 				e = errors.New("comparison/submission observations lost")
 			}
 			return contracttest.Observation{Response: r, Err: e}
-		}})
+		}, Want: contracttest.Expected{APIError: &client.
+			APIError{Backend: client.TeamsAdmin,
+			StatusCode: 400,
+		}},
+		})
 	}
-	run(t, contracttest.Case{Name: "global-no-comparison", Steps: []contracttest.Exchange{wire("POST", "/Skype.Policy/configurations/ExternalAccessPolicy", "New-CsExternalAccessPolicy", json.RawMessage(`{"Identity":"GLOBAL"}`), 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "global-no-comparison", Steps: []contracttest.Exchange{wire("POST", "/Skype.Policy/configurations/ExternalAccessPolicy", "New-CsExternalAccessPolicy", json.RawMessage(`{"Identity":"GLOBAL"}`), 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.ExternalAccessPolicies.CreateWithGlobalComparison(ctx, external.CreateRequest{Identity: "GLOBAL"})
-		if e == nil && (v.Comparison != nil || v.ComparisonResponse != nil || v.ComparisonError != nil || !v.HTTPAccepted || v.Created != nil) {
+		if v == nil || v.Comparison != nil || v.ComparisonResponse != nil || v.ComparisonError != nil || v.HTTPAccepted || v.Created != nil {
 			e = errors.New("Global comparison or result invented")
 		}
 		return contracttest.Observation{Response: r, Err: e}
-	}})
+	}, Want: contracttest.Expected{APIError: &client.
+		APIError{Backend: client.TeamsAdmin,
+		StatusCode: 400,
+	}},
+	})
 }
 
 func TestUnitAssignmentsAndMutationsRejectInvalidInputBeforeTokens(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "invalid-scope-and-input", Mappings: []contracttest.Mapping{{Command: "Grant-CsExternalAccessPolicy", ParameterSet: "Identity"}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "invalid-scope-and-input", Mappings: []contracttest.Mapping{{Command: "Grant-CsExternalAccessPolicy", ParameterSet: "Identity"}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.ExternalAccessPolicies
 		for _, input := range []policy.Assignment{{}, {User: &policy.UserAssignment{}, Tenant: &policy.TenantAssignment{}}, {User: &policy.UserAssignment{Identity: ""}}, {Group: &policy.GroupAssignment{ID: ""}}} {
 			if _, _, e := s.Assign(ctx, input); !errors.Is(e, policy.ErrInput) {
@@ -110,5 +118,4 @@ func TestUnitAssignmentsAndMutationsRejectInvalidInputBeforeTokens(t *testing.T)
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{result})
 }

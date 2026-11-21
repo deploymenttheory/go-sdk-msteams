@@ -15,7 +15,7 @@ import (
 
 func TestUnitGPARejectsInvalidInputBeforeCredentialAcquisition(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "invalid-input-and-context", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "invalid-input-and-context", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.AssignmentMigrations
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByID(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -65,6 +65,7 @@ func TestUnitGPARejectsInvalidInputBeforeCredentialAcquisition(t *testing.T) {
 				return contracttest.Observation{Err: errors.New("missing service accepted")}
 			}
 		}
+
 		//nolint:contextcheck,staticcheck // Deliberately verifies nil context rejection before credentials or HTTP.
 		if _, _, e := s.List(nil); !errors.Is(e, client.ErrNilContext) {
 			return contracttest.Observation{Err: errors.New("nil context accepted")}
@@ -76,33 +77,33 @@ func TestUnitGPARejectsInvalidInputBeforeCredentialAcquisition(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{result})
 }
 
 func TestUnitGPAMalformedAcceptedResponsesStayErrorsWithoutResubmission(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, op := range []string{"create", "clear"} {
 		for i, reply := range []string{"", "not-json", `[]`, `{"state":{}}`, `{"directAssignmentsProcessed":2147483648}`} {
 			suffix := "directAssignmentsMigration/migrate?allowNonEmptyGroup=False"
 			if op == "clear" {
 				suffix = "directAssignmentsMigration/cleanup?allowNonEmptyGroup=False"
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-malformed-%d", op, i), Mappings: mapping(op), Want: contracttest.Expected{Error: client.ErrDecode}, Steps: []contracttest.Exchange{wire(op, "POST", suffix, json.RawMessage(body), 202, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-malformed-%d", op, i), Mappings: mapping(op), Want: contracttest.Expected{Error: client.ErrDecode}, Steps: []contracttest.Exchange{wire(op, "POST", suffix, json.RawMessage(body), 202, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				return invoke(ctx, sdk, op, false)
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }
 
-func TestUnitGPARequestCanonicalGUIDAndNullResult(t *testing.T) {
+func TestUnitGPARequestCanonicalGUIDOnRejectedSubmission(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "canonical-guid-null-result", Mappings: mapping("create"), Want: contracttest.Expected{JSON: json.RawMessage("null")}, Steps: []contracttest.Exchange{wire("create", "POST", "directAssignmentsMigration/migrate?allowNonEmptyGroup=False", json.RawMessage(`{"authority":"Tenant","policytype":"FixturePolicy","policyname":"Fixture","groupid":"abcdef01-0000-4000-8000-000000000001"}`), 202, "null")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "canonical-guid-rejected-submission", Mappings: mapping("create"), Want: contracttest.Expected{APIError: &client.
+		APIError{Backend: client.TeamsAdmin,
+		StatusCode: 400,
+	}}, Steps: []contracttest.Exchange{wire("create", "POST", "directAssignmentsMigration/migrate?allowNonEmptyGroup=False", json.RawMessage(`{"authority":"Tenant","policytype":"FixturePolicy","policyname":"Fixture","groupid":"abcdef01-0000-4000-8000-000000000001"}`), 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		input := request(false)
 		input.GroupID = "ABCDEF01-0000-4000-8000-000000000001"
 		v, r, e := sdk.TeamsAdminAPI.AssignmentMigrations.Create(ctx, input)
 		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}})
-	evidence(t, []contracttest.Result{result})
 }

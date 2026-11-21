@@ -76,7 +76,7 @@ func customCase(name string, current []*resource.CustomizationApp) ([]*resource.
 	}
 	return edit.Apply(current)
 }
-func TestUnitAppSetupPinnedListComparisons(t *testing.T) {
+func TestUnitAppSetupTypedListComparisons(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Lists {
 		var value any

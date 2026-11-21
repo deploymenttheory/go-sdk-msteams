@@ -66,5 +66,5 @@ Actual client-secret and certificate Global reads on 2026-11-21 returned 403.
 Successful Teams roles, consent, cloud/feature availability, writes, read-back,
 cleanup and effective playback remain unqualified. No privilege grants are
 implicit in using this service. See the
-[source evidence](../../../docs/implementation/policies/audio-conferencing-custom-prompts-evidence.md)
+[unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/audio-conferencing-custom-prompts-lab-acceptance.md).

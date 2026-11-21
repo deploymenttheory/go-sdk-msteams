@@ -32,7 +32,7 @@ func applicationCleanupExchange(method, path string, status int, body string) co
 func runApplicationCleanupCase(t *testing.T, c contracttest.Case) {
 	t.Helper()
 	c.Family = "application_access_lab_cleanup"
-	c.Source = "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json"
+	c.Source = "tests/integration/lab/application_access_policy_cleanup_test.go"
 	c.Scope = "service"
 	discovery := applicationCleanupExchange(
 		"GET", "/Teams.Tenant/serviceDiscovery", 200,

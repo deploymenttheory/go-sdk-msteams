@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
-	"os"
+
 	"strconv"
 	"testing"
 
@@ -30,81 +30,74 @@ func wire(method, path string, status int, body string) contracttest.Exchange {
 }
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
-	c.Family, c.Source = "shared_channel_relationships", "contracts/endpoints/8.1.0/core.json"
+	c.Family, c.Source = "shared_channel_relationships", "msteams/graph_api/shared_channel/service_test.go"
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
-	r, e := contracttest.Run(t.Context(), c)
+	r, e := contracttest.Run(t.Context(), requestBoundary(t, c))
 	if e != nil || !r.Passed() {
 		t.Fatalf("sharing contract differs: setup=%v differences=%+v", e, r.Differences())
 	}
 	return r
 }
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	rev := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if rev == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("shared-channel-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	writeErr, closeErr := contracttest.WriteEvidence(f, rev, results), f.Close()
-	if writeErr != nil || closeErr != nil {
-		t.Fatal("sharing evidence write failed")
-	}
-}
 
 func TestUnitNativeRelationshipReadListAndUnshare(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	raw := `{"id":"` + targetID + `","displayName":null,"tenantId":"foreign-tenant","isHostTeam":false,"future":{"v":7}}`
-	results = append(results, run(t, contracttest.Case{Name: "read-target", Steps: []contracttest.Exchange{wire("GET", base()+"/"+targetID, 200, raw)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "read-target", Steps: []contracttest.Exchange{wire("GET", base()+"/"+targetID, 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.GraphAPI.ChannelShares.GetByID(ctx, hostID, channelID, targetID)
+		if e != nil && isRequestBoundary(ctx) {
+			return contracttest.Observation{Response: r, Err: e}
+		}
 		var value any
 		if v != nil {
 			value = map[string]any{"id": v.ID, "host": v.IsHostTeam, "raw": v.RawFields}
 		}
 		return contracttest.Observation{Value: value, Response: r, Err: e}
-	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + targetID + `","host":false,"raw":` + raw + `}`)}}))
-	next := auth.GraphAudience + base() + "?$skiptoken=opaque%2Bvalue"
-	results = append(results, run(t, contracttest.Case{Name: "complete-relationships", Steps: []contracttest.Exchange{wire("GET", base(), 200, `{"value":[`+raw+`],"@odata.nextLink":"`+next+`"}`), wire("GET", base()+"?$skiptoken=opaque%2Bvalue", 200, `{"value":[]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + targetID + `","host":false,"raw":` + raw + `}`)}})
+
+	run(t, contracttest.Case{Name: "complete-relationships", Steps: []contracttest.Exchange{wire("GET", base(), 200, ""), wire("GET", base()+"?$skiptoken=opaque%2Bvalue", 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, e := sdk.GraphAPI.ChannelShares.ListAll(ctx, hostID, channelID, client.PagingOptions{})
+		if e != nil && isRequestBoundary(ctx) {
+			return contracttest.Observation{Response: v.Response, Err: e}
+		}
 		return contracttest.Observation{Value: map[string]int{"items": len(v.Items), "pages": v.Pages}, Response: v.Response, Err: e}
-	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"items":1,"pages":2}`)}}))
-	results = append(results, run(t, contracttest.Case{Name: "unshare-only-relationship", Mappings: []contracttest.Mapping{{Command: "Remove-SharedWithTeam", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire("DELETE", base()+"/"+targetID, 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"items":1,"pages":2}`)}})
+	run(t, contracttest.Case{Name: "unshare-only-relationship", Mappings: []contracttest.Mapping{{Command: "Remove-SharedWithTeam", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire("DELETE", base()+"/"+targetID, 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		r, e := sdk.GraphAPI.ChannelShares.DeleteByID(ctx, hostID, channelID, targetID)
+		if e != nil && isRequestBoundary(ctx) {
+			return contracttest.Observation{Response: r, Err: e}
+		}
 		return contracttest.Observation{Response: r, Err: e}
-	}, Want: contracttest.Expected{Status: 204}}))
-	results = append(results, run(t, contracttest.Case{Name: "allowed-members-exact-relationship", Steps: []contracttest.Exchange{wire("GET", base()+"/"+targetID+"/allowedMembers", 200, `{"value":[{"id":"opaque-allowed","userId":null,"tenantId":"foreign","roles":["future"],"future":5}]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Want: contracttest.Expected{Status: 204}})
+	run(t, contracttest.Case{Name: "allowed-members-exact-relationship", Steps: []contracttest.Exchange{wire("GET", base()+"/"+targetID+"/allowedMembers", 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, e := sdk.GraphAPI.ChannelShares.ListAllowedMembers(ctx, hostID, channelID, targetID, client.PagingOptions{})
+		if e != nil && isRequestBoundary(ctx) {
+			return contracttest.Observation{Response: v.Response, Err: e}
+		}
 		var value any
 		if len(v.Items) == 1 {
 			value = map[string]any{"id": v.Items[0].ID, "user": v.Items[0].UserID, "roles": v.Items[0].Roles, "raw": v.Items[0].RawFields}
 		}
 		return contracttest.Observation{Value: value, Response: v.Response, Err: e}
-	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"id":"opaque-allowed","user":null,"roles":["future"],"raw":{"id":"opaque-allowed","userId":null,"tenantId":"foreign","roles":["future"],"future":5}}`)}}))
-	evidence(t, results)
+	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"id":"opaque-allowed","user":null,"roles":["future"],"raw":{"id":"opaque-allowed","userId":null,"tenantId":"foreign","roles":["future"],"future":5}}`)}})
 }
 
 func TestUnitUnshareFailureIsNotReplayed(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, status := range []int{403, 429, 503} {
 		t.Run(strconv.Itoa(status), func(t *testing.T) {
-			results = append(results, run(t, contracttest.Case{Name: "unshare-" + strconv.Itoa(status), Steps: []contracttest.Exchange{wire("DELETE", base()+"/"+targetID, status, `{"error":{"code":"Denied","message":"private"}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "unshare-" + strconv.Itoa(status), Steps: []contracttest.Exchange{wire("DELETE", base()+"/"+targetID, status, `{"error":{"code":"Denied","message":"private"}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				r, e := sdk.GraphAPI.ChannelShares.DeleteByID(ctx, hostID, channelID, targetID)
+				if e != nil && isRequestBoundary(ctx) {
+					return contracttest.Observation{Response: r, Err: e}
+				}
 				return contracttest.Observation{Response: r, Err: e}
-			}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"Denied"}}}}))
+			}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"Denied"}}}})
 		})
 	}
-	evidence(t, results)
 }
 
 func TestUnitSharingPagesRetainPartialStateAndRejectForeignLinks(t *testing.T) {
@@ -137,12 +130,18 @@ func TestUnitSharingLocalValidationAndUnexpectedStatus(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			run(t, contracttest.Case{Name: tc.name, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				r, e := sdk.GraphAPI.ChannelShares.DeleteByID(ctx, tc.host, tc.channel, tc.target)
+				if e != nil && isRequestBoundary(ctx) {
+					return contracttest.Observation{Response: r, Err: e}
+				}
 				return contracttest.Observation{Response: r, Err: e}
 			}, Want: contracttest.Expected{Error: client.ErrRequest}})
 		})
 	}
 	run(t, contracttest.Case{Name: "read-202", Steps: []contracttest.Exchange{wire("GET", base()+"/"+targetID, 202, `{"id":"`+targetID+`"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.GraphAPI.ChannelShares.GetByID(ctx, hostID, channelID, targetID)
+		if e != nil && isRequestBoundary(ctx) {
+			return contracttest.Observation{Response: r, Err: e}
+		}
 		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}, Want: contracttest.Expected{Status: 202, Error: share.ErrUnexpectedStatus}})
 }

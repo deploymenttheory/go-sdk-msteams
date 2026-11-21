@@ -17,22 +17,21 @@ import (
 
 func TestUnitAppPermissionGrantRequiresOneExplicitScope(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, c := range []struct {
 		name  string
 		input policy.Assignment
 	}{{"empty", policy.Assignment{}}, {"mixed", policy.Assignment{User: &policy.UserAssignment{Identity: "fixture"}, Tenant: &policy.TenantAssignment{}}}} {
-		results = append(results, run(t, contracttest.Case{Name: "grant-" + c.name, Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsAppPermissionPolicy", ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: "grant-" + c.name, Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsAppPermissionPolicy", ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			v, r, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.Assign(ctx, c.input)
 			return contracttest.Observation{Value: v, Response: r, Err: e}
-		}}))
+		}})
 	}
-	evidence(t, results)
 }
 
 func TestUnitAppPermissionInputAndContextRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies
 		for _, id := range []string{"", " ", ".", "..", "scope/", "/empty", "scope/..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -82,12 +81,11 @@ func TestUnitAppPermissionInputAndContextRejectBeforeHTTP(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{result})
 }
 
 func TestUnitAppPermissionMutationsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, operation := range []string{"create", "patch", "delete", "user", "group", "tenant"} {
 		for _, status := range []int{400, 401, 403, 429, 503} {
 			method, command, path, body, set := "POST", "New-CsTeamsAppPermissionPolicy", collection, `{"Identity":"Global"}`, "Identity"
@@ -103,7 +101,7 @@ func TestUnitAppPermissionMutationsKeepStatusAndNeverReplay(t *testing.T) {
 			case "tenant":
 				method, command, path, body, set = "PATCH", "Grant-CsTeamsAppPermissionPolicy", "/Skype.Policy/tenants/policies/TeamsAppPermissionPolicy", `{"PolicyName":null,"additionalParameters":null,"forceSwitchPresent":false}`, "GrantToTenant"
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies
 				var observation contracttest.Observation
 				switch operation {
@@ -132,8 +130,7 @@ func TestUnitAppPermissionMutationsKeepStatusAndNeverReplay(t *testing.T) {
 				}
 				observation.Err = nil
 				return observation
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }

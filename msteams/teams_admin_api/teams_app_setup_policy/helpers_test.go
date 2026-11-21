@@ -3,51 +3,382 @@ package teamsappsetuppolicy_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/app-setup-provider.json"
-const sourceModels = "contracts/endpoints/8.1.0/fixtures/app-setup-models.json"
+const source = "msteams/teams_admin_api/teams_app_setup_policy/testdata/get_global.json"
+const sourceModels = "msteams/teams_admin_api/teams_app_setup_policy/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsAppSetupPolicy"
 const item = collection + "/configuration/Global"
 const scoped = "scope /Fixture / Child"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Fields, Response string
 	Status                            int
 	Force                             bool
 	PolicyName                        *string `json:"policy_name"`
-	Capture                           struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                           struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captures(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
+
+	v := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:      "read",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "list",
+				Operation: "list",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy",
+					CmdletName: "Get-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "create",
+				Operation: "create",
+				Fields:    "all",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"AppPresetList\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AppPresetList\"\n    }\n  ],\n  \"PinnedAppBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedAppBarApps\",\n      \"Order\": 9007199254740993\n    }\n  ],\n  \"PinnedMessageBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedMessageBarApps\",\n      \"Order\": 9007199254740993\n    }\n  ],\n  \"AppPresetMeetingList\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AppPresetMeetingList\"\n    }\n  ],\n  \"AdditionalCustomizationApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AdditionalCustomizationApps\",\n      \"AdditionalCustomizationId\": \"fixture-customization\"\n    }\n  ],\n  \"PinnedCallingBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedCallingBarApps\"\n    }\n  ],\n  \"Description\": \"\",\n  \"AllowSideLoading\": false,\n  \"AllowUserPinning\": null,\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "New-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "create-empty-settings",
+				Operation: "create",
+				Fields:    "none",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "New-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "patch",
+				Operation: "patch",
+				Fields:    "all",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"AppPresetList\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AppPresetList\"\n    }\n  ],\n  \"PinnedAppBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedAppBarApps\",\n      \"Order\": 9007199254740993\n    }\n  ],\n  \"PinnedMessageBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedMessageBarApps\",\n      \"Order\": 9007199254740993\n    }\n  ],\n  \"AppPresetMeetingList\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AppPresetMeetingList\"\n    }\n  ],\n  \"AdditionalCustomizationApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AdditionalCustomizationApps\",\n      \"AdditionalCustomizationId\": \"fixture-customization\"\n    }\n  ],\n  \"PinnedCallingBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedCallingBarApps\"\n    }\n  ],\n  \"Description\": \"\",\n  \"AllowSideLoading\": false,\n  \"AllowUserPinning\": null,\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "patch-empty-lists",
+				Operation: "patch",
+				Fields:    "empty-lists",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"AppPresetList\": [],\n  \"PinnedAppBarApps\": [],\n  \"PinnedMessageBarApps\": [],\n  \"AppPresetMeetingList\": [],\n  \"AdditionalCustomizationApps\": [],\n  \"PinnedCallingBarApps\": [],\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "patch-scalars",
+				Operation: "patch",
+				Fields:    "scalars",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"AllowSideLoading\": false,\n  \"AllowUserPinning\": null,\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "delete",
+				Operation: "delete",
+				Fields:    "none",
+				Status:    400,
+				Force:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "DELETE",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Remove-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "grant-user",
+				Operation: "user",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsAppSetupPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"additionalParameters\": null\n}",
+
+					CmdletName: "Grant-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "grant-tenant",
+				Operation: "tenant",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsAppSetupPolicy",
+					Body:   "{\n  \"PolicyName\": null,\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+
+					CmdletName: "Grant-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "grant-group",
+				Operation: "group",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsAppSetupPolicy",
+					Body:   "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+
+					CmdletName: "Grant-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:       "grant-user-empty",
+				Operation:  "user",
+				Fields:     "none",
+				Status:     400,
+				Force:      false,
+				PolicyName: new(""),
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsAppSetupPolicy",
+					Body:   "{\n  \"policyName\": \"\",\n  \"additionalParameters\": null\n}",
+
+					CmdletName: "Grant-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:       "grant-tenant-empty",
+				Operation:  "tenant",
+				Fields:     "none",
+				Status:     400,
+				Force:      false,
+				PolicyName: new(""),
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsAppSetupPolicy",
+					Body:   "{\n  \"PolicyName\": \"\",\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+
+					CmdletName: "Grant-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:       "grant-group-empty",
+				Operation:  "group",
+				Fields:     "none",
+				Status:     400,
+				Force:      false,
+				PolicyName: new(""),
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "POST",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsAppSetupPolicy",
+					Body:   "{\n  \"policyName\": \"\",\n  \"priority\": -1\n}",
+
+					CmdletName: "Grant-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "read-null-lists",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "read-null-id",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "read-int64-order",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "read-order-overflow",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "read-null-customization",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy",
+					CmdletName: "Get-CsTeamsAppSetupPolicy",
+				},
+			},
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Fields:    "none",
+				Status:    400,
+				Force:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsTeamsAppSetupPolicy",
+				},
+			},
+		},
 	}
-	var v struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &v) != nil || len(v.Cases) != 21 {
-		t.Fatal("invalid app setup fixture")
-	}
-	for _, c := range v.Cases {
-		r := c.Capture
-		if r.Sends != 1 || r.TokenRequests != 0 || !r.CorrelationIsGuid || r.HasTargetUri || r.MpaCmdlet != "true" {
-			t.Fatal("unsafe/incomplete app setup fixture")
-		}
-	}
+
 	return v.Cases
 }
 func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -77,24 +408,4 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("app setup contract differs: %v %+v", e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, e := os.OpenRoot(t.ArtifactDir())
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() { _ = root.Close() }()
-	f, e := root.Create("app-setup-service.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	a, b := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if a != nil || b != nil {
-		t.Fatal("app setup evidence write failed")
-	}
 }

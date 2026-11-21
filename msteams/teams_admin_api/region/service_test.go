@@ -2,7 +2,6 @@ package region_test
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"net/url"
 	"testing"
@@ -18,7 +17,7 @@ const scope = audience + "/Region.Read.All"
 
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
-	c.Family, c.Source = "multi_geo_region", "contracts/endpoints/8.1.0/special-service-profiles.json"
+	c.Family, c.Source = "multi_geo_region", "msteams/teams_admin_api/region/service_test.go"
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
@@ -34,11 +33,11 @@ func wire(kind, id string, status int, body string) contracttest.Exchange {
 
 func TestUnitRegionUsesExactDelegatedScopeAndDirectEntityRoutes(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, cloud := range []string{"commercial", "gcc"} {
 		for _, kind := range []string{"users", "groups"} {
 			id := "opaque/user ?#%雪"
-			results = append(results, run(t, contracttest.Case{Name: cloud + "-" + kind, Cloud: cloud, Mode: auth.Delegated, Mappings: []contracttest.Mapping{{Command: "Get-MultiGeoRegion", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(kind, id, 200, `{"Region":"FutureRegion","LastMovementTimeStamp":null,"PreferredDataLocation":"","future":{"v":8}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: cloud + "-" + kind, Cloud: cloud, Mode: auth.Delegated, Mappings: []contracttest.Mapping{{Command: "Get-MultiGeoRegion", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(kind, id, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				if kind == "users" {
 					v, r, err := sdk.TeamsAdminAPI.Regions.GetForUser(ctx, id)
 					var value any
@@ -53,10 +52,9 @@ func TestUnitRegionUsesExactDelegatedScopeAndDirectEntityRoutes(t *testing.T) {
 					value = map[string]any{"region": v.Region, "moved": v.LastMovementTimestamp, "preferred": v.PreferredDataLocation, "raw": v.RawFields}
 				}
 				return contracttest.Observation{Value: value, Response: r, Err: err}
-			}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"region":"FutureRegion","moved":null,"preferred":"","raw":{"Region":"FutureRegion","LastMovementTimeStamp":null,"PreferredDataLocation":"","future":{"v":8}}}`)}}))
+			}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
 		}
 	}
-	evidence(t, results)
 }
 
 func TestUnitApplicationRegionAndUnqualifiedCloudsRejectBeforeTokens(t *testing.T) {

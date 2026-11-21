@@ -99,6 +99,7 @@ func TestAccFilesPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsFilesPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_files_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		phase := "preparation"
@@ -110,7 +111,8 @@ func TestAccFilesPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("files policy %s Global read failed (HTTP %d); no response payload retained", phase, status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsFilesPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsFilesPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_files_policy", "list", listResponse, nil)
 	selected, selectionErr := globalFilesPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(filesPolicyProjection(value), filesPolicyProjection(selected)) {
 		t.Fatal("files policy Global read/list projections differ")

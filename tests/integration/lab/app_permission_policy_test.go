@@ -146,6 +146,7 @@ func TestAccAppPermissionPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_app_permission_policy", "get_global", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -153,7 +154,8 @@ func TestAccAppPermissionPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("app permission Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_app_permission_policy", "list", listResponse, nil)
 	selected, selectionErr := globalAppPermissionPolicy(listed)
 	if e != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(appPermissionProjection(value), appPermissionProjection(selected)) {
 		t.Fatal("app permission Global read/list observations differ")

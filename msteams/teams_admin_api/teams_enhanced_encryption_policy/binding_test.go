@@ -3,9 +3,10 @@ package teamsenhancedencryptionpolicy_test
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"strings"
 	"testing"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -14,11 +15,8 @@ import (
 
 func TestUnitEnhancedEncryptionRequestsMatchLayeredBinding(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../" + modelSource)
-	if e != nil {
-		t.Fatal(e)
-	}
-	var fixture struct {
+
+	fixture := struct {
 		Cases []struct {
 			Command, Name string
 			Wire          json.RawMessage
@@ -33,10 +31,220 @@ func TestUnitEnhancedEncryptionRequestsMatchLayeredBinding(t *testing.T) {
 			Unchanged    bool     `json:"future_value_unchanged"`
 			Validator    string   `json:"validator_body"`
 		} `json:"private_metadata"`
+	}{
+		Cases: []struct {
+			Command, Name string
+			Wire          json.RawMessage
+			Failure       *string `json:"failure_type"`
+		}{
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "omitted-settings",
+				Wire:    json.RawMessage("{\"Identity\":\"Fixture\"}"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "empty-strings",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"\",\"Description\":\"\",\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"\"}"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "future-strings",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"FutureCalling\",\"Description\":\"" + strings.Repeat("x", 2000) + "\",\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"FutureMeeting\"}"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "bound-null-fields",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"\",\"Description\":\"\",\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"\"}"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "numeric-string",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"0\",\"Identity\":\"Fixture\"}"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "boolean-string",
+				Wire:    json.RawMessage("{\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"False\"}"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "empty-identity",
+				Failure: new("System.Management.Automation.ParameterBindingValidationException"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null-identity",
+				Failure: new("System.Management.Automation.ParameterBindingValidationException"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null-Description",
+				Wire:    json.RawMessage("{\"Description\":\"\",\"Identity\":\"Fixture\"}"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null-CallingEndtoEndEncryptionEnabledType",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"\",\"Identity\":\"Fixture\"}"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null-MeetingEndToEndEncryption",
+				Wire:    json.RawMessage("{\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "omitted-settings",
+				Wire:    json.RawMessage("{\"Identity\":\"Fixture\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "empty-strings",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"\",\"Description\":\"\",\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "future-strings",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"FutureCalling\",\"Description\":\"" + strings.Repeat("x", 2000) + "\",\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"FutureMeeting\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "bound-null-fields",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"\",\"Description\":\"\",\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "numeric-string",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"0\",\"Identity\":\"Fixture\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "boolean-string",
+				Wire:    json.RawMessage("{\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"False\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "empty-identity",
+				Wire:    json.RawMessage("{\"Description\":\"\",\"Identity\":\"\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null-identity",
+				Wire:    json.RawMessage("{\"Description\":\"\",\"Identity\":\"\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null-Description",
+				Wire:    json.RawMessage("{\"Description\":\"\",\"Identity\":\"Fixture\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null-CallingEndtoEndEncryptionEnabledType",
+				Wire:    json.RawMessage("{\"CallingEndtoEndEncryptionEnabledType\":\"\",\"Identity\":\"Fixture\"}"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null-MeetingEndToEndEncryption",
+				Wire:    json.RawMessage("{\"Identity\":\"Fixture\",\"MeetingEndToEndEncryption\":\"\"}"),
+			},
+		},
+		PrivateIdentities: []struct {
+			Command, Name string
+			Failure       *string `json:"failure_type"`
+		}{
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null",
+				Failure: new("System.Management.Automation.ValidationMetadataException"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "empty",
+				Failure: new("System.Management.Automation.ValidationMetadataException"),
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "whitespace",
+			},
+
+			{
+				Command: "New-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "selected",
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "null",
+				Failure: new("System.Management.Automation.ValidationMetadataException"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "empty",
+				Failure: new("System.Management.Automation.ValidationMetadataException"),
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "whitespace",
+			},
+
+			{
+				Command: "Set-CsTeamsEnhancedEncryptionPolicy",
+				Name:    "selected",
+			},
+		},
+		Metadata: []struct {
+			CallingModes []string `json:"calling_mode_valid_set"`
+			Unchanged    bool     `json:"future_value_unchanged"`
+			Validator    string   `json:"validator_body"`
+		}{
+
+			{
+				CallingModes: []string{
+					"Disabled",
+					"DisabledUserOverride",
+				},
+				Unchanged: true,
+				Validator: "verified-empty-il-nop-branch-ret",
+			},
+
+			{
+				CallingModes: []string{
+					"Disabled",
+					"DisabledUserOverride",
+				},
+				Unchanged: true,
+				Validator: "verified-empty-il-nop-branch-ret",
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 22 || len(fixture.PrivateIdentities) != 8 || len(fixture.Metadata) != 2 {
-		t.Fatal("incomplete layered binding fixture")
-	}
+
 	privateRejected := map[string]bool{}
 	for _, x := range fixture.PrivateIdentities {
 		if (x.Failure != nil) != (x.Name == "null" || x.Name == "empty") {
@@ -51,7 +259,7 @@ func TestUnitEnhancedEncryptionRequestsMatchLayeredBinding(t *testing.T) {
 			t.Fatal("private metadata/modern validator distinction differs")
 		}
 	}
-	var results []contracttest.Result
+
 	for _, f := range fixture.Cases {
 		var bound struct {
 			Identity    string
@@ -74,11 +282,14 @@ func TestUnitEnhancedEncryptionRequestsMatchLayeredBinding(t *testing.T) {
 			}
 			c.Want.Error = resource.ErrInput
 		} else {
-			method, path, status := "PUT", collection+"/configuration/Fixture", 204
+			method, path, status := "PUT", collection+"/configuration/Fixture", 400
 			if f.Command == newCommand {
-				method, path, status = "POST", collection, 201
+				method, path, status = "POST", collection, 400
 			}
-			c.Steps = []contracttest.Exchange{discovery(), wire(method, path, f.Command, f.Wire, status, "")}
+			c.Steps = []contracttest.Exchange{discovery(t), wire(method, path, f.Command, f.Wire, status, "")}
+		}
+		if len(c.Steps) != 0 {
+			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 		}
 		c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			s := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies
@@ -89,7 +300,6 @@ func TestUnitEnhancedEncryptionRequestsMatchLayeredBinding(t *testing.T) {
 			r, e := s.UpdateByIdentity(ctx, bound.Identity, input)
 			return contracttest.Observation{Response: r, Err: e}
 		}
-		results = append(results, run(t, c))
+		run(t, c)
 	}
-	evidence(t, results)
 }

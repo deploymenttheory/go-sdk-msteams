@@ -63,6 +63,6 @@ and read enrichment additionally need directory-user read permission; app
 enrichment uses User.Read.All. A Teams directory role does not replace Graph
 consent. No permission is granted by the SDK or examples.
 
-See [pinned contracts](../../../docs/implementation/core/channel-contract-evidence.md),
-[implementation evidence](../../../docs/implementation/core/channel-members-sdk-evidence.md)
+See [unit tests](service_test.go),
+[unit tests](service_test.go)
 and [gated lab procedure](../../../docs/implementation/core/channel-membership-lab-acceptance.md).

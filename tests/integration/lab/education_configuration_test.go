@@ -99,6 +99,7 @@ func TestAccEducationConfigurationReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsEducationConfigurations.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_education_configuration", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -106,7 +107,8 @@ func TestAccEducationConfigurationReadOnly(t *testing.T) {
 		}
 		t.Fatalf("education configuration Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsEducationConfigurations.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsEducationConfigurations.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_education_configuration", "list", listResponse, nil)
 	selected, selectionErr := globalEducationConfiguration(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(educationConfigurationProjection(value), educationConfigurationProjection(selected)) {
 		t.Fatal("education configuration Global read/list projections differ")

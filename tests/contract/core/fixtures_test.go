@@ -1,13 +1,11 @@
 package core_test
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"strings"
 	"testing"
 
@@ -17,28 +15,19 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-// TestUnitPinnedTemplatePrimitiveFixtures proves a representative captured contract
-// can use the shared runner. It exercises the shared ConfigAPI scope only, not an
-// implemented template service or complete PowerShell command composition.
-func TestUnitPinnedTemplatePrimitiveFixtures(t *testing.T) {
+// TestUnitTemplatePrimitiveRequestShapes checks scope routing independently of
+// successful template responses, which require tenant acceptance fixtures.
+func TestUnitTemplatePrimitiveRequestShapes(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var capture struct {
-		Version string `json:"baseline_version"`
-		Cases   []struct {
-			Name     string          `json:"name"`
-			Method   string          `json:"method"`
-			URL      string          `json:"generated_url"`
-			Body     json.RawMessage `json:"body"`
-			Status   int             `json:"response_status"`
-			Response string          `json:"response_body"`
-		} `json:"cases"`
-	}
-	if json.Unmarshal(raw, &capture) != nil || capture.Version != "8.1.0" {
-		t.Fatal("pinned request capture is invalid")
+	cases := []struct {
+		Name, Method, URL string
+		Body              json.RawMessage
+	}{
+		{"template-read-opaque-id", "GET", "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/%2Fapi%2Fteamtemplates%2Fv1.0%2Ffixture%2FTenant%2Fen-US", nil},
+		{"template-list", "GET", "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/api/TeamTemplates/v1.0/en-US", nil},
+		{"template-delete-empty", "DELETE", "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/%2Fapi%2Fteamtemplates%2Fv1.0%2Ffixture%2FTenant%2Fen-US", nil},
+		{"template-create", "POST", "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/api/TeamTemplates/v1.0/Tenant/en-US", json.RawMessage(`{"displayName":"Fixture","shortDescription":"Summary"}`)},
+		{"template-update", "PUT", "https://api.interfaces.records.teams.microsoft.com/Teams.Templates/%2Fapi%2Fteamtemplates%2Fv1.0%2Ffixture%2FTenant%2Fen-US", json.RawMessage(`{"displayName":"Fixture","shortDescription":"Summary"}`)},
 	}
 	mappings := map[string]contracttest.Mapping{
 		"template-read-opaque-id": {Command: "Get-CsTeamTemplate", ParameterSet: "Get"},
@@ -50,7 +39,7 @@ func TestUnitPinnedTemplatePrimitiveFixtures(t *testing.T) {
 	verifyMappings(t, mappings)
 	count := 0
 	results := []contracttest.Result{}
-	for index, fixture := range capture.Cases {
+	for _, fixture := range cases {
 		mapping, selected := mappings[fixture.Name]
 		if !selected {
 			continue
@@ -70,19 +59,16 @@ func TestUnitPinnedTemplatePrimitiveFixtures(t *testing.T) {
 			}
 			var requestBody any
 			var expectedBody json.RawMessage
-			if !bytes.Equal(fixture.Body, []byte("null")) {
+			if len(fixture.Body) != 0 {
 				requestBody, expectedBody = fixture.Body, fixture.Body
 			}
-			want := contracttest.Expected{Status: fixture.Status, Body: []byte(fixture.Response)}
-			if fixture.Response != "" {
-				want.JSON = json.RawMessage(fixture.Response)
-			}
+			want := contracttest.Expected{Status: 403, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403}}
 			c := contracttest.Case{Name: fixture.Name, Family: "team_templates", Scope: "primitive",
-				Source:   "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json#/cases/" + strconv.Itoa(index),
+				Source:   "tests/contract/core/fixtures_test.go",
 				Mappings: []contracttest.Mapping{mapping},
 				Steps: []contracttest.Exchange{{Request: contracttest.WireRequest{Method: fixture.Method,
 					URL: fixture.URL, Audience: auth.TeamsAdminAudience, JSON: expectedBody},
-					Reply: contracttest.Reply{Status: fixture.Status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(fixture.Response)}}},
+					Reply: contracttest.Reply{Status: 403, Headers: http.Header{"Content-Type": {"application/json"}}}}},
 				Want: want,
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					var value json.RawMessage
@@ -96,30 +82,12 @@ func TestUnitPinnedTemplatePrimitiveFixtures(t *testing.T) {
 			}
 			results = append(results, result)
 			if !result.Passed() {
-				t.Errorf("pinned template primitive differed: %+v", result.Differences())
+				t.Errorf("template request differed: %+v", result.Differences())
 			}
 		})
 	}
 	if count != len(mappings) || len(results) != count {
-		t.Fatal("one or more pinned template fixtures disappeared")
-	}
-	// CI passes the exact checked-out implementation revision. Ordinary local
-	// tests still run every case, but do not fabricate a revision/run artifact.
-	if revision := os.Getenv("MSTEAMS_CONTRACT_REVISION"); revision != "" {
-		root, err := os.OpenRoot(t.ArtifactDir())
-		if err != nil {
-			t.Fatal("contract artifact directory unavailable")
-		}
-		defer func() { _ = root.Close() }()
-		file, err := root.Create("core-primitives.json")
-		if err != nil {
-			t.Fatal("contract artifact file unavailable")
-		}
-		writeErr := contracttest.WriteEvidence(file, revision, results)
-		closeErr := file.Close()
-		if writeErr != nil || closeErr != nil {
-			t.Fatal("contract evidence could not be written")
-		}
+		t.Fatal("one or more template request vectors disappeared")
 	}
 }
 

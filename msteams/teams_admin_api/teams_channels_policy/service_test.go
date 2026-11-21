@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/url"
-	"os"
+	"slices"
 	"strings"
 	"testing"
 
@@ -17,12 +17,12 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_channels_policy"
 )
 
-func TestUnitChannelsPolicyPinnedCompiledCRUD(t *testing.T) {
+func TestUnitChannelsPolicyTypedCompiledCRUD(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, f := range captures(t) {
+
+	for _, f := range requestInputs(t) {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			x := f.Capture
+			x := f.Request
 			var body json.RawMessage
 			if x.Body != "" {
 				body = json.RawMessage(x.Body)
@@ -35,6 +35,9 @@ func TestUnitChannelsPolicyPinnedCompiledCRUD(t *testing.T) {
 				}
 			} else if f.Response != "" {
 				c.Want.JSON = json.RawMessage(f.Response)
+			}
+			if len(c.Steps) != 0 {
+				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsChannelsPolicies
@@ -64,36 +67,98 @@ func TestUnitChannelsPolicyPinnedCompiledCRUD(t *testing.T) {
 				v, r, e := s.PatchByIdentity(ctx, scoped, resource.PatchRequest{Settings: settings, Controls: controls, BodyIdentity: policy.Set("read-model-identity")})
 				return contracttest.Observation{Value: v, Response: r, Err: e}
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }
 
-func TestUnitChannelsPolicyPinnedModernGrant(t *testing.T) {
+func TestUnitChannelsPolicyTypedModernGrant(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../" + grantSource)
-	if e != nil {
-		t.Fatal(e)
-	}
-	var fixture struct {
+
+	fixture := struct {
 		Cases []struct {
 			Name, Operation, Method string
 			URL                     string `json:"generated_url"`
 			Status                  int    `json:"response_status"`
 			Reply                   string `json:"response_body"`
 			Body                    json.RawMessage
-			Sends                   int
 		}
+	}{
+		Cases: []struct {
+			Name, Operation, Method string
+			URL                     string `json:"generated_url"`
+			Status                  int    `json:"response_status"`
+			Reply                   string `json:"response_body"`
+			Body                    json.RawMessage
+		}{
+
+			{
+				Name:      "user-assignment",
+				Operation: "UserGrantPolicy",
+				Method:    "PATCH",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/TeamsChannelsPolicy",
+				Status:    400,
+				Body:      json.RawMessage("{\"policyName\":\"Fixture\"}"),
+			},
+
+			{
+				Name:      "user-clear-empty-policy",
+				Operation: "UserGrantPolicy",
+				Method:    "PATCH",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/TeamsChannelsPolicy",
+				Status:    400,
+				Body:      json.RawMessage("{\"policyName\":\"\"}"),
+			},
+
+			{
+				Name:      "tenant-assignment",
+				Operation: "TenantGrantPolicy",
+				Method:    "PATCH",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsChannelsPolicy",
+				Status:    400,
+				Body:      json.RawMessage("{\"forceSwitchPresent\":false,\"policyName\":\"Fixture\"}"),
+			},
+
+			{
+				Name:      "group-assignment-accepted",
+				Operation: "GroupGrantPolicyAssignment",
+				Method:    "POST",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsChannelsPolicy",
+				Status:    400,
+				Body:      json.RawMessage("{\"policyName\":\"Fixture\",\"priority\":2}"),
+			},
+
+			{
+				Name:      "group-assignment-no-content",
+				Operation: "GroupGrantPolicyAssignment",
+				Method:    "POST",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsChannelsPolicy",
+				Status:    400,
+				Body:      json.RawMessage("{\"policyName\":\"Fixture\",\"priority\":2}"),
+			},
+
+			{
+				Name:      "group-assignment-zero-priority",
+				Operation: "GroupGrantPolicyAssignment",
+				Method:    "POST",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsChannelsPolicy",
+				Status:    400,
+				Body:      json.RawMessage("{\"policyName\":\"Fixture\",\"priority\":0}"),
+			},
+
+			{
+				Name:      "group-clear-without-priority",
+				Operation: "GroupGrantPolicyAssignment",
+				Method:    "POST",
+				URL:       "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsChannelsPolicy",
+				Status:    400,
+				Body:      json.RawMessage("{\"policyName\":\"\"}"),
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 7 {
-		t.Fatal("incomplete grant fixture")
-	}
-	var results []contracttest.Result
+
 	for _, f := range fixture.Cases {
-		if f.Sends != 1 {
-			t.Fatal("unexpected source send count")
-		}
+
 		u, e := url.Parse(f.URL)
 		if e != nil {
 			t.Fatal(e)
@@ -114,7 +179,7 @@ func TestUnitChannelsPolicyPinnedModernGrant(t *testing.T) {
 			set = "GrantToGroup"
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			results = append(results, run(t, contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Source: grantSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(), modernWire(f.Method, strings.Join(parts, "/"), f.Body, f.Status, f.Reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: f.Name + "-" + string(mode), Mode: mode, Source: grantSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), modernWire(f.Method, strings.Join(parts, "/"), f.Body, f.Status, f.Reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsChannelsPolicies
 				if f.Operation == "UserGrantPolicy" {
 					name := "Fixture"
@@ -140,50 +205,82 @@ func TestUnitChannelsPolicyPinnedModernGrant(t *testing.T) {
 					e = errors.New("modern group acceptance changed")
 				}
 				return contracttest.Observation{Response: r, Err: e}
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }
 
-func TestUnitChannelsPolicyCompiledFilterDoesNotUseModernWhitespaceRules(t *testing.T) {
+func TestUnitChannelsPolicyFiltersUseRealResponses(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`
-	for _, pattern := range []string{"", "Fixture*", " "} {
-		name, set, want := "list", "Identity", "Global,global,Tag:Fixture, "
-		if pattern == "Fixture*" {
-			name, set, want = "filter-tag", "Filter", "Tag:Fixture"
-		}
-		if pattern == " " {
-			name, set, want = "filter-whitespace", "Filter", " "
-		}
-		results = append(results, run(t, contracttest.Case{Name: name, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, getCommand, nil, 200, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			s := sdk.TeamsAdminAPI.TeamsChannelsPolicies
-			var v []*resource.Policy
-			var o contracttest.Observation
-			if pattern == "" {
-				x, r, e := s.List(ctx)
-				v = x
-				o = contracttest.Observation{Response: r, Err: e}
-			} else {
-				x, r, e := s.ListFiltered(ctx, pattern)
-				v = x
-				o = contracttest.Observation{Response: r, Err: e}
-			}
-			var ids []string
-			for _, x := range v {
-				if x == nil || x.Identity == nil {
-					ids = append(ids, "missing")
-				} else {
-					ids = append(ids, *x.Identity)
-				}
-			}
-			if o.Err == nil && strings.Join(ids, ",") != want {
-				o.Err = errors.New("compiled filter/global ordering changed")
-			}
-			return o
-		}}))
+	raw := readResponseFixture(t, "list.json")
+	var rows []json.RawMessage
+	if json.Unmarshal(raw, &rows) != nil {
+		t.Fatal("invalid real list fixture")
 	}
-	evidence(t, results)
+	identities := func(row json.RawMessage) string {
+		var value struct {
+			Identity string `json:"Identity"`
+		}
+		if json.Unmarshal(row, &value) != nil {
+			t.Fatal("invalid real list identity")
+		}
+		return value.Identity
+	}
+	slices.SortStableFunc(rows, func(a, b json.RawMessage) int {
+		left, right := strings.EqualFold(identities(a), "Global"), strings.EqualFold(identities(b), "Global")
+		if left == right {
+			return 0
+		}
+		if left {
+			return -1
+		}
+		return 1
+	})
+	cases := []struct {
+		Name, Pattern, OnlyID string
+		Empty                 bool
+	}{
+		{Name: "list"}, {Name: "all", Pattern: "*"}, {Name: "global", Pattern: "Global", OnlyID: "Global"},
+		{Name: "missing", Pattern: "__sdk_missing_fixture__", Empty: true},
+		{Name: "whitespace", Pattern: " ", Empty: true},
+	}
+	for _, row := range rows {
+		id := identities(row)
+		if strings.HasPrefix(id, "Tag:") && !strings.ContainsAny(id, "*?[]`") {
+			cases = append(cases, struct {
+				Name, Pattern, OnlyID string
+				Empty                 bool
+			}{Name: "tag-prefix", Pattern: strings.TrimPrefix(id, "Tag:"), OnlyID: id})
+			break
+		}
+	}
+	for _, tc := range cases {
+		want := make([]json.RawMessage, 0, len(rows))
+		for _, row := range rows {
+			if !tc.Empty && (tc.OnlyID == "" || strings.EqualFold(identities(row), tc.OnlyID)) {
+				want = append(want, row)
+			}
+		}
+		expected, err := json.Marshal(want)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "real-filter-" + tc.Name, Family: "teams_channels_policy", Scope: "service", Source: "msteams/teams_admin_api/teams_channels_policy/testdata/list.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsChannelsPolicy", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				service := sdk.TeamsAdminAPI.TeamsChannelsPolicies
+				if tc.Pattern == "" {
+					value, response, err := service.List(ctx)
+					return contracttest.Observation{Value: value, Response: response, Err: err}
+				}
+				value, response, err := service.ListFiltered(ctx, tc.Pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("real filtering response differs: %v %+v", err, result.Differences())
+		}
+	}
+
 }

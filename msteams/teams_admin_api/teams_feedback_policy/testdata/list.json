@@ -1,0 +1,186 @@
+[
+  {
+    "UserInitiatedMode": "Enabled",
+    "ReceiveSurveysMode": "EnabledUserOverride",
+    "AllowScreenshotCollection": false,
+    "AllowEmailCollection": false,
+    "AllowLogCollection": false,
+    "EnableFeatureSuggestions": null,
+    "Key": {
+      "ScopeClass": "Global",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsFeedbackPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Global",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "Global"
+  },
+  {
+    "UserInitiatedMode": "Enabled",
+    "ReceiveSurveysMode": "EnabledUserOverride",
+    "AllowScreenshotCollection": false,
+    "AllowEmailCollection": false,
+    "AllowLogCollection": false,
+    "EnableFeatureSuggestions": null,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsFeedbackPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-269ab788",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-68f062f1"
+  },
+  {
+    "UserInitiatedMode": "Enabled",
+    "ReceiveSurveysMode": "Enabled",
+    "AllowScreenshotCollection": false,
+    "AllowEmailCollection": false,
+    "AllowLogCollection": false,
+    "EnableFeatureSuggestions": null,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsFeedbackPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-dd4a32bc",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-f187cb99"
+  },
+  {
+    "UserInitiatedMode": "Disabled",
+    "ReceiveSurveysMode": "Disabled",
+    "AllowScreenshotCollection": false,
+    "AllowEmailCollection": false,
+    "AllowLogCollection": false,
+    "EnableFeatureSuggestions": null,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsFeedbackPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-a3baad82",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-a0421e04"
+  }
+]

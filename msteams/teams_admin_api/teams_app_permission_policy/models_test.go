@@ -3,7 +3,6 @@ package teamsapppermissionpolicy_test
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -37,14 +36,597 @@ type modelFixture struct {
 
 func models(t *testing.T) modelFixture {
 	t.Helper()
-	raw, e := os.ReadFile("../../../" + sourceModels)
-	if e != nil {
-		t.Fatal(e)
+
+	v := modelFixture{
+		Policies: []struct {
+			Input       string
+			Observation struct {
+				Failure *string
+				Value   json.RawMessage
+			}
+		}{
+
+			{
+				Input: "constructor",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"DefaultCatalogApps\":[],\"DefaultCatalogAppsType\":null,\"Description\":null,\"GlobalCatalogApps\":[],\"GlobalCatalogAppsType\":null,\"Identity\":null,\"PrivateCatalogApps\":[],\"PrivateCatalogAppsType\":null}"),
+				},
+			},
+
+			{
+				Input: "future-types-long-description",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"DefaultCatalogApps\":[],\"DefaultCatalogAppsType\":\"FutureMode\",\"Description\":\"" + strings.Repeat("x", 2000) + "\",\"GlobalCatalogApps\":[],\"GlobalCatalogAppsType\":\"\",\"Identity\":null,\"PrivateCatalogApps\":[],\"Private" +
+						"CatalogAppsType\":null}"),
+				},
+			},
+
+			{
+				Input: "{}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"DefaultCatalogApps\":[],\"DefaultCatalogAppsType\":null,\"Description\":null,\"GlobalCatalogApps\":[],\"GlobalCatalogAppsType\":null,\"Identity\":null,\"PrivateCatalogApps\":[],\"PrivateCatalogAppsType\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"DefaultCatalogApps\":null,\"GlobalCatalogApps\":null,\"PrivateCatalogApps\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"DefaultCatalogApps\":[],\"DefaultCatalogAppsType\":null,\"Description\":null,\"GlobalCatalogApps\":[],\"GlobalCatalogAppsType\":null,\"Identity\":null,\"PrivateCatalogApps\":[],\"PrivateCatalogAppsType\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"DefaultCatalogApps\":[null]}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"DefaultCatalogApps\":[null],\"DefaultCatalogAppsType\":null,\"Description\":null,\"GlobalCatalogApps\":[],\"GlobalCatalogAppsType\":null,\"Identity\":null,\"PrivateCatalogApps\":[],\"PrivateCatalogAppsType\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"DefaultCatalogApps\":[{\"Id\":\"a\"}],\"DefaultCatalogApps\":[{\"Id\":\"b\"}]}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"DefaultCatalogApps\":[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null}],\"DefaultCatalogAppsType\":null,\"Description\":null,\"GlobalCatalogApps\":[],\"GlobalCatalogAppsType\":null,\"Identity\":null,\"PrivateCatalogApps\":[],\"PrivateCatalogAppsType\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"DefaultCatalogApps\":[{\"Id\":null}]}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("Newtonsoft.Json.JsonSerializationException"),
+				},
+			},
+
+			{
+				Input: "{\"DefaultCatalogApps\":[{\"Id\":null,\"Id\":\"good\"}]}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("Newtonsoft.Json.JsonSerializationException"),
+				},
+			},
+
+			{
+				Input: "{\"DefaultCatalogApps\":[{\"Id\":\"\"}],\"GlobalCatalogApps\":[{\"Id\":\"future-app\"}],\"PrivateCatalogApps\":[{\"Id\":\" \"}]}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"DefaultCatalogApps\":[{\"Id\":\"\",\"Identity\":null}],\"DefaultCatalogAppsType\":null,\"Description\":null,\"GlobalCatalogApps\":[{\"Id\":\"future-app\",\"Identity\":null}],\"GlobalCatalogAppsType\":null,\"Identity\":null,\"PrivateCatalogApps\":[{\"Id\":\" \",\"Identity\":null}],\"PrivateCatalogAppsType\":null}"),
+				},
+			},
+
+			{
+				Input: "{\"DefaultCatalogApps\":{\"Id\":\"wrong-envelope\"}}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("Newtonsoft.Json.JsonSerializationException"),
+				},
+			},
+		},
+		Apps: []struct {
+			Catalog, Input string
+			Observation    struct {
+				Failure *string
+				Value   json.RawMessage
+			}
+		}{
+
+			{
+				Catalog: "default",
+				Input:   "null",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Input:   "",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":\"\",\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Input:   " ",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":\" \",\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Input:   "future-app",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":\"future-app\",\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Input:   "json:{}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":null,\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Input:   "json:{\"Id\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Input:   "json:{\"Id\":null,\"Id\":\"good\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Input:   "null",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Input:   "",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":\"\",\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Input:   " ",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":\" \",\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Input:   "future-app",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":\"future-app\",\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Input:   "json:{}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":null,\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Input:   "json:{\"Id\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Input:   "json:{\"Id\":null,\"Id\":\"good\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Input:   "null",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Input:   "",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":\"\",\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Input:   " ",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":\" \",\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Input:   "future-app",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":\"future-app\",\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Input:   "json:{}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Id\":null,\"Identity\":null}"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Input:   "json:{\"Id\":null}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Input:   "json:{\"Id\":null,\"Id\":\"good\"}",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+		},
+		Lists: []struct {
+			Catalog, Name string
+			Observation   struct {
+				Failure *string
+				Values  json.RawMessage
+			}
+		}{
+
+			{
+				Catalog: "default",
+				Name:    "null",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[]"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Name:    "empty-operators",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[]"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Name:    "replace-duplicates",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Name:    "remove-one",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Name:    "remove-two",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Name:    "add-existing",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "default",
+				Name:    "remove-and-add",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Name:    "null",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[]"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Name:    "empty-operators",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[]"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Name:    "replace-duplicates",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Name:    "remove-one",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Name:    "remove-two",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Name:    "add-existing",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "global",
+				Name:    "remove-and-add",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Name:    "null",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[]"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Name:    "empty-operators",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[]"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Name:    "replace-duplicates",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Name:    "remove-one",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Name:    "remove-two",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Name:    "add-existing",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null}]"),
+				},
+			},
+
+			{
+				Catalog: "private",
+				Name:    "remove-and-add",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"Id\":\"a\",\"Identity\":null},{\"Id\":\"A\",\"Identity\":null},{\"Id\":\"b\",\"Identity\":null},{\"Id\":\"a\",\"Identity\":null}]"),
+				},
+			},
+		},
 	}
-	var v modelFixture
-	if json.Unmarshal(raw, &v) != nil || len(v.Policies) != 10 || len(v.Apps) != 21 || len(v.Lists) != 21 {
-		t.Fatal("invalid app permission model fixture")
-	}
+
 	return v
 }
 func sameJSON(a, b []byte) bool {
@@ -65,7 +647,7 @@ func policyProjection(v resource.Policy) []byte {
 	return raw
 }
 
-func TestUnitAppPermissionPinnedReadonlyPolicyModels(t *testing.T) {
+func TestUnitAppPermissionTypedReadonlyPolicyModels(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Policies {
 		var value resource.Policy
@@ -87,7 +669,7 @@ func TestUnitAppPermissionPinnedReadonlyPolicyModels(t *testing.T) {
 		}
 	}
 }
-func TestUnitAppPermissionPinnedCatalogModels(t *testing.T) {
+func TestUnitAppPermissionTypedCatalogModels(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Apps {
 		var value *resource.CatalogApp
@@ -139,7 +721,7 @@ func bytesProjectionEqual(a, b resource.Policy) bool {
 	return sameJSON(policyProjection(a), policyProjection(b))
 }
 
-func TestUnitAppPermissionPinnedCatalogEdits(t *testing.T) {
+func TestUnitAppPermissionTypedCatalogEdits(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Lists {
 		a, duplicate, upper, b := resource.NewCatalogApp("a"), resource.NewCatalogApp("a"), resource.NewCatalogApp("A"), resource.NewCatalogApp("b")

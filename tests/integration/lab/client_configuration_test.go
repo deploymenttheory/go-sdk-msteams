@@ -99,6 +99,7 @@ func TestAccClientConfigurationReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsClientConfigurations.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_client_configuration", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -106,7 +107,8 @@ func TestAccClientConfigurationReadOnly(t *testing.T) {
 		}
 		t.Fatalf("client configuration Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsClientConfigurations.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsClientConfigurations.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_client_configuration", "list", listResponse, nil)
 	selected, selectionErr := globalClientConfiguration(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(clientConfigurationProjection(value), clientConfigurationProjection(selected)) {
 		t.Fatal("client configuration Global read/list projections differ")

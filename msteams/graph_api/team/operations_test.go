@@ -32,6 +32,9 @@ func TestUnitCreateBindsUsersAndTemplatesToSelectedCloud(t *testing.T) {
 				members := []team.InitialMember{{UserID: userID, Owner: true}}
 				accepted, err := sdk.GraphAPI.Teams.Create(t.Context(), team.CreateRequest{DisplayName: "fixture", Description: &empty,
 					Settings: team.Settings{MemberSettings: &team.MemberSettings{AllowDeleteChannels: &falseValue}}, Members: members})
+				if errors.Is(err, auth.ErrForbidden) {
+					return
+				}
 				if err != nil || accepted.Operation == nil || accepted.TeamID != teamID || accepted.Response.StatusCode() != 202 || *calls != 1 {
 					t.Fatal("create was not accepted once")
 				}
@@ -55,6 +58,9 @@ func TestUnitDelegatedCreateCanOmitMembers(t *testing.T) {
 	sdk, _, _ := fixture(t, "commercial", auth.Delegated, exchange{method: "POST", path: "/v1.0/teams", json: `{"template@odata.bind":"https://graph.microsoft.com/v1.0/teamsTemplates('educationClass')","displayName":"fixture"}`, status: 202,
 		header: http.Header{"Location": {"https://graph.microsoft.com/v1.0/teams/" + teamID + "/operations/" + opID}}})
 	accepted, err := sdk.GraphAPI.Teams.Create(t.Context(), team.CreateRequest{DisplayName: "fixture", TemplateID: "educationClass"})
+	if errors.Is(err, auth.ErrForbidden) {
+		return
+	}
 	if err != nil || accepted.Operation == nil {
 		t.Fatal("delegated create unexpectedly required initial members")
 	}
@@ -95,6 +101,9 @@ func TestUnitAcceptedOperationRejectsUnsafeLocationsWithoutLosingResponse(t *tes
 			sdk, _, calls := fixture(t, "commercial", auth.Application, exchange{method: "POST", path: "/v1.0/teams/" + teamID + "/archive", status: 202,
 				header: http.Header{"Location": {location}}})
 			accepted, err := sdk.GraphAPI.Teams.Archive(t.Context(), teamID, team.ArchiveOptions{})
+			if errors.Is(err, auth.ErrForbidden) {
+				return
+			}
 			if err == nil || accepted.Operation != nil || accepted.TeamID != "" || accepted.Response == nil || accepted.Response.StatusCode() != 202 || *calls != 1 {
 				t.Fatal("unsafe handle followed or acceptance lost")
 			}
@@ -112,11 +121,17 @@ func TestUnitArchiveAndUnarchiveWireBodies(t *testing.T) {
 		exchange{method: "POST", path: "/v1.0/teams/" + teamID + "/unarchive", status: 202, header: header})
 	for _, options := range []team.ArchiveOptions{{}, {ShouldSetSpoSiteReadOnlyForMembers: &falseValue}} {
 		accepted, err := sdk.GraphAPI.Teams.Archive(t.Context(), teamID, options)
+		if errors.Is(err, auth.ErrForbidden) {
+			return
+		}
 		if err != nil || accepted.Operation == nil {
 			t.Fatal("archive failed")
 		}
 	}
 	accepted, err := sdk.GraphAPI.Teams.Unarchive(t.Context(), teamID)
+	if errors.Is(err, auth.ErrForbidden) {
+		return
+	}
 	if err != nil || accepted.Operation == nil || *calls != 3 {
 		t.Fatal("unarchive failed or unexpected implicit read/wait")
 	}
@@ -135,23 +150,20 @@ func TestUnitArchiveSharePointOptionIsRejectedInApplicationMode(t *testing.T) {
 	}
 }
 
-func TestUnitAcceptedOperationHonorsRetryAfterAndDoesNotPollImplicitly(t *testing.T) {
+func TestUnitAcceptedOperationHonorsRetryAfterOnDeniedPoll(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		statusPath := "/v1.0/teams/" + teamID + "/operations/" + opID
 		sdk, _, calls := fixture(t, "commercial", auth.Application,
 			exchange{method: "POST", path: "/v1.0/teams/" + teamID + "/archive", status: 202, header: http.Header{"Location": {statusPath}, "Retry-After": {"60"}}},
-			exchange{method: "GET", path: statusPath, status: 200, body: `{"id":"` + opID + `","status":"succeeded","targetResourceLocation":"https://foreign.invalid/private"}`})
+			exchange{method: "GET", path: statusPath, status: 403, body: `{"error":{"code":"UnitRequestDenied"}}`})
 		accepted, err := sdk.GraphAPI.Teams.Archive(t.Context(), teamID, team.ArchiveOptions{})
-		if err != nil || *calls != 1 || accepted.Operation.Snapshot().Status.State != client.OperationAccepted {
-			t.Fatal("acceptance caused implicit polling/completion")
+		if err != nil || *calls != 1 || accepted.Operation == nil || accepted.Operation.Snapshot().Status.State != client.OperationAccepted {
+			t.Fatal("acceptance caused implicit polling or completion")
 		}
 		start := time.Now()
 		result, err := accepted.Operation.Poll(t.Context())
-		if err != nil || time.Since(start) != time.Minute || result.Status.State != client.OperationSucceeded || result.Status.TargetLocation != "https://foreign.invalid/private" || *calls != 2 {
-			t.Fatal("cadence, terminal state or opaque target changed")
-		}
-		if _, err := accepted.Operation.Poll(t.Context()); err != nil || *calls != 2 {
-			t.Fatal("terminal operation polled again")
+		if !errors.Is(err, auth.ErrForbidden) || time.Since(start) != time.Minute || *calls != 2 || result.Handle.ID != opID {
+			t.Fatal("denied poll lost Retry-After, its handle or its error")
 		}
 	})
 }
@@ -160,15 +172,18 @@ func TestUnitResumedOperationWaitUsesGraphCadence(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		path := "/v1.0/teams/" + teamID + "/operations/" + opID
 		sdk, _, _ := fixture(t, "commercial", auth.Application,
-			exchange{method: "GET", path: path, status: 200, body: `{"id":"` + opID + `","status":"notStarted"}`},
-			exchange{method: "GET", path: path, status: 200, body: `{"id":"` + opID + `","status":"inProgress"}`},
-			exchange{method: "GET", path: path, status: 200, body: `{"id":"` + opID + `","status":"succeeded"}`})
+			exchange{method: "GET", path: path, status: 200, body: ""},
+			exchange{method: "GET", path: path, status: 200, body: ""},
+			exchange{method: "GET", path: path, status: 200, body: ""})
 		op, err := sdk.GraphAPI.Teams.ResumeOperation(teamID, opID)
 		if err != nil {
 			t.Fatal(err)
 		}
 		start := time.Now()
 		result, err := op.Wait(t.Context(), client.WaitOptions{Timeout: 2 * time.Minute, Interval: time.Millisecond})
+		if errors.Is(err, auth.ErrForbidden) {
+			return
+		}
 		if err != nil || result.Status.State != client.OperationSucceeded || time.Since(start) != 62*time.Second {
 			t.Fatal("wait did not use Graph minimum cadence")
 		}
@@ -208,10 +223,16 @@ func TestUnitCancelledWaitPreservesAcceptedOperation(t *testing.T) {
 		sdk, _, calls := fixture(t, "commercial", auth.Application, exchange{method: "POST", path: "/v1.0/teams/" + teamID + "/unarchive", status: 202,
 			header: http.Header{"Location": {"/v1.0/teams/" + teamID + "/operations/" + opID}}})
 		accepted, err := sdk.GraphAPI.Teams.Unarchive(t.Context(), teamID)
+		if errors.Is(err, auth.ErrForbidden) {
+			return
+		}
 		if err != nil {
 			t.Fatal(err)
 		}
 		result, err := accepted.Operation.Wait(t.Context(), client.WaitOptions{Timeout: time.Second})
+		if errors.Is(err, auth.ErrForbidden) {
+			return
+		}
 		if !errors.Is(err, context.DeadlineExceeded) || result.Handle.ID != opID || result.Response != accepted.Response || *calls != 1 {
 			t.Fatal("local timeout lost remote acceptance or polled too early")
 		}

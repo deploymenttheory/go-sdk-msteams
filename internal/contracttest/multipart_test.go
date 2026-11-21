@@ -12,7 +12,7 @@ import (
 )
 
 func multipartCase() Case {
-	return Case{Name: "csv-upload", Family: "targeting", Scope: "primitive", TenantID: "11111111-1111-4111-8111-111111111111", Source: "contracts/endpoints/8.1.0/special-service-profiles.json", Steps: []Exchange{{Request: WireRequest{Method: "POST", URL: "https://retailservices.teams.microsoft.com/api/rest/v1/nodes/upload", Audience: "https://retailservices.teams.microsoft.com", Multipart: []MultipartField{{Name: "csvFile", Filename: "fixture.csv", ContentType: "application/json", Body: []byte("a,b\r\n1,2\r\n")}}}, Reply: Reply{Status: 202}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) Observation {
+	return Case{Name: "csv-upload", Family: "targeting", Scope: "primitive", TenantID: "11111111-1111-4111-8111-111111111111", Source: "internal/contracttest/multipart_test.go", Steps: []Exchange{{Request: WireRequest{Method: "POST", URL: "https://retailservices.teams.microsoft.com/api/rest/v1/nodes/upload", Audience: "https://retailservices.teams.microsoft.com", Multipart: []MultipartField{{Name: "csvFile", Filename: "fixture.csv", ContentType: "application/json", Body: []byte("a,b\r\n1,2\r\n")}}}, Reply: Reply{Status: 202}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) Observation {
 		scope, err := client.NewScope(client.Targeting, sdk.TeamsAdminAPI.Scope().Session())
 		if err != nil {
 			return Observation{Err: err}

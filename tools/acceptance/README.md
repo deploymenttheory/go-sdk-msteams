@@ -13,7 +13,7 @@ does not use `pull_request_target` or execute fork code with privileged credenti
 Runs serialize without automatically cancelling an in-flight mutation.
 
 The certificate/client-secret matrix executes the explicit selections in
-[suites.json](suites.json): authentication, 25 resource read tests plus preflight,
+[suites.json](suites.json): authentication, 25 resource read tests, preflight and service discovery,
 and owned unassigned application-access-policy CRUD. The runner requires the
 selected top-level tests and their child cases to pass. Skips, missing test names,
 failed processes, missing credentials and disabled/unreached CRUD oracle checks
@@ -45,12 +45,15 @@ explicit enablement and the approved `teams-administrator` access profile. The
 exact MicrosoftTeams 8.1.0 Gallery archive is SHA512-verified using the existing
 baseline tooling before extraction. PowerShell is an oracle for tests only.
 
-## Evidence and interrupted-run recovery
+## Test results and interrupted-run recovery
+
+The job summary lists failed test names and their HTTP status codes. Missing
+credentials name the repository secret that needs fixing.
 
 Uploaded JSON contains checked-out revision, auth method, exact selected test
 names, outcomes, assertion flags and cleanup counts. It excludes credential values,
 tenant/resource IDs, response bodies, dynamic child-test names and raw Go logs.
-The output explicitly makes no full-coverage claim.
+Results cover the tests listed in each suite.
 
 The finalization step always attempts to seal only recovery journals into
 `recovery.cms` using CMS AES-256-GCM and RSA-OAEP-SHA256. It then removes the raw
@@ -75,3 +78,13 @@ use the matching resource's `TestAcc...Recover` handler with the same tenant,
 cloud and client binding. Retain unresolved entries; never infer absence from an
 empty discovery list. Finalization covers process interruption while the runner
 is available, not loss of the runner filesystem before an artifact can be saved.
+
+## Service response fixtures
+
+`TestAcc` tests write sanitized HTTP response bodies directly into each service's
+`testdata/` directory when `MSTEAMS_UPDATE_TESTDATA=1` is explicitly set locally.
+`TestUnit` tests load those committed files to check decoding, raw field retention
+and request behavior. Ordinary CI reads the fixtures and never rewrites them.
+An empty HTTP body stays empty; error responses retain their actual status.
+Refresh fixtures using the relevant tenant test with its normal lab enablement
+and credentials. Review the diff for tenant information before committing.

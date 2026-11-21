@@ -64,7 +64,7 @@ persistence or effective channel restrictions. There is no implicit restore,
 elevation or completion guarantee. Runtime PowerShell PassThru/flight behavior is
 not inferred from isolated mapped function observations.
 
-See [source evidence](../../../docs/implementation/policies/channels-policy-evidence.md)
+See [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/channels-policy-lab-acceptance.md).
 All five commands/eight sets have native mappings. Full command/tenant
 qualification and issue #111 remain open.

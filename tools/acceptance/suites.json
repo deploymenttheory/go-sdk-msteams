@@ -8,6 +8,7 @@
   "resource-reads": {
     "package": "./tests/integration/lab",
     "tests": [
+      "TestAccTeamsServiceDiscovery",
       "TestAccPreflight",
       "TestAccAppPermissionPolicyReadOnly",
       "TestAccAppSetupPolicyReadOnly",

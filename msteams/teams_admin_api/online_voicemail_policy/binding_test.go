@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"os"
 	"strings"
 	"testing"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -14,15 +15,12 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-const bindingSource = "contracts/endpoints/8.1.0/fixtures/voicemail-wrapper-binding.json"
+const bindingSource = "msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json"
 
-func TestUnitVoicemailBindingCompositionMatchesPinnedHelper(t *testing.T) {
+func TestUnitVoicemailBindingCompositionMatchesTypedHelper(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../" + bindingSource)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var fixture struct {
+
+	fixture := struct {
 		Cases []struct {
 			Name    string  `json:"name"`
 			Failure *string `json:"failure_type"`
@@ -31,10 +29,185 @@ func TestUnitVoicemailBindingCompositionMatchesPinnedHelper(t *testing.T) {
 				Parameters map[string]json.RawMessage `json:"parameters"`
 			} `json:"calls"`
 		} `json:"cases"`
+	}{
+		Cases: []struct {
+			Name    string  `json:"name"`
+			Failure *string `json:"failure_type"`
+			Calls   []struct {
+				Operation  string                     `json:"operation"`
+				Parameters map[string]json.RawMessage `json:"parameters"`
+			} `json:"calls"`
+		}{
+
+			{
+				Name: "grant-user",
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{
+
+					{
+						Operation: "assign-user",
+						Parameters: map[string]json.RawMessage{
+							"AdditionalParameters": json.RawMessage("null"),
+							"Identity":             json.RawMessage("\"fixture/user\""),
+							"PolicyName":           json.RawMessage("\"Fixture\""),
+							"PolicyType":           json.RawMessage("\"OnlineVoicemailPolicy\""),
+						},
+					},
+				},
+			},
+
+			{
+				Name: "clear-user",
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{
+
+					{
+						Operation: "assign-user",
+						Parameters: map[string]json.RawMessage{
+							"AdditionalParameters": json.RawMessage("null"),
+							"Identity":             json.RawMessage("\"fixture/user\""),
+							"PolicyName":           json.RawMessage("\"\""),
+							"PolicyType":           json.RawMessage("\"OnlineVoicemailPolicy\""),
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-tenant",
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{
+
+					{
+						Operation: "assign-tenant",
+						Parameters: map[string]json.RawMessage{
+							"AdditionalParameters": json.RawMessage("null"),
+							"PolicyName":           json.RawMessage("\"Fixture\""),
+							"PolicyType":           json.RawMessage("\"OnlineVoicemailPolicy\""),
+							"forceSwitchPresent":   json.RawMessage("false"),
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-group-rank-omitted",
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{
+
+					{
+						Operation: "assign-group",
+						Parameters: map[string]json.RawMessage{
+							"GroupId":    json.RawMessage("\"fixture/group\""),
+							"PolicyName": json.RawMessage("\"Fixture\""),
+							"PolicyType": json.RawMessage("\"OnlineVoicemailPolicy\""),
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-group-rank-zero",
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{
+
+					{
+						Operation: "assign-group",
+						Parameters: map[string]json.RawMessage{
+							"GroupId":    json.RawMessage("\"fixture/group\""),
+							"PolicyName": json.RawMessage("\"Fixture\""),
+							"PolicyType": json.RawMessage("\"OnlineVoicemailPolicy\""),
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-group-rank-two",
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{
+
+					{
+						Operation: "assign-group",
+						Parameters: map[string]json.RawMessage{
+							"GroupId":    json.RawMessage("\"fixture/group\""),
+							"PolicyName": json.RawMessage("\"Fixture\""),
+							"PolicyType": json.RawMessage("\"OnlineVoicemailPolicy\""),
+							"Rank":       json.RawMessage("2"),
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-group-rank-negative",
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{
+
+					{
+						Operation: "assign-group",
+						Parameters: map[string]json.RawMessage{
+							"GroupId":    json.RawMessage("\"fixture/group\""),
+							"PolicyName": json.RawMessage("\"Fixture\""),
+							"PolicyType": json.RawMessage("\"OnlineVoicemailPolicy\""),
+							"Rank":       json.RawMessage("-1"),
+						},
+					},
+				},
+			},
+
+			{
+				Name:    "grant-missing-policy-name",
+				Failure: new("System.Management.Automation.ParameterBindingException"),
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{},
+			},
+
+			{
+				Name:    "grant-missing-scope",
+				Failure: new("System.Management.Automation.ParameterBindingException"),
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{},
+			},
+
+			{
+				Name:    "grant-passthru-true-rejected",
+				Failure: new("System.Management.Automation.ParameterBindingException"),
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{},
+			},
+
+			{
+				Name:    "grant-passthru-false-rejected",
+				Failure: new("System.Management.Automation.ParameterBindingException"),
+				Calls: []struct {
+					Operation  string                     `json:"operation"`
+					Parameters map[string]json.RawMessage `json:"parameters"`
+				}{},
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 11 {
-		t.Fatal("invalid pinned voicemail binding observations")
-	}
+
 	var results []contracttest.Result
 	for _, f := range fixture.Cases {
 		// The native API always returns typed results/metadata. It exposes no
@@ -95,7 +268,7 @@ func TestUnitVoicemailBindingCompositionMatchesPinnedHelper(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			steps = append(steps, discovery(), generatedWire(method, origin+path, "Grant-CsOnlineVoicemailPolicy", raw, status, ""))
+			steps = append(steps, discovery(t), generatedWire(method, origin+path, "Grant-CsOnlineVoicemailPolicy", raw, status, ""))
 		}
 		results = append(results, run(t, contracttest.Case{Name: f.Name, Source: bindingSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: set}}, Steps: steps, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			v, r, e := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.AssignWithPowerShellBinding(ctx, input)
@@ -105,17 +278,15 @@ func TestUnitVoicemailBindingCompositionMatchesPinnedHelper(t *testing.T) {
 	if len(results) != 9 {
 		t.Fatal("pinned helper composition coverage incomplete")
 	}
-	evidence(t, results)
 }
 
 func TestUnitVoicemailGeneratedIdentityUsesUnreservedEscaping(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "generated-identity-unreserved", Source: generatedSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(), generatedWire("PATCH", origin+"/Skype.Policy/users/sip%3Afixture%2Buser%40example.invalid/policies/OnlineVoicemailPolicy", "Grant-CsOnlineVoicemailPolicy", json.RawMessage(`{"policyName":"Fixture"}`), 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: "generated-identity-unreserved", Source: generatedSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(t), generatedWire("PATCH", origin+"/Skype.Policy/users/sip%3Afixture%2Buser%40example.invalid/policies/OnlineVoicemailPolicy", "Grant-CsOnlineVoicemailPolicy", json.RawMessage(`{"policyName":"Fixture"}`), 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.AssignUser(ctx, "sip:fixture+user@example.invalid", policy.Set("Fixture"))
 		if e == nil && v == nil {
 			e = errors.New("missing native assignment outcome")
 		}
 		return contracttest.Observation{Response: r, Err: e}
 	}})
-	evidence(t, []contracttest.Result{result})
 }

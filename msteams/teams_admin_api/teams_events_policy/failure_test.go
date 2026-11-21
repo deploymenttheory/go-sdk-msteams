@@ -17,22 +17,21 @@ import (
 
 func TestUnitEventsPolicyGrantRequiresOneExplicitScope(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, c := range []struct {
 		name  string
 		input policy.Assignment
 	}{{"empty", policy.Assignment{}}, {"mixed", policy.Assignment{User: &policy.UserAssignment{Identity: "fixture"}, Tenant: &policy.TenantAssignment{}}}} {
-		results = append(results, run(t, contracttest.Case{Name: "grant-" + c.name, Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsEventsPolicy", ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: "grant-" + c.name, Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsEventsPolicy", ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			v, r, e := sdk.TeamsAdminAPI.TeamsEventsPolicies.Assign(ctx, c.input)
 			return contracttest.Observation{Value: v, Response: r, Err: e}
-		}}))
+		}})
 	}
-	evidence(t, results)
 }
 
 func TestUnitEventsPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.TeamsEventsPolicies
 		for _, id := range []string{"", " ", ".", "..", "scope/", "/empty", "scope/..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -77,12 +76,11 @@ func TestUnitEventsPolicyInputAndContextRejectBeforeHTTP(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{result})
 }
 
 func TestUnitEventsPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, operation := range []string{"create", "patch", "delete", "user", "group", "tenant"} {
 		for _, status := range []int{400, 401, 403, 429, 503} {
 			method, command, path, body, set := "POST", "New-CsTeamsEventsPolicy", collection, `{"Identity":"Global"}`, "Identity"
@@ -98,7 +96,7 @@ func TestUnitEventsPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
 			case "tenant":
 				method, command, path, body, set = "PATCH", "Grant-CsTeamsEventsPolicy", "/Skype.Policy/tenants/policies/TeamsEventsPolicy", `{"PolicyName":null,"additionalParameters":null,"forceSwitchPresent":false}`, "GrantToTenant"
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsEventsPolicies
 				var observation contracttest.Observation
 				switch operation {
@@ -127,8 +125,7 @@ func TestUnitEventsPolicyMutationsKeepStatusAndNeverReplay(t *testing.T) {
 				}
 				observation.Err = nil
 				return observation
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }

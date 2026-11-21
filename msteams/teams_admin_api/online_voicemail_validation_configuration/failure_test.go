@@ -17,7 +17,7 @@ import (
 
 func TestUnitValidationInputAndContextRejectBeforeTokens(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "invalid-input-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "invalid-input-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity", "scope/..", "/empty-scope", "scope/"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -54,21 +54,19 @@ func TestUnitValidationInputAndContextRejectBeforeTokens(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{result})
 }
 
 func TestUnitValidationPatchErrorsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, status := range []int{400, 401, 403, 429, 503} {
-		results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("patch-error-%d", status), Mappings: []contracttest.Mapping{{Command: "Set-CsOnlineVoicemailValidationConfiguration", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire("PATCH", item, "Set-CsOnlineVoicemailValidationConfiguration", json.RawMessage(`{"Identity":"Global","AudioFileValidationUri":null}`), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: fmt.Sprintf("patch-error-%d", status), Mappings: []contracttest.Mapping{{Command: "Set-CsOnlineVoicemailValidationConfiguration", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire("PATCH", item, "Set-CsOnlineVoicemailValidationConfiguration", json.RawMessage(`{"Identity":"Global","AudioFileValidationUri":null}`), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			_, r, e := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{AudioFileValidationURI: policy.Null[string]()}})
 			var api *client.APIError
 			if !errors.As(e, &api) || api.StatusCode != status || strings.Contains(fmt.Sprint(e), "fixture-private") {
 				return contracttest.Observation{Err: errors.New("HTTP status or error redaction changed")}
 			}
 			return contracttest.Observation{Response: r}
-		}}))
+		}})
 	}
-	evidence(t, results)
 }

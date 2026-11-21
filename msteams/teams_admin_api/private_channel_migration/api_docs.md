@@ -22,5 +22,5 @@ maps and are locally rejected rather than assigned default commercial routing.
 Native providers use the selected audience's /.default contract. Exact app
 eligibility, tenant administrator enforcement and least-privilege grants remain
 unqualified. A valid token or configured route proves neither. Source:
-[pinned migration/profile evidence](../../../docs/implementation/core/hierarchy-migration-contract-evidence.md).
+[unit tests](service_test.go).
 No tenant request or migration mutation was performed for this candidate.

@@ -90,6 +90,7 @@ func TestAccAssignmentMigrationReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	jobs, response, err := sdk.TeamsAdminAPI.AssignmentMigrations.List(ctx)
+	writeResponseFixture(t, "assignment_migration", "list", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -115,7 +116,8 @@ func TestAccAssignmentMigrationReadOnly(t *testing.T) {
 			}
 		}
 		projected = append(projected, migrationProjection{ID: strings.ToLower(*job.MigrationEventID), State: string(state)})
-		value, _, err := sdk.TeamsAdminAPI.AssignmentMigrations.GetByID(ctx, *job.MigrationEventID)
+		value, fixtureResponse, err := sdk.TeamsAdminAPI.AssignmentMigrations.GetByID(ctx, *job.MigrationEventID)
+		writeResponseFixture(t, "assignment_migration", "get_by_id", fixtureResponse, nil)
 		if err != nil || value == nil || value.MigrationEventID == nil || !strings.EqualFold(*value.MigrationEventID, *job.MigrationEventID) {
 			t.Fatal("migration read did not return the selected job")
 		}

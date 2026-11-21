@@ -34,4 +34,4 @@ accidental full-object update.
 Updates send once without implicit read-back, rollback or propagation wait. Shared
 transport supplies context, cancellation, raw metadata, redacted errors and token/
 destination isolation. Modern flight/legacy eligibility, confirmation semantics
-and actual permissions remain separately qualified. [Evidence and acceptance](../../../docs/implementation/policies/federation-sdk-evidence.md).
+and actual permissions remain separately qualified. [unit tests](service_test.go).

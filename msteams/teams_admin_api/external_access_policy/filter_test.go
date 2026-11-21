@@ -4,8 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
-	"reflect"
+
+	"slices"
+	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -14,39 +15,79 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 )
 
-func TestUnitProviderFilteringIsLocalAndGlobalOrderIsExact(t *testing.T) {
+func TestUnitProviderFilteringIsLocalAndGlobalOrderIsExactFromRealResponses(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	reply := `[{"Identity":"global","Future":null},{"Identity":"tag:Fixture","AllowedExternalDomains":[]},{"Identity":"Global","AllowedExternalDomains":["a"],"Future":{"value":false}},{"Identity":"Other"}]`
-	for index, pattern := range []string{"", "Fixture*"} {
-		results = append(results, run(t, contracttest.Case{Name: fmt.Sprint("filter-", index), Mappings: []contracttest.Mapping{{Command: "Get-CsExternalAccessPolicy", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{wire("GET", "/Skype.Policy/configurations/ExternalAccessPolicy", "Get-CsExternalAccessPolicy", nil, 200, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			values, r, e := sdk.TeamsAdminAPI.ExternalAccessPolicies.ListFiltered(ctx, pattern)
-			if e == nil {
-				want := []string{"Global", "global", "tag:Fixture", "Other"}
-				if pattern != "" {
-					want = []string{"tag:Fixture"}
-				}
-				var ids []string
-				for _, v := range values {
-					if v == nil || v.Identity == nil {
-						e = errors.New("identity lost")
-						break
-					}
-					ids = append(ids, *v.Identity)
-					encoded, err := json.Marshal(v)
-					var fields map[string]json.RawMessage
-					if err != nil || json.Unmarshal(encoded, &fields) != nil || !reflect.DeepEqual(fields, v.RawFields) {
-						e = errors.New("raw snapshot changed")
-					}
-				}
-				if !reflect.DeepEqual(ids, want) {
-					e = errors.New("local filtering or exact Global-first order changed")
-				}
-			}
-			return contracttest.Observation{Response: r, Err: e}
-		}}))
+	raw := readResponseFixture(t, "list.json")
+	var rows []json.RawMessage
+	if json.Unmarshal(raw, &rows) != nil {
+		t.Fatal("invalid real list fixture")
 	}
-	evidence(t, results)
+	identities := func(row json.RawMessage) string {
+		var value struct {
+			Identity string `json:"Identity"`
+		}
+		if json.Unmarshal(row, &value) != nil {
+			t.Fatal("invalid real list identity")
+		}
+		return value.Identity
+	}
+	slices.SortStableFunc(rows, func(a, b json.RawMessage) int {
+		left, right := strings.EqualFold(identities(a), "Global"), strings.EqualFold(identities(b), "Global")
+		if left == right {
+			return 0
+		}
+		if left {
+			return -1
+		}
+		return 1
+	})
+	cases := []struct {
+		Name, Pattern, OnlyID string
+		Empty                 bool
+	}{
+		{Name: "list"}, {Name: "all", Pattern: "*"}, {Name: "global", Pattern: "Global", OnlyID: "Global"},
+		{Name: "missing", Pattern: "__sdk_missing_fixture__", Empty: true},
+		{Name: "whitespace", Pattern: " ", Empty: true},
+	}
+	for _, row := range rows {
+		id := identities(row)
+		if strings.HasPrefix(id, "Tag:") && !strings.ContainsAny(id, "*?[]`") {
+			cases = append(cases, struct {
+				Name, Pattern, OnlyID string
+				Empty                 bool
+			}{Name: "tag-prefix", Pattern: strings.TrimPrefix(id, "Tag:"), OnlyID: id})
+			break
+		}
+	}
+	for _, tc := range cases {
+		want := make([]json.RawMessage, 0, len(rows))
+		for _, row := range rows {
+			if !tc.Empty && (tc.OnlyID == "" || strings.EqualFold(identities(row), tc.OnlyID)) {
+				want = append(want, row)
+			}
+		}
+		expected, err := json.Marshal(want)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "real-filter-" + tc.Name, Family: "external_access_policy", Scope: "service", Source: "msteams/teams_admin_api/external_access_policy/testdata/list.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/ExternalAccessPolicy", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				service := sdk.TeamsAdminAPI.ExternalAccessPolicies
+				if tc.Pattern == "" {
+					value, response, err := service.List(ctx)
+					return contracttest.Observation{Value: value, Response: response, Err: err}
+				}
+				value, response, err := service.ListFiltered(ctx, tc.Pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("real filtering response differs: %v %+v", err, result.Differences())
+		}
+	}
+
 }
 func TestUnitWrongBackendAndNilServiceRejectLocally(t *testing.T) {
 	t.Parallel()

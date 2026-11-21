@@ -3,49 +3,165 @@ package privacyconfiguration_test
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "contracts/endpoints/8.1.0/fixtures/privacy-provider.json"
+const source = "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const scoped = "scope /Fixture / Child"
 const collection = "/Skype.Policy/configurations/PrivacyConfiguration"
 const item = collection + "/configuration/Global"
 
-type capture struct {
+type inputVectors struct {
 	Name, Operation, Response string
 	Status                    int
 	Force                     bool
 	NullLocation              bool `json:"null_location"`
-	Capture                   struct {
-		Method, Url, Body, ContentType, CmdletName, MpaCmdlet string
-		FailureType                                           *string
-		Sends, TokenRequests                                  int
-		CorrelationIsGuid, HasTargetUri                       bool
+	Request                   struct {
+		Method, Url, Body, CmdletName string
+		FailureType                   *string
 	}
 }
 
-func captured(t *testing.T) []capture {
+func requestInputs(t *testing.T) []inputVectors {
 	t.Helper()
-	raw, err := os.ReadFile("../../../" + source)
-	if err != nil {
-		t.Fatal(err)
+
+	value := struct {
+		Cases []inputVectors `json:"cases"`
+	}{
+		Cases: []inputVectors{
+			{
+				Name:         "read",
+				Operation:    "read",
+				Status:       400,
+				Force:        false,
+				NullLocation: true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/PrivacyConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsPrivacyConfiguration",
+				},
+			},
+			{
+				Name:         "list",
+				Operation:    "list",
+				Status:       400,
+				Force:        false,
+				NullLocation: true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/PrivacyConfiguration",
+					CmdletName: "Get-CsPrivacyConfiguration",
+				},
+			},
+			{
+				Name:         "patch-null",
+				Operation:    "patch",
+				Status:       400,
+				Force:        false,
+				NullLocation: true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/PrivacyConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"EnablePrivacyMode\": false,\n  \"AutoInitiateContacts\": true,\n  \"PublishLocationDataDefault\": null,\n  \"DisplayPublishedPhotoDefault\": false\n}",
+
+					CmdletName: "Set-CsPrivacyConfiguration",
+				},
+			},
+			{
+				Name:         "patch-false",
+				Operation:    "patch",
+				Status:       400,
+				Force:        false,
+				NullLocation: false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/PrivacyConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"EnablePrivacyMode\": false,\n  \"AutoInitiateContacts\": true,\n  \"PublishLocationDataDefault\": false,\n  \"DisplayPublishedPhotoDefault\": false\n}",
+
+					CmdletName: "Set-CsPrivacyConfiguration",
+				},
+			},
+			{
+				Name:         "patch-force-false",
+				Operation:    "patch",
+				Status:       400,
+				Force:        true,
+				NullLocation: true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method: "PATCH",
+					Url:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/PrivacyConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					Body:   "{\n  \"Identity\": \"read-model-identity\",\n  \"EnablePrivacyMode\": false,\n  \"AutoInitiateContacts\": true,\n  \"PublishLocationDataDefault\": null,\n  \"DisplayPublishedPhotoDefault\": false,\n  \"Force\": \"False\"\n}",
+
+					CmdletName: "Set-CsPrivacyConfiguration",
+				},
+			},
+			{
+				Name:         "read-empty",
+				Operation:    "read",
+				Status:       400,
+				Force:        false,
+				NullLocation: true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/PrivacyConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsPrivacyConfiguration",
+				},
+			},
+			{
+				Name:         "list-envelope",
+				Operation:    "list",
+				Status:       400,
+				Force:        false,
+				NullLocation: true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/PrivacyConfiguration",
+					CmdletName: "Get-CsPrivacyConfiguration",
+				},
+			},
+			{
+				Name:         "read-denied",
+				Operation:    "read",
+				Status:       400,
+				Force:        false,
+				NullLocation: true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+					FailureType                   *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/PrivacyConfiguration/configuration/scope%20/Fixture%20%2F%20Child",
+					CmdletName: "Get-CsPrivacyConfiguration",
+				},
+			},
+		},
 	}
-	var value struct {
-		Cases []capture `json:"cases"`
-	}
-	if json.Unmarshal(raw, &value) != nil || len(value.Cases) != 8 {
-		t.Fatal("invalid privacy provider capture")
-	}
-	for _, c := range value.Cases {
-		if c.Capture.Sends != 1 || c.Capture.TokenRequests != 0 || !c.Capture.CorrelationIsGuid || c.Capture.HasTargetUri || c.Capture.MpaCmdlet != "true" {
-			t.Fatal("unsafe/incomplete privacy capture")
-		}
-	}
+
 	return value.Cases
 }
 func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
@@ -75,24 +191,4 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 		t.Fatalf("privacy contract differs: %v %+v", e, r.Differences())
 	}
 	return r
-}
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, err := os.OpenRoot(t.ArtifactDir())
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = root.Close() }()
-	f, err := root.Create("privacy-configuration-service.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	writeErr, closeErr := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if writeErr != nil || closeErr != nil {
-		t.Fatal("privacy evidence write failed")
-	}
 }

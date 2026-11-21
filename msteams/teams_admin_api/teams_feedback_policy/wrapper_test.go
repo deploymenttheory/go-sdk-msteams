@@ -3,7 +3,6 @@ package teamsfeedbackpolicy_test
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -11,16 +10,10 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 )
 
-// Required native string arguments express the final bound policy name. Shell
-// omission and PassThru binding failures are recorded source boundaries, not
-// invented native operations. Missing scope is expressible and rejects locally.
 func TestUnitFeedbackPolicyMappedGrantForwarding(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../" + wrapperSource)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var fixture struct {
+
+	fixture := struct {
 		Cases []struct {
 			Name    string
 			Failure *string `json:"failure_type"`
@@ -33,11 +26,258 @@ func TestUnitFeedbackPolicyMappedGrantForwarding(t *testing.T) {
 				}
 			}
 		}
+	}{
+		Cases: []struct {
+			Name    string
+			Failure *string `json:"failure_type"`
+			Calls   []struct {
+				Operation  string
+				Parameters struct {
+					Identity, PolicyName, PolicyType, GroupID string
+					Rank                                      *int32
+					Force                                     bool `json:"forceSwitchPresent"`
+				}
+			}
+		}{
+
+			{
+				Name: "grant-user",
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{
+
+					{
+						Operation: "assign-user",
+						Parameters: struct {
+							Identity, PolicyName, PolicyType, GroupID string
+							Rank                                      *int32
+							Force                                     bool `json:"forceSwitchPresent"`
+						}{
+							Identity:   "fixture/user",
+							PolicyName: "Fixture",
+							PolicyType: "TeamsFeedbackPolicy",
+						},
+					},
+				},
+			},
+
+			{
+				Name: "clear-user",
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{
+
+					{
+						Operation: "assign-user",
+						Parameters: struct {
+							Identity, PolicyName, PolicyType, GroupID string
+							Rank                                      *int32
+							Force                                     bool `json:"forceSwitchPresent"`
+						}{
+							Identity:   "fixture/user",
+							PolicyName: "",
+							PolicyType: "TeamsFeedbackPolicy",
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-tenant",
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{
+
+					{
+						Operation: "assign-tenant",
+						Parameters: struct {
+							Identity, PolicyName, PolicyType, GroupID string
+							Rank                                      *int32
+							Force                                     bool `json:"forceSwitchPresent"`
+						}{
+							PolicyName: "Fixture",
+							PolicyType: "TeamsFeedbackPolicy",
+							Force:      false,
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-group-rank-omitted",
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{
+
+					{
+						Operation: "assign-group",
+						Parameters: struct {
+							Identity, PolicyName, PolicyType, GroupID string
+							Rank                                      *int32
+							Force                                     bool `json:"forceSwitchPresent"`
+						}{
+							PolicyName: "Fixture",
+							PolicyType: "TeamsFeedbackPolicy",
+							GroupID:    "fixture/group",
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-group-rank-zero",
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{
+
+					{
+						Operation: "assign-group",
+						Parameters: struct {
+							Identity, PolicyName, PolicyType, GroupID string
+							Rank                                      *int32
+							Force                                     bool `json:"forceSwitchPresent"`
+						}{
+							PolicyName: "Fixture",
+							PolicyType: "TeamsFeedbackPolicy",
+							GroupID:    "fixture/group",
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-group-rank-two",
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{
+
+					{
+						Operation: "assign-group",
+						Parameters: struct {
+							Identity, PolicyName, PolicyType, GroupID string
+							Rank                                      *int32
+							Force                                     bool `json:"forceSwitchPresent"`
+						}{
+							PolicyName: "Fixture",
+							PolicyType: "TeamsFeedbackPolicy",
+							GroupID:    "fixture/group",
+							Rank:       new(int32(2)),
+						},
+					},
+				},
+			},
+
+			{
+				Name: "grant-group-rank-negative",
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{
+
+					{
+						Operation: "assign-group",
+						Parameters: struct {
+							Identity, PolicyName, PolicyType, GroupID string
+							Rank                                      *int32
+							Force                                     bool `json:"forceSwitchPresent"`
+						}{
+							PolicyName: "Fixture",
+							PolicyType: "TeamsFeedbackPolicy",
+							GroupID:    "fixture/group",
+							Rank:       new(int32(-1)),
+						},
+					},
+				},
+			},
+
+			{
+				Name:    "grant-missing-policy-name",
+				Failure: new("System.Management.Automation.ParameterBindingException"),
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{},
+			},
+
+			{
+				Name:    "grant-missing-scope",
+				Failure: new("System.Management.Automation.ParameterBindingException"),
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{},
+			},
+
+			{
+				Name:    "grant-passthru-true-rejected",
+				Failure: new("System.Management.Automation.ParameterBindingException"),
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{},
+			},
+
+			{
+				Name:    "grant-passthru-false-rejected",
+				Failure: new("System.Management.Automation.ParameterBindingException"),
+				Calls: []struct {
+					Operation  string
+					Parameters struct {
+						Identity, PolicyName, PolicyType, GroupID string
+						Rank                                      *int32
+						Force                                     bool `json:"forceSwitchPresent"`
+					}
+				}{},
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 11 {
-		t.Fatal("incomplete mapped feedback grant fixture")
-	}
-	var results []contracttest.Result
+
 	for _, f := range fixture.Cases {
 		if f.Failure != nil {
 			if *f.Failure != "System.Management.Automation.ParameterBindingException" || len(f.Calls) != 0 {
@@ -46,10 +286,10 @@ func TestUnitFeedbackPolicyMappedGrantForwarding(t *testing.T) {
 			if f.Name != "grant-missing-scope" {
 				continue
 			}
-			results = append(results, run(t, contracttest.Case{Name: f.Name, Source: wrapperSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: f.Name, Source: wrapperSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				_, r, e := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.Assign(ctx, resource.Assignment{})
 				return contracttest.Observation{Response: r, Err: e}
-			}}))
+			}})
 			continue
 		}
 		if len(f.Calls) != 1 || f.Calls[0].Parameters.PolicyType != "TeamsFeedbackPolicy" {
@@ -84,10 +324,9 @@ func TestUnitFeedbackPolicyMappedGrantForwarding(t *testing.T) {
 		if e != nil {
 			t.Fatal(e)
 		}
-		results = append(results, run(t, contracttest.Case{Name: f.Name, Source: wrapperSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(), modernWire(method, path, encoded, status, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: f.Name, Source: wrapperSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), modernWire(method, path, encoded, status, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			_, r, e := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.Assign(ctx, input)
 			return contracttest.Observation{Response: r, Err: e}
-		}}))
+		}})
 	}
-	evidence(t, results)
 }

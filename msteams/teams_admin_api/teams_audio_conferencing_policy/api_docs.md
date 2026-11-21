@@ -66,5 +66,5 @@ query, unconditional MPACmdlet, client ETag or implicit setting default is added
 On 2026-11-21 actual Global reads returned 403 using client-secret and certificate
 credentials. Successful authorization, cloud/flight availability, writes,
 read-back, cleanup and effective invite/assignment changes remain open. See
-[source evidence](../../../docs/implementation/policies/audio-conferencing-policy-evidence.md)
+[unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/audio-conferencing-policy-lab-acceptance.md).

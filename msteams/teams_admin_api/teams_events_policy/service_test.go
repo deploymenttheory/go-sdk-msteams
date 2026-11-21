@@ -14,12 +14,12 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_events_policy"
 )
 
-func TestUnitEventsPolicyPinnedProviderRequests(t *testing.T) {
+func TestUnitEventsPolicyTypedProviderRequests(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, f := range captures(t) {
+
+	for _, f := range requestInputs(t) {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			x := f.Capture
+			x := f.Request
 			var body json.RawMessage
 			if x.Body != "" {
 				body = json.RawMessage(x.Body)
@@ -41,6 +41,9 @@ func TestUnitEventsPolicyPinnedProviderRequests(t *testing.T) {
 				}
 			} else if f.Response != "" {
 				c.Want.JSON = json.RawMessage(f.Response)
+			}
+			if len(c.Steps) != 0 {
+				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsEventsPolicies
@@ -79,8 +82,7 @@ func TestUnitEventsPolicyPinnedProviderRequests(t *testing.T) {
 				v, r, e := s.PatchByIdentity(ctx, scoped, resource.PatchRequest{Settings: settings, Controls: controls, BodyIdentity: policy.Set("read-model-identity")})
 				return contracttest.Observation{Value: v, Response: r, Err: e}
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }

@@ -47,4 +47,4 @@ help heading is not an API alias. A null BlockedUsers response is rejected by th
 pinned model; the SDK returns a decode error and preserves raw response data.
 
 Exact RBAC/consent, cloud feature deployment and successful app/delegated service
-behavior remain unqualified. [Evidence and prepared acceptance](../../../docs/implementation/policies/federation-sdk-evidence.md).
+behavior remain unqualified. [unit tests](service_test.go).

@@ -7,7 +7,7 @@ Compare SDK and pinned PowerShell behaviour with sanitized evidence. This provid
 
 ## Implementation
 
-Implement a conformance harness that runs pinned 8.1.0 and SDK operations on equivalent isolated resources, normalizes only documented volatile fields and compares outcomes/read-back. Capture package hash, auth mode, scenario, sanitized requests/responses and cleanup result. Store reviewed fixtures with provenance; do not equate a skipped live case to a pass.
+Implement a conformance harness that runs pinned 8.1.0 and SDK operations on equivalent isolated resources, normalizes only documented volatile fields and compares outcomes/read-back. Check the package hash, authentication mode, scenario and cleanup result. Store sanitized response fixtures directly in each service testdata directory for TestUnit reuse. Do not equate a skipped TestAcc case to a pass.
 
 Source: [MicrosoftTeams 8.1.0](https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0); normalized command and parameter-set evidence in `contracts/powershell/8.1.0/commands.json` and `runtime.json`. Package SHA256: `78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7`. Planned paths are future implementation locations unless already present in the baseline preview.
 
@@ -18,7 +18,7 @@ Source: [MicrosoftTeams 8.1.0](https://www.powershellgallery.com/packages/Micros
 
 ## Verification
 
-Use controlled equal/different fixtures and failed-cleanup scenarios, then execute available tenant cases; review captured output for credentials and identifiers before retention.
+Use controlled equal/different fixtures and failed-cleanup scenarios, then execute available tenant cases; review permanent response fixtures for credentials and identifiers before committing.
 
 Go checks and SDK fixture paths are planned foundation outputs, not claims of tests already run. The implementation PR records the actual command results and evidence revision.
 

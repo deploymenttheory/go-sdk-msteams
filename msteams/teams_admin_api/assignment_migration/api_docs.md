@@ -37,5 +37,5 @@ status is preserved instead of the cmdlet's token-invalid/group-in-use output st
 Source requests the selected ConfigAPI resource's delegated user_impersonation scope.
 Application eligibility, feature activation, RBAC and cloud deployment need separate
 qualification; synthetic mode tests only establish routing. Both current dedicated-SPN
-read attempts returned HTTP 403. See [evidence](../../../docs/implementation/policies/assignment-migration-sdk-progress.md)
+read attempts returned HTTP 403. See [unit tests](service_test.go)
 and the [lab plan](../../../docs/implementation/policies/assignment-migration-lab-acceptance.md).

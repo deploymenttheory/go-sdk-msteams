@@ -66,7 +66,7 @@ are not evidence of remote service denial. Native providers use exact resource
 The hierarchy guide requires a Teams service administrator for upload. Exact
 per-operation grants, application eligibility, cloud feature deployment and role
 enforcement remain unqualified. A valid token does not prove any of them. See
-[pinned endpoint/profile evidence](../../../docs/implementation/core/hierarchy-migration-contract-evidence.md)
-and [candidate SDK evidence](../../../docs/implementation/core/targeting-sdk-evidence.md).
+[unit tests](service_test.go)
+and [unit tests](service_test.go).
 Tenant import/delete require a separately reviewed singleton backup/restore
 procedure; the prepared lab cases are read-only and unrun.

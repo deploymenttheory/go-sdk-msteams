@@ -28,6 +28,46 @@ class AcceptanceGuardTests(unittest.TestCase):
             with self.subTest(events=events, expected=expected, code=code):
                 self.assertEqual(ci.evaluate(events, expected, code)['outcome'], 'failed')
 
+    def test_failed_test_summary_names_the_test_and_http_status(self):
+        events = [
+            {'Test': 'TestAccPrivacyRead', 'Action': 'output', 'Output': 'Global read failed (HTTP 403); private-response'},
+            {'Test': 'TestAccPrivacyRead', 'Action': 'fail'},
+        ]
+        report = ci.evaluate(events, ['TestAccPrivacyRead'], 1)
+        report.update(suite='resource-reads', auth_method='certificate')
+        with tempfile.TemporaryDirectory() as directory:
+            summary = Path(directory) / 'summary.md'
+            output = io.StringIO()
+            with patch.dict(os.environ, {'GITHUB_STEP_SUMMARY': str(summary), 'GITHUB_ACTIONS': 'true'}), contextlib.redirect_stdout(output):
+                ci.print_report(report)
+                ci.write_summary([report])
+            self.assertIn('TestAccPrivacyRead: HTTP 403', output.getvalue())
+            self.assertIn('::error title=TestAccPrivacyRead::HTTP 403', output.getvalue())
+            self.assertIn('`TestAccPrivacyRead` | HTTP 403', summary.read_text())
+            self.assertNotIn('private-response', output.getvalue() + summary.read_text())
+
+    def test_prepare_names_missing_secrets_without_exposing_present_values(self):
+        with patch.dict(os.environ, {'MSTEAMS_LAB_TENANT_ID': 'private-tenant-value'}, clear=True):
+            with self.assertRaises(ci.AcceptanceFailure) as failure:
+                ci.prepare(argparse.Namespace(metadata=None, archive=None))
+        self.assertIn('MSTEAMS_LAB_CLIENT_ID', str(failure.exception))
+        self.assertIn('MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM', str(failure.exception))
+        self.assertNotIn('MSTEAMS_LAB_TENANT_ID', str(failure.exception))
+        self.assertNotIn('private-tenant-value', str(failure.exception))
+
+    def test_passing_parent_does_not_hide_skipped_child_in_output(self):
+        report = ci.evaluate([
+            {'Test': 'TestAccRead', 'Action': 'pass'},
+            {'Test': 'TestAccRead/private-identifier', 'Action': 'skip'},
+        ], ['TestAccRead'], 0)
+        report.update(suite='resource-reads', auth_method='certificate')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            ci.print_report(report)
+        self.assertEqual(report['outcome'], 'failed')
+        self.assertIn('1 child tests skip', output.getvalue())
+        self.assertNotIn('private-identifier', output.getvalue())
+
     def test_crud_pass_requires_both_oracle_comparisons(self):
         test = 'TestAccApplicationAccessPolicyCRUD'
         events = [{'Test': test, 'Action': 'pass'}]

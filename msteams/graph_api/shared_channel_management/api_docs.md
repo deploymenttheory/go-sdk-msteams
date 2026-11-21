@@ -42,6 +42,6 @@ application resource-specific .Group), and directory application User.Read.All
 for enrichment. Unshare uses ChannelMember.ReadWrite.All (or application .Group
 with resource-specific consent). Lookup roles/cloud availability are not inferred
 from a successful token. Detailed sources/restrictions are in
-[CORE-01 evidence](../../../docs/implementation/core/channel-contract-evidence.md).
+[unit tests](service_test.go).
 Offline cases are source-informed synthetic traffic; tenant and pinned-command
 comparisons remain unrun. Relationship Create/Update contracts remain open.

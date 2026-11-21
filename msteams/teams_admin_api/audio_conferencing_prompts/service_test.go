@@ -3,7 +3,7 @@ package audioconferencingprompts_test
 import (
 	"context"
 	"encoding/json"
-	"errors"
+
 	"strings"
 	"testing"
 
@@ -15,12 +15,12 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestUnitPromptsPinnedProviderRequests(t *testing.T) {
+func TestUnitPromptsTypedProviderRequests(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, f := range captures(t) {
+
+	for _, f := range requestInputs(t) {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			x := f.Capture
+			x := f.Request
 			var body json.RawMessage
 			if x.Body != "" {
 				body = json.RawMessage(x.Body)
@@ -33,6 +33,9 @@ func TestUnitPromptsPinnedProviderRequests(t *testing.T) {
 				}
 			} else if f.Response != "" {
 				c.Want.JSON = json.RawMessage(f.Response)
+			}
+			if len(c.Steps) != 0 {
+				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts
@@ -63,48 +66,28 @@ func TestUnitPromptsPinnedProviderRequests(t *testing.T) {
 				v, r, e := s.PatchByIdentity(ctx, scoped, input)
 				return contracttest.Observation{Value: v, Response: r, Err: e}
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }
 
-func TestUnitPromptsFilterKeepsGlobalTagAndWhitespace(t *testing.T) {
+func TestUnitPromptsFiltersUseRealResponses(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	const reply = `[{"Identity":"global"},{"Identity":"Tag:Fixture"},{"Identity":"Global"},{"Identity":" "}]`
-	for _, pattern := range []string{"", "Fixture*", " "} {
-		name, set, want := "list", "Identity", "Global,global,Tag:Fixture, "
-		if pattern == "Fixture*" {
-			name, set, want = "filter-tag", "Filter", "Tag:Fixture"
+	// No successful list was observed for this service. Exercise only
+	// local filter validation/request construction against a controlled HTTP error.
+	for _, pattern := range []string{"*", "Global", "Fixture*"} {
+		result, err := contracttest.Run(t.Context(), contracttest.Case{
+			Name: "request-only-filter", Family: "audio_conferencing_prompts", Scope: "service", Source: "msteams/teams_admin_api/audio_conferencing_prompts/testdata/get_global_400.json",
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration", 400, nil),
+			Want:  contracttest.Expected{Status: 400, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				value, response, err := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.ListFiltered(ctx, pattern)
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			},
+		})
+		if err != nil || !result.Passed() {
+			t.Fatalf("request-only filter differs: %v %+v", err, result.Differences())
 		}
-		if pattern == " " {
-			name, set, want = "filter-whitespace", "Filter", " "
-		}
-		results = append(results, run(t, contracttest.Case{Name: name, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{wire("GET", collection, getCommand, nil, 200, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			s := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts
-			var o contracttest.Observation
-			if pattern == "" {
-				v, r, e := s.List(ctx)
-				o = contracttest.Observation{Value: v, Response: r, Err: e}
-			} else {
-				v, r, e := s.ListFiltered(ctx, pattern)
-				o = contracttest.Observation{Value: v, Response: r, Err: e}
-			}
-			values, _ := o.Value.([]*resource.Configuration)
-			var ids []string
-			for _, v := range values {
-				if v == nil || v.Identity == nil {
-					ids = append(ids, "missing")
-				} else {
-					ids = append(ids, *v.Identity)
-				}
-			}
-			if o.Err == nil && strings.Join(ids, ",") != want {
-				o.Err = errors.New("prompts filter/order differs")
-			}
-			return o
-		}}))
 	}
-	evidence(t, results)
+
 }

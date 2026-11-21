@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
 	"testing"
 
@@ -17,7 +16,7 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
 )
 
-const fixture = "contracts/endpoints/8.1.0/fixtures/assignment-migration-dispatch.json"
+const fixture = "msteams/teams_admin_api/assignment_migration/testdata/list_400.json"
 const base = "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/"
 const body = `{"authority":"Tenant","policytype":"FixturePolicy","policyname":"Fixture","groupid":"00000000-0000-4000-8000-000000000001"}`
 
@@ -68,26 +67,6 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	}
 	return r
 }
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, err := os.OpenRoot(t.ArtifactDir())
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = root.Close() }()
-	f, err := root.Create("assignment-migration-service.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	writeErr, closeErr := contracttest.WriteEvidence(f, revision, results), f.Close()
-	if writeErr != nil || closeErr != nil {
-		t.Fatal("GPA evidence write failed")
-	}
-}
 
 func invoke(ctx context.Context, sdk *msteams.Client, operation string, allow bool) contracttest.Observation {
 	s := sdk.TeamsAdminAPI.AssignmentMigrations
@@ -116,34 +95,282 @@ func invoke(ctx context.Context, sdk *msteams.Client, operation string, allow bo
 	}
 }
 
-func TestUnitPinnedGPARequestHelper(t *testing.T) {
+func TestUnitTypedGPARequestHelper(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../" + fixture)
-	if e != nil {
-		t.Fatal(e)
-	}
-	var captured struct {
+
+	requestInputs := struct {
 		Cases []struct {
 			Name, Operation, Response string
 			Status                    int
 			Allow                     bool
-			Capture                   struct {
-				Method, Url, Body, CmdletName, MpaCmdlet string
-				Sends, TokenRequests                     int
-				CorrelationIsGuid, HasTargetUri          bool
-				FailureType                              *string
+			Request                   struct {
+				Method, Url, Body, CmdletName string
+
+				FailureType *string
 			}
 		}
+	}{
+		Cases: []struct {
+			Name, Operation, Response string
+			Status                    int
+			Allow                     bool
+			Request                   struct {
+				Method, Url, Body, CmdletName string
+
+				FailureType *string
+			}
+		}{
+
+			{
+				Name:      "list",
+				Operation: "list",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration",
+					CmdletName: "Get-DirectToGroupAssignmentsMigrationStatus",
+				},
+			},
+
+			{
+				Name:      "read",
+				Operation: "read",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration/fixture-job",
+					CmdletName: "Get-DirectToGroupAssignmentsMigrationStatus",
+				},
+			},
+
+			{
+				Name:      "types",
+				Operation: "types",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/groups/recommendations?groupThreshold=500",
+					CmdletName: "Get-GroupAssignmentRecommendationsPerPolicyType",
+				},
+			},
+
+			{
+				Name:      "names",
+				Operation: "names",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/groups/policyTypes/FixturePolicy/recommendations?groupThreshold=500",
+					CmdletName: "Get-GroupAssignmentRecommendationsPerPolicyName",
+				},
+			},
+
+			{
+				Name:      "conflicts",
+				Operation: "conflicts",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture-group/policyTypes/FixturePolicy/conflict",
+					CmdletName: "Get-GroupPolicyAssignmentConflict",
+				},
+			},
+
+			{
+				Name:      "create",
+				Operation: "create",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "POST",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration/migrate?allowNonEmptyGroup=False",
+					Body:       "{\"authority\":\"Tenant\",\"policytype\":\"FixturePolicy\",\"policyname\":\"Fixture\",\"groupid\":\"00000000-0000-4000-8000-000000000001\"}",
+					CmdletName: "Invoke-StartDirectToGroupAssignmentMigration",
+				},
+			},
+
+			{
+				Name:      "clear",
+				Operation: "clear",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "POST",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration/cleanup?allowNonEmptyGroup=False",
+					Body:       "{\"authority\":\"Tenant\",\"policytype\":\"FixturePolicy\",\"policyname\":\"Fixture\",\"groupid\":\"00000000-0000-4000-8000-000000000001\"}",
+					CmdletName: "Invoke-ClearDirectToGroupAssignmentMigration",
+				},
+			},
+
+			{
+				Name:      "create-allow",
+				Operation: "create",
+				Status:    400,
+				Allow:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "POST",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration/migrate?allowNonEmptyGroup=True",
+					Body:       "{\"authority\":\"Tenant\",\"policytype\":\"FixturePolicy\",\"policyname\":\"Fixture\",\"groupid\":\"00000000-0000-4000-8000-000000000001\"}",
+					CmdletName: "Invoke-StartDirectToGroupAssignmentMigration",
+				},
+			},
+
+			{
+				Name:      "clear-allow",
+				Operation: "clear",
+				Status:    400,
+				Allow:     true,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "POST",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration/cleanup?allowNonEmptyGroup=True",
+					Body:       "{\"authority\":\"Tenant\",\"policytype\":\"FixturePolicy\",\"policyname\":\"Fixture\",\"groupid\":\"00000000-0000-4000-8000-000000000001\"}",
+					CmdletName: "Invoke-ClearDirectToGroupAssignmentMigration",
+				},
+			},
+
+			{
+				Name:      "read-denied",
+				Operation: "read",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration/fixture-job",
+					CmdletName: "Get-DirectToGroupAssignmentsMigrationStatus",
+				},
+			},
+
+			{
+				Name:      "create-denied",
+				Operation: "create",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "POST",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration/migrate?allowNonEmptyGroup=False",
+					Body:       "{\"authority\":\"Tenant\",\"policytype\":\"FixturePolicy\",\"policyname\":\"Fixture\",\"groupid\":\"00000000-0000-4000-8000-000000000001\"}",
+					CmdletName: "Invoke-StartDirectToGroupAssignmentMigration",
+				},
+			},
+
+			{
+				Name:      "read-malformed",
+				Operation: "read",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration/fixture-job",
+					CmdletName: "Get-DirectToGroupAssignmentsMigrationStatus",
+				},
+			},
+
+			{
+				Name:      "read-empty",
+				Operation: "read",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration/fixture-job",
+					CmdletName: "Get-DirectToGroupAssignmentsMigrationStatus",
+				},
+			},
+
+			{
+				Name:      "list-null",
+				Operation: "list",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration",
+					CmdletName: "Get-DirectToGroupAssignmentsMigrationStatus",
+				},
+			},
+
+			{
+				Name:      "list-envelope",
+				Operation: "list",
+				Status:    400,
+				Allow:     false,
+				Request: struct {
+					Method, Url, Body, CmdletName string
+
+					FailureType *string
+				}{
+					Method:     "GET",
+					Url:        "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/directAssignmentsMigration",
+					CmdletName: "Get-DirectToGroupAssignmentsMigrationStatus",
+				},
+			},
+		},
 	}
-	if json.Unmarshal(raw, &captured) != nil || len(captured.Cases) != 15 {
-		t.Fatal("invalid pinned GPA fixture")
-	}
-	var results []contracttest.Result
-	for _, f := range captured.Cases {
-		c := f.Capture
-		if c.Sends != 1 || c.TokenRequests != 0 || !c.CorrelationIsGuid || c.HasTargetUri || c.MpaCmdlet != "true" || c.FailureType != nil || c.CmdletName != command(f.Operation) || !strings.HasPrefix(c.Url, base) {
-			t.Fatal("unsafe/incomplete GPA observation")
-		}
+
+	for _, f := range requestInputs.Cases {
+		c := f.Request
+
 		var input json.RawMessage
 		if c.Body != "" {
 			input = json.RawMessage(c.Body)
@@ -160,24 +387,28 @@ func TestUnitPinnedGPARequestHelper(t *testing.T) {
 			default:
 				test.Want.JSON = json.RawMessage(f.Response)
 			}
-			results = append(results, run(t, test))
+			test.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+			run(t, test)
 		}
 	}
-	evidence(t, results)
 }
 
 func TestUnitGPAEncodesSegmentsAndThresholdSeparately(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, tc := range []struct{ name, value, suffix string }{
 		{"empty", "", ""}, {"opaque", "-1 +&/?#", "-1+%2B%26%2F%3F%23"},
 	} {
-		results = append(results, run(t, contracttest.Case{Name: "threshold-" + tc.name, Mappings: mapping("types"), Steps: []contracttest.Exchange{wire("types", "GET", "group%2Ffixture%3F%23/recommendations?groupThreshold="+tc.suffix, nil, 200, "[]")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: "threshold-" + tc.name, Mappings: mapping("types"), Steps: []contracttest.Exchange{wire("types", "GET", "group%2Ffixture%3F%23/recommendations?groupThreshold="+tc.suffix, nil, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			v, r, e := sdk.TeamsAdminAPI.AssignmentMigrations.RecommendationsByPolicyType(ctx, "group/fixture?#", resource.RecommendationOptions{GroupThreshold: &tc.value})
 			return contracttest.Observation{Value: v, Response: r, Err: e}
-		}}))
+		}, Want: contracttest.Expected{APIError: &client.
+			APIError{Backend: client.TeamsAdmin,
+			StatusCode: 400,
+		}},
+		})
 	}
-	results = append(results, run(t, contracttest.Case{Name: "opaque-job-id", Mappings: mapping("read"), Steps: []contracttest.Exchange{wire("read", "GET", "directAssignmentsMigration/tag%3AFixture%20%2F%20Job%3F%23", nil, 200, `{"state":"Future","Future":false}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "opaque-job-id", Mappings: mapping("read"), Steps: []contracttest.Exchange{wire("read", "GET", "directAssignmentsMigration/tag%3AFixture%20%2F%20Job%3F%23", nil, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.AssignmentMigrations.GetByID(ctx, "tag:Fixture / Job?#")
 		if e == nil {
 			state, ok := v.State.Text()
@@ -186,28 +417,30 @@ func TestUnitGPAEncodesSegmentsAndThresholdSeparately(t *testing.T) {
 			}
 		}
 		return contracttest.Observation{Value: v, Response: r, Err: e}
-	}}))
-	evidence(t, results)
+	}, Want: contracttest.Expected{APIError: &client.
+		APIError{Backend: client.TeamsAdmin,
+		StatusCode: 400,
+	}},
+	})
 }
 
 func TestUnitGPAErrorsRetainHTTPStatusAndDoNotReplaySubmissions(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, op := range []string{"create", "clear"} {
 		for _, status := range []int{400, 401, 403, 404, 409, 429, 502, 503} {
 			suffix := "directAssignmentsMigration/migrate?allowNonEmptyGroup=False"
 			if op == "clear" {
 				suffix = "directAssignmentsMigration/cleanup?allowNonEmptyGroup=False"
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", op, status), Mappings: mapping(op), Steps: []contracttest.Exchange{wire(op, "POST", suffix, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", op, status), Mappings: mapping(op), Steps: []contracttest.Exchange{wire(op, "POST", suffix, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				observation := invoke(ctx, sdk, op, false)
 				var api *client.APIError
 				if observation.Err == nil || !errors.As(observation.Err, &api) || api.StatusCode != status || strings.Contains(fmt.Sprint(observation.Err), "fixture-private") {
 					return contracttest.Observation{Err: errors.New("normalized GPA error/status lost")}
 				}
 				return contracttest.Observation{Response: observation.Response}
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }

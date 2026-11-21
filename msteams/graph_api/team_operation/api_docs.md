@@ -49,6 +49,6 @@ tenant behavior remain unqualified; no role/grant is assigned by this service.
 The strict 200 Get contract is an explicit SDK expectation alongside the pinned
 helper's broad successful-status handling, and requires tenant qualification.
 
-See [source evidence](../../../docs/implementation/core/channel-contract-evidence.md),
-[SDK evidence](../../../docs/implementation/core/team-operation-sdk-evidence.md) and
+See [unit tests](service_test.go),
+[unit tests](service_test.go) and
 [read-only lab procedure](../../../docs/implementation/core/team-operation-lab-acceptance.md).

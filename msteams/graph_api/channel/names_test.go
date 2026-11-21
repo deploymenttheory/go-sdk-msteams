@@ -13,14 +13,14 @@ import (
 
 func TestUnitNameCompositionsUseCompleteUniqueLookup(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	next := base + "/channels?$skiptoken=next"
 	for _, tc := range []struct{ name, method, command, payload string }{
 		{"update", "PATCH", "Set-TeamChannel", `{"description":""}`},
 		{"delete", "DELETE", "Remove-TeamChannel", ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			results = append(results, run(t, contracttest.Case{Name: "name-" + tc.name,
+			run(t, contracttest.Case{Name: "name-" + tc.name,
 				Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "__AllParameterSets"}},
 				Steps: []contracttest.Exchange{
 					wire("GET", base+"/channels", "", 200, `{"value":[{"id":"other","displayName":"Other"}],"@odata.nextLink":"`+next+`"}`),
@@ -34,7 +34,7 @@ func TestUnitNameCompositionsUseCompleteUniqueLookup(t *testing.T) {
 					}
 					r, e := sdk.GraphAPI.Channels.DeleteByDisplayName(ctx, teamID, "fixture", client.PagingOptions{})
 					return contracttest.Observation{Response: r, Err: e}
-				}, Want: contracttest.Expected{Status: 204}}))
+				}, Want: contracttest.Expected{Status: 204}})
 		})
 	}
 	for _, tc := range []struct {
@@ -47,20 +47,19 @@ func TestUnitNameCompositionsUseCompleteUniqueLookup(t *testing.T) {
 		{name: "incomplete", body: `{"value":[{"id":"first","displayName":"fixture"}],"@odata.nextLink":"` + next + `"}`, limits: client.PagingOptions{MaxPages: 1}, err: client.ErrPageLimit},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			results = append(results, run(t, contracttest.Case{Name: "name-" + tc.name, Steps: []contracttest.Exchange{wire("GET", base+"/channels", "", 200, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "name-" + tc.name, Steps: []contracttest.Exchange{wire("GET", base+"/channels", "", 200, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				r, e := sdk.GraphAPI.Channels.DeleteByDisplayName(ctx, teamID, "fixture", tc.limits)
 				return contracttest.Observation{Response: r, Err: e}
-			}, Want: contracttest.Expected{Status: 200, Error: tc.err}}))
+			}, Want: contracttest.Expected{Status: 200, Error: tc.err}})
 		})
 	}
-	evidence(t, results)
 }
 
 func TestUnitExplicitCollectionWrappers(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct{ name, path string }{{"all", "allChannels"}, {"incoming", "incomingChannels"}} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "wrapper-" + tc.name, Steps: []contracttest.Exchange{wire("GET", base+"/"+tc.path, "", 200, `{"value":[]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "wrapper-" + tc.name, Steps: []contracttest.Exchange{wire("GET", base+"/"+tc.path, "", 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				var v client.ListResult[channel.Channel]
 				var e error
 				if tc.name == "all" {

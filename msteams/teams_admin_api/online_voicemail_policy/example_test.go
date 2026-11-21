@@ -32,8 +32,7 @@ func ExampleService_UpdateByIdentity() {
 func ExampleService_AssignGroup() {
 	assign := func(ctx context.Context, sdk *msteams.Client, groupID, name string) (*resource.AssignmentResult, error) {
 		result, _, err := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.AssignGroup(ctx, groupID, policy.Set(name), nil)
-		// An optional OperationID supports a later explicit GetAssignmentOperation.
-		// Accepted does not establish effective policy or completed propagation.
+
 		return result, err
 	}
 	_ = assign

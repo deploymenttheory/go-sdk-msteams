@@ -99,7 +99,7 @@ for the Skype/Teams Tenant Admin resource.
 
 Sources: [application authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication),
 [Teams roles](https://learn.microsoft.com/en-us/microsoftteams/using-admin-roles),
-[pinned template contract](../../../docs/implementation/core/template-policy-deployment-evidence.md).
+[unit tests](service_test.go).
 Offline cloud/mode routing tests do not claim actual sovereign service eligibility.
 
 ## Baseline command and parameter-set mapping
@@ -119,7 +119,7 @@ Offline cloud/mode routing tests do not claim actual sovereign service eligibili
 Local hidden values do not persist or assign permission policies. Their eventual
 policy payload serialization belongs to the corresponding permission-policy
 service. Source/model/request evidence and implementation qualification are
-recorded in [the SDK evidence note](../../../docs/implementation/core/team-template-sdk-evidence.md).
+recorded in [unit tests](service_test.go).
 
 ## Lab acceptance
 

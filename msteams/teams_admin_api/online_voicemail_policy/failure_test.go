@@ -17,7 +17,7 @@ import (
 
 func TestUnitVoicemailInvalidInputAndContextFailBeforeTokens(t *testing.T) {
 	t.Parallel()
-	result := run(t, contracttest.Case{Name: "invalid-input-and-scope", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "invalid-input-and-scope", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.OnlineVoicemailPolicies
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity", "scope/..", "/empty-scope", "scope/"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -66,12 +66,11 @@ func TestUnitVoicemailInvalidInputAndContextFailBeforeTokens(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{result})
 }
 
 func TestUnitVoicemailWriteDenialsKeepStatusAndNeverReplay(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, operation := range []string{"create", "delete", "group"} {
 		for _, status := range []int{401, 403, 429, 503} {
 			command, method, path := "New-CsOnlineVoicemailPolicy", "POST", collection
@@ -83,11 +82,11 @@ func TestUnitVoicemailWriteDenialsKeepStatusAndNeverReplay(t *testing.T) {
 			if operation == "group" {
 				command, path = "Grant-CsOnlineVoicemailPolicy", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy"
 				body = json.RawMessage(`{"policyName":"Fixture"}`)
-				steps = append(steps, discovery(), generatedWire(method, origin+path, command, body, status, `{"message":"fixture-private"}`))
+				steps = append(steps, discovery(t), generatedWire(method, origin+path, command, body, status, `{"message":"fixture-private"}`))
 			} else {
 				steps = append(steps, wire(method, path, command, body, status, `{"Message":"fixture-private"}`))
 			}
-			results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.OnlineVoicemailPolicies
 				var observation contracttest.Observation
 				switch operation {
@@ -103,8 +102,7 @@ func TestUnitVoicemailWriteDenialsKeepStatusAndNeverReplay(t *testing.T) {
 					return contracttest.Observation{Err: errors.New("normalized error/status lost")}
 				}
 				return contracttest.Observation{Response: observation.Response}
-			}}))
+			}})
 		}
 	}
-	evidence(t, results)
 }

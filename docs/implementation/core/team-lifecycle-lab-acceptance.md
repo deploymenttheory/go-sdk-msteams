@@ -92,7 +92,7 @@ They establish cleanup boundaries, not tenant acceptance.
 Primary photo [read](https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0)
 and [update](https://learn.microsoft.com/en-us/graph/api/profilephoto-update?view=graph-rest-1.0)
 documentation reviewed on 2026-11-21 supports the separate group-photo readback
-route and permissions. See [SDK evidence](teams-sdk-evidence.md) for
+route and permissions. See [tests](../../../tests/integration/lab) for
 native/composed contract scope and observed lab limits.
 
 ## Optional pinned PowerShell read comparison

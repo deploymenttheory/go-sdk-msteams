@@ -27,7 +27,7 @@ func cleanupExchange(method, path string, status int, body string) contracttest.
 func runCleanupCase(t *testing.T, c contracttest.Case) {
 	t.Helper()
 	c.Family = "membership_lab_cleanup"
-	c.Source = "contracts/endpoints/8.1.0/fixtures/core-native-team-members.json"
+	c.Source = "tests/integration/lab/team_membership_cleanup_test.go"
 	if c.Scope == "" {
 		c.Scope = "service"
 	}

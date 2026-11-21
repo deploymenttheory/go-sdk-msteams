@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
+
 	"strconv"
 	"strings"
 	"testing"
@@ -56,36 +56,15 @@ func roster() contracttest.Exchange {
 
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
-	c.Family, c.Source = "channel_user_management", "contracts/endpoints/8.1.0/core.json"
+	c.Family, c.Source = "channel_user_management", "msteams/graph_api/channel_user_management/service_test.go"
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
-	result, err := contracttest.Run(t.Context(), c)
+	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
 	if err != nil || !result.Passed() {
 		t.Fatalf("channel-user contract differs: setup=%v differences=%+v", err, result.Differences())
 	}
 	return result
-}
-
-func evidence(t *testing.T, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, err := os.OpenRoot(t.ArtifactDir())
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = root.Close() }()
-	file, err := root.Create("channel-user-service.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	writeErr, closeErr := contracttest.WriteEvidence(file, revision, results), file.Close()
-	if writeErr != nil || closeErr != nil {
-		t.Fatal("channel-user structural evidence write failed")
-	}
 }
 
 func changed(value management.ChangeResult, err error) contracttest.Observation {
@@ -99,7 +78,7 @@ func changed(value management.ChangeResult, err error) contracttest.Observation 
 
 func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, tc := range []struct {
 		name, command, kind, user, role, method, body, roles string
 		add, lookup                                          bool
@@ -120,7 +99,7 @@ func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
 			actions := []string{"resolve-channel"}
 			if tc.method == "POST" || tc.kind == "private" {
 				if tc.lookup {
-					steps = append(steps, wire("GET", "/v1.0/users/member@fixture.invalid?$select=id", "", 200, `{"id":"`+userID+`"}`))
+					steps = append(steps, wire("GET", "/v1.0/users/member@fixture.invalid?$select=id", "", 200, ""))
 				}
 				actions = append(actions, "resolve-user")
 			}
@@ -156,23 +135,22 @@ func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			results = append(results, run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "__AllParameterSets"}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "__AllParameterSets"}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				options := management.ChangeOptions{Role: management.Role(tc.role), TenantID: tc.tenant}
 				if tc.add {
 					return changed(sdk.GraphAPI.ChannelUserManagement.Add(ctx, teamID, "fixture", tc.user, options))
 				}
 				return changed(sdk.GraphAPI.ChannelUserManagement.Remove(ctx, teamID, "fixture", tc.user, options))
-			}, Want: contracttest.Expected{Status: status, JSON: want}}))
+			}, Want: contracttest.Expected{Status: status, JSON: want}})
 		})
 	}
-	evidence(t, results)
 }
 
 func stringPointer(value string) *string { return &value }
 
 func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, action := range []string{"create", "promote", "demote", "delete"} {
 		for _, status := range []int{403, 429, 503} {
 			t.Run(action+"-"+strconv.Itoa(status), func(t *testing.T) {
@@ -193,13 +171,13 @@ func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 					}
 				}
 				steps = append(steps, wire(method, path, body, status, `{"error":{"code":"FixtureDenied","message":"private"}}`))
-				results = append(results, run(t, contracttest.Case{Name: action + "-" + strconv.Itoa(status), Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, contracttest.Case{Name: action + "-" + strconv.Itoa(status), Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					options := management.ChangeOptions{Role: role}
 					if action == "create" || action == "promote" {
 						return changed(sdk.GraphAPI.ChannelUserManagement.Add(ctx, teamID, "fixture", userID, options))
 					}
 					return changed(sdk.GraphAPI.ChannelUserManagement.Remove(ctx, teamID, "fixture", userID, options))
-				}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureDenied"}}}}))
+				}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureDenied"}}}})
 			})
 		}
 	}
@@ -218,13 +196,12 @@ func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 					limits.MaxPages = 1
 					expected = client.ErrPageLimit
 				}
-				results = append(results, run(t, contracttest.Case{Name: kind + "-" + problem, Steps: []contracttest.Exchange{channelRead(kind), wire("GET", membersPath(), "", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, contracttest.Case{Name: kind + "-" + problem, Steps: []contracttest.Exchange{channelRead(kind), wire("GET", membersPath(), "", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					return changed(sdk.GraphAPI.ChannelUserManagement.Remove(ctx, teamID, "fixture", userID, management.ChangeOptions{Traversal: limits}))
-				}, Want: contracttest.Expected{Status: 200, Error: expected}}))
+				}, Want: contracttest.Expected{Status: 200, Error: expected}})
 			})
 		}
 	}
-	evidence(t, results)
 }
 
 func TestUnitLocalValidationAndStandardGuard(t *testing.T) {

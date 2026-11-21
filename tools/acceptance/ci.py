@@ -1,4 +1,4 @@
-"""Run explicit tenant acceptance selections; publish only structural outcomes."""
+"""Run TestAcc tests and print their results."""
 import argparse
 import importlib.util
 import io
@@ -20,6 +20,10 @@ PROOF_MARKERS = [
     'policy delete/absence: passed',
 ]
 ORACLE_MARKER = 'PowerShell 8.1.0 / Go policy read parity: passed'
+
+
+class AcceptanceFailure(ValueError):
+    """A diagnostic containing public test/configuration names only."""
 
 
 def write_json(path, value):
@@ -68,8 +72,9 @@ def check_names(root=ROOT):
 def prepare(args):
     keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'CERTIFICATE_PEM', 'PRIVATE_KEY_PEM', 'RECOVERY_CERTIFICATE_PEM']
     values = {key: os.environ.get('MSTEAMS_LAB_' + key, '') for key in keys}
-    if any(not value for value in values.values()):
-        raise ValueError('required repository lab secrets are missing')
+    missing = ['MSTEAMS_LAB_' + key for key, value in values.items() if not value.strip()]
+    if missing:
+        raise AcceptanceFailure('Missing repository Actions secrets: ' + ', '.join(missing))
     base = Path(os.environ['RUNNER_TEMP']).resolve()
     private = Path(tempfile.mkdtemp(prefix='msteams-acceptance-', dir=base))
     certificate = private / 'certificate.pem'
@@ -97,7 +102,7 @@ def prepare(args):
     info = baseline.gallery_metadata(metadata.read_bytes(), baseline.VERSION)
     baseline.verify_archive(archive, info, baseline.PIN)
     baseline.extract_archive(archive, private / 'module')
-    print('Private lab identity prepared; MicrosoftTeams 8.1.0 package checksum verified.')
+    print('Repository secrets loaded: 6. MicrosoftTeams 8.1.0 checksum verified.', flush=True)
 
 
 def evaluate(events, expected, process_exit, require_crud=False):
@@ -178,15 +183,78 @@ def run(args):
             if not entries or report['cleanup_journal_entries_cleaned'] != len(entries):
                 report['outcome'] = 'failed'
         report.update(suite=name, revision=revision, auth_method=mode, cloud='commercial', baseline_version='8.1.0',
-                      scope='explicit selected acceptance cases; no complete SDK parity claim', coverage_claim=False,
                       powershell_oracle_enabled=True)
         reports.append(report)
         write_json(args.report_directory / (name + '.json'), report)
-        print(name + ': ' + report['outcome'] + ' (' + str(len(report['tests'])) + ' selected tests)')
+        print_report(report)
     summary = {'revision': revision, 'auth_method': mode, 'outcome': 'passed' if all(r['outcome'] == 'passed' for r in reports) else 'failed',
                'suites': [{'name': r['suite'], 'outcome': r['outcome']} for r in reports], 'coverage_claim': False}
     write_json(args.report_directory / 'summary.json', summary)
+    write_summary(reports)
     return 0 if summary['outcome'] == 'passed' else 1
+
+
+def print_report(report):
+    passed = sum(test['outcome'] == 'pass' for test in report['tests'])
+    print(f"{report['suite']} ({report['auth_method']}): {passed}/{len(report['tests'])} passed", flush=True)
+    for test in report['tests']:
+        if test['outcome'] == 'pass':
+            continue
+        statuses = report.get('http_statuses', {}).get(test['name'], [])
+        detail = 'HTTP ' + ', '.join(map(str, statuses)) if statuses else test['outcome']
+        message = test['name'] + ': ' + detail
+        print('FAIL ' + message, flush=True)
+        if os.environ.get('GITHUB_ACTIONS') == 'true':
+            print('::error title=' + test['name'] + '::' + detail, flush=True)
+
+    if report.get('process_exit', 0):
+        print(f"FAIL {report['suite']}: go test exited {report['process_exit']}", flush=True)
+    children = report.get('child_outcomes', {})
+    for state in ['fail', 'skip']:
+        if children.get(state, 0):
+            print(f"FAIL {report['suite']}: {children[state]} child tests {state}", flush=True)
+    assertions = report.get('crud_assertions_observed', {})
+    for name, observed in assertions.items():
+        if not observed:
+            print('FAIL missing CRUD check: ' + name.removesuffix(': passed'), flush=True)
+    if assertions and report.get('crud_powershell_comparisons') != 2:
+        print(f"FAIL PowerShell comparisons: {report.get('crud_powershell_comparisons', 0)}/2", flush=True)
+    entries = report.get('cleanup_journal_entries')
+    cleaned = report.get('cleanup_journal_entries_cleaned', 0)
+    if entries is not None and (entries == 0 or entries != cleaned):
+        print(f'FAIL cleanup journals: {cleaned}/{entries} entries completed', flush=True)
+
+
+def write_summary(reports):
+    lines = ['## TestAcc results', '', '| Auth | Suite | Result | Passed | Failed | Skipped | Not run |', '|---|---|---|---:|---:|---:|---:|']
+    failed = []
+    for report in reports:
+        counts = {state: sum(test['outcome'] == state for test in report['tests']) for state in ['pass', 'fail', 'skip', 'not-run']}
+        lines.append(f"| {report['auth_method']} | {report['suite']} | {report['outcome']} | {counts['pass']} | {counts['fail']} | {counts['skip']} | {counts['not-run']} |")
+        for test in report['tests']:
+            if test['outcome'] != 'pass':
+                statuses = report.get('http_statuses', {}).get(test['name'], [])
+                detail = 'HTTP ' + ', '.join(map(str, statuses)) if statuses else test['outcome']
+                failed.append(f"| {report['auth_method']} | `{test['name']}` | {detail} |")
+    if failed:
+        lines += ['', '| Auth | Failed test | Result |', '|---|---|---|'] + failed
+    if os.environ.get('GITHUB_STEP_SUMMARY'):
+        with Path(os.environ['GITHUB_STEP_SUMMARY']).open('a') as stream:
+            stream.write('\n'.join(lines) + '\n')
+
+
+def summarize(args):
+    reports = []
+    for path in sorted(args.report_directory.rglob('*.json')):
+        report = json.loads(path.read_text())
+        if 'suite' in report and 'tests' in report:
+            reports.append(report)
+    if not reports:
+        raise AcceptanceFailure('No TestAcc reports were produced. Check the setup steps in the authentication jobs.')
+    for report in reports:
+        print_report(report)
+    write_summary(reports)
+    return 0 if all(report['outcome'] == 'passed' for report in reports) else 1
 
 
 def finalize(args):
@@ -218,7 +286,7 @@ def finalize(args):
         'recovery_encryption': 'CMS AES-256-GCM / RSA-OAEP-SHA256', 'recovery_private_key_in_ci': False,
     })
     shutil.rmtree(private)
-    print('Encrypted recovery journals retained; private identity, logs and raw journals removed.')
+    print(f'Cleanup: {cleaned}/{len(entries)} entries completed. Recovery journals encrypted; credential files removed.', flush=True)
     return 0 if cleaned == len(entries) else 1
 
 
@@ -229,7 +297,7 @@ def main():
     prep = commands.add_parser('prepare')
     prep.add_argument('--archive', type=Path)
     prep.add_argument('--metadata', type=Path)
-    for name in ['run', 'finalize']:
+    for name in ['run', 'finalize', 'summarize']:
         child = commands.add_parser(name)
         child.add_argument('--report-directory', type=Path, required=True)
         if name == 'run':
@@ -242,10 +310,15 @@ def main():
         if args.command == 'prepare':
             prepare(args)
             return 0
-        return run(args) if args.command == 'run' else finalize(args)
-    except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+        if args.command == 'run':
+            return run(args)
+        return summarize(args) if args.command == 'summarize' else finalize(args)
+    except AcceptanceFailure as error:
+        print('ERROR: ' + str(error), flush=True)
+        return 1
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         # Never echo exceptions that may include private paths, selectors or responses.
-        print('Acceptance ' + args.command + ' failed; required inputs or execution evidence are incomplete.')
+        print('ERROR: ' + args.command + ': ' + type(error).__name__, flush=True)
         return 1
 
 

@@ -95,6 +95,7 @@ func TestAccEnhancedEncryptionReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_enhanced_encryption_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		phase := "preparation"
@@ -106,7 +107,8 @@ func TestAccEnhancedEncryptionReadOnly(t *testing.T) {
 		}
 		t.Fatalf("enhanced encryption policy %s Global read failed (HTTP %d); no response payload retained", phase, status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_enhanced_encryption_policy", "list", listResponse, nil)
 	selected, selectionErr := globalEnhancedEncryption(listed)
 	if err != nil || selectionErr != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("enhanced encryption policy Global selection differs")

@@ -31,7 +31,7 @@ func lifecycleWire(method, path string, status int, body string) contracttest.Ex
 
 func lifecycleOffline(t *testing.T, c contracttest.Case) {
 	t.Helper()
-	c.Family, c.Source = "team_lifecycle_lab", "contracts/endpoints/8.1.0/fixtures/core-team-compositions.json"
+	c.Family, c.Source = "team_lifecycle_lab", "tests/integration/lab/team_lifecycle_cleanup_test.go"
 	if c.Scope == "" {
 		c.Scope = "service"
 	}

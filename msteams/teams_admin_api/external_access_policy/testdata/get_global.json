@@ -1,0 +1,22 @@
+{
+  "AllowedExternalDomains": [],
+  "BlockedExternalDomains": [],
+  "Description": null,
+  "EnableFederationAccess": true,
+  "EnableXmppAccess": false,
+  "EnablePublicCloudAudioVideoAccess": true,
+  "EnableTeamsSmsAccess": true,
+  "EnableOutsideAccess": true,
+  "EnableAcsFederationAccess": true,
+  "EnableTeamsConsumerAccess": true,
+  "EnableTeamsConsumerInbound": true,
+  "RestrictTeamsConsumerAccessToExternalUserProfiles": false,
+  "FederatedBilateralChats": false,
+  "CommunicationWithExternalOrgs": "OrganizationDefault",
+  "Identity": "Global",
+  "SchemaVersion": "0.0.1",
+  "ConfigId": "fixture-config-60dcdf4f",
+  "ConfigMetadata": {
+    "Authority": "Host"
+  }
+}

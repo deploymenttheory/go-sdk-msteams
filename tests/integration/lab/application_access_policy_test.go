@@ -151,36 +151,43 @@ func TestAccApplicationAccessPolicyCRUD(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	initial := "SDK lab non-default initial description"
-	created, _, err := service.Create(ctx, policy.CreateRequest{Identity: name, AppIDs: policy.ReplaceAppIDs([]string{appID}), Description: &initial})
+	created, createResponse, err := service.Create(ctx, policy.CreateRequest{Identity: name, AppIDs: policy.ReplaceAppIDs([]string{appID}), Description: &initial})
 	if err != nil {
 		t.Fatal("live policy creation/read-back failed; recovery journal retained")
 	}
 	if !samePolicyName(created.Identity, name) || created.Description == nil || *created.Description != initial || len(created.AppIDs) != 1 || created.AppIDs[0] != appID {
 		t.Fatal("live create read-back did not preserve non-default fields")
 	}
+	replacements := map[string]string{name: "fixture-policy", appID: "00000000-0000-4000-8000-000000000001"}
+	writeResponseFixture(t, "application_access_policy", "create_readback", createResponse, replacements)
 	if err := journal.Applied(entry, name); err != nil {
 		t.Fatal("created policy receipt was not journaled")
 	}
 	t.Log("policy create/read-back: passed")
 	comparePowerShellPolicy(t, ctx, name, initial, appID)
 	updated := "SDK lab non-default updated description"
-	if _, err := service.UpdateByIdentity(ctx, name, policy.UpdateRequest{Description: &updated}); err != nil {
+	updateResponse, err := service.UpdateByIdentity(ctx, name, policy.UpdateRequest{Description: &updated})
+	if err != nil {
 		t.Fatal("live policy update failed")
 	}
+	writeResponseFixture(t, "application_access_policy", "update", updateResponse, replacements)
 	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
-		read, _, err := service.GetByIdentity(ctx, name)
+		read, response, err := service.GetByIdentity(ctx, name)
 		if err != nil {
 			return false, err
 		}
 		matches := read != nil && read.Description != nil && *read.Description == updated
 		preserved := read != nil && len(read.AppIDs) == 1 && read.AppIDs[0] == appID
+		if matches && preserved {
+			writeResponseFixture(t, "application_access_policy", "update_readback", response, replacements)
+		}
 		return matches && preserved, nil
 	}); err != nil {
 		t.Fatal("non-default policy update and omitted-field preservation did not converge")
 	}
 	t.Log("policy update/read-back and omission: passed")
 	comparePowerShellPolicy(t, ctx, name, updated, appID)
-	items, _, err := service.List(ctx)
+	items, listResponse, err := service.List(ctx)
 	if err != nil {
 		t.Fatal("live policy list failed")
 	}
@@ -193,10 +200,16 @@ func TestAccApplicationAccessPolicyCRUD(t *testing.T) {
 	if found != 1 {
 		t.Fatal("owned policy was missing/ambiguous in live list")
 	}
+	writeResponseFixture(t, "application_access_policy", "list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if err := (policyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: name}); err != nil {
 		t.Fatal("policy deletion and independent read/list absence were not verified")
 	}
+	_, deletedResponse, err := service.GetByIdentity(ctx, name)
+	if !isHTTP(err, 404) {
+		t.Fatal("deleted policy did not return a typed 404")
+	}
+	writeResponseFixture(t, "application_access_policy", "get_deleted", deletedResponse, replacements)
 	t.Log("policy delete/absence: passed")
 	// Cleanup deliberately runs again; its handler accepts a verified 404. The
 	// private journal remains available if any earlier stage was interrupted.

@@ -25,8 +25,8 @@ Named 400/404/500 responses remain errors in Go, with raw text in the response.
 No structured per-team model or inference that Completed means success is made.
 No List/Update/Delete/cancel contract is established for this orchestration.
 
-See [pinned routing/serialization evidence](../../../docs/implementation/core/template-policy-deployment-evidence.md#batch-deployment)
-and [implementation progress](../../../docs/implementation/core/deployment-migration-sdk-progress.md).
+See [tests](../../../tests/integration/lab)
+and [unit tests](service_test.go).
 Documentation-only service limits, exact grants/cloud deployment, live behavior
 and consequential acceptance remain separately qualified. This candidate has
 made no tenant request or notification email and claims no complete issue parity.

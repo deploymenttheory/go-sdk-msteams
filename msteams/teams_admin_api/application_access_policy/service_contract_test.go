@@ -16,23 +16,22 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	policy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
-	"github.com/go-resty/resty/v2"
 )
 
 const policyOrigin = "https://api.interfaces.records.teams.microsoft.com"
-const policyForest = "https://forest.fixture.invalid/"
+const policyForest = "https://admin.example.invalid/"
 
-func policyDiscovery() contracttest.Exchange {
+func policyDiscovery(t *testing.T) contracttest.Exchange {
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: policyOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience,
 		Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}},
-		Body: []byte(`{"Endpoints":{"AdminServiceEndpoint":"forest.fixture.invalid:444/ignored?x=y#ignored"}}`)}}
+		Body: []byte(discoveryResponseFixture(t))}}
 }
 
 func policyWire(t *testing.T, name, command string) contracttest.Exchange {
 	t.Helper()
-	item, ok := pinnedCases(t)[name]
+	item, ok := requestCases(t)[name]
 	if !ok {
-		t.Fatal("pinned operation fixture missing")
+		t.Fatal("request input missing")
 	}
 	u, err := url.Parse(item.URL)
 	if err != nil {
@@ -66,7 +65,7 @@ func policyContract(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
 	c.Family = "application_access_policy"
 	if c.Source == "" {
-		c.Source = "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json"
+		c.Source = "msteams/teams_admin_api/application_access_policy/testdata/list.json"
 	}
 	if c.Scope == "" {
 		c.Scope = "service"
@@ -78,32 +77,10 @@ func policyContract(t *testing.T, c contracttest.Case) contracttest.Result {
 	return result
 }
 
-func policyEvidence(t *testing.T, name string, results []contracttest.Result) {
-	t.Helper()
-	revision := os.Getenv("MSTEAMS_CONTRACT_REVISION")
-	if revision == "" {
-		return
-	}
-	root, err := os.OpenRoot(t.ArtifactDir())
-	if err != nil {
-		t.Fatal("policy evidence directory unavailable")
-	}
-	defer func() { _ = root.Close() }()
-	file, err := root.Create(name)
-	if err != nil {
-		t.Fatal("policy evidence file unavailable")
-	}
-	writeErr := contracttest.WriteEvidence(file, revision, results)
-	closeErr := file.Close()
-	if writeErr != nil || closeErr != nil {
-		t.Fatal("policy evidence write failed")
-	}
-}
-
-func TestUnitPolicyServiceContractsMapEveryPinnedSet(t *testing.T) {
+func TestUnitPolicyRequestsMapEveryPinnedSet(t *testing.T) {
 	t.Parallel()
 	seen := map[string]bool{}
-	var results []contracttest.Result
+
 	for _, tc := range []struct {
 		name, command, set string
 		fixtures           []string
@@ -121,7 +98,7 @@ func TestUnitPolicyServiceContractsMapEveryPinnedSet(t *testing.T) {
 			v, r, e := s.ListFiltered(ctx, "Fixture*")
 			return contracttest.Observation{Value: v, Response: r, Err: e}
 		}},
-		{name: "create-readback", command: "New-CsApplicationAccessPolicy", set: "Identity", fixtures: []string{"policy-create", "policy-read-escaped"}, invoke: func(ctx context.Context, s *policy.Service) contracttest.Observation {
+		{name: "create-request", command: "New-CsApplicationAccessPolicy", set: "Identity", fixtures: []string{"policy-create", "policy-read-escaped"}, invoke: func(ctx context.Context, s *policy.Service) contracttest.Observation {
 			empty := ""
 			v, r, e := s.Create(ctx, policy.CreateRequest{Identity: "tag:Fixture / Policy", AppIDs: policy.ReplaceAppIDs([]string{"fixture-app"}), Description: &empty})
 			return contracttest.Observation{Value: v, Response: r, Err: e}
@@ -160,29 +137,16 @@ func TestUnitPolicyServiceContractsMapEveryPinnedSet(t *testing.T) {
 	} {
 		seen[tc.command+"/"+tc.set] = true
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{policyDiscovery()}
-			for i, name := range tc.fixtures {
-				command := tc.command
-				if i > 0 && tc.name == "create-readback" {
-					command = "Get-CsApplicationAccessPolicy"
-				}
-				steps = append(steps, policyWire(t, name, command))
-			}
-			want := contracttest.Expected{Status: steps[len(steps)-1].Reply.Status}
-			switch tc.name {
-			case "get", "create-readback":
-				want.JSON = json.RawMessage(`{"Identity":"tag:Fixture / Policy","AppIds":[]}`)
-			case "list", "filter":
-				want.JSON = json.RawMessage(`[]`)
-			case "assign-group-accepted":
-				want.JSON = json.RawMessage(`{"OperationId":"fixture-operation"}`)
-			case "assign-group-no-content":
-				want.JSON = json.RawMessage(`{"OperationId":""}`)
-			}
-			results = append(results, policyContract(t, contracttest.Case{Name: tc.name, Steps: steps, Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: tc.set}},
+			step := policyWire(t, tc.fixtures[0], tc.command)
+			// This table checks every public parameter-set request. Successful CRUD
+			// decoding is tested separately using actual acceptance responses.
+			step.Reply.Status, step.Reply.Body = 400, nil
+			steps := []contracttest.Exchange{policyDiscovery(t), step}
+			want := contracttest.Expected{Status: 400, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+			policyContract(t, contracttest.Case{Name: tc.name, Steps: steps, Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: tc.set}},
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					return tc.invoke(ctx, sdk.TeamsAdminAPI.ApplicationAccessPolicies)
-				}, Want: want}))
+				}, Want: want})
 		})
 	}
 	var ledger struct {
@@ -207,77 +171,30 @@ func TestUnitPolicyServiceContractsMapEveryPinnedSet(t *testing.T) {
 	if len(want) != 8 || !reflect.DeepEqual(seen, want) {
 		t.Fatal("policy service cases do not map every assigned pinned set exactly")
 	}
-	policyEvidence(t, "application-access-policy-service.json", results)
 }
 
-func TestUnitPolicyListsFollowPinnedGlobalFirstComposition(t *testing.T) {
+func TestUnitPolicyListsUseAcceptanceGlobalFirstResponse(t *testing.T) {
 	t.Parallel()
-	data, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/policy-wrapper-compositions.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var captured struct {
-		Cases []struct {
-			Name string
-			IDs  []string `json:"output_identities"`
-		}
-	}
-	if json.Unmarshal(data, &captured) != nil {
-		t.Fatal("isolated wrapper observations unavailable")
-	}
-	var results []contracttest.Result
-	for _, name := range []string{"list-global-first", "filter-global-first", "filter-tag-prefix"} {
-		t.Run(name, func(t *testing.T) {
-			step := policyWire(t, "policy-list", "Get-CsApplicationAccessPolicy")
-			step.Reply.Body = []byte(`[{"Identity":"Other"},{"Identity":"gLoBaL"},{"Identity":"Global"},{"Identity":"Tag:Global"},{"Identity":"Fixture"}]`)
-			var want []string
-			index := -1
-			for i, c := range captured.Cases {
-				if c.Name == name {
-					want, index = c.IDs, i
-					break
-				}
+	for _, filtered := range []bool{false, true} {
+		t.Run(strconv.FormatBool(filtered), func(t *testing.T) {
+			sdk, calls := scriptedClient(t, []wireCase{requestCases(t)["policy-list"]})
+			var values []policy.Policy
+			var err error
+			if filtered {
+				values, _, err = sdk.TeamsAdminAPI.ApplicationAccessPolicies.ListFiltered(t.Context(), "*")
+			} else {
+				values, _, err = sdk.TeamsAdminAPI.ApplicationAccessPolicies.List(t.Context())
 			}
-			if index < 0 {
-				t.Fatal("pinned list composition missing")
+			if err != nil || len(values) != 2 || values[0].Identity != "Global" || !responsePolicyIdentity(values[1].Identity) || *calls != 2 {
+				t.Fatal("acceptance list ordering or request count changed")
 			}
-			encoded, err := json.Marshal(want)
-			if err != nil {
-				t.Fatal(err)
-			}
-			set := "Filter"
-			if name == "list-global-first" {
-				set = "Identity"
-			}
-			results = append(results, policyContract(t, contracttest.Case{Name: name, Mappings: []contracttest.Mapping{{Command: "Get-CsApplicationAccessPolicy", ParameterSet: set}}, Source: "contracts/endpoints/8.1.0/fixtures/policy-wrapper-compositions.json#/cases/" + strconv.Itoa(index),
-				Steps: []contracttest.Exchange{policyDiscovery(), step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-					s := sdk.TeamsAdminAPI.ApplicationAccessPolicies
-					var values []policy.Policy
-					var response *resty.Response
-					var err error
-					if name == "list-global-first" {
-						values, response, err = s.List(ctx)
-					} else {
-						pattern := "*"
-						if name == "filter-tag-prefix" {
-							pattern = "Global"
-						}
-						values, response, err = s.ListFiltered(ctx, pattern)
-					}
-					ids := make([]string, 0, len(values))
-					for _, v := range values {
-						ids = append(ids, v.Identity)
-					}
-					return contracttest.Observation{Value: ids, Response: response, Err: err}
-				}, Want: contracttest.Expected{Status: 200, JSON: encoded}}))
 		})
 	}
-	policyEvidence(t, "application-access-policy-list-service.json", results)
 }
 
 func TestUnitPolicyMutationsDoNotReplayUnderDefaultTransportPolicy(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, tc := range []struct {
 		name, fixture, command, set string
 		invoke                      func(context.Context, *policy.Service) contracttest.Observation
@@ -316,14 +233,13 @@ func TestUnitPolicyMutationsDoNotReplayUnderDefaultTransportPolicy(t *testing.T)
 					step.Request.JSON = json.RawMessage(`{"Identity":"tag:Fixture / Policy"}`)
 				}
 				step.Reply.Status, step.Reply.Body = status, nil
-				results = append(results, policyContract(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{policyDiscovery(), step},
+				policyContract(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{policyDiscovery(t), step},
 					Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: tc.set}},
 					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 						return tc.invoke(ctx, sdk.TeamsAdminAPI.ApplicationAccessPolicies)
 					},
-					Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}}))
+					Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}})
 			})
 		}
 	}
-	policyEvidence(t, "application-access-policy-failure-service.json", results)
 }

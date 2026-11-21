@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -17,13 +16,10 @@ func projection(v resource.Configuration) map[string]*string {
 	return map[string]*string{"Identity": v.Identity, "ParentGuardianPreferredContactMethod": v.ParentGuardianPreferredContactMethod, "EduGenerativeAIEnhancements": v.EduGenerativeAIEnhancements, "UpdateParentInformation": v.UpdateParentInformation}
 }
 
-func TestUnitEducationConfigurationModelsMatchPinnedSetters(t *testing.T) {
+func TestUnitEducationConfigurationModelsMatchTypedSetters(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../" + source)
-	if e != nil {
-		t.Fatal(e)
-	}
-	var fixture struct {
+
+	fixture := struct {
 		Models []struct {
 			Name, Input string
 			Observation struct {
@@ -31,10 +27,268 @@ func TestUnitEducationConfigurationModelsMatchPinnedSetters(t *testing.T) {
 				Value   map[string]*string
 			}
 		}
+	}{
+		Models: []struct {
+			Name, Input string
+			Observation struct {
+				Failure *string
+				Value   map[string]*string
+			}
+		}{
+
+			{
+				Name:  "constructor",
+				Input: "constructor",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "empty-object",
+				Input: "{}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "all-settings",
+				Input: "{\"ParentGuardianPreferredContactMethod\":\"FutureContact\",\"EduGenerativeAIEnhancements\":\"FutureEnhancement\",\"UpdateParentInformation\":\"FutureUpdate\"}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          new("FutureEnhancement"),
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": new("FutureContact"),
+						"UpdateParentInformation":              new("FutureUpdate"),
+					},
+				},
+			},
+
+			{
+				Name:  "ParentGuardianPreferredContactMethod-null",
+				Input: "{\"ParentGuardianPreferredContactMethod\":null}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "ParentGuardianPreferredContactMethod-empty",
+				Input: "{\"ParentGuardianPreferredContactMethod\":\"\"}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": new(""),
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "ParentGuardianPreferredContactMethod-future",
+				Input: "{\"ParentGuardianPreferredContactMethod\":\"Future-ParentGuardianPreferredContactMethod\"}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": new("Future-ParentGuardianPreferredContactMethod"),
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "EduGenerativeAIEnhancements-null",
+				Input: "{\"EduGenerativeAIEnhancements\":null}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "EduGenerativeAIEnhancements-empty",
+				Input: "{\"EduGenerativeAIEnhancements\":\"\"}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          new(""),
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "EduGenerativeAIEnhancements-future",
+				Input: "{\"EduGenerativeAIEnhancements\":\"Future-EduGenerativeAIEnhancements\"}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          new("Future-EduGenerativeAIEnhancements"),
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "UpdateParentInformation-null",
+				Input: "{\"UpdateParentInformation\":null}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "UpdateParentInformation-empty",
+				Input: "{\"UpdateParentInformation\":\"\"}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              new(""),
+					},
+				},
+			},
+
+			{
+				Name:  "UpdateParentInformation-future",
+				Input: "{\"UpdateParentInformation\":\"Future-UpdateParentInformation\"}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              new("Future-UpdateParentInformation"),
+					},
+				},
+			},
+
+			{
+				Name:  "long-contact",
+				Input: "{\"ParentGuardianPreferredContactMethod\":\"" + strings.Repeat("x", 2000) + "\"}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": new("" + strings.Repeat("x", 2000)),
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "case-duplicate",
+				Input: "{\"UpdateParentInformation\":\"first\",\"updateparentinformation\":\"second\"}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              new("second"),
+					},
+				},
+			},
+
+			{
+				Name:  "duplicate-null",
+				Input: "{\"EduGenerativeAIEnhancements\":\"earlier\",\"edugenerativeaienhancements\":null}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Value: map[string]*string{
+						"EduGenerativeAIEnhancements":          nil,
+						"Identity":                             nil,
+						"ParentGuardianPreferredContactMethod": nil,
+						"UpdateParentInformation":              nil,
+					},
+				},
+			},
+
+			{
+				Name:  "invalid-string-array",
+				Input: "{\"ParentGuardianPreferredContactMethod\":[]}",
+				Observation: struct {
+					Failure *string
+					Value   map[string]*string
+				}{
+					Failure: new("Newtonsoft.Json.JsonReaderException"),
+				},
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Models) != 16 {
-		t.Fatal("incomplete source models")
-	}
+
 	for _, c := range fixture.Models {
 		t.Run(c.Name, func(t *testing.T) {
 			var v resource.Configuration

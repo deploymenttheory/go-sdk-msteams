@@ -170,6 +170,7 @@ func TestAccAudioConferencingPromptsReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "audio_conferencing_prompts", "get_global", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -177,7 +178,8 @@ func TestAccAudioConferencingPromptsReadOnly(t *testing.T) {
 		}
 		t.Fatalf("custom prompts Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.ListFiltered(ctx, "Global")
+	listed, listResponse, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "audio_conferencing_prompts", "list", listResponse, nil)
 	selected, selectionErr := globalConferencingPrompts(listed)
 	if e != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(conferencingPromptsProjection(value), conferencingPromptsProjection(selected)) {
 		t.Fatal("custom prompts Global/list projections differ")

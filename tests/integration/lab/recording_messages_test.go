@@ -167,6 +167,7 @@ func TestAccRecordingMessagesReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	values, response, e := sdk.TeamsAdminAPI.RecordingMessages.List(ctx)
+	writeResponseFixture(t, "recording_messages", "list", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -187,7 +188,8 @@ func TestAccRecordingMessagesReadOnly(t *testing.T) {
 		if v == nil || v.Identity == nil || *v.Identity == "" {
 			t.Fatal("recording identity unavailable")
 		}
-		read, _, e := sdk.TeamsAdminAPI.RecordingMessages.GetByIdentity(ctx, *v.Identity)
+		read, fixtureResponse, e := sdk.TeamsAdminAPI.RecordingMessages.GetByIdentity(ctx, *v.Identity)
+		writeResponseFixture(t, "recording_messages", "get_by_id", fixtureResponse, nil)
 		if e != nil || read == nil || read.Identity == nil || *read.Identity != *v.Identity {
 			t.Fatal("selected recording read failed; no output retained")
 		}

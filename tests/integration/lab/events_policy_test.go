@@ -99,6 +99,7 @@ func TestAccEventsPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsEventsPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_events_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		phase := "preparation"
@@ -110,7 +111,8 @@ func TestAccEventsPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("events policy %s Global read failed (HTTP %d); no response payload retained", phase, status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsEventsPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsEventsPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_events_policy", "list", listResponse, nil)
 	selected, selectionErr := globalEventsPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(eventsPolicyProjection(value), eventsPolicyProjection(selected)) {
 		t.Fatal("events policy Global read/list projections differ")

@@ -72,5 +72,5 @@ Requests use the selected Teams audience/origin and the shared compiled-policy
 headers, with fresh UUID correlation and no generated forest or Graph lookup.
 Synthetic application/delegated modes establish routing, not successful tenant
 authorization. Exact role, cloud, write/read-back/cleanup, shell coercion and
-effective behavior qualification remain open under #103. See [evidence](../../../docs/implementation/policies/recording-messages-evidence.md)
+effective behavior qualification remain open under #103. See [unit tests](service_test.go)
 and the [lab acceptance plan](../../../docs/implementation/policies/recording-messages-lab-acceptance.md).

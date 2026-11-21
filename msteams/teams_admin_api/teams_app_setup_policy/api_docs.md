@@ -68,5 +68,5 @@ with exact Global first; filtering is local and whitespace literal. Ordinary
 model/edit/result formatting is redacted; raw data remains caller-owned sensitive
 data. Application/delegated synthetic modes prove routing, not tenant roles,
 cloud/feature support, full shell/Newtonsoft coercion or effective layout.
-Qualification remains open under #105. See [evidence](../../../docs/implementation/policies/teams-app-setup-policy-evidence.md)
+Qualification remains open under #105. See [unit tests](service_test.go)
 and the [lab plan](../../../docs/implementation/policies/teams-app-setup-policy-lab-acceptance.md).

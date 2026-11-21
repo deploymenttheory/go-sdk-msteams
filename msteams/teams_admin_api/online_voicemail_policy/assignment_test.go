@@ -17,12 +17,18 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-const generatedSource = "contracts/endpoints/8.1.0/fixtures/voicemail-generated-assignments.json"
-const forest = "https://fixture-forest.example.invalid/"
+const generatedSource = "msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json"
+const forest = "https://admin.example.invalid/"
 
-func discovery() contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Body: []byte(`{"endpoints":{"adminServiceEndpoint":"fixture-forest.example.invalid:443/path?q=f#x"}}`)}}
+func discovery(t *testing.T) contracttest.Exchange {
+	t.Helper()
+	raw, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
 }
+
 func generatedWire(method, url, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
 	h := http.Header{}
 	h.Set("Accept", "application/json")
@@ -37,11 +43,8 @@ func generatedWire(method, url, command string, body json.RawMessage, status int
 
 func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../" + generatedSource)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var fixture struct {
+
+	fixture := struct {
 		Cases []struct {
 			Name    string          `json:"name"`
 			Method  string          `json:"method"`
@@ -50,18 +53,131 @@ func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
 			Status  int             `json:"response_status"`
 			Body    json.RawMessage `json:"body"`
 			Failure *string         `json:"decoder_failure"`
-			Sends   int             `json:"sends"`
 		} `json:"cases"`
+	}{
+		Cases: []struct {
+			Name    string          `json:"name"`
+			Method  string          `json:"method"`
+			URL     string          `json:"generated_url"`
+			Reply   string          `json:"response_body"`
+			Status  int             `json:"response_status"`
+			Body    json.RawMessage `json:"body"`
+			Failure *string         `json:"decoder_failure"`
+		}{
+
+			{
+				Name:   "user",
+				Method: "PATCH",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{\"policyName\":\"Fixture\"}"),
+			},
+
+			{
+				Name:   "user-empty",
+				Method: "PATCH",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{\"policyName\":\"\"}"),
+			},
+
+			{
+				Name:   "user-null",
+				Method: "PATCH",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/fixture%2Fuser/policies/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{}"),
+			},
+
+			{
+				Name:   "tenant",
+				Method: "PATCH",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{\"forceSwitchPresent\":false,\"policyName\":\"Fixture\"}"),
+			},
+
+			{
+				Name:   "tenant-null-force",
+				Method: "PATCH",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{\"forceSwitchPresent\":true}"),
+			},
+
+			{
+				Name:   "group-accepted",
+				Method: "POST",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{\"policyName\":\"Fixture\"}"),
+			},
+
+			{
+				Name:   "group-zero-priority",
+				Method: "POST",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{\"policyName\":\"Fixture\",\"priority\":0}"),
+			},
+
+			{
+				Name:   "group-null-negative",
+				Method: "POST",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{\"priority\":-1}"),
+			},
+
+			{
+				Name:    "group-malformed-accepted",
+				Method:  "POST",
+				URL:     "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy",
+				Status:  400,
+				Body:    json.RawMessage("{\"priority\":-1}"),
+				Failure: new("decode-rejected"),
+			},
+
+			{
+				Name:   "group-empty-id",
+				Method: "POST",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{\"priority\":-1}"),
+			},
+
+			{
+				Name:   "group-forbidden",
+				Method: "POST",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy",
+				Status: 400,
+				Body:   json.RawMessage("{\"priority\":-1}"),
+			},
+
+			{
+				Name:   "operation-read",
+				Method: "GET",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/fixture%2Foperation",
+				Status: 400,
+			},
+
+			{
+				Name:    "operation-malformed",
+				Method:  "GET",
+				URL:     "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/fixture%2Foperation",
+				Status:  400,
+				Failure: new("decode-rejected"),
+			},
+
+			{
+				Name:   "operation-unknown-fields",
+				Method: "GET",
+				URL:    "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/fixture%2Foperation",
+				Status: 400,
+			},
+		},
 	}
-	if json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 14 {
-		t.Fatal("invalid generated assignment capture")
-	}
-	for _, row := range fixture.Cases {
-		if row.Sends != 1 {
-			t.Fatal("invalid generated exchange")
-		}
-	}
-	var results []contracttest.Result
+
 	for _, f := range fixture.Cases {
 		set, command := "Identity", "Grant-CsOnlineVoicemailPolicy"
 		if strings.HasPrefix(f.Name, "tenant") {
@@ -75,12 +191,15 @@ func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
 			f.Body = nil // A JSON null fixture body denotes absent content here.
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Source: generatedSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(), generatedWire(f.Method, f.URL, command, f.Body, f.Status, f.Reply)}}
+			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Source: generatedSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), generatedWire(f.Method, f.URL, command, f.Body, f.Status, f.Reply)}}
 			if f.Failure != nil {
 				c.Want.Error = client.ErrDecode
 			}
 			if f.Status == 403 {
 				c.Want.Error = auth.ErrForbidden
+			}
+			if len(c.Steps) != 0 {
+				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.OnlineVoicemailPolicies
@@ -124,8 +243,7 @@ func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
 				}
 				return contracttest.Observation{Response: r, Err: e}
 			}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }

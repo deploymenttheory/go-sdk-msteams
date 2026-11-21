@@ -14,70 +14,80 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
 )
 
-func TestUnitFilesPolicySetRetainsPreparationAndAcceptance(t *testing.T) {
+// Without a successful mutation fixture, Set tests prove preparation, exact sparse
+// PATCH requests, failure preservation and non-replay; they do not invent acceptance.
+func TestUnitFilesPolicySetRetainsPreparationOnFailure(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+	realRead := readResponseFixture(t, "get_global.json")
 	for _, c := range []struct {
-		name        string
-		read, patch int
-		body, reply string
-		accepted    bool
+		Name         string
+		Read, Patch  int
+		InvalidRead  bool
+		NullIdentity bool
 	}{
-		{"success", 200, 204, `{"Identity":"read-model-identity","NativeFileEntryPoints":"before","SPChannelFilesTab":"retained","Future":false}`, "", true},
-		{"success-null-identity", 200, 204, `{"Identity":null}`, "", true},
-		{"read-denied", 403, 0, `{"Message":"fixture-private"}`, "", false},
-		{"read-empty", 204, 0, "", "", false},
-		{"read-malformed", 200, 0, "not-json", "", false},
-		{"patch-throttled", 200, 429, `{"Identity":"read-model-identity"}`, `{"Message":"fixture-private"}`, false},
-		{"patch-unavailable", 200, 503, `{"Identity":"read-model-identity"}`, "not-json", false},
-		{"accepted-malformed", 200, 200, `{"Identity":"read-model-identity"}`, "not-json", true},
+		{"patch-rejected", 200, 400, false, false}, {"patch-throttled", 200, 429, false, false},
+		{"patch-unavailable", 200, 503, false, false}, {"nullable-identity-request", 200, 400, false, true},
+		{"read-denied", 403, 0, false, false}, {"read-empty", 204, 0, false, false},
+		{"read-malformed", 200, 0, true, false},
 	} {
-		steps := []contracttest.Exchange{compiledWire("GET", item, setCommand, nil, c.read, c.body)}
-		if c.patch != 0 {
-			body := json.RawMessage(`{"Identity":"read-model-identity","NativeFileEntryPoints":null}`)
-			if c.name == "success-null-identity" {
-				body = json.RawMessage(`{"Identity":null,"NativeFileEntryPoints":null}`)
+		body := append([]byte(nil), realRead...)
+		expectedIdentity := json.RawMessage(`"Global"`)
+		if c.NullIdentity {
+			var fields map[string]json.RawMessage
+			if json.Unmarshal(body, &fields) != nil {
+				t.Fatal("invalid real preparation fixture")
 			}
-			steps = append(steps, compiledWire("PATCH", item, setCommand, body, c.patch, c.reply))
+			fields["Identity"] = json.RawMessage("null")
+			var err error
+			body, err = json.Marshal(fields)
+			if err != nil {
+				t.Fatal(err)
+			}
+			expectedIdentity = json.RawMessage("null")
 		}
-		results = append(results, run(t, contracttest.Case{Name: "set-" + c.name, Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			v, r, e := sdk.TeamsAdminAPI.TeamsFilesPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{NativeFileEntryPoints: policy.Null[string]()}})
-			if v == nil || v.ReadResponse == nil || v.PatchInvoked != (c.patch != 0) || v.HTTPAccepted != c.accepted {
-				return contracttest.Observation{Err: errors.New("compiled Set preparation/acceptance changed")}
+		if c.InvalidRead {
+			body = []byte("not-json")
+		}
+		if c.Read != 200 {
+			body = nil
+		}
+		steps := []contracttest.Exchange{compiledWire("GET", item, setCommand, nil, c.Read, string(body))}
+		if c.Patch != 0 {
+			payload, err := json.Marshal(map[string]json.RawMessage{"Identity": expectedIdentity, "NativeFileEntryPoints": json.RawMessage("null")})
+			if err != nil {
+				t.Fatal(err)
 			}
-			if c.name == "success" {
-				if v.Before == nil || v.Before.NativeFileEntryPoints == nil || *v.Before.NativeFileEntryPoints != "before" || v.Before.SPChannelFilesTab == nil || *v.Before.SPChannelFilesTab != "retained" || v.Before.RawFields["Future"] == nil {
-					return contracttest.Observation{Err: errors.New("preparation snapshot changed")}
+			steps = append(steps, compiledWire("PATCH", item, setCommand, payload, c.Patch, ""))
+		}
+		run(t, contracttest.Case{Name: "set-" + c.Name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			value, response, err := sdk.TeamsAdminAPI.TeamsFilesPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{NativeFileEntryPoints: policy.Null[string]()}})
+			if value == nil || value.ReadResponse == nil || value.PatchInvoked != (c.Patch != 0) || value.HTTPAccepted || err == nil {
+				t.Fatal("Set preparation/failure outcome changed")
+			}
+			if c.Patch != 0 {
+				if value.Before == nil || c.NullIdentity != (value.Before.Identity == nil) {
+					t.Fatal("preparation snapshot or nullable identity changed")
 				}
-				return contracttest.Observation{Response: r, Err: e}
-			}
-			if c.name == "success-null-identity" {
-				if v.Before == nil || v.Before.Identity != nil {
-					return contracttest.Observation{Err: errors.New("nullable preparation identity changed")}
+				var api *client.APIError
+				if !errors.As(err, &api) || api.StatusCode != c.Patch {
+					t.Fatal("failed patch lost typed status")
 				}
-				return contracttest.Observation{Response: r, Err: e}
 			}
-			if e == nil || c.accepted && !errors.Is(e, client.ErrDecode) {
-				return contracttest.Observation{Err: errors.New("partial Set failure lost")}
-			}
-			return contracttest.Observation{Response: r}
-		}}))
+			return contracttest.Observation{Response: response}
+		}})
 	}
-	evidence(t, results)
 }
 
 func TestUnitFilesPolicyCompiledGrantRetainsExplicitZeroAndSignedRank(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
 	for _, rank := range []int32{0, -2147483648, 2147483647} {
-		body, e := json.Marshal(map[string]any{"policyName": "Fixture", "priority": rank})
-		if e != nil {
-			t.Fatal(e)
+		body, err := json.Marshal(map[string]any{"policyName": "Fixture", "priority": rank})
+		if err != nil {
+			t.Fatal(err)
 		}
-		results = append(results, run(t, contracttest.Case{Name: fmt.Sprintf("group-rank-%d", rank), Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsFilesPolicy", ParameterSet: "GrantToGroup"}}, Steps: []contracttest.Exchange{compiledWire("POST", "/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsFilesPolicy", "Grant-CsTeamsFilesPolicy", body, 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			_, r, e := sdk.TeamsAdminAPI.TeamsFilesPolicies.AssignGroup(ctx, "group/fixture", new("Fixture"), rank)
-			return contracttest.Observation{Response: r, Err: e}
-		}}))
+		run(t, contracttest.Case{Name: fmt.Sprintf("group-rank-%d", rank), Steps: []contracttest.Exchange{compiledWire("POST", "/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsFilesPolicy", grantCommand, body, 400, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			_, response, err := sdk.TeamsAdminAPI.TeamsFilesPolicies.AssignGroup(ctx, "group/fixture", new("Fixture"), rank)
+			return contracttest.Observation{Response: response, Err: err}
+		}})
 	}
-	evidence(t, results)
 }

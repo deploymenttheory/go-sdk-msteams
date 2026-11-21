@@ -1,147 +1,117 @@
-package targetinghierarchy_test
+package targetinghierarchy
 
 import (
-	"context"
 	"encoding/json"
-	"fmt"
-	"os"
+	"errors"
+	"reflect"
 	"runtime"
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
-	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
-	hierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 )
 
-func statusObservation(value *hierarchy.Status) any {
-	if value == nil {
-		return nil
-	}
-	return map[string]any{"id": value.ID, "status": value.Status, "last_known_status": value.LastKnownStatus, "error_message": value.ErrorMessage, "last_updated_at": value.LastUpdatedAt, "last_modified_by": value.LastModifiedBy, "filename": value.Filename}
-}
-
-func TestUnitStatusProjectionMatchesPinnedCLRStateConstructors(t *testing.T) {
-	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/core-model-serialization.json")
+func checkProjection(t *testing.T, want []byte, value any) {
+	t.Helper()
+	got, err := json.Marshal(value)
 	if err != nil {
 		t.Fatal(err)
 	}
-	var fixtures struct {
-		Cases []struct {
-			Name  string
-			Input json.RawMessage
-			Wire  json.RawMessage
-		} `json:"cases"`
+	var a, b any
+	if json.Unmarshal(want, &a) != nil || json.Unmarshal(got, &b) != nil || !reflect.DeepEqual(a, b) {
+		t.Fatal("local status projection differs")
 	}
-	if json.Unmarshal(raw, &fixtures) != nil {
-		t.Fatal("invalid pinned model fixture")
-	}
-	var results []contracttest.Result
-	for _, fixture := range fixtures.Cases {
-		if !strings.HasPrefix(fixture.Name, "hierarchy-status-projection-") {
-			continue
-		}
-		var input string
-		if json.Unmarshal(fixture.Input, &input) != nil {
-			t.Fatal("invalid selected model input")
-		}
-		results = append(results, run(t, contracttest.Case{Name: strings.ToLower(fixture.Name), Source: "contracts/endpoints/8.1.0/fixtures/core-model-serialization.json", Mappings: mapping("Get-TeamTargetingHierarchyStatus"), Steps: []contracttest.Exchange{wire(hierarchy.V2, "GET", hierarchyPath()+"/operations/latest", 200, input)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			v, r, err := sdk.TeamsAdminAPI.TargetingHierarchy.GetStatus(ctx, "", hierarchy.V2)
-			var actual any
-			if v != nil {
-				if v.RawStatus == nil || v.Hierarchy == nil || v.Hierarchy.Status != v.RawStatus {
-					t.Error("native status was lost during projection")
-				}
-				actual = map[string]any{"id": v.ID, "status": v.Status, "lastUpdatedAt": v.LastUpdatedAt, "fileName": v.Filename}
+}
+func TestUnitStatusProjectionFromLocalOperationValues(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct{ name, input, want string }{
+		{"hierarchy-status-projection-NotStarted", "{\"id\":\"fixture-operation\",\"status\":\"NotStarted\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}", "{\"fileName\":\"fixture.csv\",\"id\":\"fixture-operation\",\"lastUpdatedAt\":\"2026-01-01T00:00:00Z\",\"status\":\"Starting\"}"},
+		{"hierarchy-status-projection-Running", "{\"id\":\"fixture-operation\",\"status\":\"Running\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}", "{\"fileName\":\"fixture.csv\",\"id\":\"fixture-operation\",\"lastUpdatedAt\":\"2026-01-01T00:00:00Z\",\"status\":\"Ingesting\"}"},
+		{"hierarchy-status-projection-Succeeded", "{\"id\":\"fixture-operation\",\"status\":\"Succeeded\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}", "{\"fileName\":\"fixture.csv\",\"id\":\"fixture-operation\",\"lastUpdatedAt\":\"2026-01-01T00:00:00Z\",\"status\":\"Successful\"}"},
+		{"hierarchy-status-projection-Failed", "{\"id\":\"fixture-operation\",\"status\":\"Failed\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}", "{\"fileName\":\"fixture.csv\",\"id\":\"fixture-operation\",\"lastUpdatedAt\":\"2026-01-01T00:00:00Z\",\"status\":\"Failed\"}"},
+		{"hierarchy-status-projection-UnknownFutureValue", "{\"id\":\"fixture-operation\",\"status\":\"UnknownFutureValue\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}", "{\"fileName\":\"fixture.csv\",\"id\":\"fixture-operation\",\"lastUpdatedAt\":\"2026-01-01T00:00:00Z\",\"status\":\"Unknown\"}"},
+		{"hierarchy-status-projection-FutureStatus", "{\"id\":\"fixture-operation\",\"status\":\"FutureStatus\",\"lastActionDateTime\":\"2026-01-01T00:00:00Z\",\"fileName\":\"fixture.csv\"}", "{\"fileName\":\"fixture.csv\",\"id\":\"fixture-operation\",\"lastUpdatedAt\":\"2026-01-01T00:00:00Z\",\"status\":\"FutureStatus\"}"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var value HierarchyOperation
+			if json.Unmarshal([]byte(tc.input), &value) != nil {
+				t.Fatal("invalid local operation vector")
 			}
-			return contracttest.Observation{Value: actual, Response: r, Err: err}
-		}, Want: contracttest.Expected{Status: 200, JSON: fixture.Wire}}))
+			projected, err := projectHierarchy(&value)
+			if err != nil {
+				t.Fatal(err)
+			}
+			checkProjection(t, []byte(tc.want), map[string]any{"id": projected.ID, "status": projected.Status, "lastUpdatedAt": projected.LastUpdatedAt, "fileName": projected.Filename})
+		})
 	}
-	if len(results) != 6 {
-		t.Fatal("pinned state constructor count changed")
-	}
-	evidence(t, results)
 }
-
-func TestUnitStatusErrorProjectionMatchesPinnedCLRConstructors(t *testing.T) {
+func TestUnitStatusErrorProjectionFromLocalOperationValues(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/hierarchy-status-projections.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var fixtures struct {
-		Version string `json:"baseline_version"`
-		Hash    string `json:"assembly_sha256"`
-		Cases   []struct {
-			Name       string
-			Version    hierarchy.Version
-			Input      string
-			Projection map[string]any
-		}
-	}
-	if json.Unmarshal(raw, &fixtures) != nil || fixtures.Version != "8.1.0" || fixtures.Hash != "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24" {
-		t.Fatal("invalid pinned error projection fixture")
-	}
-	var results []contracttest.Result
-	for _, fixture := range fixtures.Cases {
-		t.Run(fixture.Name, func(t *testing.T) {
-			if message, ok := fixture.Projection["error_message"].(string); ok {
-				header, body, found := strings.Cut(message, "\r\n")
-				if !found {
-					t.Fatal("pinned error header line ending differs")
+	for _, tc := range []struct{ name, version, input, want string }{
+		{"retail-ordered-error-arguments", "1", "{\"id\":\"fixture-operation\",\"status\":\"Failed\",\"lastUpdatedAt\":\"wire-time\",\"errorDetails\":{\"lastKnownStatus\":\"Ingesting\",\"errorMessage\":\"[{\\\"errorCode\\\":\\\"First\\\",\\\"description\\\":\\\"bad {first}/{second}\\\",\\\"args\\\":[{\\\"second\\\":\\\"B\\\",\\\"first\\\":\\\"A\\\"}]},{\\\"errorCode\\\":\\\"First\\\",\\\"description\\\":\\\"extra {x}\\\",\\\"args\\\":[{\\\"x\\\":\\\"X\\\"}]}]\"}}", "{\"status\":\"Failed\",\"filename\":null,\"id\":\"fixture-operation\",\"last_known_status\":\"Ingesting\",\"error_message\":\"2 error(s) were found.\\r\\nError: First\\nDescriptions:\\nbad {first}/B\\nbad A/{second}\\nError: First\\nDescriptions:\\nextra X\\n\",\"last_updated_at\":\"wire-time\",\"last_modified_by\":null}"},
+		{"retail-empty-error-text", "1", "{\"id\":\"fixture-operation\",\"status\":\"Ingesting\",\"errorDetails\":{\"lastKnownStatus\":\"Starting\",\"errorMessage\":\"\"}}", "{\"status\":\"Ingesting\",\"filename\":null,\"id\":\"fixture-operation\",\"last_known_status\":\"Starting\",\"error_message\":null,\"last_updated_at\":null,\"last_modified_by\":null}"},
+		{"hierarchy-grouped-ordered-errors", "2", "{\"id\":\"fixture-operation\",\"status\":\"Failed\",\"error\":{\"message\":\"native top-level message\",\"details\":[{\"code\":\"A\",\"message\":\"bad {a}/{b}\",\"arguments\":{\"{a}\":\"{b}\",\"{b}\":\"B\"}},{\"code\":\"B\",\"message\":\"other\",\"arguments\":{}},{\"code\":\"A\",\"message\":\"last {x}\",\"arguments\":{\"{x}\":\"X\"}}]}}", "{\"status\":\"Failed\",\"filename\":null,\"id\":\"fixture-operation\",\"last_known_status\":null,\"error_message\":\"3 error(s) were found.\\r\\nError: A\\nDescriptions:\\nbad B/B\\nlast X\\nError: B\\nDescriptions:\\nother\\n\",\"last_updated_at\":null,\"last_modified_by\":null}"},
+		{"hierarchy-no-error-details", "2", "{\"id\":\"fixture-operation\",\"status\":\"Succeeded\",\"error\":{\"message\":\"native top-level message\",\"details\":[]}}", "{\"status\":\"Successful\",\"filename\":null,\"id\":\"fixture-operation\",\"last_known_status\":null,\"error_message\":null,\"last_updated_at\":null,\"last_modified_by\":null}"},
+		{"hierarchy-numeric-status", "2", "{\"id\":\"fixture-operation\",\"status\":\"1\"}", "{\"status\":\"Ingesting\",\"filename\":null,\"id\":\"fixture-operation\",\"last_known_status\":null,\"error_message\":null,\"last_updated_at\":null,\"last_modified_by\":null}"},
+		{"hierarchy-status-case", "2", "{\"id\":\"fixture-operation\",\"status\":\"running\"}", "{\"status\":\"running\",\"filename\":null,\"id\":\"fixture-operation\",\"last_known_status\":null,\"error_message\":null,\"last_updated_at\":null,\"last_modified_by\":null}"},
+		{"hierarchy-combined-enum-status", "2", "{\"id\":\"fixture-operation\",\"status\":\"Running, Succeeded\"}", "{\"status\":\"Failed\",\"filename\":null,\"id\":\"fixture-operation\",\"last_known_status\":null,\"error_message\":null,\"last_updated_at\":null,\"last_modified_by\":null}"},
+		{"hierarchy-status-whitespace", "2", "{\"id\":\"fixture-operation\",\"status\":\"  Running  \"}", "{\"status\":\"Ingesting\",\"filename\":null,\"id\":\"fixture-operation\",\"last_known_status\":null,\"error_message\":null,\"last_updated_at\":null,\"last_modified_by\":null}"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var status *Status
+			var err error
+			if tc.version == "1" {
+				var value RetailOperation
+				if json.Unmarshal([]byte(tc.input), &value) != nil {
+					t.Fatal("invalid retail vector")
+				}
+				status, err = projectRetail(&value)
+			} else {
+				var value HierarchyOperation
+				if json.Unmarshal([]byte(tc.input), &value) != nil {
+					t.Fatal("invalid hierarchy vector")
+				}
+				status, err = projectHierarchy(&value)
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			var want map[string]any
+			if json.Unmarshal([]byte(tc.want), &want) != nil {
+				t.Fatal("invalid expected projection")
+			}
+			if message, ok := want["error_message"].(string); ok {
+				head, body, ok := strings.Cut(message, "\r\n")
+				if !ok {
+					t.Fatal("missing error header")
 				}
 				body = strings.ReplaceAll(body, "\r\n", "\n")
 				if runtime.GOOS == "windows" {
 					body = strings.ReplaceAll(body, "\n", "\r\n")
 				}
-				fixture.Projection["error_message"] = header + "\r\n" + body
+				want["error_message"] = head + "\r\n" + body
 			}
-			want, err := json.Marshal(fixture.Projection)
-			if err != nil {
-				t.Fatal(err)
-			}
-			path := "/api/rest/v1/nodes/upload/status"
-			if fixture.Version == hierarchy.V2 {
-				path = hierarchyPath() + "/operations/latest"
-			}
-			results = append(results, run(t, contracttest.Case{Name: fixture.Name, Source: "contracts/endpoints/8.1.0/fixtures/hierarchy-status-projections.json", Mappings: mapping("Get-TeamTargetingHierarchyStatus"), Steps: []contracttest.Exchange{wire(fixture.Version, "GET", path, 200, fixture.Input)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				v, r, err := sdk.TeamsAdminAPI.TargetingHierarchy.GetStatus(ctx, "", fixture.Version)
-				return contracttest.Observation{Value: statusObservation(v), Response: r, Err: err}
-			}, Want: contracttest.Expected{Status: 200, JSON: want}}))
+			encoded, _ := json.Marshal(want)
+			checkProjection(t, encoded, map[string]any{"id": status.ID, "status": status.Status, "last_known_status": status.LastKnownStatus, "error_message": status.ErrorMessage, "last_updated_at": status.LastUpdatedAt, "last_modified_by": status.LastModifiedBy, "filename": status.Filename})
 		})
 	}
-	if len(results) != 8 {
-		t.Fatal("pinned error constructor count changed")
-	}
-	evidence(t, results)
 }
-
-func TestUnitMalformedNestedErrorsRetainReadableNativeOperation(t *testing.T) {
+func TestUnitMalformedNestedErrorsRetainLocalOperation(t *testing.T) {
 	t.Parallel()
-	for _, tc := range []struct {
-		name, body string
-		version    hierarchy.Version
-	}{
-		{"malformed-json-text", `{"id":"operation","status":"Failed","errorDetails":{"lastKnownStatus":"Ingesting","errorMessage":"not-json"}}`, hierarchy.V1},
-		{"missing-v2-status", `{"id":"operation","future":5}`, hierarchy.V2},
-	} {
-		path := "/api/rest/v1/nodes/upload/status"
-		if tc.version == hierarchy.V2 {
-			path = hierarchyPath() + "/operations/latest"
-		}
-		run(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{wire(tc.version, "GET", path, 200, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			v, r, err := sdk.TeamsAdminAPI.TargetingHierarchy.GetStatus(ctx, "", tc.version)
-			if v == nil || v.ID != "operation" || v.Retail == nil && v.Hierarchy == nil {
-				t.Error("projection failure lost native read")
-			}
-			for _, format := range []string{"%v", "%+v", "%#v"} {
-				if strings.Contains(fmt.Sprintf(format, v), "operation\"") || strings.Contains(fmt.Sprintf(format, v), "not-json") {
-					t.Error("projection formatting leaked native data")
-				}
-			}
-			return contracttest.Observation{Response: r, Err: err}
-		}, Want: contracttest.Expected{Status: 200, Error: client.ErrDecode}})
+	var retail RetailOperation
+	if json.Unmarshal([]byte(`{"id":"operation","status":"Failed","errorDetails":{"lastKnownStatus":"Ingesting","errorMessage":"not-json"}}`), &retail) != nil {
+		t.Fatal("invalid local retail vector")
+	}
+	v, err := projectRetail(&retail)
+	if !errors.Is(err, client.ErrDecode) || v == nil || v.Retail != &retail {
+		t.Fatal("malformed error lost readable operation")
+	}
+	var hierarchy HierarchyOperation
+	if json.Unmarshal([]byte(`{"id":"operation","future":5}`), &hierarchy) != nil {
+		t.Fatal("invalid local hierarchy vector")
+	}
+	v, err = projectHierarchy(&hierarchy)
+	if !errors.Is(err, client.ErrDecode) || v == nil || v.Hierarchy != &hierarchy {
+		t.Fatal("missing status lost readable operation")
 	}
 }

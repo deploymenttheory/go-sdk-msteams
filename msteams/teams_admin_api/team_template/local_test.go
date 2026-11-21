@@ -49,7 +49,7 @@ func TestUnitNewHiddenMeetingTemplate(t *testing.T) {
 
 func TestUnitHiddenBuildersHaveNoManagementOrAuthIO(t *testing.T) {
 	t.Parallel()
-	evidence := collectServiceEvidence(t, "New-CsTeamsHiddenTemplate", "New-CsTeamsHiddenMeetingTemplate")
+	coverage := collectServiceCoverage(t, "New-CsTeamsHiddenTemplate", "New-CsTeamsHiddenMeetingTemplate")
 	for _, tc := range []struct {
 		name, command, source string
 		invoke                func(context.Context, *msteams.Client) contracttest.Observation
@@ -80,7 +80,7 @@ func TestUnitHiddenBuildersHaveNoManagementOrAuthIO(t *testing.T) {
 			if !result.Passed() {
 				t.Fatalf("local builder contract differed: %+v", result.Differences())
 			}
-			evidence.add(c, result)
+			coverage.add(c)
 		})
 	}
 }

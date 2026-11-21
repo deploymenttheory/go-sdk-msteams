@@ -76,11 +76,13 @@ func TestAccApplicationMeetingConfigurationReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	s := sdk.TeamsAdminAPI.ApplicationMeetingConfigurations
-	value, _, err := s.GetByIdentity(ctx, "Global")
+	value, fixtureResponse, err := s.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "application_meeting_configuration", "get_global", fixtureResponse, nil)
 	if err != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("application meeting Global read failed")
 	}
-	listed, _, err := s.ListFiltered(ctx, "Global")
+	listed, listResponse, err := s.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "application_meeting_configuration", "list", listResponse, nil)
 	if err != nil || len(listed) != 1 || !reflect.DeepEqual(value.RawFields, listed[0].RawFields) {
 		t.Fatal("application meeting filtered read differs")
 	}

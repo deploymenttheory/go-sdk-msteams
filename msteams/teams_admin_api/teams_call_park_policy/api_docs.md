@@ -61,5 +61,5 @@ retaining encoded slashes. A server-specific byte-spelling rule is not claimed.
 Actual Global reads returned 403 with client-secret and certificate credentials
 on 2026-11-21. Authorized reads, cloud/flight availability, service range/timeout
 rules, CRUD read-back/cleanup and effective parking/grants remain unqualified.
-See [source evidence](../../../docs/implementation/policies/call-park-policy-evidence.md)
+See [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/call-park-policy-lab-acceptance.md).

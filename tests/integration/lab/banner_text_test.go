@@ -147,6 +147,7 @@ func TestAccBannerTextReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	values, response, e := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.List(ctx)
+	writeResponseFixture(t, "teams_custom_banner_text", "list", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -167,7 +168,8 @@ func TestAccBannerTextReadOnly(t *testing.T) {
 		if v == nil || v.Identity == nil || *v.Identity == "" || projections[*v.Identity] != nil {
 			t.Fatal("banner identity unavailable or duplicated")
 		}
-		read, _, e := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.GetByIdentity(ctx, *v.Identity)
+		read, fixtureResponse, e := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.GetByIdentity(ctx, *v.Identity)
+		writeResponseFixture(t, "teams_custom_banner_text", "get_by_id", fixtureResponse, nil)
 		if e != nil || read == nil || read.Identity == nil || *read.Identity != *v.Identity {
 			t.Fatal("selected banner read failed; no output retained")
 		}

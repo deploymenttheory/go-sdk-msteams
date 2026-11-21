@@ -99,6 +99,7 @@ func TestAccFeedbackPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_feedback_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		phase := "preparation"
@@ -110,7 +111,8 @@ func TestAccFeedbackPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("feedback policy %s Global read failed (HTTP %d); no response payload retained", phase, status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_feedback_policy", "list", listResponse, nil)
 	selected, selectionErr := globalFeedbackPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(feedbackPolicyProjection(value), feedbackPolicyProjection(selected)) {
 		t.Fatal("feedback policy Global read/list projections differ")

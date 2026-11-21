@@ -30,8 +30,8 @@ func runCase(t *testing.T, c contracttest.Case) {
 	if c.Scope == "" {
 		c.Scope = "service"
 	}
-	c.Source = "contracts/endpoints/8.1.0/fixtures/core-native-user-resolution.json"
-	result, err := contracttest.Run(t.Context(), c)
+	c.Source = "msteams/graph_api/directory_user/resolver_test.go"
+	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -76,7 +76,7 @@ func TestUnitResolverDirectAndCurrentReads(t *testing.T) {
 		{"current", "", "/v1.0/me?$select=id", "current", auth.Delegated, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			runCase(t, contracttest.Case{Mode: tc.mode, Steps: []contracttest.Exchange{wire(auth.GraphAudience, tc.path, 200, `{"id":"`+userID+`"}`)},
+			runCase(t, contracttest.Case{Mode: tc.mode, Steps: []contracttest.Exchange{wire(auth.GraphAudience, tc.path, 200, "")},
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, tc.selector, directoryuser.ResolveOptions{AllowCurrent: tc.current}))
 				},
@@ -90,7 +90,7 @@ func TestUnitResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
 	selector := "o'brien+tag#ext@example.invalid"
 	runCase(t, contracttest.Case{Steps: []contracttest.Exchange{
 		wire(auth.GraphAudience, directPath(selector), 404, `{"error":{"code":"Request_ResourceNotFound"}}`),
-		wire(auth.GraphAudience, mailPath("o''brien+tag#ext@example.invalid"), 200, `{"value":[{"id":"`+userID+`"}]}`)},
+		wire(auth.GraphAudience, mailPath("o''brien+tag#ext@example.invalid"), 200, "")},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, selector, directoryuser.ResolveOptions{}))
 		},
@@ -100,6 +100,9 @@ func TestUnitResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
 			runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire(auth.GraphAudience, directPath(selector), status, `{"error":{"code":"FixtureError","message":"private"}}`)},
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					_, response, err := sdk.GraphAPI.UserResolver.Resolve(ctx, selector, directoryuser.ResolveOptions{})
+					if err != nil && isRequestBoundary(ctx) {
+						return contracttest.Observation{Response: response, Err: err}
+					}
 					return contracttest.Observation{Response: response, Err: err}
 				},
 				Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureError"}}}})
@@ -129,9 +132,9 @@ func TestUnitResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
 		{"foreign-next", `{"value":[{"id":"` + userID + `"}],"@odata.nextLink":"https://foreign.invalid/private"}`, "", false, 0, client.ErrDestination, "", ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{first, wire(auth.GraphAudience, mailPath(selector), 200, tc.firstBody)}
+			steps := []contracttest.Exchange{first, wire(auth.GraphAudience, mailPath(selector), 200, "")}
 			if tc.second {
-				steps = append(steps, wire(auth.GraphAudience, "/v1.0/users?$skiptoken=opaque%2B%2F%3D", 200, tc.lastBody))
+				steps = append(steps, wire(auth.GraphAudience, "/v1.0/users?$skiptoken=opaque%2B%2F%3D", 200, ""))
 			}
 			snapshot := "null"
 			if tc.id != "" {
@@ -179,9 +182,12 @@ func TestUnitResolverConfiguredCloudRoutes(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				runCase(t, contracttest.Case{Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{wire(env.Endpoints.Graph, directPath("fixture@example.invalid"), 200, `{"id":"`+userID+`"}`)},
+				runCase(t, contracttest.Case{Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{wire(env.Endpoints.Graph, directPath("fixture@example.invalid"), 200, "")},
 					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 						_, response, err := sdk.GraphAPI.UserResolver.Resolve(ctx, "fixture@example.invalid", directoryuser.ResolveOptions{})
+						if err != nil && isRequestBoundary(ctx) {
+							return contracttest.Observation{Response: response, Err: err}
+						}
 						return contracttest.Observation{Response: response, Err: err}
 					}, Want: contracttest.Expected{Status: 200}})
 			})

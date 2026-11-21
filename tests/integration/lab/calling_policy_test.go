@@ -99,6 +99,7 @@ func TestAccCallingPolicyReadOnly(t *testing.T) {
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsCallingPolicies.GetByIdentity(ctx, "Global")
+	writeResponseFixture(t, "teams_calling_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -106,7 +107,8 @@ func TestAccCallingPolicyReadOnly(t *testing.T) {
 		}
 		t.Fatalf("calling policy Global read failed (HTTP %d); no response payload retained", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TeamsCallingPolicies.ListFiltered(ctx, "Global")
+	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsCallingPolicies.ListFiltered(ctx, "Global")
+	writeResponseFixture(t, "teams_calling_policy", "list", listResponse, nil)
 	selected, selectionErr := globalCallingPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(callingProjection(value), callingProjection(selected)) {
 		t.Fatal("calling Global read/list projections differ")

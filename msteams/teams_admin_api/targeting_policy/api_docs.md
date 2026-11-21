@@ -39,5 +39,5 @@ Policy Create/upsert is not established by the assigned commands or source.
 No guessed POST/assignment or generic unsupported stub is exposed. The documented
 Global delete reset/default-assignment effects are service behavior, not a guessed
 reset payload. Confirm those effects in a disposable tenant before consequential
-acceptance. See [routing and eligibility evidence](../../../docs/implementation/core/policy-routing-evidence.md)
-and [pinned policy contract](../../../docs/implementation/core/template-policy-deployment-evidence.md).
+acceptance. See [unit tests](service_test.go)
+and [unit tests](service_test.go).

@@ -3,7 +3,6 @@ package recordingmessages_test
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -35,17 +34,249 @@ type modelFixture struct {
 
 func models(t *testing.T) modelFixture {
 	t.Helper()
-	raw, e := os.ReadFile("../../../contracts/endpoints/8.1.0/fixtures/recording-message-models.json")
-	if e != nil {
-		t.Fatal(e)
+
+	v := modelFixture{
+		Models: []struct {
+			Name        string
+			Observation struct {
+				Failure *string
+				Value   json.RawMessage
+			}
+		}{
+
+			{
+				Name: "language-null",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("System.ArgumentNullException"),
+				},
+			},
+
+			{
+				Name: "language-empty",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AgreementDialogue\":null,\"Identity\":null,\"InitiatorExplicit\":null,\"InitiatorImplicit\":null,\"Language\":\"\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null}"),
+				},
+			},
+
+			{
+				Name: "language-space",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AgreementDialogue\":null,\"Identity\":null,\"InitiatorExplicit\":null,\"InitiatorImplicit\":null,\"Language\":\" \",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null}"),
+				},
+			},
+
+			{
+				Name: "language-future",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AgreementDialogue\":null,\"Identity\":null,\"InitiatorExplicit\":null,\"InitiatorImplicit\":null,\"Language\":\"Future-Language\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null}"),
+				},
+			},
+
+			{
+				Name: "localization-absent",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"AgreementDialogue\":null,\"Identity\":null,\"InitiatorExplicit\":null,\"InitiatorImplicit\":null,\"Language\":null,\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null}"),
+				},
+			},
+
+			{
+				Name: "localization-null-language",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("Newtonsoft.Json.JsonSerializationException"),
+				},
+			},
+
+			{
+				Name: "message-absent",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":null,\"Identity\":null,\"RecordingAndTranscriptionLocalizationCustomMessage\":[]}"),
+				},
+			},
+
+			{
+				Name: "message-null-id",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":null,\"Identity\":null,\"RecordingAndTranscriptionLocalizationCustomMessage\":[]}"),
+				},
+			},
+
+			{
+				Name: "message-empty-id",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+				},
+			},
+
+			{
+				Name: "message-invalid-id",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("XsdClassGenerator.PropertyArgumentException"),
+				},
+			},
+
+			{
+				Name: "message-id-final-lf",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":null,\"Id\":\"00000000-0000-4000-8000-000000000031\\n\",\"Identity\":null,\"RecordingAndTranscriptionLocalizationCustomMessage\":[]}"),
+				},
+			},
+
+			{
+				Name: "message-null-collection",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Failure: new("Newtonsoft.Json.JsonSerializationException"),
+				},
+			},
+
+			{
+				Name: "message-long-description",
+				Observation: struct {
+					Failure *string
+					Value   json.RawMessage
+				}{
+					Value: json.RawMessage("{\"Description\":\"" + strings.Repeat("x", 2000) + "\",\"Id\":null,\"Identity\":null,\"RecordingAndTranscriptionLocalizationCustomMessage\":[]}"),
+				},
+			},
+		},
+		Lists: []struct {
+			Name        string
+			Observation struct {
+				Failure *string
+				Values  json.RawMessage
+			}
+		}{
+
+			{
+				Name: "null",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[]"),
+				},
+			},
+
+			{
+				Name: "empty-operators",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[]"),
+				},
+			},
+
+			{
+				Name: "replace-empty",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[]"),
+				},
+			},
+
+			{
+				Name: "replace-duplicates",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"AgreementDialogue\":null,\"Identity\":\"fixture-second\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-second\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-lower\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-us\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null}]"),
+				},
+			},
+
+			{
+				Name: "replace-null",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[null]"),
+				},
+			},
+
+			{
+				Name: "remove-one",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"AgreementDialogue\":null,\"Identity\":\"fixture-second\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-lower\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-us\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-different\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"b\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null}]"),
+				},
+			},
+
+			{
+				Name: "remove-two",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"AgreementDialogue\":null,\"Identity\":\"fixture-lower\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-us\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-different\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"b\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null}]"),
+				},
+			},
+
+			{
+				Name: "add-existing",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"AgreementDialogue\":null,\"Identity\":\"fixture-first\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-second\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-lower\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-us\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-different\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"b\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-second\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-second\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null}]"),
+				},
+			},
+
+			{
+				Name: "remove-and-add",
+				Observation: struct {
+					Failure *string
+					Values  json.RawMessage
+				}{
+					Values: json.RawMessage("[{\"AgreementDialogue\":null,\"Identity\":\"fixture-second\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-lower\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-us\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-different\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"b\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null},{\"AgreementDialogue\":null,\"Identity\":\"fixture-second\",\"InitiatorExplicit\":null,\"InitiatorImplicit\":\"a\",\"Language\":\"en-US\",\"ParticipantExplicitProvided\":null,\"ParticipantExplicitRequested\":null,\"ParticipantImplicit\":null}]"),
+				},
+			},
+		},
 	}
-	var v modelFixture
-	if json.Unmarshal(raw, &v) != nil || len(v.Models) != 13 || len(v.Lists) != 9 {
-		t.Fatal("invalid recording model fixture")
-	}
+
 	return v
 }
-func TestUnitRecordingPinnedModelSetterAndConstructorRules(t *testing.T) {
+func TestUnitRecordingTypedModelSetterAndConstructorRules(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Models {
 		var value any
@@ -124,7 +355,7 @@ func seed() []*resource.Localization {
 	}
 	return []*resource.Localization{makeItem("en-US", "a", "fixture-first"), makeItem("en-US", "a", "fixture-second"), makeItem("en-us", "a", "fixture-lower"), makeItem("en-US", "b", "fixture-different")}
 }
-func TestUnitRecordingPinnedSevenFieldListEdits(t *testing.T) {
+func TestUnitRecordingTypedSevenFieldListEdits(t *testing.T) {
 	t.Parallel()
 	for _, c := range models(t).Lists {
 		items := seed()

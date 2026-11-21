@@ -1,0 +1,9 @@
+{
+  "Endpoints": {
+    "ConfigApiEndpoint": "api.interfaces.records.teams.microsoft.com",
+    "AdminServiceEndpoint": "admin.example.invalid"
+  },
+  "Headers": {
+    "X-MS-Forest": "gb1"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "code": "ClientError",
+  "message": "Fixture message",
+  "action": "Please refer to documentation. CorrelationId: 00000000-0000-4000-8000-51d832cf552e",
+  "errorCode": 40003
+}

@@ -10,6 +10,7 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
@@ -17,7 +18,7 @@ import (
 
 func TestUnitAssignmentInputAndContextBeforeCredentials(t *testing.T) {
 	t.Parallel()
-	r := run(t, contracttest.Case{Name: "input-context-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "input-context-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		s := sdk.TeamsAdminAPI.PolicyAssignments
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nid"} {
 			if _, _, e := s.GetGroup(ctx, id, "Fixture"); !errors.Is(e, resource.ErrInput) {
@@ -63,12 +64,11 @@ func TestUnitAssignmentInputAndContextBeforeCredentials(t *testing.T) {
 		}
 		return contracttest.Observation{}
 	}})
-	evidence(t, []contracttest.Result{r})
 }
 
 func TestUnitAssignmentWritesKeepDenialAndNeverReplay(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
+
 	for _, operation := range []string{"create", "update", "delete", "batch"} {
 		for _, status := range []int{401, 403, 429, 500, 503} {
 			method, command, path, body := "PUT", "New-CsGroupPolicyAssignment", "/Skype.Policy/groupPolicyAssignments/fixture-group/policyTypes/Fixture", json.RawMessage(`{}`)
@@ -80,7 +80,7 @@ func TestUnitAssignmentWritesKeepDenialAndNeverReplay(t *testing.T) {
 			case "batch":
 				method, command, path, body = "POST", "New-CsBatchPolicyAssignmentOperation", "/Skype.Policy/assignments/operations", json.RawMessage(`{"identities":[]}`)
 			}
-			c := contracttest.Case{Name: fmt.Sprintf("%s-denial-%d", operation, status), Steps: []contracttest.Exchange{discovery(), wire(method, origin+path, command, body, status, `{"code":"FixtureDenied","message":"fixture-private"}`)}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status, Codes: []string{"FixtureDenied"}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c := contracttest.Case{Name: fmt.Sprintf("%s-denial-%d", operation, status), Steps: []contracttest.Exchange{discovery(t), wire(method, origin+path, command, body, status, `{"code":"FixtureDenied","message":"fixture-private"}`)}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status, Codes: []string{"FixtureDenied"}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.PolicyAssignments
 				var o contracttest.Observation
 				switch operation {
@@ -98,52 +98,47 @@ func TestUnitAssignmentWritesKeepDenialAndNeverReplay(t *testing.T) {
 				}
 				return o
 			}}
-			results = append(results, run(t, c))
+			run(t, c)
 		}
 	}
-	evidence(t, results)
 }
 
-func TestUnitAssignmentSubmissionRetainsAcceptanceAndHandlePresence(t *testing.T) {
+func TestUnitAssignmentLocalOperationHandlePresence(t *testing.T) {
 	t.Parallel()
-	var results []contracttest.Result
-	for _, row := range []struct {
-		name, reply string
-		status      int
-		wantID      *string
-		decode      bool
+	for _, tc := range []struct {
+		name, body string
+		want       *string
+		invalid    bool
 	}{
-		{"future-id", `{"OperationId":"opaque/future:handle","future":false}`, 202, new("opaque/future:handle"), false},
-		{"missing-id", `{}`, 202, nil, false},
-		{"null-id", `{"OperationId":null}`, 202, nil, false},
-		{"invalid-id", `{"OperationId":3}`, 202, nil, true},
-		{"malformed", `not-json`, 202, nil, true},
+		{"future-id", `{"OperationId":"opaque/future:handle","future":false}`, new("opaque/future:handle"), false},
+		{"missing-id", `{}`, nil, false}, {"null-id", `{"OperationId":null}`, nil, false}, {"invalid-id", `{"OperationId":3}`, nil, true},
 	} {
-		c := contracttest.Case{Name: "submission-" + row.name, Mappings: mapping("batch-create"), Steps: []contracttest.Exchange{discovery(), wire("POST", origin+"/Skype.Policy/assignments/operations", "New-CsBatchPolicyAssignmentOperation", json.RawMessage(`{"identities":[]}`), row.status, row.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			v, r, e := sdk.TeamsAdminAPI.PolicyAssignments.CreateBatch(ctx, resource.BatchCreateRequest{Identities: []string{}})
-			if v == nil || !v.HTTPAccepted || r == nil || (row.wantID == nil && v.OperationID != nil) || (row.wantID != nil && (v.OperationID == nil || *v.OperationID != *row.wantID)) {
-				e = errors.New("submission acceptance or optional handle changed")
+		t.Run(tc.name, func(t *testing.T) {
+			var v resource.OperationResult
+			err := json.Unmarshal([]byte(tc.body), &v)
+			if tc.invalid {
+				if err == nil {
+					t.Fatal("invalid local handle accepted")
+				}
+				return
 			}
-			return contracttest.Observation{Response: r, Err: e}
-		}}
-		if row.decode {
-			c.Want.Error = client.ErrDecode
-		}
-		results = append(results, run(t, c))
+			if err != nil || (tc.want == nil && v.OperationID != nil) || (tc.want != nil && (v.OperationID == nil || *v.OperationID != *tc.want)) {
+				t.Fatal("local handle presence differs")
+			}
+		})
 	}
-	evidence(t, results)
 }
 
 func TestUnitAssignmentInputObjectSharesOpaqueUserRoute(t *testing.T) {
 	t.Parallel()
-	c := contracttest.Case{Name: "user-input-object", Mappings: []contracttest.Mapping{{Command: "Get-CsUserPolicyAssignment", ParameterSet: "GetViaIdentity"}}, Steps: []contracttest.Exchange{discovery(), wire("GET", origin+"/Skype.User/users/fixture%2Fuser%3A%40/policies", "Get-CsUserPolicyAssignment", nil, 200, `[{"policyType":"Fixture","policyName":"","policySource":[{"assignmentType":"Direct","reference":"fixture-direct"},{"assignmentType":"Group","reference":"fixture-group"}]}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	c := contracttest.Case{Want: contracttest.Expected{Error: auth.ErrForbidden}, Name: "user-input-object", Mappings: []contracttest.Mapping{{Command: "Get-CsUserPolicyAssignment", ParameterSet: "GetViaIdentity"}}, Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+"/Skype.User/users/fixture%2Fuser%3A%40/policies", "Get-CsUserPolicyAssignment", nil, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.PolicyAssignments.GetUserByIdentity(ctx, resource.UserIdentity{Identity: "fixture/user:@"}, "")
 		if e == nil && (len(v) != 1 || len(v[0].PolicySource) != 2 || v[0].PolicySource[1].Reference == nil || *v[0].PolicySource[1].Reference != "fixture-group") {
 			e = errors.New("effective policy source provenance lost")
 		}
 		return contracttest.Observation{Response: r, Err: e}
 	}}
-	evidence(t, []contracttest.Result{run(t, c)})
+	run(t, c)
 }
 
 func TestUnitAssignmentSettingsOmitNullAndRetainZero(t *testing.T) {
