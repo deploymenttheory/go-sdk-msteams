@@ -3,6 +3,7 @@ package team_test
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -34,4 +35,24 @@ func ExampleService_Create() {
 		return accepted.Operation.Wait(ctx, client.WaitOptions{})
 	}
 	_ = createAndWait
+}
+
+func ExampleService_DeleteByID() {
+	deleteOwnedTeam := func(ctx context.Context, sdk *msteams.Client, ownedGroupID string) error {
+		// Deletes the backing group and its associated resources. Establish
+		// fixture ownership before invoking; a failed delete is not replayed.
+		_, err := sdk.GraphAPI.Teams.DeleteByID(ctx, ownedGroupID)
+		return err
+	}
+	_ = deleteOwnedTeam
+}
+
+func ExampleService_UploadPicture() {
+	upload := func(ctx context.Context, sdk *msteams.Client, groupID string, jpeg io.ReadCloser) error {
+		// UploadPicture owns and closes jpeg, including validation failure.
+		// Supply a valid JPEG; bytes are preserved without image conversion.
+		_, err := sdk.GraphAPI.Teams.UploadPicture(ctx, groupID, jpeg)
+		return err
+	}
+	_ = upload
 }

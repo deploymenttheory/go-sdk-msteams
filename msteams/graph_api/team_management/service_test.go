@@ -1,8 +1,11 @@
 package teammanagement_test
 
 import (
+	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
@@ -79,8 +82,10 @@ func fixture(t *testing.T, name string) []contracttest.Exchange {
 				Query        [][2]string
 				Headers      map[string]string
 				Body         struct {
-					Kind  string
-					Value json.RawMessage
+					Kind        string
+					Value       json.RawMessage
+					Base64      string
+					ContentType string `json:"content_type"`
 				}
 				Response struct {
 					Status  int
@@ -112,6 +117,14 @@ func fixture(t *testing.T, name string) []contracttest.Exchange {
 				path += "?" + query.Encode()
 			}
 			exchange := wire(step.Method, path, body, step.Response.Status, string(step.Response.JSON))
+			if step.Body.Kind == "bytes" {
+				payload, err := base64.StdEncoding.Strict().DecodeString(step.Body.Base64)
+				if err != nil {
+					t.Fatal("source-derived binary fixture invalid")
+				}
+				exchange.Request.Binary = payload
+				exchange.Request.Headers.Set("Content-Type", step.Body.ContentType)
+			}
 			for key, value := range step.Headers {
 				exchange.Request.Headers.Set(key, value)
 			}
@@ -171,6 +184,57 @@ func TestGetIdentityEnrichesFromSourceDerivedPairedRead(t *testing.T) {
 		return observed(sdk.GraphAPI.TeamManagement.GetByID(ctx, groupID))
 	}, Want: contracttest.Expected{Status: 200, JSON: enriched(`["read-group:succeeded","read-team:succeeded"]`)}})
 	evidence(t, "team-get-service.json", []contracttest.Result{r})
+}
+
+type observedPictureSource struct {
+	io.Reader
+	closes int
+}
+
+func (s *observedPictureSource) Close() error { s.closes++; return nil }
+
+func TestDeleteAndPictureUseSourceDerivedPrimitiveMappings(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		command, sourceCase, report string
+	}{
+		{command: "Remove-Team", sourceCase: "team-delete-backing-group", report: "team-delete-service.json"},
+		{command: "Set-TeamPicture", sourceCase: "team-picture-raw-bytes", report: "team-picture-service.json"},
+	} {
+		t.Run(tc.command, func(t *testing.T) {
+			t.Parallel()
+			var results []contracttest.Result
+			for _, denied := range []bool{false, true} {
+				steps := fixture(t, tc.sourceCase)
+				want := contracttest.Expected{Status: http.StatusNoContent}
+				name := tc.sourceCase
+				if denied {
+					name += "-denied"
+					steps[0].Reply = contracttest.Reply{Status: http.StatusForbidden,
+						Headers: http.Header{"Content-Type": {"application/json"}, "Request-Id": {"fixture-denial"}},
+						Body:    []byte(`{"error":{"code":"Authorization_RequestDenied"}}`)}
+					want = contracttest.Expected{Status: http.StatusForbidden, Error: auth.ErrForbidden,
+						Headers: http.Header{"Request-Id": {"fixture-denial"}}}
+				}
+				results = append(results, runCase(t, tc.command, contracttest.Case{Name: name, Steps: steps,
+					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+						if tc.command == "Remove-Team" {
+							response, err := sdk.GraphAPI.Teams.DeleteByID(ctx, groupID)
+							return contracttest.Observation{Response: response, Err: err}
+						}
+						// The immutable source fixture deliberately contains synthetic,
+						// non-image bytes. This proves transfer, not server image validity.
+						stream := &observedPictureSource{Reader: bytes.NewReader(steps[0].Request.Binary)}
+						response, err := sdk.GraphAPI.Teams.UploadPicture(ctx, groupID, stream)
+						if stream.closes != 1 {
+							t.Error("picture source was not closed exactly once")
+						}
+						return contracttest.Observation{Response: response, Err: err}
+					}, Want: want}))
+			}
+			evidence(t, tc.report, results)
+		})
+	}
 }
 
 func TestUpdateOrdersWritesAndPreservesPartialOutcomes(t *testing.T) {
