@@ -6,6 +6,7 @@ import (
 	acsfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/acs_federation_configuration"
 	applicationaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
 	applicationmeetingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_meeting_configuration"
+	assignmentmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
 	batchdeployment "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/batch_deployment"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
@@ -21,6 +22,7 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	AssignmentMigrations              *assignmentmigration.Service
 	TeamsExternalAccessConfigurations *teamsexternalaccessconfiguration.Service
 	ACSFederationConfigurations       *acsfederationconfiguration.Service
 	ExternalAccessPolicies            *externalaccesspolicy.Service
@@ -55,7 +57,22 @@ func NewServices(session *client.Session) (*Services, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Services{scope: scope, TeamsExternalAccessConfigurations: teamsexternalaccessconfiguration.NewService(scope), ACSFederationConfigurations: acsfederationconfiguration.NewService(scope), ExternalAccessPolicies: externalaccesspolicy.NewService(scope), ApplicationAccessPolicies: applicationaccesspolicy.NewService(backend), ApplicationMeetingConfigurations: applicationmeetingconfiguration.NewService(backend), TenantFederationConfigurations: tenantfederationconfiguration.NewService(backend), TeamTemplates: teamtemplate.NewService(backend), TargetingPolicies: targetingpolicy.NewService(backend), TargetingHierarchy: hierarchy, BatchDeployments: batchdeployment.NewService(backend), PrivateChannelMigration: privatechannelmigration.NewService(migrationScope), Regions: region.NewService(regionScope)}, nil
+	return &Services{
+		scope:                             scope,
+		AssignmentMigrations:              assignmentmigration.NewService(scope),
+		TeamsExternalAccessConfigurations: teamsexternalaccessconfiguration.NewService(scope),
+		ACSFederationConfigurations:       acsfederationconfiguration.NewService(scope),
+		ExternalAccessPolicies:            externalaccesspolicy.NewService(scope),
+		ApplicationAccessPolicies:         applicationaccesspolicy.NewService(backend),
+		ApplicationMeetingConfigurations:  applicationmeetingconfiguration.NewService(backend),
+		TenantFederationConfigurations:    tenantfederationconfiguration.NewService(backend),
+		TeamTemplates:                     teamtemplate.NewService(backend),
+		TargetingPolicies:                 targetingpolicy.NewService(backend),
+		TargetingHierarchy:                hierarchy,
+		BatchDeployments:                  batchdeployment.NewService(backend),
+		PrivateChannelMigration:           privatechannelmigration.NewService(migrationScope),
+		Regions:                           region.NewService(regionScope),
+	}, nil
 }
 
 // Scope returns the backend dependency shared by this collection's resources.

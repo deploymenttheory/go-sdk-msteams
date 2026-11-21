@@ -8808,24 +8808,60 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/200/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_test.go",
+              "name": "TestPinnedGPARequestHelper"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
+              "name": "TestGPARejectsInvalidInputBeforeCredentialAcquisition"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/assignment_migration_test.go",
+              "name": "TestLabAssignmentMigrationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/assignment_migration/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/assignment_migration/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/assignment-migration-sdk-progress.md"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Dedicated-SPN secret and certificate status-list reads returned resource HTTP 403; GetByID and PowerShell comparison were not reached. No mode or feature restriction is inferred; full qualification remains outstanding.",
+        "evidence": [
+          "docs/implementation/policies/assignment-migration-sdk-progress.md"
+        ]
       },
       "exclusion": null
     },
@@ -8888,19 +8924,40 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/201/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service.go",
+              "name": "Service.RecommendationsByPolicyName"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_test.go",
+              "name": "TestPinnedGPARequestHelper"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
+              "name": "TestGPARejectsInvalidInputBeforeCredentialAcquisition"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/assignment_migration/service.go",
+            "name": "Service.RecommendationsByPolicyName"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/assignment-migration-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -8920,19 +8977,40 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/202/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service.go",
+              "name": "Service.RecommendationsByPolicyType"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_test.go",
+              "name": "TestPinnedGPARequestHelper"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
+              "name": "TestGPARejectsInvalidInputBeforeCredentialAcquisition"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/assignment_migration/service.go",
+            "name": "Service.RecommendationsByPolicyType"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/assignment-migration-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -8952,19 +9030,40 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/203/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service.go",
+              "name": "Service.GetConflicts"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_test.go",
+              "name": "TestPinnedGPARequestHelper"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
+              "name": "TestGPARejectsInvalidInputBeforeCredentialAcquisition"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/assignment_migration/service.go",
+            "name": "Service.GetConflicts"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/assignment-migration-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -12800,19 +12899,48 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/274/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service.go",
+              "name": "Service.ClearDirectAssignments"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_test.go",
+              "name": "TestPinnedGPARequestHelper"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
+              "name": "TestGPARejectsInvalidInputBeforeCredentialAcquisition"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_test.go",
+              "name": "TestGPAErrorsRetainHTTPStatusAndDoNotReplaySubmissions"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
+              "name": "TestGPAMalformedAcceptedResponsesStayErrorsWithoutResubmission"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/assignment_migration/service.go",
+            "name": "Service.ClearDirectAssignments"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/assignment-migration-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -13104,19 +13232,48 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/276/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_test.go",
+              "name": "TestPinnedGPARequestHelper"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
+              "name": "TestGPARejectsInvalidInputBeforeCredentialAcquisition"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_test.go",
+              "name": "TestGPAErrorsRetainHTTPStatusAndDoNotReplaySubmissions"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
+              "name": "TestGPAMalformedAcceptedResponsesStayErrorsWithoutResubmission"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/assignment_migration/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/assignment-migration-sdk-progress.md"
+        ]
       },
       "live": {
         "status": "not-run",
