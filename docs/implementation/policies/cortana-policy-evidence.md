@@ -48,8 +48,7 @@ PowerShell are development-only; Microsoft binaries/decompiled source are privat
   one-POST primitive and explicit POST/Get composition with partial read-back
   results. PUT is sparse and allows identity-only requests. Delete is bodyless.
   Whitespace Get/filter selection returns the collection; Global-first ordering
-  is case-insensitive and stable. The native API should expose explicit list and
-  identity operations rather than silently reinterpret an invalid identity.
+  is case-insensitive and stable. The native API exposes explicit list and identity operations; invalid explicit identity input rejects before credentials/HTTP.
 - The public declaration binder preserves omitted settings, empty strings and
   false/true. It converts null strings to empty and numeric Boolean zero to false,
   and rejects null Booleans and Boolean strings. Long Description and future mode
@@ -60,16 +59,12 @@ PowerShell are development-only; Microsoft binaries/decompiled source are privat
   omits absent/zero Rank, while the native generated DTO can send explicit zero.
   Tenant helper Force is Boolean; the public family does not expose Force.
   Acceptance needs an actual POST response, not discovery metadata.
-- Read values use generic Xds snapshots. Native typed projections should retain
-  unknown/unprojectable fields in raw JSON rather than manufacture false/empty
-  values. No implicit polling, replay, restoration, elevation, ETag, atomicity or
+- Read values use generic Xds snapshots. Native typed projections retain unknown/unprojectable fields in owned raw JSON, with nil typed projections rather than manufactured false/empty values. No implicit polling, replay, restoration, elevation, ETag, atomicity or
   effective-clear guarantee follows the captures.
 
 ## Remaining implementation and qualification
 
-Implement native modern CRUD/list, explicit create/read-back and grants for all
-five settings, root wiring, exact mappings, source comparisons, input/context/
-failure tests, documentation/examples and gated read-only lab support. Successful
+Native modern CRUD/list, explicit create/read-back and grants for all five settings are present with root wiring, exact mappings, source comparisons, input/context/failure tests, compiling examples and gated read-only lab support. Tests compare generated requests in application/delegated synthetic modes and all twelve successful isolated public binding outputs. They retain partial create/read-back and group acceptance, source Rank omission versus native zero priority, sparse/default updates, all mutation failure statuses and credential-free input guards. URI comparison normalizes equivalent colon spelling once per segment while preserving encoded slashes. Actual read-only evidence is recorded in `cortana-policy-lab-acceptance.md`. Successful
 authorization, server/cloud/flight availability and all effective behavior remain
 open. These source captures are not tenant validation; issue #113 and full command
 qualification remain open.
