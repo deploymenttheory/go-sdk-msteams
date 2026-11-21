@@ -32,6 +32,7 @@ import (
 	teamschannelspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_channels_policy"
 	teamsclientconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_client_configuration"
 	teamscortanapolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_cortana_policy"
+	teamscustombannertext "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_custom_banner_text"
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
@@ -39,6 +40,7 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsCustomBannerTexts                  *teamscustombannertext.Service
 	TeamsCortanaPolicies                    *teamscortanapolicy.Service
 	TeamsClientConfigurations               *teamsclientconfiguration.Service
 	TeamsChannelsPolicies                   *teamschannelspolicy.Service
@@ -92,6 +94,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsCustomBannerTexts:                  teamscustombannertext.NewService(scope),
 		TeamsCortanaPolicies:                    teamscortanapolicy.NewService(backend),
 		TeamsClientConfigurations:               teamsclientconfiguration.NewService(scope),
 		TeamsChannelsPolicies:                   teamschannelspolicy.NewService(scope),

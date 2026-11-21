@@ -47,9 +47,23 @@ prepares Global/Guid and POSTs Text plus that Identity without an Id member.
 Bound Force serializes as a string, including false. The resource uses compiled
 MPACmdlet, command and correlation headers, with no modern forest target.
 
-GetAll returns a bare CustomBannerText collection. Full Get filtering/sorting and
-public binder semantics require their own comparisons; provider snapshots alone
-do not prove all command processing.
+GetAll returns a bare CustomBannerText collection. A separate
+capture-banner-text-binding.ps1 invokes actual inherited compiled parameter
+properties/attributes through an in-process runspace with synthetic lifecycle
+overrides. Its banner-text-binding.json contains 24 public binding observations
+(19 successes, five expected failures) and five actual protected FilterPolicies
+observations. Constructor injection and credential refusal remain in force;
+every observation has zero sends and zero token requests. This seam exercises
+binding and the pure filter helper, not the original command lifecycle or
+authorization.
+
+The mandatory New Text binder rejects empty/null, while optional Set Text binds
+empty or null; the latter subsequently fails the model setter. New without Id
+selects ParentAndRelativeKey and keeps the constructor GUID. Opaque selected Id
+values bind without model GUID validation. Mixed Identity/Id selectors and empty
+bound Identity fail. Filters match Identity and Tag-prefixed identities with
+case-insensitive wildcard matching; whitespace is literal. Native List additionally
+places exact-case Global first, as the compiled Get processing does.
 
 ## Model constraints
 
@@ -67,14 +81,24 @@ Later case variants/duplicates apply in Newtonsoft; a later explicit Text null
 still fails. Public New Text is mandatory metadata, a distinct binder seam from
 the model constructor/provider behavior.
 
-## Remaining implementation and qualification
+## Native implementation and qualification
 
-Implement full native CRUD/list, both selector forms, source-compatible default
-ID generation and explicit Set read/modify/PATCH composition with partial results.
-Preserve source body Identity/Id distinctions, omission/null/empty/Force, owned raw
-snapshots, exact parameter-set mappings and appropriate local model validation.
-Add public binding observations, filter/identity preparation coverage, successful
-and failure wire comparisons, documentation/examples and gated read-only lab
-support. Server rules, authorization, updates/read-back/restoration and feature
+TeamsCustomBannerTexts now exposes native CRUD/list for both selector forms,
+source-compatible default UUID generation, and explicit Set read/sparse-PATCH
+composition. Direct writes perform no implicit read-back, rollback or retry.
+Update retains its read snapshot/response, patch invocation and HTTP acceptance
+on partial failure; auto-create retains its generated selector after submission
+failure. Requests forward only known bound fields. Responses own their raw bytes
+and future fields; sequential setter validation rejects an earlier invalid Id or
+null Text even if a later duplicate would otherwise replace it. Native JSON
+strings are strict; arbitrary PowerShell input-object coercion is not inferred.
+
+Contract tests compare source routes/headers/bodies in synthetic application and
+delegated modes, filter behavior, nullable read-derived selectors, accepted empty
+responses, malformed replies and non-replayed mutation failures. Gated read-only
+lab support compares list/read and optional bounded, tenant-bound pinned source
+projections, including a genuine empty list. This does not establish successful
+tenant CRUD. See the [lab acceptance record](banner-text-lab-acceptance.md).
+Server rules, authorization, updates/read-back/restoration and displayed banner
 behavior remain unqualified. Issue #114 and full command/tenant qualification
 remain open. Microsoft binaries and decompiled source stay private.
