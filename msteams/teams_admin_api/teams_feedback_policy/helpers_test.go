@@ -116,3 +116,8 @@ func modernWire(method, path string, body json.RawMessage, status int, reply str
 	}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
 }
+
+const item = collection + "/configuration/Global"
+const newCommand = "New-CsTeamsFeedbackPolicy"
+const deleteCommand = "Remove-CsTeamsFeedbackPolicy"
+const wrapperSource = "contracts/endpoints/8.1.0/fixtures/feedback-policy-grant-wrappers.json"

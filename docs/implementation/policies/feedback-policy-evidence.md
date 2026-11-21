@@ -53,18 +53,35 @@ PATCH/body-bearing DELETE and string Force. Set retains read-model Identity.
 Modern Grant uses forest-target discovery and modern assignment payloads. These
 observations require separate backend wiring in the native service.
 
-The initial native checkpoint exposes TeamsFeedbackPolicies with compiled
+The native service exposes TeamsFeedbackPolicies with compiled
 CRUD/list/explicit Set composition, all six nullable settings and owned raw
 snapshots, plus separately wired modern user/tenant/group grants. Source-aware
 Assign omits zero Rank while the explicit native group primitive can send zero.
-Initial race comparisons cover all 15 compiled provider cases in synthetic
+Race comparisons cover all 15 compiled provider cases in synthetic
 application/delegated modes, all seven modern requests in both modes, all 26
 model observations, 36 compiled bindings and five actual source filters. All
 five public commands/eight command-set pairs have native symbol mappings.
 
-Remaining work includes mapped wrapper comparisons, partial Set and grant
-acceptance/failure/context/no-replay tests; API docs/examples; gated lab/source
-reads; full checks and sanitized CI review. Issue #119 remains open. No tenant read/write
-has run for this family, and no successful CRUD, persistence, assignment or
-effective feedback/survey/collection behavior is claimed. Microsoft binaries and
-decompiled source remain private.
+Mapped wrapper comparisons exercise all seven successful forwarding observations
+and the expressible native missing-scope rejection. Three other source failures
+(omitted required PolicyName and either bound PassThru value) are asserted as
+binding boundaries; the native API requires a policy name argument and does not
+expose PassThru. They are not counted as native operations or comparisons.
+
+Additional tests interleave compiled/modern operations in both synthetic auth
+modes without header leakage, retain Set preparation/acceptance through partial
+failure and a null read-model Identity, reject invalid input/context/backend
+before HTTP, and verify single-send mutations across five error statuses. Group
+202/204, malformed/empty/future payloads and discovery-phase failures preserve
+the distinction between submission and effective assignment. API docs, a
+compiling example and gated read-only lab/source comparison are included.
+
+Ledger rows remain in-progress/metadata-only: selected offline comparisons do not
+establish complete command qualification. Issue #119 remains open. Successful
+tenant CRUD, persistence, assignment and effective feedback/survey/collection
+behavior remain unqualified. Microsoft binaries and decompiled source remain
+private.
+
+On 2026-11-21 actual compiled Global reads returned resource HTTP 403 with both
+client-secret and certificate authentication. No writes ran. See
+[lab acceptance](feedback-policy-lab-acceptance.md).

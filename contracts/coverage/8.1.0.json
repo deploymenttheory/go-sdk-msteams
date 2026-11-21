@@ -6817,7 +6817,12 @@
               "name": "TestFeedbackPolicyFiltersMatchCapturedSource"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/feedback_policy_test.go",
+              "name": "TestLabFeedbackPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
@@ -6842,7 +6847,12 @@
               "name": "TestFeedbackPolicyCapturedCompiledBindings"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/feedback_policy_test.go",
+              "name": "TestLabFeedbackPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
@@ -6874,9 +6884,11 @@
         ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21. No writes, grants or privilege changes ran; successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -13997,6 +14009,18 @@
             {
               "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
               "name": "TestFeedbackPolicyPinnedModernGrant"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/wrapper_test.go",
+              "name": "TestFeedbackPolicyMappedGrantForwarding"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/acceptance_test.go",
+              "name": "TestFeedbackPolicyGroupAcceptanceSurvivesOnlyActualPostResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/failure_test.go",
+              "name": "TestFeedbackPolicyAllMutationErrorsAreSingleSend"
             }
           ],
           "live_tests": []
@@ -14018,6 +14042,14 @@
             {
               "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
               "name": "TestFeedbackPolicyPinnedModernGrant"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/wrapper_test.go",
+              "name": "TestFeedbackPolicyMappedGrantForwarding"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/failure_test.go",
+              "name": "TestFeedbackPolicyAllMutationErrorsAreSingleSend"
             }
           ],
           "live_tests": []
@@ -14039,6 +14071,14 @@
             {
               "file": "msteams/teams_admin_api/teams_feedback_policy/service_test.go",
               "name": "TestFeedbackPolicyPinnedModernGrant"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/wrapper_test.go",
+              "name": "TestFeedbackPolicyMappedGrantForwarding"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/failure_test.go",
+              "name": "TestFeedbackPolicyAllMutationErrorsAreSingleSend"
             }
           ],
           "live_tests": []
@@ -14085,9 +14125,11 @@
         ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21. No writes, grants or privilege changes ran; successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -19580,6 +19622,10 @@
             {
               "file": "msteams/teams_admin_api/teams_feedback_policy/binding_test.go",
               "name": "TestFeedbackPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/failure_test.go",
+              "name": "TestFeedbackPolicyAllMutationErrorsAreSingleSend"
             }
           ],
           "live_tests": []
@@ -19606,9 +19652,11 @@
         ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21. No writes, grants or privilege changes ran; successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -24271,6 +24319,10 @@
             {
               "file": "msteams/teams_admin_api/teams_feedback_policy/binding_test.go",
               "name": "TestFeedbackPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/failure_test.go",
+              "name": "TestFeedbackPolicyAllMutationErrorsAreSingleSend"
             }
           ],
           "live_tests": []
@@ -24297,9 +24349,11 @@
         ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21. No writes, grants or privilege changes ran; successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -29891,6 +29945,14 @@
             {
               "file": "msteams/teams_admin_api/teams_feedback_policy/binding_test.go",
               "name": "TestFeedbackPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/failure_test.go",
+              "name": "TestFeedbackPolicyAllMutationErrorsAreSingleSend"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_feedback_policy/composition_test.go",
+              "name": "TestFeedbackPolicySetRetainsPreparationAndAcceptance"
             }
           ],
           "live_tests": []
@@ -29921,9 +29983,11 @@
         ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21. No writes, grants or privilege changes ran; successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/feedback-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
