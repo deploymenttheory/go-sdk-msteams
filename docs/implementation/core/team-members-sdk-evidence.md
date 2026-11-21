@@ -96,3 +96,14 @@ cancellation and partial reads. These are synthetic SDK executions, not runtime
 captures of PowerShell commands. Reports retain `coverage_claim: false` and
 live qualification `not-run`; no command ledger promotion or tenant writes
 were made. Successful journalled lab qualification remains outstanding.
+
+Opt-in `TestLabTeamMembershipCRUD` and `TestLabRecoverTeamMembership` entry points
+are prepared for native CRUD/role observations and backing-reference compositions
+on a new disposable team. They require all three lab flags, same-tenant distinct
+user fixtures and a private bound recovery journal, and skip before loading
+credentials in ordinary CI. Recovery requires complete unique positive lookup
+and both team/group ownership snapshots before deleting the owned group. Offline
+root-client cases verify these cleanup boundaries, including denied/missing and
+partial discovery without false absence. No live run was made. See the
+[acceptance procedure](membership-lab-acceptance.md) for exact scope and remaining
+guest/client-convergence qualification.
