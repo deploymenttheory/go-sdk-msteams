@@ -79,3 +79,37 @@ Chrome DevTools was also attempted for the user's signed-in Teams session; its
 server could not read Chrome's debugging-port file (permission denied). Browser
 inspection is unavailable until that connection is repaired; no browser change
 or browser-derived service qualification is claimed.
+
+## Mapped-wrapper and complete service evidence
+
+The guarded [wrapper oracle](../../../tools/contracts/capture-policy-wrappers.ps1)
+executes six unmodified function definitions from the hash-checked pinned source
+under explicitly synthetic telemetry/host types and an in-memory internal command
+module. It imports no MicrosoftTeams module, connects nowhere and has no HTTP
+sender. Its [19 observations](../../../contracts/endpoints/8.1.0/fixtures/policy-wrapper-compositions.json)
+confirm stable case-insensitive Global-first output, Identity/Tag filtering,
+POST-then-GET creation, stopping after creation failure, the omitted-Identity
+Global update default, empty user-clear policy names, tenant force false and Rank
+omission/forwarding. Negative Rank is forwarded; a backend range is not invented.
+Missing scope/PolicyName and explicit true/false PassThru reject at this mapped
+function boundary. The exported TrpsPSCmdlet, flight selection and generated HTTP
+pipeline were not executed; those boundaries are not silently promoted.
+
+These observations exposed and fixed missing Global-first ordering in the Go
+list projection. Raw HTTP bodies and within-partition order remain retained.
+The policy operations now also supply explicit public-command operation labels
+in X-MS-CmdletName, consistent with the existing template SDK convention. This
+is native operation metadata, not a reconstructed PSInvocationInfo value or a
+claim that the server requires exactly that string. Discovery stays unlabelled,
+and the same-origin token/forest header boundary is unchanged.
+
+The shared root-client runner now exercises all five commands/eight sets against
+actual pinned request/status observations. Eleven positive CRUD/assignment
+executions, three source-wrapper listing cases and twelve mutation failure cases
+emit exact-name sanitized reports. The failure cases use the default transport
+policy, so received 429/503 cannot be hidden by setting a one-attempt test policy.
+All six mutation entry points make one attempt, and failed creation performs no
+read-back. Set coverage is checked against the validated ownership ledger.
+Go-symbol/test links now identify every set; implementation remains in-progress,
+contract metadata-only and live not-run. These reports are candidate offline
+evidence, not a promotion of complete command or tenant parity.

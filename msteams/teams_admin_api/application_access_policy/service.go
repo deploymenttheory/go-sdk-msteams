@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -34,7 +35,7 @@ func validIdentity(identity string) bool {
 	return strings.TrimSpace(identity) != "" && identity != "." && identity != ".." && !strings.ContainsAny(identity, "\x00\r\n")
 }
 
-func (s *Service) do(ctx context.Context, request client.Request, result any, statuses ...int) (*resty.Response, error) {
+func (s *Service) do(ctx context.Context, command string, request client.Request, result any, statuses ...int) (*resty.Response, error) {
 	if ctx == nil {
 		return nil, client.ErrNilContext
 	}
@@ -44,6 +45,14 @@ func (s *Service) do(ctx context.Context, request client.Request, result any, st
 	if s == nil || s.client == nil {
 		return nil, client.ErrClosed
 	}
+	// Native operation metadata uses the corresponding public command name.
+	// It is not reconstructed from a PowerShell invocation/runspace.
+	request.Header = request.Header.Clone()
+	if request.Header == nil {
+		request.Header = make(http.Header)
+	}
+	request.Header.Set("Accept", "application/json")
+	request.Header.Set("X-MS-CmdletName", command)
 	response, err := s.client.Do(ctx, request, result)
 	if err != nil {
 		return response, err
@@ -62,7 +71,7 @@ func (s *Service) GetByIdentity(ctx context.Context, identity string) (*Policy, 
 		return nil, nil, ErrInput
 	}
 	var policy Policy
-	response, err := s.do(ctx, client.Request{Method: http.MethodGet, Path: path(identity), Replay: client.ReplaySafe}, &policy, http.StatusOK)
+	response, err := s.do(ctx, "Get-CsApplicationAccessPolicy", client.Request{Method: http.MethodGet, Path: path(identity), Replay: client.ReplaySafe}, &policy, http.StatusOK)
 	if err != nil {
 		return nil, response, err
 	}
@@ -75,7 +84,7 @@ func (s *Service) GetByIdentity(ctx context.Context, identity string) (*Policy, 
 // List reads the service's bare array. No unlimited paging guarantee is inferred.
 func (s *Service) List(ctx context.Context) ([]Policy, *resty.Response, error) {
 	var raw json.RawMessage
-	response, err := s.do(ctx, client.Request{Method: http.MethodGet, Path: path(""), Replay: client.ReplaySafe}, &raw, http.StatusOK)
+	response, err := s.do(ctx, "Get-CsApplicationAccessPolicy", client.Request{Method: http.MethodGet, Path: path(""), Replay: client.ReplaySafe}, &raw, http.StatusOK)
 	if err != nil {
 		return nil, response, err
 	}
@@ -83,6 +92,18 @@ func (s *Service) List(ctx context.Context) ([]Policy, *resty.Response, error) {
 	if len(raw) == 0 || json.Unmarshal(raw, &policies) != nil || policies == nil {
 		return nil, response, client.ErrDecode
 	}
+	// Match the mapped Get wrapper's stable, case-insensitive Global-first
+	// partition while retaining each received snapshot and raw response.
+	slices.SortStableFunc(policies, func(left, right Policy) int {
+		a, b := strings.EqualFold(left.Identity, "Global"), strings.EqualFold(right.Identity, "Global")
+		if a == b {
+			return 0
+		}
+		if a {
+			return -1
+		}
+		return 1
+	})
 	return policies, response, nil
 }
 
@@ -116,7 +137,7 @@ func (s *Service) Create(ctx context.Context, input CreateRequest) (*Policy, *re
 	if err != nil {
 		return nil, nil, err
 	}
-	created, err := s.do(ctx, client.Request{Method: http.MethodPost, Path: path(""), Body: body}, nil, http.StatusCreated)
+	created, err := s.do(ctx, "New-CsApplicationAccessPolicy", client.Request{Method: http.MethodPost, Path: path(""), Body: body}, nil, http.StatusCreated)
 	if err != nil {
 		return nil, created, err
 	}
@@ -137,7 +158,7 @@ func (s *Service) UpdateByIdentity(ctx context.Context, identity string, input U
 	if err != nil {
 		return nil, err
 	}
-	return s.do(ctx, client.Request{Method: http.MethodPut, Path: path(identity), Body: body}, nil, http.StatusNoContent)
+	return s.do(ctx, "Set-CsApplicationAccessPolicy", client.Request{Method: http.MethodPut, Path: path(identity), Body: body}, nil, http.StatusNoContent)
 }
 
 // DeleteByIdentity removes one policy and returns its HTTP metadata.
@@ -145,7 +166,7 @@ func (s *Service) DeleteByIdentity(ctx context.Context, identity string) (*resty
 	if !validIdentity(identity) {
 		return nil, ErrInput
 	}
-	return s.do(ctx, client.Request{Method: http.MethodDelete, Path: path(identity)}, nil, http.StatusNoContent)
+	return s.do(ctx, "Remove-CsApplicationAccessPolicy", client.Request{Method: http.MethodDelete, Path: path(identity)}, nil, http.StatusNoContent)
 }
 
 // AssignToUser assigns a policy. Empty policyName sends the evidenced clear form.
@@ -153,12 +174,12 @@ func (s *Service) AssignToUser(ctx context.Context, user, policyName string) (*r
 	if !validIdentity(user) {
 		return nil, ErrInput
 	}
-	return s.do(ctx, client.Request{Method: http.MethodPatch, Path: []string{"Skype.Policy", "users", user, "policies", "ApplicationAccessPolicy"}, Body: map[string]any{"policyName": policyName}}, nil, http.StatusOK)
+	return s.do(ctx, "Grant-CsApplicationAccessPolicy", client.Request{Method: http.MethodPatch, Path: []string{"Skype.Policy", "users", user, "policies", "ApplicationAccessPolicy"}, Body: map[string]any{"policyName": policyName}}, nil, http.StatusOK)
 }
 
 // AssignTenantDefault changes the tenant assignment, separately from policy CRUD.
 func (s *Service) AssignTenantDefault(ctx context.Context, policyName string, force bool) (*resty.Response, error) {
-	return s.do(ctx, client.Request{Method: http.MethodPatch, Path: []string{"Skype.Policy", "tenants", "policies", "ApplicationAccessPolicy"}, Body: map[string]any{"policyName": policyName, "forceSwitchPresent": force}}, nil, http.StatusOK)
+	return s.do(ctx, "Grant-CsApplicationAccessPolicy", client.Request{Method: http.MethodPatch, Path: []string{"Skype.Policy", "tenants", "policies", "ApplicationAccessPolicy"}, Body: map[string]any{"policyName": policyName, "forceSwitchPresent": force}}, nil, http.StatusOK)
 }
 
 // AssignToGroup submits an assignment and retains 202 acceptance versus 204.
@@ -173,7 +194,7 @@ func (s *Service) AssignToGroup(ctx context.Context, group, policyName string, p
 		body["priority"] = *priority
 	}
 	var raw json.RawMessage
-	response, err := s.do(ctx, client.Request{Method: http.MethodPost, Path: []string{"Skype.Policy", "groupPolicyAssignments", group, "policyTypes", "ApplicationAccessPolicy"}, Body: body}, &raw, http.StatusAccepted, http.StatusNoContent)
+	response, err := s.do(ctx, "Grant-CsApplicationAccessPolicy", client.Request{Method: http.MethodPost, Path: []string{"Skype.Policy", "groupPolicyAssignments", group, "policyTypes", "ApplicationAccessPolicy"}, Body: body}, &raw, http.StatusAccepted, http.StatusNoContent)
 	if err != nil {
 		return nil, response, err
 	}

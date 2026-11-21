@@ -6,6 +6,9 @@ I/O. The first operation discovers the tenant forest at
 `GET /Teams.Tenant/serviceDiscovery`; subsequent requests carry its normalized
 HTTPS root in `X-MS-Target-Uri`. Requests and bearer tokens continue to use the
 selected ConfigAPI origin/audience, including when discovery returns another host.
+Each management request labels its native operation with the corresponding public
+command in `X-MS-CmdletName`; this mirrors the existing template SDK convention,
+without reconstructing a PowerShell invocation. Discovery has its own headers.
 
 | Go operation | HTTP contract | PowerShell behavior |
 | --- | --- | --- |
@@ -45,6 +48,8 @@ backtick escapes. UTF-16 character positions preserve the observed string
 wildcard behavior for surrogate pairs. Native matching uses portable Unicode
 case folding; locale-specific PowerShell collation remains an explicit
 compatibility limitation. See [PowerShell string wildcards](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_wildcards?view=powershell-7.5).
+Both list methods place case-insensitive Global identities first, preserving
+the relative order within each partition and all raw snapshot/response data.
 
 Authentication uses the selected Teams/ConfigAPI resource. Microsoft documents
 `Organization.Read.All` for module onboarding and an appropriate Teams directory

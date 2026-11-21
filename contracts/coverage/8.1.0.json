@@ -875,22 +875,93 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/19/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/filter.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestListFilteredUsesLocalTagAwareMatching"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyListsFollowPinnedGlobalFirstComposition"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyServiceContractsMapEveryPinnedSet"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/application_access_policy_test.go",
+              "name": "TestLabApplicationAccessPolicyCRUD"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/19/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestCRUDAndAssignmentsAgainstPinnedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestMalformedOrEmptySuccessfulReadsAreFailures"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyListsFollowPinnedGlobalFirstComposition"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyServiceContractsMapEveryPinnedSet"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/application_access_policy_test.go",
+              "name": "TestLabApplicationAccessPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/filter.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "Service.GetByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -898,7 +969,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Dedicated-identity policy reads returned HTTP 403. Successful resource CRUD and assignment qualification have not run; modern/legacy selection and exported-wrapper conformance remain separate.",
         "evidence": []
       },
       "exclusion": null
@@ -9120,29 +9191,104 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/221/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.AssignToGroup"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "GroupAssignment"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestCRUDAndAssignmentsAgainstPinnedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyServiceContractsMapEveryPinnedSet"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyMutationsDoNotReplayUnderDefaultTransportPolicy"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/221/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestCRUDAndAssignmentsAgainstPinnedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyServiceContractsMapEveryPinnedSet"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyMutationsDoNotReplayUnderDefaultTransportPolicy"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/221/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestCRUDAndAssignmentsAgainstPinnedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyServiceContractsMapEveryPinnedSet"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyMutationsDoNotReplayUnderDefaultTransportPolicy"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "GroupAssignment"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9150,7 +9296,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Dedicated-identity policy reads returned HTTP 403. Successful resource CRUD and assignment qualification have not run; modern/legacy selection and exported-wrapper conformance remain separate.",
         "evidence": []
       },
       "exclusion": null
@@ -12159,15 +12305,111 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/279/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "ReadBackError"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "CreateRequest"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "ReplaceAppIDs"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "ChangeAppIDs"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "LegacyAppIDs"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "ChangeLegacyAppIDs"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestCreateReadbackFailureRetainsCreationWithoutCleanup"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestValidationAndCancellationNeverDiscoverOrSend"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models_test.go",
+              "name": "TestListChangesPreserveReplacementDeltaAndEmpty"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models_test.go",
+              "name": "TestLegacyListChangesCleanOnlyMetadata"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyServiceContractsMapEveryPinnedSet"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyMutationsDoNotReplayUnderDefaultTransportPolicy"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/application_access_policy_test.go",
+              "name": "TestLabApplicationAccessPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "Service.Create"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "ReadBackError"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "CreateRequest"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "ReplaceAppIDs"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "ChangeAppIDs"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "LegacyAppIDs"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "ChangeLegacyAppIDs"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -12175,7 +12417,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Dedicated-identity policy reads returned HTTP 403. Successful resource CRUD and assignment qualification have not run; modern/legacy selection and exported-wrapper conformance remain separate.",
         "evidence": []
       },
       "exclusion": null
@@ -16970,15 +17212,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/412/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestCRUDAndAssignmentsAgainstPinnedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestValidationAndCancellationNeverDiscoverOrSend"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyServiceContractsMapEveryPinnedSet"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyMutationsDoNotReplayUnderDefaultTransportPolicy"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/application_access_policy_test.go",
+              "name": "TestLabApplicationAccessPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -16986,7 +17260,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Dedicated-identity policy reads returned HTTP 403. Successful resource CRUD and assignment qualification have not run; modern/legacy selection and exported-wrapper conformance remain separate.",
         "evidence": []
       },
       "exclusion": null
@@ -20810,15 +21084,95 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/523/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "UpdateRequest"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "ReplaceAppIDs"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "ChangeAppIDs"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "LegacyAppIDs"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models.go",
+              "name": "ChangeLegacyAppIDs"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestCRUDAndAssignmentsAgainstPinnedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_test.go",
+              "name": "TestValidationAndCancellationNeverDiscoverOrSend"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models_test.go",
+              "name": "TestListChangesPreserveReplacementDeltaAndEmpty"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/models_test.go",
+              "name": "TestLegacyListChangesCleanOnlyMetadata"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyServiceContractsMapEveryPinnedSet"
+            },
+            {
+              "file": "msteams/teams_admin_api/application_access_policy/service_contract_test.go",
+              "name": "TestPolicyMutationsDoNotReplayUnderDefaultTransportPolicy"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/application_access_policy_test.go",
+              "name": "TestLabApplicationAccessPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "UpdateRequest"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "ReplaceAppIDs"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "ChangeAppIDs"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "LegacyAppIDs"
+          },
+          {
+            "file": "msteams/teams_admin_api/application_access_policy/models.go",
+            "name": "ChangeLegacyAppIDs"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20826,7 +21180,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Dedicated-identity policy reads returned HTTP 403. Successful resource CRUD and assignment qualification have not run; modern/legacy selection and exported-wrapper conformance remain separate.",
         "evidence": []
       },
       "exclusion": null
