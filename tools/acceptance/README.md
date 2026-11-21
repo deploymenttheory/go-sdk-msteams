@@ -15,7 +15,9 @@ Runs serialize without automatically cancelling an in-flight mutation.
 The certificate/client-secret matrix executes the explicit selections in
 [suites.json](suites.json): authentication, 22 resource read tests, preflight,
 service discovery, three tenant access-outcome checks, and owned unassigned
-application-access, external-access and calling-policy CRUD. Selected tests and child cases must pass. Skips,
+application-access, external-access and calling-policy CRUD. Authentication jobs
+run one at a time because concurrent writes to the tenant's policy collection
+can conflict even when resource names differ. Selected tests and child cases must pass. Skips,
 missing tests, setup failures and unsuccessful cleanup fail CI. CRUD also requires
 all assertion milestones, two PowerShell comparisons for each selected mutation test and new cleaned journals.
 

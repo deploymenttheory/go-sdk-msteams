@@ -31,6 +31,13 @@ func (h callingPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (str
 		}
 	}
 	if found == "" {
+		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
+		if isHTTP(err, 404) {
+			return "", nil
+		}
+		if err != nil {
+			return "", err
+		}
 		return "", lab.ErrUnresolved
 	}
 	return found, nil
