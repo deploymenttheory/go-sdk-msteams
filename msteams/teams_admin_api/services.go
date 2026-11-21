@@ -5,6 +5,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	applicationaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
+	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
@@ -12,6 +13,7 @@ import (
 type Services struct {
 	scope                     *client.Scope
 	ApplicationAccessPolicies *applicationaccesspolicy.Service
+	TeamTemplates             *teamtemplate.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -20,7 +22,8 @@ func NewServices(session *client.Session) (*Services, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Services{scope: scope, ApplicationAccessPolicies: applicationaccesspolicy.NewService(configapi.New(scope))}, nil
+	backend := configapi.New(scope)
+	return &Services{scope: scope, ApplicationAccessPolicies: applicationaccesspolicy.NewService(backend), TeamTemplates: teamtemplate.NewService(backend)}, nil
 }
 
 // Scope returns the backend dependency shared by this collection's resources.

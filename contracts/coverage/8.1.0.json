@@ -7480,30 +7480,67 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/182/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceGetByID"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         },
         {
           "name": "GetViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/182/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceGetByID"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/team_template/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/team-template-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Actual secret/certificate List probes returned HTTP 403. Owned CRUD and pinned PowerShell acceptance remain not-run pending the lab Teams Administrator role approval.",
         "evidence": []
       },
       "exclusion": null
@@ -7519,23 +7556,45 @@
         {
           "name": "DefaultLocaleOverride",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/183/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceList"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/team_template/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/team-template-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Actual secret/certificate List probes returned HTTP 403. Owned CRUD and pinned PowerShell acceptance remain not-run pending the lab Teams Administrator role approval.",
         "evidence": []
       },
       "exclusion": null
@@ -15282,23 +15341,40 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/361/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/local.go",
+              "name": "NewHiddenMeetingTemplate"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/local_test.go",
+              "name": "TestHiddenBuildersHaveNoManagementOrAuthIO"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/team_template/local.go",
+            "name": "NewHiddenMeetingTemplate"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/team-template-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Pure local builder with no management endpoint. Offline execution is tested; no live tenant pass is asserted.",
         "evidence": []
       },
       "exclusion": null
@@ -15314,23 +15390,40 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/362/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/local.go",
+              "name": "NewHiddenTemplate"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/local_test.go",
+              "name": "TestHiddenBuildersHaveNoManagementOrAuthIO"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/team_template/local.go",
+            "name": "NewHiddenTemplate"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/team-template-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Pure local builder with no management endpoint. Offline execution is tested; no live tenant pass is asserted.",
         "evidence": []
       },
       "exclusion": null
@@ -16504,44 +16597,187 @@
         {
           "name": "New",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/397/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "Definition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "NewDefinition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "ParseDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceCreate"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition_test.go",
+              "name": "TestDefinitionMatchesPinnedModelObservations"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         },
         {
           "name": "NewExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/397/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "Definition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "NewDefinition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "ParseDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceCreate"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition_test.go",
+              "name": "TestDefinitionMatchesPinnedModelObservations"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         },
         {
           "name": "NewViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/397/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "Definition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "NewDefinition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "ParseDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceCreate"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition_test.go",
+              "name": "TestDefinitionMatchesPinnedModelObservations"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         },
         {
           "name": "NewViaIdentityExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/397/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.Create"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "Definition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "NewDefinition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "ParseDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceCreate"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition_test.go",
+              "name": "TestDefinitionMatchesPinnedModelObservations"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/team_template/service.go",
+            "name": "Service.Create"
+          },
+          {
+            "file": "msteams/teams_admin_api/team_template/definition.go",
+            "name": "Definition"
+          },
+          {
+            "file": "msteams/teams_admin_api/team_template/definition.go",
+            "name": "NewDefinition"
+          },
+          {
+            "file": "msteams/teams_admin_api/team_template/definition.go",
+            "name": "ParseDefinition"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/team-template-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Actual secret/certificate List probes returned HTTP 403. Owned CRUD and pinned PowerShell acceptance remain not-run pending the lab Teams Administrator role approval.",
         "evidence": []
       },
       "exclusion": null
@@ -20384,30 +20620,67 @@
         {
           "name": "Delete",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/506/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceDeleteByID"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         },
         {
           "name": "DeleteViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/506/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceDeleteByID"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/team_template/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/team-template-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Actual secret/certificate List probes returned HTTP 403. Owned CRUD and pinned PowerShell acceptance remain not-run pending the lab Teams Administrator role approval.",
         "evidence": []
       },
       "exclusion": null
@@ -26809,44 +27082,187 @@
         {
           "name": "Update",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/676/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "Definition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "NewDefinition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "ParseDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceUpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition_test.go",
+              "name": "TestDefinitionMatchesPinnedModelObservations"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         },
         {
           "name": "UpdateExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/676/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "Definition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "NewDefinition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "ParseDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceUpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition_test.go",
+              "name": "TestDefinitionMatchesPinnedModelObservations"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         },
         {
           "name": "UpdateViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/676/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "Definition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "NewDefinition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "ParseDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceUpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition_test.go",
+              "name": "TestDefinitionMatchesPinnedModelObservations"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         },
         {
           "name": "UpdateViaIdentityExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/676/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "Definition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "NewDefinition"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition.go",
+              "name": "ParseDefinition"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/team_template/service_test.go",
+              "name": "TestServiceUpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/team_template/definition_test.go",
+              "name": "TestDefinitionMatchesPinnedModelObservations"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/team_template_test.go",
+              "name": "TestLabTeamTemplateCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/team_template/service.go",
+            "name": "Service.UpdateByID"
+          },
+          {
+            "file": "msteams/teams_admin_api/team_template/definition.go",
+            "name": "Definition"
+          },
+          {
+            "file": "msteams/teams_admin_api/team_template/definition.go",
+            "name": "NewDefinition"
+          },
+          {
+            "file": "msteams/teams_admin_api/team_template/definition.go",
+            "name": "ParseDefinition"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/team-template-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Actual secret/certificate List probes returned HTTP 403. Owned CRUD and pinned PowerShell acceptance remain not-run pending the lab Teams Administrator role approval.",
         "evidence": []
       },
       "exclusion": null
