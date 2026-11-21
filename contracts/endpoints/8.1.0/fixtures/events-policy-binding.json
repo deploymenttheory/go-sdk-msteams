@@ -1,0 +1,5649 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "inherited-compiled-events-binding-and-filter",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Owned subclasses inherit actual Core properties/attributes/constructors. Synthetic Begin/Process/End replace original lifecycle solely to capture binder values and protected New/Set predicates. The no-scope Grant/Identity case alone invokes actual private ExecuteGrant with synthetic token/origin; default dispatch emits its source error and false result without HTTP. All other grant scopes are binding only. Actual protected Get filter invoked separately. Memory client/credential-refusing host restored; no original auth/scope/processing, credentials, discovery or network.",
+  "cases": [
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {},
+          "specified": null,
+          "settings": {}
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {},
+      "command": "Get-CsTeamsEventsPolicy",
+      "name": "list"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Filter",
+          "bound": {
+            "Filter": "Fixture*"
+          },
+          "specified": null,
+          "settings": {}
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Filter": "Fixture*"
+      },
+      "command": "Get-CsTeamsEventsPolicy",
+      "name": "filter"
+    },
+    {
+      "observed": {
+        "failure": "System.Management.Automation.ValidationMetadataException",
+        "had_errors": false,
+        "output": null,
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Filter": ""
+      },
+      "command": "Get-CsTeamsEventsPolicy",
+      "name": "empty-filter"
+    },
+    {
+      "observed": {
+        "failure": "System.Management.Automation.ValidationMetadataException",
+        "had_errors": false,
+        "output": null,
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": ""
+      },
+      "command": "Get-CsTeamsEventsPolicy",
+      "name": "empty-identity"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture"
+          },
+          "specified": false,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "identity-only"
+    },
+    {
+      "observed": {
+        "failure": "System.Management.Automation.ParameterBindingValidationException",
+        "had_errors": false,
+        "output": null,
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "empty-identity"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture"
+          },
+          "specified": false,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "identity-only"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Force": {
+              "IsPresent": false
+            },
+            "Identity": "Fixture"
+          },
+          "specified": false,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Force": false,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "force-only"
+    },
+    {
+      "observed": {
+        "failure": "System.Management.Automation.ValidationMetadataException",
+        "had_errors": false,
+        "output": null,
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "",
+        "Description": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "empty-identity"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Force": {
+              "IsPresent": false
+            },
+            "Identity": "Fixture"
+          },
+          "specified": null,
+          "settings": {}
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Force": false,
+        "Identity": "Fixture"
+      },
+      "command": "Remove-CsTeamsEventsPolicy",
+      "name": "force-false"
+    },
+    {
+      "observed": {
+        "failure": "System.Exception",
+        "had_errors": true,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {},
+          "no_scope_result": true
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {},
+      "command": "Grant-CsTeamsEventsPolicy",
+      "name": "no-scope"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "GrantToUser",
+          "bound": {
+            "Identity": "user/fixture"
+          },
+          "no_scope_result": false
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "user/fixture"
+      },
+      "command": "Grant-CsTeamsEventsPolicy",
+      "name": "user-omitted-name"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "GrantToUser",
+          "bound": {
+            "Identity": "user/fixture",
+            "PolicyName": null
+          },
+          "no_scope_result": false
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "user/fixture",
+        "PolicyName": null
+      },
+      "command": "Grant-CsTeamsEventsPolicy",
+      "name": "user-null-name"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "GrantToUser",
+          "bound": {
+            "Identity": "user/fixture",
+            "PolicyName": ""
+          },
+          "no_scope_result": false
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "user/fixture",
+        "PolicyName": ""
+      },
+      "command": "Grant-CsTeamsEventsPolicy",
+      "name": "user-empty-name"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "GrantToTenant",
+          "bound": {
+            "Global": {
+              "IsPresent": false
+            },
+            "Force": {
+              "IsPresent": false
+            },
+            "PolicyName": null
+          },
+          "no_scope_result": false
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Global": false,
+        "Force": false,
+        "PolicyName": null
+      },
+      "command": "Grant-CsTeamsEventsPolicy",
+      "name": "tenant-false-selector"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "GrantToTenant",
+          "bound": {
+            "Global": {
+              "IsPresent": true
+            },
+            "Force": {
+              "IsPresent": true
+            },
+            "PolicyName": "Fixture"
+          },
+          "no_scope_result": false
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Global": true,
+        "Force": true,
+        "PolicyName": "Fixture"
+      },
+      "command": "Grant-CsTeamsEventsPolicy",
+      "name": "tenant-true-force"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "GrantToGroup",
+          "bound": {
+            "Group": "group/fixture",
+            "PolicyName": null,
+            "Rank": 0
+          },
+          "no_scope_result": false
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Group": "group/fixture",
+        "PolicyName": null,
+        "Rank": 0
+      },
+      "command": "Grant-CsTeamsEventsPolicy",
+      "name": "group-rank-zero"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "GrantToGroup",
+          "bound": {
+            "Group": "group/fixture",
+            "PolicyName": "",
+            "Rank": -1
+          },
+          "no_scope_result": false
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Group": "group/fixture",
+        "PolicyName": "",
+        "Rank": -1
+      },
+      "command": "Grant-CsTeamsEventsPolicy",
+      "name": "group-rank-negative"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "GrantToGroup",
+          "bound": {
+            "Group": "group/fixture",
+            "PolicyName": "Fixture",
+            "Rank": 2
+          },
+          "no_scope_result": false
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Group": "group/fixture",
+        "PolicyName": "Fixture",
+        "Rank": 2
+      },
+      "command": "Grant-CsTeamsEventsPolicy",
+      "name": "group-rank-two"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowWebinars": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowWebinars": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowWebinars-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowWebinars": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": "",
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowWebinars": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowWebinars-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "EventAccessType": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "EventAccessType": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "EventAccessType-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "EventAccessType": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": "",
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "EventAccessType": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "EventAccessType-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowTownhalls": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowTownhalls": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowTownhalls-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowTownhalls": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": "",
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowTownhalls": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowTownhalls-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "TownhallEventAttendeeAccess": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "TownhallEventAttendeeAccess": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TownhallEventAttendeeAccess-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "TownhallEventAttendeeAccess": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": "",
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "TownhallEventAttendeeAccess": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TownhallEventAttendeeAccess-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "ExternalPresenterJoinVerification": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "ExternalPresenterJoinVerification": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "ExternalPresenterJoinVerification-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "ExternalPresenterJoinVerification": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": "",
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "ExternalPresenterJoinVerification": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "ExternalPresenterJoinVerification-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowEmailEditing": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowEmailEditing": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowEmailEditing-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowEmailEditing": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": "",
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowEmailEditing": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowEmailEditing-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedQuestionTypesInRegistrationForm": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowedQuestionTypesInRegistrationForm-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedQuestionTypesInRegistrationForm": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": "",
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedQuestionTypesInRegistrationForm": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowedQuestionTypesInRegistrationForm-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "AllowEventIntegrations": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "AllowEventIntegrations": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowEventIntegrations-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "AllowEventIntegrations": false
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": false,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "AllowEventIntegrations": false
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowEventIntegrations-false"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedWebinarTypesForRecordingPublish": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowedWebinarTypesForRecordingPublish-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedWebinarTypesForRecordingPublish": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": "",
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedWebinarTypesForRecordingPublish": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowedWebinarTypesForRecordingPublish-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedTownhallTypesForRecordingPublish": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowedTownhallTypesForRecordingPublish-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedTownhallTypesForRecordingPublish": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": "",
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedTownhallTypesForRecordingPublish": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowedTownhallTypesForRecordingPublish-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "RecordingForTownhall": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "RecordingForTownhall": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "RecordingForTownhall-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "RecordingForTownhall": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": "",
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "RecordingForTownhall": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "RecordingForTownhall-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "RecordingForWebinar": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "RecordingForWebinar": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "RecordingForWebinar-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "RecordingForWebinar": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": "",
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "RecordingForWebinar": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "RecordingForWebinar-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TranscriptionForTownhall": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TranscriptionForTownhall": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TranscriptionForTownhall-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TranscriptionForTownhall": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": "",
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TranscriptionForTownhall": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TranscriptionForTownhall-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TranscriptionForWebinar": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TranscriptionForWebinar": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TranscriptionForWebinar-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TranscriptionForWebinar": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": "",
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TranscriptionForWebinar": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TranscriptionForWebinar-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TownhallChatExperience": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TownhallChatExperience": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TownhallChatExperience-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TownhallChatExperience": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": "",
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TownhallChatExperience": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TownhallChatExperience-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "BroadcastPremiumApps": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "BroadcastPremiumApps": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "BroadcastPremiumApps-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "BroadcastPremiumApps": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": "",
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "BroadcastPremiumApps": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "BroadcastPremiumApps-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "UseMicrosoftECDN": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "UseMicrosoftECDN": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "UseMicrosoftECDN-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "UseMicrosoftECDN": false,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": false,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "UseMicrosoftECDN": false,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "UseMicrosoftECDN-false"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "ImmersiveEvents": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "ImmersiveEvents": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "ImmersiveEvents-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "ImmersiveEvents": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": "",
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "ImmersiveEvents": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "ImmersiveEvents-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "TownhallMaxResolution": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "TownhallMaxResolution": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TownhallMaxResolution-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "TownhallMaxResolution": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": "",
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "TownhallMaxResolution": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "TownhallMaxResolution-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "HighBitrateForTownhall": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "HighBitrateForTownhall": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "HighBitrateForTownhall-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "HighBitrateForTownhall": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": "",
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "HighBitrateForTownhall": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "HighBitrateForTownhall-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "BackroomChat": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "BackroomChat": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "BackroomChat-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "BackroomChat": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": "",
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "BackroomChat": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "BackroomChat-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "Registration": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "Registration": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "Registration-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "Registration": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": "",
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "Registration": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "Registration-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowEngagementReport": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowEngagementReport": null,
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowEngagementReport-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowEngagementReport": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": "",
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowEngagementReport": "",
+        "Identity": "Fixture"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "AllowEngagementReport-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "InfoShownInReportMode": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "InfoShownInReportMode": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "InfoShownInReportMode-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "InfoShownInReportMode": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": "",
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "InfoShownInReportMode": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "InfoShownInReportMode-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "Description": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "Description": null
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "Description-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "Description": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": ""
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "Description": ""
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "Description-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedWebinarTypesForRecordingPublish": "Future-AllowedWebinarTypesForRecordingPublish",
+            "AllowEmailEditing": "Future-AllowEmailEditing",
+            "AllowTownhalls": "Future-AllowTownhalls",
+            "TownhallEventAttendeeAccess": "Future-TownhallEventAttendeeAccess",
+            "BroadcastPremiumApps": "Future-BroadcastPremiumApps",
+            "AllowWebinars": "Future-AllowWebinars",
+            "EventAccessType": "Future-EventAccessType",
+            "RecordingForWebinar": "Future-RecordingForWebinar",
+            "AllowEventIntegrations": true,
+            "AllowedTownhallTypesForRecordingPublish": "Future-AllowedTownhallTypesForRecordingPublish",
+            "BackroomChat": "Future-BackroomChat",
+            "TownhallMaxResolution": "Future-TownhallMaxResolution",
+            "HighBitrateForTownhall": "Future-HighBitrateForTownhall",
+            "ImmersiveEvents": "Future-ImmersiveEvents",
+            "InfoShownInReportMode": "Future-InfoShownInReportMode",
+            "RecordingForTownhall": "Future-RecordingForTownhall",
+            "AllowedQuestionTypesInRegistrationForm": "Future-AllowedQuestionTypesInRegistrationForm",
+            "Description": "Future-Description",
+            "UseMicrosoftECDN": true,
+            "TranscriptionForWebinar": "Future-TranscriptionForWebinar",
+            "ExternalPresenterJoinVerification": "Future-ExternalPresenterJoinVerification",
+            "Identity": "Fixture",
+            "TownhallChatExperience": "Future-TownhallChatExperience",
+            "Registration": "Future-Registration",
+            "TranscriptionForTownhall": "Future-TranscriptionForTownhall",
+            "AllowEngagementReport": "Future-AllowEngagementReport"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": "Future-AllowWebinars",
+            "EventAccessType": "Future-EventAccessType",
+            "AllowTownhalls": "Future-AllowTownhalls",
+            "TownhallEventAttendeeAccess": "Future-TownhallEventAttendeeAccess",
+            "ExternalPresenterJoinVerification": "Future-ExternalPresenterJoinVerification",
+            "AllowEmailEditing": "Future-AllowEmailEditing",
+            "AllowedQuestionTypesInRegistrationForm": "Future-AllowedQuestionTypesInRegistrationForm",
+            "AllowEventIntegrations": true,
+            "AllowedWebinarTypesForRecordingPublish": "Future-AllowedWebinarTypesForRecordingPublish",
+            "AllowedTownhallTypesForRecordingPublish": "Future-AllowedTownhallTypesForRecordingPublish",
+            "RecordingForTownhall": "Future-RecordingForTownhall",
+            "RecordingForWebinar": "Future-RecordingForWebinar",
+            "TranscriptionForTownhall": "Future-TranscriptionForTownhall",
+            "TranscriptionForWebinar": "Future-TranscriptionForWebinar",
+            "TownhallChatExperience": "Future-TownhallChatExperience",
+            "BroadcastPremiumApps": "Future-BroadcastPremiumApps",
+            "UseMicrosoftECDN": true,
+            "ImmersiveEvents": "Future-ImmersiveEvents",
+            "TownhallMaxResolution": "Future-TownhallMaxResolution",
+            "HighBitrateForTownhall": "Future-HighBitrateForTownhall",
+            "BackroomChat": "Future-BackroomChat",
+            "Registration": "Future-Registration",
+            "AllowEngagementReport": "Future-AllowEngagementReport",
+            "InfoShownInReportMode": "Future-InfoShownInReportMode",
+            "Description": "Future-Description"
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedWebinarTypesForRecordingPublish": "Future-AllowedWebinarTypesForRecordingPublish",
+        "AllowEmailEditing": "Future-AllowEmailEditing",
+        "AllowTownhalls": "Future-AllowTownhalls",
+        "TownhallEventAttendeeAccess": "Future-TownhallEventAttendeeAccess",
+        "BroadcastPremiumApps": "Future-BroadcastPremiumApps",
+        "AllowWebinars": "Future-AllowWebinars",
+        "EventAccessType": "Future-EventAccessType",
+        "RecordingForWebinar": "Future-RecordingForWebinar",
+        "AllowEventIntegrations": true,
+        "AllowedTownhallTypesForRecordingPublish": "Future-AllowedTownhallTypesForRecordingPublish",
+        "BackroomChat": "Future-BackroomChat",
+        "TownhallMaxResolution": "Future-TownhallMaxResolution",
+        "HighBitrateForTownhall": "Future-HighBitrateForTownhall",
+        "ImmersiveEvents": "Future-ImmersiveEvents",
+        "InfoShownInReportMode": "Future-InfoShownInReportMode",
+        "RecordingForTownhall": "Future-RecordingForTownhall",
+        "AllowedQuestionTypesInRegistrationForm": "Future-AllowedQuestionTypesInRegistrationForm",
+        "Description": "Future-Description",
+        "UseMicrosoftECDN": true,
+        "TranscriptionForWebinar": "Future-TranscriptionForWebinar",
+        "ExternalPresenterJoinVerification": "Future-ExternalPresenterJoinVerification",
+        "Identity": "Fixture",
+        "TownhallChatExperience": "Future-TownhallChatExperience",
+        "Registration": "Future-Registration",
+        "TranscriptionForTownhall": "Future-TranscriptionForTownhall",
+        "AllowEngagementReport": "Future-AllowEngagementReport"
+      },
+      "command": "New-CsTeamsEventsPolicy",
+      "name": "all-settings"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowWebinars": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowWebinars": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowWebinars-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowWebinars": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": "",
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowWebinars": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowWebinars-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "EventAccessType": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "EventAccessType": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "EventAccessType-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "EventAccessType": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": "",
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "EventAccessType": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "EventAccessType-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowTownhalls": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowTownhalls": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowTownhalls-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowTownhalls": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": "",
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowTownhalls": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowTownhalls-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "TownhallEventAttendeeAccess": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "TownhallEventAttendeeAccess": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TownhallEventAttendeeAccess-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "TownhallEventAttendeeAccess": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": "",
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "TownhallEventAttendeeAccess": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TownhallEventAttendeeAccess-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "ExternalPresenterJoinVerification": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "ExternalPresenterJoinVerification": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "ExternalPresenterJoinVerification-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "ExternalPresenterJoinVerification": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": "",
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "ExternalPresenterJoinVerification": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "ExternalPresenterJoinVerification-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowEmailEditing": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowEmailEditing": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowEmailEditing-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowEmailEditing": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": "",
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowEmailEditing": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowEmailEditing-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedQuestionTypesInRegistrationForm": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowedQuestionTypesInRegistrationForm-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedQuestionTypesInRegistrationForm": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": "",
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedQuestionTypesInRegistrationForm": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowedQuestionTypesInRegistrationForm-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "AllowEventIntegrations": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "AllowEventIntegrations": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowEventIntegrations-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "AllowEventIntegrations": false
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": false,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "AllowEventIntegrations": false
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowEventIntegrations-false"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedWebinarTypesForRecordingPublish": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowedWebinarTypesForRecordingPublish-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedWebinarTypesForRecordingPublish": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": "",
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedWebinarTypesForRecordingPublish": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowedWebinarTypesForRecordingPublish-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedTownhallTypesForRecordingPublish": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowedTownhallTypesForRecordingPublish-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedTownhallTypesForRecordingPublish": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": "",
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedTownhallTypesForRecordingPublish": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowedTownhallTypesForRecordingPublish-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "RecordingForTownhall": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "RecordingForTownhall": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "RecordingForTownhall-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "RecordingForTownhall": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": "",
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "RecordingForTownhall": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "RecordingForTownhall-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "RecordingForWebinar": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "RecordingForWebinar": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "RecordingForWebinar-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "RecordingForWebinar": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": "",
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "RecordingForWebinar": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "RecordingForWebinar-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TranscriptionForTownhall": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TranscriptionForTownhall": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TranscriptionForTownhall-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TranscriptionForTownhall": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": "",
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TranscriptionForTownhall": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TranscriptionForTownhall-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TranscriptionForWebinar": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TranscriptionForWebinar": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TranscriptionForWebinar-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TranscriptionForWebinar": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": "",
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TranscriptionForWebinar": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TranscriptionForWebinar-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TownhallChatExperience": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TownhallChatExperience": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TownhallChatExperience-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "TownhallChatExperience": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": "",
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "TownhallChatExperience": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TownhallChatExperience-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "BroadcastPremiumApps": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "BroadcastPremiumApps": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "BroadcastPremiumApps-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "BroadcastPremiumApps": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": "",
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "BroadcastPremiumApps": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "BroadcastPremiumApps-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "UseMicrosoftECDN": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "UseMicrosoftECDN": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "UseMicrosoftECDN-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "UseMicrosoftECDN": false,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": false,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "UseMicrosoftECDN": false,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "UseMicrosoftECDN-false"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "ImmersiveEvents": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "ImmersiveEvents": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "ImmersiveEvents-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "ImmersiveEvents": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": "",
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "ImmersiveEvents": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "ImmersiveEvents-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "TownhallMaxResolution": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "TownhallMaxResolution": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TownhallMaxResolution-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "TownhallMaxResolution": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": "",
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "TownhallMaxResolution": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "TownhallMaxResolution-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "HighBitrateForTownhall": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "HighBitrateForTownhall": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "HighBitrateForTownhall-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "HighBitrateForTownhall": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": "",
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "HighBitrateForTownhall": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "HighBitrateForTownhall-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "BackroomChat": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "BackroomChat": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "BackroomChat-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "BackroomChat": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": "",
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "BackroomChat": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "BackroomChat-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "Registration": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "Registration": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "Registration-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "Registration": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": "",
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "Registration": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "Registration-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowEngagementReport": null,
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowEngagementReport": null,
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowEngagementReport-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowEngagementReport": "",
+            "Identity": "Fixture"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": "",
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowEngagementReport": "",
+        "Identity": "Fixture"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "AllowEngagementReport-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "InfoShownInReportMode": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "InfoShownInReportMode": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "InfoShownInReportMode-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "InfoShownInReportMode": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": "",
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "InfoShownInReportMode": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "InfoShownInReportMode-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "Description": null
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": null
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "Description": null
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "Description-null"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "Identity": "Fixture",
+            "Description": ""
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": null,
+            "EventAccessType": null,
+            "AllowTownhalls": null,
+            "TownhallEventAttendeeAccess": null,
+            "ExternalPresenterJoinVerification": null,
+            "AllowEmailEditing": null,
+            "AllowedQuestionTypesInRegistrationForm": null,
+            "AllowEventIntegrations": null,
+            "AllowedWebinarTypesForRecordingPublish": null,
+            "AllowedTownhallTypesForRecordingPublish": null,
+            "RecordingForTownhall": null,
+            "RecordingForWebinar": null,
+            "TranscriptionForTownhall": null,
+            "TranscriptionForWebinar": null,
+            "TownhallChatExperience": null,
+            "BroadcastPremiumApps": null,
+            "UseMicrosoftECDN": null,
+            "ImmersiveEvents": null,
+            "TownhallMaxResolution": null,
+            "HighBitrateForTownhall": null,
+            "BackroomChat": null,
+            "Registration": null,
+            "AllowEngagementReport": null,
+            "InfoShownInReportMode": null,
+            "Description": ""
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "Identity": "Fixture",
+        "Description": ""
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "Description-empty"
+    },
+    {
+      "observed": {
+        "failure": null,
+        "had_errors": false,
+        "output": {
+          "parameter_set": "Identity",
+          "bound": {
+            "AllowedWebinarTypesForRecordingPublish": "Future-AllowedWebinarTypesForRecordingPublish",
+            "AllowEmailEditing": "Future-AllowEmailEditing",
+            "AllowTownhalls": "Future-AllowTownhalls",
+            "TownhallEventAttendeeAccess": "Future-TownhallEventAttendeeAccess",
+            "BroadcastPremiumApps": "Future-BroadcastPremiumApps",
+            "AllowWebinars": "Future-AllowWebinars",
+            "EventAccessType": "Future-EventAccessType",
+            "RecordingForWebinar": "Future-RecordingForWebinar",
+            "AllowEventIntegrations": true,
+            "AllowedTownhallTypesForRecordingPublish": "Future-AllowedTownhallTypesForRecordingPublish",
+            "BackroomChat": "Future-BackroomChat",
+            "TownhallMaxResolution": "Future-TownhallMaxResolution",
+            "HighBitrateForTownhall": "Future-HighBitrateForTownhall",
+            "ImmersiveEvents": "Future-ImmersiveEvents",
+            "InfoShownInReportMode": "Future-InfoShownInReportMode",
+            "RecordingForTownhall": "Future-RecordingForTownhall",
+            "AllowedQuestionTypesInRegistrationForm": "Future-AllowedQuestionTypesInRegistrationForm",
+            "Description": "Future-Description",
+            "UseMicrosoftECDN": true,
+            "TranscriptionForWebinar": "Future-TranscriptionForWebinar",
+            "ExternalPresenterJoinVerification": "Future-ExternalPresenterJoinVerification",
+            "Identity": "Fixture",
+            "TownhallChatExperience": "Future-TownhallChatExperience",
+            "Registration": "Future-Registration",
+            "TranscriptionForTownhall": "Future-TranscriptionForTownhall",
+            "AllowEngagementReport": "Future-AllowEngagementReport"
+          },
+          "specified": true,
+          "settings": {
+            "AllowWebinars": "Future-AllowWebinars",
+            "EventAccessType": "Future-EventAccessType",
+            "AllowTownhalls": "Future-AllowTownhalls",
+            "TownhallEventAttendeeAccess": "Future-TownhallEventAttendeeAccess",
+            "ExternalPresenterJoinVerification": "Future-ExternalPresenterJoinVerification",
+            "AllowEmailEditing": "Future-AllowEmailEditing",
+            "AllowedQuestionTypesInRegistrationForm": "Future-AllowedQuestionTypesInRegistrationForm",
+            "AllowEventIntegrations": true,
+            "AllowedWebinarTypesForRecordingPublish": "Future-AllowedWebinarTypesForRecordingPublish",
+            "AllowedTownhallTypesForRecordingPublish": "Future-AllowedTownhallTypesForRecordingPublish",
+            "RecordingForTownhall": "Future-RecordingForTownhall",
+            "RecordingForWebinar": "Future-RecordingForWebinar",
+            "TranscriptionForTownhall": "Future-TranscriptionForTownhall",
+            "TranscriptionForWebinar": "Future-TranscriptionForWebinar",
+            "TownhallChatExperience": "Future-TownhallChatExperience",
+            "BroadcastPremiumApps": "Future-BroadcastPremiumApps",
+            "UseMicrosoftECDN": true,
+            "ImmersiveEvents": "Future-ImmersiveEvents",
+            "TownhallMaxResolution": "Future-TownhallMaxResolution",
+            "HighBitrateForTownhall": "Future-HighBitrateForTownhall",
+            "BackroomChat": "Future-BackroomChat",
+            "Registration": "Future-Registration",
+            "AllowEngagementReport": "Future-AllowEngagementReport",
+            "InfoShownInReportMode": "Future-InfoShownInReportMode",
+            "Description": "Future-Description"
+          }
+        },
+        "sends": 0,
+        "tokens": 0
+      },
+      "arguments": {
+        "AllowedWebinarTypesForRecordingPublish": "Future-AllowedWebinarTypesForRecordingPublish",
+        "AllowEmailEditing": "Future-AllowEmailEditing",
+        "AllowTownhalls": "Future-AllowTownhalls",
+        "TownhallEventAttendeeAccess": "Future-TownhallEventAttendeeAccess",
+        "BroadcastPremiumApps": "Future-BroadcastPremiumApps",
+        "AllowWebinars": "Future-AllowWebinars",
+        "EventAccessType": "Future-EventAccessType",
+        "RecordingForWebinar": "Future-RecordingForWebinar",
+        "AllowEventIntegrations": true,
+        "AllowedTownhallTypesForRecordingPublish": "Future-AllowedTownhallTypesForRecordingPublish",
+        "BackroomChat": "Future-BackroomChat",
+        "TownhallMaxResolution": "Future-TownhallMaxResolution",
+        "HighBitrateForTownhall": "Future-HighBitrateForTownhall",
+        "ImmersiveEvents": "Future-ImmersiveEvents",
+        "InfoShownInReportMode": "Future-InfoShownInReportMode",
+        "RecordingForTownhall": "Future-RecordingForTownhall",
+        "AllowedQuestionTypesInRegistrationForm": "Future-AllowedQuestionTypesInRegistrationForm",
+        "Description": "Future-Description",
+        "UseMicrosoftECDN": true,
+        "TranscriptionForWebinar": "Future-TranscriptionForWebinar",
+        "ExternalPresenterJoinVerification": "Future-ExternalPresenterJoinVerification",
+        "Identity": "Fixture",
+        "TownhallChatExperience": "Future-TownhallChatExperience",
+        "Registration": "Future-Registration",
+        "TranscriptionForTownhall": "Future-TranscriptionForTownhall",
+        "AllowEngagementReport": "Future-AllowEngagementReport"
+      },
+      "command": "Set-CsTeamsEventsPolicy",
+      "name": "all-settings"
+    }
+  ],
+  "filters": [
+    {
+      "observed": {
+        "identities": [
+          "global",
+          "Tag:Fixture",
+          "Global",
+          " ",
+          "Global/fixture"
+        ],
+        "sends": 0,
+        "tokens": 0
+      },
+      "pattern": ""
+    },
+    {
+      "observed": {
+        "identities": [
+          "Tag:Fixture"
+        ],
+        "sends": 0,
+        "tokens": 0
+      },
+      "pattern": "Fixture*"
+    },
+    {
+      "observed": {
+        "identities": [
+          " "
+        ],
+        "sends": 0,
+        "tokens": 0
+      },
+      "pattern": " "
+    },
+    {
+      "observed": {
+        "identities": [
+          "global",
+          "Global"
+        ],
+        "sends": 0,
+        "tokens": 0
+      },
+      "pattern": "Global"
+    },
+    {
+      "observed": {
+        "identities": [
+          "Global/fixture"
+        ],
+        "sends": 0,
+        "tokens": 0
+      },
+      "pattern": "Global/*"
+    }
+  ]
+}

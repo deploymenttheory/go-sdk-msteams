@@ -6599,31 +6599,92 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/121/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/filter_test.go",
+              "name": "TestEventsPolicyFiltersMatchCapturedSource"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/binding_test.go",
+              "name": "TestEventsPolicyCapturedCompiledBindings"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/events_policy_test.go",
+              "name": "TestLabEventsPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/121/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service_test.go",
+              "name": "TestEventsPolicyPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/binding_test.go",
+              "name": "TestEventsPolicyCapturedCompiledBindings"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/events_policy_test.go",
+              "name": "TestLabEventsPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/events-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-binding.json"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21; no writes or privilege changes ran. Successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/events-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -13695,45 +13756,164 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/244/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service_test.go",
+              "name": "TestEventsPolicyPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/binding_test.go",
+              "name": "TestEventsPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/composition_test.go",
+              "name": "TestEventsPolicyCompiledGrantRetainsExplicitZeroAndSignedRank"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/failure_test.go",
+              "name": "TestEventsPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/244/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service_test.go",
+              "name": "TestEventsPolicyPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/binding_test.go",
+              "name": "TestEventsPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/failure_test.go",
+              "name": "TestEventsPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/244/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+              "name": "Service.AssignUser"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service_test.go",
+              "name": "TestEventsPolicyPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/binding_test.go",
+              "name": "TestEventsPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/failure_test.go",
+              "name": "TestEventsPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/244/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/filter_test.go",
+              "name": "TestEventsPolicyParameterlessGrantHasNoDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/binding_test.go",
+              "name": "TestEventsPolicyCapturedCompiledBindings"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+            "name": "Service.AssignUser"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/assignment.go",
+            "name": "Service.Assign"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/events-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-binding.json"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21; no writes or privilege changes ran. Successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/events-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -19197,24 +19377,53 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/358/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service_test.go",
+              "name": "TestEventsPolicyPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/binding_test.go",
+              "name": "TestEventsPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/failure_test.go",
+              "name": "TestEventsPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/events-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-binding.json"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21; no writes or privilege changes ran. Successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/events-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -23834,24 +24043,53 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/470/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service_test.go",
+              "name": "TestEventsPolicyPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/binding_test.go",
+              "name": "TestEventsPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/failure_test.go",
+              "name": "TestEventsPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/events-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-binding.json"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21; no writes or privilege changes ran. Successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/events-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -29327,24 +29565,65 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/594/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/service_test.go",
+              "name": "TestEventsPolicyPinnedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/binding_test.go",
+              "name": "TestEventsPolicyCapturedCompiledBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/composition_test.go",
+              "name": "TestEventsPolicySetRetainsPreparationAndAcceptance"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_events_policy/failure_test.go",
+              "name": "TestEventsPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_events_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/policies/events-policy-evidence.md",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-provider.json",
+          "contracts/endpoints/8.1.0/fixtures/events-policy-binding.json"
+        ]
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Actual compiled Global resource reads returned HTTP 403 with client-secret and certificate authentication on 2026-11-21; no writes or privilege changes ran. Successful tenant CRUD/grants remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/events-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
