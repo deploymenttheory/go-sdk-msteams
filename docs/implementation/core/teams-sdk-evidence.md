@@ -5,8 +5,8 @@ create-from-group, archive/unarchive, picture upload and resumable operation
 handling are implemented under `sdk.GraphAPI.Teams`. Supporting group CRUD is
 implemented under `sdk.GraphAPI.Groups`. New-Team creation/migration, Get-Team
 identity/enriched listing, Set-Team and Set-TeamArchivedState compositions are implemented
-under `sdk.GraphAPI.TeamManagement`; remaining
-compositions and successful tenant acceptance are required.
+under `sdk.GraphAPI.TeamManagement`. Command mappings and contract review are in
+progress; successful tenant acceptance remains outstanding.
 This does not close [CORE-28 / #81](https://github.com/deploymenttheory/go-sdk-msteams/issues/81)
 or promote its command coverage.
 
@@ -111,6 +111,23 @@ Additional offline tests cover batch width, mixed/malformed outcomes, statuses,
 normalized diagnostics, exact filtering, throttles, deadlines and client close.
 No live calls were made. See the [listing notes](../../../msteams/graph_api/team_management/list_api_docs.md).
 
+Remove-Team maps to `Teams.DeleteByID`, which deletes only through the backing
+group route. Set-TeamPicture maps to `Teams.UploadPicture`. Both now exercise the
+immutable source-derived fixture through the real root client and shared runner,
+with additional denied-response cases. Reports `team-delete-service.json` and
+`team-picture-service.json` retain only structural metadata. The picture fixture's
+original synthetic bytes are deliberately not a valid image: the test proves
+exact transfer, JPEG content type and single source close, without claiming that
+Graph accepts those bytes as an image. The shared binary assertion prerequisite
+is separate from production transfer behavior. Existing native tests additionally
+cover the size bound, local validation, cancellation and mutation non-replay.
+
+All six assigned commands and eight parameter sets now link their actual Go
+symbols and tests in the coverage ledger. Implementation remains `in-progress`,
+contract status remains `metadata-only`, and live status remains `not-run` while
+the candidate evidence and remaining acceptance work are reviewed. These links
+do not infer a contract pass or tenant success from green CI alone.
+
 The primary native Giphy payload uses the documented string enum. A test first
 requires the pinned artifact to retain its observed numeric 1, then records the
 explicit native string difference without rewriting the capture. Unknown future
@@ -158,7 +175,7 @@ No response bodies, tenant identifiers, tokens or credentials were recorded in
 the repository. This verifies denial handling; it does not validate successful
 team CRUD, operation completion, provisioning, archive transitions or photos.
 
-Before CORE-28 can close, finish remaining command evidence and journalled tenant
+Before CORE-28 can close, finish reviewing command evidence and journalled tenant
 acceptance across the [existing decision record](core-composition-evidence.md),
-including removal/picture mappings and successful resource/composition scenarios.
+including successful resource/composition scenarios.
 Successful lab validation and least-privilege access setup remain outstanding.

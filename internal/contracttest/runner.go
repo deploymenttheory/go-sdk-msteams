@@ -44,12 +44,15 @@ type Mapping struct {
 // WireRequest keeps the fully escaped path and repeated query values exact.
 // Headers are explicit assertions; transport-owned headers can remain unspecified.
 // A nil JSON body means no body, which differs from JSON null, {}, or [].
+// Binary asserts exact bytes instead of JSON structure. JSON and Binary are
+// mutually exclusive; nil for both requires an absent or zero-length body.
 type WireRequest struct {
 	Method   string
 	URL      string
 	Audience string
 	Headers  http.Header
 	JSON     json.RawMessage
+	Binary   []byte
 }
 
 // Reply is a synthetic HTTP response. Bodies may deliberately be malformed.
@@ -226,6 +229,9 @@ func validCase(c Case) bool {
 		}
 	}
 	for _, step := range c.Steps {
+		if step.Request.JSON != nil && step.Request.Binary != nil {
+			return false
+		}
 		u, err := url.Parse(step.Request.URL)
 		if err != nil || u.Scheme != "https" || u.Host == "" || u.User != nil || u.Fragment != "" {
 			return false
@@ -339,6 +345,12 @@ func compareRequest(want WireRequest, got *http.Request, prefix string) []Differ
 		if err != nil || len(raw) > client.MaxResponseBytes {
 			return append(differences, Difference{Path: prefix + ".body", Kind: "read-failed"})
 		}
+	}
+	if want.Binary != nil {
+		if !slices.Equal(want.Binary, raw) {
+			differences = append(differences, Difference{Path: prefix + ".body", Kind: "different-value"})
+		}
+		return differences
 	}
 	if want.JSON == nil {
 		if len(raw) != 0 {
