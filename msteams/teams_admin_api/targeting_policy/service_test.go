@@ -29,7 +29,7 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
 }
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
 	c.Family, c.Source = "targeting_policy", "contracts/endpoints/8.1.0/fixtures/generated-request-dispatch.json"
 	if c.Scope == "" {
@@ -39,6 +39,7 @@ func run(t *testing.T, c contracttest.Case) {
 	if err != nil || !r.Passed() {
 		t.Fatalf("targeting policy differs: setup=%v differences=%+v", err, r.Differences())
 	}
+	return r
 }
 
 func TestPinnedModernResourceRoutes(t *testing.T) {
@@ -61,6 +62,7 @@ func TestPinnedModernResourceRoutes(t *testing.T) {
 		t.Fatal("invalid pinned request fixture")
 	}
 	seen := 0
+	var results []contracttest.Result
 	for _, f := range fixtures.Cases {
 		if !strings.HasPrefix(f.Name, "targeting-policy-") {
 			continue
@@ -86,7 +88,7 @@ func TestPinnedModernResourceRoutes(t *testing.T) {
 			if f.Response != "" {
 				want.JSON = json.RawMessage(f.Response)
 			}
-			run(t, contracttest.Case{Name: f.Name, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(), wire(f.Method, u.RequestURI(), command, body, f.Status, f.Response)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			results = append(results, run(t, contracttest.Case{Name: f.Name, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(), wire(f.Method, u.RequestURI(), command, body, f.Status, f.Response)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TargetingPolicies
 				switch f.Name {
 				case "targeting-policy-list":
@@ -103,12 +105,13 @@ func TestPinnedModernResourceRoutes(t *testing.T) {
 					r, err := s.DeleteByIdentity(ctx, "Global")
 					return contracttest.Observation{Response: r, Err: err}
 				}
-			}, Want: want})
+			}, Want: want}))
 		})
 	}
 	if seen != 4 {
 		t.Fatal("pinned policy primitive count changed")
 	}
+	evidence(t, results)
 }
 
 func TestSparseIdentityUpdateAndOpenValues(t *testing.T) {
@@ -156,10 +159,11 @@ func TestCanceledPolicyDoesNotDiscoverOrAcquireCredentials(t *testing.T) {
 
 func TestTargetingFilterIsLocalAndTagAware(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local-tag-filter", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsTargetingPolicy", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{discovery(), wire("GET", collection, "Get-CsTeamsTargetingPolicy", nil, 200, `[{"Identity":"Global"},{"Identity":"Tag:Fixture One"},{"Identity":"Fixture Two"},{"Identity":"Tag:Other"}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	result := run(t, contracttest.Case{Name: "local-tag-filter", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsTargetingPolicy", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{discovery(), wire("GET", collection, "Get-CsTeamsTargetingPolicy", nil, 200, `[{"Identity":"Global"},{"Identity":"Tag:Fixture One"},{"Identity":"Fixture Two"},{"Identity":"Tag:Other"}]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, err := sdk.TeamsAdminAPI.TargetingPolicies.ListFiltered(ctx, "fIX*")
 		return contracttest.Observation{Value: v, Response: r, Err: err}
 	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`[{"Identity":"Tag:Fixture One"},{"Identity":"Fixture Two"}]`)}})
+	evidence(t, []contracttest.Result{result})
 	run(t, contracttest.Case{Name: "bad-filter-local", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, err := sdk.TeamsAdminAPI.TargetingPolicies.ListFiltered(ctx, "[z-a]")
 		return contracttest.Observation{Value: v, Response: r, Err: err}

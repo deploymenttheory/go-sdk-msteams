@@ -7051,26 +7051,83 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/168/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/filter.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestPinnedModernResourceRoutes"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestTargetingFilterIsLocalAndTagAware"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/targeting_test.go",
+              "name": "TestLabTargetingPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/168/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestPinnedModernResourceRoutes"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestTargetingFilterIsLocalAndTagAware"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/targeting_test.go",
+              "name": "TestLabTargetingPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/targeting_policy/filter.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/targeting-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -9483,19 +9540,65 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/218/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service.go",
+              "name": "Service.GetStatus"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+              "name": "V1Service.GetOperation"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+              "name": "V2Service.GetOperation"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service_test.go",
+              "name": "TestNativeStatusRoutesAndIndependentHierarchyPrimitives"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/projection_test.go",
+              "name": "TestStatusProjectionMatchesPinnedCLRStateConstructors"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/projection_test.go",
+              "name": "TestStatusErrorProjectionMatchesPinnedCLRConstructors"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/targeting_test.go",
+              "name": "TestLabTargetingHierarchyStatusReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/service.go",
+            "name": "Service.GetStatus"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+            "name": "V1Service.GetOperation"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+            "name": "V2Service.GetOperation"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/targeting-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -20711,19 +20814,40 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/496/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestPinnedModernResourceRoutes"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestTargetingFailuresDoNotInventSuccessOrReplayWrites"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/targeting_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/targeting-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -21738,19 +21862,56 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/520/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service.go",
+              "name": "Service.Delete"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+              "name": "V1Service.Delete"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+              "name": "V2Service.Delete"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service_test.go",
+              "name": "TestNativeStatusRoutesAndIndependentHierarchyPrimitives"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/failure_test.go",
+              "name": "TestHierarchyDeletionFailuresAreNotReplayed"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/service.go",
+            "name": "Service.Delete"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+            "name": "V1Service.Delete"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+            "name": "V2Service.Delete"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/targeting-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -25805,19 +25966,48 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/631/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestPinnedModernResourceRoutes"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestSparseIdentityUpdateAndOpenValues"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/targeting_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_policy/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/targeting-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -27122,19 +27312,76 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/661/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service.go",
+              "name": "Service.UploadCSV"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+              "name": "V1Service.ImportCSV"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+              "name": "V2Service.GetHierarchy"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+              "name": "V2Service.CreateHierarchy"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+              "name": "V2Service.ImportCSV"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service_test.go",
+              "name": "TestNativeImportsStreamOriginalCSVWithoutPreparation"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service_test.go",
+              "name": "TestUploadCompositionCreatesOnlyAfter404AndRetainsPartialState"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/failure_test.go",
+              "name": "TestHierarchyOptionsProfilesAndSourceValidationAreLocal"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/service.go",
+            "name": "Service.UploadCSV"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+            "name": "V1Service.ImportCSV"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+            "name": "V2Service.GetHierarchy"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+            "name": "V2Service.CreateHierarchy"
+          },
+          {
+            "file": "msteams/teams_admin_api/targeting_hierarchy/native.go",
+            "name": "V2Service.ImportCSV"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/core/targeting-sdk-evidence.md"
+        ]
       },
       "live": {
         "status": "not-run",
