@@ -1,7 +1,7 @@
 # Call park policy: selected modern contract
 
-POL-36 / issue #109, MicrosoftTeams 8.1.0, checked 2026-11-21. This source
-checkpoint precedes native implementation and makes no completed command or
+POL-36 / issue #109, MicrosoftTeams 8.1.0, checked 2026-11-21. The source
+checkpoint below supports native implementation and makes no completed command or
 tenant qualification claim.
 
 ## Export and transport selection
@@ -98,8 +98,23 @@ Mutations must not be replayed. New submission must survive a failed read-back.
 
 ## Outstanding qualification
 
-Native service/root wiring, typed models, examples, ledger mappings and opt-in
-lab support follow this checkpoint. Successful authorization, cloud/flight
-deployment, pickup/timeout rules, CRUD read-back/cleanup, grant completion and
-effective call parking remain open. No successful tenant read, mutation,
-privilege change or pinned PowerShell/Go comparison is claimed.
+Native CRUD/list/filter, create/read-back, sparse/default Global update, scoped
+grants, raw-preserving scalar models, root wiring, examples, exact ledger mappings
+and strict opt-in lab support accompany this evidence. All generated cases run
+in application/delegated synthetic modes. Sixteen successful isolated binding
+outputs are checked against native requests; source null-Boolean/overflow failures
+have no corresponding native typed value. Tests preserve Int64 limits/large
+values, field presence, future shapes, partial submission/acceptance and no replay.
+
+Actual client-secret and certificate Global reads returned resource 403 on
+2026-11-21. Filter/list and optional pinned comparison were not reached. No
+tenant state changed. Successful authorization, cloud/flight deployment,
+pickup/timeout rules, CRUD read-back/cleanup, grant completion and effective call
+parking remain open. No privilege change or successful live qualification is
+claimed; the ledger stays in-progress/metadata-only.
+
+The full offline race/shuffle suite, SDK/examples build, vet, ledger validation
+and its ten tests passed on 2026-11-21. All three source captures executed
+successfully; they and the optional read oracle passed PowerShell syntax checks.
+Exact-revision structural reports and cross-platform CI evidence are reviewed
+separately. These checks do not establish live command parity.

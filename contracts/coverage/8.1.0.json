@@ -5620,30 +5620,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/108/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service_test.go",
+              "name": "TestCallParkModernFilterAndWhitespace"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_park_policy_test.go",
+              "name": "TestLabCallParkPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/108/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service_test.go",
+              "name": "TestCallParkPinnedGeneratedRequests"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_park_policy_test.go",
+              "name": "TestLabCallParkPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "status": "unavailable",
+        "reason": "On 2026-11-21, opt-in modern call park policy Global reads returned resource HTTP 403 using the dedicated lab SPN in client-secret and certificate modes. Filter/list and optional pinned PowerShell comparison were not reached. No policy, parking setting, assignment, role or consent changed. Successful authorization/cloud/flight qualification remains open.",
         "evidence": []
       },
       "exclusion": null
@@ -12491,29 +12538,112 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/236/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service_test.go",
+              "name": "TestCallParkPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/failure_test.go",
+              "name": "TestCallParkMutationErrorsNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/phase_test.go",
+              "name": "TestCallParkDiscoveryCannotEstablishAssignmentAcceptance"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/composition_test.go",
+              "name": "TestCallParkGroupAcceptanceSurvivesOnlyActualPostResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/composition_test.go",
+              "name": "TestCallParkGrantRankAndSparseGlobalComposition"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/236/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service_test.go",
+              "name": "TestCallParkPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/failure_test.go",
+              "name": "TestCallParkMutationErrorsNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/236/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service_test.go",
+              "name": "TestCallParkPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/failure_test.go",
+              "name": "TestCallParkMutationErrorsNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -17763,15 +17893,46 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/345/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service_test.go",
+              "name": "TestCallParkPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/composition_test.go",
+              "name": "TestCallParkCreateRetainsSubmissionOnReadBackFailure"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/binding_test.go",
+              "name": "TestCallParkNativeRequestsMatchSuccessfulIsolatedBinding"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -22373,15 +22534,34 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/460/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service_test.go",
+              "name": "TestCallParkPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/failure_test.go",
+              "name": "TestCallParkMutationErrorsNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27473,15 +27653,46 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/581/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/service_test.go",
+              "name": "TestCallParkPinnedGeneratedRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/composition_test.go",
+              "name": "TestCallParkGrantRankAndSparseGlobalComposition"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_call_park_policy/binding_test.go",
+              "name": "TestCallParkNativeRequestsMatchSuccessfulIsolatedBinding"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_call_park_policy/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
