@@ -54,6 +54,9 @@ jobs:
           name: offline-contracts-${{ matrix.os }}
           path: |
             ${{ runner.temp }}/go-test-artifacts/**/core-primitives.json
+            ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-list-service.json
+            ${{ runner.temp }}/go-test-artifacts/**/application-access-policy-failure-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-member-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-user-add-service.json
             ${{ runner.temp }}/go-test-artifacts/**/team-user-list-service.json
