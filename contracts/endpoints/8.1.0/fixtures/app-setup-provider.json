@@ -1,0 +1,603 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "captured_at": "2026-11-21",
+  "qualification": "offline-app-setup-provider",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "assemblies": [
+    {
+      "sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll"
+    },
+    {
+      "sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "path": "netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll"
+    },
+    {
+      "sha256": "477bb287ab3b0fddfcbdad6db0ecdd7e7df590a6fe2dec066c6b75e9ed7e69af",
+      "path": "netcoreapp3.1/Microsoft.Teams.ConfigAPI.CmdletHostContract.dll"
+    }
+  ],
+  "host_powershell_version": "7.6.6",
+  "stage": "Pinned direct HttpRequestHelper, synthetic InvocationInfo, credential-refusing host and memory sender. Private client/version/host replaced/restored. No command constructor/lifecycle, credentials, discovery or network.",
+  "cases": [
+    {
+      "response": "{\"Identity\":\"fixture-response\",\"AllowSideLoading\":false,\"AllowUserPinning\":null,\"AppPresetList\":[]}",
+      "policy_name": null,
+      "status": 200,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppSetupPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "read",
+      "fields": "none",
+      "force": false,
+      "operation": "read"
+    },
+    {
+      "response": "[]",
+      "policy_name": null,
+      "status": 200,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": false,
+        "DecodedNull": false,
+        "DecodedType": "System.Collections.Generic.List`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppSetupPolicy, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "list",
+      "fields": "none",
+      "force": false,
+      "operation": "list"
+    },
+    {
+      "response": "{}",
+      "policy_name": null,
+      "status": 201,
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"AppPresetList\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AppPresetList\"\n    }\n  ],\n  \"PinnedAppBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedAppBarApps\",\n      \"Order\": 9007199254740993\n    }\n  ],\n  \"PinnedMessageBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedMessageBarApps\",\n      \"Order\": 9007199254740993\n    }\n  ],\n  \"AppPresetMeetingList\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AppPresetMeetingList\"\n    }\n  ],\n  \"AdditionalCustomizationApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AdditionalCustomizationApps\",\n      \"AdditionalCustomizationId\": \"fixture-customization\"\n    }\n  ],\n  \"PinnedCallingBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedCallingBarApps\"\n    }\n  ],\n  \"Description\": \"\",\n  \"AllowSideLoading\": false,\n  \"AllowUserPinning\": null,\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppSetupPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "create",
+      "fields": "all",
+      "force": true,
+      "operation": "create"
+    },
+    {
+      "response": "{}",
+      "policy_name": null,
+      "status": 201,
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "New-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppSetupPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "create-empty-settings",
+      "fields": "none",
+      "force": true,
+      "operation": "create"
+    },
+    {
+      "response": "",
+      "policy_name": null,
+      "status": 204,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"AppPresetList\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AppPresetList\"\n    }\n  ],\n  \"PinnedAppBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedAppBarApps\",\n      \"Order\": 9007199254740993\n    }\n  ],\n  \"PinnedMessageBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedMessageBarApps\",\n      \"Order\": 9007199254740993\n    }\n  ],\n  \"AppPresetMeetingList\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AppPresetMeetingList\"\n    }\n  ],\n  \"AdditionalCustomizationApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-AdditionalCustomizationApps\",\n      \"AdditionalCustomizationId\": \"fixture-customization\"\n    }\n  ],\n  \"PinnedCallingBarApps\": [\n    {\n      \"Identity\": null,\n      \"Id\": \"fixture-PinnedCallingBarApps\"\n    }\n  ],\n  \"Description\": \"\",\n  \"AllowSideLoading\": false,\n  \"AllowUserPinning\": null,\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "patch",
+      "fields": "all",
+      "force": true,
+      "operation": "patch"
+    },
+    {
+      "response": "",
+      "policy_name": null,
+      "status": 204,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"AppPresetList\": [],\n  \"PinnedAppBarApps\": [],\n  \"PinnedMessageBarApps\": [],\n  \"AppPresetMeetingList\": [],\n  \"AdditionalCustomizationApps\": [],\n  \"PinnedCallingBarApps\": [],\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "patch-empty-lists",
+      "fields": "empty-lists",
+      "force": true,
+      "operation": "patch"
+    },
+    {
+      "response": "",
+      "policy_name": null,
+      "status": 204,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"read-model-identity\",\n  \"Description\": \"\",\n  \"AllowSideLoading\": false,\n  \"AllowUserPinning\": null,\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Set-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "patch-scalars",
+      "fields": "scalars",
+      "force": true,
+      "operation": "patch"
+    },
+    {
+      "response": "",
+      "policy_name": null,
+      "status": 204,
+      "capture": {
+        "Method": "DELETE",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": "{\n  \"Identity\": \"scope /Fixture / Child\",\n  \"Force\": \"False\"\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Remove-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "delete",
+      "fields": "none",
+      "force": true,
+      "operation": "delete"
+    },
+    {
+      "response": "",
+      "policy_name": null,
+      "status": 204,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsAppSetupPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"additionalParameters\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "grant-user",
+      "fields": "none",
+      "force": false,
+      "operation": "user"
+    },
+    {
+      "response": "",
+      "policy_name": null,
+      "status": 204,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsAppSetupPolicy",
+        "Body": "{\n  \"PolicyName\": null,\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "grant-tenant",
+      "fields": "none",
+      "force": false,
+      "operation": "tenant"
+    },
+    {
+      "response": "",
+      "policy_name": null,
+      "status": 204,
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsAppSetupPolicy",
+        "Body": "{\n  \"policyName\": null,\n  \"priority\": -1\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "grant-group",
+      "fields": "none",
+      "force": false,
+      "operation": "group"
+    },
+    {
+      "response": "",
+      "policy_name": "",
+      "status": 204,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/users/user%2Ffixture/policies/TeamsAppSetupPolicy",
+        "Body": "{\n  \"policyName\": \"\",\n  \"additionalParameters\": null\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "grant-user-empty",
+      "fields": "none",
+      "force": false,
+      "operation": "user"
+    },
+    {
+      "response": "",
+      "policy_name": "",
+      "status": 204,
+      "capture": {
+        "Method": "PATCH",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/tenants/policies/TeamsAppSetupPolicy",
+        "Body": "{\n  \"PolicyName\": \"\",\n  \"additionalParameters\": null,\n  \"forceSwitchPresent\": false\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "grant-tenant-empty",
+      "fields": "none",
+      "force": false,
+      "operation": "tenant"
+    },
+    {
+      "response": "",
+      "policy_name": "",
+      "status": 204,
+      "capture": {
+        "Method": "POST",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsAppSetupPolicy",
+        "Body": "{\n  \"policyName\": \"\",\n  \"priority\": -1\n}",
+        "ContentType": "application/json; charset=utf-8",
+        "CmdletName": "Grant-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": true,
+        "DecodedType": null,
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "grant-group-empty",
+      "fields": "none",
+      "force": false,
+      "operation": "group"
+    },
+    {
+      "response": "{\"AppPresetList\":null,\"PinnedAppBarApps\":null,\"PinnedMessageBarApps\":null,\"AppPresetMeetingList\":null,\"AdditionalCustomizationApps\":null,\"PinnedCallingBarApps\":null}",
+      "policy_name": null,
+      "status": 200,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppSetupPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "read-null-lists",
+      "fields": "none",
+      "force": false,
+      "operation": "read"
+    },
+    {
+      "response": "{\"AppPresetList\":[{\"Id\":null}]}",
+      "policy_name": null,
+      "status": 200,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "name": "read-null-id",
+      "fields": "none",
+      "force": false,
+      "operation": "read"
+    },
+    {
+      "response": "{\"PinnedAppBarApps\":[{\"Id\":\"fixture\",\"Order\":9007199254740993}]}",
+      "policy_name": null,
+      "status": 200,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": true,
+        "DecodedNull": false,
+        "DecodedType": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppSetupPolicy",
+        "FailureType": null,
+        "Warnings": [
+          "fixture-warning"
+        ]
+      },
+      "name": "read-int64-order",
+      "fields": "none",
+      "force": false,
+      "operation": "read"
+    },
+    {
+      "response": "{\"PinnedAppBarApps\":[{\"Id\":\"fixture\",\"Order\":9223372036854775808}]}",
+      "policy_name": null,
+      "status": 200,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "name": "read-order-overflow",
+      "fields": "none",
+      "force": false,
+      "operation": "read"
+    },
+    {
+      "response": "{\"AdditionalCustomizationApps\":[{\"Id\":\"fixture\",\"AdditionalCustomizationId\":null}]}",
+      "policy_name": null,
+      "status": 200,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "name": "read-null-customization",
+      "fields": "none",
+      "force": false,
+      "operation": "read"
+    },
+    {
+      "response": "{\"value\":[]}",
+      "policy_name": null,
+      "status": 200,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Newtonsoft.Json.JsonSerializationException",
+        "Warnings": null
+      },
+      "name": "list-envelope",
+      "fields": "none",
+      "force": false,
+      "operation": "list"
+    },
+    {
+      "response": "{\"Message\":\"fixture-denied\"}",
+      "policy_name": null,
+      "status": 403,
+      "capture": {
+        "Method": "GET",
+        "Url": "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/TeamsAppSetupPolicy/configuration/scope%20/Fixture%20%2F%20Child",
+        "Body": null,
+        "ContentType": null,
+        "CmdletName": "Get-CsTeamsAppSetupPolicy",
+        "CorrelationIsGuid": true,
+        "HasTargetUri": false,
+        "MpaCmdlet": "true",
+        "Sends": 1,
+        "TokenRequests": 0,
+        "Success": null,
+        "DecodedNull": null,
+        "DecodedType": null,
+        "FailureType": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRpException",
+        "Warnings": null
+      },
+      "name": "read-denied",
+      "fields": "none",
+      "force": false,
+      "operation": "read"
+    }
+  ]
+}
