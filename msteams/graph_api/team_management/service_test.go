@@ -37,7 +37,9 @@ func runCase(t *testing.T, command string, c contracttest.Case) contracttest.Res
 	if command == "Get-Team" {
 		set = "Identity"
 	}
-	c.Mappings = []contracttest.Mapping{{Command: command, ParameterSet: set}}
+	if len(c.Mappings) == 0 {
+		c.Mappings = []contracttest.Mapping{{Command: command, ParameterSet: set}}
+	}
 	result, err := contracttest.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
