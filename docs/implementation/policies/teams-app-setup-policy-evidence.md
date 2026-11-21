@@ -2,9 +2,10 @@
 
 Issue #105 owns five baseline commands and nine exact parameter sets: Get
 (Filter/Identity), New/Set/Remove (Identity), and Grant (GrantToUser/GrantToGroup/
-GrantToTenant/Identity). This source/capture checkpoint establishes no native
-service, contract pass or successful tenant qualification. The immutable runtime
-snapshot and coverage states are unchanged.
+GrantToTenant/Identity). Native CRUD, explicit Set composition, local builders
+and three scoped assignment methods now cover all nine mapped sets. The ledger
+remains in-progress and metadata-only without a full command/tenant parity claim.
+The immutable runtime snapshot is unchanged.
 
 The accepted MicrosoftTeams 8.1.0 package SHA256 is
 `78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7`.
@@ -61,9 +62,9 @@ AdditionalCustomizationApp also has AdditionalCustomizationId with the same
 null-setter rule. The two bar pin elements have signed Int64 Order, default zero,
 with no source range check. Negative values and Int64 maximum are accepted;
 null/overflow setters fail. Captures preserve 9,007,199,254,740,993 exactly through
-request/response serialization. Native models must use int64 and avoid float
-conversion. Newtonsoft's captured string-to-Order conversion does not by itself
-establish Go coercion support; any typed-JSON difference must remain explicit.
+request/response serialization. Native models use int64, never float conversion,
+and implement the captured numeric-string Order form with checked decimal parsing.
+Other arbitrary Newtonsoft conversions remain separately unqualified.
 
 Each list uses its command-specific ordinal equality predicate:
 
@@ -82,19 +83,44 @@ order and duplicates. The three-removal cases distinguish same Id with a differe
 Order/customization from Id-only lists. Future received fields must stay in
 snapshots and be excluded from source-compatible request DTO projection.
 
-## Native implementation sequence and qualification
+## Native implementation and qualification
 
-Implement typed snapshots and readonly-list decoding with original response
-retention. Keep the element shapes and three equality rules explicit; do not
-silently unify a pin's Order with a customization key or add Order to calling pins.
-Provide owned pure element/list builders, sparse native writes and explicit Set
-read/edit/PATCH composition, then root wiring and three scoped assignments.
-Map all nine parameter sets with exact wire/model/edit tests and local invalid
-grant selection. Cover Int64 boundaries, duplicate properties, null/absence/false,
-omission, future data, partial preparation, redaction, cancellation and no mutation
-replay. Add opt-in bounded reads and separately owned write/read-back/cleanup cases.
+TeamsAdminAPI.TeamsAppSetupPolicies exposes native CRUD, sparse PATCH, explicit
+read/edit/PATCH composition and user/group/tenant assignments. Typed App, PinnedApp
+and CustomizationApp models and edits keep all six named list fields and the three
+equality predicates explicit. Constructors/edits own their pointers, list contents
+and raw data; nil/zero edit receivers reject safely. Only the named compiled
+resource is added to the existing adapter; transport/auth behavior is unchanged.
 
-No lab request, setup-policy write, assignment, app installation, directory role
-or consent change has run for this family. Full shell/Newtonsoft conversions,
-cloud/permission availability, tenant persistence/cleanup and effective client app
-layout remain unqualified under #105. No source observation counts as full parity.
+All nine parameter sets map to compiling methods and tests. All twenty-one
+provider fixtures run in application/delegated synthetic modes. Canonical model
+projections compare all twelve policy, fifty-six element and forty-eight list
+observations. Exact JSON-number comparisons prevent float precision from hiding
+incorrect Int64 handling. The captured string Order first failed and passed after
+checked native parsing. Tests cover every list/key, readonly duplicate append and
+null behavior, owned data, known DTO projection, body identity, false/omission,
+partial preparation, no-HTTP builders/invalid grant selection, local guards,
+status/redaction and single-send mutations. Structural reports retain
+coverage_claim false and live not-run.
+
+Actual Global reads on 2026-11-21 returned resource HTTP 403 with the existing
+dedicated lab SPN in both client-secret and certificate modes. Filter/list and
+optional pinned module comparison were not reached. No payload was retained and
+no policy/layout, assignment, app installation, role or consent changed. Get's
+ledger live state is unavailable; writes remain not-run. The opt-in harness can
+compare canonical nullable fields and six lists with a tenant-bound hash-checked
+PowerShell module, preserving Int64 numbers without float conversion. It rejects
+incomplete properties rather than manufacturing empty arrays.
+
+Full shell/Newtonsoft conversions, cloud/permission availability, successful
+tenant writes/read-back/cleanup and effective client app layout remain unqualified
+under #105. Native JSON fields require their Go types except the captured checked
+Order string form. Raw presence differs from CLR default presentation; conservative
+identity validation does not claim every shell input. Future write acceptance
+requires owned policy/principal fixtures and authorized journals/restoration.
+
+Local verification on 2026-11-21 passed the full offline race/shuffle suite,
+SDK/examples build, vet, scoped lint with zero issues, ledger validation and its
+ten validator tests. All three PowerShell scripts parse, including the tightened
+collection/element completeness checks. Revision-bound structural artifacts are
+reviewed independently of the unchanged qualification states.
