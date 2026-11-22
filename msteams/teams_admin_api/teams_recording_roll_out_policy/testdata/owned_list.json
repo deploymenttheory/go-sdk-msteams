@@ -1,0 +1,18 @@
+[
+  {
+    "MeetingRecordingOwnership": "MeetingOrganizer",
+    "Identity": "Global",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "Global"
+  },
+  {
+    "MeetingRecordingOwnership": "MeetingOrganizer",
+    "Identity": "Tag:fixture-policy",
+    "ConfigMetadata": {
+      "Authority": "Tenant"
+    },
+    "ConfigId": "fixture-config-042d3d4e"
+  }
+]

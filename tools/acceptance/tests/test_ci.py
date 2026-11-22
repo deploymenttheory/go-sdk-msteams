@@ -63,6 +63,7 @@ class AcceptanceGuardTests(unittest.TestCase):
             ('TestAccOnlineVoicemailReadOnly', 'pinned voicemail projection unavailable'),
             ('TestAccMobilityPolicyReadOnly', 'Go and PowerShell compiled scalar getters differ'),
             ('TestAccMultiTenantOrganizationConfigurationUpdateRestore', 'multi-tenant original state not independently restored'),
+            ('TestAccRecordingRollOutPolicyCRUD', 'recording rollout sparse update included an unbound field'),
         ]:
             with self.subTest(name=name):
                 report = ci.evaluate([

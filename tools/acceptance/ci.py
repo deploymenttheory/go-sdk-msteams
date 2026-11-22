@@ -103,6 +103,15 @@ FAILURE_REASONS = (
     'notification update or omitted-field preservation did not converge',
     'notification explicit-null description update failed',
     'notification explicit-null read-back did not converge',
+    'pinned personal attendant policy projection unavailable',
+    'pinned recording rollout policy projection unavailable',
+    'SDK and PowerShell personal attendant policy projections differ',
+    'SDK and PowerShell recording rollout policy projections differ',
+    'personal attendant non-default create read-back did not converge',
+    'personal attendant update or omitted-field preservation did not converge',
+    'recording rollout non-default create read-back did not converge',
+    'recording rollout update or omitted-field preservation did not converge',
+    'recording rollout sparse update included an unbound field',
 )
 FEDERATION_CASES = {'external-policy', 'acs', 'external-users', 'tenant'}
 

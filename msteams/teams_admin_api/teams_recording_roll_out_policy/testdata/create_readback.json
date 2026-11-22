@@ -1,0 +1,8 @@
+{
+  "MeetingRecordingOwnership": "MeetingInitiator",
+  "Identity": "Tag:fixture-policy",
+  "ConfigMetadata": {
+    "Authority": "Tenant"
+  },
+  "ConfigId": "fixture-config-042d3d4e"
+}

@@ -1,0 +1,8 @@
+{
+  "MeetingRecordingOwnership": "MeetingOrganizer",
+  "Identity": "Global",
+  "ConfigMetadata": {
+    "Authority": "Host"
+  },
+  "ConfigId": "Global"
+}

@@ -50,12 +50,16 @@ import (
 	teamsmultitenantorganizationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_multi_tenant_organization_configuration"
 	teamsnetworkroamingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_network_roaming_policy"
 	teamsnotificationandfeedspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_notification_and_feeds_policy"
+	teamspersonalattendantpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_personal_attendant_policy"
+	teamsrecordingrolloutpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_recording_roll_out_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsPersonalAttendantPolicies             *teamspersonalattendantpolicy.Service
+	TeamsRecordingRollOutPolicies              *teamsrecordingrolloutpolicy.Service
 	TeamsNetworkRoamingPolicies                *teamsnetworkroamingpolicy.Service
 	TeamsNotificationAndFeedsPolicies          *teamsnotificationandfeedspolicy.Service
 	TeamsMobilityPolicies                      *teamsmobilitypolicy.Service
@@ -126,6 +130,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsPersonalAttendantPolicies:             teamspersonalattendantpolicy.NewService(scope),
+		TeamsRecordingRollOutPolicies:              teamsrecordingrolloutpolicy.NewService(scope),
 		TeamsNetworkRoamingPolicies:                teamsnetworkroamingpolicy.NewService(backend),
 		TeamsNotificationAndFeedsPolicies:          teamsnotificationandfeedspolicy.NewService(scope),
 		TeamsMobilityPolicies:                      teamsmobilitypolicy.NewService(scope),

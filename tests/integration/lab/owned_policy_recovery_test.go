@@ -32,6 +32,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	handlers := map[string]lab.Handler{
+		"personal-policy":            personalPolicyCleanup{sdk.TeamsAdminAPI.TeamsPersonalAttendantPolicies},
+		"recording-rollout-policy":   recordingRollOutPolicyCleanup{sdk.TeamsAdminAPI.TeamsRecordingRollOutPolicies},
 		"notification-policy":        notificationPolicyCleanup{sdk.TeamsAdminAPI.TeamsNotificationAndFeedsPolicies},
 		"roaming-policy":             roamingPolicyCleanup{sdk.TeamsAdminAPI.TeamsNetworkRoamingPolicies},
 		"multi-tenant-configuration": multiTenantConfigurationCleanup{sdk.TeamsAdminAPI.TeamsMultiTenantOrganizationConfigurations},
