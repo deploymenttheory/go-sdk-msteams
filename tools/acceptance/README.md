@@ -226,3 +226,13 @@ identity. The latter checks exact sparse request bytes as well as two persisted
 ownership values. Both require two pinned comparisons and a cleaned create intent;
 recovery kinds are `personal-policy` and `recording-rollout-policy`. These tests
 do not grant policies or qualify effective attendant/recording behavior.
+
+Room-video and unassociated shared-calling CRUD run with normal owned policy tests.
+Shared-calling's populated scenario is explicitly pending: the lab has no resource
+accounts or telephone numbers. Select its private fixture with
+MSTEAMS_LAB_SHARED_CALLING_FIXTURE_FILE only after providing tenant_id,
+resource_account_id and two actual unassigned emergency callback numbers in
+emergency_numbers. The test uses those references without changing the account or
+phone assignments, checks list preservation/edit/clear, and sanitizes phone values.
+Its empty-list CRUD test does not qualify the populated scenario. Recovery kinds
+are room-video-policy and shared-calling-policy.

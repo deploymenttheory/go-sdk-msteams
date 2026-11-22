@@ -40,7 +40,9 @@
       "TestAccNetworkRoamingPolicyReadOnly",
       "TestAccNotificationAndFeedsPolicyReadOnly",
       "TestAccPersonalAttendantPolicyReadOnly",
-      "TestAccRecordingRollOutPolicyReadOnly"
+      "TestAccRecordingRollOutPolicyReadOnly",
+      "TestAccRoomVideoTeleConferencingPolicyReadOnly",
+      "TestAccSharedCallingRoutingPolicyReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -69,7 +71,9 @@
       "TestAccMobilityPolicyCRUD",
       "TestAccNetworkRoamingPolicyCRUD",
       "TestAccPersonalAttendantPolicyCRUD",
-      "TestAccRecordingRollOutPolicyCRUD"
+      "TestAccRecordingRollOutPolicyCRUD",
+      "TestAccRoomVideoTeleConferencingPolicyCRUD",
+      "TestAccSharedCallingRoutingPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1

@@ -52,12 +52,16 @@ import (
 	teamsnotificationandfeedspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_notification_and_feeds_policy"
 	teamspersonalattendantpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_personal_attendant_policy"
 	teamsrecordingrolloutpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_recording_roll_out_policy"
+	teamsroomvideoteleconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_room_video_tele_conferencing_policy"
+	teamssharedcallingroutingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shared_calling_routing_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsRoomVideoTeleConferencingPolicies     *teamsroomvideoteleconferencingpolicy.Service
+	TeamsSharedCallingRoutingPolicies          *teamssharedcallingroutingpolicy.Service
 	TeamsPersonalAttendantPolicies             *teamspersonalattendantpolicy.Service
 	TeamsRecordingRollOutPolicies              *teamsrecordingrolloutpolicy.Service
 	TeamsNetworkRoamingPolicies                *teamsnetworkroamingpolicy.Service
@@ -130,6 +134,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsRoomVideoTeleConferencingPolicies:     teamsroomvideoteleconferencingpolicy.NewService(backend),
+		TeamsSharedCallingRoutingPolicies:          teamssharedcallingroutingpolicy.NewService(scope),
 		TeamsPersonalAttendantPolicies:             teamspersonalattendantpolicy.NewService(scope),
 		TeamsRecordingRollOutPolicies:              teamsrecordingrolloutpolicy.NewService(scope),
 		TeamsNetworkRoamingPolicies:                teamsnetworkroamingpolicy.NewService(backend),

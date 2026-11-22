@@ -8689,22 +8689,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/151/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/room_shared_calling_test.go",
+              "name": "TestAccRoomVideoTeleConferencingPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/151/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/room_shared_calling_test.go",
+              "name": "TestAccRoomVideoTeleConferencingPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8712,8 +8759,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -8760,22 +8809,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/153/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/room_shared_calling_test.go",
+              "name": "TestAccSharedCallingRoutingPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/153/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/room_shared_calling_test.go",
+              "name": "TestAccSharedCallingRoutingPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8783,8 +8879,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -15879,29 +15977,96 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/258/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service_test.go",
+              "name": "TestUnitModernGrantScopeBodiesAndRankOmission"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/258/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service_test.go",
+              "name": "TestUnitModernGrantScopeBodiesAndRankOmission"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/258/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service_test.go",
+              "name": "TestUnitModernGrantScopeBodiesAndRankOmission"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -15909,8 +16074,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -15925,36 +16092,117 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/259/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/failure_test.go",
+              "name": "TestUnitSharedCallingRoutingPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/259/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/failure_test.go",
+              "name": "TestUnitSharedCallingRoutingPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/259/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/failure_test.go",
+              "name": "TestUnitSharedCallingRoutingPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/259/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/failure_test.go",
+              "name": "TestUnitSharedCallingRoutingPolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+            "name": "Service.AssignUser"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/assignment.go",
+            "name": "Service.Assign"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -15962,8 +16210,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -21700,15 +21950,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/380/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/room_video_policy_crud_test.go",
+              "name": "TestAccRoomVideoTeleConferencingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21716,8 +21994,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -21732,15 +22012,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/381/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shared_calling_policy_crud_test.go",
+              "name": "TestAccSharedCallingRoutingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21748,8 +22048,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -26251,15 +26553,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/487/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/room_video_policy_crud_test.go",
+              "name": "TestAccRoomVideoTeleConferencingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26267,8 +26589,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -26283,15 +26607,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/488/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shared_calling_policy_crud_test.go",
+              "name": "TestAccSharedCallingRoutingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26299,8 +26643,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -32519,15 +32865,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/621/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/room_video_policy_crud_test.go",
+              "name": "TestAccRoomVideoTeleConferencingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32535,8 +32909,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -32583,15 +32959,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/623/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shared_calling_policy_crud_test.go",
+              "name": "TestAccSharedCallingRoutingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_shared_calling_routing_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32599,8 +33003,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and unassigned room-video / unassociated shared-calling CRUD passed both application modes. Populated callbacks require absent telephone inventory; grants and effective behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/room-shared-calling-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
