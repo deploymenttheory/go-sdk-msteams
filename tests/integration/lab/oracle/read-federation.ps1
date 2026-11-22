@@ -24,8 +24,17 @@ try {
     $identity=Get-Content -LiteralPath $env:MSTEAMS_LAB_IDENTITY_FILE -Raw | ConvertFrom-Json
     if([string]$request.tenant_id -ine [string]$identity.tenant_id -or [string]$request.tenant_id -notmatch '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'){throw 'Tenant binding differs.'}
     Import-Module $manifest -Force -WarningAction SilentlyContinue
-    $certificate=[Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromPemFile($identity.certificate_file,$identity.private_key_file)
-    Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $identity.tenant_id -WarningAction SilentlyContinue -InformationAction SilentlyContinue -ErrorAction Stop | Out-Null
+    if($env:MSTEAMS_LAB_AUTH_METHOD -eq 'client-secret'){
+        $authTenant=[Guid]::Parse($identity.tenant_id).ToString();$tokens=@()
+        foreach($scope in @('https://graph.microsoft.com/.default','48ac35b8-9aa8-4d74-927d-1f4a14a0b239/.default')){
+            $token=Invoke-RestMethod -Method Post -Uri "https://login.microsoftonline.com/$authTenant/oauth2/v2.0/token" -Body @{grant_type='client_credentials';client_id=$identity.client_id;client_secret=$identity.client_secret;scope=$scope}
+            $tokens+= $token.access_token
+        }
+        Connect-MicrosoftTeams -AccessTokens $tokens -ErrorAction Stop -InformationAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
+    }elseif([string]::IsNullOrEmpty($env:MSTEAMS_LAB_AUTH_METHOD) -or $env:MSTEAMS_LAB_AUTH_METHOD -eq 'certificate'){
+        $certificate=[Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromPemFile($identity.certificate_file,$identity.private_key_file)
+        Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $identity.tenant_id -WarningAction SilentlyContinue -InformationAction SilentlyContinue -ErrorAction Stop | Out-Null
+    }else{throw 'Unknown auth method.'}
     $connected=$true
     $values=@(switch($request.kind){
         'external-policy'{Get-CsExternalAccessPolicy -Identity $selected -ErrorAction Stop}

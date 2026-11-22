@@ -1,244 +1,1065 @@
 {
-  "authentication": {
+  "auth": {
     "package": "./tests/integration/auth",
-    "tests": [
-      "TestAccApplicationAccess"
+    "steps": [
+      {
+        "id": "authentication",
+        "tests": [
+          "TestAccApplicationAccess"
+        ]
+      }
     ]
   },
-  "resource-reads": {
-    "package": "./tests/integration/lab",
-    "tests": [
-      "TestAccTeamsServiceDiscovery",
-      "TestAccPreflight",
-      "TestAccAppPermissionPolicyReadOnly",
-      "TestAccAppSetupPolicyReadOnly",
-      "TestAccApplicationMeetingConfigurationReadOnly",
-      "TestAccAudioConferencingPolicyReadOnly",
-      "TestAccBannerTextReadOnly",
-      "TestAccCallHoldPolicyReadOnly",
-      "TestAccCallParkPolicyReadOnly",
-      "TestAccCallingPolicyReadOnly",
-      "TestAccChannelsPolicyReadOnly",
-      "TestAccClientConfigurationReadOnly",
-      "TestAccCortanaPolicyReadOnly",
-      "TestAccEducationAssignmentsReadOnly",
-      "TestAccEducationConfigurationReadOnly",
-      "TestAccEnhancedEncryptionReadOnly",
-      "TestAccEventsPolicyReadOnly",
-      "TestAccExternalAccessPolicyReadOnly",
-      "TestAccACSFederationConfigurationReadOnly",
-      "TestAccTeamsExternalAccessConfigurationReadOnly",
-      "TestAccTenantFederationConfigurationReadOnly",
-      "TestAccFeedbackPolicyReadOnly",
-      "TestAccFilesPolicyReadOnly",
-      "TestAccMeetingBrandingReadOnly",
-      "TestAccOnlineVoicemailReadOnly",
-      "TestAccRecordingMessagesReadOnly",
-      "TestAccVoicemailValidationReadOnly",
-      "TestAccMeetingPolicyReadOnly",
-      "TestAccMessagingPolicyReadOnly",
-      "TestAccMeetingTemplateConfigurationReadOnly",
-      "TestAccMeetingTemplatePermissionReadOnly",
-      "TestAccMobilityPolicyReadOnly",
-      "TestAccNetworkRoamingPolicyReadOnly",
-      "TestAccNotificationAndFeedsPolicyReadOnly",
-      "TestAccPersonalAttendantPolicyReadOnly",
-      "TestAccRecordingRollOutPolicyReadOnly",
-      "TestAccRoomVideoTeleConferencingPolicyReadOnly",
-      "TestAccSharedCallingRoutingPolicyReadOnly",
-      "TestAccShiftsPolicyReadOnly",
-      "TestAccTemplatePermissionPolicyReadOnly",
-      "TestAccUpdateManagementPolicyReadOnly",
-      "TestAccUpgradePolicyReadOnly",
-      "TestAccUpgradeGrantMigrationBinding",
-      "TestAccVDIPolicyReadOnly",
-      "TestAccVirtualAppointmentsPolicyReadOnly",
-      "TestAccVoiceApplicationsPolicyReadOnly",
-      "TestAccWorkLoadPolicyReadOnly"
-    ]
-  },
-  "owned-policy-crud": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "tests": [
-      "TestAccApplicationAccessPolicyCRUD",
-      "TestAccExternalAccessPolicyCRUD",
-      "TestAccCallingPolicyCRUD",
-      "TestAccCallHoldPolicyCRUD",
-      "TestAccCallParkPolicyCRUD",
-      "TestAccChannelsPolicyCRUD",
-      "TestAccCortanaPolicyCRUD",
-      "TestAccEventsPolicyCRUD",
-      "TestAccEnhancedEncryptionPolicyCRUD",
-      "TestAccFeedbackPolicyCRUD",
-      "TestAccFilesPolicyCRUD",
-      "TestAccOnlineVoicemailPolicyCRUD",
-      "TestAccAudioConferencingPolicyCRUD",
-      "TestAccAppPermissionPolicyCRUD",
-      "TestAccAppSetupPolicyCRUD",
-      "TestAccMeetingBrandingPolicyCRUD",
-      "TestAccMeetingPolicyCRUD",
-      "TestAccMessagingPolicyCRUD",
-      "TestAccMeetingTemplatePermissionPolicyCRUD",
-      "TestAccMobilityPolicyCRUD",
-      "TestAccNetworkRoamingPolicyCRUD",
-      "TestAccPersonalAttendantPolicyCRUD",
-      "TestAccRecordingRollOutPolicyCRUD",
-      "TestAccRoomVideoTeleConferencingPolicyCRUD",
-      "TestAccSharedCallingRoutingPolicyCRUD",
-      "TestAccShiftsPolicyCRUD",
-      "TestAccTemplatePermissionPolicyCRUD"
-    ],
-    "proof": "owned-crud",
-    "journal_entries_per_test": 1
-  },
-  "tenant-access-outcomes": {
-    "package": "./tests/integration/lab",
-    "tests": [
-      "TestAccAssignmentMigrationCapabilityUnavailable",
-      "TestAccAudioConferencingPromptsCapabilityUnavailable",
-      "TestAccPrivacyConfigurationAuthorizationDenied",
-      "TestAccTenantAbuseConfigurationAuthorizationDenied"
-    ]
-  },
-  "owned-user-assignments": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "user-assignment",
-    "journal_entries_per_test": 2,
-    "tests": [
-      "TestAccApplicationAccessPolicyUserAssignment"
-    ]
-  },
-  "owned-group-assignments": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "group-assignment",
-    "journal_entries_per_test": 3,
-    "tests": [
-      "TestAccApplicationAccessPolicyGroupAssignment"
-    ]
-  },
-  "owned-team-templates": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "template-crud",
-    "journal_entries_per_test": 2,
-    "tests": [
-      "TestAccTeamTemplateCRUD"
-    ],
-    "children": {
-      "TestAccTeamTemplateCRUD": [
-        "expanded",
-        "json-body"
+  "services": {
+    "acs_federation_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccACSFederationConfigurationReadOnly"
+          ]
+        }
+      ]
+    },
+    "application_access_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccApplicationAccessPolicyCRUD"
+          ]
+        },
+        {
+          "id": "user-assignment",
+          "mutation": true,
+          "proof": "user-assignment",
+          "journal_entries_per_test": 2,
+          "tests": [
+            "TestAccApplicationAccessPolicyUserAssignment"
+          ]
+        },
+        {
+          "id": "group-assignment",
+          "mutation": true,
+          "proof": "group-assignment",
+          "journal_entries_per_test": 3,
+          "tests": [
+            "TestAccApplicationAccessPolicyGroupAssignment"
+          ]
+        }
+      ]
+    },
+    "application_meeting_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccApplicationMeetingConfigurationReadOnly"
+          ]
+        }
+      ]
+    },
+    "assignment_migration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "tenant-access-outcomes",
+          "tests": [
+            "TestAccAssignmentMigrationCapabilityUnavailable"
+          ]
+        }
+      ]
+    },
+    "audio_conferencing_prompts": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "tenant-access-outcomes",
+          "tests": [
+            "TestAccAudioConferencingPromptsCapabilityUnavailable"
+          ]
+        }
+      ]
+    },
+    "external_access_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccExternalAccessPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccExternalAccessPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "meeting_branding": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMeetingBrandingReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMeetingBrandingPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "online_voicemail_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccOnlineVoicemailReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccOnlineVoicemailPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "online_voicemail_validation_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccVoicemailValidationReadOnly"
+          ]
+        }
+      ]
+    },
+    "platform": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccTeamsServiceDiscovery",
+            "TestAccPreflight"
+          ]
+        }
+      ]
+    },
+    "privacy_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "tenant-access-outcomes",
+          "tests": [
+            "TestAccPrivacyConfigurationAuthorizationDenied"
+          ]
+        }
+      ]
+    },
+    "recording_messages": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccRecordingMessagesReadOnly"
+          ]
+        }
+      ]
+    },
+    "team_template": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "template-crud",
+          "journal_entries_per_test": 2,
+          "tests": [
+            "TestAccTeamTemplateCRUD"
+          ],
+          "children": {
+            "TestAccTeamTemplateCRUD": [
+              "expanded",
+              "json-body"
+            ]
+          }
+        }
+      ]
+    },
+    "teams_app_permission_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccAppPermissionPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccAppPermissionPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_app_setup_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccAppSetupPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccAppSetupPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_audio_conferencing_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccAudioConferencingPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccAudioConferencingPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_call_hold_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccCallHoldPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccCallHoldPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_call_park_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccCallParkPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccCallParkPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_calling_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccCallingPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccCallingPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_channels_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccChannelsPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccChannelsPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_client_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccClientConfigurationReadOnly"
+          ]
+        }
+      ]
+    },
+    "teams_cortana_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccCortanaPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccCortanaPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_custom_banner_text": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccBannerTextReadOnly"
+          ]
+        }
+      ]
+    },
+    "teams_education_assignments_app_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccEducationAssignmentsReadOnly"
+          ]
+        }
+      ]
+    },
+    "teams_education_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccEducationConfigurationReadOnly"
+          ]
+        }
+      ]
+    },
+    "teams_enhanced_encryption_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccEnhancedEncryptionReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccEnhancedEncryptionPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_events_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccEventsPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccEventsPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_external_access_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccTeamsExternalAccessConfigurationReadOnly"
+          ]
+        }
+      ]
+    },
+    "teams_feedback_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccFeedbackPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccFeedbackPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_files_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccFilesPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccFilesPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_meeting_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMeetingPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMeetingPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_meeting_template_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMeetingTemplateConfigurationReadOnly"
+          ]
+        }
+      ]
+    },
+    "teams_meeting_template_permission_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMeetingTemplatePermissionReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMeetingTemplatePermissionPolicyCRUD"
+          ]
+        },
+        {
+          "id": "populated-access",
+          "mutation": true,
+          "proof": "populated-template-access",
+          "journal_entries_per_test": 2,
+          "tests": [
+            "TestAccMeetingTemplatePermissionPopulatedAccess"
+          ]
+        }
+      ]
+    },
+    "teams_messaging_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccMessagingConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMessagingConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
+    "teams_messaging_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMessagingPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMessagingPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_migration_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccMigrationConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMigrationConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
+    "teams_mobility_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMobilityPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMobilityPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_multi_tenant_organization_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccMultiTenantOrganizationConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMultiTenantOrganizationConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
+    "teams_network_roaming_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccNetworkRoamingPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccNetworkRoamingPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_notification_and_feeds_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccNotificationAndFeedsPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-notification-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccNotificationAndFeedsPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_personal_attendant_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccPersonalAttendantPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccPersonalAttendantPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_recording_roll_out_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccRecordingRollOutPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccRecordingRollOutPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_room_video_tele_conferencing_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccRoomVideoTeleConferencingPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccRoomVideoTeleConferencingPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_shared_calling_routing_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccSharedCallingRoutingPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccSharedCallingRoutingPolicyCRUD"
+          ]
+        },
+        {
+          "id": "populated-crud",
+          "mutation": true,
+          "proof": "owned-shared-calling-populated-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccSharedCallingRoutingPolicyPopulatedCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_shifts_app_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccShiftsAppPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccShiftsAppPolicyUpdateRestore"
+          ]
+        }
+      ]
+    },
+    "teams_shifts_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccShiftsPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccShiftsPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_sip_devices_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccSipDevicesConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccSipDevicesConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
+    "teams_template_permission_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccTemplatePermissionPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccTemplatePermissionPolicyCRUD"
+          ]
+        },
+        {
+          "id": "populated-crud",
+          "mutation": true,
+          "proof": "owned-template-permission-populated-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccTemplatePermissionPopulatedCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_tenant_abuse_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "tenant-access-outcomes",
+          "tests": [
+            "TestAccTenantAbuseConfigurationAuthorizationDenied"
+          ]
+        },
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccTenantAbuseConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccTenantAbuseConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
+    "teams_update_management_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccUpdateManagementPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-update-management-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccUpdateManagementPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_upgrade_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccUpgradeConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccUpgradeConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
+    "teams_upgrade_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccUpgradePolicyReadOnly",
+            "TestAccUpgradeGrantMigrationBinding"
+          ]
+        }
+      ]
+    },
+    "teams_vdi_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccVDIPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccVDIPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_virtual_appointments_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccVirtualAppointmentsPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccVirtualAppointmentsPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_voice_applications_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccVoiceApplicationsPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccVoiceApplicationsPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_work_load_policy": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccWorkLoadPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccWorkLoadPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "tenant_federation_configuration": {
+      "package": "./tests/integration/lab",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccTenantFederationConfigurationReadOnly"
+          ]
+        }
       ]
     }
-  },
-  "populated-template-access": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "populated-template-access",
-    "journal_entries_per_test": 2,
-    "tests": [
-      "TestAccMeetingTemplatePermissionPopulatedAccess"
-    ]
-  },
-  "singleton-configuration-reads": {
-    "package": "./tests/integration/lab",
-    "serial": true,
-    "tests": [
-      "TestAccMessagingConfigurationReadOnly",
-      "TestAccMigrationConfigurationReadOnly",
-      "TestAccMultiTenantOrganizationConfigurationReadOnly",
-      "TestAccShiftsAppPolicyReadOnly",
-      "TestAccSipDevicesConfigurationReadOnly",
-      "TestAccTenantAbuseConfigurationReadOnly"
-    ]
-  },
-  "singleton-configuration-updates": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "configuration-update",
-    "journal_entries_per_test": 1,
-    "tests": [
-      "TestAccMessagingConfigurationUpdateRestore",
-      "TestAccMigrationConfigurationUpdateRestore",
-      "TestAccMultiTenantOrganizationConfigurationUpdateRestore",
-      "TestAccShiftsAppPolicyUpdateRestore",
-      "TestAccSipDevicesConfigurationUpdateRestore",
-      "TestAccTenantAbuseConfigurationUpdateRestore"
-    ]
-  },
-  "owned-notification-policy": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "owned-notification-crud",
-    "journal_entries_per_test": 1,
-    "tests": [
-      "TestAccNotificationAndFeedsPolicyCRUD"
-    ]
-  },
-  "owned-shared-calling-populated-policy": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "owned-shared-calling-populated-crud",
-    "journal_entries_per_test": 1,
-    "tests": [
-      "TestAccSharedCallingRoutingPolicyPopulatedCRUD"
-    ]
-  },
-  "owned-template-permission-populated-policy": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "owned-template-permission-populated-crud",
-    "journal_entries_per_test": 1,
-    "tests": [
-      "TestAccTemplatePermissionPopulatedCRUD"
-    ]
-  },
-  "owned-update-management-policy": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "owned-update-management-crud",
-    "journal_entries_per_test": 1,
-    "tests": [
-      "TestAccUpdateManagementPolicyCRUD"
-    ]
-  },
-  "singleton-upgrade-configuration": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "configuration-update",
-    "journal_entries_per_test": 1,
-    "tests": [
-      "TestAccUpgradeConfigurationUpdateRestore"
-    ]
-  },
-  "singleton-upgrade-reads": {
-    "package": "./tests/integration/lab",
-    "serial": true,
-    "tests": [
-      "TestAccUpgradeConfigurationReadOnly"
-    ]
-  },
-  "owned-vdi-virtual-appointments": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "owned-crud",
-    "journal_entries_per_test": 1,
-    "tests": [
-      "TestAccVDIPolicyCRUD",
-      "TestAccVirtualAppointmentsPolicyCRUD"
-    ]
-  },
-  "owned-voice-workload-policies": {
-    "package": "./tests/integration/lab",
-    "mutation": true,
-    "proof": "owned-crud",
-    "journal_entries_per_test": 1,
-    "tests": [
-      "TestAccVoiceApplicationsPolicyCRUD",
-      "TestAccWorkLoadPolicyCRUD"
-    ]
   }
 }

@@ -16,9 +16,19 @@ ci = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(ci)
 
 
+def registry(*steps, service='svc', package='./fixture'):
+    """A registry with one auth step and one service partition."""
+    return {'auth': {'package': './auth', 'steps': [{'id': 'authentication', 'tests': ['TestAccAuth']}]},
+            'services': {service: {'package': package, 'steps': list(steps)}}}
+
+
+def service_run(root, **kwargs):
+    return argparse.Namespace(auth=False, service='svc', step=None, report_directory=root / 'reports', **kwargs)
+
+
 class AcceptanceGuardTests(unittest.TestCase):
     def test_skip_selection_requires_exact_registered_names_and_public_reasons(self):
-        suites = {'crud': {'tests': ['TestAccRead', 'TestAccPhone']}}
+        suites = registry({'id': 'crud', 'tests': ['TestAccRead', 'TestAccPhone']})
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / 'skips.json').write_text(json.dumps({'TestAccPhone': 'No lab phone inventory.'}))
@@ -50,7 +60,7 @@ class AcceptanceGuardTests(unittest.TestCase):
             journals = private / 'journals'
             journals.mkdir(parents=True)
             active, skipped = 'TestAccRead', 'TestAccPhone'
-            (root / 'suites.json').write_text(json.dumps({'crud': {'package': './fixture', 'tests': [active, skipped], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1}}))
+            (root / 'suites.json').write_text(json.dumps(registry({'id': 'crud', 'tests': [active, skipped], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1})))
             (root / 'skips.json').write_text(json.dumps({skipped: 'No lab phone inventory.'}))
             invoked = []
 
@@ -65,12 +75,13 @@ class AcceptanceGuardTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, 0)
 
             with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}, clear=True), patch.object(ci.subprocess, 'run', side_effect=process), contextlib.redirect_stdout(io.StringIO()):
-                self.assertEqual(ci.run(argparse.Namespace(suite=['crud'], report_directory=root / 'reports')), 0)
+                self.assertEqual(ci.run(service_run(root)), 0)
             self.assertEqual(len(invoked), 1)
             pattern = invoked[0][invoked[0].index('-run') + 1]
             self.assertEqual(pattern, '^(TestAccRead)$')
-            report = json.loads((root / 'reports/crud.json').read_text())
+            report = json.loads((root / 'reports/svc--crud.json').read_text())
             self.assertEqual(report['expected_cleanup_journal_entries'], 1)
+            self.assertEqual((report['suite'], report['service'], report['step'], report['phase']), ('svc/crud', 'svc', 'crud', 'writes'))
             self.assertEqual(report['cleanup_journal_entries_cleaned'], 1)
             self.assertEqual(report['tests'][1], {'name': skipped, 'outcome': 'skip', 'skip_reason': 'No lab phone inventory.'})
             self.assertTrue(ci.report_matches_selection(report, {'tests': [active, skipped]}, {skipped: 'No lab phone inventory.'}))
@@ -80,13 +91,13 @@ class AcceptanceGuardTests(unittest.TestCase):
             root = Path(directory)
             private = root / 'private'
             private.mkdir()
-            (root / 'suites.json').write_text(json.dumps({'phone': {'package': './fixture', 'tests': ['TestAccPhone'], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1}}))
+            (root / 'suites.json').write_text(json.dumps(registry({'id': 'phone', 'tests': ['TestAccPhone'], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1})))
             (root / 'skips.json').write_text(json.dumps({'TestAccPhone': 'No lab phone inventory.'}))
             with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}, clear=True), patch.object(ci.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0, stdout='a' * 40 + '\n')) as process, contextlib.redirect_stdout(io.StringIO()) as output:
-                self.assertEqual(ci.run(argparse.Namespace(suite=['phone'], report_directory=root / 'reports')), 0)
+                self.assertEqual(ci.run(service_run(root)), 0)
             self.assertEqual(process.call_count, 1)
             self.assertEqual(process.call_args.args[0][0], 'git')
-            report = json.loads((root / 'reports/phone.json').read_text())
+            report = json.loads((root / 'reports/svc--phone.json').read_text())
             self.assertEqual(report['outcome'], 'skipped')
             self.assertEqual(report['expected_cleanup_journal_entries'], 0)
             self.assertIn('SKIP TestAccPhone: No lab phone inventory.', output.getvalue())
@@ -98,12 +109,13 @@ class AcceptanceGuardTests(unittest.TestCase):
             root = Path(directory)
             reports = root / 'reports'
             reports.mkdir()
-            (root / 'suites.json').write_text(json.dumps({'crud': {'tests': ['TestAccRead', 'TestAccPhone']}}))
+            (root / 'suites.json').write_text(json.dumps(registry({'id': 'crud', 'tests': ['TestAccRead', 'TestAccPhone']})))
             (root / 'skips.json').write_text(json.dumps({'TestAccPhone': 'No lab phone inventory.'}))
-            for mode in ['certificate', 'client-secret']:
-                (reports / (mode + '.json')).write_text(json.dumps({'suite': 'crud', 'auth_method': mode, 'outcome': 'passed', 'tests': [
-                    {'name': 'TestAccRead', 'outcome': 'pass'},
-                    {'name': 'TestAccPhone', 'outcome': 'skip', 'skip_reason': 'No lab phone inventory.'}]}))
+            (reports / 'auth.json').write_text(json.dumps({'suite': 'auth/authentication', 'auth_method': 'all', 'outcome': 'passed',
+                                                           'tests': [{'name': 'TestAccAuth', 'outcome': 'pass'}]}))
+            (reports / 'svc.json').write_text(json.dumps({'suite': 'svc/crud', 'auth_method': 'client-secret', 'outcome': 'passed', 'tests': [
+                {'name': 'TestAccRead', 'outcome': 'pass'},
+                {'name': 'TestAccPhone', 'outcome': 'skip', 'skip_reason': 'No lab phone inventory.'}]}))
             summary = root / 'summary.md'
             args = argparse.Namespace(report_directory=reports)
             with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'GITHUB_STEP_SUMMARY': str(summary)}, clear=True), contextlib.redirect_stdout(io.StringIO()):
@@ -114,7 +126,7 @@ class AcceptanceGuardTests(unittest.TestCase):
                 self.assertIn('provide no acceptance evidence', rendered)
                 self.assertNotIn('Failed test', rendered)
                 # A test's own t.Skip is still a failure, even if the parent report says passed.
-                path = reports / 'certificate.json'
+                path = reports / 'svc.json'
                 original = json.loads(path.read_text())
                 for change in ['runtime-skip', 'wrong-reason', 'missing', 'duplicate', 'include-configured']:
                     report = json.loads(json.dumps(original))
@@ -234,7 +246,7 @@ class AcceptanceGuardTests(unittest.TestCase):
             {'Test': 'TestAccPrivacyRead', 'Action': 'fail'},
         ]
         report = ci.evaluate(events, ['TestAccPrivacyRead'], 1)
-        report.update(suite='resource-reads', auth_method='certificate')
+        report.update(suite='svc/reads', auth_method='client-secret')
         with tempfile.TemporaryDirectory() as directory:
             summary = Path(directory) / 'summary.md'
             output = io.StringIO()
@@ -270,7 +282,7 @@ class AcceptanceGuardTests(unittest.TestCase):
                     {'Test': name, 'Action': 'output', 'Output': reason + ': private-response'},
                     {'Test': name, 'Action': 'fail'},
                 ], [name], 1)
-                report.update(suite='resource-reads', auth_method='client-secret')
+                report.update(suite='svc/reads', auth_method='client-secret')
                 output = io.StringIO()
                 with contextlib.redirect_stdout(output):
                     ci.print_report(report)
@@ -286,7 +298,7 @@ class AcceptanceGuardTests(unittest.TestCase):
             {'Test': name, 'Action': 'fail'},
         ]
         report = ci.evaluate(events, [name], 1)
-        report.update(suite='resource-reads', auth_method='client-secret')
+        report.update(suite='svc/reads', auth_method='client-secret')
         output = io.StringIO()
         with tempfile.TemporaryDirectory() as directory:
             summary = Path(directory) / 'summary.md'
@@ -304,7 +316,7 @@ class AcceptanceGuardTests(unittest.TestCase):
             {'Test': 'TestAccRead', 'Action': 'pass'},
             {'Test': 'TestAccRead/private-identifier', 'Action': 'skip'},
         ], ['TestAccRead'], 0)
-        report.update(suite='resource-reads', auth_method='certificate')
+        report.update(suite='svc/reads', auth_method='client-secret')
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
             ci.print_report(report)
@@ -317,7 +329,7 @@ class AcceptanceGuardTests(unittest.TestCase):
             {'Test': 'TestAccPromptsCapabilityUnavailable', 'Action': 'output', 'Output': 'confirmed capability denial: HTTP 400, PolicyRP 40003; private-response'},
             {'Test': 'TestAccPromptsCapabilityUnavailable', 'Action': 'pass'},
         ], ['TestAccPromptsCapabilityUnavailable'], 0)
-        report.update(suite='tenant-access-outcomes', auth_method='certificate')
+        report.update(suite='assignment_migration/tenant-access-outcomes', step='tenant-access-outcomes', auth_method='client-secret')
         with tempfile.TemporaryDirectory() as directory:
             summary = Path(directory) / 'summary.md'
             output = io.StringIO()
@@ -399,7 +411,7 @@ func TestAccRead(t *testing.T) {
             private = root / 'msteams-acceptance-fixture'
             private.mkdir()
             test = 'TestAccApplicationAccessPolicyCRUD'
-            (root / 'suites.json').write_text(json.dumps({'crud': {'package': './fixture', 'tests': [test], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1}}))
+            (root / 'suites.json').write_text(json.dumps(registry({'id': 'crud', 'tests': [test], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1})))
 
             def process(command, **kwargs):
                 if command[0] == 'git':
@@ -412,9 +424,9 @@ func TestAccRead(t *testing.T) {
 
             with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}), patch.object(ci.subprocess, 'run', side_effect=process):
                 with contextlib.redirect_stdout(io.StringIO()):
-                    outcome = ci.run(argparse.Namespace(suite=['crud'], report_directory=root / 'reports'))
+                    outcome = ci.run(service_run(root))
             self.assertEqual(outcome, 1)
-            self.assertEqual(json.loads((root / 'reports/crud.json').read_text())['cleanup_journal_entries'], 0)
+            self.assertEqual(json.loads((root / 'reports/svc--crud.json').read_text())['cleanup_journal_entries'], 0)
 
     def test_user_assignment_requires_clear_cleanup_and_three_comparisons(self):
         name = 'TestAccApplicationAccessPolicyUserAssignment'
@@ -449,8 +461,8 @@ func TestAccRead(t *testing.T) {
             private = root / 'msteams-acceptance-fixture'
             (private / 'journals').mkdir(parents=True)
             name = 'TestAccApplicationAccessPolicyUserAssignment'
-            (root / 'suites.json').write_text(json.dumps({'assign': {'package': './fixture', 'tests': [name],
-                'mutation': True, 'proof': 'user-assignment', 'journal_entries_per_test': 2}}))
+            (root / 'suites.json').write_text(json.dumps(registry({'id': 'assign', 'tests': [name],
+                'mutation': True, 'proof': 'user-assignment', 'journal_entries_per_test': 2})))
 
             def process(command, **kwargs):
                 if command[0] == 'git':
@@ -465,8 +477,8 @@ func TestAccRead(t *testing.T) {
 
             with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}), patch.object(ci.subprocess, 'run', side_effect=process):
                 with contextlib.redirect_stdout(io.StringIO()):
-                    result = ci.run(argparse.Namespace(suite=['assign'], report_directory=root / 'reports'))
-            report = json.loads((root / 'reports/assign.json').read_text())
+                    result = ci.run(service_run(root))
+            report = json.loads((root / 'reports/svc--assign.json').read_text())
             self.assertEqual(result, 1)
             self.assertEqual(report['cleanup_journal_entries_cleaned'], 1)
             self.assertEqual(report['expected_cleanup_journal_entries'], 2)
@@ -522,51 +534,128 @@ func TestAccRead(t *testing.T) {
                     ci.group_fixture(dict(values, GROUP_FIXTURE_JSON=json.dumps(dict(fixture, **change))))
                 self.assertEqual(str(failure.exception), 'Invalid repository Actions secret: MSTEAMS_LAB_GROUP_FIXTURE_JSON')
 
-    def test_aggregate_requires_every_suite_in_both_authentication_modes(self):
+    def test_aggregate_requires_one_auth_report_and_client_secret_service_reports(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / 'suites.json').write_text(json.dumps({'reads': {'tests': ['TestAccFixture']}, 'writes': {'tests': ['TestAccFixture']}}))
+            (root / 'suites.json').write_text(json.dumps(registry({'id': 'reads', 'tests': ['TestAccFixture']},
+                                                                  {'id': 'crud', 'tests': ['TestAccWrite'], 'mutation': True,
+                                                                   'proof': 'owned-crud', 'journal_entries_per_test': 1})))
             reports = root / 'reports'
             reports.mkdir()
-            for mode in ['certificate', 'client-secret']:
-                for suite in ['reads', 'writes']:
-                    (reports / (mode + '-' + suite + '.json')).write_text(json.dumps({
-                        'suite': suite, 'auth_method': mode, 'outcome': 'passed',
-                        'tests': [{'name': 'TestAccFixture', 'outcome': 'pass'}]}))
-            with patch.object(ci, 'HERE', root), contextlib.redirect_stdout(io.StringIO()):
+
+            def write(name, suite, mode, test):
+                (reports / (name + '.json')).write_text(json.dumps({
+                    'suite': suite, 'auth_method': mode, 'outcome': 'passed', 'tests': [{'name': test, 'outcome': 'pass'}]}))
+
+            write('auth--authentication', 'auth/authentication', 'all', 'TestAccAuth')
+            write('svc--reads', 'svc/reads', 'client-secret', 'TestAccFixture')
+            write('svc--crud', 'svc/crud', 'client-secret', 'TestAccWrite')
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {}, clear=True), contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 0)
-                (reports / 'client-secret-writes.json').unlink()
+                # A service report from certificate auth is unexpected, not extra evidence.
+                write('svc--reads-certificate', 'svc/reads', 'certificate', 'TestAccFixture')
                 self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 1)
-                (reports / 'duplicate.json').write_text((reports / 'certificate-reads.json').read_text())
+                (reports / 'svc--reads-certificate.json').unlink()
+                (reports / 'auth--authentication.json').unlink()
+                self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 1)
+                write('auth--authentication', 'auth/authentication', 'all', 'TestAccAuth')
+                (reports / 'svc--crud.json').unlink()
+                self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 1)
+                # A dispatch that reruns selected services expects only their reports.
+                with patch.dict(os.environ, {'MSTEAMS_ACC_SERVICES': 'svc'}):
+                    self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 1)
+                write('svc--crud', 'svc/crud', 'client-secret', 'TestAccWrite')
+                (reports / 'duplicate.json').write_text((reports / 'svc--reads.json').read_text())
                 self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 1)
 
-    def test_read_selection_cannot_enable_mutations(self):
+    def test_service_steps_run_in_order_and_only_mutating_steps_enable_mutations(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             private = root / 'msteams-acceptance-fixture'
-            private.mkdir()
-            (root / 'suites.json').write_text(json.dumps({
-                'reads': {'package': './fixture', 'tests': ['TestAccRead']},
-                'writes': {'package': './fixture', 'tests': ['TestAccWrite'], 'mutation': True,
-                           'proof': 'owned-crud', 'journal_entries_per_test': 1}}))
+            (private / 'journals').mkdir(parents=True)
+            (root / 'suites.json').write_text(json.dumps(registry(
+                {'id': 'reads', 'tests': ['TestAccRead']},
+                {'id': 'crud', 'tests': ['TestAccWrite'], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1})))
             invoked = []
 
             def process(command, **kwargs):
                 if command[0] == 'git':
                     return subprocess.CompletedProcess(command, 0, stdout='a' * 40 + '\n')
-                invoked.append((command, kwargs['env']['MSTEAMS_LAB_MUTATIONS']))
-                kwargs['stdout'].write(json.dumps({'Test': 'TestAccRead', 'Action': 'pass'}) + '\n')
+                name = command[command.index('-run') + 1][2:-2]
+                invoked.append((name, kwargs['env']['MSTEAMS_LAB_MUTATIONS'], kwargs['env']['MSTEAMS_LAB_AUTH_METHOD']))
+                kwargs['stdout'].write(json.dumps({'Test': name, 'Action': 'pass'}) + '\n')
                 return subprocess.CompletedProcess(command, 0)
 
-            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}), patch.object(ci.subprocess, 'run', side_effect=process):
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}, clear=True), patch.object(ci.subprocess, 'run', side_effect=process):
                 with contextlib.redirect_stdout(io.StringIO()):
-                    result = ci.run(argparse.Namespace(suite=None, kind='reads', report_directory=root / 'reports'))
-            self.assertEqual(result, 0)
+                    ci.run(service_run(root))
+                    self.assertEqual(invoked, [('TestAccRead', '0', 'client-secret'), ('TestAccWrite', '1', 'client-secret')])
+                    invoked.clear()
+                    self.assertEqual(ci.run(argparse.Namespace(auth=False, service='svc', step=['reads'], report_directory=root / 'only-reads')), 0)
+            self.assertEqual(invoked, [('TestAccRead', '0', 'client-secret')])
+            self.assertFalse((root / 'only-reads/svc--crud.json').exists())
+
+    def test_failed_step_blocks_later_mutations_of_the_service(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            private = root / 'msteams-acceptance-fixture'
+            (private / 'journals').mkdir(parents=True)
+            (root / 'suites.json').write_text(json.dumps(registry(
+                {'id': 'reads', 'tests': ['TestAccRead']},
+                {'id': 'crud', 'tests': ['TestAccWrite'], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1})))
+            invoked = []
+
+            def process(command, **kwargs):
+                if command[0] == 'git':
+                    return subprocess.CompletedProcess(command, 0, stdout='a' * 40 + '\n')
+                invoked.append(command)
+                kwargs['stdout'].write(json.dumps({'Test': 'TestAccRead', 'Action': 'fail'}) + '\n')
+                return subprocess.CompletedProcess(command, 1)
+
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}, clear=True), patch.object(ci.subprocess, 'run', side_effect=process):
+                with contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(ci.run(service_run(root)), 1)
             self.assertEqual(len(invoked), 1)
-            self.assertEqual(invoked[0][1], '0')
-            self.assertIn('TestAccRead', ' '.join(invoked[0][0]))
-            self.assertNotIn('TestAccWrite', ' '.join(invoked[0][0]))
-            self.assertFalse((root / 'reports/writes.json').exists())
+            report = json.loads((root / 'reports/svc--crud.json').read_text())
+            self.assertEqual(report['outcome'], 'failed')
+            self.assertTrue(report['blocked_by_earlier_step'])
+            self.assertEqual(report['tests'], [{'name': 'TestAccWrite', 'outcome': 'not-run'}])
+
+    def test_service_partitions_refuse_certificate_authentication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'suites.json').write_text(json.dumps(registry({'id': 'reads', 'tests': ['TestAccRead']})))
+            environment = {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(root), 'MSTEAMS_LAB_AUTH_METHOD': 'certificate'}
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, environment, clear=True), patch.object(ci.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0, stdout='a' * 40 + '\n')) as process:
+                with self.assertRaises(ci.AcceptanceFailure):
+                    ci.run(service_run(root))
+            self.assertEqual([call.args[0][0] for call in process.call_args_list], ['git'])
+
+    def test_auth_partition_loads_every_credential_kind(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'suites.json').write_text(json.dumps(registry({'id': 'reads', 'tests': ['TestAccRead']})))
+            invoked = []
+
+            def process(command, **kwargs):
+                if command[0] == 'git':
+                    return subprocess.CompletedProcess(command, 0, stdout='a' * 40 + '\n')
+                invoked.append((command[-1], kwargs['env']['MSTEAMS_LAB_AUTH_METHOD']))
+                kwargs['stdout'].write(json.dumps({'Test': 'TestAccAuth', 'Action': 'pass'}) + '\n')
+                return subprocess.CompletedProcess(command, 0)
+
+            for mode in ['certificate', 'client-secret']:
+                environment = {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(root), 'MSTEAMS_LAB_AUTH_METHOD': mode}
+                with self.subTest(mode=mode), patch.object(ci, 'HERE', root), patch.dict(os.environ, environment, clear=True), patch.object(ci.subprocess, 'run', side_effect=process):
+                    with self.assertRaises(ci.AcceptanceFailure):
+                        ci.run(argparse.Namespace(auth=True, service=None, step=None, report_directory=root / 'reports'))
+            environment = {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(root), 'MSTEAMS_LAB_AUTH_METHOD': 'all'}
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, environment, clear=True), patch.object(ci.subprocess, 'run', side_effect=process):
+                with contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(ci.run(argparse.Namespace(auth=True, service=None, step=None, report_directory=root / 'reports')), 0)
+            self.assertEqual(invoked, [('./auth', 'all')])
+            report = json.loads((root / 'reports/auth--authentication.json').read_text())
+            self.assertEqual((report['suite'], report['partition'], report['auth_method']), ('auth/authentication', 'auth', 'all'))
 
     def test_naming_guard_distinguishes_test_account_from_test_acc(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -578,33 +667,76 @@ func TestAccRead(t *testing.T) {
             with self.assertRaises(ValueError):
                 ci.check_names(root)
 
-    def test_singleton_reads_share_the_write_lock_without_mutation_enablement(self):
+    def test_plan_locks_services_with_serialized_reads_or_mutations(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            output = root / 'github-output'
+            fixture = {'auth': registry()['auth'], 'services': {
+                'platform': {'package': './fixture', 'steps': [{'id': 'reads', 'tests': ['TestAccOrdinaryRead']}]},
+                'teams_messaging_configuration': {'package': './fixture', 'steps': [{'id': 'global-reads', 'serial': True, 'tests': ['TestAccSingletonRead']}]},
+                'teams_call_hold_policy': {'package': './fixture', 'steps': [
+                    {'id': 'reads', 'tests': ['TestAccCallHoldRead']},
+                    {'id': 'crud', 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1, 'tests': ['TestAccCallHoldWrite']}]}}}
+            (root / 'suites.json').write_text(json.dumps(fixture))
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'GITHUB_OUTPUT': str(output)}, clear=True), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(ci.plan(argparse.Namespace()), 0)
+                lines = dict(line.split('=', 1) for line in output.read_text().splitlines())
+                self.assertNotIn('auth', lines)
+                self.assertEqual(json.loads(lines['services_unlocked']), ['platform'])
+                self.assertEqual(json.loads(lines['services_locked']), ['teams_messaging_configuration', 'teams_call_hold_policy'])
+                output.write_text('')
+                with patch.dict(os.environ, {'MSTEAMS_ACC_SERVICES': 'teams_call_hold_policy'}):
+                    ci.plan(argparse.Namespace())
+                lines = dict(line.split('=', 1) for line in output.read_text().splitlines())
+                self.assertEqual((json.loads(lines['services_unlocked']), json.loads(lines['services_locked'])), ([], ['teams_call_hold_policy']))
+                with patch.dict(os.environ, {'MSTEAMS_ACC_SERVICES': 'teams_unknown'}), self.assertRaises(ci.AcceptanceFailure):
+                    ci.plan(argparse.Namespace())
+
+    def test_registry_rejects_unordered_unknown_or_unchecked_partitions(self):
+        base = registry({'id': 'reads', 'tests': ['TestAccRead']}, service='platform')
+        ci.validate_registry(base)
+        crud = {'id': 'crud', 'tests': ['TestAccWrite'], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1}
+        for change in [
+            lambda r: r['services'].update(teams_unknown_service=r['services'].pop('platform')),
+            lambda r: r['services']['platform']['steps'].insert(0, crud),
+            lambda r: r['services']['platform']['steps'].append(dict(crud, proof='unknown')),
+            lambda r: r['services']['platform']['steps'].append(dict(crud, id='reads')),
+            lambda r: r['auth'].update(steps=[]),
+            lambda r: r['auth']['steps'][0].update(mutation=True),
+        ]:
+            broken = json.loads(json.dumps(base))
+            change(broken)
+            with self.subTest(registry=broken), self.assertRaises(ci.AcceptanceFailure):
+                ci.validate_registry(broken)
+
+    def test_serialized_reads_never_enable_mutations(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             private = root / 'msteams-acceptance-fixture'
             (private / 'journals').mkdir(parents=True)
-            (root / 'suites.json').write_text(json.dumps({
-                'ordinary': {'package': './fixture', 'tests': ['TestAccOrdinaryRead']},
-                'singleton': {'package': './fixture', 'serial': True, 'tests': ['TestAccSingletonRead']}}))
+            (root / 'suites.json').write_text(json.dumps(registry({'id': 'global-reads', 'serial': True, 'tests': ['TestAccSingletonRead']})))
             invoked = []
 
             def process(command, **kwargs):
                 if command[0] == 'git':
                     return subprocess.CompletedProcess(command, 0, stdout='a' * 40 + '\n')
-                invoked.append((command, kwargs['env']['MSTEAMS_LAB_MUTATIONS']))
-                name = 'TestAccSingletonRead' if 'TestAccSingletonRead' in command[command.index('-run') + 1] else 'TestAccOrdinaryRead'
-                kwargs['stdout'].write(json.dumps({'Test': name, 'Action': 'pass'}) + '\n')
+                invoked.append(kwargs['env']['MSTEAMS_LAB_MUTATIONS'])
+                kwargs['stdout'].write(json.dumps({'Test': 'TestAccSingletonRead', 'Action': 'pass'}) + '\n')
                 return subprocess.CompletedProcess(command, 0)
 
-            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}), patch.object(ci.subprocess, 'run', side_effect=process):
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}, clear=True), patch.object(ci.subprocess, 'run', side_effect=process):
                 with contextlib.redirect_stdout(io.StringIO()):
-                    for kind in ['reads', 'writes']:
-                        self.assertEqual(ci.run(argparse.Namespace(suite=None, kind=kind, report_directory=root / kind)), 0)
-            self.assertEqual(len(invoked), 2)
-            self.assertIn('TestAccOrdinaryRead', ' '.join(invoked[0][0]))
-            self.assertNotIn('TestAccSingletonRead', ' '.join(invoked[0][0]))
-            self.assertIn('TestAccSingletonRead', ' '.join(invoked[1][0]))
-            self.assertEqual([mode for _, mode in invoked], ['0', '0'])
+                    self.assertEqual(ci.run(service_run(root)), 0)
+            self.assertEqual(invoked, ['0'])
+            self.assertEqual(json.loads((root / 'reports/svc--global-reads.json').read_text())['phase'], 'writes')
+
+    def test_prepare_requires_certificate_material_only_for_certificate_auth(self):
+        for mode, required in [('all', True), ('certificate', True), ('client-secret', False)]:
+            with self.subTest(mode=mode), patch.dict(os.environ, {'MSTEAMS_LAB_AUTH_METHOD': mode}, clear=True):
+                with self.assertRaises(ci.AcceptanceFailure) as failure:
+                    ci.prepare(argparse.Namespace(metadata=None, archive=None))
+                self.assertEqual('MSTEAMS_LAB_CERTIFICATE_PEM' in str(failure.exception), required)
+                self.assertEqual('MSTEAMS_LAB_PRIVATE_KEY_PEM' in str(failure.exception), required)
 
     def test_configuration_update_requires_restoration_and_three_comparisons(self):
         name = 'TestAccMessagingConfigurationUpdateRestore'

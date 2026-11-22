@@ -19,8 +19,17 @@ try {
  $stage='module';Import-Module $manifest -Force -WarningAction SilentlyContinue
  $stage='identity';$identity=Get-Content -LiteralPath $env:MSTEAMS_LAB_IDENTITY_FILE -Raw | ConvertFrom-Json
  if([Guid]::Parse($identity.tenant_id).ToString() -ne $tenant){throw 'Tenant binding differs.'}
- $stage='authentication';$certificate=[Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromPemFile($identity.certificate_file,$identity.private_key_file)
- Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $identity.tenant_id -ErrorAction Stop -InformationAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
+ $stage='authentication';if($env:MSTEAMS_LAB_AUTH_METHOD -eq 'client-secret'){
+   $authTenant=[Guid]::Parse($identity.tenant_id).ToString();$tokens=@()
+   foreach($scope in @('https://graph.microsoft.com/.default','48ac35b8-9aa8-4d74-927d-1f4a14a0b239/.default')){
+     $token=Invoke-RestMethod -Method Post -Uri "https://login.microsoftonline.com/$authTenant/oauth2/v2.0/token" -Body @{grant_type='client_credentials';client_id=$identity.client_id;client_secret=$identity.client_secret;scope=$scope}
+     $tokens+= $token.access_token
+   }
+   Connect-MicrosoftTeams -AccessTokens $tokens -ErrorAction Stop -InformationAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
+ }elseif([string]::IsNullOrEmpty($env:MSTEAMS_LAB_AUTH_METHOD) -or $env:MSTEAMS_LAB_AUTH_METHOD -eq 'certificate'){
+   $certificate=[Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromPemFile($identity.certificate_file,$identity.private_key_file)
+   Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $identity.tenant_id -ErrorAction Stop -InformationAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
+ }else{throw 'Unknown auth method.'}
  $connected=$true;$stage='read';$values=@(Get-CsTeamsCallingPolicy -Identity $selected -ErrorAction Stop)
  $stage='selected-result';if($values.Count -ne 1 -or (([string]$values[0].Identity -replace '^(?i)tag:','') -ine $fixture)){throw 'Expected Global policy.'}
  $settings=@{}

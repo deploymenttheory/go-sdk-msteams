@@ -83,7 +83,7 @@ func comparePowerShellPolicy(t *testing.T, ctx context.Context, name, descriptio
 			command.Env = append(command.Env, key+"="+value)
 		}
 	}
-	command.Env = append(command.Env, "MSTEAMS_LAB_MODULE_PATH="+module, "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"), "MSTEAMS_LAB_POLICY_FIXTURE="+name)
+	command.Env = append(command.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_MODULE_PATH="+module, "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"), "MSTEAMS_LAB_POLICY_FIXTURE="+name)
 	var output labkit.OracleBuffer
 	command.Stdout, command.Stderr = &output, io.Discard
 	defer func() { clear(output.Data) }()
