@@ -17,6 +17,164 @@ SPEC.loader.exec_module(ci)
 
 
 class AcceptanceGuardTests(unittest.TestCase):
+    def test_skip_selection_requires_exact_registered_names_and_public_reasons(self):
+        suites = {'crud': {'tests': ['TestAccRead', 'TestAccPhone']}}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'skips.json').write_text(json.dumps({'TestAccPhone': 'No lab phone inventory.'}))
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {}, clear=True):
+                self.assertEqual(ci.selected_skips(suites), {'TestAccPhone': 'No lab phone inventory.'})
+                self.assertEqual(ci.selected_skips(suites, argparse.Namespace(include_test=['TestAccPhone'])), {})
+                self.assertEqual(ci.selected_skips(suites, argparse.Namespace(skip_test=['TestAccRead'], skip_reason='Maintenance.')),
+                                 {'TestAccPhone': 'No lab phone inventory.', 'TestAccRead': 'Maintenance.'})
+                for args in [
+                    argparse.Namespace(skip_test=['TestAccRead']),
+                    argparse.Namespace(skip_test=['TestAccUnknown'], skip_reason='Maintenance.'),
+                    argparse.Namespace(skip_test=['TestAcc.*'], skip_reason='Maintenance.'),
+                    argparse.Namespace(include_test=['TestAccRead']),
+                    argparse.Namespace(include_test=['TestAccPhone'], skip_test=['TestAccPhone'], skip_reason='Maintenance.'),
+                    argparse.Namespace(skip_test=['TestAccRead'], skip_reason='reason\n::error::injection'),
+                ]:
+                    with self.subTest(args=args), self.assertRaises(ci.AcceptanceFailure):
+                        ci.selected_skips(suites, args)
+                with patch.dict(os.environ, {'MSTEAMS_ACC_SKIP_TESTS': 'TestAccRead', 'MSTEAMS_ACC_SKIP_REASON': 'Maintenance.', 'MSTEAMS_ACC_INCLUDE_TESTS': 'TestAccPhone'}):
+                    self.assertEqual(ci.selected_skips(suites), {'TestAccRead': 'Maintenance.'})
+                (root / 'skips.json').write_text(json.dumps({'TestAccUnknown': 'Stale selection.'}))
+                with self.assertRaises(ci.AcceptanceFailure):
+                    ci.selected_skips(suites)
+
+    def test_selective_crud_skip_runs_other_tests_and_counts_only_their_journals(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            private = root / 'private'
+            journals = private / 'journals'
+            journals.mkdir(parents=True)
+            active, skipped = 'TestAccRead', 'TestAccPhone'
+            (root / 'suites.json').write_text(json.dumps({'crud': {'package': './fixture', 'tests': [active, skipped], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1}}))
+            (root / 'skips.json').write_text(json.dumps({skipped: 'No lab phone inventory.'}))
+            invoked = []
+
+            def process(command, **kwargs):
+                if command[0] == 'git':
+                    return subprocess.CompletedProcess(command, 0, stdout='a' * 40 + '\n')
+                invoked.append(command)
+                for marker in ci.PROOF_MARKERS + [ci.ORACLE_MARKER] * 2:
+                    kwargs['stdout'].write(json.dumps({'Test': active, 'Action': 'output', 'Output': marker}) + '\n')
+                kwargs['stdout'].write(json.dumps({'Test': active, 'Action': 'pass'}) + '\n')
+                (journals / 'owned.json').write_text(json.dumps({'entries': [{'state': 'cleaned'}]}))
+                return subprocess.CompletedProcess(command, 0)
+
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}, clear=True), patch.object(ci.subprocess, 'run', side_effect=process), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(ci.run(argparse.Namespace(suite=['crud'], report_directory=root / 'reports')), 0)
+            self.assertEqual(len(invoked), 1)
+            pattern = invoked[0][invoked[0].index('-run') + 1]
+            self.assertEqual(pattern, '^(TestAccRead)$')
+            report = json.loads((root / 'reports/crud.json').read_text())
+            self.assertEqual(report['expected_cleanup_journal_entries'], 1)
+            self.assertEqual(report['cleanup_journal_entries_cleaned'], 1)
+            self.assertEqual(report['tests'][1], {'name': skipped, 'outcome': 'skip', 'skip_reason': 'No lab phone inventory.'})
+            self.assertTrue(ci.report_matches_selection(report, {'tests': [active, skipped]}, {skipped: 'No lab phone inventory.'}))
+
+    def test_entire_skipped_suite_never_starts_go_or_counts_as_passed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            private = root / 'private'
+            private.mkdir()
+            (root / 'suites.json').write_text(json.dumps({'phone': {'package': './fixture', 'tests': ['TestAccPhone'], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1}}))
+            (root / 'skips.json').write_text(json.dumps({'TestAccPhone': 'No lab phone inventory.'}))
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}, clear=True), patch.object(ci.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0, stdout='a' * 40 + '\n')) as process, contextlib.redirect_stdout(io.StringIO()) as output:
+                self.assertEqual(ci.run(argparse.Namespace(suite=['phone'], report_directory=root / 'reports')), 0)
+            self.assertEqual(process.call_count, 1)
+            self.assertEqual(process.call_args.args[0][0], 'git')
+            report = json.loads((root / 'reports/phone.json').read_text())
+            self.assertEqual(report['outcome'], 'skipped')
+            self.assertEqual(report['expected_cleanup_journal_entries'], 0)
+            self.assertIn('SKIP TestAccPhone: No lab phone inventory.', output.getvalue())
+            self.assertNotIn('FAIL', output.getvalue())
+            self.assertFalse(list(private.glob('*.jsonl')))
+
+    def test_aggregate_accepts_only_the_requested_skips_and_displays_reasons(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            reports = root / 'reports'
+            reports.mkdir()
+            (root / 'suites.json').write_text(json.dumps({'crud': {'tests': ['TestAccRead', 'TestAccPhone']}}))
+            (root / 'skips.json').write_text(json.dumps({'TestAccPhone': 'No lab phone inventory.'}))
+            for mode in ['certificate', 'client-secret']:
+                (reports / (mode + '.json')).write_text(json.dumps({'suite': 'crud', 'auth_method': mode, 'outcome': 'passed', 'tests': [
+                    {'name': 'TestAccRead', 'outcome': 'pass'},
+                    {'name': 'TestAccPhone', 'outcome': 'skip', 'skip_reason': 'No lab phone inventory.'}]}))
+            summary = root / 'summary.md'
+            args = argparse.Namespace(report_directory=reports)
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'GITHUB_STEP_SUMMARY': str(summary)}, clear=True), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(ci.summarize(args), 0)
+                rendered = summary.read_text()
+                self.assertIn('### Configured skips', rendered)
+                self.assertIn('No lab phone inventory.', rendered)
+                self.assertIn('provide no acceptance evidence', rendered)
+                self.assertNotIn('Failed test', rendered)
+                # A test's own t.Skip is still a failure, even if the parent report says passed.
+                path = reports / 'certificate.json'
+                original = json.loads(path.read_text())
+                for change in ['runtime-skip', 'wrong-reason', 'missing', 'duplicate', 'include-configured']:
+                    report = json.loads(json.dumps(original))
+                    overrides = args
+                    if change == 'runtime-skip':
+                        report['tests'][0]['outcome'] = 'skip'
+                    elif change == 'wrong-reason':
+                        report['tests'][1]['skip_reason'] = 'Different reason.'
+                    elif change == 'missing':
+                        report['tests'].pop()
+                    elif change == 'duplicate':
+                        report['tests'].append(report['tests'][1])
+                    else:
+                        overrides = argparse.Namespace(report_directory=reports, include_test=['TestAccPhone'])
+                    path.write_text(json.dumps(report))
+                    with self.subTest(change=change):
+                        self.assertEqual(ci.summarize(overrides), 1)
+
+    def test_populated_shared_calling_requires_list_edits_and_four_comparisons(self):
+        test = 'TestAccSharedCallingRoutingPolicyPopulatedCRUD'
+        proof = 'owned-shared-calling-populated-crud'
+        markers, oracle, count = ci.PROOFS[proof]
+        events = [{'Test': test, 'Action': 'output', 'Output': marker} for marker in markers + [oracle] * count]
+        events.append({'Test': test, 'Action': 'pass'})
+        self.assertEqual(ci.evaluate(events, [test], 0, proof=proof)['outcome'], 'passed')
+        for absent in ['shared calling populated list edit/clear: passed', oracle]:
+            missing = events.copy()
+            missing.remove(next(event for event in missing if event.get('Output') == absent))
+            with self.subTest(absent=absent):
+                self.assertEqual(ci.evaluate(missing, [test], 0, proof=proof)['outcome'], 'failed')
+
+    def test_optional_phone_fixture_rejects_foreign_tenants_and_dial_codes(self):
+        tenant = '11111111-1111-1111-1111-111111111111'
+        fixture = {'tenant_id': tenant, 'resource_account_id': '22222222-2222-2222-2222-222222222222',
+                   'emergency_numbers': ['+12025550101', '+12025550102']}
+        # Parser vectors only; these reserved numbers are never submitted to a tenant.
+        self.assertEqual(ci.shared_calling_fixture(tenant, json.dumps(fixture)), fixture)
+        for update in [
+            {'tenant_id': '33333333-3333-3333-3333-333333333333'},
+            {'resource_account_id': 'not-an-account-id'},
+            {'emergency_numbers': ['112', '999']},
+            {'emergency_numbers': ['+12025550101']},
+            {'emergency_numbers': ['+12025550101', '+12025550101']},
+            {'emergency_numbers': ['+12025550101', None]},
+            {'unexpected': 'private-value'},
+        ]:
+            with self.subTest(update=update), self.assertRaises(ci.AcceptanceFailure) as failure:
+                ci.shared_calling_fixture(tenant, json.dumps(fixture | update))
+            self.assertNotIn('private-value', str(failure.exception))
+
+    def test_read_mismatch_diagnostics_publish_only_fixed_reasons(self):
+        test = 'TestAccNotificationAndFeedsPolicyReadOnly'
+        events = [
+            {'Test': test, 'Action': 'output', 'Output': 'read/list comparison: metadata values differ private-tenant-value'},
+            {'Test': test, 'Action': 'fail'},
+        ]
+        report = ci.evaluate(events, [test], 1)
+        self.assertEqual(report['failure_reasons'][test], ['read/list comparison: metadata values differ'])
+        self.assertNotIn('private-tenant-value', json.dumps(report))
+
     def test_skip_missing_empty_and_failed_process_cannot_pass(self):
         for events, expected, code in [
             ([{'Test': 'TestAccRead', 'Action': 'skip'}], ['TestAccRead'], 0),
@@ -324,7 +482,7 @@ func TestAccRead(t *testing.T) {
     def test_aggregate_requires_every_suite_in_both_authentication_modes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / 'suites.json').write_text(json.dumps({'reads': {}, 'writes': {}}))
+            (root / 'suites.json').write_text(json.dumps({'reads': {'tests': ['TestAccFixture']}, 'writes': {'tests': ['TestAccFixture']}}))
             reports = root / 'reports'
             reports.mkdir()
             for mode in ['certificate', 'client-secret']:

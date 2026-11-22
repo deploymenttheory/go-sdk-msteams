@@ -119,9 +119,21 @@ func TestAccOnlineVoicemailReadOnly(t *testing.T) {
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.ListFiltered(ctx, "Global")
 	writeResponseFixture(t, "online_voicemail_policy", "list", listResponse, nil)
-	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !sameResponseFields(value.RawFields, listed[0].RawFields) {
+	if err != nil {
+		logAccessResponse(t, listResponse, err)
+		t.Fatal("voicemail Global list request failed")
+	}
+	if value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") {
+		t.Fatal("voicemail Global read identity differs")
+	}
+	if len(listed) != 1 || listed[0] == nil {
+		t.Fatal("voicemail Global list selection differs")
+	}
+	if reason := responseComparisonFailure(value.RawFields, listed[0].RawFields); reason != "" {
+		t.Log(reason)
 		t.Fatal("voicemail Global read/list observations differ")
 	}
+
 	if oracle {
 		tenant, _, ok := strings.Cut(binding, "|")
 		if !ok {

@@ -77,6 +77,10 @@ func tenantConfigurationOracle(t *testing.T, ctx context.Context, kind, tenant s
 		names = []string{"EnableLegacyClientInterop"}
 	case "mobility":
 		names = []string{"Description", "IPAudioMobileMode", "IPVideoMobileMode", "MobileDialerPreference", "LinksInTeams"}
+	case "room-video":
+		names = []string{"Description", "Enabled", "AreaCode", "ReceiveExternalCalls", "ReceiveInternalCalls", "PlaceExternalCalls", "PlaceInternalCalls"}
+	case "shared-calling":
+		names = []string{"Description", "ResourceAccount", "EmergencyNumbers"}
 	case "personal":
 		names = []string{"PersonalAttendant", "CallScreening", "CalendarBookings", "InboundInternalCalls", "InboundFederatedCalls", "InboundPSTNCalls", "AutomaticTranscription", "AutomaticRecording"}
 	case "recording-rollout":

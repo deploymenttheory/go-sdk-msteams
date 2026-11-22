@@ -54,9 +54,21 @@ func testCompiledScalarGlobal(t *testing.T, kind, family string, read func(*mste
 	}
 	values, response, err := list(ctx, sdk)
 	writeResponseFixture(t, family, "list", response, nil)
-	if err != nil || len(values) != 1 || values[0] == nil || !sameResponseFields(v.fields, values[0].fields) || !sameTemplateProjection(v.settings, values[0].settings) {
+	if err != nil {
+		logAccessResponse(t, response, err)
+		t.Fatal("compiled scalar Global list request failed")
+	}
+	if len(values) != 1 || values[0] == nil {
+		t.Fatal("compiled scalar Global list selection differs")
+	}
+	if reason := responseComparisonFailure(v.fields, values[0].fields); reason != "" {
+		t.Log(reason)
 		t.Fatal("compiled scalar Global read/list differ")
 	}
+	if !sameTemplateProjection(v.settings, values[0].settings) {
+		t.Fatal("compiled scalar Global typed getters differ")
+	}
+
 	if oracle {
 		tenant, _, ok := strings.Cut(binding, "|")
 		if !ok || !sameTemplateProjection(v.settings, tenantConfigurationOracle(t, ctx, kind, tenant)) {
