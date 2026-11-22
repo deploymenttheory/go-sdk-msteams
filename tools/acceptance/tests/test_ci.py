@@ -52,6 +52,7 @@ class AcceptanceGuardTests(unittest.TestCase):
                 ci.prepare(argparse.Namespace(metadata=None, archive=None))
         self.assertIn('MSTEAMS_LAB_CLIENT_ID', str(failure.exception))
         self.assertIn('MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM', str(failure.exception))
+        self.assertIn('MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID', str(failure.exception))
         self.assertNotIn('MSTEAMS_LAB_TENANT_ID', str(failure.exception))
         self.assertNotIn('private-tenant-value', str(failure.exception))
 

@@ -34,6 +34,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 	_, err = journal.Recover(ctx, map[string]lab.Handler{
 		"application-access-policy": policyCleanup{sdk.TeamsAdminAPI.ApplicationAccessPolicies},
 		"external-access-policy":    externalPolicyCleanup{sdk.TeamsAdminAPI.ExternalAccessPolicies},
+		"call-hold-policy":          callHoldPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallHoldPolicies},
+		"call-park-policy":          callParkPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallParkPolicies},
 		"calling-policy":            callingPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallingPolicies},
 	})
 	if err != nil {

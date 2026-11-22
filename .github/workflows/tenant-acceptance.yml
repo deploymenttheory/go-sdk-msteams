@@ -11,6 +11,7 @@ permissions:
 
 concurrency:
   group: msteams-lab-tenant-acceptance
+  queue: max
   cancel-in-progress: false
 
 env:
@@ -51,6 +52,7 @@ jobs:
           MSTEAMS_LAB_CLIENT_SECRET: ${{ secrets.MSTEAMS_LAB_CLIENT_SECRET }}
           MSTEAMS_LAB_CERTIFICATE_PEM: ${{ secrets.MSTEAMS_LAB_CERTIFICATE_PEM }}
           MSTEAMS_LAB_PRIVATE_KEY_PEM: ${{ secrets.MSTEAMS_LAB_PRIVATE_KEY_PEM }}
+          MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID: ${{ secrets.MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID }}
           MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM: ${{ secrets.MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM }}
         run: python3 tools/acceptance/ci.py prepare
       - name: Run TestAcc tests

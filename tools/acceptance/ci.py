@@ -70,11 +70,13 @@ def check_names(root=ROOT):
 
 
 def prepare(args):
-    keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'CERTIFICATE_PEM', 'PRIVATE_KEY_PEM', 'RECOVERY_CERTIFICATE_PEM']
+    keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'CERTIFICATE_PEM', 'PRIVATE_KEY_PEM', 'RECOVERY_CERTIFICATE_PEM', 'CALL_HOLD_AUDIO_FILE_ID']
     values = {key: os.environ.get('MSTEAMS_LAB_' + key, '') for key in keys}
     missing = ['MSTEAMS_LAB_' + key for key, value in values.items() if not value.strip()]
     if missing:
         raise AcceptanceFailure('Missing repository Actions secrets: ' + ', '.join(missing))
+    if not re.fullmatch(r'(?:[0-9a-fA-F]{32}|[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})', values['CALL_HOLD_AUDIO_FILE_ID']):
+        raise AcceptanceFailure('Invalid repository Actions secret: MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID')
     base = Path(os.environ['RUNNER_TEMP']).resolve()
     private = Path(tempfile.mkdtemp(prefix='msteams-acceptance-', dir=base))
     certificate = private / 'certificate.pem'
@@ -85,6 +87,7 @@ def prepare(args):
     write_json(private / 'identity.json', {
         'tenant_id': values['TENANT_ID'], 'client_id': values['CLIENT_ID'],
         'client_secret': values['CLIENT_SECRET'],
+        'call_hold_audio_file_id': values['CALL_HOLD_AUDIO_FILE_ID'],
         'certificate_file': str(certificate), 'private_key_file': str(key),
     })
     # Publish paths early so finalization also runs after a download/import failure.
@@ -102,7 +105,7 @@ def prepare(args):
     info = baseline.gallery_metadata(metadata.read_bytes(), baseline.VERSION)
     baseline.verify_archive(archive, info, baseline.PIN)
     baseline.extract_archive(archive, private / 'module')
-    print('Repository secrets loaded: 6. MicrosoftTeams 8.1.0 checksum verified.', flush=True)
+    print('Repository secrets loaded: 7. MicrosoftTeams 8.1.0 checksum verified.', flush=True)
 
 
 def evaluate(events, expected, process_exit, require_crud=False):
