@@ -17,7 +17,10 @@ The certificate/client-secret matrix executes the explicit selections in
 service discovery, three tenant access-outcome checks, and owned unassigned
 application-access, external-access, calling, call-hold and call-park policy CRUD.
 Authentication jobs run one at a time because concurrent writes to the tenant's
-policy collection can conflict even when resource names differ. Selected tests
+policy collection can conflict even when resource names differ. The shared
+workflow group uses `queue: max`, so a new PR, main push or release update waits
+instead of replacing an existing pending run. GitHub documents the
+[workflow queue behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency). Selected tests
 and child cases must pass. Skips,
 missing tests, setup failures and unsuccessful cleanup fail CI. CRUD also requires
 all assertion milestones, two PowerShell comparisons for each selected mutation test and new cleaned journals.
