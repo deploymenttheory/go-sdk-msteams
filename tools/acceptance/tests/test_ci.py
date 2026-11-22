@@ -278,6 +278,25 @@ func TestAccRead(t *testing.T) {
                 incomplete = [event for event in events if event.get('Output') != marker]
                 self.assertEqual(ci.evaluate(incomplete, [name], 0, proof='group-assignment')['outcome'], 'failed')
 
+    def test_template_variants_each_require_crud_and_two_comparisons(self):
+        name = 'TestAccTeamTemplateCRUD'
+        children = {name: ['expanded', 'json-body']}
+        events = [{'Test': name, 'Action': 'pass'}]
+        for child in children[name]:
+            events.append({'Test': name + '/' + child, 'Action': 'pass'})
+            events += [{'Test': name + '/' + child, 'Action': 'output', 'Output': marker}
+                       for marker in ci.TEMPLATE_MARKERS + [ci.TEMPLATE_ORACLE] * 2]
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='template-crud', expected_children=children)['outcome'], 'passed')
+        for removed in [
+            lambda event: event['Test'].endswith('/json-body') and event['Action'] == 'pass',
+            lambda event: event['Test'].endswith('/json-body') and event.get('Output') == ci.TEMPLATE_MARKERS[2],
+            lambda event: event['Test'].endswith('/json-body') and event.get('Output') == ci.TEMPLATE_ORACLE,
+        ]:
+            incomplete = [event for event in events if not removed(event)]
+            self.assertEqual(ci.evaluate(incomplete, [name], 0, proof='template-crud', expected_children=children)['outcome'], 'failed')
+        skipped = [dict(event, Action='skip') if event['Test'].endswith('/json-body') and event['Action'] == 'pass' else event for event in events]
+        self.assertEqual(ci.evaluate(skipped, [name], 0, proof='template-crud', expected_children=children)['outcome'], 'failed')
+
     def test_group_fixture_secret_is_bound_to_the_dedicated_empty_security_group(self):
         tenant = '00000000-0000-4000-8000-000000000001'
         fixture = {'tenant_id': tenant, 'group_id': '00000000-0000-4000-8000-000000000020',

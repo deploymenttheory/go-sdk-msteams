@@ -1,0 +1,58 @@
+{
+  "value": {
+    "templateId": "00000000-0000-4000-8000-ab105af6736f",
+    "displayName": "fixture-template",
+    "description": "SDK lab non-default initial description",
+    "teamDefinition": {
+      "id": "00000000-0000-4000-8000-ab105af6736f.Team",
+      "displayName": "fixture-template",
+      "description": "SDK lab non-default initial description",
+      "visibility": "Private",
+      "channels": [
+        {
+          "id": "General",
+          "displayName": "General",
+          "isFavoriteByDefault": true,
+          "tabs": []
+        }
+      ],
+      "memberSettings": {
+        "allowCreateUpdateChannels": false,
+        "allowDeleteChannels": false,
+        "allowAddRemoveApps": false,
+        "uploadCustomApp": false,
+        "allowCreateUpdateRemoveTabs": false,
+        "allowCreateUpdateRemoveConnectors": false,
+        "allowCreatePrivateChannels": false
+      },
+      "guestSettings": {
+        "allowCreateUpdateChannels": false,
+        "allowDeleteChannels": false
+      },
+      "messagingSettings": {
+        "allowUserEditMessages": false,
+        "allowUserDeleteMessages": false,
+        "allowOwnerDeleteMessages": false,
+        "allowTeamMentions": false,
+        "allowChannelMentions": false
+      },
+      "funSettings": {
+        "allowGiphy": false,
+        "allowStickersAndMemes": false,
+        "allowCustomMemes": false
+      },
+      "discoverySettings": {
+        "showInTeamsSearchAndSuggestions": false
+      }
+    },
+    "schemaVersion": "v1.0",
+    "scope": "Tenant",
+    "locale": "en-US",
+    "icon": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/default_tenant.svg",
+    "extendedProperties": {
+      "modifiedBy": "00000000-0000-4000-8000-a12da7e13b12",
+      "modifiedOn": "2026-11-22T02:16:23.7433696Z",
+      "shortDescription": "SDK lab non-default initial summary"
+    }
+  }
+}

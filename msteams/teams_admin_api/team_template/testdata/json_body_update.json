@@ -1,0 +1,13 @@
+{
+  "id": "00000000-0000-4000-8000-ab105af6736f",
+  "name": "fixture-template",
+  "scope": "Tenant",
+  "description": "SDK lab non-default updated description",
+  "shortDescription": "SDK lab non-default updated summary",
+  "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/default_tenant.svg",
+  "channelCount": 1,
+  "modifiedOn": "2026-11-22T02:16:28.6132169Z",
+  "modifiedBy": "00000000-0000-4000-8000-a12da7e13b12",
+  "locale": "en-US",
+  "@odata.id": "/api/teamtemplates/v1.0/00000000-0000-4000-8000-ab105af6736f/Tenant/en-US"
+}

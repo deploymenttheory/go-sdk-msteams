@@ -78,6 +78,14 @@ func NewAPIError(backend Backend, status int, headers http.Header, body []byte) 
 		if json.Unmarshal(envelope["errors"], &objects) == nil {
 			for _, object := range objects {
 				collectErrorObject(err, object, 0)
+				// Template/ConfigAPI array details use a string errorCode;
+				// direct PolicyRP envelopes retain their separate numeric contract.
+				var detail struct {
+					Code *string `json:"errorCode"`
+				}
+				if json.Unmarshal(object, &detail) == nil && detail.Code != nil {
+					err.Codes = appendUnique(err.Codes, *detail.Code)
+				}
 			}
 		} else {
 			collectErrorObject(err, envelope["error"], 0)

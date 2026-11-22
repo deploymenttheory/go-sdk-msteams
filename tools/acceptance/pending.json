@@ -67,10 +67,6 @@
     "file": "tests/integration/lab/team_operation_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
-  "TestAccTeamTemplateCRUD": {
-    "file": "tests/integration/lab/team_template_test.go",
-    "reason": "Cleanup/oracle reliability gaps and complete owned-fixture tenant acceptance remain on the resource ticket before enabling additional CI mutations."
-  },
   "TestAccTeamTemplateRecover": {
     "file": "tests/integration/lab/team_template_test.go",
     "reason": "Requires an explicit private interrupted-run journal and same-tenant fixture recovery; operator-selected recovery is not a fresh CI CRUD scenario."

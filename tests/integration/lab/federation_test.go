@@ -234,7 +234,7 @@ func TestAccFederationReadOnly(t *testing.T) {
 				}
 				t.Fatalf("selected federation read failed (HTTP %d, %s); no response payload retained", status, stage)
 			}
-			if identity == nil || !strings.EqualFold(*identity, "Global") || len(listed) != 1 || !reflect.DeepEqual(raw, listed[0]) {
+			if identity == nil || !strings.EqualFold(*identity, "Global") || len(listed) != 1 || !sameResponseFields(raw, listed[0]) {
 				t.Fatal("Global federation read/list observations differ")
 			}
 			if oracle {

@@ -57,3 +57,15 @@ Successful persistence, assignment, Premium feature effects, RBAC, cloud deploym
 and full binding/coercion parity remain separately qualified. See
 [unit tests](service_test.go) and
 the [lab plan](../../../docs/implementation/policies/meeting-branding-lab-acceptance.md).
+
+### Executed owned CRUD
+
+`TestAccMeetingBrandingPolicyCRUD` passed with certificate and client-secret
+authentication. It creates an unassigned policy with theme override disabled,
+enables it through a sparse update while preserving disabled background-effect
+requirement, checks its list entry and independently verifies selected/list
+absence after deletion. Both selected six-scalar getter projections agree with
+public MicrosoftTeams 8.1.0. Actual replies supply the CRUD unit workflow,
+including empty mutation replies, complete snapshots and typed deleted404 errors.
+CI requires both pinned comparisons, every CRUD assertion and a cleaned journal.
+Assets, Premium user effects and assignments are separate acceptance scenarios.
