@@ -1,0 +1,9 @@
+{
+  "CopilotFromHomeTenant": "Disabled",
+  "Identity": "Global",
+  "SchemaVersion": "0.0.1",
+  "ConfigId": "Global",
+  "ConfigMetadata": {
+    "Authority": "Tenant"
+  }
+}
