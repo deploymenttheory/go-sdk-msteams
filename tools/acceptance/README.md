@@ -26,9 +26,10 @@ can conflict even with distinct resource names. Job-level `queue: max` retains
 pending write jobs. The group name is unchanged, so older workflow-level locks
 also exclude new write jobs during migration. GitHub documents the
 [workflow queue behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency). Selected tests
-and child cases must pass. The aggregate result requires every selected suite
-in both authentication modes and rejects missing or duplicate reports. Skips,
-missing tests, setup failures and unsuccessful cleanup fail CI. CRUD also requires
+and child cases must pass unless explicitly excluded as described below. The
+aggregate result requires every suite report in both authentication modes and
+rejects missing or duplicate reports. Unconfigured skips, missing tests, setup
+failures and unsuccessful cleanup fail CI. CRUD also requires
 all assertion milestones, two PowerShell comparisons per owned CRUD test and
 one cleaned journal entry per test. User assignment requires assign/read-back,
 clear/restoration, independent cleanup, three pinned comparisons (before,
@@ -36,10 +37,54 @@ assigned and restored), and both policy and user-restoration journal entries. Gr
 all five phase assertions, six pinned comparisons and three cleaned entries
 (two owned policies and group restoration).
 
-The remaining 22 acceptance tests are listed in `pending.json` with their missing
+The remaining acceptance tests are listed in `pending.json` with their missing
 fixtures, permissions, capabilities or execution mode. Resource tickets stay open
 until their successful operations are qualified. The first supported release
 requires complete command and parameter-set qualification.
+
+## Selective acceptance skips
+
+[skips.json](skips.json) maps exact registered `TestAcc` names to public reasons.
+These tests stay in their normal suites. The runner excludes them before starting
+Go, prints `SKIP <test>: <reason>`, and shows their names and reasons in the CI
+summary. Skipped tests count separately from passes and provide no acceptance
+evidence. The aggregate checks those exclusions against the same configuration.
+A test that calls `t.Skip` without a configured exclusion still fails CI.
+
+The first configured skip is `TestAccSharedCallingRoutingPolicyPopulatedCRUD`:
+the lab has no resource account or phone inventory. Shared-calling reads and
+unassociated CRUD continue to run. Its populated scenario retains mandatory list
+edit/clear checks, four PowerShell comparisons and verified cleanup when enabled.
+
+For a temporary local exclusion, after normal lab preparation:
+
+```sh
+python3 tools/acceptance/ci.py run --kind writes --report-directory /private/tmp/acceptance-results \
+  --skip-test TestAccRoomVideoTeleConferencingPolicyCRUD --skip-reason 'Lab maintenance.'
+```
+
+Repeat `--skip-test` to select multiple exact names. Wildcards, unknown names,
+missing reasons and conflicting selections are errors. To run a configured skip,
+use `--include-test TestAccSharedCallingRoutingPolicyPopulatedCRUD`; this requires
+its real fixture and normal mutation opt-in. It does not turn missing fixtures
+into a pass. For prepared local runs, store its private JSON as
+`$MSTEAMS_LAB_PRIVATE_DIRECTORY/shared-calling-fixture.json` with mode 0600.
+The file has `tenant_id`, `resource_account_id` and `emergency_numbers` (at least
+two distinct real E.164 callback numbers). Never use example numbers as lab inventory.
+
+For CI, **Run workflow** provides `skip_tests` (comma-separated names),
+`skip_reason`, and `include_tests`. The same inputs reach each auth job and the
+aggregate. Local automation can use `MSTEAMS_ACC_SKIP_TESTS`,
+`MSTEAMS_ACC_SKIP_REASON` and `MSTEAMS_ACC_INCLUDE_TESTS`. Pass the same selections
+to `summarize` when aggregating local reports. Routine PR/main runs use the
+checked-in skip configuration. Remove its entry after a fixture is available and
+the test has passed in both auth modes.
+
+The optional repository secret `MSTEAMS_LAB_SHARED_CALLING_FIXTURE_JSON` supplies
+that phone fixture when available. Preparation checks its tenant, account GUID,
+number format and distinctness, writes it privately and removes it at finalization.
+No secret is required for a deliberately skipped phone scenario. Number ownership,
+availability and calling behavior are verified by the live test and service.
 
 ## Repository secrets
 

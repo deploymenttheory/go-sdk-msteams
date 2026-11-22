@@ -156,5 +156,14 @@
     "tests": [
       "TestAccNotificationAndFeedsPolicyCRUD"
     ]
+  },
+  "owned-shared-calling-populated-policy": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "owned-shared-calling-populated-crud",
+    "journal_entries_per_test": 1,
+    "tests": [
+      "TestAccSharedCallingRoutingPolicyPopulatedCRUD"
+    ]
   }
 }

@@ -38,10 +38,14 @@ only. Private inventory data remains in the user-selected lab directory. No
 numbers, accounts, licenses or assignments were provisioned or changed.
 
 The full populated-list test requires an explicit bound resource-account/number
-fixture, and remains registered as pending. It retains create/read, sparse
+fixture, and is the first configured selective acceptance skip in
+`tools/acceptance/skips.json`. It stays registered in its CI suite and retains create/read, sparse
 preservation, Add/Remove, clear, list and delete. It will not count as a passing
 empty-list case. Callback numbers are sanitized before writing permanent fixtures.
-The lab fixture question is pending; no credentials are missing.
+The user authorized selective skipping on 2026-11-22. CI reports the exact test
+and missing-inventory reason separately from passes. Basic reads and unassociated
+CRUD continue to run. Use `--include-test` or the workflow's `include_tests` input
+with a real bound fixture to enable it; no credentials are missing.
 
 Eighteen permanent sanitized response files from the available successful cases
 supply unit decoding, snapshot, request, CRUD and actual-error checks. Decoder

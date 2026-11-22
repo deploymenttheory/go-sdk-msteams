@@ -5,6 +5,19 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: 'Exact TestAcc names to skip, separated by commas'
+        type: string
+        required: false
+      skip_reason:
+        description: 'Public reason for these skips (required with skip_tests)'
+        type: string
+        required: false
+      include_tests:
+        description: 'Run these exact tests currently skipped in tools/acceptance/skips.json'
+        type: string
+        required: false
 
 permissions:
   contents: read
@@ -56,8 +69,13 @@ jobs:
           MSTEAMS_LAB_GROUP_FIXTURE_JSON: ${{ secrets.MSTEAMS_LAB_GROUP_FIXTURE_JSON }}
           MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID: ${{ secrets.MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID }}
           MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM: ${{ secrets.MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM }}
+          MSTEAMS_LAB_SHARED_CALLING_FIXTURE_JSON: ${{ secrets.MSTEAMS_LAB_SHARED_CALLING_FIXTURE_JSON }}
         run: python3 tools/acceptance/ci.py prepare
       - name: Run TestAcc tests
+        env:
+          MSTEAMS_ACC_SKIP_TESTS: ${{ inputs.skip_tests || '' }}
+          MSTEAMS_ACC_SKIP_REASON: ${{ inputs.skip_reason || '' }}
+          MSTEAMS_ACC_INCLUDE_TESTS: ${{ inputs.include_tests || '' }}
         run: python3 tools/acceptance/ci.py run --kind "$ACCEPTANCE_KIND" --report-directory "$RUNNER_TEMP/acceptance-report"
       - name: Save recovery journals and remove credentials
         if: always() && env.MSTEAMS_LAB_PRIVATE_DIRECTORY != ''
@@ -95,6 +113,9 @@ jobs:
         if: always()
         env:
           LAB_RESULT: ${{ needs.lab.result }}
+          MSTEAMS_ACC_SKIP_TESTS: ${{ inputs.skip_tests || '' }}
+          MSTEAMS_ACC_SKIP_REASON: ${{ inputs.skip_reason || '' }}
+          MSTEAMS_ACC_INCLUDE_TESTS: ${{ inputs.include_tests || '' }}
         run: |
           if [ "$LAB_RESULT" = skipped ]; then
             echo "::error::TestAcc did not run for this PR source. Run from a trusted repository branch."

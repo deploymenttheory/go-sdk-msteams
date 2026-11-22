@@ -90,9 +90,5 @@
   "TestAccMeetingTemplatePermissionPopulatedCRUD": {
     "file": "tests/integration/lab/meeting_template_permission_crud_test.go",
     "reason": "With both application auth methods, native and pinned PowerShell populated-list create return PolicyRP 40013 with downstream HTTP 401. Full populated-list CRUD requires a separately qualified authentication fixture; delegated browser access is currently unavailable. Empty-list CRUD and exact app-only denial parity run separately in CI."
-  },
-  "TestAccSharedCallingRoutingPolicyPopulatedCRUD": {
-    "file": "tests/integration/lab/shared_calling_policy_crud_test.go",
-    "reason": "Requires a same-tenant resource account and two real unassigned emergency callback telephone numbers. Authorized lab inventory reads succeeded with zero resource accounts and zero phone numbers on 2026-11-22. Basic unassociated CRUD does not qualify populated list binding/edit/clear or effective calling."
   }
 }

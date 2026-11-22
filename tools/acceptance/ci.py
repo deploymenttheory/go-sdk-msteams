@@ -45,6 +45,7 @@ TEMPLATE_ORACLE = 'PowerShell 8.1.0 / Go template read parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-notification-crud': (PROOF_MARKERS + ['notification explicit-null update/read-back: passed'], ORACLE_MARKER, 3),
+    'owned-shared-calling-populated-crud': (PROOF_MARKERS + ['shared calling populated list edit/clear: passed'], ORACLE_MARKER, 4),
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
     'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
     'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
@@ -160,7 +161,58 @@ def check_names(root=ROOT):
             raise ValueError('every TestAcc must have one CI suite or an explicit pending disposition')
         if any(not entry.get('reason') or not (ROOT / entry['file']).is_file() for entry in pending.values()):
             raise ValueError('pending acceptance requires an existing test file and a concrete reason')
+        selected_skips(suites)
     return counts
+
+
+def selected_skips(suites, args=None):
+    """Resolve exact test names before starting any tenant operation."""
+    path = HERE / 'skips.json'
+    skipped = json.loads(path.read_text()) if path.exists() else {}
+    known = {test for suite in suites.values() for test in suite.get('tests', [])}
+    if not isinstance(skipped, dict):
+        raise AcceptanceFailure('Acceptance skips must map exact TestAcc names to public reasons.')
+
+    def names(option, variable):
+        values = list(getattr(args, option, None) or [])
+        values += re.split(r'[\s,]+', os.environ.get(variable, '').strip())
+        result = {value for value in values if value}
+        if any(not re.fullmatch(r'TestAcc[A-Za-z0-9_]+', value) for value in result) or result - known:
+            raise AcceptanceFailure('Acceptance skip/include selections must name existing registered TestAcc tests exactly.')
+        return result
+
+    def reason_valid(reason):
+        return isinstance(reason, str) and bool(reason.strip()) and len(reason) <= 500 and not any(ord(char) < 32 for char in reason)
+
+    if set(skipped) - known or any(not reason_valid(reason) for reason in skipped.values()):
+        raise AcceptanceFailure('Each configured acceptance skip needs a registered TestAcc name and a public single-line reason.')
+    excluded = names('skip_test', 'MSTEAMS_ACC_SKIP_TESTS')
+    included = names('include_test', 'MSTEAMS_ACC_INCLUDE_TESTS')
+    if excluded & included or included - set(skipped):
+        raise AcceptanceFailure('Include only configured skipped tests; do not both skip and include a test.')
+    reason = getattr(args, 'skip_reason', None) or os.environ.get('MSTEAMS_ACC_SKIP_REASON', '')
+    if excluded and not reason_valid(reason):
+        raise AcceptanceFailure('Selective acceptance skips require --skip-reason or MSTEAMS_ACC_SKIP_REASON with a public single-line reason.')
+    for test in included:
+        del skipped[test]
+    skipped.update({test: reason.strip() for test in excluded})
+    return skipped
+
+
+def report_matches_selection(report, suite, skipped):
+    tests = report.get('tests', [])
+    expected = suite.get('tests', [])
+    if [test.get('name') for test in tests] != expected:
+        return False
+    for test in tests:
+        reason = skipped.get(test['name'])
+        if reason is not None:
+            if test.get('outcome') != 'skip' or test.get('skip_reason') != reason:
+                return False
+        elif test.get('outcome') != 'pass' or 'skip_reason' in test:
+            return False
+    outcome = 'skipped' if all(test in skipped for test in expected) else 'passed'
+    return bool(expected) and report.get('outcome') == outcome
 
 
 def user_fixture(values):
@@ -196,6 +248,23 @@ def group_fixture(values):
     return fixture
 
 
+def shared_calling_fixture(tenant_id, raw):
+    try:
+        fixture = json.loads(raw)
+        numbers = fixture['emergency_numbers']
+        valid = (set(fixture) == {'tenant_id', 'resource_account_id', 'emergency_numbers'}
+                 and fixture['tenant_id'].lower() == tenant_id.lower()
+                 and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', fixture['resource_account_id'])
+                 and isinstance(numbers, list) and len(numbers) >= 2
+                 and all(isinstance(number, str) and re.fullmatch(r'\+[1-9][0-9]{1,14}', number) for number in numbers)
+                 and len(set(numbers)) == len(numbers))
+    except (ValueError, TypeError, AttributeError, KeyError):
+        valid = False
+    if not valid:
+        raise AcceptanceFailure('Invalid optional repository Actions secret: MSTEAMS_LAB_SHARED_CALLING_FIXTURE_JSON')
+    return fixture
+
+
 def prepare(args):
     keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'CERTIFICATE_PEM', 'PRIVATE_KEY_PEM', 'RECOVERY_CERTIFICATE_PEM', 'CALL_HOLD_AUDIO_FILE_ID', 'USER_FIXTURE_JSON', 'GROUP_FIXTURE_JSON']
     values = {key: os.environ.get('MSTEAMS_LAB_' + key, '') for key in keys}
@@ -206,6 +275,8 @@ def prepare(args):
         raise AcceptanceFailure('Invalid repository Actions secret: MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID')
     fixture = user_fixture(values)
     group = group_fixture(values)
+    phone_json = os.environ.get('MSTEAMS_LAB_SHARED_CALLING_FIXTURE_JSON', '')
+    phone = shared_calling_fixture(values['TENANT_ID'], phone_json) if phone_json else None
     base = Path(os.environ['RUNNER_TEMP']).resolve()
     private = Path(tempfile.mkdtemp(prefix='msteams-acceptance-', dir=base))
     certificate = private / 'certificate.pem'
@@ -215,6 +286,8 @@ def prepare(args):
     write_private(private / 'recovery-certificate.pem', values['RECOVERY_CERTIFICATE_PEM'])
     write_json(private / 'user-fixture.json', fixture)
     write_json(private / 'group-fixture.json', group)
+    if phone is not None:
+        write_json(private / 'shared-calling-fixture.json', phone)
     write_json(private / 'identity.json', {
         'tenant_id': values['TENANT_ID'], 'client_id': values['CLIENT_ID'],
         'client_secret': values['CLIENT_SECRET'],
@@ -331,6 +404,7 @@ def run(args):
                 and (not kind or bool(suite.get('mutation') or suite.get('serial')) == (kind == 'writes'))]
     if not selected or args.suite and set(args.suite) - set(suites):
         raise ValueError('unknown acceptance suite')
+    skipped = selected_skips(suites, args)
     revision = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
     mode = os.environ.get('MSTEAMS_LAB_AUTH_METHOD', 'certificate')
     if mode not in {'certificate', 'client-secret'}:
@@ -340,6 +414,7 @@ def run(args):
         suite = suites[name]
         if suite.get('mutation') and (suite.get('proof') not in PROOFS or type(suite.get('journal_entries_per_test')) is not int or suite['journal_entries_per_test'] < 1):
             raise ValueError('mutation suite requires explicit checks and journal entry count')
+        active = [test for test in suite['tests'] if test not in skipped]
         env = {key: value for key, value in os.environ.items() if not key.startswith('MSTEAMS_')}
         env.update({
             'MSTEAMS_LAB_READ_ONLY': '1', 'MSTEAMS_LAB_MUTATIONS': '1' if suite.get('mutation') else '0',
@@ -352,26 +427,35 @@ def run(args):
             'MSTEAMS_LAB_POWERSHELL_ORACLE': '1', 'MSTEAMS_LAB_AUTH_METHOD': mode,
             'MSTEAMS_LAB_ACCESS_PROFILE': 'teams-administrator', 'MSTEAMS_LIVE_ACCESS': '1',
         })
-        pattern = '^(' + '|'.join(re.escape(test) for test in suite['tests']) + ')$'
+        if (private / 'shared-calling-fixture.json').is_file():
+            env['MSTEAMS_LAB_SHARED_CALLING_FIXTURE_FILE'] = str(private / 'shared-calling-fixture.json')
+        pattern = '^(' + '|'.join(re.escape(test) for test in active) + ')$'
         command = ['go', 'test', '-json', '-count=1', '-race', '-timeout=12m', '-run', pattern, suite['package']]
         previous_journals = set((private / 'journals').glob('*.json'))
         log = private / (name + '.jsonl')
-        fd = os.open(log, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-        with os.fdopen(fd, 'w') as stream:
-            result = subprocess.run(command, cwd=ROOT, env=env, stdout=stream, stderr=subprocess.STDOUT)
         events = []
-        for line in log.read_text().splitlines():
-            try:
-                events.append(json.loads(line))
-            except ValueError:
-                pass
-        report = evaluate(events, suite['tests'], result.returncode, proof=suite.get('proof'), expected_children=suite.get('children'))
+        process_exit = 0
+        if active:
+            fd = os.open(log, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+            with os.fdopen(fd, 'w') as stream:
+                process_exit = subprocess.run(command, cwd=ROOT, env=env, stdout=stream, stderr=subprocess.STDOUT).returncode
+            for line in log.read_text().splitlines():
+                try:
+                    events.append(json.loads(line))
+                except ValueError:
+                    pass
+        children = {test: cases for test, cases in suite.get('children', {}).items() if test in active}
+        report = evaluate(events, active, process_exit, proof=suite.get('proof'), expected_children=children)
+        if not active:
+            report['outcome'] = 'skipped'
+        outcomes = {test['name']: test for test in report['tests']}
+        report['tests'] = [outcomes[test] if test in outcomes else {'name': test, 'outcome': 'skip', 'skip_reason': skipped[test]} for test in suite['tests']]
         if suite.get('mutation'):
             new_journals = set((private / 'journals').glob('*.json')) - previous_journals
             entries = [entry for path in new_journals for entry in json.loads(path.read_text())['entries']]
             report['cleanup_journal_entries'] = len(entries)
             report['cleanup_journal_entries_cleaned'] = sum(entry['state'] == 'cleaned' for entry in entries)
-            report['expected_cleanup_journal_entries'] = len(suite['tests']) * suite['journal_entries_per_test']
+            report['expected_cleanup_journal_entries'] = len(active) * suite['journal_entries_per_test']
             if len(entries) != report['expected_cleanup_journal_entries'] or report['cleanup_journal_entries_cleaned'] != len(entries):
                 report['outcome'] = 'failed'
         report.update(suite=name, revision=revision, auth_method=mode, cloud='commercial', baseline_version='8.1.0',
@@ -379,11 +463,15 @@ def run(args):
         reports.append(report)
         write_json(args.report_directory / (name + '.json'), report)
         print_report(report)
-    summary = {'revision': revision, 'auth_method': mode, 'outcome': 'passed' if all(r['outcome'] == 'passed' for r in reports) else 'failed',
+    outcome = ('skipped' if all(r['outcome'] == 'skipped' for r in reports)
+               else 'passed' if all(r['outcome'] in {'passed', 'skipped'} for r in reports) else 'failed')
+    summary = {'revision': revision, 'auth_method': mode, 'outcome': outcome,
+               'passed_tests': sum(test['outcome'] == 'pass' for report in reports for test in report['tests']),
+               'skipped_tests': sum(test['outcome'] == 'skip' for report in reports for test in report['tests']),
                'suites': [{'name': r['suite'], 'outcome': r['outcome']} for r in reports], 'coverage_claim': False}
     write_json(args.report_directory / 'summary.json', summary)
     write_summary(reports)
-    return 0 if summary['outcome'] == 'passed' else 1
+    return 0 if summary['outcome'] in {'passed', 'skipped'} else 1
 
 
 def failure_detail(report, test):
@@ -398,6 +486,9 @@ def print_report(report):
     print(f"{report['suite']} ({report['auth_method']}): {passed}/{len(report['tests'])} passed", flush=True)
     for test in report['tests']:
         if test['outcome'] == 'pass':
+            continue
+        if test['outcome'] == 'skip' and test.get('skip_reason'):
+            print(f"SKIP {test['name']}: {test['skip_reason']}", flush=True)
             continue
         detail = failure_detail(report, test)
         message = test['name'] + ': ' + detail
@@ -434,7 +525,7 @@ def print_report(report):
     entries = report.get('cleanup_journal_entries')
     cleaned = report.get('cleanup_journal_entries_cleaned', 0)
     expected_entries = report.get('expected_cleanup_journal_entries', entries)
-    if entries is not None and (entries == 0 or entries != cleaned or entries != expected_entries):
+    if entries is not None and (entries != cleaned or entries != expected_entries):
         print(f'FAIL cleanup journals: {cleaned}/{entries} entries completed', flush=True)
         if entries != expected_entries:
             print(f'FAIL cleanup journal count: {entries}/{expected_entries} required entries', flush=True)
@@ -443,15 +534,21 @@ def print_report(report):
 def write_summary(reports):
     lines = ['## TestAcc results', '', '| Auth | Suite | Result | Passed | Failed | Skipped | Not run |', '|---|---|---|---:|---:|---:|---:|']
     failed = []
+    skipped = []
     for report in reports:
         counts = {state: sum(test['outcome'] == state for test in report['tests']) for state in ['pass', 'fail', 'skip', 'not-run']}
         lines.append(f"| {report['auth_method']} | {report['suite']} | {report['outcome']} | {counts['pass']} | {counts['fail']} | {counts['skip']} | {counts['not-run']} |")
         for test in report['tests']:
-            if test['outcome'] != 'pass':
+            if test['outcome'] == 'skip' and test.get('skip_reason'):
+                reason = test['skip_reason'].replace('|', '\\|').replace('`', '\\`')
+                skipped.append(f"| {report['auth_method']} | `{test['name']}` | {reason} |")
+            elif test['outcome'] != 'pass':
                 detail = failure_detail(report, test)
                 failed.append(f"| {report['auth_method']} | `{test['name']}` | {detail} |")
     if failed:
         lines += ['', '| Auth | Failed test | Result |', '|---|---|---|'] + failed
+    if skipped:
+        lines += ['', '### Configured skips', '', 'Skipped tests did not run and provide no acceptance evidence.', '', '| Auth | Skipped test | Reason |', '|---|---|---|'] + skipped
     access = []
     for report in reports:
         if report['suite'] != 'tenant-access-outcomes':
@@ -476,6 +573,7 @@ def summarize(args):
     if not reports:
         raise AcceptanceFailure('No TestAcc reports were produced. Check the setup steps in the authentication jobs.')
     suites = json.loads((HERE / 'suites.json').read_text())
+    skipped = selected_skips(suites, args)
     expected = {(mode, name) for mode in ['certificate', 'client-secret'] for name in suites}
     actual = [(report.get('auth_method'), report.get('suite')) for report in reports]
     complete = set(actual) == expected and len(actual) == len(expected)
@@ -485,8 +583,11 @@ def summarize(args):
         print('FAIL unexpected or duplicate TestAcc suite reports', flush=True)
     for report in reports:
         print_report(report)
+        if report.get('suite') in suites and not report_matches_selection(report, suites[report['suite']], skipped):
+            print(f"FAIL TestAcc selection or outcomes differ: {report['auth_method']}/{report['suite']}", flush=True)
+            complete = False
     write_summary(reports)
-    return 0 if complete and all(report['outcome'] == 'passed' for report in reports) else 1
+    return 0 if complete and all(report['outcome'] in {'passed', 'skipped'} for report in reports) else 1
 
 
 def finalize(args):
@@ -532,6 +633,10 @@ def main():
     for name in ['run', 'finalize', 'summarize']:
         child = commands.add_parser(name)
         child.add_argument('--report-directory', type=Path, required=True)
+        if name in {'run', 'summarize'}:
+            child.add_argument('--skip-test', action='append', help='Skip an exact registered TestAcc name; repeat for multiple tests.')
+            child.add_argument('--skip-reason', help='Public reason for the selective skips.')
+            child.add_argument('--include-test', action='append', help='Run a test skipped by skips.json; repeat for multiple tests.')
         if name == 'run':
             child.add_argument('--suite', action='append')
             child.add_argument('--kind', choices=['reads', 'writes'])
