@@ -20,6 +20,9 @@ func TestUnitCallPolicyCleanupRequiresIndependentAbsence(t *testing.T) {
 		modern                  bool
 		handler                 func(*msteams.Client) lab.Handler
 	}{
+		{"meeting-template-policy", "TeamsMeetingTemplatePermissionPolicy", "teams_meeting_template_permission_policy", false, func(sdk *msteams.Client) lab.Handler {
+			return meetingTemplatePolicyCleanup{sdk.TeamsAdminAPI.TeamsMeetingTemplatePermissionPolicies}
+		}},
 		{"meeting-policy", "TeamsMeetingPolicy", "teams_meeting_policy", false, func(sdk *msteams.Client) lab.Handler {
 			return meetingPolicyCleanup{sdk.TeamsAdminAPI.TeamsMeetingPolicies}
 		}},

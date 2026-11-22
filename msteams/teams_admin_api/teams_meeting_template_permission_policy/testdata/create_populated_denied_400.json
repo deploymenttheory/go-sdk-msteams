@@ -1,0 +1,15 @@
+{
+  "code": "ClientError",
+  "message": "Fixture message",
+  "action": "Please refer to documentation. CorrelationId: 00000000-0000-4000-8000-778542ab093a",
+  "errorCode": 40013,
+  "innerError": {
+    "ErrorCode": "UnknownFailureErrorMessage",
+    "ErrorCodeMetadata": {
+      "ParameterList": [
+        "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.2\",\"title\":\"Unauthorized\",\"status\":401,\"traceId\":\"00-b98bb26d32b7e65451e6934b99f0cef8-74f07cad40e6a1ac-01\"}",
+        ""
+      ]
+    }
+  }
+}

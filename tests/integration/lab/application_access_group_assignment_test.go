@@ -272,7 +272,7 @@ func TestAccApplicationAccessPolicyGroupAssignment(t *testing.T) {
 			t.Fatal("group assignment read-back did not converge")
 		}
 		values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListGroup(ctx, fixture.GroupID)
-		if err != nil || len(values) != 1 || values[0] == nil || !reflect.DeepEqual(selected.RawFields, values[0].RawFields) {
+		if err != nil || len(values) != 1 || values[0] == nil || !sameResponseFields(selected.RawFields, values[0].RawFields) {
 			t.Fatal("selected group assignment and list differ")
 		}
 		writeResponseFixture(t, "policy_assignments", label+"_list", response, replacements)
