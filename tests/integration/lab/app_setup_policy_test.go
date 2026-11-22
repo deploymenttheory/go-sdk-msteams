@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -26,14 +27,26 @@ type appSetupObservation struct {
 
 var appSetupCollections = []string{"AppPresetList", "PinnedAppBarApps", "PinnedMessageBarApps", "AppPresetMeetingList", "AdditionalCustomizationApps", "PinnedCallingBarApps"}
 
+var appSetupOwnedIdentity = regexp.MustCompile(`(?i)^(?:tag:)?msteams-sdk-[a-z2-7]{26,64}-app-setup-policy$`)
+
 func decodeAppSetupOracle(raw []byte, tenant string) (appSetupObservation, error) {
+	return decodeAppSetupOracleForIdentity(raw, tenant, "Global")
+}
+func decodeAppSetupOracleForIdentity(raw []byte, tenant, identity string) (appSetupObservation, error) {
 	var v appSetupObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
+	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !appSetupOwnedIdentity.MatchString(identity) {
 		return v, errTeamOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
-	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || !strings.EqualFold(v.Identity, "Global") || len(v.Settings) != 9 {
+	if d.Decode(&v) != nil {
+		return appSetupObservation{}, errTeamOracle
+	}
+	identityMatches := strings.EqualFold(v.Identity, "Global")
+	if !strings.EqualFold(identity, "Global") {
+		identityMatches = samePolicyName(v.Identity, identity)
+	}
+	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != 9 {
 		return appSetupObservation{}, errTeamOracle
 	}
 	var extra any
@@ -126,8 +139,11 @@ func appSetupProjection(v *resource.Policy) []byte {
 	return raw
 }
 func appSetupOracle(t *testing.T, ctx context.Context, tenant string) appSetupObservation {
+	return appSetupOracleForIdentity(t, ctx, tenant, "Global")
+}
+func appSetupOracleForIdentity(t *testing.T, ctx context.Context, tenant, identity string) appSetupObservation {
 	t.Helper()
-	input, e := json.Marshal(map[string]string{"tenant_id": tenant})
+	input, e := json.Marshal(map[string]string{"tenant_id": tenant, "identity": identity})
 	if e != nil {
 		t.Fatal("invalid setup oracle selector")
 	}
@@ -139,7 +155,7 @@ func appSetupOracle(t *testing.T, ctx context.Context, tenant string) appSetupOb
 			cmd.Env = append(cmd.Env, key+"="+value)
 		}
 	}
-	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
+	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
 	var output teamOracleBuffer
 	defer func() { clear(output.data) }()
 	cmd.Stdin = bytes.NewReader(input)
@@ -147,7 +163,7 @@ func appSetupOracle(t *testing.T, ctx context.Context, tenant string) appSetupOb
 	if cmd.Run() != nil || output.exceeded {
 		t.Fatal("pinned setup read failed; no output retained")
 	}
-	value, e := decodeAppSetupOracle(output.data, tenant)
+	value, e := decodeAppSetupOracleForIdentity(output.data, tenant, identity)
 	if e != nil {
 		t.Fatal("pinned setup projection unavailable")
 	}
@@ -237,5 +253,40 @@ func TestUnitAppSetupOracleRejectsWrongTenantMixedOutputAndOrderOverflow(t *test
 	}
 	if _, e := globalAppSetupPolicy([]*resource.Policy{global, {Identity: new("global")}}); e == nil {
 		t.Fatal("ambiguous Global accepted")
+	}
+}
+
+func TestUnitAppSetupOracleRestrictsOwnedIdentity(t *testing.T) {
+	t.Parallel()
+	const tenant = "00000000-0000-4000-8000-000000000003"
+	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-app-setup-policy"
+	raw, err := os.ReadFile("../../../msteams/teams_admin_api/teams_app_setup_policy/testdata/get_global.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var value resource.Policy
+	if json.Unmarshal(raw, &value) != nil {
+		t.Fatal("invalid actual policy fixture")
+	}
+	var settings map[string]json.RawMessage
+	if json.Unmarshal(appSetupProjection(&value), &settings) != nil {
+		t.Fatal("invalid canonical projection")
+	}
+	for _, tc := range []struct {
+		selected, returned string
+		valid              bool
+	}{
+		{"Global", "global", true}, {name, "Tag:" + name, true}, {"Tag:" + name, name, true},
+		{"other-policy", "other-policy", false}, {name, strings.Replace(name, "aaaa", "bbbb", 1), false},
+		{"Global", "Tag:Global", false}, {strings.Replace(name, "app-setup-policy", "calling-policy", 1), name, false},
+	} {
+		body, err := json.Marshal(map[string]any{"success": true, "tenant_id": tenant, "identity": tc.returned, "settings": settings})
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err = decodeAppSetupOracleForIdentity(body, tenant, tc.selected)
+		if (err == nil) != tc.valid {
+			t.Fatal("oracle accepted a foreign policy or rejected its owned selection")
+		}
 	}
 }

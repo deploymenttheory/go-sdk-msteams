@@ -1,0 +1,105 @@
+{
+  "AppPresetList": [],
+  "PinnedAppBarApps": [
+    {
+      "Id": "00000000-0000-4000-8000-6f4410ae7ea2",
+      "Order": 1
+    },
+    {
+      "Id": "00000000-0000-4000-8000-eee8dab167c4",
+      "Order": 2
+    },
+    {
+      "Id": "00000000-0000-4000-8000-cc85f60f3b17",
+      "Order": 3
+    },
+    {
+      "Id": "00000000-0000-4000-8000-deedf4d97327",
+      "Order": 4
+    },
+    {
+      "Id": "00000000-0000-4000-8000-067a3f50a4c3",
+      "Order": 5
+    },
+    {
+      "Id": "00000000-0000-4000-8000-89333f3b48b0",
+      "Order": 6
+    }
+  ],
+  "PinnedMessageBarApps": [],
+  "AppPresetMeetingList": [],
+  "AdditionalCustomizationApps": [],
+  "PinnedCallingBarApps": [],
+  "Description": "SDK lab non-default updated description",
+  "AllowSideLoading": false,
+  "AllowUserPinning": false,
+  "Key": {
+    "ScopeClass": "Tag",
+    "SchemaId": {
+      "XName": {
+        "name": "Fixture name"
+      }
+    },
+    "AuthorityId": {
+      "Class": "Tenant",
+      "InstanceId": "00000000-0000-4000-8000-0b617a16f800",
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+      }
+    },
+    "DefaultXml": {
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "Data": {
+        "TeamsAppSetupPolicy": {
+          "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017",
+          "AppPresetList": null,
+          "PinnedAppBarApps": {
+            "PinnedApp": [
+              {
+                "@Id": "00000000-0000-4000-8000-6f4410ae7ea2",
+                "@Order": "1"
+              },
+              {
+                "@Id": "00000000-0000-4000-8000-eee8dab167c4",
+                "@Order": "2"
+              },
+              {
+                "@Id": "00000000-0000-4000-8000-cc85f60f3b17",
+                "@Order": "3"
+              },
+              {
+                "@Id": "00000000-0000-4000-8000-deedf4d97327",
+                "@Order": "4"
+              },
+              {
+                "@Id": "00000000-0000-4000-8000-067a3f50a4c3",
+                "@Order": "5"
+              },
+              {
+                "@Id": "00000000-0000-4000-8000-89333f3b48b0",
+                "@Order": "6"
+              }
+            ],
+            "#comment": []
+          },
+          "PinnedMessageBarApps": null
+        }
+      },
+      "ConfigObject": null,
+      "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+      "IsModified": true
+    },
+    "XmlRoot": {
+      "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+    }
+  },
+  "Identity": "Tag:fixture-policy",
+  "ConfigMetadata": {
+    "Authority": "Tenant"
+  },
+  "ConfigId": "fixture-config-328078f6"
+}

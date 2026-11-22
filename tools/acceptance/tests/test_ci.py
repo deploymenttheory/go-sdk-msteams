@@ -58,6 +58,20 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertNotIn('MSTEAMS_LAB_TENANT_ID', str(failure.exception))
         self.assertNotIn('private-tenant-value', str(failure.exception))
 
+    def test_voicemail_failure_keeps_the_assertion_without_raw_output(self):
+        name = 'TestAccOnlineVoicemailReadOnly'
+        reason = 'pinned voicemail projection unavailable'
+        report = ci.evaluate([
+            {'Test': name, 'Action': 'output', 'Output': reason + ': private-response'},
+            {'Test': name, 'Action': 'fail'},
+        ], [name], 1)
+        report.update(suite='resource-reads', auth_method='client-secret')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            ci.print_report(report)
+        self.assertIn(name + ': ' + reason, output.getvalue())
+        self.assertNotIn('private-response', output.getvalue() + json.dumps(report))
+
     def test_failure_reason_keeps_fixed_assertion_and_public_case_only(self):
         name = 'TestAccFederationReadOnly'
         reason = 'pinned federation read oracle failed; no output retained'

@@ -49,6 +49,10 @@ FAILURE_REASONS = (
     'selected federation read failed',
     'Global federation read/list observations differ',
     'canonical tenant binding required',
+    'pinned voicemail read failed; no output retained',
+    'pinned voicemail projection unavailable',
+    'voicemail Global read/list observations differ',
+    'Go and pinned voicemail scalar projections differ',
 )
 FEDERATION_CASES = {'external-policy', 'acs', 'external-users', 'tenant'}
 

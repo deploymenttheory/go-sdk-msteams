@@ -1,0 +1,50 @@
+{
+  "DefaultCatalogApps": [],
+  "GlobalCatalogApps": [],
+  "PrivateCatalogApps": [],
+  "Description": "SDK lab non-default initial description",
+  "DefaultCatalogAppsType": "AllowedAppList",
+  "GlobalCatalogAppsType": "BlockedAppList",
+  "PrivateCatalogAppsType": "BlockedAppList",
+  "Key": {
+    "ScopeClass": "Tag",
+    "SchemaId": {
+      "XName": {
+        "name": "Fixture name"
+      }
+    },
+    "AuthorityId": {
+      "Class": "Tenant",
+      "InstanceId": "00000000-0000-4000-8000-0b617a16f800",
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+      }
+    },
+    "DefaultXml": {
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "Data": {
+        "TeamsAppPermissionPolicy": {
+          "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017",
+          "DefaultCatalogApps": null,
+          "GlobalCatalogApps": null,
+          "PrivateCatalogApps": null
+        }
+      },
+      "ConfigObject": null,
+      "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+      "IsModified": true
+    },
+    "XmlRoot": {
+      "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+    }
+  },
+  "Identity": "Tag:fixture-policy",
+  "ConfigMetadata": {
+    "Authority": "Tenant"
+  },
+  "ConfigId": "fixture-config-d0f0211b"
+}

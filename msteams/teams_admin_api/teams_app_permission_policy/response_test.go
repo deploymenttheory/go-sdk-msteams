@@ -30,7 +30,7 @@ func readResponseFixture(t *testing.T, name string) []byte {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !json.Valid(raw) {
+	if !json.Valid(raw) && (len(raw) != 0 || !strings.HasSuffix(name, ".body")) {
 		t.Fatal("invalid permanent response fixture")
 	}
 	return raw
