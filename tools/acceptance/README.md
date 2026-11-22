@@ -202,3 +202,12 @@ Recovery selects `TestAccRecoverOwnedPolicies` with the bound private journal;
 `migration-configuration` restores only `EnableLegacyClientInterop` on Global.
 Null or missing originals refuse mutation. This suite temporarily changes Global
 in the dedicated lab; it does not qualify user/client propagation.
+
+Mobility CRUD now runs in `owned-policy-crud`, with all five getters compared
+against the pinned module before and after a sparse description update. Its
+recovery kind is `mobility-policy`. Multi-tenant Global reads/updates run in the
+serialized singleton suites; its `multi-tenant-configuration` recovery kind
+restores only the journaled CopilotFromHomeTenant string on Global. The recovery
+handler accepts only the documented Enabled/Disabled baseline used by the test.
+CI reports fixed parity, persistence and restoration failure reasons without
+publishing raw responses or resource names.

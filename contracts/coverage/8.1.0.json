@@ -7964,22 +7964,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/142/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mobility_multi_tenant_test.go",
+              "name": "TestAccMobilityPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/142/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mobility_multi_tenant_test.go",
+              "name": "TestAccMobilityPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -7987,8 +8034,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and owned mobility CRUD / shared setting update-restoration are exercised separately. Grants, remaining binding and full release qualification are pending.",
+        "evidence": [
+          "docs/implementation/policies/mobility-multi-tenant-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -8003,22 +8052,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/143/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go",
+              "name": "TestUnitFilterUsesActualCollection"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mobility_multi_tenant_test.go",
+              "name": "TestAccMultiTenantOrganizationConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/143/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mobility_multi_tenant_test.go",
+              "name": "TestAccMultiTenantOrganizationConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8026,8 +8122,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and owned mobility CRUD / shared setting update-restoration are exercised separately. Grants, remaining binding and full release qualification are pending.",
+        "evidence": [
+          "docs/implementation/policies/mobility-multi-tenant-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -15177,36 +15275,117 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/255/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/failure_test.go",
+              "name": "TestUnitMobilityPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/255/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/failure_test.go",
+              "name": "TestUnitMobilityPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/255/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/failure_test.go",
+              "name": "TestUnitMobilityPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/255/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/failure_test.go",
+              "name": "TestUnitMobilityPolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+            "name": "Service.AssignUser"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/assignment.go",
+            "name": "Service.Assign"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -15214,8 +15393,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and owned mobility CRUD / shared setting update-restoration are exercised separately. Grants, remaining binding and full release qualification are pending.",
+        "evidence": [
+          "docs/implementation/policies/mobility-multi-tenant-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -20716,15 +20897,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/372/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mobility_policy_crud_test.go",
+              "name": "TestAccMobilityPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20732,8 +20933,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and owned mobility CRUD / shared setting update-restoration are exercised separately. Grants, remaining binding and full release qualification are pending.",
+        "evidence": [
+          "docs/implementation/policies/mobility-multi-tenant-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -25231,15 +25434,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/480/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mobility_policy_crud_test.go",
+              "name": "TestAccMobilityPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25247,8 +25470,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and owned mobility CRUD / shared setting update-restoration are exercised separately. Grants, remaining binding and full release qualification are pending.",
+        "evidence": [
+          "docs/implementation/policies/mobility-multi-tenant-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -31267,15 +31492,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/613/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_mobility_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mobility_policy_crud_test.go",
+              "name": "TestAccMobilityPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_mobility_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -31283,8 +31536,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and owned mobility CRUD / shared setting update-restoration are exercised separately. Grants, remaining binding and full release qualification are pending.",
+        "evidence": [
+          "docs/implementation/policies/mobility-multi-tenant-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -31299,15 +31554,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/614/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/multi_tenant_update_test.go",
+              "name": "TestAccMultiTenantOrganizationConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -31315,8 +31598,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global reads and owned mobility CRUD / shared setting update-restoration are exercised separately. Grants, remaining binding and full release qualification are pending.",
+        "evidence": [
+          "docs/implementation/policies/mobility-multi-tenant-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },

@@ -35,7 +35,8 @@
       "TestAccMeetingPolicyReadOnly",
       "TestAccMessagingPolicyReadOnly",
       "TestAccMeetingTemplateConfigurationReadOnly",
-      "TestAccMeetingTemplatePermissionReadOnly"
+      "TestAccMeetingTemplatePermissionReadOnly",
+      "TestAccMobilityPolicyReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -60,7 +61,8 @@
       "TestAccMeetingBrandingPolicyCRUD",
       "TestAccMeetingPolicyCRUD",
       "TestAccMessagingPolicyCRUD",
-      "TestAccMeetingTemplatePermissionPolicyCRUD"
+      "TestAccMeetingTemplatePermissionPolicyCRUD",
+      "TestAccMobilityPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1
@@ -120,7 +122,8 @@
     "serial": true,
     "tests": [
       "TestAccMessagingConfigurationReadOnly",
-      "TestAccMigrationConfigurationReadOnly"
+      "TestAccMigrationConfigurationReadOnly",
+      "TestAccMultiTenantOrganizationConfigurationReadOnly"
     ]
   },
   "singleton-configuration-updates": {
@@ -130,7 +133,8 @@
     "journal_entries_per_test": 1,
     "tests": [
       "TestAccMessagingConfigurationUpdateRestore",
-      "TestAccMigrationConfigurationUpdateRestore"
+      "TestAccMigrationConfigurationUpdateRestore",
+      "TestAccMultiTenantOrganizationConfigurationUpdateRestore"
     ]
   }
 }

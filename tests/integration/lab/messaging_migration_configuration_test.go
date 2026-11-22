@@ -72,8 +72,13 @@ func tenantConfigurationOracle(t *testing.T, ctx context.Context, kind, tenant s
 		t.Fatal("pinned tenant configuration projection unavailable")
 	}
 	names := []string{"EnableVideoMessageCaptions", "EnableInOrganizationChatControl", "CustomEmojis", "Storyline", "Communities", "MessagingNotes", "FileTypeCheck", "UrlReputationCheck", "ContentBasedPhishingCheck", "ReportIncorrectSecurityDetections", "FileTypeCustomizationSetting", "FileTypeBlockList"}
-	if kind == "migration" {
+	switch kind {
+	case "migration":
 		names = []string{"EnableLegacyClientInterop"}
+	case "mobility":
+		names = []string{"Description", "IPAudioMobileMode", "IPVideoMobileMode", "MobileDialerPreference", "LinksInTeams"}
+	case "multi-tenant":
+		names = []string{"CopilotFromHomeTenant"}
 	}
 	if len(result.Settings) != len(names) {
 		t.Fatal("incomplete configuration getter projection")
