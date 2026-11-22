@@ -143,7 +143,7 @@ func TestAccExternalAccessPolicyCRUD(t *testing.T) {
 		if !ok {
 			t.Fatal("tenant binding unavailable")
 		}
-		compareFederation(t, "external-policy", value.RawFields, federationOracleForIdentity(t, ctx, "external-policy", tenant, identity))
+		labkit.CompareFederation(t, "external-policy", value.RawFields, labkit.FederationOracleForIdentity(t, ctx, "external-policy", tenant, identity))
 		t.Log("PowerShell 8.1.0 / Go policy read parity: passed")
 	}
 	t.Log("policy create/read-back: passed")

@@ -277,11 +277,11 @@ class AcceptanceGuardTests(unittest.TestCase):
                 self.assertIn(name + ': ' + reason, output.getvalue())
                 self.assertNotIn('private-response', output.getvalue() + json.dumps(report))
 
-    def test_failure_reason_keeps_fixed_assertion_and_public_case_only(self):
-        name = 'TestAccFederationReadOnly'
+    def test_failure_reason_keeps_fixed_assertion_only(self):
+        name = 'TestAccACSFederationConfigurationReadOnly'
         reason = 'pinned federation read oracle failed; no output retained'
         events = [
-            {'Test': name + '/acs', 'Action': 'output', 'Output': reason + ': private-response'},
+            {'Test': name, 'Action': 'output', 'Output': reason + ': private-response'},
             {'Test': name + '/private-user', 'Action': 'output', 'Output': 'Global federation read/list observations differ private-token'},
             {'Test': name, 'Action': 'fail'},
         ]
@@ -294,7 +294,8 @@ class AcceptanceGuardTests(unittest.TestCase):
                 ci.print_report(report)
                 ci.write_summary([report])
             published = json.dumps(report) + output.getvalue() + summary.read_text()
-        self.assertIn('acs: ' + reason, published)
+        self.assertIn(reason, report['failure_reasons'][name])
+        self.assertIn(name + ': Global federation read/list observations differ; ' + reason, published)
         self.assertIn('Global federation read/list observations differ', published)
         self.assertNotIn('private-', published)
 

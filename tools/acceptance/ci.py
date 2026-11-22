@@ -133,7 +133,6 @@ FAILURE_REASONS = (
     'recording rollout update or omitted-field preservation did not converge',
     'recording rollout sparse update included an unbound field',
 )
-FEDERATION_CASES = {'external-policy', 'acs', 'external-users', 'tenant'}
 
 
 class AcceptanceFailure(ValueError):
@@ -376,11 +375,9 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None, exp
         if owner in http_statuses and action == 'output':
             http_statuses[owner].extend(int(value) for value in re.findall(r'HTTP (\d{3})\b', event.get('Output', '')))
             service_codes[owner].extend(int(value) for value in re.findall(r'PolicyRP (\d+)\b', event.get('Output', '')))
-            case = test.removeprefix('TestAccFederationReadOnly/')
-            prefix = case + ': ' if owner == 'TestAccFederationReadOnly' and case in FEDERATION_CASES else ''
             matched = next((reason for reason in reasons if reason in event.get('Output', '')), None)
             if matched:
-                failure_reasons[owner].add(prefix + matched)
+                failure_reasons[owner].add(matched)
         if owner in markers and action == 'output':
             for marker in proof_markers + ([oracle_marker] if oracle_marker else []):
                 if marker in event.get('Output', ''):

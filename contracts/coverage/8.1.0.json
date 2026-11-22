@@ -2121,7 +2121,7 @@
           "live_tests": [
             {
               "file": "tests/integration/lab/federation_test.go",
-              "name": "TestAccFederationReadOnly"
+              "name": "TestAccExternalAccessPolicyReadOnly"
             }
           ]
         },
@@ -2151,7 +2151,7 @@
           "live_tests": [
             {
               "file": "tests/integration/lab/federation_test.go",
-              "name": "TestAccFederationReadOnly"
+              "name": "TestAccExternalAccessPolicyReadOnly"
             }
           ]
         }
@@ -4949,7 +4949,7 @@
           "live_tests": [
             {
               "file": "tests/integration/lab/federation_test.go",
-              "name": "TestAccFederationReadOnly"
+              "name": "TestAccACSFederationConfigurationReadOnly"
             }
           ]
         },
@@ -4979,7 +4979,7 @@
           "live_tests": [
             {
               "file": "tests/integration/lab/federation_test.go",
-              "name": "TestAccFederationReadOnly"
+              "name": "TestAccACSFederationConfigurationReadOnly"
             }
           ]
         }
@@ -6689,7 +6689,7 @@
           "live_tests": [
             {
               "file": "tests/integration/lab/federation_test.go",
-              "name": "TestAccFederationReadOnly"
+              "name": "TestAccTeamsExternalAccessConfigurationReadOnly"
             }
           ]
         },
@@ -6719,7 +6719,7 @@
           "live_tests": [
             {
               "file": "tests/integration/lab/federation_test.go",
-              "name": "TestAccFederationReadOnly"
+              "name": "TestAccTeamsExternalAccessConfigurationReadOnly"
             }
           ]
         }
@@ -10939,7 +10939,7 @@
           "live_tests": [
             {
               "file": "tests/integration/lab/federation_test.go",
-              "name": "TestAccFederationReadOnly"
+              "name": "TestAccTenantFederationConfigurationReadOnly"
             }
           ]
         },
@@ -10969,7 +10969,7 @@
           "live_tests": [
             {
               "file": "tests/integration/lab/federation_test.go",
-              "name": "TestAccFederationReadOnly"
+              "name": "TestAccTenantFederationConfigurationReadOnly"
             }
           ]
         }

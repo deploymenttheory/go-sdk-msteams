@@ -2,11 +2,14 @@
 
 Use the existing private lab identity and the [lab lifecycle gates](../lab/lifecycle-evidence.md).
 Ordinary tests read no credentials. Explicit MSTEAMS_LAB_READ_ONLY=1 enables
-TestAccFederationReadOnly; MSTEAMS_LAB_IDENTITY_FILE names the private identity.
+the four federation read tests; MSTEAMS_LAB_IDENTITY_FILE names the private identity.
 MSTEAMS_LAB_AUTH_METHOD selects certificate (default) or client-secret.
 
-The read test checks Global and a locally filtered list for external access policy,
-ACS settings, external-user settings and tenant federation settings. Optional
+Each family has its own read test, run in its service's acceptance partition:
+TestAccExternalAccessPolicyReadOnly, TestAccACSFederationConfigurationReadOnly,
+TestAccTeamsExternalAccessConfigurationReadOnly and
+TestAccTenantFederationConfigurationReadOnly. Each checks Global and a locally
+filtered list; they share labkit.RunFederationGlobal. Optional
 MSTEAMS_LAB_POWERSHELL_ORACLE=1 plus the absolute pinned module path enables a
 certificate-authenticated read-only PowerShell comparison of selected nullable
 scalars. The oracle checks version/assembly hashes and tenant binding, accepts
