@@ -9452,22 +9452,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/165/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go",
+              "name": "TestUnitFilterUsesActualCollection"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/sip_template_policy_test.go",
+              "name": "TestAccSipDevicesConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/165/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/sip_template_policy_test.go",
+              "name": "TestAccSipDevicesConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9475,8 +9522,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global reads, journaled SIP update/restoration and empty/populated team-template policy CRUD passed both application modes, including real-ID Add/Remove and clear. Additional bindings and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/sip-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -9663,22 +9712,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/169/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/sip_template_policy_test.go",
+              "name": "TestAccTemplatePermissionPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/169/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/sip_template_policy_test.go",
+              "name": "TestAccTemplatePermissionPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9686,8 +9782,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global reads, journaled SIP update/restoration and empty/populated team-template policy CRUD passed both application modes, including real-ID Add/Remove and clear. Additional bindings and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/sip-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -22491,15 +22589,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/388/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/populated_crud_test.go",
+              "name": "TestUnitPopulatedCRUDAndListEditsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "name": "TestAccTemplatePermissionPopulatedCRUD"
+            },
+            {
+              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "name": "TestAccTemplatePermissionPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -22507,8 +22629,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global reads, journaled SIP update/restoration and empty/populated team-template policy CRUD passed both application modes, including real-ID Add/Remove and clear. Additional bindings and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/sip-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -27177,15 +27301,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/497/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/populated_crud_test.go",
+              "name": "TestUnitPopulatedCRUDAndListEditsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "name": "TestAccTemplatePermissionPopulatedCRUD"
+            },
+            {
+              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "name": "TestAccTemplatePermissionPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27193,8 +27341,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global reads, journaled SIP update/restoration and empty/populated team-template policy CRUD passed both application modes, including real-ID Add/Remove and clear. Additional bindings and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/sip-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -33464,15 +33614,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/628/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/sip_devices_update_test.go",
+              "name": "TestAccSipDevicesConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -33480,8 +33658,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global reads, journaled SIP update/restoration and empty/populated team-template policy CRUD passed both application modes, including real-ID Add/Remove and clear. Additional bindings and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/sip-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -33619,15 +33799,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/632/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_template_permission_policy/populated_crud_test.go",
+              "name": "TestUnitPopulatedCRUDAndListEditsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "name": "TestAccTemplatePermissionPopulatedCRUD"
+            },
+            {
+              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "name": "TestAccTemplatePermissionPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_template_permission_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -33635,8 +33847,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global reads, journaled SIP update/restoration and empty/populated team-template policy CRUD passed both application modes, including real-ID Add/Remove and clear. Additional bindings and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/sip-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },

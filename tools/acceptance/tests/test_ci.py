@@ -175,6 +175,19 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertEqual(report['failure_reasons'][test], ['read/list comparison: metadata values differ'])
         self.assertNotIn('private-tenant-value', json.dumps(report))
 
+    def test_populated_team_templates_require_edit_clear_and_four_comparisons(self):
+        test = 'TestAccTemplatePermissionPopulatedCRUD'
+        proof = 'owned-template-permission-populated-crud'
+        markers, oracle, count = ci.PROOFS[proof]
+        events = [{'Test': test, 'Action': 'output', 'Output': marker} for marker in markers + [oracle] * count]
+        events.append({'Test': test, 'Action': 'pass'})
+        self.assertEqual(ci.evaluate(events, [test], 0, proof=proof)['outcome'], 'passed')
+        for absent in ['policy hidden-list edit/read-back: passed', 'policy hidden-list clear/read-back: passed', oracle]:
+            missing = events.copy()
+            missing.remove(next(event for event in missing if event.get('Output') == absent))
+            with self.subTest(absent=absent):
+                self.assertEqual(ci.evaluate(missing, [test], 0, proof=proof)['outcome'], 'failed')
+
     def test_skip_missing_empty_and_failed_process_cannot_pass(self):
         for events, expected, code in [
             ([{'Test': 'TestAccRead', 'Action': 'skip'}], ['TestAccRead'], 0),

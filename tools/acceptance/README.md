@@ -287,3 +287,13 @@ with PowerShell before/after a grace-period update. Its bound recovery kind is
 serialized singleton suites, with three pinned comparisons and one cleaned
 `shifts-app-configuration` restore entry. Permanent response fixtures feed both
 service unit suites; additional grants and effective behavior remain separate.
+
+SIP devices Global reads/update-restoration share the tenant lock. Its bound
+`sip-devices-configuration` handler restores only the original Enabled/Disabled
+BulkSignIn string on Global; CI requires three pinned comparisons and a cleaned
+restore entry. Team template permission basic CRUD runs in `owned-policy-crud`.
+Its separate `owned-template-permission-populated-policy` suite reads actual
+existing team-template IDs, verifies sparse omission, Add/Remove and clear with
+four pinned comparisons, and independently deletes its owned policy. Recovery
+kind: `template-permission-policy`. Empty and populated workflows write distinct
+permanent fixture names. Both new service scenarios run in each auth mode.

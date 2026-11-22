@@ -43,7 +43,8 @@
       "TestAccRecordingRollOutPolicyReadOnly",
       "TestAccRoomVideoTeleConferencingPolicyReadOnly",
       "TestAccSharedCallingRoutingPolicyReadOnly",
-      "TestAccShiftsPolicyReadOnly"
+      "TestAccShiftsPolicyReadOnly",
+      "TestAccTemplatePermissionPolicyReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -75,7 +76,8 @@
       "TestAccRecordingRollOutPolicyCRUD",
       "TestAccRoomVideoTeleConferencingPolicyCRUD",
       "TestAccSharedCallingRoutingPolicyCRUD",
-      "TestAccShiftsPolicyCRUD"
+      "TestAccShiftsPolicyCRUD",
+      "TestAccTemplatePermissionPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1
@@ -137,7 +139,8 @@
       "TestAccMessagingConfigurationReadOnly",
       "TestAccMigrationConfigurationReadOnly",
       "TestAccMultiTenantOrganizationConfigurationReadOnly",
-      "TestAccShiftsAppPolicyReadOnly"
+      "TestAccShiftsAppPolicyReadOnly",
+      "TestAccSipDevicesConfigurationReadOnly"
     ]
   },
   "singleton-configuration-updates": {
@@ -149,7 +152,8 @@
       "TestAccMessagingConfigurationUpdateRestore",
       "TestAccMigrationConfigurationUpdateRestore",
       "TestAccMultiTenantOrganizationConfigurationUpdateRestore",
-      "TestAccShiftsAppPolicyUpdateRestore"
+      "TestAccShiftsAppPolicyUpdateRestore",
+      "TestAccSipDevicesConfigurationUpdateRestore"
     ]
   },
   "owned-notification-policy": {
@@ -168,6 +172,15 @@
     "journal_entries_per_test": 1,
     "tests": [
       "TestAccSharedCallingRoutingPolicyPopulatedCRUD"
+    ]
+  },
+  "owned-template-permission-populated-policy": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "owned-template-permission-populated-crud",
+    "journal_entries_per_test": 1,
+    "tests": [
+      "TestAccTemplatePermissionPopulatedCRUD"
     ]
   }
 }
