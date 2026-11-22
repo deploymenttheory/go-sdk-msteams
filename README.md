@@ -75,3 +75,9 @@ Teams [meeting policies](msteams/teams_admin_api/teams_meeting_policy/api_docs.m
 CRUD, list/filter and scoped grant methods. Their owned CRUD and Global read acceptance
 use both application authentication methods and permanent response fixtures; full
 assignment and parameter qualification remains tracked in #130 and #134.
+
+Meeting-template [configuration reads](msteams/teams_admin_api/teams_meeting_template_configuration/api_docs.md)
+and [permission-policy management](msteams/teams_admin_api/teams_meeting_template_permission_policy/api_docs.md)
+have native services with permanent acceptance response fixtures. Global reads and
+owned permission CRUD passed in the lab under both application authentication methods;
+remaining qualification is tracked in #131 and #132.

@@ -41,6 +41,8 @@ import (
 	teamsfeedbackpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 	teamsfilespolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
 	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
+	teamsmeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
+	teamsmeetingtemplatepermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_permission_policy"
 	teamsmessagingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_messaging_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
@@ -48,6 +50,8 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsMeetingTemplatePermissionPolicies  *teamsmeetingtemplatepermissionpolicy.Service
+	TeamsMeetingTemplateConfigurations      *teamsmeetingtemplateconfiguration.Service
 	TeamsMessagingPolicies                  *teamsmessagingpolicy.Service
 	TeamsMeetingPolicies                    *teamsmeetingpolicy.Service
 	TeamsEventsPolicies                     *teamseventspolicy.Service
@@ -110,6 +114,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsMeetingTemplatePermissionPolicies:  teamsmeetingtemplatepermissionpolicy.NewService(scope),
+		TeamsMeetingTemplateConfigurations:      teamsmeetingtemplateconfiguration.NewService(scope),
 		TeamsMessagingPolicies:                  teamsmessagingpolicy.NewService(scope),
 		TeamsMeetingPolicies:                    teamsmeetingpolicy.NewService(scope),
 		TeamsEventsPolicies:                     teamseventspolicy.NewService(scope),

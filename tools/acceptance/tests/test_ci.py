@@ -409,5 +409,17 @@ func TestAccRead(t *testing.T) {
             self.assertTrue(private.exists())
 
 
+    def test_populated_template_denial_needs_parity_and_cleanup(self):
+        name = 'TestAccMeetingTemplatePermissionPopulatedAccess'
+        markers, oracle, count = ci.PROOFS['populated-template-access']
+        events = [{'Test': name, 'Action': 'output', 'Output': marker} for marker in markers + [oracle]]
+        events.append({'Test': name, 'Action': 'pass'})
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='populated-template-access')['outcome'], 'passed')
+        self.assertEqual(count, 1)
+        for omitted in markers + [oracle]:
+            incomplete = [event for event in events if event.get('Output') != omitted]
+            self.assertEqual(ci.evaluate(incomplete, [name], 0, proof='populated-template-access')['outcome'], 'failed')
+
+
 if __name__ == '__main__':
     unittest.main()

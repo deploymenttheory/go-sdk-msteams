@@ -47,6 +47,7 @@ PROOFS = {
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
     'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
     'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
+    'populated-template-access': (['native populated-list create denial: verified', 'populated-list comparison cleanup: passed'], 'PowerShell 8.1.0 / Go populated-list authorization parity: passed', 1),
 }
 # Publish fixed assertion text only. HTTP payloads and dynamic fixture names
 # remain private even when a test fails.

@@ -86,5 +86,9 @@
   "TestAccRecoverOwnedPolicies": {
     "file": "tests/integration/lab/owned_policy_recovery_test.go",
     "reason": "Operator-selected recovery for interrupted owned-policy tests. Requires a decrypted private journal and matching tenant/cloud/client binding; normal CI has no recovery-file selection."
+  },
+  "TestAccMeetingTemplatePermissionPopulatedCRUD": {
+    "file": "tests/integration/lab/meeting_template_permission_crud_test.go",
+    "reason": "With both application auth methods, native and pinned PowerShell populated-list create return PolicyRP 40013 with downstream HTTP 401. Full populated-list CRUD requires a separately qualified authentication fixture; delegated browser access is currently unavailable. Empty-list CRUD and exact app-only denial parity run separately in CI."
   }
 }

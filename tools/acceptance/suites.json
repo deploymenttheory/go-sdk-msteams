@@ -33,7 +33,9 @@
       "TestAccRecordingMessagesReadOnly",
       "TestAccVoicemailValidationReadOnly",
       "TestAccMeetingPolicyReadOnly",
-      "TestAccMessagingPolicyReadOnly"
+      "TestAccMessagingPolicyReadOnly",
+      "TestAccMeetingTemplateConfigurationReadOnly",
+      "TestAccMeetingTemplatePermissionReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -57,7 +59,8 @@
       "TestAccAppSetupPolicyCRUD",
       "TestAccMeetingBrandingPolicyCRUD",
       "TestAccMeetingPolicyCRUD",
-      "TestAccMessagingPolicyCRUD"
+      "TestAccMessagingPolicyCRUD",
+      "TestAccMeetingTemplatePermissionPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1
@@ -102,5 +105,14 @@
         "json-body"
       ]
     }
+  },
+  "populated-template-access": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "populated-template-access",
+    "journal_entries_per_test": 2,
+    "tests": [
+      "TestAccMeetingTemplatePermissionPopulatedAccess"
+    ]
   }
 }
