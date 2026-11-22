@@ -69,3 +69,9 @@ These commands operate locally and do not publish GitHub issues. The publication
 ## Licence
 
 See [LICENSE](LICENSE). This community project is not affiliated with Microsoft.
+
+Teams [meeting policies](msteams/teams_admin_api/teams_meeting_policy/api_docs.md) and
+[messaging policies](msteams/teams_admin_api/teams_messaging_policy/api_docs.md) expose native
+CRUD, list/filter and scoped grant methods. Their owned CRUD and Global read acceptance
+use both application authentication methods and permanent response fixtures; full
+assignment and parameter qualification remains tracked in #130 and #134.

@@ -1,0 +1,397 @@
+[
+  {
+    "Description": null,
+    "AllowUrlPreviews": true,
+    "AllowOwnerDeleteMessage": false,
+    "AllowUserEditMessage": true,
+    "AllowUserDeleteMessage": true,
+    "UsersCanDeleteBotMessages": false,
+    "AllowUserDeleteChat": true,
+    "AllowUserChat": true,
+    "AllowRemoveUser": true,
+    "AllowGiphy": true,
+    "GiphyRatingType": "Moderate",
+    "AllowGiphyDisplay": true,
+    "AllowPasteInternetImage": true,
+    "AllowMemes": true,
+    "AllowImmersiveReader": true,
+    "AllowStickers": true,
+    "AllowUserTranslation": true,
+    "ReadReceiptsEnabledType": "UserPreference",
+    "AllowPriorityMessages": true,
+    "AllowSmartReply": true,
+    "AllowSmartCompose": true,
+    "ChannelsInChatListEnabledType": "DisabledUserOverride",
+    "AudioMessageEnabledType": "ChatsAndChannels",
+    "ChatPermissionRole": "Restricted",
+    "AllowFullChatPermissionUserToDeleteAnyMessage": false,
+    "AllowFluidCollaborate": false,
+    "AllowVideoMessages": true,
+    "AllowCommunicationComplianceEndUserReporting": true,
+    "AllowChatWithGroup": true,
+    "AllowSecurityEndUserReporting": true,
+    "InOrganizationChatControl": "BlockingDisallowed",
+    "AllowGroupChatJoinLinks": true,
+    "CreateCustomEmojis": true,
+    "UseB2BInvitesToAddExternalUsers": true,
+    "AllowProactiveSummaries": true,
+    "DeleteCustomEmojis": false,
+    "AutoShareFilesInExternalChats": "Enabled",
+    "DesignerForBackgroundsAndImages": "Enabled",
+    "AllowCustomGroupChatAvatars": true,
+    "Key": {
+      "ScopeClass": "Global",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsMessagingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Global",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "Global"
+  },
+  {
+    "Description": null,
+    "AllowUrlPreviews": true,
+    "AllowOwnerDeleteMessage": false,
+    "AllowUserEditMessage": true,
+    "AllowUserDeleteMessage": true,
+    "UsersCanDeleteBotMessages": false,
+    "AllowUserDeleteChat": true,
+    "AllowUserChat": true,
+    "AllowRemoveUser": true,
+    "AllowGiphy": true,
+    "GiphyRatingType": "Moderate",
+    "AllowGiphyDisplay": true,
+    "AllowPasteInternetImage": true,
+    "AllowMemes": true,
+    "AllowImmersiveReader": true,
+    "AllowStickers": true,
+    "AllowUserTranslation": true,
+    "ReadReceiptsEnabledType": "UserPreference",
+    "AllowPriorityMessages": true,
+    "AllowSmartReply": true,
+    "AllowSmartCompose": true,
+    "ChannelsInChatListEnabledType": "DisabledUserOverride",
+    "AudioMessageEnabledType": "ChatsAndChannels",
+    "ChatPermissionRole": "Restricted",
+    "AllowFullChatPermissionUserToDeleteAnyMessage": false,
+    "AllowFluidCollaborate": false,
+    "AllowVideoMessages": true,
+    "AllowCommunicationComplianceEndUserReporting": true,
+    "AllowChatWithGroup": true,
+    "AllowSecurityEndUserReporting": true,
+    "InOrganizationChatControl": "BlockingDisallowed",
+    "AllowGroupChatJoinLinks": true,
+    "CreateCustomEmojis": true,
+    "UseB2BInvitesToAddExternalUsers": true,
+    "AllowProactiveSummaries": true,
+    "DeleteCustomEmojis": false,
+    "AutoShareFilesInExternalChats": "Enabled",
+    "DesignerForBackgroundsAndImages": "Enabled",
+    "AllowCustomGroupChatAvatars": true,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsMessagingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-5016ca81",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-4ad0d41a"
+  },
+  {
+    "Description": null,
+    "AllowUrlPreviews": true,
+    "AllowOwnerDeleteMessage": true,
+    "AllowUserEditMessage": true,
+    "AllowUserDeleteMessage": true,
+    "UsersCanDeleteBotMessages": false,
+    "AllowUserDeleteChat": true,
+    "AllowUserChat": true,
+    "AllowRemoveUser": true,
+    "AllowGiphy": false,
+    "GiphyRatingType": "Strict",
+    "AllowGiphyDisplay": false,
+    "AllowPasteInternetImage": false,
+    "AllowMemes": true,
+    "AllowImmersiveReader": true,
+    "AllowStickers": true,
+    "AllowUserTranslation": true,
+    "ReadReceiptsEnabledType": "UserPreference",
+    "AllowPriorityMessages": true,
+    "AllowSmartReply": true,
+    "AllowSmartCompose": true,
+    "ChannelsInChatListEnabledType": "DisabledUserOverride",
+    "AudioMessageEnabledType": "ChatsAndChannels",
+    "ChatPermissionRole": "Full",
+    "AllowFullChatPermissionUserToDeleteAnyMessage": false,
+    "AllowFluidCollaborate": false,
+    "AllowVideoMessages": true,
+    "AllowCommunicationComplianceEndUserReporting": true,
+    "AllowChatWithGroup": true,
+    "AllowSecurityEndUserReporting": true,
+    "InOrganizationChatControl": "BlockingDisallowed",
+    "AllowGroupChatJoinLinks": true,
+    "CreateCustomEmojis": true,
+    "UseB2BInvitesToAddExternalUsers": true,
+    "AllowProactiveSummaries": true,
+    "DeleteCustomEmojis": false,
+    "AutoShareFilesInExternalChats": "Enabled",
+    "DesignerForBackgroundsAndImages": "Enabled",
+    "AllowCustomGroupChatAvatars": true,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsMessagingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-184dd423",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-1a934e33"
+  },
+  {
+    "Description": null,
+    "AllowUrlPreviews": true,
+    "AllowOwnerDeleteMessage": false,
+    "AllowUserEditMessage": true,
+    "AllowUserDeleteMessage": true,
+    "UsersCanDeleteBotMessages": false,
+    "AllowUserDeleteChat": true,
+    "AllowUserChat": true,
+    "AllowRemoveUser": true,
+    "AllowGiphy": false,
+    "GiphyRatingType": "Strict",
+    "AllowGiphyDisplay": false,
+    "AllowPasteInternetImage": false,
+    "AllowMemes": true,
+    "AllowImmersiveReader": true,
+    "AllowStickers": true,
+    "AllowUserTranslation": true,
+    "ReadReceiptsEnabledType": "UserPreference",
+    "AllowPriorityMessages": true,
+    "AllowSmartReply": true,
+    "AllowSmartCompose": true,
+    "ChannelsInChatListEnabledType": "DisabledUserOverride",
+    "AudioMessageEnabledType": "ChatsAndChannels",
+    "ChatPermissionRole": "Full",
+    "AllowFullChatPermissionUserToDeleteAnyMessage": false,
+    "AllowFluidCollaborate": false,
+    "AllowVideoMessages": true,
+    "AllowCommunicationComplianceEndUserReporting": true,
+    "AllowChatWithGroup": true,
+    "AllowSecurityEndUserReporting": true,
+    "InOrganizationChatControl": "BlockingDisallowed",
+    "AllowGroupChatJoinLinks": true,
+    "CreateCustomEmojis": true,
+    "UseB2BInvitesToAddExternalUsers": true,
+    "AllowProactiveSummaries": true,
+    "DeleteCustomEmojis": false,
+    "AutoShareFilesInExternalChats": "Enabled",
+    "DesignerForBackgroundsAndImages": "Enabled",
+    "AllowCustomGroupChatAvatars": true,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsMessagingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-24739e26",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-9893c9b2"
+  },
+  {
+    "Description": "SDK lab non-default updated description",
+    "AllowUrlPreviews": true,
+    "AllowOwnerDeleteMessage": false,
+    "AllowUserEditMessage": true,
+    "AllowUserDeleteMessage": true,
+    "UsersCanDeleteBotMessages": false,
+    "AllowUserDeleteChat": true,
+    "AllowUserChat": true,
+    "AllowRemoveUser": true,
+    "AllowGiphy": false,
+    "GiphyRatingType": "Moderate",
+    "AllowGiphyDisplay": true,
+    "AllowPasteInternetImage": true,
+    "AllowMemes": true,
+    "AllowImmersiveReader": true,
+    "AllowStickers": true,
+    "AllowUserTranslation": true,
+    "ReadReceiptsEnabledType": "UserPreference",
+    "AllowPriorityMessages": true,
+    "AllowSmartReply": true,
+    "AllowSmartCompose": true,
+    "ChannelsInChatListEnabledType": "DisabledUserOverride",
+    "AudioMessageEnabledType": "ChatsAndChannels",
+    "ChatPermissionRole": "Restricted",
+    "AllowFullChatPermissionUserToDeleteAnyMessage": false,
+    "AllowFluidCollaborate": false,
+    "AllowVideoMessages": true,
+    "AllowCommunicationComplianceEndUserReporting": true,
+    "AllowChatWithGroup": true,
+    "AllowSecurityEndUserReporting": true,
+    "InOrganizationChatControl": "BlockingDisallowed",
+    "AllowGroupChatJoinLinks": true,
+    "CreateCustomEmojis": true,
+    "UseB2BInvitesToAddExternalUsers": true,
+    "AllowProactiveSummaries": true,
+    "DeleteCustomEmojis": false,
+    "AutoShareFilesInExternalChats": "Enabled",
+    "DesignerForBackgroundsAndImages": "Enabled",
+    "AllowCustomGroupChatAvatars": true,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Tenant",
+        "InstanceId": "00000000-0000-4000-8000-0b617a16f800",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsMessagingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Tag:fixture-policy",
+    "ConfigMetadata": {
+      "Authority": "Tenant"
+    },
+    "ConfigId": "fixture-config-128c02e1"
+  }
+]
