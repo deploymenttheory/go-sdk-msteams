@@ -64,12 +64,16 @@ import (
 	teamsupgradepolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_upgrade_policy"
 	teamsvdipolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_vdi_policy"
 	teamsvirtualappointmentspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_virtual_appointments_policy"
+	teamsvoiceapplicationspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_voice_applications_policy"
+	teamsworkloadpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_load_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsVoiceApplicationsPolicies   *teamsvoiceapplicationspolicy.Service
+	TeamsWorkLoadPolicies            *teamsworkloadpolicy.Service
 	TeamsVDIPolicies                 *teamsvdipolicy.Service
 	TeamsVirtualAppointmentsPolicies *teamsvirtualappointmentspolicy.Service
 
@@ -155,6 +159,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsVoiceApplicationsPolicies:   teamsvoiceapplicationspolicy.NewService(scope),
+		TeamsWorkLoadPolicies:            teamsworkloadpolicy.NewService(backend),
 		TeamsVDIPolicies:                 teamsvdipolicy.NewService(scope),
 		TeamsVirtualAppointmentsPolicies: teamsvirtualappointmentspolicy.NewService(scope),
 

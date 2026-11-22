@@ -42,6 +42,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 		"room-video-policy":           roomVideoPolicyCleanup{sdk.TeamsAdminAPI.TeamsRoomVideoTeleConferencingPolicies},
 		"shared-calling-policy":       sharedCallingPolicyCleanup{sdk.TeamsAdminAPI.TeamsSharedCallingRoutingPolicies},
 		"personal-policy":             personalPolicyCleanup{sdk.TeamsAdminAPI.TeamsPersonalAttendantPolicies},
+		"voice-applications-policy":   voiceApplicationsPolicyCleanup{sdk.TeamsAdminAPI.TeamsVoiceApplicationsPolicies},
+		"work-load-policy":            workLoadPolicyCleanup{sdk.TeamsAdminAPI.TeamsWorkLoadPolicies},
 		"vdi-policy":                  vdiPolicyCleanup{sdk.TeamsAdminAPI.TeamsVDIPolicies},
 		"virtual-appointments-policy": virtualAppointmentsPolicyCleanup{sdk.TeamsAdminAPI.TeamsVirtualAppointmentsPolicies},
 		"recording-rollout-policy":    recordingRollOutPolicyCleanup{sdk.TeamsAdminAPI.TeamsRecordingRollOutPolicies},

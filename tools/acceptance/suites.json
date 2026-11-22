@@ -49,7 +49,9 @@
       "TestAccUpgradePolicyReadOnly",
       "TestAccUpgradeGrantMigrationBinding",
       "TestAccVDIPolicyReadOnly",
-      "TestAccVirtualAppointmentsPolicyReadOnly"
+      "TestAccVirtualAppointmentsPolicyReadOnly",
+      "TestAccVoiceApplicationsPolicyReadOnly",
+      "TestAccWorkLoadPolicyReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -224,6 +226,16 @@
     "tests": [
       "TestAccVDIPolicyCRUD",
       "TestAccVirtualAppointmentsPolicyCRUD"
+    ]
+  },
+  "owned-voice-workload-policies": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "owned-crud",
+    "journal_entries_per_test": 1,
+    "tests": [
+      "TestAccVoiceApplicationsPolicyCRUD",
+      "TestAccWorkLoadPolicyCRUD"
     ]
   }
 }

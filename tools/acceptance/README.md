@@ -316,3 +316,11 @@ journal entry. VDI verifies both disable flags survive an optimization-only upda
 virtual appointments verifies false-to-true SMS persistence. Permanent sanitized
 service testdata supplies unit replay. Grants remain outside the qualified live
 CRUD claim. Existing policies and assignments are untouched.
+
+Voice-applications and workload Global reads are in resource-reads. Their dedicated
+owned-voice-workload-policies suite requires two pinned comparisons and one cleaned
+journal entry per test. Voice applications checks all 34 getters across a
+Description-only update; workload preserves all six Boolean settings across a
+Description-only PUT. Each request is asserted sparse and each delete requires
+independent GET404/list absence. Eighteen actual response fixtures supply units;
+Grant persistence is a separate unqualified operation.
