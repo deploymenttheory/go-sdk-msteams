@@ -68,8 +68,9 @@ from metadata or a release note. Facts may describe output schemas, defaults, ro
 authentication or validation. Evidence references and both values are preserved; changing
 between documentation and observation provenance is itself flagged. The comparator
 requires provenance fields but does not verify remote URLs or attest that a supplied
-observation was actually executed. Capture/review and LAB qualification own that proof.
-Only sanitized schema facts belong in these inputs; raw credential-bearing captures do not.
+observation was actually executed. Acceptance tests and review establish that proof.
+Only sanitized schema facts belong in these inputs. Service response fixtures live
+in each service's `testdata` directory and feed its unit tests.
 
 Every change includes the resource family, stable research/implementation ticket, GitHub
 issue link, implementation/model symbols and mapped tests where the coverage ledger has
