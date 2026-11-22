@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -26,14 +27,26 @@ type feedbackPolicyObservation struct {
 	Settings map[string]json.RawMessage `json:"settings"`
 }
 
+var feedbackPolicyOwnedIdentity = regexp.MustCompile(`(?i)^(?:tag:)?msteams-sdk-[a-z2-7]{26,64}-feedback-policy$`)
+
 func decodeFeedbackPolicyOracle(raw []byte, tenant string) (feedbackPolicyObservation, error) {
+	return decodeFeedbackPolicyOracleForIdentity(raw, tenant, "Global")
+}
+func decodeFeedbackPolicyOracleForIdentity(raw []byte, tenant, identity string) (feedbackPolicyObservation, error) {
 	var v feedbackPolicyObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
+	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !feedbackPolicyOwnedIdentity.MatchString(identity) {
 		return v, errTeamOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
-	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || !strings.EqualFold(v.Identity, "Global") || len(v.Settings) != len(feedbackPolicyScalars) {
+	if d.Decode(&v) != nil {
+		return feedbackPolicyObservation{}, errTeamOracle
+	}
+	identityMatches := strings.EqualFold(v.Identity, "Global")
+	if !strings.EqualFold(identity, "Global") {
+		identityMatches = samePolicyName(v.Identity, identity)
+	}
+	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(feedbackPolicyScalars) {
 		return feedbackPolicyObservation{}, errTeamOracle
 	}
 	var extra any
@@ -54,8 +67,11 @@ func decodeFeedbackPolicyOracle(raw []byte, tenant string) (feedbackPolicyObserv
 }
 
 func feedbackPolicyOracle(t *testing.T, ctx context.Context, tenant string) feedbackPolicyObservation {
+	return feedbackPolicyOracleForIdentity(t, ctx, tenant, "Global")
+}
+func feedbackPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, identity string) feedbackPolicyObservation {
 	t.Helper()
-	input, err := json.Marshal(map[string]string{"tenant_id": tenant})
+	input, err := json.Marshal(map[string]string{"tenant_id": tenant, "identity": identity})
 	if err != nil {
 		t.Fatal("invalid feedback policy oracle selector")
 	}
@@ -67,7 +83,7 @@ func feedbackPolicyOracle(t *testing.T, ctx context.Context, tenant string) feed
 			cmd.Env = append(cmd.Env, key+"="+value)
 		}
 	}
-	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
+	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
 	var output teamOracleBuffer
 	defer func() { clear(output.data) }()
 	cmd.Stdin = bytes.NewReader(input)
@@ -75,7 +91,7 @@ func feedbackPolicyOracle(t *testing.T, ctx context.Context, tenant string) feed
 	if cmd.Run() != nil || output.exceeded {
 		t.Fatal("pinned feedback policy read failed; no output retained")
 	}
-	value, err := decodeFeedbackPolicyOracle(output.data, tenant)
+	value, err := decodeFeedbackPolicyOracleForIdentity(output.data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned feedback policy projection unavailable")
 	}
@@ -219,5 +235,46 @@ func TestUnitFeedbackPolicyOracleUsesLastCaseInsensitiveGetterValue(t *testing.T
 		if !matchesFeedbackPolicyGetterProjection(&value, settings) {
 			t.Fatal("canonical getter comparison used raw key spelling/earlier duplicate")
 		}
+	}
+}
+
+func TestUnitFeedbackPolicyOracleRestrictsOwnedIdentity(t *testing.T) {
+	t.Parallel()
+	const tenant = "00000000-0000-4000-8000-000000000003"
+	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-feedback-policy"
+	raw, err := os.ReadFile("../../../msteams/teams_admin_api/teams_feedback_policy/testdata/get_global.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var settings map[string]json.RawMessage
+	if json.Unmarshal(raw, &settings) != nil {
+		t.Fatal("invalid acceptance response")
+	}
+	projection := map[string]json.RawMessage{}
+	for _, field := range feedbackPolicyScalars {
+		projection[field] = settings[field]
+	}
+	for _, tc := range []struct {
+		name, selected, returned string
+		valid                    bool
+	}{
+		{"global", "Global", "global", true},
+		{"owned-bare", name, "Tag:" + name, true},
+		{"owned-tagged", "Tag:" + name, name, true},
+		{"foreign-selection", "other-policy", "other-policy", false},
+		{"wrong-owned-policy", name, strings.Replace(name, "aaaa", "bbbb", 1), false},
+		{"tagged-global", "Global", "Tag:Global", false},
+		{"wrong-kind", strings.Replace(name, "feedback-policy", "calling-policy", 1), name, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			body, err := json.Marshal(map[string]any{"success": true, "tenant_id": tenant, "identity": tc.returned, "settings": projection})
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = decodeFeedbackPolicyOracleForIdentity(body, tenant, tc.selected)
+			if (err == nil) != tc.valid {
+				t.Fatal("oracle accepted a different identity or rejected its owned policy")
+			}
+		})
 	}
 }

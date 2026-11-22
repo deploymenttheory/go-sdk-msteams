@@ -46,7 +46,9 @@
       "TestAccChannelsPolicyCRUD",
       "TestAccCortanaPolicyCRUD",
       "TestAccEventsPolicyCRUD",
-      "TestAccEnhancedEncryptionPolicyCRUD"
+      "TestAccEnhancedEncryptionPolicyCRUD",
+      "TestAccFeedbackPolicyCRUD",
+      "TestAccFilesPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1
