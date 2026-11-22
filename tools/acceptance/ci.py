@@ -107,7 +107,7 @@ def prepare(args):
 
 def evaluate(events, expected, process_exit, require_crud=False):
     outcomes = {}
-    markers = []
+    markers = {name: [] for name in expected}
     child_counts = {'pass': 0, 'fail': 0, 'skip': 0}
     http_statuses = {name: [] for name in expected}
     service_codes = {name: [] for name in expected}
@@ -122,22 +122,23 @@ def evaluate(events, expected, process_exit, require_crud=False):
         if owner in http_statuses and action == 'output':
             http_statuses[owner].extend(int(value) for value in re.findall(r'HTTP (\d{3})\b', event.get('Output', '')))
             service_codes[owner].extend(int(value) for value in re.findall(r'PolicyRP (\d+)\b', event.get('Output', '')))
-        if test == 'TestAccApplicationAccessPolicyCRUD' and action == 'output':
+        if test in markers and action == 'output':
             for marker in PROOF_MARKERS + [ORACLE_MARKER]:
                 if marker in event.get('Output', ''):
-                    markers.append(marker)
+                    markers[test].append(marker)
     tests = [{'name': name, 'outcome': outcomes.get(name, 'not-run')} for name in expected]
     passed = bool(expected) and len(set(expected)) == len(expected) and process_exit == 0
     passed = passed and all(item['outcome'] == 'pass' for item in tests) and not child_counts['skip'] and not child_counts['fail']
     if require_crud:
-        passed = passed and all(marker in markers for marker in PROOF_MARKERS) and markers.count(ORACLE_MARKER) == 2
+        passed = passed and all(all(marker in markers[name] for marker in PROOF_MARKERS) and markers[name].count(ORACLE_MARKER) == 2 for name in expected)
     return {
         'outcome': 'passed' if passed else 'failed', 'tests': tests,
         'child_outcomes': child_counts, 'process_exit': process_exit,
         'http_statuses': {name: sorted(set(values)) for name, values in http_statuses.items() if values},
         'service_error_codes': {name: sorted(set(values)) for name, values in service_codes.items() if values},
-        'crud_assertions_observed': {marker: marker in markers for marker in PROOF_MARKERS} if require_crud else {},
-        'crud_powershell_comparisons': markers.count(ORACLE_MARKER),
+        'crud_assertions_observed': {(name + ': ' if len(expected) > 1 else '') + marker: marker in markers[name] for name in expected for marker in PROOF_MARKERS} if require_crud else {},
+        'crud_powershell_comparisons': sum(values.count(ORACLE_MARKER) for values in markers.values()),
+        'crud_powershell_comparisons_by_test': {name: values.count(ORACLE_MARKER) for name, values in markers.items()} if require_crud else {},
     }
 
 
@@ -226,8 +227,9 @@ def print_report(report):
     for name, observed in assertions.items():
         if not observed:
             print('FAIL missing CRUD check: ' + name.removesuffix(': passed'), flush=True)
-    if assertions and report.get('crud_powershell_comparisons') != 2:
-        print(f"FAIL PowerShell comparisons: {report.get('crud_powershell_comparisons', 0)}/2", flush=True)
+    for name, count in report.get('crud_powershell_comparisons_by_test', {}).items():
+        if count != 2:
+            print(f'FAIL {name} PowerShell comparisons: {count}/2', flush=True)
     entries = report.get('cleanup_journal_entries')
     cleaned = report.get('cleanup_journal_entries_cleaned', 0)
     if entries is not None and (entries == 0 or entries != cleaned):

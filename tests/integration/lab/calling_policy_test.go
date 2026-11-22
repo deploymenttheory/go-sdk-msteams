@@ -9,6 +9,8 @@ import (
 	"os"
 	"os/exec"
 	"reflect"
+	"regexp"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -20,20 +22,34 @@ import (
 var callingPolicyScalars = []string{"Description", "AllowPrivateCalling", "AllowWebPSTNCalling", "AllowSIPDevicesCalling", "AllowVoicemail", "AllowCallGroups", "AllowDelegation", "AllowCallForwardingToUser", "AllowCallForwardingToPhone", "PreventTollBypass", "BusyOnBusyEnabledType", "MusicOnHoldEnabledType", "AllowCloudRecordingForCalls", "ExplicitRecordingConsent", "PreventComplianceRecording", "EnableRecordingAndTranscriptionCustomMessage", "RecordingAndTranscriptionCustomMessageIdentifier", "AllowMeetingKnowledgeGeneration", "AllowTranscriptionForCalling", "RecordingAndTranscriptionAudioNotification", "PopoutForIncomingPstnCalls", "PopoutAppPathForIncomingPstnCalls", "LiveCaptionsEnabledTypeForCalling", "AutoAnswerEnabledType", "SpamFilteringEnabledType", "CallRecordingExpirationDays", "AllowCallRedirect", "InboundPstnCallRoutingTreatment", "InboundFederatedCallRoutingTreatment", "EnableWebPstnMediaBypass", "EnableSpendLimits", "CallingSpendUserLimit", "Copilot", "ShowTeamsCallsInCallLog", "RealTimeText", "AIInterpreter", "VoiceSimulationInInterpreter", "ReportCall", "VoicePhishingDetection"}
 
 type callingPolicyObservation struct {
-	Success  bool                       `json:"success"`
-	Tenant   string                     `json:"tenant_id"`
-	Identity string                     `json:"identity"`
-	Settings map[string]json.RawMessage `json:"settings"`
+	FailureStage string                     `json:"failure_stage,omitempty"`
+	Success      bool                       `json:"success"`
+	Tenant       string                     `json:"tenant_id"`
+	Identity     string                     `json:"identity"`
+	Settings     map[string]json.RawMessage `json:"settings"`
 }
 
+var callingOwnedIdentity = regexp.MustCompile(`(?i)^(?:tag:)?msteams-sdk-[a-z2-7]{26,64}-calling-policy$`)
+
 func decodeCallingPolicyOracle(raw []byte, tenant string) (callingPolicyObservation, error) {
+	return decodeCallingPolicyOracleForIdentity(raw, tenant, "Global")
+}
+
+func decodeCallingPolicyOracleForIdentity(raw []byte, tenant, identity string) (callingPolicyObservation, error) {
 	var v callingPolicyObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
+	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !callingOwnedIdentity.MatchString(identity) {
 		return v, errTeamOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
-	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || !strings.EqualFold(v.Identity, "Global") || len(v.Settings) != len(callingPolicyScalars) {
+	if d.Decode(&v) != nil {
+		return callingPolicyObservation{}, errTeamOracle
+	}
+	identityMatches := strings.EqualFold(v.Identity, "Global")
+	if !strings.EqualFold(identity, "Global") {
+		identityMatches = samePolicyName(v.Identity, identity)
+	}
+	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(callingPolicyScalars) {
 		return callingPolicyObservation{}, errTeamOracle
 	}
 	var extra any
@@ -55,7 +71,12 @@ func decodeCallingPolicyOracle(raw []byte, tenant string) (callingPolicyObservat
 
 func callingPolicyOracle(t *testing.T, ctx context.Context, tenant string) callingPolicyObservation {
 	t.Helper()
-	input, err := json.Marshal(map[string]string{"tenant_id": tenant})
+	return callingPolicyOracleForIdentity(t, ctx, tenant, "Global")
+}
+
+func callingPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, identity string) callingPolicyObservation {
+	t.Helper()
+	input, err := json.Marshal(map[string]string{"tenant_id": tenant, "identity": identity})
 	if err != nil {
 		t.Fatal("invalid calling policy oracle selector")
 	}
@@ -75,9 +96,19 @@ func callingPolicyOracle(t *testing.T, ctx context.Context, tenant string) calli
 	if cmd.Run() != nil || output.exceeded {
 		t.Fatal("pinned calling policy read failed; no output retained")
 	}
-	value, err := decodeCallingPolicyOracle(output.data, tenant)
+	value, err := decodeCallingPolicyOracleForIdentity(output.data, tenant, identity)
 	if err != nil {
-		t.Fatal("pinned calling policy projection unavailable")
+		var diagnostic struct {
+			Success bool   `json:"success"`
+			Stage   string `json:"failure_stage"`
+		}
+		if json.Unmarshal(output.data, &diagnostic) == nil && !diagnostic.Success {
+			stage := diagnostic.Stage
+			if slices.Contains([]string{"enablement", "selectors", "baseline", "module", "identity", "authentication", "read", "selected-result"}, stage) || strings.HasPrefix(stage, "property:") && slices.Contains(callingPolicyScalars, strings.TrimPrefix(stage, "property:")) {
+				t.Fatalf("pinned calling policy read failed at %s", stage)
+			}
+		}
+		t.Fatal("pinned calling policy projection identity/types differ")
 	}
 	return value
 }

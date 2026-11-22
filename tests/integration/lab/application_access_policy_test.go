@@ -21,6 +21,9 @@ func samePolicyName(identity, fixture string) bool {
 	if len(identity) > 4 && strings.EqualFold(identity[:4], "tag:") {
 		identity = identity[4:]
 	}
+	if len(fixture) > 4 && strings.EqualFold(fixture[:4], "tag:") {
+		fixture = fixture[4:]
+	}
 	return strings.EqualFold(identity, fixture)
 }
 

@@ -1,0 +1,500 @@
+[
+  {
+    "Description": null,
+    "AllowCalling": true,
+    "AllowPrivateCalling": true,
+    "AllowWebPSTNCalling": true,
+    "AllowSIPDevicesCalling": false,
+    "AllowVoicemail": "UserOverride",
+    "AllowCallGroups": true,
+    "AllowDelegation": true,
+    "AllowUserControl": true,
+    "AllowCallForwardingToUser": true,
+    "AllowCallForwardingToPhone": true,
+    "PreventTollBypass": false,
+    "BusyOnBusyEnabledType": "Disabled",
+    "MusicOnHoldEnabledType": "Enabled",
+    "AllowCloudRecordingForCalls": true,
+    "ExplicitRecordingConsent": "Disabled",
+    "PreventComplianceRecording": "None",
+    "EnableRecordingAndTranscriptionCustomMessage": false,
+    "RecordingAndTranscriptionCustomMessageIdentifier": null,
+    "AllowMeetingKnowledgeGeneration": true,
+    "AllowTranscriptionForCalling": true,
+    "RecordingAndTranscriptionAudioNotification": "Disabled",
+    "PopoutForIncomingPstnCalls": "Disabled",
+    "PopoutAppPathForIncomingPstnCalls": null,
+    "LiveCaptionsEnabledTypeForCalling": "DisabledUserOverride",
+    "AutoAnswerEnabledType": "Disabled",
+    "SpamFilteringEnabledType": "Enabled",
+    "CallRecordingExpirationDays": 60,
+    "AllowCallRedirect": "Disabled",
+    "InboundPstnCallRoutingTreatment": "RegularIncoming",
+    "InboundFederatedCallRoutingTreatment": "RegularIncoming",
+    "EnableWebPstnMediaBypass": false,
+    "EnablePayAsYouGoSpendingLimits": false,
+    "PayAsYouGoSpendingUserLimit": null,
+    "EnableSpendLimits": false,
+    "CallingSpendUserLimit": null,
+    "Copilot": "Enabled",
+    "ShowTeamsCallsInCallLog": true,
+    "RealTimeText": "Enabled",
+    "AIInterpreter": "Enabled",
+    "VoiceSimulationInInterpreter": "Enabled",
+    "ReportCall": "Enabled",
+    "VoicePhishingDetection": "None",
+    "Key": {
+      "ScopeClass": "Global",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsCallingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Global",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "Global"
+  },
+  {
+    "Description": "SDK lab non-default updated description",
+    "AllowCalling": true,
+    "AllowPrivateCalling": false,
+    "AllowWebPSTNCalling": true,
+    "AllowSIPDevicesCalling": false,
+    "AllowVoicemail": "UserOverride",
+    "AllowCallGroups": true,
+    "AllowDelegation": true,
+    "AllowUserControl": true,
+    "AllowCallForwardingToUser": true,
+    "AllowCallForwardingToPhone": true,
+    "PreventTollBypass": false,
+    "BusyOnBusyEnabledType": "Disabled",
+    "MusicOnHoldEnabledType": "Enabled",
+    "AllowCloudRecordingForCalls": true,
+    "ExplicitRecordingConsent": "Disabled",
+    "PreventComplianceRecording": "None",
+    "EnableRecordingAndTranscriptionCustomMessage": false,
+    "RecordingAndTranscriptionCustomMessageIdentifier": null,
+    "AllowMeetingKnowledgeGeneration": true,
+    "AllowTranscriptionForCalling": true,
+    "RecordingAndTranscriptionAudioNotification": "Disabled",
+    "PopoutForIncomingPstnCalls": "Disabled",
+    "PopoutAppPathForIncomingPstnCalls": null,
+    "LiveCaptionsEnabledTypeForCalling": "DisabledUserOverride",
+    "AutoAnswerEnabledType": "Disabled",
+    "SpamFilteringEnabledType": "Enabled",
+    "CallRecordingExpirationDays": 60,
+    "AllowCallRedirect": "Disabled",
+    "InboundPstnCallRoutingTreatment": "RegularIncoming",
+    "InboundFederatedCallRoutingTreatment": "RegularIncoming",
+    "EnableWebPstnMediaBypass": false,
+    "EnablePayAsYouGoSpendingLimits": false,
+    "PayAsYouGoSpendingUserLimit": null,
+    "EnableSpendLimits": false,
+    "CallingSpendUserLimit": null,
+    "Copilot": "Enabled",
+    "ShowTeamsCallsInCallLog": true,
+    "RealTimeText": "Enabled",
+    "AIInterpreter": "Enabled",
+    "VoiceSimulationInInterpreter": "Enabled",
+    "ReportCall": "Enabled",
+    "VoicePhishingDetection": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Tenant",
+        "InstanceId": "00000000-0000-4000-8000-0b617a16f800",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsCallingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Tag:fixture-policy",
+    "ConfigMetadata": {
+      "Authority": "Tenant"
+    },
+    "ConfigId": "fixture-config-de94eb9f"
+  },
+  {
+    "Description": null,
+    "AllowCalling": true,
+    "AllowPrivateCalling": true,
+    "AllowWebPSTNCalling": true,
+    "AllowSIPDevicesCalling": false,
+    "AllowVoicemail": "UserOverride",
+    "AllowCallGroups": true,
+    "AllowDelegation": true,
+    "AllowUserControl": true,
+    "AllowCallForwardingToUser": true,
+    "AllowCallForwardingToPhone": true,
+    "PreventTollBypass": false,
+    "BusyOnBusyEnabledType": "Disabled",
+    "MusicOnHoldEnabledType": "Enabled",
+    "AllowCloudRecordingForCalls": true,
+    "ExplicitRecordingConsent": "Disabled",
+    "PreventComplianceRecording": "None",
+    "EnableRecordingAndTranscriptionCustomMessage": false,
+    "RecordingAndTranscriptionCustomMessageIdentifier": null,
+    "AllowMeetingKnowledgeGeneration": true,
+    "AllowTranscriptionForCalling": true,
+    "RecordingAndTranscriptionAudioNotification": "Disabled",
+    "PopoutForIncomingPstnCalls": "Disabled",
+    "PopoutAppPathForIncomingPstnCalls": null,
+    "LiveCaptionsEnabledTypeForCalling": "DisabledUserOverride",
+    "AutoAnswerEnabledType": "Disabled",
+    "SpamFilteringEnabledType": "Enabled",
+    "CallRecordingExpirationDays": 60,
+    "AllowCallRedirect": "Disabled",
+    "InboundPstnCallRoutingTreatment": "RegularIncoming",
+    "InboundFederatedCallRoutingTreatment": "RegularIncoming",
+    "EnableWebPstnMediaBypass": false,
+    "EnablePayAsYouGoSpendingLimits": false,
+    "PayAsYouGoSpendingUserLimit": null,
+    "EnableSpendLimits": false,
+    "CallingSpendUserLimit": null,
+    "Copilot": "Enabled",
+    "ShowTeamsCallsInCallLog": true,
+    "RealTimeText": "Enabled",
+    "AIInterpreter": "Enabled",
+    "VoiceSimulationInInterpreter": "Enabled",
+    "ReportCall": "Enabled",
+    "VoicePhishingDetection": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsCallingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-094aa1a2",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-448138fd"
+  },
+  {
+    "Description": null,
+    "AllowCalling": true,
+    "AllowPrivateCalling": false,
+    "AllowWebPSTNCalling": true,
+    "AllowSIPDevicesCalling": false,
+    "AllowVoicemail": "AlwaysDisabled",
+    "AllowCallGroups": false,
+    "AllowDelegation": false,
+    "AllowUserControl": true,
+    "AllowCallForwardingToUser": false,
+    "AllowCallForwardingToPhone": false,
+    "PreventTollBypass": false,
+    "BusyOnBusyEnabledType": "Disabled",
+    "MusicOnHoldEnabledType": "Enabled",
+    "AllowCloudRecordingForCalls": false,
+    "ExplicitRecordingConsent": "Disabled",
+    "PreventComplianceRecording": "None",
+    "EnableRecordingAndTranscriptionCustomMessage": false,
+    "RecordingAndTranscriptionCustomMessageIdentifier": null,
+    "AllowMeetingKnowledgeGeneration": true,
+    "AllowTranscriptionForCalling": false,
+    "RecordingAndTranscriptionAudioNotification": "Disabled",
+    "PopoutForIncomingPstnCalls": "Disabled",
+    "PopoutAppPathForIncomingPstnCalls": null,
+    "LiveCaptionsEnabledTypeForCalling": "DisabledUserOverride",
+    "AutoAnswerEnabledType": "Disabled",
+    "SpamFilteringEnabledType": "Enabled",
+    "CallRecordingExpirationDays": 60,
+    "AllowCallRedirect": "Disabled",
+    "InboundPstnCallRoutingTreatment": "RegularIncoming",
+    "InboundFederatedCallRoutingTreatment": "RegularIncoming",
+    "EnableWebPstnMediaBypass": false,
+    "EnablePayAsYouGoSpendingLimits": false,
+    "PayAsYouGoSpendingUserLimit": null,
+    "EnableSpendLimits": false,
+    "CallingSpendUserLimit": null,
+    "Copilot": "Enabled",
+    "ShowTeamsCallsInCallLog": true,
+    "RealTimeText": "Enabled",
+    "AIInterpreter": "Enabled",
+    "VoiceSimulationInInterpreter": "Enabled",
+    "ReportCall": "Enabled",
+    "VoicePhishingDetection": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsCallingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-2dd67500",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-df0c1dfb"
+  },
+  {
+    "Description": null,
+    "AllowCalling": true,
+    "AllowPrivateCalling": true,
+    "AllowWebPSTNCalling": true,
+    "AllowSIPDevicesCalling": false,
+    "AllowVoicemail": "UserOverride",
+    "AllowCallGroups": true,
+    "AllowDelegation": true,
+    "AllowUserControl": true,
+    "AllowCallForwardingToUser": true,
+    "AllowCallForwardingToPhone": true,
+    "PreventTollBypass": true,
+    "BusyOnBusyEnabledType": "Disabled",
+    "MusicOnHoldEnabledType": "Enabled",
+    "AllowCloudRecordingForCalls": true,
+    "ExplicitRecordingConsent": "Disabled",
+    "PreventComplianceRecording": "None",
+    "EnableRecordingAndTranscriptionCustomMessage": false,
+    "RecordingAndTranscriptionCustomMessageIdentifier": null,
+    "AllowMeetingKnowledgeGeneration": true,
+    "AllowTranscriptionForCalling": true,
+    "RecordingAndTranscriptionAudioNotification": "Disabled",
+    "PopoutForIncomingPstnCalls": "Disabled",
+    "PopoutAppPathForIncomingPstnCalls": null,
+    "LiveCaptionsEnabledTypeForCalling": "DisabledUserOverride",
+    "AutoAnswerEnabledType": "Disabled",
+    "SpamFilteringEnabledType": "Enabled",
+    "CallRecordingExpirationDays": 60,
+    "AllowCallRedirect": "Disabled",
+    "InboundPstnCallRoutingTreatment": "RegularIncoming",
+    "InboundFederatedCallRoutingTreatment": "RegularIncoming",
+    "EnableWebPstnMediaBypass": false,
+    "EnablePayAsYouGoSpendingLimits": false,
+    "PayAsYouGoSpendingUserLimit": null,
+    "EnableSpendLimits": false,
+    "CallingSpendUserLimit": null,
+    "Copilot": "Enabled",
+    "ShowTeamsCallsInCallLog": true,
+    "RealTimeText": "Enabled",
+    "AIInterpreter": "Enabled",
+    "VoiceSimulationInInterpreter": "Enabled",
+    "ReportCall": "Enabled",
+    "VoicePhishingDetection": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsCallingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-3c3ab33b",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-e1c5ef0e"
+  },
+  {
+    "Description": null,
+    "AllowCalling": true,
+    "AllowPrivateCalling": true,
+    "AllowWebPSTNCalling": true,
+    "AllowSIPDevicesCalling": false,
+    "AllowVoicemail": "UserOverride",
+    "AllowCallGroups": true,
+    "AllowDelegation": true,
+    "AllowUserControl": true,
+    "AllowCallForwardingToUser": true,
+    "AllowCallForwardingToPhone": false,
+    "PreventTollBypass": false,
+    "BusyOnBusyEnabledType": "Disabled",
+    "MusicOnHoldEnabledType": "Enabled",
+    "AllowCloudRecordingForCalls": true,
+    "ExplicitRecordingConsent": "Disabled",
+    "PreventComplianceRecording": "None",
+    "EnableRecordingAndTranscriptionCustomMessage": false,
+    "RecordingAndTranscriptionCustomMessageIdentifier": null,
+    "AllowMeetingKnowledgeGeneration": true,
+    "AllowTranscriptionForCalling": true,
+    "RecordingAndTranscriptionAudioNotification": "Disabled",
+    "PopoutForIncomingPstnCalls": "Disabled",
+    "PopoutAppPathForIncomingPstnCalls": null,
+    "LiveCaptionsEnabledTypeForCalling": "DisabledUserOverride",
+    "AutoAnswerEnabledType": "Disabled",
+    "SpamFilteringEnabledType": "Enabled",
+    "CallRecordingExpirationDays": 60,
+    "AllowCallRedirect": "Disabled",
+    "InboundPstnCallRoutingTreatment": "RegularIncoming",
+    "InboundFederatedCallRoutingTreatment": "RegularIncoming",
+    "EnableWebPstnMediaBypass": false,
+    "EnablePayAsYouGoSpendingLimits": false,
+    "PayAsYouGoSpendingUserLimit": null,
+    "EnableSpendLimits": false,
+    "CallingSpendUserLimit": null,
+    "Copilot": "Enabled",
+    "ShowTeamsCallsInCallLog": true,
+    "RealTimeText": "Enabled",
+    "AIInterpreter": "Enabled",
+    "VoiceSimulationInInterpreter": "Enabled",
+    "ReportCall": "Enabled",
+    "VoicePhishingDetection": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsCallingPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-f0830290",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-9268e5d2"
+  }
+]

@@ -38,7 +38,9 @@
     "package": "./tests/integration/lab",
     "mutation": true,
     "tests": [
-      "TestAccApplicationAccessPolicyCRUD"
+      "TestAccApplicationAccessPolicyCRUD",
+      "TestAccExternalAccessPolicyCRUD",
+      "TestAccCallingPolicyCRUD"
     ]
   },
   "tenant-access-outcomes": {

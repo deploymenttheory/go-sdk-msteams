@@ -15,9 +15,11 @@ Runs serialize without automatically cancelling an in-flight mutation.
 The certificate/client-secret matrix executes the explicit selections in
 [suites.json](suites.json): authentication, 22 resource read tests, preflight,
 service discovery, three tenant access-outcome checks, and owned unassigned
-application-access-policy CRUD. Selected tests and child cases must pass. Skips,
+application-access, external-access and calling-policy CRUD. Authentication jobs
+run one at a time because concurrent writes to the tenant's policy collection
+can conflict even when resource names differ. Selected tests and child cases must pass. Skips,
 missing tests, setup failures and unsuccessful cleanup fail CI. CRUD also requires
-all assertion milestones, two PowerShell comparisons and a new cleaned journal.
+all assertion milestones, two PowerShell comparisons for each selected mutation test and new cleaned journals.
 
 The remaining 23 acceptance tests are listed in `pending.json` with their missing
 fixtures, permissions, capabilities or execution mode. Resource tickets stay open
@@ -97,3 +99,8 @@ Successful reads and mutations for these resources remain pending on issues #95,
 #106 and #102. The original successful-read TestAcc tests remain registered in
 `pending.json` until a suitable tenant or identity is available. No resource
 coverage state is promoted by a passing denial test.
+
+For application-access, external-access and calling-policy journals, run
+`TestAccRecoverOwnedPolicies` with `MSTEAMS_LAB_RECOVERY_FILE` pointing to the
+private decrypted journal, the same lab identity and normal mutation opt-in.
+It verifies ownership and requires typed GET404 plus list absence after deletion.

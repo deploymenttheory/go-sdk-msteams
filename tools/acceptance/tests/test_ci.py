@@ -93,6 +93,19 @@ class AcceptanceGuardTests(unittest.TestCase):
         events.extend({'Test': test, 'Action': 'output', 'Output': ci.ORACLE_MARKER} for _ in range(2))
         self.assertEqual(ci.evaluate(events, [test], 0, True)['outcome'], 'passed')
 
+    def test_each_mutation_requires_its_own_checks_and_oracle_comparisons(self):
+        names = ['TestAccPolicyOneCRUD', 'TestAccPolicyTwoCRUD']
+        events = []
+        for name in names:
+            events.append({'Test': name, 'Action': 'pass'})
+            events.extend({'Test': name, 'Action': 'output', 'Output': marker} for marker in ci.PROOF_MARKERS)
+        events.extend({'Test': names[0], 'Action': 'output', 'Output': ci.ORACLE_MARKER} for _ in range(2))
+        self.assertEqual(ci.evaluate(events, names, 0, True)['outcome'], 'failed')
+        events.extend({'Test': names[1], 'Action': 'output', 'Output': ci.ORACLE_MARKER} for _ in range(2))
+        self.assertEqual(ci.evaluate(events, names, 0, True)['outcome'], 'passed')
+        events = [event for event in events if not (event['Test'] == names[1] and event.get('Output') == ci.PROOF_MARKERS[0])]
+        self.assertEqual(ci.evaluate(events, names, 0, True)['outcome'], 'failed')
+
     def test_raw_test_output_and_dynamic_child_names_are_not_published(self):
         events = [
             {'Test': 'TestAccRead', 'Action': 'output', 'Output': 'private-token-and-tenant-data'},
