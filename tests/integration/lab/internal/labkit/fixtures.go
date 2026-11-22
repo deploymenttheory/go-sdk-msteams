@@ -113,6 +113,12 @@ func fixtureString(key, parent, value string, replacements map[string]string) st
 	case "configid":
 		hash := sha256.Sum256([]byte(value))
 		return fmt.Sprintf("fixture-config-%x", hash[:4])
+	case "groupid":
+		// Media storage group IDs embed the tenant ID without separators.
+		if fixtureGUIDPattern.FindString(value) != value && !strings.HasPrefix(value, "fixture-group-") {
+			hash := sha256.Sum256([]byte(strings.ToLower(value)))
+			return fmt.Sprintf("fixture-group-%x", hash[:4])
+		}
 	}
 	if strings.Contains(normalized, "domain") && strings.Contains(value, ".") {
 		return "fixture.example.invalid"
@@ -261,7 +267,8 @@ func WriteResponseFixture(t *testing.T, service, name string, response *resty.Re
 		extension = ".json"
 		raw = append(raw, '\n')
 	}
-	directory := filepath.Join("..", "..", "..", "msteams", "teams_admin_api", service, "testdata")
+	// Resolve from the module root: lab tests run in per-service packages.
+	directory := filepath.Join(Root, "msteams", "teams_admin_api", service, "testdata")
 	if err := os.MkdirAll(directory, 0o750); err != nil {
 		t.Fatal("service testdata directory unavailable")
 	}

@@ -89,6 +89,19 @@ func TestUnitResponseFixtureRedactsCompactAudioID(t *testing.T) {
 	}
 }
 
+func TestUnitResponseFixtureRedactsMediaGroupID(t *testing.T) {
+	t.Parallel()
+	const private = "tenantglobal123456781234412381231234567890ab"
+	raw, err := fixtureJSON([]byte(`{"GroupId":"`+private+`"}`), nil)
+	if err != nil || bytes.Contains(raw, []byte("123456781234412381231234567890ab")) {
+		t.Fatal("tenant-derived media group ID retained")
+	}
+	again, err := fixtureJSON(raw, nil)
+	if err != nil || !bytes.Equal(again, raw) {
+		t.Fatal("sanitized fixture is not stable")
+	}
+}
+
 func TestUnitResponseFixtureKeepsOwnedTemplateSelectorsConsistent(t *testing.T) {
 	t.Parallel()
 	raw := []byte(`{"name":"owned-template","displayName":"owned-template","channel":{"id":"General","displayName":"General"},"other":{"name":"private-name"}}`)
