@@ -372,6 +372,46 @@ func TestAccRead(t *testing.T) {
             with self.assertRaises(ValueError):
                 ci.check_names(root)
 
+    def test_singleton_reads_share_the_write_lock_without_mutation_enablement(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            private = root / 'msteams-acceptance-fixture'
+            (private / 'journals').mkdir(parents=True)
+            (root / 'suites.json').write_text(json.dumps({
+                'ordinary': {'package': './fixture', 'tests': ['TestAccOrdinaryRead']},
+                'singleton': {'package': './fixture', 'serial': True, 'tests': ['TestAccSingletonRead']}}))
+            invoked = []
+
+            def process(command, **kwargs):
+                if command[0] == 'git':
+                    return subprocess.CompletedProcess(command, 0, stdout='a' * 40 + '\n')
+                invoked.append((command, kwargs['env']['MSTEAMS_LAB_MUTATIONS']))
+                name = 'TestAccSingletonRead' if 'TestAccSingletonRead' in command[command.index('-run') + 1] else 'TestAccOrdinaryRead'
+                kwargs['stdout'].write(json.dumps({'Test': name, 'Action': 'pass'}) + '\n')
+                return subprocess.CompletedProcess(command, 0)
+
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}), patch.object(ci.subprocess, 'run', side_effect=process):
+                with contextlib.redirect_stdout(io.StringIO()):
+                    for kind in ['reads', 'writes']:
+                        self.assertEqual(ci.run(argparse.Namespace(suite=None, kind=kind, report_directory=root / kind)), 0)
+            self.assertEqual(len(invoked), 2)
+            self.assertIn('TestAccOrdinaryRead', ' '.join(invoked[0][0]))
+            self.assertNotIn('TestAccSingletonRead', ' '.join(invoked[0][0]))
+            self.assertIn('TestAccSingletonRead', ' '.join(invoked[1][0]))
+            self.assertEqual([mode for _, mode in invoked], ['0', '0'])
+
+    def test_configuration_update_requires_restoration_and_three_comparisons(self):
+        name = 'TestAccMessagingConfigurationUpdateRestore'
+        markers, oracle, count = ci.PROOFS['configuration-update']
+        events = [{'Test': name, 'Action': 'output', 'Output': marker} for marker in markers + [oracle] * count]
+        events.append({'Test': name, 'Action': 'pass'})
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='configuration-update')['outcome'], 'passed')
+        for omitted in markers:
+            incomplete = [event for event in events if event.get('Output') != omitted]
+            self.assertEqual(ci.evaluate(incomplete, [name], 0, proof='configuration-update')['outcome'], 'failed')
+        events.remove(next(event for event in events if event.get('Output') == oracle))
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='configuration-update')['outcome'], 'failed')
+
     def test_finalization_encrypts_only_journals_before_removing_private_data(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

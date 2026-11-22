@@ -43,13 +43,17 @@ import (
 	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
 	teamsmeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
 	teamsmeetingtemplatepermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_permission_policy"
+	teamsmessagingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_messaging_configuration"
 	teamsmessagingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_messaging_policy"
+	teamsmigrationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_migration_configuration"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsMigrationConfigurations            *teamsmigrationconfiguration.Service
+	TeamsMessagingConfigurations            *teamsmessagingconfiguration.Service
 	TeamsMeetingTemplatePermissionPolicies  *teamsmeetingtemplatepermissionpolicy.Service
 	TeamsMeetingTemplateConfigurations      *teamsmeetingtemplateconfiguration.Service
 	TeamsMessagingPolicies                  *teamsmessagingpolicy.Service
@@ -114,6 +118,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsMigrationConfigurations:            teamsmigrationconfiguration.NewService(backend),
+		TeamsMessagingConfigurations:            teamsmessagingconfiguration.NewService(scope),
 		TeamsMeetingTemplatePermissionPolicies:  teamsmeetingtemplatepermissionpolicy.NewService(scope),
 		TeamsMeetingTemplateConfigurations:      teamsmeetingtemplateconfiguration.NewService(scope),
 		TeamsMessagingPolicies:                  teamsmessagingpolicy.NewService(scope),

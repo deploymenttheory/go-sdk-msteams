@@ -48,6 +48,7 @@ PROOFS = {
     'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
     'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
     'populated-template-access': (['native populated-list create denial: verified', 'populated-list comparison cleanup: passed'], 'PowerShell 8.1.0 / Go populated-list authorization parity: passed', 1),
+    'configuration-update': (['configuration update/read-back and omission: passed', 'configuration restoration/read-back: passed'], 'PowerShell 8.1.0 / Go configuration read parity: passed', 3),
 }
 # Publish fixed assertion text only. HTTP payloads and dynamic fixture names
 # remain private even when a test fails.
@@ -287,7 +288,7 @@ def run(args):
         raise ValueError('choose a suite selection or a read/write group')
     selected = [name for name, suite in suites.items()
                 if (not args.suite or name in args.suite)
-                and (not kind or bool(suite.get('mutation')) == (kind == 'writes'))]
+                and (not kind or bool(suite.get('mutation') or suite.get('serial')) == (kind == 'writes'))]
     if not selected or args.suite and set(args.suite) - set(suites):
         raise ValueError('unknown acceptance suite')
     revision = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()

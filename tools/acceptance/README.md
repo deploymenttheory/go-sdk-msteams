@@ -185,3 +185,20 @@ lists and deleted404 responses supply the permanent unit fixtures. The public
 General-channel name/ID and controlled fixture selector remain consistent across
 responses. Ordinary CI never rewrites those files. No team, membership, app
 installation or public template is created or changed by this suite.
+
+## Singleton messaging and migration configurations
+
+The `singleton-configuration-reads` suite shares the tenant write lock through
+`serial: true` and keeps mutation enablement off. The update suite uses the same
+lock. This prevents parallel Global reads from observing its temporary changes.
+Each update journals the original non-null Boolean before mutation, toggles it,
+verifies all typed getter values, compares PowerShell before/after/restoration,
+and independently reads back the original state. Messaging updates preserve the
+nonempty file block list and every other omitted typed setting. CI requires all
+three comparisons, both assertions and one cleaned restore entry per test.
+
+Recovery selects `TestAccRecoverOwnedPolicies` with the bound private journal;
+`messaging-configuration` restores only `EnableVideoMessageCaptions`, and
+`migration-configuration` restores only `EnableLegacyClientInterop` on Global.
+Null or missing originals refuse mutation. This suite temporarily changes Global
+in the dedicated lab; it does not qualify user/client propagation.

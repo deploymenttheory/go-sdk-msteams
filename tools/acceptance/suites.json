@@ -114,5 +114,23 @@
     "tests": [
       "TestAccMeetingTemplatePermissionPopulatedAccess"
     ]
+  },
+  "singleton-configuration-reads": {
+    "package": "./tests/integration/lab",
+    "serial": true,
+    "tests": [
+      "TestAccMessagingConfigurationReadOnly",
+      "TestAccMigrationConfigurationReadOnly"
+    ]
+  },
+  "singleton-configuration-updates": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "configuration-update",
+    "journal_entries_per_test": 1,
+    "tests": [
+      "TestAccMessagingConfigurationUpdateRestore",
+      "TestAccMigrationConfigurationUpdateRestore"
+    ]
   }
 }
