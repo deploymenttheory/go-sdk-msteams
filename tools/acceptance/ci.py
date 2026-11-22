@@ -30,6 +30,18 @@ PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
 }
+# Publish fixed assertion text only. HTTP payloads and dynamic fixture names
+# remain private even when a test fails.
+FAILURE_REASONS = (
+    'pinned federation read oracle failed; no output retained',
+    'pinned federation read could not be verified',
+    'pinned federation identity differs',
+    'PowerShell and Go selected federation settings differ',
+    'selected federation read failed',
+    'Global federation read/list observations differ',
+    'canonical tenant binding required',
+)
+FEDERATION_CASES = {'external-policy', 'acs', 'external-users', 'tenant'}
 
 
 class AcceptanceFailure(ValueError):
@@ -143,6 +155,7 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None):
     child_counts = {'pass': 0, 'fail': 0, 'skip': 0}
     http_statuses = {name: [] for name in expected}
     service_codes = {name: [] for name in expected}
+    failure_reasons = {name: set() for name in expected}
     for event in events:
         test = event.get('Test', '')
         action = event.get('Action')
@@ -154,6 +167,9 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None):
         if owner in http_statuses and action == 'output':
             http_statuses[owner].extend(int(value) for value in re.findall(r'HTTP (\d{3})\b', event.get('Output', '')))
             service_codes[owner].extend(int(value) for value in re.findall(r'PolicyRP (\d+)\b', event.get('Output', '')))
+            case = test.removeprefix('TestAccFederationReadOnly/')
+            prefix = case + ': ' if owner == 'TestAccFederationReadOnly' and case in FEDERATION_CASES else ''
+            failure_reasons[owner].update(prefix + reason for reason in FAILURE_REASONS if reason in event.get('Output', ''))
         if test in markers and action == 'output':
             for marker in proof_markers + ([oracle_marker] if oracle_marker else []):
                 if marker in event.get('Output', ''):
@@ -168,6 +184,7 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None):
         'child_outcomes': child_counts, 'process_exit': process_exit,
         'http_statuses': {name: sorted(set(values)) for name, values in http_statuses.items() if values},
         'service_error_codes': {name: sorted(set(values)) for name, values in service_codes.items() if values},
+        'failure_reasons': {name: sorted(values) for name, values in failure_reasons.items() if values},
         'mutation_assertions_observed': {(name + ': ' if len(expected) > 1 else '') + marker: marker in markers[name] for name in expected for marker in proof_markers},
         'mutation_powershell_comparisons': sum(values.count(oracle_marker) for values in markers.values()) if oracle_marker else 0,
         'mutation_powershell_comparisons_by_test': {name: values.count(oracle_marker) for name, values in markers.items()} if proof else {},
@@ -240,14 +257,20 @@ def run(args):
     return 0 if summary['outcome'] == 'passed' else 1
 
 
+def failure_detail(report, test):
+    statuses = report.get('http_statuses', {}).get(test['name'], [])
+    details = (['HTTP ' + ', '.join(map(str, statuses))] if statuses else [])
+    details += report.get('failure_reasons', {}).get(test['name'], [])
+    return '; '.join(details) if details else test['outcome']
+
+
 def print_report(report):
     passed = sum(test['outcome'] == 'pass' for test in report['tests'])
     print(f"{report['suite']} ({report['auth_method']}): {passed}/{len(report['tests'])} passed", flush=True)
     for test in report['tests']:
         if test['outcome'] == 'pass':
             continue
-        statuses = report.get('http_statuses', {}).get(test['name'], [])
-        detail = 'HTTP ' + ', '.join(map(str, statuses)) if statuses else test['outcome']
+        detail = failure_detail(report, test)
         message = test['name'] + ': ' + detail
         print('FAIL ' + message, flush=True)
         if os.environ.get('GITHUB_ACTIONS') == 'true':
@@ -290,8 +313,7 @@ def write_summary(reports):
         lines.append(f"| {report['auth_method']} | {report['suite']} | {report['outcome']} | {counts['pass']} | {counts['fail']} | {counts['skip']} | {counts['not-run']} |")
         for test in report['tests']:
             if test['outcome'] != 'pass':
-                statuses = report.get('http_statuses', {}).get(test['name'], [])
-                detail = 'HTTP ' + ', '.join(map(str, statuses)) if statuses else test['outcome']
+                detail = failure_detail(report, test)
                 failed.append(f"| {report['auth_method']} | `{test['name']}` | {detail} |")
     if failed:
         lines += ['', '| Auth | Failed test | Result |', '|---|---|---|'] + failed

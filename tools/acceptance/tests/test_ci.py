@@ -57,6 +57,27 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertNotIn('MSTEAMS_LAB_TENANT_ID', str(failure.exception))
         self.assertNotIn('private-tenant-value', str(failure.exception))
 
+    def test_failure_reason_keeps_fixed_assertion_and_public_case_only(self):
+        name = 'TestAccFederationReadOnly'
+        reason = 'pinned federation read oracle failed; no output retained'
+        events = [
+            {'Test': name + '/acs', 'Action': 'output', 'Output': reason + ': private-response'},
+            {'Test': name + '/private-user', 'Action': 'output', 'Output': 'Global federation read/list observations differ private-token'},
+            {'Test': name, 'Action': 'fail'},
+        ]
+        report = ci.evaluate(events, [name], 1)
+        report.update(suite='resource-reads', auth_method='client-secret')
+        output = io.StringIO()
+        with tempfile.TemporaryDirectory() as directory:
+            summary = Path(directory) / 'summary.md'
+            with patch.dict(os.environ, {'GITHUB_STEP_SUMMARY': str(summary)}), contextlib.redirect_stdout(output):
+                ci.print_report(report)
+                ci.write_summary([report])
+            published = json.dumps(report) + output.getvalue() + summary.read_text()
+        self.assertIn('acs: ' + reason, published)
+        self.assertIn('Global federation read/list observations differ', published)
+        self.assertNotIn('private-', published)
+
     def test_passing_parent_does_not_hide_skipped_child_in_output(self):
         report = ci.evaluate([
             {'Test': 'TestAccRead', 'Action': 'pass'},
