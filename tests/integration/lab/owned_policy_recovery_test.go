@@ -35,6 +35,7 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 		"tenant-abuse-configuration": tenantAbuseConfigurationCleanup{sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations},
 		"update-management-policy":   updateManagementPolicyCleanup{sdk.TeamsAdminAPI.TeamsUpdateManagementPolicies},
 		"template-permission-policy": templatePermissionPolicyCleanup{sdk.TeamsAdminAPI.TeamsTemplatePermissionPolicies},
+		"upgrade-configuration":      upgradeConfigurationCleanup{sdk.TeamsAdminAPI.TeamsUpgradeConfigurations},
 		"sip-devices-configuration":  sipDevicesConfigurationCleanup{sdk.TeamsAdminAPI.TeamsSipDevicesConfigurations},
 		"shifts-policy":              shiftsPolicyCleanup{sdk.TeamsAdminAPI.TeamsShiftsPolicies},
 		"shifts-app-configuration":   configurationRestore{shiftsAppSingleton(sdk)},

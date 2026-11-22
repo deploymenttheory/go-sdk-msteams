@@ -10054,22 +10054,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/174/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/filter_test.go",
+              "name": "TestUnitFilterUsesActualCollection"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/upgrade_read_test.go",
+              "name": "TestAccUpgradeConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/174/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/upgrade_read_test.go",
+              "name": "TestAccUpgradeConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10077,8 +10124,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed upgrade Global reads/list and configuration toggle/restoration. Migration binding failure is matched to pinned modern PowerShell; grant persistence remains unqualified. Full versioned ledger qualification is separate.",
+        "evidence": [
+          "docs/implementation/policies/upgrade-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -10093,22 +10142,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/175/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/response_test.go",
+              "name": "TestUnitModernFiltersUseActualCollection"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/upgrade_read_test.go",
+              "name": "TestAccUpgradePolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/175/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/response_test.go",
+              "name": "TestUnitActualModernReadAndCollection"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/upgrade_read_test.go",
+              "name": "TestAccUpgradePolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10116,8 +10212,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed upgrade Global reads/list and configuration toggle/restoration. Migration binding failure is matched to pinned modern PowerShell; grant persistence remains unqualified. Full versioned ledger qualification is separate.",
+        "evidence": [
+          "docs/implementation/policies/upgrade-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -16799,29 +16897,103 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/263/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/upgrade_grant_binding_test.go",
+              "name": "TestAccUpgradeGrantMigrationBinding"
+            }
+          ]
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/263/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/upgrade_grant_binding_test.go",
+              "name": "TestAccUpgradeGrantMigrationBinding"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/263/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/upgrade_grant_binding_test.go",
+              "name": "TestAccUpgradeGrantMigrationBinding"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -16829,8 +17001,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed upgrade Global reads/list and configuration toggle/restoration. Migration binding failure is matched to pinned modern PowerShell; grant persistence remains unqualified. Full versioned ledger qualification is separate.",
+        "evidence": [
+          "docs/implementation/policies/upgrade-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -34256,15 +34430,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/637/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/upgrade_configuration_update_test.go",
+              "name": "TestAccUpgradeConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_upgrade_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -34272,8 +34474,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed upgrade Global reads/list and configuration toggle/restoration. Migration binding failure is matched to pinned modern PowerShell; grant persistence remains unqualified. Full versioned ledger qualification is separate.",
+        "evidence": [
+          "docs/implementation/policies/upgrade-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

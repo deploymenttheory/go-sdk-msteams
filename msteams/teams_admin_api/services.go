@@ -60,12 +60,16 @@ import (
 	teamstemplatepermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_template_permission_policy"
 	teamstenantabuseconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_tenant_abuse_configuration"
 	teamsupdatemanagementpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_update_management_policy"
+	teamsupgradeconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_upgrade_configuration"
+	teamsupgradepolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_upgrade_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsUpgradeConfigurations                 *teamsupgradeconfiguration.Service
+	TeamsUpgradePolicies                       *teamsupgradepolicy.Service
 	TeamsTenantAbuseConfigurations             *teamstenantabuseconfiguration.Service
 	TeamsUpdateManagementPolicies              *teamsupdatemanagementpolicy.Service
 	TeamsTemplatePermissionPolicies            *teamstemplatepermissionpolicy.Service
@@ -146,6 +150,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsUpgradeConfigurations:                 teamsupgradeconfiguration.NewService(scope),
+		TeamsUpgradePolicies:                       teamsupgradepolicy.NewService(backend),
 		TeamsTenantAbuseConfigurations:             teamstenantabuseconfiguration.NewService(scope),
 		TeamsUpdateManagementPolicies:              teamsupdatemanagementpolicy.NewService(scope),
 		TeamsTemplatePermissionPolicies:            teamstemplatepermissionpolicy.NewService(scope),

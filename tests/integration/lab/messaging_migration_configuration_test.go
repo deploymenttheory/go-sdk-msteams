@@ -73,6 +73,10 @@ func tenantConfigurationOracle(t *testing.T, ctx context.Context, kind, tenant s
 	}
 	names := []string{"EnableVideoMessageCaptions", "EnableInOrganizationChatControl", "CustomEmojis", "Storyline", "Communities", "MessagingNotes", "FileTypeCheck", "UrlReputationCheck", "ContentBasedPhishingCheck", "ReportIncorrectSecurityDetections", "FileTypeCustomizationSetting", "FileTypeBlockList"}
 	switch kind {
+	case "upgrade-configuration":
+		names = []string{"DownloadTeams", "SfBMeetingJoinUx", "BlockLegacyAuthorization"}
+	case "upgrade-policy":
+		names = []string{"Description", "Mode", "NotifySfbUsers", "Action"}
 	case "tenant-abuse":
 		names = []string{"LowSeatLimit", "TrialTenantValidation", "SkipValidation", "CreateThreadThresholdPerSeat", "AddMemberThresholdPerSeat", "SendMessageThresholdPerSeat", "CreateThreadThresholdForTrialTenants", "AddMemberThresholdForTrialTenants", "SendMessageThresholdForTrialTenants", "BlockedTenants"}
 	case "update-management":

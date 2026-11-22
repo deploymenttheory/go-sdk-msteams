@@ -1,0 +1,486 @@
+[
+  {
+    "Description": "Fixture description",
+    "Mode": "Islands",
+    "NotifySfbUsers": false,
+    "Action": "None",
+    "Key": {
+      "ScopeClass": "Global",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Global",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "Global"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "TeamsOnly",
+    "NotifySfbUsers": false,
+    "Action": "Upgrade",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-160dd90e",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-85c571b4"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "Islands",
+    "NotifySfbUsers": false,
+    "Action": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-975f45d1",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-28b41dc1"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "Islands",
+    "NotifySfbUsers": true,
+    "Action": "Notify",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-93bc7318",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-10ea25a9"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "SfBOnly",
+    "NotifySfbUsers": false,
+    "Action": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-817c7545",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-ad8dab03"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "SfBOnly",
+    "NotifySfbUsers": true,
+    "Action": "Notify",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-5e1dbd7a",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-6e394a91"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "SfBWithTeamsCollab",
+    "NotifySfbUsers": false,
+    "Action": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-83e80e10",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-a0cf0978"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "SfBWithTeamsCollab",
+    "NotifySfbUsers": true,
+    "Action": "Notify",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-b7b42c46",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-c083fcc7"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "SfBWithTeamsCollabAndMeetings",
+    "NotifySfbUsers": false,
+    "Action": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-d80e294d",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-1a7f0fd7"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "SfBWithTeamsCollabAndMeetings",
+    "NotifySfbUsers": true,
+    "Action": "Notify",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-d238bfde",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-39407eb3"
+  },
+  {
+    "Description": "Fixture description",
+    "Mode": "SfBOnly",
+    "NotifySfbUsers": false,
+    "Action": "None",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsUpgradePolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-d0f44713",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-d1133959"
+  }
+]

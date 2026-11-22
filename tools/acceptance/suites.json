@@ -45,7 +45,9 @@
       "TestAccSharedCallingRoutingPolicyReadOnly",
       "TestAccShiftsPolicyReadOnly",
       "TestAccTemplatePermissionPolicyReadOnly",
-      "TestAccUpdateManagementPolicyReadOnly"
+      "TestAccUpdateManagementPolicyReadOnly",
+      "TestAccUpgradePolicyReadOnly",
+      "TestAccUpgradeGrantMigrationBinding"
     ]
   },
   "owned-policy-crud": {
@@ -194,6 +196,22 @@
     "journal_entries_per_test": 1,
     "tests": [
       "TestAccUpdateManagementPolicyCRUD"
+    ]
+  },
+  "singleton-upgrade-configuration": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "configuration-update",
+    "journal_entries_per_test": 1,
+    "tests": [
+      "TestAccUpgradeConfigurationUpdateRestore"
+    ]
+  },
+  "singleton-upgrade-reads": {
+    "package": "./tests/integration/lab",
+    "serial": true,
+    "tests": [
+      "TestAccUpgradeConfigurationReadOnly"
     ]
   }
 }
