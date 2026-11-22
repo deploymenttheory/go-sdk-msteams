@@ -342,6 +342,18 @@ class AcceptanceGuardTests(unittest.TestCase):
                     ci.finalize(argparse.Namespace(report_directory=root / 'reports'))
             self.assertTrue(private.exists())
 
+    def test_files_oracle_failure_retains_fixed_reason_and_stage(self):
+        name = 'TestAccFilesPolicyCRUD'
+        reason = 'pinned files policy projection unavailable'
+        events = [
+            {'Test': name, 'Action': 'output', 'Output': 'oracle failure stage: read private-response'},
+            {'Test': name, 'Action': 'output', 'Output': reason + ' private-token'},
+            {'Test': name, 'Action': 'fail'},
+        ]
+        report = ci.evaluate(events, [name], 1)
+        self.assertEqual(report['failure_reasons'][name], ['oracle failure stage: read', reason])
+        self.assertNotIn('private-', json.dumps(report))
+
 
 if __name__ == '__main__':
     unittest.main()

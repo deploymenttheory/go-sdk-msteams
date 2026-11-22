@@ -49,6 +49,14 @@ FAILURE_REASONS = (
     'selected federation read failed',
     'Global federation read/list observations differ',
     'canonical tenant binding required',
+    'pinned files policy read failed; no output retained',
+    'pinned files policy projection unavailable',
+    'SDK and PowerShell files policy projections differ',
+    'oracle failure stage: module',
+    'oracle failure stage: authentication',
+    'oracle failure stage: read',
+    'oracle failure stage: projection',
+    'oracle failure stage: unknown',
 )
 FEDERATION_CASES = {'external-policy', 'acs', 'external-users', 'tenant'}
 
