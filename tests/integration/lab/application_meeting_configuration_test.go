@@ -83,7 +83,7 @@ func TestAccApplicationMeetingConfigurationReadOnly(t *testing.T) {
 	}
 	listed, listResponse, err := s.ListFiltered(ctx, "Global")
 	writeResponseFixture(t, "application_meeting_configuration", "list", listResponse, nil)
-	if err != nil || len(listed) != 1 || !reflect.DeepEqual(value.RawFields, listed[0].RawFields) {
+	if err != nil || len(listed) != 1 || !sameResponseFields(value.RawFields, listed[0].RawFields) {
 		t.Fatal("application meeting filtered read differs")
 	}
 	if oracle {
