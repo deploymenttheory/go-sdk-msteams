@@ -154,6 +154,18 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertNotIn('private-', report)
         self.assertIn('passed', report)
 
+    def test_files_oracle_failure_retains_fixed_reason_and_stage(self):
+        name = 'TestAccFilesPolicyCRUD'
+        reason = 'pinned files policy projection unavailable'
+        events = [
+            {'Test': name, 'Action': 'output', 'Output': 'oracle failure stage: read private-response'},
+            {'Test': name, 'Action': 'output', 'Output': reason + ' private-token'},
+            {'Test': name, 'Action': 'fail'},
+        ]
+        report = ci.evaluate(events, [name], 1)
+        self.assertEqual(report['failure_reasons'][name], ['oracle failure stage: read', reason])
+        self.assertNotIn('private-', json.dumps(report))
+
     def test_mutation_cannot_pass_without_a_new_cleaned_journal(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

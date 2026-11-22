@@ -91,6 +91,9 @@ func filesPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, ide
 	if cmd.Run() != nil || output.exceeded {
 		t.Fatal("pinned files policy read failed; no output retained")
 	}
+	if stage := readOracleFailureStage(output.data); stage != "" {
+		t.Log("oracle failure stage: " + stage)
+	}
 	value, err := decodeFilesPolicyOracleForIdentity(output.data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned files policy projection unavailable")

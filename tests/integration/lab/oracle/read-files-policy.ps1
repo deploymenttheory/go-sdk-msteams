@@ -2,7 +2,7 @@
 $ErrorActionPreference='Stop'
 $ProgressPreference='SilentlyContinue';$InformationPreference='SilentlyContinue'
 $WarningPreference='SilentlyContinue';$VerbosePreference='SilentlyContinue';$DebugPreference='SilentlyContinue'
-$report=@{success=$false};$connected=$false;$certificate=$null
+$stage='module';$report=@{success=$false};$connected=$false;$certificate=$null
 try {
  if($env:MSTEAMS_LAB_READ_ONLY -ne '1' -or $env:MSTEAMS_LAB_POWERSHELL_ORACLE -ne '1'){throw 'Explicit read oracle opt-in required.'}
  $request=[Console]::In.ReadToEnd() | ConvertFrom-Json;$tenant=[Guid]::Parse($request.tenant_id).ToString()
@@ -19,6 +19,7 @@ try {
  Import-Module $manifest -Force -WarningAction SilentlyContinue
  $identity=Get-Content -LiteralPath $env:MSTEAMS_LAB_IDENTITY_FILE -Raw | ConvertFrom-Json
  if([Guid]::Parse($identity.tenant_id).ToString() -ne $tenant){throw 'Tenant binding differs.'}
+ $stage='authentication'
  if($env:MSTEAMS_LAB_AUTH_METHOD -eq 'client-secret'){
   $tokens=@()
   foreach($scope in @('https://graph.microsoft.com/.default','48ac35b8-9aa8-4d74-927d-1f4a14a0b239/.default')){
@@ -30,13 +31,14 @@ try {
   $certificate=[Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromPemFile($identity.certificate_file,$identity.private_key_file)
   Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $tenant -ErrorAction Stop -InformationAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
  }else{throw 'Unknown auth method.'}
- $connected=$true;$values=@(Get-CsTeamsFilesPolicy -Identity $selected -ErrorAction Stop)
+ $connected=$true;$stage='read';$values=@(Get-CsTeamsFilesPolicy -Identity $selected -ErrorAction Stop)
  if($values.Count -ne 1 -or (([string]$values[0].Identity -replace '^(?i)tag:','') -ine $fixture)){throw 'Expected selected policy.'}
+ $stage='projection'
  $settings=@{}
  foreach($name in @('NativeFileEntryPoints','SPChannelFilesTab','DefaultFileUploadAppId','FileSharingInChatswithExternalUsers')){
   $property=$values[0].PSObject.Properties[$name];if($null -eq $property){throw 'Incomplete files policy projection.'};$settings[$name]=$property.Value
  }
  $report=@{success=$true;tenant_id=$tenant;identity=[string]$values[0].Identity;settings=$settings}
-} catch {$report=@{success=$false}}
+} catch {$report=@{success=$false;failure_stage=$stage}}
 finally{if($connected){Disconnect-MicrosoftTeams -Confirm:$false -ErrorAction SilentlyContinue | Out-Null};if($null -ne $certificate){$certificate.Dispose()}}
 [Console]::Out.Write(($report | ConvertTo-Json -Depth 12 -Compress))
