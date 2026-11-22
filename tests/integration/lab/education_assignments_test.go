@@ -7,11 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_education_assignments_app_policy"
@@ -28,27 +29,27 @@ type educationAssignmentsObservation struct {
 
 func decodeEducationAssignmentsOracle(raw []byte, tenant string) (educationAssignmentsObservation, error) {
 	var v educationAssignmentsObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || !strings.EqualFold(v.Identity, "Global") || len(v.Settings) != len(educationAssignmentsScalars) {
-		return educationAssignmentsObservation{}, errTeamOracle
+		return educationAssignmentsObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return educationAssignmentsObservation{}, errTeamOracle
+		return educationAssignmentsObservation{}, labkit.ErrOracle
 	}
 	for _, name := range educationAssignmentsScalars {
 		if _, ok := v.Settings[name]; !ok {
-			return educationAssignmentsObservation{}, errTeamOracle
+			return educationAssignmentsObservation{}, labkit.ErrOracle
 		}
 	}
 	settings, err := json.Marshal(v.Settings)
 	var model resource.Policy
 	if err != nil || json.Unmarshal(settings, &model) != nil {
-		return educationAssignmentsObservation{}, errTeamOracle
+		return educationAssignmentsObservation{}, labkit.ErrOracle
 	}
 	return v, nil
 }
@@ -60,7 +61,7 @@ func educationAssignmentsOracle(t *testing.T, ctx context.Context, tenant string
 		t.Fatal("invalid education assignments policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-education-assignments.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-education-assignments.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -68,14 +69,14 @@ func educationAssignmentsOracle(t *testing.T, ctx context.Context, tenant string
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned education assignments policy read failed; no output retained")
 	}
-	value, err := decodeEducationAssignmentsOracle(output.data, tenant)
+	value, err := decodeEducationAssignmentsOracle(output.Data, tenant)
 	if err != nil {
 		t.Fatal("pinned education assignments policy projection unavailable")
 	}
@@ -94,12 +95,12 @@ func TestAccEducationAssignmentsReadOnly(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsEducationAssignmentsAppPolicies.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_education_assignments_app_policy", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_education_assignments_app_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -108,7 +109,7 @@ func TestAccEducationAssignmentsReadOnly(t *testing.T) {
 		t.Fatalf("education assignments policy Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsEducationAssignmentsAppPolicies.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_education_assignments_app_policy", "list", listResponse, nil)
+	labkit.WriteResponseFixture(t, "teams_education_assignments_app_policy", "list", listResponse, nil)
 	selected, selectionErr := globalEducationAssignments(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(educationAssignmentsProjection(value), educationAssignmentsProjection(selected)) {
 		t.Fatal("education assignments policy Global read/list projections differ")
@@ -151,13 +152,13 @@ func globalEducationAssignments(values []*resource.Policy) (*resource.Policy, er
 	for _, v := range values {
 		if v != nil && v.Identity != nil && strings.EqualFold(*v.Identity, "Global") {
 			if found != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			found = v
 		}
 	}
 	if found == nil {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	return found, nil
 }

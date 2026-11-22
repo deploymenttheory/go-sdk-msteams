@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
 	management "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_management"
@@ -16,7 +18,7 @@ import (
 // parent team/group, including child channels after an interrupted run.
 func TestAccChannelCRUD(t *testing.T) {
 	cfg := lifecycleLabConfig(t) // All three opt-ins precede any credential read.
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	owner, err := loadLifecycleOwner(os.Getenv("MSTEAMS_LAB_TEAM_OWNER_FILE"), binding)
 	if err != nil {
 		t.Fatal("explicit private same-tenant owner fixture is required")

@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -16,11 +18,11 @@ func TestUnitCallingCleanupReconcilesRejectedCreate(t *testing.T) {
 	t.Parallel()
 	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-calling-policy"
 	const base = "/Skype.Policy/configurations/TeamsCallingPolicy"
-	list, err := os.ReadFile("../../../msteams/teams_admin_api/teams_calling_policy/testdata/list.json")
+	list, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/teams_calling_policy/testdata/list.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	missing, err := os.ReadFile("../../../msteams/teams_admin_api/teams_calling_policy/testdata/get_deleted_404.json")
+	missing, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/teams_calling_policy/testdata/get_deleted_404.json")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -7,15 +7,15 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
-	"github.com/go-resty/resty/v2"
 )
 
 type accessOutcome struct {
@@ -31,27 +31,27 @@ func decodeAccessOutcome(raw []byte, tenant, command, outcome string) (accessOut
 	var result accessOutcome
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || d.Decode(&result) != nil || !result.Success || !strings.EqualFold(result.Tenant, tenant) || result.Command != command || result.Outcome != outcome {
-		return accessOutcome{}, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || d.Decode(&result) != nil || !result.Success || !strings.EqualFold(result.Tenant, tenant) || result.Command != command || result.Outcome != outcome {
+		return accessOutcome{}, labkit.ErrOracle
 	}
 	if d.Decode(new(any)) != io.EOF {
-		return accessOutcome{}, errTeamOracle
+		return accessOutcome{}, labkit.ErrOracle
 	}
 	switch outcome {
 	case "migration-status-message":
 		if result.Code != nil || result.ErrorCode != nil {
-			return accessOutcome{}, errTeamOracle
+			return accessOutcome{}, labkit.ErrOracle
 		}
 	case "feature-unavailable":
 		if result.Code == nil || *result.Code != "ClientError" || result.ErrorCode == nil || *result.ErrorCode != 40003 {
-			return accessOutcome{}, errTeamOracle
+			return accessOutcome{}, labkit.ErrOracle
 		}
 	case "forbidden":
 		if result.Code == nil || *result.Code != "Forbidden" || result.ErrorCode == nil || *result.ErrorCode != 40301 {
-			return accessOutcome{}, errTeamOracle
+			return accessOutcome{}, labkit.ErrOracle
 		}
 	default:
-		return accessOutcome{}, errTeamOracle
+		return accessOutcome{}, labkit.ErrOracle
 	}
 	return result, nil
 }
@@ -63,7 +63,7 @@ func accessOutcomeOracle(t *testing.T, ctx context.Context, tenant, resource, co
 		t.Fatal(err)
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-access-outcome.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-access-outcome.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -74,48 +74,34 @@ func accessOutcomeOracle(t *testing.T, ctx context.Context, tenant, resource, co
 		cmd.Env = append(cmd.Env, key+"="+os.Getenv(key))
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1")
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout = &output
 	cmd.Stderr = io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned access outcome oracle failed")
 	}
-	if _, err := decodeAccessOutcome(output.data, tenant, command, outcome); err != nil {
+	if _, err := decodeAccessOutcome(output.Data, tenant, command, outcome); err != nil {
 		t.Fatal("PowerShell access outcome changed or was not verified")
 	}
 }
 
-func logAccessResponse(t *testing.T, response *resty.Response, err error) {
-	t.Helper()
-	status := 0
-	if response != nil {
-		status = response.StatusCode()
-	}
-	var api *client.APIError
-	var codes []int
-	if errors.As(err, &api) {
-		codes = api.ServiceErrorCodes
-	}
-	t.Logf("SDK access outcome: HTTP %d; PolicyRP codes %v; error %T", status, codes, err)
-}
-
 func TestAccAssignmentMigrationCapabilityUnavailable(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	if !teamOracleEnabled(t) {
+	cfg := labkit.ReadOnlyEnabled(t)
+	if !labkit.OracleEnabled(t) {
 		t.Fatal("PowerShell comparison is required for tenant access outcomes")
 	}
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	value, response, err := sdk.TeamsAdminAPI.AssignmentMigrations.List(ctx)
-	logAccessResponse(t, response, err)
+	labkit.LogAccessResponse(t, response, err)
 	var api *client.APIError
 	if value != nil || response == nil || response.StatusCode() != 400 || !errors.Is(err, auth.ErrTenantCapabilityUnavailable) || !errors.As(err, &api) || !slices.Equal(api.ServiceErrorCodes, []int{40003}) {
 		t.Fatal("expected typed tenant capability denial changed; successful migration needs separate qualification")
 	}
-	writeResponseFixture(t, "assignment_migration", "list", response, nil)
+	labkit.WriteResponseFixture(t, "assignment_migration", "list", response, nil)
 	tenant, _, ok := strings.Cut(binding, "|")
 	if !ok {
 		t.Fatal("tenant binding required")
@@ -125,20 +111,20 @@ func TestAccAssignmentMigrationCapabilityUnavailable(t *testing.T) {
 }
 
 func TestAccAudioConferencingPromptsCapabilityUnavailable(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	if !teamOracleEnabled(t) {
+	cfg := labkit.ReadOnlyEnabled(t)
+	if !labkit.OracleEnabled(t) {
 		t.Fatal("PowerShell comparison is required for tenant access outcomes")
 	}
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	value, response, err := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.GetByIdentity(ctx, "Global")
-	logAccessResponse(t, response, err)
+	labkit.LogAccessResponse(t, response, err)
 	var api *client.APIError
 	if value != nil || response == nil || response.StatusCode() != 400 || !errors.Is(err, auth.ErrTenantCapabilityUnavailable) || !errors.As(err, &api) || !slices.Equal(api.ServiceErrorCodes, []int{40003}) {
 		t.Fatal("expected typed tenant capability denial changed; successful prompt operations need separate qualification")
 	}
-	writeResponseFixture(t, "audio_conferencing_prompts", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "audio_conferencing_prompts", "get_global", response, nil)
 	tenant, _, ok := strings.Cut(binding, "|")
 	if !ok {
 		t.Fatal("tenant binding required")
@@ -148,20 +134,20 @@ func TestAccAudioConferencingPromptsCapabilityUnavailable(t *testing.T) {
 }
 
 func TestAccPrivacyConfigurationAuthorizationDenied(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	if !teamOracleEnabled(t) {
+	cfg := labkit.ReadOnlyEnabled(t)
+	if !labkit.OracleEnabled(t) {
 		t.Fatal("PowerShell comparison is required for tenant access outcomes")
 	}
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	value, response, err := sdk.TeamsAdminAPI.PrivacyConfigurations.GetByIdentity(ctx, "Global")
-	logAccessResponse(t, response, err)
+	labkit.LogAccessResponse(t, response, err)
 	var api *client.APIError
 	if value != nil || response == nil || response.StatusCode() != 403 || !errors.Is(err, auth.ErrForbidden) || errors.Is(err, auth.ErrTenantCapabilityUnavailable) || !errors.As(err, &api) || !slices.Equal(api.ServiceErrorCodes, []int{40301}) {
 		t.Fatal("expected privacy authorization denial changed; successful privacy reads need separate qualification")
 	}
-	writeResponseFixture(t, "privacy_configuration", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "privacy_configuration", "get_global", response, nil)
 	tenant, _, ok := strings.Cut(binding, "|")
 	if !ok {
 		t.Fatal("tenant binding required")
@@ -171,20 +157,20 @@ func TestAccPrivacyConfigurationAuthorizationDenied(t *testing.T) {
 }
 
 func TestAccTenantAbuseConfigurationAuthorizationDenied(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	if !teamOracleEnabled(t) {
+	cfg := labkit.ReadOnlyEnabled(t)
+	if !labkit.OracleEnabled(t) {
 		t.Fatal("PowerShell comparison is required for tenant access outcomes")
 	}
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	value, response, err := sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations.GetByIdentity(ctx, "Global")
-	logAccessResponse(t, response, err)
+	labkit.LogAccessResponse(t, response, err)
 	var api *client.APIError
 	if value != nil || response == nil || response.StatusCode() != 403 || !errors.Is(err, auth.ErrForbidden) || errors.Is(err, auth.ErrTenantCapabilityUnavailable) || !errors.As(err, &api) || !slices.Equal(api.ServiceErrorCodes, []int{40301}) {
 		t.Fatal("expected tenant-abuse authorization denial changed; successful tenant-abuse reads need separate qualification")
 	}
-	writeResponseFixture(t, "teams_tenant_abuse_configuration", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_tenant_abuse_configuration", "get_global", response, nil)
 	tenant, _, ok := strings.Cut(binding, "|")
 	if !ok {
 		t.Fatal("tenant binding required")

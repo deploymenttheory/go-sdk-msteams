@@ -5,6 +5,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 )
 
@@ -19,7 +21,7 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 	if err != nil || cfg.Require(lab.Mutation) != nil {
 		t.Fatal("explicit mutation opt-in is required for recovery")
 	}
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	journal, err := lab.OpenJournal(file, binding)
 	if err != nil {
 		t.Fatal("private bound recovery journal unavailable")
@@ -38,7 +40,7 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 		"upgrade-configuration":       upgradeConfigurationCleanup{sdk.TeamsAdminAPI.TeamsUpgradeConfigurations},
 		"sip-devices-configuration":   sipDevicesConfigurationCleanup{sdk.TeamsAdminAPI.TeamsSipDevicesConfigurations},
 		"shifts-policy":               shiftsPolicyCleanup{sdk.TeamsAdminAPI.TeamsShiftsPolicies},
-		"shifts-app-configuration":    configurationRestore{shiftsAppSingleton(sdk)},
+		"shifts-app-configuration":    labkit.ConfigurationRestore{SingletonConfiguration: shiftsAppSingleton(sdk)},
 		"room-video-policy":           roomVideoPolicyCleanup{sdk.TeamsAdminAPI.TeamsRoomVideoTeleConferencingPolicies},
 		"shared-calling-policy":       sharedCallingPolicyCleanup{sdk.TeamsAdminAPI.TeamsSharedCallingRoutingPolicies},
 		"personal-policy":             personalPolicyCleanup{sdk.TeamsAdminAPI.TeamsPersonalAttendantPolicies},
@@ -51,8 +53,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 		"roaming-policy":              roamingPolicyCleanup{sdk.TeamsAdminAPI.TeamsNetworkRoamingPolicies},
 		"multi-tenant-configuration":  multiTenantConfigurationCleanup{sdk.TeamsAdminAPI.TeamsMultiTenantOrganizationConfigurations},
 		"mobility-policy":             mobilityPolicyCleanup{sdk.TeamsAdminAPI.TeamsMobilityPolicies},
-		"messaging-configuration":     configurationRestore{messagingSingleton(sdk)},
-		"migration-configuration":     configurationRestore{migrationSingleton(sdk)},
+		"messaging-configuration":     labkit.ConfigurationRestore{SingletonConfiguration: messagingSingleton(sdk)},
+		"migration-configuration":     labkit.ConfigurationRestore{SingletonConfiguration: migrationSingleton(sdk)},
 		"team-template":               templateCleanup{sdk.TeamsAdminAPI.TeamTemplates},
 		"branding-policy":             brandingPolicyCleanup{sdk.TeamsAdminAPI.MeetingBrandingPolicies},
 		"app-permission-policy":       appPermissionPolicyCleanup{sdk.TeamsAdminAPI.TeamsAppPermissionPolicies},

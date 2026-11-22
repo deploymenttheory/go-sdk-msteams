@@ -4,47 +4,49 @@ import (
 	"context"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/go-resty/resty/v2"
 )
 
-func personalRead(sdk *msteams.Client) compiledScalarRead {
-	return func(ctx context.Context) (*compiledScalarView, *resty.Response, error) {
+func personalRead(sdk *msteams.Client) labkit.CompiledScalarRead {
+	return func(ctx context.Context) (*labkit.CompiledScalarView, *resty.Response, error) {
 		v, r, e := sdk.TeamsAdminAPI.TeamsPersonalAttendantPolicies.GetByIdentity(ctx, "Global")
 		if e != nil || v == nil {
 			return nil, r, e
 		}
-		return &compiledScalarView{v.Identity, map[string]any{"PersonalAttendant": v.PersonalAttendant, "CallScreening": v.CallScreening, "CalendarBookings": v.CalendarBookings, "InboundInternalCalls": v.InboundInternalCalls, "InboundFederatedCalls": v.InboundFederatedCalls, "InboundPSTNCalls": v.InboundPSTNCalls, "AutomaticTranscription": v.AutomaticTranscription, "AutomaticRecording": v.AutomaticRecording}, v.RawFields}, r, nil
+		return &labkit.CompiledScalarView{Identity: v.Identity, Settings: map[string]any{"PersonalAttendant": v.PersonalAttendant, "CallScreening": v.CallScreening, "CalendarBookings": v.CalendarBookings, "InboundInternalCalls": v.InboundInternalCalls, "InboundFederatedCalls": v.InboundFederatedCalls, "InboundPSTNCalls": v.InboundPSTNCalls, "AutomaticTranscription": v.AutomaticTranscription, "AutomaticRecording": v.AutomaticRecording}, Fields: v.RawFields}, r, nil
 	}
 }
 func TestAccPersonalAttendantPolicyReadOnly(t *testing.T) {
-	testCompiledScalarGlobal(t, "personal", "teams_personal_attendant_policy", personalRead, func(ctx context.Context, sdk *msteams.Client) ([]*compiledScalarView, *resty.Response, error) {
+	labkit.RunCompiledScalarGlobal(t, "personal", "teams_personal_attendant_policy", personalRead, func(ctx context.Context, sdk *msteams.Client) ([]*labkit.CompiledScalarView, *resty.Response, error) {
 		values, r, e := sdk.TeamsAdminAPI.TeamsPersonalAttendantPolicies.ListFiltered(ctx, "Global")
-		var out []*compiledScalarView
+		var out []*labkit.CompiledScalarView
 		for _, v := range values {
 			if v != nil {
-				out = append(out, &compiledScalarView{v.Identity, map[string]any{"PersonalAttendant": v.PersonalAttendant, "CallScreening": v.CallScreening, "CalendarBookings": v.CalendarBookings, "InboundInternalCalls": v.InboundInternalCalls, "InboundFederatedCalls": v.InboundFederatedCalls, "InboundPSTNCalls": v.InboundPSTNCalls, "AutomaticTranscription": v.AutomaticTranscription, "AutomaticRecording": v.AutomaticRecording}, v.RawFields})
+				out = append(out, &labkit.CompiledScalarView{Identity: v.Identity, Settings: map[string]any{"PersonalAttendant": v.PersonalAttendant, "CallScreening": v.CallScreening, "CalendarBookings": v.CalendarBookings, "InboundInternalCalls": v.InboundInternalCalls, "InboundFederatedCalls": v.InboundFederatedCalls, "InboundPSTNCalls": v.InboundPSTNCalls, "AutomaticTranscription": v.AutomaticTranscription, "AutomaticRecording": v.AutomaticRecording}, Fields: v.RawFields})
 			}
 		}
 		return out, r, e
 	})
 }
-func recordingRollOutRead(sdk *msteams.Client) compiledScalarRead {
-	return func(ctx context.Context) (*compiledScalarView, *resty.Response, error) {
+func recordingRollOutRead(sdk *msteams.Client) labkit.CompiledScalarRead {
+	return func(ctx context.Context) (*labkit.CompiledScalarView, *resty.Response, error) {
 		v, r, e := sdk.TeamsAdminAPI.TeamsRecordingRollOutPolicies.GetByIdentity(ctx, "Global")
 		if e != nil || v == nil {
 			return nil, r, e
 		}
-		return &compiledScalarView{v.Identity, map[string]any{"MeetingRecordingOwnership": v.MeetingRecordingOwnership}, v.RawFields}, r, nil
+		return &labkit.CompiledScalarView{Identity: v.Identity, Settings: map[string]any{"MeetingRecordingOwnership": v.MeetingRecordingOwnership}, Fields: v.RawFields}, r, nil
 	}
 }
 func TestAccRecordingRollOutPolicyReadOnly(t *testing.T) {
-	testCompiledScalarGlobal(t, "recording-rollout", "teams_recording_roll_out_policy", recordingRollOutRead, func(ctx context.Context, sdk *msteams.Client) ([]*compiledScalarView, *resty.Response, error) {
+	labkit.RunCompiledScalarGlobal(t, "recording-rollout", "teams_recording_roll_out_policy", recordingRollOutRead, func(ctx context.Context, sdk *msteams.Client) ([]*labkit.CompiledScalarView, *resty.Response, error) {
 		values, r, e := sdk.TeamsAdminAPI.TeamsRecordingRollOutPolicies.ListFiltered(ctx, "Global")
-		var out []*compiledScalarView
+		var out []*labkit.CompiledScalarView
 		for _, v := range values {
 			if v != nil {
-				out = append(out, &compiledScalarView{v.Identity, map[string]any{"MeetingRecordingOwnership": v.MeetingRecordingOwnership}, v.RawFields})
+				out = append(out, &labkit.CompiledScalarView{Identity: v.Identity, Settings: map[string]any{"MeetingRecordingOwnership": v.MeetingRecordingOwnership}, Fields: v.RawFields})
 			}
 		}
 		return out, r, e

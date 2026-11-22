@@ -6,6 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	channels "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_channels_policy"
@@ -23,7 +25,7 @@ func (h channelsPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (st
 		if value == nil || value.Identity == nil {
 			return "", lab.ErrUnresolved
 		}
-		if samePolicyName(*value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -32,7 +34,7 @@ func (h channelsPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (st
 	}
 	if found == "" {
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -43,19 +45,19 @@ func (h channelsPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (st
 	return found, nil
 }
 func (h channelsPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, _, err := h.service.DeleteByIdentity(ctx, entry.ResourceID, policy.Controls{})
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -66,7 +68,7 @@ func (h channelsPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) erro
 			if value == nil || value.Identity == nil {
 				return false, lab.ErrUnresolved
 			}
-			if samePolicyName(*value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -87,8 +89,8 @@ func TestAccChannelsPolicyCRUD(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsChannelsPolicies
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -118,23 +120,23 @@ func TestAccChannelsPolicyCRUD(t *testing.T) {
 	initial := "SDK lab non-default initial description"
 	_, response, err := service.CreateByIdentity(ctx, name, channels.CreateRequest{Settings: channels.Settings{Description: policy.Set(initial), AllowPrivateChannelCreation: policy.Set(false)}})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("channels policy create failed; recovery journal retained")
 	}
-	writeResponseFixture(t, "teams_channels_policy", "create", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_channels_policy", "create", response, replacements)
 	var value *channels.Policy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
-		matched := read != nil && read.Identity != nil && samePolicyName(*read.Identity, name) && read.Description != nil && *read.Description == initial && read.AllowPrivateChannelCreation != nil && !*read.AllowPrivateChannelCreation
+		matched := read != nil && read.Identity != nil && labkit.SamePolicyName(*read.Identity, name) && read.Description != nil && *read.Description == initial && read.AllowPrivateChannelCreation != nil && !*read.AllowPrivateChannelCreation
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_channels_policy", "create_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_channels_policy", "create_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -163,11 +165,11 @@ func TestAccChannelsPolicyCRUD(t *testing.T) {
 	updated := "SDK lab non-default updated description"
 	_, response, err = service.UpdateByIdentity(ctx, identity, channels.UpdateRequest{Settings: channels.Settings{Description: policy.Set(updated)}})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("channels sparse update failed")
 	}
-	writeResponseFixture(t, "teams_channels_policy", "update", response, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "teams_channels_policy", "update", response, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, identity)
 		if err != nil {
 			return false, err
@@ -175,7 +177,7 @@ func TestAccChannelsPolicyCRUD(t *testing.T) {
 		matched := read != nil && read.Description != nil && *read.Description == updated && read.AllowPrivateChannelCreation != nil && !*read.AllowPrivateChannelCreation
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_channels_policy", "update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_channels_policy", "update_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -189,29 +191,29 @@ func TestAccChannelsPolicyCRUD(t *testing.T) {
 	}
 	count := 0
 	for _, item := range values {
-		if item != nil && item.Identity != nil && samePolicyName(*item.Identity, name) {
+		if item != nil && item.Identity != nil && labkit.SamePolicyName(*item.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned channels policy missing or ambiguous in list")
 	}
-	writeResponseFixture(t, "teams_channels_policy", "owned_list", listResponse, replacements)
+	labkit.WriteResponseFixture(t, "teams_channels_policy", "owned_list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if _, deletedResponse, err := service.DeleteByIdentity(ctx, identity, policy.Controls{}); err != nil {
-		logAccessResponse(t, deletedResponse, err)
+		labkit.LogAccessResponse(t, deletedResponse, err)
 		t.Fatal("owned policy delete failed")
 	} else {
-		writeResponseFixture(t, "teams_channels_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
+		labkit.WriteResponseFixture(t, "teams_channels_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
 	}
 	if err := (channelsPolicyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: identity}); err != nil {
 		t.Fatal("channels deletion and independent absence were not verified")
 	}
 	_, response, err = service.GetByIdentity(ctx, identity)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("channels deleted policy did not return typed404")
 	}
-	writeResponseFixture(t, "teams_channels_policy", "get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_channels_policy", "get_deleted", response, replacements)
 	t.Log("policy delete/absence: passed")
 	t.Log("channels policy create/read/update/list/delete and omitted-field preservation verified")
 }

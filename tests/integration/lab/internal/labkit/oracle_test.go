@@ -1,10 +1,27 @@
-package lab_test
+package labkit
 
 import (
 	"errors"
 	"strings"
 	"testing"
 )
+
+func TestUnitReadOracleFailureStageRejectsDynamicDiagnostics(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct{ raw, want string }{
+		{`{"success":true}`, ""}, {`{"success":false}`, "unknown"},
+		{`{"success":false,"failure_stage":"module"}`, "module"},
+		{`{"success":false,"failure_stage":"authentication"}`, "authentication"},
+		{`{"success":false,"failure_stage":"read"}`, "read"},
+		{`{"success":false,"failure_stage":"projection"}`, "projection"},
+		{`{"success":false,"failure_stage":"private-token"}`, "unknown"},
+		{`private-exception`, "unknown"},
+	} {
+		if ReadOracleFailureStage([]byte(tc.raw)) != tc.want {
+			t.Fatal("oracle failure exposed dynamic text or lost its fixed stage")
+		}
+	}
+}
 
 func TestUnitTeamOracleRejectsIncompleteOrPollutedReports(t *testing.T) {
 	t.Parallel()
@@ -50,15 +67,15 @@ func TestUnitTeamOracleRejectsIncompleteOrPollutedReports(t *testing.T) {
 		{name: "banner", kind: "users", body: `private-banner-canary {"success":true,"stage":"complete","users":[]}`},
 		{name: "wrong-bool-type", kind: "team", body: `{"success":true,"stage":"complete","team":{"archived":"false"},"tenant":{},"user":{}}`},
 		{name: "wrong-kind", kind: "unknown", body: `{"success":true,"stage":"complete","users":[]}`},
-		{name: "oversize", kind: "users", body: strings.Repeat("x", maxTeamOracleBytes+1)},
+		{name: "oversize", kind: "users", body: strings.Repeat("x", MaxOracleBytes+1)},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			value, err := decodeTeamOracle([]byte(tc.body), tc.kind)
+			value, err := DecodeTeamOracle([]byte(tc.body), tc.kind)
 			if (err == nil) != tc.valid {
 				t.Fatal("oracle report validity differs")
 			}
-			if err != nil && (!errors.Is(err, errTeamOracle) || strings.Contains(err.Error(), "canary")) {
+			if err != nil && (!errors.Is(err, ErrOracle) || strings.Contains(err.Error(), "canary")) {
 				t.Fatal("oracle error leaked uncontrolled output")
 			}
 			if tc.name == "team" && (value.Team.Archived == nil || *value.Team.Archived || value.Team.AllowGiphy != nil) {
@@ -73,22 +90,22 @@ func TestUnitTeamOracleRejectsIncompleteOrPollutedReports(t *testing.T) {
 
 func TestUnitTeamOracleOutputIsBoundedAcrossWrites(t *testing.T) {
 	t.Parallel()
-	var buffer teamOracleBuffer
-	first := []byte(strings.Repeat("a", maxTeamOracleBytes-1))
+	var buffer OracleBuffer
+	first := []byte(strings.Repeat("a", MaxOracleBytes-1))
 	if n, err := buffer.Write(first); err != nil || n != len(first) {
 		t.Fatal("bounded output was rejected")
 	}
 	if n, err := buffer.Write([]byte("b")); err != nil || n != 1 {
 		t.Fatal("exact bound was rejected")
 	}
-	if _, err := buffer.Write([]byte("private-overflow-canary")); !errors.Is(err, errTeamOracle) {
+	if _, err := buffer.Write([]byte("private-overflow-canary")); !errors.Is(err, ErrOracle) {
 		t.Fatal("overflow accepted")
 	}
-	if len(buffer.data) != maxTeamOracleBytes || !buffer.exceeded || strings.Contains(string(buffer.data), "canary") {
+	if len(buffer.Data) != MaxOracleBytes || !buffer.Exceeded || strings.Contains(string(buffer.Data), "canary") {
 		t.Fatal("overflow was retained or hidden")
 	}
-	if _, err := buffer.Write(nil); !errors.Is(err, errTeamOracle) {
+	if _, err := buffer.Write(nil); !errors.Is(err, ErrOracle) {
 		t.Fatal("overflow state was reset")
 	}
-	clear(buffer.data)
+	clear(buffer.Data)
 }

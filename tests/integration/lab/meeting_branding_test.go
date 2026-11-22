@@ -7,12 +7,13 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 )
@@ -33,28 +34,28 @@ func decodeBrandingOracle(raw []byte, tenant string) (brandingObservation, error
 }
 func decodeBrandingOracleForIdentity(raw []byte, tenant, identity string) (brandingObservation, error) {
 	var v brandingObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !brandingOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !brandingOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return brandingObservation{}, errTeamOracle
+		return brandingObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(brandingScalars) {
-		return brandingObservation{}, errTeamOracle
+		return brandingObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return brandingObservation{}, errTeamOracle
+		return brandingObservation{}, labkit.ErrOracle
 	}
 	for _, name := range brandingScalars {
 		if _, ok := v.Settings[name]; !ok {
-			return brandingObservation{}, errTeamOracle
+			return brandingObservation{}, labkit.ErrOracle
 		}
 	}
 	return v, nil
@@ -70,7 +71,7 @@ func brandingOracleForIdentity(t *testing.T, ctx context.Context, tenant, identi
 		t.Fatal("invalid branding oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-meeting-branding.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-meeting-branding.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -78,14 +79,14 @@ func brandingOracleForIdentity(t *testing.T, ctx context.Context, tenant, identi
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned branding read failed; no output retained")
 	}
-	value, err := decodeBrandingOracleForIdentity(output.data, tenant, identity)
+	value, err := decodeBrandingOracleForIdentity(output.Data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned branding projection unavailable")
 	}
@@ -104,12 +105,12 @@ func TestAccMeetingBrandingReadOnly(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "meeting_branding", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "meeting_branding", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -118,8 +119,8 @@ func TestAccMeetingBrandingReadOnly(t *testing.T) {
 		t.Fatalf("branding Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "meeting_branding", "list", listResponse, nil)
-	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !sameConfigurationFields(value.RawFields, listed[0].RawFields) {
+	labkit.WriteResponseFixture(t, "meeting_branding", "list", listResponse, nil)
+	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !labkit.SameConfigurationFields(value.RawFields, listed[0].RawFields) {
 		t.Fatal("branding Global read/list observations differ")
 	}
 	if oracle {
@@ -161,7 +162,7 @@ func TestUnitBrandingOracleRestrictsOwnedIdentity(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-branding-policy"
-	raw, err := os.ReadFile("../../../msteams/teams_admin_api/meeting_branding/testdata/get_global.json")
+	raw, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/meeting_branding/testdata/get_global.json")
 	if err != nil {
 		t.Fatal(err)
 	}

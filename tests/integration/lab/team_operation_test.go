@@ -10,20 +10,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	operation "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_operation"
 )
-
-type teamOracleOperation struct {
-	ID             string     `json:"id"`
-	Type           *string    `json:"type"`
-	Status         *string    `json:"status"`
-	Created        *time.Time `json:"created"`
-	Updated        *time.Time `json:"updated"`
-	Attempts       *int64     `json:"attempts"`
-	TargetID       *string    `json:"target_id"`
-	TargetLocation *string    `json:"target_location"`
-}
 
 type operationFixture struct {
 	TenantID    string `json:"tenant_id"`
@@ -43,16 +34,16 @@ func TestAccTeamOperationReadOnly(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid operation lab enablement")
 	}
-	_ = teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
-	raw, err := privateLabFile(os.Getenv("MSTEAMS_LAB_TEAM_OPERATION_FILE"))
+	_ = labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
+	raw, err := labkit.PrivateFile(os.Getenv("MSTEAMS_LAB_TEAM_OPERATION_FILE"))
 	if err != nil {
 		t.Fatal("explicit private operation fixture is required")
 	}
 	defer clear(raw)
 	var fixture operationFixture
 	tenant, _, ok := strings.Cut(binding, "|")
-	if json.Unmarshal(raw, &fixture) != nil || !ok || !strings.EqualFold(fixture.TenantID, tenant) || !labDirectoryID.MatchString(fixture.TeamID) || strings.TrimSpace(fixture.OperationID) == "" {
+	if json.Unmarshal(raw, &fixture) != nil || !ok || !strings.EqualFold(fixture.TenantID, tenant) || !labkit.DirectoryID.MatchString(fixture.TeamID) || strings.TrimSpace(fixture.OperationID) == "" {
 		t.Fatal("invalid operation fixture binding")
 	}
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
@@ -61,9 +52,9 @@ func TestAccTeamOperationReadOnly(t *testing.T) {
 	if err != nil || value == nil || value.ID != fixture.OperationID || value.Status == nil {
 		t.Fatal("selected beta team-operation read failed")
 	}
-	if teamOracleEnabled(t) {
+	if labkit.OracleEnabled(t) {
 		want := operationProjection(*value)
-		actual := runTeamOracle(t, ctx, teamOracleRequest{Kind: "operation", ID: fixture.TeamID, OperationID: fixture.OperationID}).Operation
+		actual := labkit.RunTeamOracle(t, ctx, labkit.TeamOracleRequest{Kind: "operation", ID: fixture.TeamID, OperationID: fixture.OperationID}).Operation
 		if actual == nil || !sameOperationProjection(want, *actual) {
 			t.Fatal("PowerShell and Go selected operation fields differ")
 		}
@@ -72,8 +63,8 @@ func TestAccTeamOperationReadOnly(t *testing.T) {
 	t.Log("selected team-operation read observed; authorization, active polling and mutation scenarios remain separately qualified")
 }
 
-func operationProjection(value operation.Operation) teamOracleOperation {
-	result := teamOracleOperation{ID: value.ID, Created: value.CreatedDateTime, Updated: value.LastActionDateTime, Attempts: value.AttemptsCount, TargetID: value.TargetResourceID, TargetLocation: value.TargetResourceLocation}
+func operationProjection(value operation.Operation) labkit.TeamOracleOperation {
+	result := labkit.TeamOracleOperation{ID: value.ID, Created: value.CreatedDateTime, Updated: value.LastActionDateTime, Attempts: value.AttemptsCount, TargetID: value.TargetResourceID, TargetLocation: value.TargetResourceLocation}
 	if value.OperationType != nil {
 		v := strings.ToLower(string(*value.OperationType))
 		result.Type = &v
@@ -85,7 +76,7 @@ func operationProjection(value operation.Operation) teamOracleOperation {
 	return result
 }
 
-func sameOperationProjection(a, b teamOracleOperation) bool {
+func sameOperationProjection(a, b labkit.TeamOracleOperation) bool {
 	// JSON decoding discards monotonic clocks; compare offsets representing the
 	// same instant without losing nil versus present timestamp fields.
 	for _, pair := range [][2]*time.Time{{a.Created, b.Created}, {a.Updated, b.Updated}} {
@@ -106,14 +97,14 @@ func TestUnitOperationOracleComparesPresenceAndTimestampInstants(t *testing.T) {
 	utc := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
 	offset := utc.In(time.FixedZone("fixture", 3600))
 	zero := int64(0)
-	want := teamOracleOperation{ID: "fixture", Created: &utc, Attempts: &zero}
-	if !sameOperationProjection(want, teamOracleOperation{ID: "fixture", Created: &offset, Attempts: &zero}) {
+	want := labkit.TeamOracleOperation{ID: "fixture", Created: &utc, Attempts: &zero}
+	if !sameOperationProjection(want, labkit.TeamOracleOperation{ID: "fixture", Created: &offset, Attempts: &zero}) {
 		t.Fatal("equal timestamp instants differed")
 	}
-	if sameOperationProjection(want, teamOracleOperation{ID: "fixture", Created: &utc}) {
+	if sameOperationProjection(want, labkit.TeamOracleOperation{ID: "fixture", Created: &utc}) {
 		t.Fatal("unknown and zero attempts collapsed")
 	}
-	if sameOperationProjection(want, teamOracleOperation{ID: "fixture", Attempts: &zero}) {
+	if sameOperationProjection(want, labkit.TeamOracleOperation{ID: "fixture", Attempts: &zero}) {
 		t.Fatal("unknown and present timestamps collapsed")
 	}
 }

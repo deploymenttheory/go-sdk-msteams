@@ -6,6 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	encryption "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_enhanced_encryption_policy"
 )
@@ -22,7 +24,7 @@ func (h enhancedEncryptionPolicyCleanup) Resolve(ctx context.Context, entry lab.
 		if value.Identity == "" {
 			return "", lab.ErrUnresolved
 		}
-		if samePolicyName(value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -32,7 +34,7 @@ func (h enhancedEncryptionPolicyCleanup) Resolve(ctx context.Context, entry lab.
 	if found == "" {
 		// An empty list match alone cannot establish absence after a lost POST.
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -43,19 +45,19 @@ func (h enhancedEncryptionPolicyCleanup) Resolve(ctx context.Context, entry lab.
 	return found, nil
 }
 func (h enhancedEncryptionPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, err := h.service.DeleteByIdentity(ctx, entry.ResourceID)
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -66,7 +68,7 @@ func (h enhancedEncryptionPolicyCleanup) Delete(ctx context.Context, entry lab.E
 			if value.Identity == "" {
 				return false, lab.ErrUnresolved
 			}
-			if samePolicyName(value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -89,8 +91,8 @@ func TestAccEnhancedEncryptionPolicyCRUD(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -120,23 +122,23 @@ func TestAccEnhancedEncryptionPolicyCRUD(t *testing.T) {
 	initial := "SDK lab non-default initial description"
 	response, err := service.CreateByIdentity(ctx, name, encryption.Settings{Description: new(initial), CallingEndToEndEncryptionEnabledType: new("Disabled")})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("enhanced encryption policy create failed; recovery journal retained")
 	}
-	writeResponseFixture(t, "teams_enhanced_encryption_policy", "create", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_enhanced_encryption_policy", "create", response, replacements)
 	var value *encryption.Policy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
-		matched := read != nil && read.Identity != "" && samePolicyName(read.Identity, name) && read.Description != nil && *read.Description == initial && read.CallingEndToEndEncryptionEnabledType != nil && *read.CallingEndToEndEncryptionEnabledType == "Disabled"
+		matched := read != nil && read.Identity != "" && labkit.SamePolicyName(read.Identity, name) && read.Description != nil && *read.Description == initial && read.CallingEndToEndEncryptionEnabledType != nil && *read.CallingEndToEndEncryptionEnabledType == "Disabled"
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_enhanced_encryption_policy", "create_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_enhanced_encryption_policy", "create_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -165,11 +167,11 @@ func TestAccEnhancedEncryptionPolicyCRUD(t *testing.T) {
 	updated := "SDK lab non-default updated description"
 	response, err = service.UpdateByIdentity(ctx, identity, encryption.UpdateRequest{Description: new(updated)})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("enhanced encryption sparse update failed")
 	}
-	writeResponseFixture(t, "teams_enhanced_encryption_policy", "update", response, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "teams_enhanced_encryption_policy", "update", response, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, identity)
 		if err != nil {
 			return false, err
@@ -177,7 +179,7 @@ func TestAccEnhancedEncryptionPolicyCRUD(t *testing.T) {
 		matched := read != nil && read.Description != nil && *read.Description == updated && read.CallingEndToEndEncryptionEnabledType != nil && *read.CallingEndToEndEncryptionEnabledType == "Disabled"
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_enhanced_encryption_policy", "update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_enhanced_encryption_policy", "update_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -191,29 +193,29 @@ func TestAccEnhancedEncryptionPolicyCRUD(t *testing.T) {
 	}
 	count := 0
 	for _, item := range values {
-		if item.Identity != "" && samePolicyName(item.Identity, name) {
+		if item.Identity != "" && labkit.SamePolicyName(item.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned enhanced encryption policy missing or ambiguous in list")
 	}
-	writeResponseFixture(t, "teams_enhanced_encryption_policy", "owned_list", listResponse, replacements)
+	labkit.WriteResponseFixture(t, "teams_enhanced_encryption_policy", "owned_list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if deletedResponse, err := service.DeleteByIdentity(ctx, identity); err != nil {
-		logAccessResponse(t, deletedResponse, err)
+		labkit.LogAccessResponse(t, deletedResponse, err)
 		t.Fatal("owned policy delete failed")
 	} else {
-		writeResponseFixture(t, "teams_enhanced_encryption_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
+		labkit.WriteResponseFixture(t, "teams_enhanced_encryption_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
 	}
 	if err := (enhancedEncryptionPolicyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: identity}); err != nil {
 		t.Fatal("enhanced encryption deletion and independent absence were not verified")
 	}
 	_, response, err = service.GetByIdentity(ctx, identity)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("enhanced encryption deleted policy did not return typed404")
 	}
-	writeResponseFixture(t, "teams_enhanced_encryption_policy", "get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_enhanced_encryption_policy", "get_deleted", response, replacements)
 	t.Log("policy delete/absence: passed")
 	t.Log("enhanced encryption policy create/read/update/list/delete and omitted-field preservation verified")
 }

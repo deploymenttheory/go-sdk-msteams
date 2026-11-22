@@ -6,6 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	roomVideo "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_room_video_tele_conferencing_policy"
 )
@@ -22,7 +24,7 @@ func (h roomVideoPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (s
 		if value.Identity == "" {
 			return "", lab.ErrUnresolved
 		}
-		if samePolicyName(value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -32,7 +34,7 @@ func (h roomVideoPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (s
 	if found == "" {
 		// An empty list match alone cannot establish absence after a lost POST.
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -43,19 +45,19 @@ func (h roomVideoPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (s
 	return found, nil
 }
 func (h roomVideoPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, err := h.service.DeleteByIdentity(ctx, entry.ResourceID)
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -66,7 +68,7 @@ func (h roomVideoPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) err
 			if value.Identity == "" {
 				return false, lab.ErrUnresolved
 			}
-			if samePolicyName(value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -87,8 +89,8 @@ func TestAccRoomVideoTeleConferencingPolicyCRUD(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsRoomVideoTeleConferencingPolicies
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -118,23 +120,23 @@ func TestAccRoomVideoTeleConferencingPolicyCRUD(t *testing.T) {
 	initial := "SDK lab non-default initial description"
 	response, err := service.CreateByIdentity(ctx, name, roomVideo.Settings{Description: new(initial), Enabled: new(false)})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("room video policy create failed; recovery journal retained")
 	}
-	writeResponseFixture(t, "teams_room_video_tele_conferencing_policy", "create", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_room_video_tele_conferencing_policy", "create", response, replacements)
 	var value *roomVideo.Policy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
-		matched := read != nil && read.Identity != "" && samePolicyName(read.Identity, name) && read.Description != nil && *read.Description == initial && read.Enabled != nil && !*read.Enabled
+		matched := read != nil && read.Identity != "" && labkit.SamePolicyName(read.Identity, name) && read.Description != nil && *read.Description == initial && read.Enabled != nil && !*read.Enabled
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_room_video_tele_conferencing_policy", "create_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_room_video_tele_conferencing_policy", "create_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -163,11 +165,11 @@ func TestAccRoomVideoTeleConferencingPolicyCRUD(t *testing.T) {
 	updated := "SDK lab non-default updated description"
 	response, err = service.UpdateByIdentity(ctx, identity, roomVideo.UpdateRequest{Description: new(updated)})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("room video sparse update failed")
 	}
-	writeResponseFixture(t, "teams_room_video_tele_conferencing_policy", "update", response, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "teams_room_video_tele_conferencing_policy", "update", response, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, identity)
 		if err != nil {
 			return false, err
@@ -175,7 +177,7 @@ func TestAccRoomVideoTeleConferencingPolicyCRUD(t *testing.T) {
 		matched := read != nil && read.Description != nil && *read.Description == updated && read.Enabled != nil && !*read.Enabled
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_room_video_tele_conferencing_policy", "update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_room_video_tele_conferencing_policy", "update_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -189,29 +191,29 @@ func TestAccRoomVideoTeleConferencingPolicyCRUD(t *testing.T) {
 	}
 	count := 0
 	for _, item := range values {
-		if item.Identity != "" && samePolicyName(item.Identity, name) {
+		if item.Identity != "" && labkit.SamePolicyName(item.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned room video policy missing or ambiguous in list")
 	}
-	writeResponseFixture(t, "teams_room_video_tele_conferencing_policy", "owned_list", listResponse, replacements)
+	labkit.WriteResponseFixture(t, "teams_room_video_tele_conferencing_policy", "owned_list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if deletedResponse, err := service.DeleteByIdentity(ctx, identity); err != nil {
-		logAccessResponse(t, deletedResponse, err)
+		labkit.LogAccessResponse(t, deletedResponse, err)
 		t.Fatal("owned policy delete failed")
 	} else {
-		writeResponseFixture(t, "teams_room_video_tele_conferencing_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
+		labkit.WriteResponseFixture(t, "teams_room_video_tele_conferencing_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
 	}
 	if err := (roomVideoPolicyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: identity}); err != nil {
 		t.Fatal("room video deletion and independent absence were not verified")
 	}
 	_, response, err = service.GetByIdentity(ctx, identity)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("room video deleted policy did not return typed404")
 	}
-	writeResponseFixture(t, "teams_room_video_tele_conferencing_policy", "get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_room_video_tele_conferencing_policy", "get_deleted", response, replacements)
 	t.Log("policy delete/absence: passed")
 	t.Log("room video policy create/read/update/list/delete and omitted-field preservation verified")
 }

@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
@@ -20,8 +22,8 @@ import (
 // its own journalled parent team. Existing fixtures are directory users only.
 func TestAccChannelMembershipCRUD(t *testing.T) {
 	cfg := lifecycleLabConfig(t)
-	_ = teamOracleEnabled(t) // Validate optional oracle prerequisites before writes.
-	sdk, binding, _ := labSDKClient(t)
+	_ = labkit.OracleEnabled(t) // Validate optional oracle prerequisites before writes.
+	sdk, binding, _ := labkit.SDKClient(t)
 	users, err := loadMembershipUsers(os.Getenv("MSTEAMS_LAB_MEMBERSHIP_USERS_FILE"), binding)
 	if err != nil {
 		t.Fatal("explicit private same-tenant membership users are required")
@@ -93,7 +95,7 @@ func TestAccChannelMembershipCRUD(t *testing.T) {
 
 func observeChannelMember(t *testing.T, ctx context.Context, sdk *msteams.Client, teamID, channelID string, id member.MembershipID, userID string, owner bool) {
 	t.Helper()
-	err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		value, _, err := sdk.GraphAPI.ChannelMembers.GetByID(ctx, teamID, channelID, id)
 		if err != nil {
 			return false, err
@@ -134,7 +136,7 @@ func observeChannelMember(t *testing.T, ctx context.Context, sdk *msteams.Client
 
 func observeChannelMemberAbsent(t *testing.T, ctx context.Context, sdk *msteams.Client, teamID, channelID string, id member.MembershipID) {
 	t.Helper()
-	err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := sdk.GraphAPI.ChannelMembers.GetByID(ctx, teamID, channelID, id)
 		if err == nil {
 			return false, nil
@@ -165,17 +167,17 @@ func comparePowerShellChannelUsers(t *testing.T, ctx context.Context, sdk *mstea
 	if err != nil || !listed.Complete {
 		t.Fatal("complete enriched Go channel-user snapshot is required")
 	}
-	if !teamOracleEnabled(t) {
+	if !labkit.OracleEnabled(t) {
 		return
 	}
-	want := make([]teamOracleUser, 0, len(listed.Items))
+	want := make([]labkit.TeamOracleUser, 0, len(listed.Items))
 	for _, value := range listed.Items {
 		if value.UserID == nil {
 			t.Fatal("owned channel member has no comparable directory identity")
 		}
-		want = append(want, teamOracleUser{ID: string(*value.UserID), User: value.User, Name: value.Name, Role: string(value.Role)})
+		want = append(want, labkit.TeamOracleUser{ID: string(*value.UserID), User: value.User, Name: value.Name, Role: string(value.Role)})
 	}
-	observed := runTeamOracle(t, ctx, teamOracleRequest{Kind: "channel-users", ID: teamID, Fixture: fixture, Channel: channelName})
+	observed := labkit.RunTeamOracle(t, ctx, labkit.TeamOracleRequest{Kind: "channel-users", ID: teamID, Fixture: fixture, Channel: channelName})
 	if !sameTeamOracleUsers(want, observed.Users) {
 		t.Fatal("PowerShell and Go channel-user projection differed")
 	}

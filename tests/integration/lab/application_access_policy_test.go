@@ -6,26 +6,17 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	policy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
 )
 
 type policyCleanup struct{ service *policy.Service }
-
-func samePolicyName(identity, fixture string) bool {
-	if len(identity) > 4 && strings.EqualFold(identity[:4], "tag:") {
-		identity = identity[4:]
-	}
-	if len(fixture) > 4 && strings.EqualFold(fixture[:4], "tag:") {
-		fixture = fixture[4:]
-	}
-	return strings.EqualFold(identity, fixture)
-}
 
 func (h policyCleanup) Resolve(ctx context.Context, entry lab.Entry) (string, error) {
 	items, _, err := h.service.List(ctx)
@@ -34,7 +25,7 @@ func (h policyCleanup) Resolve(ctx context.Context, entry lab.Entry) (string, er
 	}
 	count := 0
 	for _, item := range items {
-		if samePolicyName(item.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(item.Identity, entry.Fixture) {
 			count++
 		}
 	}
@@ -45,19 +36,19 @@ func (h policyCleanup) Resolve(ctx context.Context, entry lab.Entry) (string, er
 }
 
 func (h policyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if entry.Fixture == "" || !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if entry.Fixture == "" || !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, err := h.service.DeleteByIdentity(ctx, entry.ResourceID)
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		items, _, err := h.service.List(ctx)
@@ -65,7 +56,7 @@ func (h policyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 			return false, err
 		}
 		for _, item := range items {
-			if samePolicyName(item.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(item.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -84,7 +75,7 @@ func comparePowerShellPolicy(t *testing.T, ctx context.Context, name, descriptio
 	if module == "" {
 		t.Fatal("explicit pinned PowerShell module path is required")
 	}
-	command := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-application-access-policy.ps1")
+	command := labkit.OracleCommand(ctx, "read-application-access-policy.ps1")
 	command.WaitDelay = time.Second
 	command.Env = []string{}
 	for _, key := range []string{"PATH", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR"} {
@@ -93,10 +84,10 @@ func comparePowerShellPolicy(t *testing.T, ctx context.Context, name, descriptio
 		}
 	}
 	command.Env = append(command.Env, "MSTEAMS_LAB_MODULE_PATH="+module, "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"), "MSTEAMS_LAB_POLICY_FIXTURE="+name)
-	var output teamOracleBuffer
+	var output labkit.OracleBuffer
 	command.Stdout, command.Stderr = &output, io.Discard
-	defer func() { clear(output.data) }()
-	if command.Run() != nil || output.exceeded {
+	defer func() { clear(output.Data) }()
+	if command.Run() != nil || output.Exceeded {
 		t.Fatal("pinned PowerShell read oracle failed; no output retained")
 	}
 	var observed struct {
@@ -105,10 +96,10 @@ func comparePowerShellPolicy(t *testing.T, ctx context.Context, name, descriptio
 		AppIDs      []string `json:"app_ids"`
 		Description string   `json:"description"`
 	}
-	if json.Unmarshal(output.data, &observed) != nil || !observed.Success {
+	if json.Unmarshal(output.Data, &observed) != nil || !observed.Success {
 		t.Fatal("pinned PowerShell could not read the owned fixture")
 	}
-	if !samePolicyName(observed.Identity, name) || observed.Description != description || len(observed.AppIDs) != 1 || observed.AppIDs[0] != appID {
+	if !labkit.SamePolicyName(observed.Identity, name) || observed.Description != description || len(observed.AppIDs) != 1 || observed.AppIDs[0] != appID {
 		t.Fatal("pinned PowerShell and Go policy fields differ")
 	}
 	t.Log("PowerShell 8.1.0 / Go policy read parity: passed")
@@ -126,7 +117,7 @@ func TestAccApplicationAccessPolicyCRUD(t *testing.T) {
 	} else if err != nil {
 		t.Fatal(err)
 	}
-	sdk, binding, appID := labSDKClient(t)
+	sdk, binding, appID := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.ApplicationAccessPolicies
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -158,11 +149,11 @@ func TestAccApplicationAccessPolicyCRUD(t *testing.T) {
 	if err != nil {
 		t.Fatal("live policy creation/read-back failed; recovery journal retained")
 	}
-	if !samePolicyName(created.Identity, name) || created.Description == nil || *created.Description != initial || len(created.AppIDs) != 1 || created.AppIDs[0] != appID {
+	if !labkit.SamePolicyName(created.Identity, name) || created.Description == nil || *created.Description != initial || len(created.AppIDs) != 1 || created.AppIDs[0] != appID {
 		t.Fatal("live create read-back did not preserve non-default fields")
 	}
 	replacements := map[string]string{name: "fixture-policy", appID: "00000000-0000-4000-8000-000000000001"}
-	writeResponseFixture(t, "application_access_policy", "create_readback", createResponse, replacements)
+	labkit.WriteResponseFixture(t, "application_access_policy", "create_readback", createResponse, replacements)
 	if err := journal.Applied(entry, name); err != nil {
 		t.Fatal("created policy receipt was not journaled")
 	}
@@ -173,8 +164,8 @@ func TestAccApplicationAccessPolicyCRUD(t *testing.T) {
 	if err != nil {
 		t.Fatal("live policy update failed")
 	}
-	writeResponseFixture(t, "application_access_policy", "update", updateResponse, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "application_access_policy", "update", updateResponse, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
 		if err != nil {
 			return false, err
@@ -182,7 +173,7 @@ func TestAccApplicationAccessPolicyCRUD(t *testing.T) {
 		matches := read != nil && read.Description != nil && *read.Description == updated
 		preserved := read != nil && len(read.AppIDs) == 1 && read.AppIDs[0] == appID
 		if matches && preserved {
-			writeResponseFixture(t, "application_access_policy", "update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "application_access_policy", "update_readback", response, replacements)
 		}
 		return matches && preserved, nil
 	}); err != nil {
@@ -196,23 +187,23 @@ func TestAccApplicationAccessPolicyCRUD(t *testing.T) {
 	}
 	found := 0
 	for _, item := range items {
-		if samePolicyName(item.Identity, name) {
+		if labkit.SamePolicyName(item.Identity, name) {
 			found++
 		}
 	}
 	if found != 1 {
 		t.Fatal("owned policy was missing/ambiguous in live list")
 	}
-	writeResponseFixture(t, "application_access_policy", "list", listResponse, replacements)
+	labkit.WriteResponseFixture(t, "application_access_policy", "list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if err := (policyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: name}); err != nil {
 		t.Fatal("policy deletion and independent read/list absence were not verified")
 	}
 	_, deletedResponse, err := service.GetByIdentity(ctx, name)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("deleted policy did not return a typed 404")
 	}
-	writeResponseFixture(t, "application_access_policy", "get_deleted", deletedResponse, replacements)
+	labkit.WriteResponseFixture(t, "application_access_policy", "get_deleted", deletedResponse, replacements)
 	t.Log("policy delete/absence: passed")
 	// Cleanup deliberately runs again; its handler accepts a verified 404. The
 	// private journal remains available if any earlier stage was interrupted.

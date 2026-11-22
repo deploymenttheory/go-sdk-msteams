@@ -6,11 +6,12 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"os/exec"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_room_video_tele_conferencing_policy"
 )
@@ -28,28 +29,28 @@ var roomVideoPolicyOwnedIdentity = regexp.MustCompile(`(?i)^(?:tag:)?msteams-sdk
 
 func decodeRoomVideoTeleConferencingPolicyOracleForIdentity(raw []byte, tenant, identity string) (roomVideoPolicyObservation, error) {
 	var v roomVideoPolicyObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !roomVideoPolicyOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !roomVideoPolicyOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return roomVideoPolicyObservation{}, errTeamOracle
+		return roomVideoPolicyObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(roomVideoPolicyScalars) {
-		return roomVideoPolicyObservation{}, errTeamOracle
+		return roomVideoPolicyObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return roomVideoPolicyObservation{}, errTeamOracle
+		return roomVideoPolicyObservation{}, labkit.ErrOracle
 	}
 	for _, name := range roomVideoPolicyScalars {
 		if _, ok := v.Settings[name]; !ok {
-			return roomVideoPolicyObservation{}, errTeamOracle
+			return roomVideoPolicyObservation{}, labkit.ErrOracle
 		}
 	}
 	settings, err := json.Marshal(v.Settings)
@@ -63,7 +64,7 @@ func decodeRoomVideoTeleConferencingPolicyOracleForIdentity(raw []byte, tenant, 
 		PlaceInternalCalls   *string
 	}
 	if err != nil || json.Unmarshal(settings, &model) != nil {
-		return roomVideoPolicyObservation{}, errTeamOracle
+		return roomVideoPolicyObservation{}, labkit.ErrOracle
 	}
 	return v, nil
 }
@@ -75,7 +76,7 @@ func roomVideoPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant,
 		t.Fatal("invalid room-video policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-room-video-policy.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-room-video-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -83,17 +84,17 @@ func roomVideoPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant,
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned room-video policy read failed; no output retained")
 	}
-	if stage := readOracleFailureStage(output.data); stage != "" {
+	if stage := labkit.ReadOracleFailureStage(output.Data); stage != "" {
 		t.Log("oracle failure stage: " + stage)
 	}
-	value, err := decodeRoomVideoTeleConferencingPolicyOracleForIdentity(output.data, tenant, identity)
+	value, err := decodeRoomVideoTeleConferencingPolicyOracleForIdentity(output.Data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned room-video policy projection unavailable")
 	}
@@ -104,5 +105,5 @@ func matchesRoomVideoTeleConferencingPolicyGetterProjection(v *resource.Policy, 
 	if v == nil {
 		return false
 	}
-	return sameTemplateProjection(map[string]any{"Description": v.Description, "Enabled": v.Enabled, "AreaCode": v.AreaCode, "ReceiveExternalCalls": v.ReceiveExternalCalls, "ReceiveInternalCalls": v.ReceiveInternalCalls, "PlaceExternalCalls": v.PlaceExternalCalls, "PlaceInternalCalls": v.PlaceInternalCalls}, settings)
+	return labkit.SameProjection(map[string]any{"Description": v.Description, "Enabled": v.Enabled, "AreaCode": v.AreaCode, "ReceiveExternalCalls": v.ReceiveExternalCalls, "ReceiveInternalCalls": v.ReceiveInternalCalls, "PlaceExternalCalls": v.PlaceExternalCalls, "PlaceInternalCalls": v.PlaceInternalCalls}, settings)
 }

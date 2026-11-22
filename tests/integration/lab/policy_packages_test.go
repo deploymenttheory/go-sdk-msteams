@@ -11,6 +11,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -32,7 +34,7 @@ func (v packageIdentity) GoString() string { return v.String() }
 
 func decodePackageIdentity(raw []byte, tenant string, now time.Time) (packageIdentity, error) {
 	var v packageIdentity
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) {
 		return v, errPackageIdentity
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
@@ -49,7 +51,7 @@ func decodePackageIdentity(raw []byte, tenant string, now time.Time) (packageIde
 
 func delegatedPackageClient(t *testing.T) (*msteams.Client, string) {
 	t.Helper()
-	raw, err := privateLabFile(os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
+	raw, err := labkit.PrivateFile(os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
 	if err != nil {
 		t.Fatal("private lab tenant binding unavailable")
 	}
@@ -60,7 +62,7 @@ func delegatedPackageClient(t *testing.T) (*msteams.Client, string) {
 	if json.Unmarshal(raw, &expected) != nil {
 		t.Fatal("invalid lab tenant binding")
 	}
-	data, err := privateLabFile(os.Getenv("MSTEAMS_LAB_PACKAGE_DELEGATED_FILE"))
+	data, err := labkit.PrivateFile(os.Getenv("MSTEAMS_LAB_PACKAGE_DELEGATED_FILE"))
 	if err != nil {
 		t.Fatal("private delegated package identity unavailable")
 	}
@@ -86,11 +88,11 @@ func delegatedPackageClient(t *testing.T) (*msteams.Client, string) {
 // With the existing SPN it verifies the documented local mode guard, then skips
 // tenant qualification. It never creates, changes or assigns a package.
 func TestAccPolicyPackagesReadOnly(t *testing.T) {
-	cfg := targetingReadOnly(t)
+	cfg := labkit.ReadOnlyEnabled(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	if os.Getenv("MSTEAMS_LAB_PACKAGE_DELEGATED_FILE") == "" {
-		sdk, _, _ := labSDKClient(t)
+		sdk, _, _ := labkit.SDKClient(t)
 		_, r, e := sdk.TeamsAdminAPI.PolicyPackages.List(ctx)
 		if !errors.Is(e, client.ErrAuthenticationMode) || r != nil {
 			t.Fatal("configured lab identity did not enforce the documented package mode restriction")

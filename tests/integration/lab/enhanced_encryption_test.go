@@ -7,12 +7,13 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_enhanced_encryption_policy"
@@ -34,29 +35,29 @@ func decodeEnhancedEncryptionOracle(raw []byte, tenant string) (enhancedEncrypti
 }
 func decodeEnhancedEncryptionOracleForIdentity(raw []byte, tenant, identity string) (enhancedEncryptionObservation, error) {
 	var v enhancedEncryptionObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !enhancedEncryptionOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !enhancedEncryptionOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return enhancedEncryptionObservation{}, errTeamOracle
+		return enhancedEncryptionObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(enhancedEncryptionFields) {
-		return enhancedEncryptionObservation{}, errTeamOracle
+		return enhancedEncryptionObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return enhancedEncryptionObservation{}, errTeamOracle
+		return enhancedEncryptionObservation{}, labkit.ErrOracle
 	}
 	for _, key := range enhancedEncryptionFields {
 		var text *string
 		if raw, ok := v.Settings[key]; !ok || json.Unmarshal(raw, &text) != nil {
-			return enhancedEncryptionObservation{}, errTeamOracle
+			return enhancedEncryptionObservation{}, labkit.ErrOracle
 		}
 	}
 	return v, nil
@@ -73,7 +74,7 @@ func enhancedEncryptionOracleForIdentity(t *testing.T, ctx context.Context, tena
 		t.Fatal("invalid enhanced encryption policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-enhanced-encryption-policy.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-enhanced-encryption-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -81,14 +82,14 @@ func enhancedEncryptionOracleForIdentity(t *testing.T, ctx context.Context, tena
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned enhanced encryption policy read failed; no output retained")
 	}
-	value, err := decodeEnhancedEncryptionOracleForIdentity(output.data, tenant, identity)
+	value, err := decodeEnhancedEncryptionOracleForIdentity(output.Data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned enhanced encryption policy projection unavailable")
 	}
@@ -107,12 +108,12 @@ func TestAccEnhancedEncryptionReadOnly(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_enhanced_encryption_policy", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_enhanced_encryption_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		phase := "preparation"
@@ -125,7 +126,7 @@ func TestAccEnhancedEncryptionReadOnly(t *testing.T) {
 		t.Fatalf("enhanced encryption policy %s Global read failed (HTTP %d); no response payload retained", phase, status)
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_enhanced_encryption_policy", "list", listResponse, nil)
+	labkit.WriteResponseFixture(t, "teams_enhanced_encryption_policy", "list", listResponse, nil)
 	selected, selectionErr := globalEnhancedEncryption(listed)
 	if err != nil || selectionErr != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("enhanced encryption policy Global selection differs")
@@ -166,13 +167,13 @@ func globalEnhancedEncryption(values []resource.Policy) (*resource.Policy, error
 	for i := range values {
 		if strings.EqualFold(values[i].Identity, "Global") {
 			if found != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			found = &values[i]
 		}
 	}
 	if found == nil {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	return found, nil
 }
@@ -201,7 +202,7 @@ func TestUnitEnhancedEncryptionOracleRestrictsOwnedIdentity(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-enhanced-encryption-policy"
-	raw, err := os.ReadFile("../../../msteams/teams_admin_api/teams_enhanced_encryption_policy/testdata/get_global.json")
+	raw, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/teams_enhanced_encryption_policy/testdata/get_global.json")
 	if err != nil {
 		t.Fatal(err)
 	}

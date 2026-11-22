@@ -7,11 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_client_configuration"
@@ -28,27 +29,27 @@ type clientConfigurationObservation struct {
 
 func decodeClientConfigurationOracle(raw []byte, tenant string) (clientConfigurationObservation, error) {
 	var v clientConfigurationObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || !strings.EqualFold(v.Identity, "Global") || len(v.Settings) != len(clientConfigurationScalars) {
-		return clientConfigurationObservation{}, errTeamOracle
+		return clientConfigurationObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return clientConfigurationObservation{}, errTeamOracle
+		return clientConfigurationObservation{}, labkit.ErrOracle
 	}
 	for _, name := range clientConfigurationScalars {
 		if _, ok := v.Settings[name]; !ok {
-			return clientConfigurationObservation{}, errTeamOracle
+			return clientConfigurationObservation{}, labkit.ErrOracle
 		}
 	}
 	settings, err := json.Marshal(v.Settings)
 	var model resource.Configuration
 	if err != nil || json.Unmarshal(settings, &model) != nil {
-		return clientConfigurationObservation{}, errTeamOracle
+		return clientConfigurationObservation{}, labkit.ErrOracle
 	}
 	return v, nil
 }
@@ -60,7 +61,7 @@ func clientConfigurationOracle(t *testing.T, ctx context.Context, tenant string)
 		t.Fatal("invalid client configuration oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-client-configuration.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-client-configuration.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -68,14 +69,14 @@ func clientConfigurationOracle(t *testing.T, ctx context.Context, tenant string)
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned client configuration read failed; no output retained")
 	}
-	value, err := decodeClientConfigurationOracle(output.data, tenant)
+	value, err := decodeClientConfigurationOracle(output.Data, tenant)
 	if err != nil {
 		t.Fatal("pinned client configuration projection unavailable")
 	}
@@ -94,12 +95,12 @@ func TestAccClientConfigurationReadOnly(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsClientConfigurations.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_client_configuration", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_client_configuration", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -108,7 +109,7 @@ func TestAccClientConfigurationReadOnly(t *testing.T) {
 		t.Fatalf("client configuration Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsClientConfigurations.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_client_configuration", "list", listResponse, nil)
+	labkit.WriteResponseFixture(t, "teams_client_configuration", "list", listResponse, nil)
 	selected, selectionErr := globalClientConfiguration(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(clientConfigurationProjection(value), clientConfigurationProjection(selected)) {
 		t.Fatal("client configuration Global read/list projections differ")
@@ -151,13 +152,13 @@ func globalClientConfiguration(values []*resource.Configuration) (*resource.Conf
 	for _, v := range values {
 		if v != nil && v.Identity != nil && strings.EqualFold(*v.Identity, "Global") {
 			if found != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			found = v
 		}
 	}
 	if found == nil {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	return found, nil
 }

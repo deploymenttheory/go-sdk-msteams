@@ -7,12 +7,13 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
@@ -35,37 +36,37 @@ func decodeCallParkPolicyOracle(raw []byte, tenant string) (callParkPolicyObserv
 
 func decodeCallParkPolicyOracleForIdentity(raw []byte, tenant, identity string) (callParkPolicyObservation, error) {
 	var v callParkPolicyObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !callParkOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !callParkOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return callParkPolicyObservation{}, errTeamOracle
+		return callParkPolicyObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(callParkPolicyFields) {
-		return callParkPolicyObservation{}, errTeamOracle
+		return callParkPolicyObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return callParkPolicyObservation{}, errTeamOracle
+		return callParkPolicyObservation{}, labkit.ErrOracle
 	}
 	var text *string
 	if raw, ok := v.Settings["Description"]; !ok || json.Unmarshal(raw, &text) != nil {
-		return callParkPolicyObservation{}, errTeamOracle
+		return callParkPolicyObservation{}, labkit.ErrOracle
 	}
 	var boolean *bool
 	if raw, ok := v.Settings["AllowCallPark"]; !ok || json.Unmarshal(raw, &boolean) != nil {
-		return callParkPolicyObservation{}, errTeamOracle
+		return callParkPolicyObservation{}, labkit.ErrOracle
 	}
 	for _, key := range []string{"ParkTimeoutSeconds", "PickupRangeStart", "PickupRangeEnd"} {
 		var number *int64
 		if raw, ok := v.Settings[key]; !ok || json.Unmarshal(raw, &number) != nil {
-			return callParkPolicyObservation{}, errTeamOracle
+			return callParkPolicyObservation{}, labkit.ErrOracle
 		}
 	}
 	return v, nil
@@ -83,7 +84,7 @@ func callParkPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, 
 		t.Fatal("invalid call park policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-call-park-policy.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-call-park-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -91,14 +92,14 @@ func callParkPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, 
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned call park policy read failed; no output retained")
 	}
-	value, err := decodeCallParkPolicyOracleForIdentity(output.data, tenant, identity)
+	value, err := decodeCallParkPolicyOracleForIdentity(output.Data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned call park policy projection unavailable")
 	}
@@ -117,12 +118,12 @@ func TestAccCallParkPolicyReadOnly(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsCallParkPolicies.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_call_park_policy", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_call_park_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -131,7 +132,7 @@ func TestAccCallParkPolicyReadOnly(t *testing.T) {
 		t.Fatalf("call park policy Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsCallParkPolicies.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_call_park_policy", "list", listResponse, nil)
+	labkit.WriteResponseFixture(t, "teams_call_park_policy", "list", listResponse, nil)
 	selected, selectionErr := globalCallParkPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("call park policy Global selection differs")
@@ -172,13 +173,13 @@ func globalCallParkPolicy(values []resource.Policy) (*resource.Policy, error) {
 	for i := range values {
 		if strings.EqualFold(values[i].Identity, "Global") {
 			if found != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			found = &values[i]
 		}
 	}
 	if found == nil {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	return found, nil
 }
@@ -220,7 +221,7 @@ func TestUnitCallParkOracleRestrictsOwnedIdentity(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-call-park-policy"
-	raw, err := os.ReadFile("../../../msteams/teams_admin_api/teams_call_park_policy/testdata/get_global.json")
+	raw, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/teams_call_park_policy/testdata/get_global.json")
 	if err != nil {
 		t.Fatal(err)
 	}

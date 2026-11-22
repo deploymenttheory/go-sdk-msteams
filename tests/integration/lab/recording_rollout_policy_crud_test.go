@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	recordingRollOut "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_recording_roll_out_policy"
@@ -24,7 +26,7 @@ func (h recordingRollOutPolicyCleanup) Resolve(ctx context.Context, entry lab.En
 		if value == nil || value.Identity == nil {
 			return "", lab.ErrUnresolved
 		}
-		if samePolicyName(*value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -33,7 +35,7 @@ func (h recordingRollOutPolicyCleanup) Resolve(ctx context.Context, entry lab.En
 	}
 	if found == "" {
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -44,19 +46,19 @@ func (h recordingRollOutPolicyCleanup) Resolve(ctx context.Context, entry lab.En
 	return found, nil
 }
 func (h recordingRollOutPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, _, err := h.service.DeleteByIdentity(ctx, entry.ResourceID, policy.Controls{})
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -67,7 +69,7 @@ func (h recordingRollOutPolicyCleanup) Delete(ctx context.Context, entry lab.Ent
 			if value == nil || value.Identity == nil {
 				return false, lab.ErrUnresolved
 			}
-			if samePolicyName(*value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -90,8 +92,8 @@ func TestAccRecordingRollOutPolicyCRUD(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsRecordingRollOutPolicies
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -120,23 +122,23 @@ func TestAccRecordingRollOutPolicyCRUD(t *testing.T) {
 	replacements := map[string]string{name: "fixture-policy"}
 	_, response, err := service.CreateByIdentity(ctx, name, recordingRollOut.CreateRequest{Settings: recordingRollOut.Settings{MeetingRecordingOwnership: policy.Set("MeetingInitiator")}})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("recording rollout policy create failed; recovery journal retained")
 	}
-	writeResponseFixture(t, "teams_recording_roll_out_policy", "create", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_recording_roll_out_policy", "create", response, replacements)
 	var value *recordingRollOut.Policy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
-		matched := read != nil && read.Identity != nil && samePolicyName(*read.Identity, name) && read.MeetingRecordingOwnership != nil && *read.MeetingRecordingOwnership == "MeetingInitiator"
+		matched := read != nil && read.Identity != nil && labkit.SamePolicyName(*read.Identity, name) && read.MeetingRecordingOwnership != nil && *read.MeetingRecordingOwnership == "MeetingInitiator"
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_recording_roll_out_policy", "create_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_recording_roll_out_policy", "create_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -164,7 +166,7 @@ func TestAccRecordingRollOutPolicyCRUD(t *testing.T) {
 	compare(value)
 	_, response, err = service.UpdateByIdentity(ctx, identity, recordingRollOut.UpdateRequest{Settings: recordingRollOut.Settings{MeetingRecordingOwnership: policy.Set("MeetingOrganizer")}})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("recording rollout sparse update failed")
 	}
 	if response == nil || response.Request == nil {
@@ -175,8 +177,8 @@ func TestAccRecordingRollOutPolicyCRUD(t *testing.T) {
 	if !ok || json.Unmarshal(sent, &fields) != nil || len(fields) != 2 || fields["Identity"] == nil || fields["MeetingRecordingOwnership"] == nil {
 		t.Fatal("recording rollout sparse update included an unbound field")
 	}
-	writeResponseFixture(t, "teams_recording_roll_out_policy", "update", response, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "teams_recording_roll_out_policy", "update", response, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, identity)
 		if err != nil {
 			return false, err
@@ -184,7 +186,7 @@ func TestAccRecordingRollOutPolicyCRUD(t *testing.T) {
 		matched := read != nil && read.MeetingRecordingOwnership != nil && *read.MeetingRecordingOwnership == "MeetingOrganizer"
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_recording_roll_out_policy", "update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_recording_roll_out_policy", "update_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -198,29 +200,29 @@ func TestAccRecordingRollOutPolicyCRUD(t *testing.T) {
 	}
 	count := 0
 	for _, item := range values {
-		if item != nil && item.Identity != nil && samePolicyName(*item.Identity, name) {
+		if item != nil && item.Identity != nil && labkit.SamePolicyName(*item.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned recording rollout policy missing or ambiguous in list")
 	}
-	writeResponseFixture(t, "teams_recording_roll_out_policy", "owned_list", listResponse, replacements)
+	labkit.WriteResponseFixture(t, "teams_recording_roll_out_policy", "owned_list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if _, deletedResponse, err := service.DeleteByIdentity(ctx, identity, policy.Controls{}); err != nil {
-		logAccessResponse(t, deletedResponse, err)
+		labkit.LogAccessResponse(t, deletedResponse, err)
 		t.Fatal("owned policy delete failed")
 	} else {
-		writeResponseFixture(t, "teams_recording_roll_out_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
+		labkit.WriteResponseFixture(t, "teams_recording_roll_out_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
 	}
 	if err := (recordingRollOutPolicyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: identity}); err != nil {
 		t.Fatal("recording rollout deletion and independent absence were not verified")
 	}
 	_, response, err = service.GetByIdentity(ctx, identity)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("recording rollout deleted policy did not return typed404")
 	}
-	writeResponseFixture(t, "teams_recording_roll_out_policy", "get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_recording_roll_out_policy", "get_deleted", response, replacements)
 	t.Log("policy delete/absence: passed")
 	t.Log("recording rollout policy create/read/update/list/delete and omitted-field preservation verified")
 }

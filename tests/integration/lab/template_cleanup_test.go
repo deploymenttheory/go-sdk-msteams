@@ -8,6 +8,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -26,7 +28,7 @@ func TestUnitTemplateCleanupRequiresOwnedReferencesAndListAbsence(t *testing.T) 
 			t.Fatal("template cleanup accepted a foreign selector")
 		}
 	}
-	root, err := os.OpenRoot("../../../msteams/teams_admin_api")
+	root, err := os.OpenRoot(labkit.Root + "/msteams/teams_admin_api")
 	if err != nil {
 		t.Fatal(err)
 	}

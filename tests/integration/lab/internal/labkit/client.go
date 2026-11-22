@@ -1,4 +1,4 @@
-package lab_test
+package labkit
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-func privateLabFile(path string) ([]byte, error) {
+func PrivateFile(path string) ([]byte, error) {
 	//nolint:gosec // G304: explicitly selected private lab files, after live opt-in.
 	file, err := os.Open(path)
 	if err != nil {
@@ -33,13 +33,13 @@ func privateLabFile(path string) ([]byte, error) {
 	return data, nil
 }
 
-func labSDKClient(t *testing.T) (*msteams.Client, string, string) {
+func SDKClient(t *testing.T) (*msteams.Client, string, string) {
 	t.Helper()
 	file := os.Getenv("MSTEAMS_LAB_IDENTITY_FILE")
 	if file == "" {
 		t.Fatal("explicit private lab identity file is required")
 	}
-	raw, err := privateLabFile(file)
+	raw, err := PrivateFile(file)
 	if err != nil {
 		t.Fatal("private lab identity unavailable")
 	}
@@ -58,11 +58,11 @@ func labSDKClient(t *testing.T) (*msteams.Client, string, string) {
 	cfg := &auth.Config{Method: auth.Certificate, TenantID: identity.Tenant, ClientID: identity.Client}
 	switch method {
 	case "", "certificate":
-		cfg.Certificate, err = privateLabFile(identity.Certificate)
+		cfg.Certificate, err = PrivateFile(identity.Certificate)
 		if err != nil {
 			t.Fatal("private lab certificate unavailable")
 		}
-		cfg.PrivateKey, err = privateLabFile(identity.Key)
+		cfg.PrivateKey, err = PrivateFile(identity.Key)
 		if err != nil {
 			t.Fatal("private lab key unavailable")
 		}

@@ -7,11 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -33,14 +34,14 @@ type assignmentGroupFixture struct {
 
 func loadAssignmentGroupFixture(t *testing.T, binding string) assignmentGroupFixture {
 	t.Helper()
-	raw, err := privateLabFile(os.Getenv("MSTEAMS_LAB_GROUP_FIXTURE_FILE"))
+	raw, err := labkit.PrivateFile(os.Getenv("MSTEAMS_LAB_GROUP_FIXTURE_FILE"))
 	if err != nil {
 		t.Fatal("explicit private assignment-group fixture is required")
 	}
 	defer clear(raw)
 	var fixture assignmentGroupFixture
 	tenant, _, ok := strings.Cut(binding, "|")
-	if json.Unmarshal(raw, &fixture) != nil || !ok || !strings.EqualFold(fixture.TenantID, tenant) || !labDirectoryID.MatchString(fixture.GroupID) || fixture.DisplayName != "go-sdk-msteams acceptance policy group" || fixture.MailNickname != "go-sdk-msteams-acceptance-policy" || !fixture.SecurityEnabled || fixture.MailEnabled || fixture.RoleAssignable || !fixture.EmptyMembershipVerified {
+	if json.Unmarshal(raw, &fixture) != nil || !ok || !strings.EqualFold(fixture.TenantID, tenant) || !labkit.DirectoryID.MatchString(fixture.GroupID) || fixture.DisplayName != "go-sdk-msteams acceptance policy group" || fixture.MailNickname != "go-sdk-msteams-acceptance-policy" || !fixture.SecurityEnabled || fixture.MailEnabled || fixture.RoleAssignable || !fixture.EmptyMembershipVerified {
 		t.Fatal("assignment group ownership or tenant binding differs")
 	}
 	return fixture
@@ -57,7 +58,7 @@ func (groupAssignmentCleanup) Resolve(context.Context, lab.Entry) (string, error
 func (groupAssignmentCleanup) Delete(context.Context, lab.Entry) error { return lab.ErrUnresolved }
 func (h groupAssignmentCleanup) absent(ctx context.Context) (bool, error) {
 	_, _, err := h.sdk.TeamsAdminAPI.PolicyAssignments.GetGroup(ctx, h.groupID, "ApplicationAccessPolicy")
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		return false, err
 	}
 	values, _, err := h.sdk.TeamsAdminAPI.PolicyAssignments.ListGroup(ctx, h.groupID)
@@ -76,7 +77,7 @@ func (h groupAssignmentCleanup) absent(ctx context.Context) (bool, error) {
 }
 func (h groupAssignmentCleanup) Restore(ctx context.Context, entry lab.Entry) error {
 	var before []*assignments.GroupAssignment
-	if entry.ResourceID != h.groupID || !labDirectoryID.MatchString(h.groupID) || json.Unmarshal(entry.Snapshot, &before) != nil || before == nil || len(before) != 0 {
+	if entry.ResourceID != h.groupID || !labkit.DirectoryID.MatchString(h.groupID) || json.Unmarshal(entry.Snapshot, &before) != nil || before == nil || len(before) != 0 {
 		return lab.ErrUnresolved
 	}
 	absent, err := h.absent(ctx)
@@ -84,11 +85,11 @@ func (h groupAssignmentCleanup) Restore(ctx context.Context, entry lab.Entry) er
 		return err
 	}
 	if !absent {
-		if _, _, err := h.sdk.TeamsAdminAPI.PolicyAssignments.DeleteGroup(ctx, h.groupID, "ApplicationAccessPolicy"); err != nil && !isHTTP(err, 404) {
+		if _, _, err := h.sdk.TeamsAdminAPI.PolicyAssignments.DeleteGroup(ctx, h.groupID, "ApplicationAccessPolicy"); err != nil && !labkit.IsHTTP(err, 404) {
 			return err
 		}
 	}
-	return observeUntil(ctx, h.absent)
+	return labkit.ObserveUntil(ctx, h.absent)
 }
 
 // Never delete a policy while this fixture still has an assignment: recovery
@@ -118,7 +119,7 @@ type groupAssignmentProjection struct {
 
 func compareGroupAssignmentOracle(t *testing.T, ctx context.Context, fixture assignmentGroupFixture, values []*assignments.GroupAssignment) {
 	t.Helper()
-	if !teamOracleEnabled(t) {
+	if !labkit.OracleEnabled(t) {
 		return
 	}
 	input, err := json.Marshal(map[string]string{"tenant_id": fixture.TenantID, "group_id": fixture.GroupID})
@@ -126,7 +127,7 @@ func compareGroupAssignmentOracle(t *testing.T, ctx context.Context, fixture ass
 		t.Fatal("invalid group oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-group-application-assignment.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-group-application-assignment.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath", "MSTEAMS_LAB_AUTH_METHOD", "MSTEAMS_LAB_MODULE_PATH", "MSTEAMS_LAB_IDENTITY_FILE", "MSTEAMS_LAB_GROUP_FIXTURE_FILE"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -134,12 +135,12 @@ func compareGroupAssignmentOracle(t *testing.T, ctx context.Context, fixture ass
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1")
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout = &output
 	cmd.Stderr = io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned group-assignment read failed")
 	}
 	var report struct {
@@ -148,7 +149,7 @@ func compareGroupAssignmentOracle(t *testing.T, ctx context.Context, fixture ass
 		Group       string                      `json:"group_id"`
 		Assignments []groupAssignmentProjection `json:"assignments"`
 	}
-	d := json.NewDecoder(bytes.NewReader(output.data))
+	d := json.NewDecoder(bytes.NewReader(output.Data))
 	d.DisallowUnknownFields()
 	var trailing any
 	if d.Decode(&report) != nil || d.Decode(&trailing) != io.EOF || !report.Success || !strings.EqualFold(report.Tenant, fixture.TenantID) || !strings.EqualFold(report.Group, fixture.GroupID) || report.Assignments == nil {
@@ -180,7 +181,7 @@ func TestAccApplicationAccessPolicyGroupAssignment(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab mutation enablement")
 	}
-	sdk, binding, appID := labSDKClient(t)
+	sdk, binding, appID := labkit.SDKClient(t)
 	fixture := loadAssignmentGroupFixture(t, binding)
 	handler := groupAssignmentCleanup{sdk, fixture.GroupID}
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
@@ -202,11 +203,11 @@ func TestAccApplicationAccessPolicyGroupAssignment(t *testing.T) {
 	defer cancel()
 	before, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListGroup(ctx, fixture.GroupID)
 	if err != nil || len(before) != 0 {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("owned group must have no pre-existing assignments")
 	}
 	replacements := map[string]string{fixture.GroupID: "00000000-0000-4000-8000-000000000020", appID: "00000000-0000-4000-8000-000000000001"}
-	writeResponseFixture(t, "policy_assignments", "group_application_access_before", response, replacements)
+	labkit.WriteResponseFixture(t, "policy_assignments", "group_application_access_before", response, replacements)
 	compareGroupAssignmentOracle(t, ctx, fixture, before)
 	names := make([]string, 0, 2)
 	for _, label := range []string{"group-access-a", "group-access-b"} {
@@ -220,8 +221,8 @@ func TestAccApplicationAccessPolicyGroupAssignment(t *testing.T) {
 		}
 		description := "SDK lab non-default initial description"
 		created, response, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.Create(ctx, application.CreateRequest{Identity: name, AppIDs: application.ReplaceAppIDs([]string{appID}), Description: &description})
-		if err != nil || created == nil || !samePolicyName(created.Identity, name) {
-			logAccessResponse(t, response, err)
+		if err != nil || created == nil || !labkit.SamePolicyName(created.Identity, name) {
+			labkit.LogAccessResponse(t, response, err)
 			t.Fatal("owned group policy creation failed")
 		}
 		if err := journal.Applied(entry, name); err != nil {
@@ -243,9 +244,9 @@ func TestAccApplicationAccessPolicyGroupAssignment(t *testing.T) {
 		return assignments.GroupSettings{PolicyName: policy.Set(name), Priority: policy.Set(int32(1))}
 	}
 	result, response, err := sdk.TeamsAdminAPI.PolicyAssignments.CreateGroup(ctx, fixture.GroupID, "ApplicationAccessPolicy", settings(names[0]))
-	writeResponseFixture(t, "policy_assignments", "group_application_access_create", response, replacements)
+	labkit.WriteResponseFixture(t, "policy_assignments", "group_application_access_create", response, replacements)
 	if err != nil || result == nil || !result.HTTPAccepted {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("owned group assignment create failed")
 	}
 	if err := journal.Applied(entry, fixture.GroupID); err != nil {
@@ -254,36 +255,36 @@ func TestAccApplicationAccessPolicyGroupAssignment(t *testing.T) {
 	read := func(name, label string) {
 		t.Helper()
 		var selected *assignments.GroupAssignment
-		if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+		if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 			value, response, err := sdk.TeamsAdminAPI.PolicyAssignments.GetGroup(ctx, fixture.GroupID, "ApplicationAccessPolicy")
-			if isHTTP(err, 404) {
+			if labkit.IsHTTP(err, 404) {
 				return false, nil
 			}
 			if err != nil {
 				return false, err
 			}
-			matched := value != nil && value.GroupID != nil && strings.EqualFold(*value.GroupID, fixture.GroupID) && value.PolicyType != nil && *value.PolicyType == "ApplicationAccessPolicy" && value.PolicyName != nil && samePolicyName(*value.PolicyName, name) && value.Priority != nil && *value.Priority == 1
+			matched := value != nil && value.GroupID != nil && strings.EqualFold(*value.GroupID, fixture.GroupID) && value.PolicyType != nil && *value.PolicyType == "ApplicationAccessPolicy" && value.PolicyName != nil && labkit.SamePolicyName(*value.PolicyName, name) && value.Priority != nil && *value.Priority == 1
 			if matched {
 				selected = value
-				writeResponseFixture(t, "policy_assignments", label+"_get", response, replacements)
+				labkit.WriteResponseFixture(t, "policy_assignments", label+"_get", response, replacements)
 			}
 			return matched, nil
 		}); err != nil {
 			t.Fatal("group assignment read-back did not converge")
 		}
 		values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListGroup(ctx, fixture.GroupID)
-		if err != nil || len(values) != 1 || values[0] == nil || !sameResponseFields(selected.RawFields, values[0].RawFields) {
+		if err != nil || len(values) != 1 || values[0] == nil || !labkit.SameResponseFields(selected.RawFields, values[0].RawFields) {
 			t.Fatal("selected group assignment and list differ")
 		}
-		writeResponseFixture(t, "policy_assignments", label+"_list", response, replacements)
+		labkit.WriteResponseFixture(t, "policy_assignments", label+"_list", response, replacements)
 		compareGroupAssignmentOracle(t, ctx, fixture, values)
 	}
 	read(names[0], "group_application_access_created")
 	t.Log("group policy create/read-back: passed")
 	result, response, err = sdk.TeamsAdminAPI.PolicyAssignments.UpdateGroup(ctx, fixture.GroupID, "ApplicationAccessPolicy", settings(names[1]))
-	writeResponseFixture(t, "policy_assignments", "group_application_access_update", response, replacements)
+	labkit.WriteResponseFixture(t, "policy_assignments", "group_application_access_update", response, replacements)
 	if err != nil || result == nil || !result.HTTPAccepted {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("owned group assignment update failed")
 	}
 	read(names[1], "group_application_access_updated")
@@ -291,33 +292,33 @@ func TestAccApplicationAccessPolicyGroupAssignment(t *testing.T) {
 	remove := func(label string) {
 		t.Helper()
 		result, response, err := sdk.TeamsAdminAPI.PolicyAssignments.DeleteGroup(ctx, fixture.GroupID, "ApplicationAccessPolicy")
-		writeResponseFixture(t, "policy_assignments", label+"_delete", response, replacements)
+		labkit.WriteResponseFixture(t, "policy_assignments", label+"_delete", response, replacements)
 		if err != nil || result == nil || !result.HTTPAccepted {
-			logAccessResponse(t, response, err)
+			labkit.LogAccessResponse(t, response, err)
 			t.Fatal("owned group assignment delete failed")
 		}
-		if err := observeUntil(ctx, handler.absent); err != nil {
+		if err := labkit.ObserveUntil(ctx, handler.absent); err != nil {
 			t.Fatal("owned group assignment absence not verified")
 		}
 		_, response, err = sdk.TeamsAdminAPI.PolicyAssignments.GetGroup(ctx, fixture.GroupID, "ApplicationAccessPolicy")
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			t.Fatal("deleted group assignment did not return HTTP404")
 		}
-		writeResponseFixture(t, "policy_assignments", label+"_get_deleted", response, replacements)
+		labkit.WriteResponseFixture(t, "policy_assignments", label+"_get_deleted", response, replacements)
 		values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListGroup(ctx, fixture.GroupID)
 		if err != nil || len(values) != 0 {
 			t.Fatal("deleted group assignment remains in list")
 		}
-		writeResponseFixture(t, "policy_assignments", label+"_list_deleted", response, replacements)
+		labkit.WriteResponseFixture(t, "policy_assignments", label+"_list_deleted", response, replacements)
 		compareGroupAssignmentOracle(t, ctx, fixture, values)
 	}
 	remove("group_application_access")
 	t.Log("group policy delete/absence: passed")
 	rank := 1
 	grant, response, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.AssignToGroup(ctx, fixture.GroupID, names[0], &rank)
-	writeResponseFixture(t, "application_access_policy", "assign_group", response, replacements)
+	labkit.WriteResponseFixture(t, "application_access_policy", "assign_group", response, replacements)
 	if err != nil || grant == nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("owned group grant failed")
 	}
 	read(names[0], "group_application_access_granted")

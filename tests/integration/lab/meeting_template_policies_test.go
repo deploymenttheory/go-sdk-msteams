@@ -7,12 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
-	"reflect"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	configuration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
@@ -49,22 +49,7 @@ func meetingTemplatePermissionProjection(value *permission.Policy) map[string]an
 	}
 	return map[string]any{"Description": value.Description, "DefaultMeetingTemplateId": value.DefaultMeetingTemplateId, "HiddenMeetingTemplates": templates}
 }
-func sameTemplateProjection(left, right any) bool {
-	a, e := json.Marshal(left)
-	if e != nil {
-		return false
-	}
-	b, e := json.Marshal(right)
-	if e != nil {
-		return false
-	}
-	var x, y any
-	leftDecoder := json.NewDecoder(bytes.NewReader(a))
-	rightDecoder := json.NewDecoder(bytes.NewReader(b))
-	leftDecoder.UseNumber()
-	rightDecoder.UseNumber()
-	return leftDecoder.Decode(&x) == nil && rightDecoder.Decode(&y) == nil && reflect.DeepEqual(x, y)
-}
+
 func meetingTemplateReadEnabled(t *testing.T) lab.Config {
 	t.Helper()
 	cfg, err := lab.Load()
@@ -94,42 +79,42 @@ func decodeMeetingTemplatePolicyOracle(raw []byte, kind, tenant string) (meeting
 func decodeMeetingTemplatePolicyOracleForIdentity(raw []byte, kind, tenant, identity string) (meetingTemplatePolicyObservation, error) {
 	var value meetingTemplatePolicyObservation
 	if !strings.EqualFold(identity, "Global") && (kind != "permission" || !meetingTemplatePolicyOwnedIdentity.MatchString(identity)) {
-		return value, errTeamOracle
+		return value, labkit.ErrOracle
 	}
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || (kind != "configuration" && kind != "permission" && kind != "firstparty") {
-		return value, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || (kind != "configuration" && kind != "permission" && kind != "firstparty") {
+		return value, labkit.ErrOracle
 	}
 	decoder := json.NewDecoder(bytes.NewReader(raw))
 	decoder.DisallowUnknownFields()
 	if decoder.Decode(&value) != nil {
-		return meetingTemplatePolicyObservation{}, errTeamOracle
+		return meetingTemplatePolicyObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(value.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(value.Identity, identity)
+		identityMatches = labkit.SamePolicyName(value.Identity, identity)
 	}
 	if !value.Success || !strings.EqualFold(value.Tenant, tenant) || !identityMatches {
-		return meetingTemplatePolicyObservation{}, errTeamOracle
+		return meetingTemplatePolicyObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if decoder.Decode(&extra) != io.EOF {
-		return meetingTemplatePolicyObservation{}, errTeamOracle
+		return meetingTemplatePolicyObservation{}, labkit.ErrOracle
 	}
 	names := []string{"Description", "TeamsMeetingTemplates"}
 	if kind == "permission" {
 		names = []string{"Description", "DefaultMeetingTemplateId", "HiddenMeetingTemplates"}
 	}
 	if len(value.Settings) != len(names) {
-		return meetingTemplatePolicyObservation{}, errTeamOracle
+		return meetingTemplatePolicyObservation{}, labkit.ErrOracle
 	}
 	for _, name := range names {
 		if _, ok := value.Settings[name]; !ok {
-			return meetingTemplatePolicyObservation{}, errTeamOracle
+			return meetingTemplatePolicyObservation{}, labkit.ErrOracle
 		}
 	}
 	settings, err := json.Marshal(value.Settings)
 	if err != nil {
-		return meetingTemplatePolicyObservation{}, errTeamOracle
+		return meetingTemplatePolicyObservation{}, labkit.ErrOracle
 	}
 	if kind != "permission" {
 		var model configuration.Configuration
@@ -139,7 +124,7 @@ func decodeMeetingTemplatePolicyOracleForIdentity(raw []byte, kind, tenant, iden
 		err = json.Unmarshal(settings, &model)
 	}
 	if err != nil {
-		return meetingTemplatePolicyObservation{}, errTeamOracle
+		return meetingTemplatePolicyObservation{}, labkit.ErrOracle
 	}
 	return value, nil
 }
@@ -153,7 +138,7 @@ func meetingTemplatePolicyOracleForIdentity(t *testing.T, ctx context.Context, k
 		t.Fatal("invalid template policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-meeting-template-policies.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-meeting-template-policies.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -161,14 +146,14 @@ func meetingTemplatePolicyOracleForIdentity(t *testing.T, ctx context.Context, k
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned template policy read oracle process failed")
 	}
-	value, err := decodeMeetingTemplatePolicyOracleForIdentity(output.data, kind, tenant, identity)
+	value, err := decodeMeetingTemplatePolicyOracleForIdentity(output.Data, kind, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned template policy projection unavailable")
 	}
@@ -176,24 +161,24 @@ func meetingTemplatePolicyOracleForIdentity(t *testing.T, ctx context.Context, k
 }
 func TestAccMeetingTemplateConfigurationReadOnly(t *testing.T) {
 	cfg := meetingTemplateReadEnabled(t)
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	service := sdk.TeamsAdminAPI.TeamsMeetingTemplateConfigurations
 	value, response, err := service.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_meeting_template_configuration", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_meeting_template_configuration", "get_global", response, nil)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("meeting template configuration Global read failed")
 	}
 	if value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") {
 		t.Fatal("template configuration selected identity differs")
 	}
 	values, response, err := service.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_meeting_template_configuration", "list", response, nil)
+	labkit.WriteResponseFixture(t, "teams_meeting_template_configuration", "list", response, nil)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("meeting template configuration list failed")
 	}
 	var selected *configuration.Configuration
@@ -205,7 +190,7 @@ func TestAccMeetingTemplateConfigurationReadOnly(t *testing.T) {
 			selected = item
 		}
 	}
-	if selected == nil || !sameTemplateProjection(meetingTemplateConfigurationProjection(value), meetingTemplateConfigurationProjection(selected)) {
+	if selected == nil || !labkit.SameProjection(meetingTemplateConfigurationProjection(value), meetingTemplateConfigurationProjection(selected)) {
 		t.Fatal("template configuration read/list getter projections differ")
 	}
 	if oracle {
@@ -214,7 +199,7 @@ func TestAccMeetingTemplateConfigurationReadOnly(t *testing.T) {
 			t.Fatal("template tenant binding unavailable")
 		}
 		actual := meetingTemplatePolicyOracle(t, ctx, "configuration", tenant)
-		if !sameTemplateProjection(meetingTemplateConfigurationProjection(value), actual.Settings) {
+		if !labkit.SameProjection(meetingTemplateConfigurationProjection(value), actual.Settings) {
 			t.Fatal("Go and PowerShell template configuration getters differ")
 		}
 	}
@@ -222,24 +207,24 @@ func TestAccMeetingTemplateConfigurationReadOnly(t *testing.T) {
 }
 func TestAccMeetingTemplatePermissionReadOnly(t *testing.T) {
 	cfg := meetingTemplateReadEnabled(t)
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	service := sdk.TeamsAdminAPI.TeamsMeetingTemplatePermissionPolicies
 	value, response, err := service.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_meeting_template_permission_policy", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_meeting_template_permission_policy", "get_global", response, nil)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("meeting template permission Global read failed")
 	}
 	if value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") {
 		t.Fatal("template permission selected identity differs")
 	}
 	values, response, err := service.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_meeting_template_permission_policy", "list", response, nil)
+	labkit.WriteResponseFixture(t, "teams_meeting_template_permission_policy", "list", response, nil)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("meeting template permission list failed")
 	}
 	var selected *permission.Policy
@@ -251,7 +236,7 @@ func TestAccMeetingTemplatePermissionReadOnly(t *testing.T) {
 			selected = item
 		}
 	}
-	if selected == nil || !sameTemplateProjection(meetingTemplatePermissionProjection(value), meetingTemplatePermissionProjection(selected)) {
+	if selected == nil || !labkit.SameProjection(meetingTemplatePermissionProjection(value), meetingTemplatePermissionProjection(selected)) {
 		t.Fatal("template permission read/list getter projections differ")
 	}
 	if oracle {
@@ -260,7 +245,7 @@ func TestAccMeetingTemplatePermissionReadOnly(t *testing.T) {
 			t.Fatal("template tenant binding unavailable")
 		}
 		actual := meetingTemplatePolicyOracle(t, ctx, "permission", tenant)
-		if !sameTemplateProjection(meetingTemplatePermissionProjection(value), actual.Settings) {
+		if !labkit.SameProjection(meetingTemplatePermissionProjection(value), actual.Settings) {
 			t.Fatal("Go and PowerShell template permission getters differ")
 		}
 	}
@@ -275,7 +260,7 @@ func TestUnitMeetingTemplateOraclesUseAcceptanceFields(t *testing.T) {
 		if kind == "permission" {
 			service = "teams_meeting_template_permission_policy"
 		}
-		directory, err := os.OpenRoot("../../../msteams/teams_admin_api/" + service + "/testdata")
+		directory, err := os.OpenRoot(labkit.Root + "/msteams/teams_admin_api/" + service + "/testdata")
 		if err != nil {
 			t.Fatal(err)
 		}

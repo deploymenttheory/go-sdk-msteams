@@ -6,6 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	roaming "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_network_roaming_policy"
 )
@@ -22,7 +24,7 @@ func (h roamingPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (str
 		if value.Identity == "" {
 			return "", lab.ErrUnresolved
 		}
-		if samePolicyName(value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -32,7 +34,7 @@ func (h roamingPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (str
 	if found == "" {
 		// An empty list match alone cannot establish absence after a lost POST.
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -43,19 +45,19 @@ func (h roamingPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (str
 	return found, nil
 }
 func (h roamingPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, err := h.service.DeleteByIdentity(ctx, entry.ResourceID)
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -66,7 +68,7 @@ func (h roamingPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error
 			if value.Identity == "" {
 				return false, lab.ErrUnresolved
 			}
-			if samePolicyName(value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -87,8 +89,8 @@ func TestAccNetworkRoamingPolicyCRUD(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsNetworkRoamingPolicies
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -118,23 +120,23 @@ func TestAccNetworkRoamingPolicyCRUD(t *testing.T) {
 	initial := "SDK lab non-default initial description"
 	response, err := service.CreateByIdentity(ctx, name, roaming.Settings{Description: new(initial), AllowIPVideo: new(false), MediaBitRateKb: new(int64(50000))})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("NetworkRoaming policy create failed; recovery journal retained")
 	}
-	writeResponseFixture(t, "teams_network_roaming_policy", "create", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_network_roaming_policy", "create", response, replacements)
 	var value *roaming.Policy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
-		matched := read != nil && read.Identity != "" && samePolicyName(read.Identity, name) && read.Description != nil && *read.Description == initial && read.AllowIPVideo != nil && !*read.AllowIPVideo && read.MediaBitRateKb != nil && *read.MediaBitRateKb == 50000
+		matched := read != nil && read.Identity != "" && labkit.SamePolicyName(read.Identity, name) && read.Description != nil && *read.Description == initial && read.AllowIPVideo != nil && !*read.AllowIPVideo && read.MediaBitRateKb != nil && *read.MediaBitRateKb == 50000
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_network_roaming_policy", "create_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_network_roaming_policy", "create_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -163,11 +165,11 @@ func TestAccNetworkRoamingPolicyCRUD(t *testing.T) {
 	updated := "SDK lab non-default updated description"
 	response, err = service.UpdateByIdentity(ctx, identity, roaming.UpdateRequest{Description: new(updated)})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("NetworkRoaming sparse update failed")
 	}
-	writeResponseFixture(t, "teams_network_roaming_policy", "update", response, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "teams_network_roaming_policy", "update", response, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, identity)
 		if err != nil {
 			return false, err
@@ -175,7 +177,7 @@ func TestAccNetworkRoamingPolicyCRUD(t *testing.T) {
 		matched := read != nil && read.Description != nil && *read.Description == updated && read.AllowIPVideo != nil && !*read.AllowIPVideo && read.MediaBitRateKb != nil && *read.MediaBitRateKb == 50000
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_network_roaming_policy", "update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_network_roaming_policy", "update_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -189,29 +191,29 @@ func TestAccNetworkRoamingPolicyCRUD(t *testing.T) {
 	}
 	count := 0
 	for _, item := range values {
-		if item.Identity != "" && samePolicyName(item.Identity, name) {
+		if item.Identity != "" && labkit.SamePolicyName(item.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned NetworkRoaming policy missing or ambiguous in list")
 	}
-	writeResponseFixture(t, "teams_network_roaming_policy", "owned_list", listResponse, replacements)
+	labkit.WriteResponseFixture(t, "teams_network_roaming_policy", "owned_list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if deletedResponse, err := service.DeleteByIdentity(ctx, identity); err != nil {
-		logAccessResponse(t, deletedResponse, err)
+		labkit.LogAccessResponse(t, deletedResponse, err)
 		t.Fatal("owned policy delete failed")
 	} else {
-		writeResponseFixture(t, "teams_network_roaming_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
+		labkit.WriteResponseFixture(t, "teams_network_roaming_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
 	}
 	if err := (roamingPolicyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: identity}); err != nil {
 		t.Fatal("NetworkRoaming deletion and independent absence were not verified")
 	}
 	_, response, err = service.GetByIdentity(ctx, identity)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("NetworkRoaming deleted policy did not return typed404")
 	}
-	writeResponseFixture(t, "teams_network_roaming_policy", "get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_network_roaming_policy", "get_deleted", response, replacements)
 	t.Log("policy delete/absence: passed")
 	t.Log("NetworkRoaming policy create/read/update/list/delete and omitted-field preservation verified")
 }

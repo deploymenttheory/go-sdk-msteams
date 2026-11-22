@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -13,11 +15,11 @@ import (
 
 func TestUnitGroupRecoveryKeepsPoliciesUntilAssignmentIsAbsent(t *testing.T) {
 	t.Parallel()
-	discovery, err := os.ReadFile("../../../msteams/teams_admin_api/internal/configapi/testdata/service_discovery.json")
+	discovery, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	assigned, err := os.ReadFile("../../../msteams/teams_admin_api/policy_assignments/testdata/group_application_access_created_get.json")
+	assigned, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/policy_assignments/testdata/group_application_access_created_get.json")
 	if err != nil {
 		t.Fatal(err)
 	}

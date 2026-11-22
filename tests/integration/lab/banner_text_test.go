@@ -7,11 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_custom_banner_text"
@@ -28,40 +29,40 @@ type bannerOracleReport struct {
 }
 
 func decodeBannerOracle(raw []byte, tenant string, identities []string, count int) (map[string]json.RawMessage, error) {
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || len(identities) > 5 || count < len(identities) {
-		return nil, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || len(identities) > 5 || count < len(identities) {
+		return nil, labkit.ErrOracle
 	}
 	var v bannerOracleReport
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || v.Count == nil || *v.Count != count || v.Observations == nil || len(v.Observations) != len(identities) {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	allowed := map[string]bool{}
 	for _, identity := range identities {
 		if identity == "" || allowed[identity] {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		allowed[identity] = true
 	}
 	result := map[string]json.RawMessage{}
 	for _, o := range v.Observations {
 		if !allowed[o.Identity] || result[o.Identity] != nil {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		var fields map[string]json.RawMessage
 		if json.Unmarshal(o.Settings, &fields) != nil || len(fields) != 3 {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		for _, key := range []string{"Id", "Text", "Description"} {
 			var nullable *string
 			raw, ok := fields[key]
 			if !ok || json.Unmarshal(raw, &nullable) != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 		}
 		// The PowerShell projection includes null for an absent CLR Text. Do not
@@ -69,7 +70,7 @@ func decodeBannerOracle(raw []byte, tenant string, identities []string, count in
 		projection, e := json.Marshal(map[string]json.RawMessage{"Id": fields["Id"], "Description": fields["Description"]})
 		var model resource.Banner
 		if e != nil || json.Unmarshal(projection, &model) != nil {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		result[o.Identity] = o.Settings
 	}
@@ -108,7 +109,7 @@ func bannerOracle(t *testing.T, ctx context.Context, tenant string, identities [
 		t.Fatal("invalid banner oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-banner-text.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-banner-text.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -116,14 +117,14 @@ func bannerOracle(t *testing.T, ctx context.Context, tenant string, identities [
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned banner reads failed; no output retained")
 	}
-	v, e := decodeBannerOracle(output.data, tenant, identities, count)
+	v, e := decodeBannerOracle(output.Data, tenant, identities, count)
 	if e != nil {
 		t.Fatal("pinned banner projection unavailable")
 	}
@@ -142,12 +143,12 @@ func TestAccBannerTextReadOnly(t *testing.T) {
 	} else if e != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	values, response, e := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.List(ctx)
-	writeResponseFixture(t, "teams_custom_banner_text", "list", response, nil)
+	labkit.WriteResponseFixture(t, "teams_custom_banner_text", "list", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -169,7 +170,7 @@ func TestAccBannerTextReadOnly(t *testing.T) {
 			t.Fatal("banner identity unavailable or duplicated")
 		}
 		read, fixtureResponse, e := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.GetByIdentity(ctx, *v.Identity)
-		writeResponseFixture(t, "teams_custom_banner_text", "get_by_id", fixtureResponse, nil)
+		labkit.WriteResponseFixture(t, "teams_custom_banner_text", "get_by_id", fixtureResponse, nil)
 		if e != nil || read == nil || read.Identity == nil || *read.Identity != *v.Identity {
 			t.Fatal("selected banner read failed; no output retained")
 		}

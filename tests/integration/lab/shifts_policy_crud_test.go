@@ -6,6 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	shifts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shifts_policy"
@@ -23,7 +25,7 @@ func (h shiftsPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (stri
 		if value == nil || value.Identity == nil {
 			return "", lab.ErrUnresolved
 		}
-		if samePolicyName(*value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -32,7 +34,7 @@ func (h shiftsPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (stri
 	}
 	if found == "" {
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -43,19 +45,19 @@ func (h shiftsPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (stri
 	return found, nil
 }
 func (h shiftsPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, _, err := h.service.DeleteByIdentity(ctx, entry.ResourceID, policy.Controls{})
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -66,7 +68,7 @@ func (h shiftsPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error 
 			if value == nil || value.Identity == nil {
 				return false, lab.ErrUnresolved
 			}
-			if samePolicyName(*value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -87,8 +89,8 @@ func TestAccShiftsPolicyCRUD(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsShiftsPolicies
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -117,23 +119,23 @@ func TestAccShiftsPolicyCRUD(t *testing.T) {
 	replacements := map[string]string{name: "fixture-policy"}
 	_, response, err := service.CreateByIdentity(ctx, name, shifts.CreateRequest{Settings: shifts.Settings{ShiftNoticeFrequency: policy.Set("Always"), AccessGracePeriodMinutes: policy.Set(int64(5)), EnableScheduleOwnerPermissions: policy.Set(true)}})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("Shifts policy create failed; recovery journal retained")
 	}
-	writeResponseFixture(t, "teams_shifts_policy", "create", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_shifts_policy", "create", response, replacements)
 	var value *shifts.Policy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
-		matched := read != nil && read.Identity != nil && samePolicyName(*read.Identity, name) && read.ShiftNoticeFrequency != nil && *read.ShiftNoticeFrequency == "Always" && read.AccessGracePeriodMinutes != nil && *read.AccessGracePeriodMinutes == 5 && read.EnableScheduleOwnerPermissions != nil && *read.EnableScheduleOwnerPermissions
+		matched := read != nil && read.Identity != nil && labkit.SamePolicyName(*read.Identity, name) && read.ShiftNoticeFrequency != nil && *read.ShiftNoticeFrequency == "Always" && read.AccessGracePeriodMinutes != nil && *read.AccessGracePeriodMinutes == 5 && read.EnableScheduleOwnerPermissions != nil && *read.EnableScheduleOwnerPermissions
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_shifts_policy", "create_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_shifts_policy", "create_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -161,11 +163,11 @@ func TestAccShiftsPolicyCRUD(t *testing.T) {
 	compare(value)
 	_, response, err = service.UpdateByIdentity(ctx, identity, shifts.UpdateRequest{Settings: shifts.Settings{AccessGracePeriodMinutes: policy.Set(int64(10))}})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("Shifts sparse update failed")
 	}
-	writeResponseFixture(t, "teams_shifts_policy", "update", response, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "teams_shifts_policy", "update", response, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, identity)
 		if err != nil {
 			return false, err
@@ -173,7 +175,7 @@ func TestAccShiftsPolicyCRUD(t *testing.T) {
 		matched := read != nil && read.AccessGracePeriodMinutes != nil && *read.AccessGracePeriodMinutes == 10 && read.ShiftNoticeFrequency != nil && *read.ShiftNoticeFrequency == "Always" && read.EnableScheduleOwnerPermissions != nil && *read.EnableScheduleOwnerPermissions
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_shifts_policy", "update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_shifts_policy", "update_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -187,29 +189,29 @@ func TestAccShiftsPolicyCRUD(t *testing.T) {
 	}
 	count := 0
 	for _, item := range values {
-		if item != nil && item.Identity != nil && samePolicyName(*item.Identity, name) {
+		if item != nil && item.Identity != nil && labkit.SamePolicyName(*item.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned Shifts policy missing or ambiguous in list")
 	}
-	writeResponseFixture(t, "teams_shifts_policy", "owned_list", listResponse, replacements)
+	labkit.WriteResponseFixture(t, "teams_shifts_policy", "owned_list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if _, deletedResponse, err := service.DeleteByIdentity(ctx, identity, policy.Controls{}); err != nil {
-		logAccessResponse(t, deletedResponse, err)
+		labkit.LogAccessResponse(t, deletedResponse, err)
 		t.Fatal("owned policy delete failed")
 	} else {
-		writeResponseFixture(t, "teams_shifts_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
+		labkit.WriteResponseFixture(t, "teams_shifts_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
 	}
 	if err := (shiftsPolicyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: identity}); err != nil {
 		t.Fatal("Shifts deletion and independent absence were not verified")
 	}
 	_, response, err = service.GetByIdentity(ctx, identity)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("Shifts deleted policy did not return typed404")
 	}
-	writeResponseFixture(t, "teams_shifts_policy", "get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_shifts_policy", "get_deleted", response, replacements)
 	t.Log("policy delete/absence: passed")
 	t.Log("Shifts policy create/read/update/list/delete and omitted-field preservation verified")
 }

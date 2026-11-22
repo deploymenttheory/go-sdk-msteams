@@ -7,20 +7,21 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_upgrade_policy"
 )
 
 func TestAccUpgradeGrantMigrationBinding(t *testing.T) {
-	cfg := configurationReadEnabled(t)
-	if !teamOracleEnabled(t) {
+	cfg := labkit.ConfigurationReadEnabled(t)
+	if !labkit.OracleEnabled(t) {
 		t.Fatal("pinned upgrade binding comparison requires its oracle")
 	}
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	tenant, _, ok := strings.Cut(binding, "|")
 	if !ok {
 		t.Fatal("invalid oracle tenant binding")
@@ -32,7 +33,7 @@ func TestAccUpgradeGrantMigrationBinding(t *testing.T) {
 	defer clear(input)
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-upgrade-grant-binding.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-upgrade-grant-binding.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -43,12 +44,12 @@ func TestAccUpgradeGrantMigrationBinding(t *testing.T) {
 		cmd.Env = append(cmd.Env, key+"="+os.Getenv(key))
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1")
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout = &output
 	cmd.Stderr = io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned upgrade binding oracle failed")
 	}
 	var observed struct {
@@ -60,7 +61,7 @@ func TestAccUpgradeGrantMigrationBinding(t *testing.T) {
 			ExceptionType string `json:"exception_type"`
 		} `json:"results"`
 	}
-	if json.Unmarshal(output.data, &observed) != nil || !observed.Success || len(observed.Results) != 2 {
+	if json.Unmarshal(output.Data, &observed) != nil || !observed.Success || len(observed.Results) != 2 {
 		t.Fatal("invalid pinned binding observation")
 	}
 	for index, flag := range []bool{false, true} {

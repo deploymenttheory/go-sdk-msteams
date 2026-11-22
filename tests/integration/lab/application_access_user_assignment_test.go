@@ -7,11 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -28,14 +29,14 @@ type assignmentUserFixture struct {
 
 func loadAssignmentUserFixture(t *testing.T, binding string) assignmentUserFixture {
 	t.Helper()
-	raw, err := privateLabFile(os.Getenv("MSTEAMS_LAB_USER_FIXTURE_FILE"))
+	raw, err := labkit.PrivateFile(os.Getenv("MSTEAMS_LAB_USER_FIXTURE_FILE"))
 	if err != nil {
 		t.Fatal("explicit private assignment-user fixture is required")
 	}
 	defer clear(raw)
 	var fixture assignmentUserFixture
 	tenant, _, ok := strings.Cut(binding, "|")
-	if json.Unmarshal(raw, &fixture) != nil || !ok || !strings.EqualFold(fixture.TenantID, tenant) || !labDirectoryID.MatchString(fixture.UserID) || !strings.HasPrefix(fixture.PrincipalName, "go-sdk-msteams-acceptance@") || fixture.DisplayName != "go-sdk-msteams acceptance user" {
+	if json.Unmarshal(raw, &fixture) != nil || !ok || !strings.EqualFold(fixture.TenantID, tenant) || !labkit.DirectoryID.MatchString(fixture.UserID) || !strings.HasPrefix(fixture.PrincipalName, "go-sdk-msteams-acceptance@") || fixture.DisplayName != "go-sdk-msteams acceptance user" {
 		t.Fatal("assignment fixture ownership or tenant binding differs")
 	}
 	return fixture
@@ -51,7 +52,7 @@ func (userAssignmentCleanup) Resolve(context.Context, lab.Entry) (string, error)
 }
 func (userAssignmentCleanup) Delete(context.Context, lab.Entry) error { return lab.ErrUnresolved }
 func (h userAssignmentCleanup) Restore(ctx context.Context, entry lab.Entry) error {
-	if entry.ResourceID != h.userID || !labDirectoryID.MatchString(h.userID) {
+	if entry.ResourceID != h.userID || !labkit.DirectoryID.MatchString(h.userID) {
 		return lab.ErrUnresolved
 	}
 	var before []*assignments.EffectivePolicy
@@ -61,7 +62,7 @@ func (h userAssignmentCleanup) Restore(ctx context.Context, entry lab.Entry) err
 	if _, err := h.sdk.TeamsAdminAPI.ApplicationAccessPolicies.AssignToUser(ctx, h.userID, ""); err != nil {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		values, _, err := h.sdk.TeamsAdminAPI.PolicyAssignments.GetUser(ctx, h.userID, "ApplicationAccessPolicy")
 		return err == nil && len(values) == 0, err
 	})
@@ -83,12 +84,12 @@ func projectUserAssignments(values []*assignments.EffectivePolicy) ([]userAssign
 	out := make([]userAssignmentProjection, 0, len(values))
 	for _, value := range values {
 		if value == nil || value.PolicyType == nil || !strings.EqualFold(*value.PolicyType, "ApplicationAccessPolicy") {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		item := userAssignmentProjection{PolicyType: value.PolicyType, PolicyName: value.PolicyName, Sources: make([]userAssignmentSource, 0, len(value.PolicySource))}
 		for _, source := range value.PolicySource {
 			if source == nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			item.Sources = append(item.Sources, userAssignmentSource{source.PolicyName, source.PolicyType, source.AssignmentType, source.Reference})
 		}
@@ -98,7 +99,7 @@ func projectUserAssignments(values []*assignments.EffectivePolicy) ([]userAssign
 }
 func compareUserAssignmentOracle(t *testing.T, ctx context.Context, fixture assignmentUserFixture, values []*assignments.EffectivePolicy) {
 	t.Helper()
-	if !teamOracleEnabled(t) {
+	if !labkit.OracleEnabled(t) {
 		return
 	}
 	input, err := json.Marshal(map[string]string{"tenant_id": fixture.TenantID, "user_id": fixture.UserID})
@@ -106,7 +107,7 @@ func compareUserAssignmentOracle(t *testing.T, ctx context.Context, fixture assi
 		t.Fatal("invalid assignment oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-user-application-assignment.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-user-application-assignment.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -117,12 +118,12 @@ func compareUserAssignmentOracle(t *testing.T, ctx context.Context, fixture assi
 		cmd.Env = append(cmd.Env, key+"="+os.Getenv(key))
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1")
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout = &output
 	cmd.Stderr = io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned user-assignment read failed")
 	}
 	var report struct {
@@ -131,7 +132,7 @@ func compareUserAssignmentOracle(t *testing.T, ctx context.Context, fixture assi
 		User     string                     `json:"user_id"`
 		Policies []userAssignmentProjection `json:"policies"`
 	}
-	d := json.NewDecoder(bytes.NewReader(output.data))
+	d := json.NewDecoder(bytes.NewReader(output.Data))
 	d.DisallowUnknownFields()
 	var trailing any
 	if d.Decode(&report) != nil || d.Decode(&trailing) != io.EOF || !report.Success || !strings.EqualFold(report.Tenant, fixture.TenantID) || !strings.EqualFold(report.User, fixture.UserID) || report.Policies == nil {
@@ -157,7 +158,7 @@ func TestAccApplicationAccessPolicyUserAssignment(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab mutation enablement")
 	}
-	sdk, binding, appID := labSDKClient(t)
+	sdk, binding, appID := labkit.SDKClient(t)
 	fixture := loadAssignmentUserFixture(t, binding)
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -178,11 +179,11 @@ func TestAccApplicationAccessPolicyUserAssignment(t *testing.T) {
 	defer cancel()
 	before, response, err := sdk.TeamsAdminAPI.PolicyAssignments.GetUser(ctx, fixture.UserID, "ApplicationAccessPolicy")
 	if err != nil || len(before) != 0 {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("owned user must have no pre-existing application-access assignment")
 	}
 	replacements := map[string]string{fixture.UserID: "00000000-0000-4000-8000-000000000010", fixture.PrincipalName: "fixture-user@example.invalid", appID: "00000000-0000-4000-8000-000000000001"}
-	writeResponseFixture(t, "policy_assignments", "user_application_access_before", response, replacements)
+	labkit.WriteResponseFixture(t, "policy_assignments", "user_application_access_before", response, replacements)
 	compareUserAssignmentOracle(t, ctx, fixture, before)
 	name, err := journal.FixtureName("app-access")
 	if err != nil {
@@ -195,8 +196,8 @@ func TestAccApplicationAccessPolicyUserAssignment(t *testing.T) {
 	}
 	description := "SDK lab non-default initial description"
 	created, response, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.Create(ctx, application.CreateRequest{Identity: name, AppIDs: application.ReplaceAppIDs([]string{appID}), Description: &description})
-	if err != nil || created == nil || !samePolicyName(created.Identity, name) {
-		logAccessResponse(t, response, err)
+	if err != nil || created == nil || !labkit.SamePolicyName(created.Identity, name) {
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("owned assignment policy creation failed")
 	}
 	if err := journal.Applied(entry, name); err != nil {
@@ -211,24 +212,24 @@ func TestAccApplicationAccessPolicyUserAssignment(t *testing.T) {
 		t.Fatal("user restoration intent not journaled")
 	}
 	response, err = sdk.TeamsAdminAPI.ApplicationAccessPolicies.AssignToUser(ctx, fixture.UserID, name)
-	writeResponseFixture(t, "application_access_policy", "assign_user", response, replacements)
+	labkit.WriteResponseFixture(t, "application_access_policy", "assign_user", response, replacements)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("owned user policy assignment failed")
 	}
 	if err := journal.Applied(restore, fixture.UserID); err != nil {
 		t.Fatal("user assignment receipt not journaled")
 	}
 	var assigned []*assignments.EffectivePolicy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.GetUser(ctx, fixture.UserID, "ApplicationAccessPolicy")
 		if err != nil {
 			return false, err
 		}
-		matched := len(values) == 1 && values[0] != nil && values[0].PolicyType != nil && strings.EqualFold(*values[0].PolicyType, "ApplicationAccessPolicy") && values[0].PolicyName != nil && samePolicyName(*values[0].PolicyName, name)
+		matched := len(values) == 1 && values[0] != nil && values[0].PolicyType != nil && strings.EqualFold(*values[0].PolicyType, "ApplicationAccessPolicy") && values[0].PolicyName != nil && labkit.SamePolicyName(*values[0].PolicyName, name)
 		if matched {
 			assigned = values
-			writeResponseFixture(t, "policy_assignments", "user_application_access_assigned", response, replacements)
+			labkit.WriteResponseFixture(t, "policy_assignments", "user_application_access_assigned", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -237,20 +238,20 @@ func TestAccApplicationAccessPolicyUserAssignment(t *testing.T) {
 	t.Log("user policy assignment/read-back: passed")
 	compareUserAssignmentOracle(t, ctx, fixture, assigned)
 	response, err = sdk.TeamsAdminAPI.ApplicationAccessPolicies.AssignToUser(ctx, fixture.UserID, "")
-	writeResponseFixture(t, "application_access_policy", "clear_user", response, replacements)
+	labkit.WriteResponseFixture(t, "application_access_policy", "clear_user", response, replacements)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("owned user policy clear failed")
 	}
 	var restored []*assignments.EffectivePolicy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.GetUser(ctx, fixture.UserID, "ApplicationAccessPolicy")
 		if err != nil {
 			return false, err
 		}
 		if len(values) == 0 {
 			restored = values
-			writeResponseFixture(t, "policy_assignments", "user_application_access_restored", response, replacements)
+			labkit.WriteResponseFixture(t, "policy_assignments", "user_application_access_restored", response, replacements)
 			return true, nil
 		}
 		return false, nil

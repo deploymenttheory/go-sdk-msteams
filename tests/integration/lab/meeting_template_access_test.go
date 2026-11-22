@@ -7,11 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -59,7 +60,7 @@ func comparePopulatedTemplateCreate(t *testing.T, ctx context.Context, tenant, n
 		t.Fatal("invalid populated policy baseline selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/create-meeting-template-permission.ps1")
+	cmd := labkit.OracleCommand(ctx, "create-meeting-template-permission.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath", "MSTEAMS_LAB_AUTH_METHOD", "MSTEAMS_LAB_MODULE_PATH", "MSTEAMS_LAB_IDENTITY_FILE"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -67,16 +68,16 @@ func comparePopulatedTemplateCreate(t *testing.T, ctx context.Context, tenant, n
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_MUTATIONS=1", "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1")
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin, cmd.Stdout, cmd.Stderr = bytes.NewReader(input), &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned populated policy create process failed")
 	}
 	var actual populatedTemplateBaseline
-	decoder := json.NewDecoder(bytes.NewReader(output.data))
+	decoder := json.NewDecoder(bytes.NewReader(output.Data))
 	decoder.DisallowUnknownFields()
-	if decoder.Decode(&actual) != nil || decoder.Decode(new(any)) != io.EOF || !actual.Success || !strings.EqualFold(actual.Tenant, tenant) || !samePolicyName(actual.Identity, name) || actual.Outcome != "downstream-unauthorized" || actual.Code != 40013 || actual.Status != 401 {
+	if decoder.Decode(&actual) != nil || decoder.Decode(new(any)) != io.EOF || !actual.Success || !strings.EqualFold(actual.Tenant, tenant) || !labkit.SamePolicyName(actual.Identity, name) || actual.Outcome != "downstream-unauthorized" || actual.Code != 40013 || actual.Status != 401 {
 		t.Fatal("pinned populated policy authorization outcome differs")
 	}
 }
@@ -93,10 +94,10 @@ func TestAccMeetingTemplatePermissionPopulatedAccess(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid populated policy mutation enablement")
 	}
-	if !teamOracleEnabled(t) {
+	if !labkit.OracleEnabled(t) {
 		t.Fatal("pinned populated policy comparison is required")
 	}
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	tenant, _, ok := strings.Cut(binding, "|")
@@ -132,10 +133,10 @@ func TestAccMeetingTemplatePermissionPopulatedAccess(t *testing.T) {
 		names = append(names, name)
 	}
 	_, response, err := service.CreateByIdentity(ctx, names[0], permission.CreateRequest{ScalarSettings: permission.ScalarSettings{Description: policy.Set("SDK lab non-default initial description")}, HiddenMeetingTemplates: permission.ReplaceHiddenTemplates(permission.NewHiddenTemplate(ids[0]))})
-	writeResponseFixture(t, "teams_meeting_template_permission_policy", "create_populated_denied", response, map[string]string{names[0]: "fixture-policy"})
+	labkit.WriteResponseFixture(t, "teams_meeting_template_permission_policy", "create_populated_denied", response, map[string]string{names[0]: "fixture-policy"})
 	var api *client.APIError
 	if !errors.As(err, &api) || response == nil || api.StatusCode != 400 || !slices.Contains(api.ServiceErrorCodes, 40013) || !populatedTemplateUnauthorized(response.Body()) {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("native populated policy authorization outcome changed")
 	}
 	t.Log("native populated-list create denial: verified")
@@ -149,7 +150,7 @@ func TestAccMeetingTemplatePermissionPopulatedAccess(t *testing.T) {
 
 func TestUnitPopulatedAuthorizationUsesAcceptanceEnvelope(t *testing.T) {
 	t.Parallel()
-	directory, err := os.OpenRoot("../../../msteams/teams_admin_api/teams_meeting_template_permission_policy/testdata")
+	directory, err := os.OpenRoot(labkit.Root + "/msteams/teams_admin_api/teams_meeting_template_permission_policy/testdata")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -6,13 +6,14 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"sort"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
 )
@@ -29,23 +30,23 @@ type migrationObservation struct {
 
 func decodeMigrationOracle(raw []byte, tenant string) (migrationObservation, error) {
 	var value migrationObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
-		return value, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) {
+		return value, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&value) != nil || !value.Success || !strings.EqualFold(value.Tenant, tenant) || value.Jobs == nil {
-		return migrationObservation{}, errTeamOracle
+		return migrationObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return migrationObservation{}, errTeamOracle
+		return migrationObservation{}, labkit.ErrOracle
 	}
 	seen := map[string]bool{}
 	for _, job := range value.Jobs {
 		id := strings.ToLower(job.ID)
-		if !labDirectoryID.MatchString(id) || job.State == "" || seen[id] {
-			return migrationObservation{}, errTeamOracle
+		if !labkit.DirectoryID.MatchString(id) || job.State == "" || seen[id] {
+			return migrationObservation{}, labkit.ErrOracle
 		}
 		seen[id] = true
 	}
@@ -59,7 +60,7 @@ func migrationOracle(t *testing.T, ctx context.Context, tenant string) migration
 		t.Fatal("invalid migration oracle tenant")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-assignment-migration.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-assignment-migration.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -67,14 +68,14 @@ func migrationOracle(t *testing.T, ctx context.Context, tenant string) migration
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned migration read failed; no output retained")
 	}
-	v, err := decodeMigrationOracle(output.data, tenant)
+	v, err := decodeMigrationOracle(output.Data, tenant)
 	if err != nil {
 		t.Fatal("pinned migration read projection unavailable")
 	}
@@ -84,13 +85,13 @@ func migrationOracle(t *testing.T, ctx context.Context, tenant string) migration
 // TestAccAssignmentMigrationReadOnly lists status and reads returned job IDs.
 // It never submits migrations/cleanup or changes effective assignments.
 func TestAccAssignmentMigrationReadOnly(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	cfg := labkit.ReadOnlyEnabled(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	jobs, response, err := sdk.TeamsAdminAPI.AssignmentMigrations.List(ctx)
-	writeResponseFixture(t, "assignment_migration", "list", response, nil)
+	labkit.WriteResponseFixture(t, "assignment_migration", "list", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -100,7 +101,7 @@ func TestAccAssignmentMigrationReadOnly(t *testing.T) {
 	}
 	projected := make([]migrationProjection, 0, len(jobs))
 	for _, job := range jobs {
-		if job == nil || job.MigrationEventID == nil || !labDirectoryID.MatchString(*job.MigrationEventID) {
+		if job == nil || job.MigrationEventID == nil || !labkit.DirectoryID.MatchString(*job.MigrationEventID) {
 			t.Fatal("migration status has no stable job identity")
 		}
 		state, ok := job.State.Text()
@@ -117,7 +118,7 @@ func TestAccAssignmentMigrationReadOnly(t *testing.T) {
 		}
 		projected = append(projected, migrationProjection{ID: strings.ToLower(*job.MigrationEventID), State: string(state)})
 		value, fixtureResponse, err := sdk.TeamsAdminAPI.AssignmentMigrations.GetByID(ctx, *job.MigrationEventID)
-		writeResponseFixture(t, "assignment_migration", "get_by_id", fixtureResponse, nil)
+		labkit.WriteResponseFixture(t, "assignment_migration", "get_by_id", fixtureResponse, nil)
 		if err != nil || value == nil || value.MigrationEventID == nil || !strings.EqualFold(*value.MigrationEventID, *job.MigrationEventID) {
 			t.Fatal("migration read did not return the selected job")
 		}

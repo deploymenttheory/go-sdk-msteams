@@ -7,11 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_conferencing_prompts"
@@ -38,23 +39,23 @@ func nullableStrings(item map[string]json.RawMessage, names []string) bool {
 }
 func decodeConferencingPromptsOracle(raw []byte, tenant string) (conferencingPromptsObservation, error) {
 	var v conferencingPromptsObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || !strings.EqualFold(v.Identity, "Global") || len(v.Settings) != 2 {
-		return conferencingPromptsObservation{}, errTeamOracle
+		return conferencingPromptsObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return conferencingPromptsObservation{}, errTeamOracle
+		return conferencingPromptsObservation{}, labkit.ErrOracle
 	}
 	for _, key := range []string{"Prompts", "Packages"} {
 		body, ok := v.Settings[key]
 		var items []map[string]json.RawMessage
 		if !ok || json.Unmarshal(body, &items) != nil || items == nil {
-			return conferencingPromptsObservation{}, errTeamOracle
+			return conferencingPromptsObservation{}, labkit.ErrOracle
 		}
 		for _, item := range items {
 			if item == nil {
@@ -62,17 +63,17 @@ func decodeConferencingPromptsOracle(raw []byte, tenant string) (conferencingPro
 			}
 			if key == "Prompts" {
 				if len(item) != 7 || !nullableStrings(item, []string{"Identity", "Id", "Name", "AudioPrompt", "TextPrompt", "Type", "Locale"}) {
-					return conferencingPromptsObservation{}, errTeamOracle
+					return conferencingPromptsObservation{}, labkit.ErrOracle
 				}
 			} else {
 				if len(item) != 10 || !nullableStrings(item, []string{"Identity", "Id", "Name", "DefaultLocale"}) {
-					return conferencingPromptsObservation{}, errTeamOracle
+					return conferencingPromptsObservation{}, labkit.ErrOracle
 				}
 				for _, name := range conferencingPackageArrays {
 					var values []*string
 					body, ok := item[name]
 					if !ok || json.Unmarshal(body, &values) != nil || values == nil {
-						return conferencingPromptsObservation{}, errTeamOracle
+						return conferencingPromptsObservation{}, labkit.ErrOracle
 					}
 				}
 			}
@@ -116,7 +117,7 @@ func conferencingPromptsOracle(t *testing.T, ctx context.Context, tenant string)
 		t.Fatal("invalid prompts selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-audio-conferencing-prompts.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-audio-conferencing-prompts.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if v, ok := os.LookupEnv(key); ok {
@@ -124,14 +125,14 @@ func conferencingPromptsOracle(t *testing.T, ctx context.Context, tenant string)
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned custom prompts read failed; no output retained")
 	}
-	v, e := decodeConferencingPromptsOracle(output.data, tenant)
+	v, e := decodeConferencingPromptsOracle(output.Data, tenant)
 	if e != nil {
 		t.Fatal("pinned prompts projection unavailable")
 	}
@@ -142,13 +143,13 @@ func globalConferencingPrompts(values []*resource.Configuration) (*resource.Conf
 	for _, v := range values {
 		if v != nil && v.Identity != nil && strings.EqualFold(*v.Identity, "Global") {
 			if found != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			found = v
 		}
 	}
 	if found == nil {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	return found, nil
 }
@@ -165,12 +166,12 @@ func TestAccAudioConferencingPromptsReadOnly(t *testing.T) {
 	} else if e != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "audio_conferencing_prompts", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "audio_conferencing_prompts", "get_global", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -179,7 +180,7 @@ func TestAccAudioConferencingPromptsReadOnly(t *testing.T) {
 		t.Fatalf("custom prompts Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "audio_conferencing_prompts", "list", listResponse, nil)
+	labkit.WriteResponseFixture(t, "audio_conferencing_prompts", "list", listResponse, nil)
 	selected, selectionErr := globalConferencingPrompts(listed)
 	if e != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(conferencingPromptsProjection(value), conferencingPromptsProjection(selected)) {
 		t.Fatal("custom prompts Global/list projections differ")

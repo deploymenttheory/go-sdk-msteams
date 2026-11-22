@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	updatePolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_update_management_policy"
@@ -24,7 +26,7 @@ func (h updateManagementPolicyCleanup) Resolve(ctx context.Context, entry lab.En
 		if value == nil || value.Identity == nil {
 			return "", lab.ErrUnresolved
 		}
-		if samePolicyName(*value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -33,7 +35,7 @@ func (h updateManagementPolicyCleanup) Resolve(ctx context.Context, entry lab.En
 	}
 	if found == "" {
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -44,19 +46,19 @@ func (h updateManagementPolicyCleanup) Resolve(ctx context.Context, entry lab.En
 	return found, nil
 }
 func (h updateManagementPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, _, err := h.service.DeleteByIdentity(ctx, entry.ResourceID, policy.Controls{})
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -67,7 +69,7 @@ func (h updateManagementPolicyCleanup) Delete(ctx context.Context, entry lab.Ent
 			if value == nil || value.Identity == nil {
 				return false, lab.ErrUnresolved
 			}
-			if samePolicyName(*value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -91,8 +93,8 @@ func TestAccUpdateManagementPolicyCRUD(t *testing.T) {
 	} else if e != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsUpdateManagementPolicies
 	journal, e := lab.NewJournal(cfg.JournalDirectory, binding)
 	if e != nil {
@@ -122,24 +124,24 @@ func TestAccUpdateManagementPolicyCRUD(t *testing.T) {
 	// These are Microsoft's documented campaign categories, not tenant phone/account fixtures.
 	first, second := "91382d07-8b89-444c-bbcb-cfe43133af33", "edf2633e-9827-44de-b34c-8b8b9717e84c"
 	_, r, e := service.CreateByIdentity(ctx, name, updatePolicy.CreateRequest{ScalarSettings: updatePolicy.ScalarSettings{Description: policy.Set("SDK lab non-default initial description"), AllowManagedUpdates: policy.Set(true), UpdateDayOfWeek: policy.Set(int64(3)), UpdateTime: policy.Set("19:30"), AllowPublicPreview: policy.Set("Enabled")}, DisabledInProductMessages: policy.ReplaceStrings(first)})
-	writeResponseFixture(t, "teams_update_management_policy", "create", r, replacements)
+	labkit.WriteResponseFixture(t, "teams_update_management_policy", "create", r, replacements)
 	if e != nil {
-		logAccessResponse(t, r, e)
+		labkit.LogAccessResponse(t, r, e)
 		t.Fatal("update-management create failed; intent retained")
 	}
 	var current *updatePolicy.Policy
-	if e := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if e := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		v, r, e := service.GetByIdentity(ctx, name)
-		if isHTTP(e, 404) {
+		if labkit.IsHTTP(e, 404) {
 			return false, nil
 		}
 		if e != nil {
 			return false, e
 		}
-		matched := v != nil && v.Identity != nil && samePolicyName(*v.Identity, name) && v.Description != nil && *v.Description == "SDK lab non-default initial description" && v.AllowManagedUpdates != nil && *v.AllowManagedUpdates && v.UpdateDayOfWeek != nil && *v.UpdateDayOfWeek == 3 && v.UpdateTime != nil && *v.UpdateTime == "19:30" && v.AllowPublicPreview != nil && *v.AllowPublicPreview == "Enabled" && len(v.DisabledInProductMessages) == 1 && v.DisabledInProductMessages[0] == first
+		matched := v != nil && v.Identity != nil && labkit.SamePolicyName(*v.Identity, name) && v.Description != nil && *v.Description == "SDK lab non-default initial description" && v.AllowManagedUpdates != nil && *v.AllowManagedUpdates && v.UpdateDayOfWeek != nil && *v.UpdateDayOfWeek == 3 && v.UpdateTime != nil && *v.UpdateTime == "19:30" && v.AllowPublicPreview != nil && *v.AllowPublicPreview == "Enabled" && len(v.DisabledInProductMessages) == 1 && v.DisabledInProductMessages[0] == first
 		if matched {
 			current = v
-			writeResponseFixture(t, "teams_update_management_policy", "create_readback", r, replacements)
+			labkit.WriteResponseFixture(t, "teams_update_management_policy", "create_readback", r, replacements)
 		}
 		return matched, nil
 	}); e != nil {
@@ -158,7 +160,7 @@ func TestAccUpdateManagementPolicyCRUD(t *testing.T) {
 			t.Fatal("update-management tenant binding unavailable")
 		}
 		actual := updateManagementPolicyOracleForIdentity(t, ctx, tenant, identity)
-		if !sameTemplateProjection(updateManagementProjection(v), actual.Settings) {
+		if !labkit.SameProjection(updateManagementProjection(v), actual.Settings) {
 			t.Fatal("SDK and PowerShell update-management getters differ")
 		}
 		t.Log("PowerShell 8.1.0 / Go policy read parity: passed")
@@ -167,18 +169,18 @@ func TestAccUpdateManagementPolicyCRUD(t *testing.T) {
 	compare(current)
 	original := updateManagementProjection(current)
 	_, r, e = service.UpdateByIdentity(ctx, identity, updatePolicy.UpdateRequest{ScalarSettings: updatePolicy.ScalarSettings{Description: policy.Set("SDK lab non-default updated description")}})
-	writeResponseFixture(t, "teams_update_management_policy", "update", r, replacements)
+	labkit.WriteResponseFixture(t, "teams_update_management_policy", "update", r, replacements)
 	if e != nil {
-		logAccessResponse(t, r, e)
+		labkit.LogAccessResponse(t, r, e)
 		t.Fatal("update-management sparse update failed")
 	}
 	original["Description"] = new("SDK lab non-default updated description")
-	if e := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if e := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		v, r, e := service.GetByIdentity(ctx, identity)
-		matched := e == nil && v != nil && sameTemplateProjection(original, updateManagementProjection(v))
+		matched := e == nil && v != nil && labkit.SameProjection(original, updateManagementProjection(v))
 		if matched {
 			current = v
-			writeResponseFixture(t, "teams_update_management_policy", "update_readback", r, replacements)
+			labkit.WriteResponseFixture(t, "teams_update_management_policy", "update_readback", r, replacements)
 		}
 		return matched, e
 	}); e != nil {
@@ -195,17 +197,17 @@ func TestAccUpdateManagementPolicyCRUD(t *testing.T) {
 		t.Fatal("update-management DateTime construction failed")
 	}
 	_, r, e = service.UpdateByIdentity(ctx, identity, updatePolicy.UpdateRequest{ScalarSettings: updatePolicy.ScalarSettings{UpdateTimeOfDay: policy.Set(date)}})
-	writeResponseFixture(t, "teams_update_management_policy", "datetime_update", r, replacements)
+	labkit.WriteResponseFixture(t, "teams_update_management_policy", "datetime_update", r, replacements)
 	if e != nil {
-		logAccessResponse(t, r, e)
+		labkit.LogAccessResponse(t, r, e)
 		t.Fatal("update-management DateTime update failed")
 	}
-	if e := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if e := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		v, r, e := service.GetByIdentity(ctx, identity)
 		matched := e == nil && v != nil && v.UpdateTimeOfDay != nil && v.UpdateTimeOfDay.Time().Hour() == clock.Hour() && v.UpdateTimeOfDay.Time().Minute() == clock.Minute()
 		if matched {
 			current = v
-			writeResponseFixture(t, "teams_update_management_policy", "datetime_readback", r, replacements)
+			labkit.WriteResponseFixture(t, "teams_update_management_policy", "datetime_readback", r, replacements)
 		}
 		return matched, e
 	}); e != nil {
@@ -222,19 +224,19 @@ func TestAccUpdateManagementPolicyCRUD(t *testing.T) {
 		{"list_clear", "update-management list clear/read-back: passed", policy.ReplaceStrings(), []string{}},
 	} {
 		_, r, e = service.UpdateByIdentity(ctx, identity, updatePolicy.UpdateRequest{DisabledInProductMessages: stage.edit})
-		writeResponseFixture(t, "teams_update_management_policy", stage.label, r, replacements)
+		labkit.WriteResponseFixture(t, "teams_update_management_policy", stage.label, r, replacements)
 		if e != nil {
-			logAccessResponse(t, r, e)
+			labkit.LogAccessResponse(t, r, e)
 			t.Fatal("update-management list update failed")
 		}
 		want := updateManagementProjection(current)
 		want["DisabledInProductMessages"] = stage.want
-		if e := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+		if e := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 			v, r, e := service.GetByIdentity(ctx, identity)
-			matched := e == nil && v != nil && sameTemplateProjection(want, updateManagementProjection(v))
+			matched := e == nil && v != nil && labkit.SameProjection(want, updateManagementProjection(v))
 			if matched {
 				current = v
-				writeResponseFixture(t, "teams_update_management_policy", stage.label+"_readback", r, replacements)
+				labkit.WriteResponseFixture(t, "teams_update_management_policy", stage.label+"_readback", r, replacements)
 			}
 			return matched, e
 		}); e != nil {
@@ -249,17 +251,17 @@ func TestAccUpdateManagementPolicyCRUD(t *testing.T) {
 	}
 	count := 0
 	for _, v := range values {
-		if v != nil && v.Identity != nil && samePolicyName(*v.Identity, name) {
+		if v != nil && v.Identity != nil && labkit.SamePolicyName(*v.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned update-management policy missing or ambiguous")
 	}
-	writeResponseFixture(t, "teams_update_management_policy", "owned_list", r, replacements)
+	labkit.WriteResponseFixture(t, "teams_update_management_policy", "owned_list", r, replacements)
 	t.Log("policy list: passed")
 	_, r, e = service.DeleteByIdentity(ctx, identity, policy.Controls{})
-	writeResponseFixture(t, "teams_update_management_policy", "delete", r, replacements)
+	labkit.WriteResponseFixture(t, "teams_update_management_policy", "delete", r, replacements)
 	if e != nil {
 		t.Fatal("update-management delete failed")
 	}
@@ -267,9 +269,9 @@ func TestAccUpdateManagementPolicyCRUD(t *testing.T) {
 		t.Fatal("update-management independent absence not verified")
 	}
 	_, r, e = service.GetByIdentity(ctx, identity)
-	if !isHTTP(e, 404) {
+	if !labkit.IsHTTP(e, 404) {
 		t.Fatal("update-management deleted read did not return404")
 	}
-	writeResponseFixture(t, "teams_update_management_policy", "get_deleted", r, replacements)
+	labkit.WriteResponseFixture(t, "teams_update_management_policy", "get_deleted", r, replacements)
 	t.Log("policy delete/absence: passed")
 }

@@ -7,12 +7,13 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
@@ -35,50 +36,50 @@ func decodeAppPermissionOracle(raw []byte, tenant string) (appPermissionObservat
 }
 func decodeAppPermissionOracleForIdentity(raw []byte, tenant, identity string) (appPermissionObservation, error) {
 	var v appPermissionObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !appPermissionOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !appPermissionOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return appPermissionObservation{}, errTeamOracle
+		return appPermissionObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != 7 {
-		return appPermissionObservation{}, errTeamOracle
+		return appPermissionObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return appPermissionObservation{}, errTeamOracle
+		return appPermissionObservation{}, labkit.ErrOracle
 	}
 	for _, key := range appPermissionScalars {
 		var value *string
 		body, ok := v.Settings[key]
 		if !ok || json.Unmarshal(body, &value) != nil {
-			return appPermissionObservation{}, errTeamOracle
+			return appPermissionObservation{}, labkit.ErrOracle
 		}
 	}
 	for _, key := range appPermissionCatalogs {
 		var items []map[string]*string
 		body, ok := v.Settings[key]
 		if !ok || json.Unmarshal(body, &items) != nil || items == nil {
-			return appPermissionObservation{}, errTeamOracle
+			return appPermissionObservation{}, labkit.ErrOracle
 		}
 		for _, item := range items {
 			if item == nil {
 				continue
 			}
 			if len(item) != 2 {
-				return appPermissionObservation{}, errTeamOracle
+				return appPermissionObservation{}, labkit.ErrOracle
 			}
 			if _, ok := item["Identity"]; !ok {
-				return appPermissionObservation{}, errTeamOracle
+				return appPermissionObservation{}, labkit.ErrOracle
 			}
 			if _, ok := item["Id"]; !ok {
-				return appPermissionObservation{}, errTeamOracle
+				return appPermissionObservation{}, labkit.ErrOracle
 			}
 		}
 	}
@@ -107,7 +108,7 @@ func appPermissionOracleForIdentity(t *testing.T, ctx context.Context, tenant, i
 		t.Fatal("invalid app permission oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-app-permission-policy.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-app-permission-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -115,14 +116,14 @@ func appPermissionOracleForIdentity(t *testing.T, ctx context.Context, tenant, i
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned app permission read failed; no output retained")
 	}
-	v, e := decodeAppPermissionOracleForIdentity(output.data, tenant, identity)
+	v, e := decodeAppPermissionOracleForIdentity(output.Data, tenant, identity)
 	if e != nil {
 		t.Fatal("pinned app permission projection unavailable")
 	}
@@ -134,13 +135,13 @@ func globalAppPermissionPolicy(values []*resource.Policy) (*resource.Policy, err
 	for _, value := range values {
 		if value != nil && value.Identity != nil && strings.EqualFold(*value.Identity, "Global") {
 			if found != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			found = value
 		}
 	}
 	if found == nil {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	return found, nil
 }
@@ -157,12 +158,12 @@ func TestAccAppPermissionPolicyReadOnly(t *testing.T) {
 	} else if e != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_app_permission_policy", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_app_permission_policy", "get_global", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -171,7 +172,7 @@ func TestAccAppPermissionPolicyReadOnly(t *testing.T) {
 		t.Fatalf("app permission Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_app_permission_policy", "list", listResponse, nil)
+	labkit.WriteResponseFixture(t, "teams_app_permission_policy", "list", listResponse, nil)
 	selected, selectionErr := globalAppPermissionPolicy(listed)
 	if e != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(appPermissionProjection(value), appPermissionProjection(selected)) {
 		t.Fatal("app permission Global read/list observations differ")
@@ -222,7 +223,7 @@ func TestUnitAppPermissionOracleRestrictsOwnedIdentity(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-app-permission-policy"
-	raw, err := os.ReadFile("../../../msteams/teams_admin_api/teams_app_permission_policy/testdata/get_global.json")
+	raw, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/teams_app_permission_policy/testdata/get_global.json")
 	if err != nil {
 		t.Fatal(err)
 	}

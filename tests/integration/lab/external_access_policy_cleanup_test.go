@@ -7,6 +7,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -27,7 +29,7 @@ func externalCleanupWire(method, path, command string, status int, body []byte) 
 
 func TestUnitExternalCleanupMissingOwnedPolicyStaysUnresolved(t *testing.T) {
 	t.Parallel()
-	body, err := os.ReadFile("../../../msteams/teams_admin_api/external_access_policy/testdata/list.json")
+	body, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/external_access_policy/testdata/list.json")
 	if err != nil {
 		t.Fatal(err)
 	}

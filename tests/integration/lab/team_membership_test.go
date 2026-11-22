@@ -8,7 +8,8 @@ import (
 	"regexp"
 	"strings"
 	"testing"
-	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -22,7 +23,6 @@ import (
 
 const membershipFixtureKind = "membership-team"
 
-var labDirectoryID = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
 var membershipFixtureName = regexp.MustCompile(`^msteams-sdk-[a-z2-7]{26,64}-membership$`)
 
 // User fixtures are existing lab accounts. The test changes relationships only
@@ -36,7 +36,7 @@ type membershipUsers struct {
 
 func loadMembershipUsers(file, binding string) (membershipUsers, error) {
 	var value membershipUsers
-	raw, err := privateLabFile(file)
+	raw, err := labkit.PrivateFile(file)
 	if err != nil {
 		return value, lab.ErrConfig
 	}
@@ -51,7 +51,7 @@ func loadMembershipUsers(file, binding string) (membershipUsers, error) {
 	seen := map[string]bool{}
 	for _, id := range []string{value.Owner, value.SecondOwner, value.Member} {
 		key := strings.ToLower(id)
-		if !labDirectoryID.MatchString(id) || seen[key] {
+		if !labkit.DirectoryID.MatchString(id) || seen[key] {
 			return membershipUsers{}, lab.ErrConfig
 		}
 		seen[key] = true
@@ -73,7 +73,7 @@ func (h membershipCleanup) Resolve(ctx context.Context, entry lab.Entry) (string
 	}
 	id := ""
 	for _, item := range list.Items {
-		if item.DisplayName == nil || *item.DisplayName != entry.Fixture || !labDirectoryID.MatchString(item.ID) {
+		if item.DisplayName == nil || *item.DisplayName != entry.Fixture || !labkit.DirectoryID.MatchString(item.ID) {
 			return "", lab.ErrUnresolved
 		}
 		if id != "" && !strings.EqualFold(id, item.ID) {
@@ -88,7 +88,7 @@ func (h membershipCleanup) Resolve(ctx context.Context, entry lab.Entry) (string
 }
 
 func (h membershipCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !membershipFixtureName.MatchString(entry.Fixture) || !labDirectoryID.MatchString(entry.ResourceID) {
+	if !membershipFixtureName.MatchString(entry.Fixture) || !labkit.DirectoryID.MatchString(entry.ResourceID) {
 		return lab.ErrUnresolved
 	}
 	teamData, _, err := h.sdk.GraphAPI.Teams.GetByID(ctx, entry.ResourceID)
@@ -135,8 +135,8 @@ func membershipLabConfig(t *testing.T) lab.Config {
 // normal CI and cannot accept a pre-existing team ID as its mutation target.
 func TestAccTeamMembershipCRUD(t *testing.T) {
 	cfg := membershipLabConfig(t)
-	_ = teamOracleEnabled(t) // Validate the optional oracle before fixture writes.
-	sdk, binding, _ := labSDKClient(t)
+	_ = labkit.OracleEnabled(t) // Validate the optional oracle before fixture writes.
+	sdk, binding, _ := labkit.SDKClient(t)
 	users, err := loadMembershipUsers(os.Getenv("MSTEAMS_LAB_MEMBERSHIP_USERS_FILE"), binding)
 	if err != nil {
 		t.Fatal("explicit private same-tenant membership user fixtures are required")
@@ -247,26 +247,8 @@ func TestAccTeamMembershipCRUD(t *testing.T) {
 	t.Log("native membership CRUD/role changes and backing-group team-user compositions passed; guest and Teams-client convergence qualification remain outstanding")
 }
 
-// Observation polling is test-owned, read-only and explicitly bounded by ctx.
-// Mutations are never retried; received read errors fail immediately.
-func observeUntil(ctx context.Context, read func(context.Context) (bool, error)) error {
-	for {
-		ok, err := read(ctx)
-		if err != nil || ok {
-			return err
-		}
-		timer := time.NewTimer(2 * time.Second)
-		select {
-		case <-ctx.Done():
-			timer.Stop()
-			return ctx.Err()
-		case <-timer.C:
-		}
-	}
-}
-
 func observeNativeMember(ctx context.Context, sdk *msteams.Client, teamID string, id member.MembershipID, userID string, owner bool) error {
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		value, _, err := sdk.GraphAPI.TeamMembers.GetByID(ctx, teamID, id)
 		if err != nil {
 			return false, err
@@ -306,7 +288,7 @@ func observeNativeMember(ctx context.Context, sdk *msteams.Client, teamID string
 }
 
 func observeNativeAbsence(ctx context.Context, sdk *msteams.Client, teamID string, id member.MembershipID) error {
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := sdk.GraphAPI.TeamMembers.GetByID(ctx, teamID, id)
 		var apiError *client.APIError
 		if err == nil {
@@ -329,7 +311,7 @@ func observeNativeAbsence(ctx context.Context, sdk *msteams.Client, teamID strin
 }
 
 func observeReferences(ctx context.Context, sdk *msteams.Client, teamID, userID string, wantMember, wantOwner bool) error {
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		members, err := sdk.GraphAPI.GroupMembers.ListAll(ctx, teamID, relationship.ListOptions{Select: []string{"id"}}, client.PagingOptions{MaxPages: 16})
 		if err != nil {
 			return false, err
@@ -357,7 +339,7 @@ func observeReferences(ctx context.Context, sdk *msteams.Client, teamID, userID 
 // same tenant/cloud/app binding. Denied/absent/ambiguous reads keep it unresolved.
 func TestAccRecoverTeamMembership(t *testing.T) {
 	cfg := membershipLabConfig(t)
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	file := os.Getenv("MSTEAMS_LAB_RECOVERY_JOURNAL")
 	if file == "" {
 		t.Skip("explicit private recovery journal is required")

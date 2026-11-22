@@ -6,11 +6,12 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"os/exec"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shared_calling_routing_policy"
 )
@@ -28,34 +29,34 @@ var sharedCallingPolicyOwnedIdentity = regexp.MustCompile(`(?i)^(?:tag:)?msteams
 
 func decodeSharedCallingRoutingPolicyOracleForIdentity(raw []byte, tenant, identity string) (sharedCallingPolicyObservation, error) {
 	var v sharedCallingPolicyObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !sharedCallingPolicyOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !sharedCallingPolicyOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return sharedCallingPolicyObservation{}, errTeamOracle
+		return sharedCallingPolicyObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(sharedCallingPolicyScalars) {
-		return sharedCallingPolicyObservation{}, errTeamOracle
+		return sharedCallingPolicyObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return sharedCallingPolicyObservation{}, errTeamOracle
+		return sharedCallingPolicyObservation{}, labkit.ErrOracle
 	}
 	for _, name := range sharedCallingPolicyScalars {
 		if _, ok := v.Settings[name]; !ok {
-			return sharedCallingPolicyObservation{}, errTeamOracle
+			return sharedCallingPolicyObservation{}, labkit.ErrOracle
 		}
 	}
 	settings, err := json.Marshal(v.Settings)
 	var model resource.Policy
 	if err != nil || json.Unmarshal(settings, &model) != nil {
-		return sharedCallingPolicyObservation{}, errTeamOracle
+		return sharedCallingPolicyObservation{}, labkit.ErrOracle
 	}
 	return v, nil
 }
@@ -67,7 +68,7 @@ func sharedCallingPolicyOracleForIdentity(t *testing.T, ctx context.Context, ten
 		t.Fatal("invalid shared-calling policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-shared-calling-policy.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-shared-calling-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -75,17 +76,17 @@ func sharedCallingPolicyOracleForIdentity(t *testing.T, ctx context.Context, ten
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned shared-calling policy read failed; no output retained")
 	}
-	if stage := readOracleFailureStage(output.data); stage != "" {
+	if stage := labkit.ReadOracleFailureStage(output.Data); stage != "" {
 		t.Log("oracle failure stage: " + stage)
 	}
-	value, err := decodeSharedCallingRoutingPolicyOracleForIdentity(output.data, tenant, identity)
+	value, err := decodeSharedCallingRoutingPolicyOracleForIdentity(output.Data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned shared-calling policy projection unavailable")
 	}
@@ -96,5 +97,5 @@ func matchesSharedCallingRoutingPolicyGetterProjection(v *resource.Policy, setti
 	if v == nil {
 		return false
 	}
-	return sameTemplateProjection(map[string]any{"Description": v.Description, "ResourceAccount": v.ResourceAccount, "EmergencyNumbers": v.EmergencyNumbers}, settings)
+	return labkit.SameProjection(map[string]any{"Description": v.Description, "ResourceAccount": v.ResourceAccount, "EmergencyNumbers": v.EmergencyNumbers}, settings)
 }

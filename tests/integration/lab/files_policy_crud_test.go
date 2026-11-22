@@ -6,6 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	files "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
@@ -23,7 +25,7 @@ func (h filesPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (strin
 		if value == nil || value.Identity == nil {
 			return "", lab.ErrUnresolved
 		}
-		if samePolicyName(*value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -32,7 +34,7 @@ func (h filesPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (strin
 	}
 	if found == "" {
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -43,19 +45,19 @@ func (h filesPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (strin
 	return found, nil
 }
 func (h filesPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, _, err := h.service.DeleteByIdentity(ctx, entry.ResourceID, policy.Controls{})
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -66,7 +68,7 @@ func (h filesPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 			if value == nil || value.Identity == nil {
 				return false, lab.ErrUnresolved
 			}
-			if samePolicyName(*value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -87,8 +89,8 @@ func TestAccFilesPolicyCRUD(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsFilesPolicies
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -117,23 +119,23 @@ func TestAccFilesPolicyCRUD(t *testing.T) {
 	replacements := map[string]string{name: "fixture-policy"}
 	_, response, err := service.CreateByIdentity(ctx, name, files.CreateRequest{Settings: files.Settings{NativeFileEntryPoints: policy.Set("Disabled"), SPChannelFilesTab: policy.Set("Enabled")}})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("files policy create failed; recovery journal retained")
 	}
-	writeResponseFixture(t, "teams_files_policy", "create", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_files_policy", "create", response, replacements)
 	var value *files.Policy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
-		matched := read != nil && read.Identity != nil && samePolicyName(*read.Identity, name) && read.NativeFileEntryPoints != nil && *read.NativeFileEntryPoints == "Disabled" && read.SPChannelFilesTab != nil && *read.SPChannelFilesTab == "Enabled"
+		matched := read != nil && read.Identity != nil && labkit.SamePolicyName(*read.Identity, name) && read.NativeFileEntryPoints != nil && *read.NativeFileEntryPoints == "Disabled" && read.SPChannelFilesTab != nil && *read.SPChannelFilesTab == "Enabled"
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_files_policy", "create_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_files_policy", "create_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -161,11 +163,11 @@ func TestAccFilesPolicyCRUD(t *testing.T) {
 	compare(value)
 	_, response, err = service.UpdateByIdentity(ctx, identity, files.UpdateRequest{Settings: files.Settings{SPChannelFilesTab: policy.Set("Disabled")}})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("files sparse update failed")
 	}
-	writeResponseFixture(t, "teams_files_policy", "update", response, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "teams_files_policy", "update", response, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, identity)
 		if err != nil {
 			return false, err
@@ -173,7 +175,7 @@ func TestAccFilesPolicyCRUD(t *testing.T) {
 		matched := read != nil && read.NativeFileEntryPoints != nil && *read.NativeFileEntryPoints == "Disabled" && read.SPChannelFilesTab != nil && *read.SPChannelFilesTab == "Disabled"
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_files_policy", "update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_files_policy", "update_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -187,29 +189,29 @@ func TestAccFilesPolicyCRUD(t *testing.T) {
 	}
 	count := 0
 	for _, item := range values {
-		if item != nil && item.Identity != nil && samePolicyName(*item.Identity, name) {
+		if item != nil && item.Identity != nil && labkit.SamePolicyName(*item.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned files policy missing or ambiguous in list")
 	}
-	writeResponseFixture(t, "teams_files_policy", "owned_list", listResponse, replacements)
+	labkit.WriteResponseFixture(t, "teams_files_policy", "owned_list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if _, deletedResponse, err := service.DeleteByIdentity(ctx, identity, policy.Controls{}); err != nil {
-		logAccessResponse(t, deletedResponse, err)
+		labkit.LogAccessResponse(t, deletedResponse, err)
 		t.Fatal("owned policy delete failed")
 	} else {
-		writeResponseFixture(t, "teams_files_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
+		labkit.WriteResponseFixture(t, "teams_files_policy", "delete", deletedResponse, map[string]string{name: "fixture-policy"})
 	}
 	if err := (filesPolicyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: identity}); err != nil {
 		t.Fatal("files deletion and independent absence were not verified")
 	}
 	_, response, err = service.GetByIdentity(ctx, identity)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("files deleted policy did not return typed404")
 	}
-	writeResponseFixture(t, "teams_files_policy", "get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_files_policy", "get_deleted", response, replacements)
 	t.Log("policy delete/absence: passed")
 	t.Log("files policy create/read/update/list/delete and omitted-field preservation verified")
 }

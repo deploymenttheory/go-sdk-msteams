@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	audio "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
 )
@@ -20,7 +22,7 @@ func (h audioPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (strin
 	}
 	found := ""
 	for _, value := range values {
-		if samePolicyName(value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -29,7 +31,7 @@ func (h audioPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (strin
 	}
 	if found == "" {
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -40,18 +42,18 @@ func (h audioPolicyCleanup) Resolve(ctx context.Context, entry lab.Entry) (strin
 	return found, nil
 }
 func (h audioPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
-	if _, err := h.service.DeleteByIdentity(ctx, entry.ResourceID); err != nil && !isHTTP(err, 404) {
+	if _, err := h.service.DeleteByIdentity(ctx, entry.ResourceID); err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -59,7 +61,7 @@ func (h audioPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 			return false, err
 		}
 		for _, value := range values {
-			if samePolicyName(value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -80,8 +82,8 @@ func TestAccAudioConferencingPolicyCRUD(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsAudioConferencingPolicies
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -110,23 +112,23 @@ func TestAccAudioConferencingPolicyCRUD(t *testing.T) {
 	replacements := map[string]string{name: "fixture-policy"}
 	response, err := service.CreateByIdentity(ctx, name, audio.Settings{AllowTollFreeDialin: new(false), MeetingInvitePhoneNumbers: audio.ReplacePhoneNumbers()})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("audio policy create failed")
 	}
-	writeResponseFixture(t, "teams_audio_conferencing_policy", "create", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_audio_conferencing_policy", "create", response, replacements)
 	var value *audio.Policy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
-		matched := read != nil && samePolicyName(read.Identity, name) && read.AllowTollFreeDialin != nil && !*read.AllowTollFreeDialin && read.MeetingInvitePhoneNumbers != nil && len(read.MeetingInvitePhoneNumbers) == 0
+		matched := read != nil && labkit.SamePolicyName(read.Identity, name) && read.AllowTollFreeDialin != nil && !*read.AllowTollFreeDialin && read.MeetingInvitePhoneNumbers != nil && len(read.MeetingInvitePhoneNumbers) == 0
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_audio_conferencing_policy", "create_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_audio_conferencing_policy", "create_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -157,11 +159,11 @@ func TestAccAudioConferencingPolicyCRUD(t *testing.T) {
 	compare(value)
 	response, err = service.UpdateByIdentity(ctx, identity, audio.Settings{AllowTollFreeDialin: new(true)})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("audio policy sparse update failed")
 	}
-	writeResponseFixture(t, "teams_audio_conferencing_policy", "update", response, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "teams_audio_conferencing_policy", "update", response, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, identity)
 		if err != nil {
 			return false, err
@@ -169,7 +171,7 @@ func TestAccAudioConferencingPolicyCRUD(t *testing.T) {
 		matched := read != nil && read.AllowTollFreeDialin != nil && *read.AllowTollFreeDialin && read.MeetingInvitePhoneNumbers != nil && len(read.MeetingInvitePhoneNumbers) == 0
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_audio_conferencing_policy", "update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_audio_conferencing_policy", "update_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -183,28 +185,28 @@ func TestAccAudioConferencingPolicyCRUD(t *testing.T) {
 	}
 	count := 0
 	for _, item := range values {
-		if samePolicyName(item.Identity, name) {
+		if labkit.SamePolicyName(item.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned audio policy missing or ambiguous in list")
 	}
-	writeResponseFixture(t, "teams_audio_conferencing_policy", "owned_list", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_audio_conferencing_policy", "owned_list", response, replacements)
 	t.Log("policy list: passed")
 	response, err = service.DeleteByIdentity(ctx, identity)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("owned audio policy delete failed")
 	}
-	writeResponseFixture(t, "teams_audio_conferencing_policy", "delete", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_audio_conferencing_policy", "delete", response, replacements)
 	if err := (audioPolicyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: identity}); err != nil {
 		t.Fatal("audio policy deletion or independent absence not verified")
 	}
 	_, response, err = service.GetByIdentity(ctx, identity)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("deleted audio policy did not return typed404")
 	}
-	writeResponseFixture(t, "teams_audio_conferencing_policy", "get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_audio_conferencing_policy", "get_deleted", response, replacements)
 	t.Log("policy delete/absence: passed")
 }

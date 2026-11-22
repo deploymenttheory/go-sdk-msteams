@@ -8,23 +8,19 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-type privateMigrationObservation struct {
-	TenantID *string `json:"tenant_id"`
-	Status   *string `json:"status"`
-	Details  *string `json:"details"`
-}
-
 // TestAccBatchDeploymentStatusReadOnly reads one explicitly selected existing
 // orchestration. It never submits a deployment or sends notification email.
 func TestAccBatchDeploymentStatusReadOnly(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
-	raw, err := privateLabFile(os.Getenv("MSTEAMS_LAB_BATCH_STATUS_FILE"))
+	cfg := labkit.ReadOnlyEnabled(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
+	raw, err := labkit.PrivateFile(os.Getenv("MSTEAMS_LAB_BATCH_STATUS_FILE"))
 	if err != nil {
 		t.Fatal("explicit private batch-status fixture required")
 	}
@@ -44,7 +40,7 @@ func TestAccBatchDeploymentStatusReadOnly(t *testing.T) {
 		t.Fatal("selected batch status read failed")
 	}
 	if oracle {
-		actual := runTeamOracle(t, ctx, teamOracleRequest{Kind: "batch-status", ID: tenant, OrchestrationID: fixture.OrchestrationID}).BatchStatus
+		actual := labkit.RunTeamOracle(t, ctx, labkit.TeamOracleRequest{Kind: "batch-status", ID: tenant, OrchestrationID: fixture.OrchestrationID}).BatchStatus
 		if actual == nil || *actual != value.Text {
 			t.Fatal("PowerShell and Go batch status text differs")
 		}
@@ -53,9 +49,9 @@ func TestAccBatchDeploymentStatusReadOnly(t *testing.T) {
 }
 
 func TestAccPrivateChannelMigrationReadOnly(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	cfg := labkit.ReadOnlyEnabled(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, _, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
@@ -67,8 +63,8 @@ func TestAccPrivateChannelMigrationReadOnly(t *testing.T) {
 		t.Fatal("migration status tenant does not match selected identity")
 	}
 	if oracle {
-		actual := runTeamOracle(t, ctx, teamOracleRequest{Kind: "private-migration", ID: tenant}).PrivateMigration
-		want := privateMigrationObservation{TenantID: value.TenantID, Status: value.MigrationStatus, Details: value.Details}
+		actual := labkit.RunTeamOracle(t, ctx, labkit.TeamOracleRequest{Kind: "private-migration", ID: tenant}).PrivateMigration
+		want := labkit.PrivateMigrationObservation{TenantID: value.TenantID, Status: value.MigrationStatus, Details: value.Details}
 		if actual == nil || !reflect.DeepEqual(want, *actual) {
 			t.Fatal("PowerShell and Go selected private migration fields differ")
 		}
@@ -80,13 +76,13 @@ func TestAccPrivateChannelMigrationReadOnly(t *testing.T) {
 // scope-specific token file. It cannot reuse the dedicated application identity.
 // No token is obtained from an ambient browser or application-mode fallback.
 func TestAccMultiGeoRegionReadOnly(t *testing.T) {
-	cfg := targetingReadOnly(t)
+	cfg := labkit.ReadOnlyEnabled(t)
 	path := os.Getenv("MSTEAMS_LAB_REGION_FILE")
 	if path == "" {
 		t.Skip("region read requires an explicitly provisioned private delegated scope-token fixture")
 	}
-	_, binding, _ := labSDKClient(t)
-	raw, err := privateLabFile(path)
+	_, binding, _ := labkit.SDKClient(t)
+	raw, err := labkit.PrivateFile(path)
 	if err != nil {
 		t.Fatal("private delegated region fixture unavailable")
 	}
@@ -104,7 +100,7 @@ func TestAccMultiGeoRegionReadOnly(t *testing.T) {
 	}
 	defer clear(fixture.Tokens)
 	tenant, _, ok := strings.Cut(binding, "|")
-	if !ok || !strings.EqualFold(fixture.TenantID, tenant) || !labDirectoryID.MatchString(fixture.IdentityID) || fixture.Cloud != "commercial" && fixture.Cloud != "gcc" || fixture.EntityID == "" || fixture.EntityType != "User" && fixture.EntityType != "Group" {
+	if !ok || !strings.EqualFold(fixture.TenantID, tenant) || !labkit.DirectoryID.MatchString(fixture.IdentityID) || fixture.Cloud != "commercial" && fixture.Cloud != "gcc" || fixture.EntityID == "" || fixture.EntityType != "User" && fixture.EntityType != "Group" {
 		t.Fatal("invalid delegated region binding/selector")
 	}
 	const audience = "https://migrationsvc.teams.microsoft.com"

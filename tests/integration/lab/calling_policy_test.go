@@ -7,13 +7,14 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"regexp"
 	"slices"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_calling_policy"
@@ -37,34 +38,34 @@ func decodeCallingPolicyOracle(raw []byte, tenant string) (callingPolicyObservat
 
 func decodeCallingPolicyOracleForIdentity(raw []byte, tenant, identity string) (callingPolicyObservation, error) {
 	var v callingPolicyObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !callingOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !callingOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return callingPolicyObservation{}, errTeamOracle
+		return callingPolicyObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(callingPolicyScalars) {
-		return callingPolicyObservation{}, errTeamOracle
+		return callingPolicyObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return callingPolicyObservation{}, errTeamOracle
+		return callingPolicyObservation{}, labkit.ErrOracle
 	}
 	for _, name := range callingPolicyScalars {
 		if _, ok := v.Settings[name]; !ok {
-			return callingPolicyObservation{}, errTeamOracle
+			return callingPolicyObservation{}, labkit.ErrOracle
 		}
 	}
 	settings, err := json.Marshal(v.Settings)
 	var model resource.Policy
 	if err != nil || json.Unmarshal(settings, &model) != nil {
-		return callingPolicyObservation{}, errTeamOracle
+		return callingPolicyObservation{}, labkit.ErrOracle
 	}
 	return v, nil
 }
@@ -81,7 +82,7 @@ func callingPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, i
 		t.Fatal("invalid calling policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-calling-policy.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-calling-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -89,20 +90,20 @@ func callingPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, i
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned calling policy read failed; no output retained")
 	}
-	value, err := decodeCallingPolicyOracleForIdentity(output.data, tenant, identity)
+	value, err := decodeCallingPolicyOracleForIdentity(output.Data, tenant, identity)
 	if err != nil {
 		var diagnostic struct {
 			Success bool   `json:"success"`
 			Stage   string `json:"failure_stage"`
 		}
-		if json.Unmarshal(output.data, &diagnostic) == nil && !diagnostic.Success {
+		if json.Unmarshal(output.Data, &diagnostic) == nil && !diagnostic.Success {
 			stage := diagnostic.Stage
 			if slices.Contains([]string{"enablement", "selectors", "baseline", "module", "identity", "authentication", "read", "selected-result"}, stage) || strings.HasPrefix(stage, "property:") && slices.Contains(callingPolicyScalars, strings.TrimPrefix(stage, "property:")) {
 				t.Fatalf("pinned calling policy read failed at %s", stage)
@@ -125,12 +126,12 @@ func TestAccCallingPolicyReadOnly(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsCallingPolicies.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_calling_policy", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_calling_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -139,7 +140,7 @@ func TestAccCallingPolicyReadOnly(t *testing.T) {
 		t.Fatalf("calling policy Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsCallingPolicies.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_calling_policy", "list", listResponse, nil)
+	labkit.WriteResponseFixture(t, "teams_calling_policy", "list", listResponse, nil)
 	selected, selectionErr := globalCallingPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(callingProjection(value), callingProjection(selected)) {
 		t.Fatal("calling Global read/list projections differ")
@@ -182,13 +183,13 @@ func globalCallingPolicy(values []*resource.Policy) (*resource.Policy, error) {
 	for _, v := range values {
 		if v != nil && v.Identity != nil && strings.EqualFold(*v.Identity, "Global") {
 			if found != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			found = v
 		}
 	}
 	if found == nil {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	return found, nil
 }

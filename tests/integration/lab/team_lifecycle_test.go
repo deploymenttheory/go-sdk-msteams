@@ -17,6 +17,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -37,7 +39,7 @@ type lifecycleOwner struct {
 
 func loadLifecycleOwner(file, binding string) (lifecycleOwner, error) {
 	var value lifecycleOwner
-	raw, err := privateLabFile(file)
+	raw, err := labkit.PrivateFile(file)
 	if err != nil {
 		return value, lab.ErrConfig
 	}
@@ -150,8 +152,8 @@ func lifecycleJournal(t *testing.T, cfg lab.Config, sdk *msteams.Client, binding
 // resource IDs are never accepted as mutation targets. No tenant roles are set.
 func TestAccTeamLifecycle(t *testing.T) {
 	cfg := lifecycleLabConfig(t)
-	_ = teamOracleEnabled(t) // Validate the optional oracle before fixture writes.
-	sdk, binding, _ := labSDKClient(t)
+	_ = labkit.OracleEnabled(t) // Validate the optional oracle before fixture writes.
+	sdk, binding, _ := labkit.SDKClient(t)
 	owner, err := loadLifecycleOwner(os.Getenv("MSTEAMS_LAB_TEAM_OWNER_FILE"), binding)
 	if err != nil {
 		t.Fatal("explicit private same-tenant owner fixture is required")
@@ -302,7 +304,7 @@ func lifecycleObserveAbsent(ctx context.Context, sdk *msteams.Client, id string)
 
 func TestAccRecoverTeamLifecycle(t *testing.T) {
 	cfg := lifecycleLabConfig(t)
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	file := os.Getenv("MSTEAMS_LAB_RECOVERY_JOURNAL")
 	if file == "" {
 		t.Skip("explicit private recovery journal is required")

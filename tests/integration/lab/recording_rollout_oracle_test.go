@@ -6,11 +6,12 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"os/exec"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_recording_roll_out_policy"
 )
@@ -28,34 +29,34 @@ var recordingRollOutPolicyOwnedIdentity = regexp.MustCompile(`(?i)^(?:tag:)?mste
 
 func decodeRecordingRollOutPolicyOracleForIdentity(raw []byte, tenant, identity string) (recordingRollOutPolicyObservation, error) {
 	var v recordingRollOutPolicyObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !recordingRollOutPolicyOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !recordingRollOutPolicyOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return recordingRollOutPolicyObservation{}, errTeamOracle
+		return recordingRollOutPolicyObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(recordingRollOutPolicyScalars) {
-		return recordingRollOutPolicyObservation{}, errTeamOracle
+		return recordingRollOutPolicyObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return recordingRollOutPolicyObservation{}, errTeamOracle
+		return recordingRollOutPolicyObservation{}, labkit.ErrOracle
 	}
 	for _, name := range recordingRollOutPolicyScalars {
 		if _, ok := v.Settings[name]; !ok {
-			return recordingRollOutPolicyObservation{}, errTeamOracle
+			return recordingRollOutPolicyObservation{}, labkit.ErrOracle
 		}
 	}
 	settings, err := json.Marshal(v.Settings)
 	var model resource.Policy
 	if err != nil || json.Unmarshal(settings, &model) != nil {
-		return recordingRollOutPolicyObservation{}, errTeamOracle
+		return recordingRollOutPolicyObservation{}, labkit.ErrOracle
 	}
 	return v, nil
 }
@@ -67,7 +68,7 @@ func recordingRollOutPolicyOracleForIdentity(t *testing.T, ctx context.Context, 
 		t.Fatal("invalid recording rollout policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-recording-rollout-policy.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-recording-rollout-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -75,17 +76,17 @@ func recordingRollOutPolicyOracleForIdentity(t *testing.T, ctx context.Context, 
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned recording rollout policy read failed; no output retained")
 	}
-	if stage := readOracleFailureStage(output.data); stage != "" {
+	if stage := labkit.ReadOracleFailureStage(output.Data); stage != "" {
 		t.Log("oracle failure stage: " + stage)
 	}
-	value, err := decodeRecordingRollOutPolicyOracleForIdentity(output.data, tenant, identity)
+	value, err := decodeRecordingRollOutPolicyOracleForIdentity(output.Data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned recording rollout policy projection unavailable")
 	}
@@ -96,5 +97,5 @@ func matchesRecordingRollOutPolicyGetterProjection(v *resource.Policy, settings 
 	if v == nil {
 		return false
 	}
-	return sameTemplateProjection(map[string]any{"MeetingRecordingOwnership": v.MeetingRecordingOwnership}, settings)
+	return labkit.SameProjection(map[string]any{"MeetingRecordingOwnership": v.MeetingRecordingOwnership}, settings)
 }

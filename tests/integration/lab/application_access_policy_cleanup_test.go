@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -129,7 +131,7 @@ func TestUnitPolicyNamesNormalizeTagOnEitherSide(t *testing.T) {
 		{"single-tag-only", "Tag:Tag:Fixture", "Fixture", false},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			if samePolicyName(test.left, test.right) != test.want {
+			if labkit.SamePolicyName(test.left, test.right) != test.want {
 				t.Fatal("policy identity normalization differs")
 			}
 		})

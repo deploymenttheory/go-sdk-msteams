@@ -4,12 +4,14 @@ import (
 	"context"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
 func TestAccTeamsServiceDiscovery(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	sdk, _, _ := labSDKClient(t)
+	cfg := labkit.ReadOnlyEnabled(t)
+	sdk, _, _ := labkit.SDKClient(t)
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	var result struct {
@@ -23,5 +25,5 @@ func TestAccTeamsServiceDiscovery(t *testing.T) {
 	if err != nil || response == nil || response.StatusCode() != 200 || result.Endpoints.Admin == "" {
 		t.Fatal("Teams service discovery did not return an administration endpoint")
 	}
-	writeResponseFixture(t, "internal/configapi", "service_discovery", response, nil)
+	labkit.WriteResponseFixture(t, "internal/configapi", "service_discovery", response, nil)
 }

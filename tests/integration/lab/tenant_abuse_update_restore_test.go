@@ -9,6 +9,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_tenant_abuse_configuration"
@@ -41,7 +43,7 @@ func (h tenantAbuseConfigurationCleanup) Restore(ctx context.Context, entry lab.
 	if _, _, e := h.service.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{LowSeatLimit: policy.Set(*original.Value)}}); e != nil {
 		return e
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		v, _, e := h.service.GetByIdentity(ctx, "Global")
 		return e == nil && v != nil && v.LowSeatLimit != nil && *v.LowSeatLimit == *original.Value, e
 	})
@@ -62,14 +64,14 @@ func TestAccTenantAbuseConfigurationUpdateRestore(t *testing.T) {
 	} else if e != nil {
 		t.Fatal("invalid tenant-abuse mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	s := sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	before, r, e := s.GetByIdentity(ctx, "Global")
 	if e != nil || before == nil || before.LowSeatLimit == nil {
-		logAccessResponse(t, r, e)
+		labkit.LogAccessResponse(t, r, e)
 		t.Fatal("tenant-abuse original UInt64 unavailable; mutation refused")
 	}
 	journal, e := lab.NewJournal(cfg.JournalDirectory, binding)
@@ -92,7 +94,7 @@ func TestAccTenantAbuseConfigurationUpdateRestore(t *testing.T) {
 			return
 		}
 		tenant, _, ok := strings.Cut(binding, "|")
-		if !ok || !sameTemplateProjection(tenantAbuseProjection(v), tenantConfigurationOracle(t, ctx, "tenant-abuse", tenant)) {
+		if !ok || !labkit.SameProjection(tenantAbuseProjection(v), labkit.TenantConfigurationOracle(t, ctx, "tenant-abuse", tenant)) {
 			t.Fatal("Go and PowerShell tenant-abuse getters differ")
 		}
 		t.Log("PowerShell 8.1.0 / Go configuration read parity: passed")
@@ -113,9 +115,9 @@ func TestAccTenantAbuseConfigurationUpdateRestore(t *testing.T) {
 		want++
 	}
 	_, r, e = s.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{LowSeatLimit: policy.Set(want)}})
-	writeResponseFixture(t, "teams_tenant_abuse_configuration", "update", r, nil)
+	labkit.WriteResponseFixture(t, "teams_tenant_abuse_configuration", "update", r, nil)
 	if e != nil {
-		logAccessResponse(t, r, e)
+		labkit.LogAccessResponse(t, r, e)
 		t.Fatal("tenant-abuse update failed; restoration intent retained")
 	}
 	if e := journal.Applied(entry, "Global"); e != nil {
@@ -124,12 +126,12 @@ func TestAccTenantAbuseConfigurationUpdateRestore(t *testing.T) {
 	expected := tenantAbuseProjection(before)
 	expected["LowSeatLimit"] = &want
 	var updated *resource.Configuration
-	if e := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if e := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		v, r, e := s.GetByIdentity(ctx, "Global")
-		matched := e == nil && v != nil && sameTemplateProjection(expected, tenantAbuseProjection(v))
+		matched := e == nil && v != nil && labkit.SameProjection(expected, tenantAbuseProjection(v))
 		if matched {
 			updated = v
-			writeResponseFixture(t, "teams_tenant_abuse_configuration", "update_readback", r, nil)
+			labkit.WriteResponseFixture(t, "teams_tenant_abuse_configuration", "update_readback", r, nil)
 		}
 		return matched, e
 	}); e != nil {
@@ -141,10 +143,10 @@ func TestAccTenantAbuseConfigurationUpdateRestore(t *testing.T) {
 		t.Fatal("tenant-abuse original restoration failed")
 	}
 	restored, r, e := s.GetByIdentity(ctx, "Global")
-	if e != nil || restored == nil || !sameTemplateProjection(tenantAbuseProjection(before), tenantAbuseProjection(restored)) {
+	if e != nil || restored == nil || !labkit.SameProjection(tenantAbuseProjection(before), tenantAbuseProjection(restored)) {
 		t.Fatal("tenant-abuse original was not independently restored")
 	}
-	writeResponseFixture(t, "teams_tenant_abuse_configuration", "restored_readback", r, nil)
+	labkit.WriteResponseFixture(t, "teams_tenant_abuse_configuration", "restored_readback", r, nil)
 	compare(restored)
 	t.Log("configuration restoration/read-back: passed")
 }

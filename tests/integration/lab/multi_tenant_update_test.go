@@ -9,6 +9,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	configuration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_multi_tenant_organization_configuration"
@@ -41,7 +43,7 @@ func (h multiTenantConfigurationCleanup) Restore(ctx context.Context, entry lab.
 	if _, _, err := h.service.UpdateByIdentity(ctx, "Global", configuration.UpdateRequest{Settings: configuration.Settings{CopilotFromHomeTenant: policy.Set(*snapshot.Value)}}); err != nil {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		v, _, e := h.service.GetByIdentity(ctx, "Global")
 		return e == nil && v != nil && v.CopilotFromHomeTenant != nil && *v.CopilotFromHomeTenant == *snapshot.Value, e
 	})
@@ -57,8 +59,8 @@ func TestAccMultiTenantOrganizationConfigurationUpdateRestore(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid multi-tenant configuration mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	s := sdk.TeamsAdminAPI.TeamsMultiTenantOrganizationConfigurations
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -79,7 +81,7 @@ func TestAccMultiTenantOrganizationConfigurationUpdateRestore(t *testing.T) {
 	defer cancel()
 	before, response, err := s.GetByIdentity(ctx, "Global")
 	if err != nil || before == nil || before.CopilotFromHomeTenant == nil || (*before.CopilotFromHomeTenant != "Enabled" && *before.CopilotFromHomeTenant != "Disabled") {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("supported original multi-tenant setting unavailable; update refused")
 	}
 	compare := func(v *configuration.Configuration) {
@@ -87,7 +89,7 @@ func TestAccMultiTenantOrganizationConfigurationUpdateRestore(t *testing.T) {
 			return
 		}
 		tenant, _, ok := strings.Cut(binding, "|")
-		if !ok || !sameTemplateProjection(map[string]any{"CopilotFromHomeTenant": v.CopilotFromHomeTenant}, tenantConfigurationOracle(t, ctx, "multi-tenant", tenant)) {
+		if !ok || !labkit.SameProjection(map[string]any{"CopilotFromHomeTenant": v.CopilotFromHomeTenant}, labkit.TenantConfigurationOracle(t, ctx, "multi-tenant", tenant)) {
 			t.Fatal("Go and PowerShell multi-tenant configuration getters differ")
 		}
 		t.Log("PowerShell 8.1.0 / Go configuration read parity: passed")
@@ -106,21 +108,21 @@ func TestAccMultiTenantOrganizationConfigurationUpdateRestore(t *testing.T) {
 		want = "Enabled"
 	}
 	_, response, err = s.UpdateByIdentity(ctx, "Global", configuration.UpdateRequest{Settings: configuration.Settings{CopilotFromHomeTenant: policy.Set(want)}})
-	writeResponseFixture(t, "teams_multi_tenant_organization_configuration", "update", response, nil)
+	labkit.WriteResponseFixture(t, "teams_multi_tenant_organization_configuration", "update", response, nil)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("multi-tenant configuration update failed")
 	}
 	if err := journal.Applied(entry, "Global"); err != nil {
 		t.Fatal("multi-tenant update receipt not journaled")
 	}
 	var updated *configuration.Configuration
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		v, r, e := s.GetByIdentity(ctx, "Global")
 		matched := e == nil && v != nil && v.CopilotFromHomeTenant != nil && *v.CopilotFromHomeTenant == want
 		if matched {
 			updated = v
-			writeResponseFixture(t, "teams_multi_tenant_organization_configuration", "update_readback", r, nil)
+			labkit.WriteResponseFixture(t, "teams_multi_tenant_organization_configuration", "update_readback", r, nil)
 		}
 		return matched, e
 	}); err != nil {
@@ -135,7 +137,7 @@ func TestAccMultiTenantOrganizationConfigurationUpdateRestore(t *testing.T) {
 	if err != nil || restored == nil || restored.CopilotFromHomeTenant == nil || *restored.CopilotFromHomeTenant != *before.CopilotFromHomeTenant {
 		t.Fatal("multi-tenant original state not independently restored")
 	}
-	writeResponseFixture(t, "teams_multi_tenant_organization_configuration", "restored_readback", response, nil)
+	labkit.WriteResponseFixture(t, "teams_multi_tenant_organization_configuration", "restored_readback", response, nil)
 	compare(restored)
 	t.Log("configuration restoration/read-back: passed")
 }

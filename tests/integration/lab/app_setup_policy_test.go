@@ -7,12 +7,13 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_setup_policy"
@@ -34,42 +35,42 @@ func decodeAppSetupOracle(raw []byte, tenant string) (appSetupObservation, error
 }
 func decodeAppSetupOracleForIdentity(raw []byte, tenant, identity string) (appSetupObservation, error) {
 	var v appSetupObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !appSetupOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !appSetupOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return appSetupObservation{}, errTeamOracle
+		return appSetupObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != 9 {
-		return appSetupObservation{}, errTeamOracle
+		return appSetupObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return appSetupObservation{}, errTeamOracle
+		return appSetupObservation{}, labkit.ErrOracle
 	}
 	var description *string
 	body, ok := v.Settings["Description"]
 	if !ok || json.Unmarshal(body, &description) != nil {
-		return appSetupObservation{}, errTeamOracle
+		return appSetupObservation{}, labkit.ErrOracle
 	}
 	for _, key := range []string{"AllowSideLoading", "AllowUserPinning"} {
 		var value *bool
 		body, ok := v.Settings[key]
 		if !ok || json.Unmarshal(body, &value) != nil {
-			return appSetupObservation{}, errTeamOracle
+			return appSetupObservation{}, labkit.ErrOracle
 		}
 	}
 	for _, key := range appSetupCollections {
 		var items []map[string]json.RawMessage
 		body, ok := v.Settings[key]
 		if !ok || json.Unmarshal(body, &items) != nil || items == nil {
-			return appSetupObservation{}, errTeamOracle
+			return appSetupObservation{}, labkit.ErrOracle
 		}
 		for _, item := range items {
 			if item == nil {
@@ -80,27 +81,27 @@ func decodeAppSetupOracleForIdentity(raw []byte, tenant, identity string) (appSe
 				count = 3
 			}
 			if len(item) != count {
-				return appSetupObservation{}, errTeamOracle
+				return appSetupObservation{}, labkit.ErrOracle
 			}
 			for _, name := range []string{"Identity", "Id"} {
 				var value *string
 				raw, ok := item[name]
 				if !ok || json.Unmarshal(raw, &value) != nil {
-					return appSetupObservation{}, errTeamOracle
+					return appSetupObservation{}, labkit.ErrOracle
 				}
 			}
 			if key == "PinnedAppBarApps" || key == "PinnedMessageBarApps" {
 				var order int64
 				raw, ok := item["Order"]
 				if !ok || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) || json.Unmarshal(raw, &order) != nil {
-					return appSetupObservation{}, errTeamOracle
+					return appSetupObservation{}, labkit.ErrOracle
 				}
 			}
 			if key == "AdditionalCustomizationApps" {
 				var value *string
 				raw, ok := item["AdditionalCustomizationId"]
 				if !ok || json.Unmarshal(raw, &value) != nil {
-					return appSetupObservation{}, errTeamOracle
+					return appSetupObservation{}, labkit.ErrOracle
 				}
 			}
 		}
@@ -148,7 +149,7 @@ func appSetupOracleForIdentity(t *testing.T, ctx context.Context, tenant, identi
 		t.Fatal("invalid setup oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-app-setup-policy.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-app-setup-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -156,14 +157,14 @@ func appSetupOracleForIdentity(t *testing.T, ctx context.Context, tenant, identi
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned setup read failed; no output retained")
 	}
-	value, e := decodeAppSetupOracleForIdentity(output.data, tenant, identity)
+	value, e := decodeAppSetupOracleForIdentity(output.Data, tenant, identity)
 	if e != nil {
 		t.Fatal("pinned setup projection unavailable")
 	}
@@ -174,13 +175,13 @@ func globalAppSetupPolicy(values []*resource.Policy) (*resource.Policy, error) {
 	for _, v := range values {
 		if v != nil && v.Identity != nil && strings.EqualFold(*v.Identity, "Global") {
 			if found != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			found = v
 		}
 	}
 	if found == nil {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	return found, nil
 }
@@ -197,12 +198,12 @@ func TestAccAppSetupPolicyReadOnly(t *testing.T) {
 	} else if e != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, e := sdk.TeamsAdminAPI.TeamsAppSetupPolicies.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_app_setup_policy", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_app_setup_policy", "get_global", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -211,7 +212,7 @@ func TestAccAppSetupPolicyReadOnly(t *testing.T) {
 		t.Fatalf("app setup Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, e := sdk.TeamsAdminAPI.TeamsAppSetupPolicies.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_app_setup_policy", "list", listResponse, nil)
+	labkit.WriteResponseFixture(t, "teams_app_setup_policy", "list", listResponse, nil)
 	selected, selectionErr := globalAppSetupPolicy(listed)
 	if e != nil || selectionErr != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || !bytes.Equal(appSetupProjection(value), appSetupProjection(selected)) {
 		t.Fatal("setup Global read/list projections differ")
@@ -260,7 +261,7 @@ func TestUnitAppSetupOracleRestrictsOwnedIdentity(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-app-setup-policy"
-	raw, err := os.ReadFile("../../../msteams/teams_admin_api/teams_app_setup_policy/testdata/get_global.json")
+	raw, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/teams_app_setup_policy/testdata/get_global.json")
 	if err != nil {
 		t.Fatal(err)
 	}

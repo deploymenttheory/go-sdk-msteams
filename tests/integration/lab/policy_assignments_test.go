@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	policyassignments "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 )
 
@@ -12,8 +14,8 @@ import (
 // grants policies, refreshes users or invokes OCE reprocessing operations.
 // It lists ordinary generated jobs and reads at most five returned job IDs.
 func TestAccPolicyAssignmentsReadOnly(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	sdk, _, _ := labSDKClient(t)
+	cfg := labkit.ReadOnlyEnabled(t)
+	sdk, _, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	jobs, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListBatches(ctx, "")
@@ -48,10 +50,10 @@ func TestAccPolicyAssignmentsReadOnly(t *testing.T) {
 // explicit OCE target. It only lists regional status; no privileged PowerShell
 // profile, contributor elevation, refresh or reprocessing action runs.
 func TestAccPolicyAssignmentsOCEReadOnly(t *testing.T) {
-	cfg := targetingReadOnly(t)
-	sdk, binding, _ := labSDKClient(t)
+	cfg := labkit.ReadOnlyEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	tenant, _, ok := strings.Cut(binding, "|")
-	if !ok || !labDirectoryID.MatchString(tenant) {
+	if !ok || !labkit.DirectoryID.MatchString(tenant) {
 		t.Fatal("canonical OCE lab tenant binding required")
 	}
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)

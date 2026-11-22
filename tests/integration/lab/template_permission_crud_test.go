@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	permission "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_template_permission_policy"
@@ -24,7 +26,7 @@ func (h templatePermissionPolicyCleanup) Resolve(ctx context.Context, entry lab.
 		if value == nil || value.Identity == nil {
 			return "", lab.ErrUnresolved
 		}
-		if samePolicyName(*value.Identity, entry.Fixture) {
+		if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 			if found != "" {
 				return "", lab.ErrUnresolved
 			}
@@ -33,7 +35,7 @@ func (h templatePermissionPolicyCleanup) Resolve(ctx context.Context, entry lab.
 	}
 	if found == "" {
 		_, _, err := h.service.GetByIdentity(ctx, entry.Fixture)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return "", nil
 		}
 		if err != nil {
@@ -44,19 +46,19 @@ func (h templatePermissionPolicyCleanup) Resolve(ctx context.Context, entry lab.
 	return found, nil
 }
 func (h templatePermissionPolicyCleanup) Delete(ctx context.Context, entry lab.Entry) error {
-	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !samePolicyName(entry.ResourceID, entry.Fixture) {
+	if !strings.HasPrefix(entry.Fixture, "msteams-sdk-") || !labkit.SamePolicyName(entry.ResourceID, entry.Fixture) {
 		return lab.ErrUnresolved
 	}
 	_, _, err := h.service.DeleteByIdentity(ctx, entry.ResourceID, policy.Controls{})
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByIdentity(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx)
@@ -67,7 +69,7 @@ func (h templatePermissionPolicyCleanup) Delete(ctx context.Context, entry lab.E
 			if value == nil || value.Identity == nil {
 				return false, lab.ErrUnresolved
 			}
-			if samePolicyName(*value.Identity, entry.Fixture) {
+			if labkit.SamePolicyName(*value.Identity, entry.Fixture) {
 				return false, nil
 			}
 		}
@@ -105,8 +107,8 @@ func testTemplatePermissionCRUD(t *testing.T, populated bool) {
 	} else if err != nil {
 		t.Fatal("invalid mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamsTemplatePermissionPolicies
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
@@ -159,24 +161,24 @@ func testTemplatePermissionCRUD(t *testing.T, populated bool) {
 	replacements := map[string]string{name: "fixture-policy"}
 	initial := "SDK lab non-default initial description"
 	_, response, err := service.CreateByIdentity(ctx, name, permission.CreateRequest{ScalarSettings: permission.ScalarSettings{Description: policy.Set(initial)}, HiddenTemplates: initialEdit})
-	writeResponseFixture(t, "teams_template_permission_policy", prefix+"create", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_template_permission_policy", prefix+"create", response, replacements)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("permission policy create failed; recovery journal retained")
 	}
 	var value *permission.Policy
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, name)
-		if isHTTP(err, 404) {
+		if labkit.IsHTTP(err, 404) {
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
-		matched := read != nil && read.Identity != nil && samePolicyName(*read.Identity, name) && read.Description != nil && *read.Description == initial && hasTeamHiddenTemplateIDs(read, expectedIDs...)
+		matched := read != nil && read.Identity != nil && labkit.SamePolicyName(*read.Identity, name) && read.Description != nil && *read.Description == initial && hasTeamHiddenTemplateIDs(read, expectedIDs...)
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_template_permission_policy", prefix+"create_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_template_permission_policy", prefix+"create_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -201,7 +203,7 @@ func testTemplatePermissionCRUD(t *testing.T, populated bool) {
 	updated := "SDK lab non-default updated description"
 	_, response, err = service.UpdateByIdentity(ctx, identity, permission.UpdateRequest{ScalarSettings: permission.ScalarSettings{Description: policy.Set(updated)}})
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("permission sparse update failed")
 	}
 	if response == nil || response.Request == nil {
@@ -212,8 +214,8 @@ func testTemplatePermissionCRUD(t *testing.T, populated bool) {
 	if !ok || json.Unmarshal(sent, &fields) != nil || len(fields) != 2 || fields["Identity"] == nil || fields["Description"] == nil {
 		t.Fatal("description-only request included an unbound setting")
 	}
-	writeResponseFixture(t, "teams_template_permission_policy", prefix+"update", response, replacements)
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	labkit.WriteResponseFixture(t, "teams_template_permission_policy", prefix+"update", response, replacements)
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		read, response, err := service.GetByIdentity(ctx, identity)
 		if err != nil {
 			return false, err
@@ -221,7 +223,7 @@ func testTemplatePermissionCRUD(t *testing.T, populated bool) {
 		matched := read != nil && read.Description != nil && *read.Description == updated && hasTeamHiddenTemplateIDs(read, expectedIDs...)
 		if matched {
 			value = read
-			writeResponseFixture(t, "teams_template_permission_policy", prefix+"update_readback", response, replacements)
+			labkit.WriteResponseFixture(t, "teams_template_permission_policy", prefix+"update_readback", response, replacements)
 		}
 		return matched, nil
 	}); err != nil {
@@ -240,11 +242,11 @@ func testTemplatePermissionCRUD(t *testing.T, populated bool) {
 		} {
 			_, response, err = service.UpdateByIdentity(ctx, identity, permission.UpdateRequest{HiddenTemplates: stage.edit})
 			if err != nil {
-				logAccessResponse(t, response, err)
+				labkit.LogAccessResponse(t, response, err)
 				t.Fatal("permission hidden-list update failed")
 			}
-			writeResponseFixture(t, "teams_template_permission_policy", prefix+stage.label, response, replacements)
-			if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+			labkit.WriteResponseFixture(t, "teams_template_permission_policy", prefix+stage.label, response, replacements)
+			if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 				read, response, err := service.GetByIdentity(ctx, identity)
 				if err != nil {
 					return false, err
@@ -252,7 +254,7 @@ func testTemplatePermissionCRUD(t *testing.T, populated bool) {
 				matched := read != nil && read.Description != nil && *read.Description == updated && hasTeamHiddenTemplateIDs(read, stage.ids...)
 				if matched {
 					value = read
-					writeResponseFixture(t, "teams_template_permission_policy", prefix+stage.label+"_readback", response, replacements)
+					labkit.WriteResponseFixture(t, "teams_template_permission_policy", prefix+stage.label+"_readback", response, replacements)
 				}
 				return matched, nil
 			}); err != nil {
@@ -269,29 +271,29 @@ func testTemplatePermissionCRUD(t *testing.T, populated bool) {
 	}
 	count := 0
 	for _, item := range values {
-		if item != nil && item.Identity != nil && samePolicyName(*item.Identity, name) {
+		if item != nil && item.Identity != nil && labkit.SamePolicyName(*item.Identity, name) {
 			count++
 		}
 	}
 	if count != 1 {
 		t.Fatal("owned permission policy missing or ambiguous in list")
 	}
-	writeResponseFixture(t, "teams_template_permission_policy", prefix+"owned_list", listResponse, replacements)
+	labkit.WriteResponseFixture(t, "teams_template_permission_policy", prefix+"owned_list", listResponse, replacements)
 	t.Log("policy list: passed")
 	if _, deletedResponse, err := service.DeleteByIdentity(ctx, identity, policy.Controls{}); err != nil {
-		logAccessResponse(t, deletedResponse, err)
+		labkit.LogAccessResponse(t, deletedResponse, err)
 		t.Fatal("owned policy delete failed")
 	} else {
-		writeResponseFixture(t, "teams_template_permission_policy", prefix+"delete", deletedResponse, map[string]string{name: "fixture-policy"})
+		labkit.WriteResponseFixture(t, "teams_template_permission_policy", prefix+"delete", deletedResponse, map[string]string{name: "fixture-policy"})
 	}
 	if err := (templatePermissionPolicyCleanup{service}).Delete(ctx, lab.Entry{Fixture: name, ResourceID: identity}); err != nil {
 		t.Fatal("permission deletion and independent absence were not verified")
 	}
 	_, response, err = service.GetByIdentity(ctx, identity)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("permission deleted policy did not return typed404")
 	}
-	writeResponseFixture(t, "teams_template_permission_policy", prefix+"get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "teams_template_permission_policy", prefix+"get_deleted", response, replacements)
 	t.Log("policy delete/absence: passed")
 	t.Log("permission policy create/read/update/list/delete and omitted-field preservation verified")
 }

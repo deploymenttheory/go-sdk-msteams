@@ -7,11 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/recording_messages"
@@ -23,8 +24,8 @@ type recordingOracleObservation struct {
 }
 
 func decodeRecordingOracle(raw []byte, tenant string, identities []string) (map[string]json.RawMessage, error) {
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || len(identities) > 5 {
-		return nil, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || len(identities) > 5 {
+		return nil, labkit.ErrOracle
 	}
 	var v struct {
 		Success      bool                         `json:"success"`
@@ -34,31 +35,31 @@ func decodeRecordingOracle(raw []byte, tenant string, identities []string) (map[
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || len(v.Observations) != len(identities) {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	allowed := map[string]bool{}
 	for _, identity := range identities {
 		if identity == "" || allowed[identity] {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		allowed[identity] = true
 	}
 	result := map[string]json.RawMessage{}
 	for _, o := range v.Observations {
 		if !allowed[o.Identity] || result[o.Identity] != nil {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		var fields map[string]json.RawMessage
 		if json.Unmarshal(o.Settings, &fields) != nil || len(fields) != 3 {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		for _, key := range []string{"Id", "Description", "RecordingAndTranscriptionLocalizationCustomMessage"} {
 			if _, ok := fields[key]; !ok {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 		}
 		// Validate ID/text using the SDK rule, then validate the canonical child
@@ -67,22 +68,22 @@ func decodeRecordingOracle(raw []byte, tenant string, identities []string) (map[
 		encoded, e := json.Marshal(projection)
 		var model resource.Message
 		if e != nil || json.Unmarshal(encoded, &model) != nil {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		var children []map[string]*string
 		if json.Unmarshal(fields["RecordingAndTranscriptionLocalizationCustomMessage"], &children) != nil || children == nil {
-			return nil, errTeamOracle
+			return nil, labkit.ErrOracle
 		}
 		for _, child := range children {
 			if child == nil {
 				continue
 			}
 			if len(child) != 8 {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			for _, name := range []string{"Identity", "Language", "InitiatorImplicit", "ParticipantImplicit", "InitiatorExplicit", "ParticipantExplicitRequested", "ParticipantExplicitProvided", "AgreementDialogue"} {
 				if _, ok := child[name]; !ok {
-					return nil, errTeamOracle
+					return nil, labkit.ErrOracle
 				}
 			}
 		}
@@ -128,7 +129,7 @@ func recordingOracle(t *testing.T, ctx context.Context, tenant string, identitie
 		t.Fatal("invalid recording oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-recording-messages.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-recording-messages.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -136,14 +137,14 @@ func recordingOracle(t *testing.T, ctx context.Context, tenant string, identitie
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned recording reads failed; no output retained")
 	}
-	v, e := decodeRecordingOracle(output.data, tenant, identities)
+	v, e := decodeRecordingOracle(output.Data, tenant, identities)
 	if e != nil {
 		t.Fatal("pinned recording projection unavailable")
 	}
@@ -162,12 +163,12 @@ func TestAccRecordingMessagesReadOnly(t *testing.T) {
 	} else if e != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	values, response, e := sdk.TeamsAdminAPI.RecordingMessages.List(ctx)
-	writeResponseFixture(t, "recording_messages", "list", response, nil)
+	labkit.WriteResponseFixture(t, "recording_messages", "list", response, nil)
 	if e != nil {
 		status := 0
 		if response != nil {
@@ -189,7 +190,7 @@ func TestAccRecordingMessagesReadOnly(t *testing.T) {
 			t.Fatal("recording identity unavailable")
 		}
 		read, fixtureResponse, e := sdk.TeamsAdminAPI.RecordingMessages.GetByIdentity(ctx, *v.Identity)
-		writeResponseFixture(t, "recording_messages", "get_by_id", fixtureResponse, nil)
+		labkit.WriteResponseFixture(t, "recording_messages", "get_by_id", fixtureResponse, nil)
 		if e != nil || read == nil || read.Identity == nil || *read.Identity != *v.Identity {
 			t.Fatal("selected recording read failed; no output retained")
 		}
@@ -197,7 +198,7 @@ func TestAccRecordingMessagesReadOnly(t *testing.T) {
 		if !bytes.Equal(before, after) {
 			t.Fatal("recording list/read projections differ")
 		}
-		if v.ID != nil && labDirectoryID.MatchString(*v.ID) && *v.Identity == "Global/"+*v.ID {
+		if v.ID != nil && labkit.DirectoryID.MatchString(*v.ID) && *v.Identity == "Global/"+*v.ID {
 			relative, _, e := sdk.TeamsAdminAPI.RecordingMessages.GetByID(ctx, *v.ID)
 			if e != nil || relative == nil || relative.Identity == nil || *relative.Identity != *v.Identity || !bytes.Equal(after, recordingProjection(relative)) {
 				t.Fatal("recording relative-ID read differs")

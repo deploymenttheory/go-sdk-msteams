@@ -7,12 +7,13 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_cortana_policy"
@@ -34,35 +35,35 @@ func decodeCortanaPolicyOracle(raw []byte, tenant string) (cortanaPolicyObservat
 }
 func decodeCortanaPolicyOracleForIdentity(raw []byte, tenant, identity string) (cortanaPolicyObservation, error) {
 	var v cortanaPolicyObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !cortanaOwnedIdentity.MatchString(identity) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !cortanaOwnedIdentity.MatchString(identity) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil {
-		return cortanaPolicyObservation{}, errTeamOracle
+		return cortanaPolicyObservation{}, labkit.ErrOracle
 	}
 	identityMatches := strings.EqualFold(v.Identity, "Global")
 	if !strings.EqualFold(identity, "Global") {
-		identityMatches = samePolicyName(v.Identity, identity)
+		identityMatches = labkit.SamePolicyName(v.Identity, identity)
 	}
 	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(cortanaPolicyFields) {
-		return cortanaPolicyObservation{}, errTeamOracle
+		return cortanaPolicyObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return cortanaPolicyObservation{}, errTeamOracle
+		return cortanaPolicyObservation{}, labkit.ErrOracle
 	}
 	for _, key := range []string{"Description", "CortanaVoiceInvocationMode"} {
 		var text *string
 		if raw, ok := v.Settings[key]; !ok || json.Unmarshal(raw, &text) != nil {
-			return cortanaPolicyObservation{}, errTeamOracle
+			return cortanaPolicyObservation{}, labkit.ErrOracle
 		}
 	}
 	for _, key := range []string{"AllowCortanaVoiceInvocation", "AllowCortanaAmbientListening", "AllowCortanaInContextSuggestions"} {
 		var boolean *bool
 		if raw, ok := v.Settings[key]; !ok || json.Unmarshal(raw, &boolean) != nil {
-			return cortanaPolicyObservation{}, errTeamOracle
+			return cortanaPolicyObservation{}, labkit.ErrOracle
 		}
 	}
 	return v, nil
@@ -79,7 +80,7 @@ func cortanaPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, i
 		t.Fatal("invalid Cortana policy oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-cortana-policy.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-cortana-policy.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -87,14 +88,14 @@ func cortanaPolicyOracleForIdentity(t *testing.T, ctx context.Context, tenant, i
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned Cortana policy read failed; no output retained")
 	}
-	value, err := decodeCortanaPolicyOracleForIdentity(output.data, tenant, identity)
+	value, err := decodeCortanaPolicyOracleForIdentity(output.Data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned Cortana policy projection unavailable")
 	}
@@ -113,12 +114,12 @@ func TestAccCortanaPolicyReadOnly(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.TeamsCortanaPolicies.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "teams_cortana_policy", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "teams_cortana_policy", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -127,7 +128,7 @@ func TestAccCortanaPolicyReadOnly(t *testing.T) {
 		t.Fatalf("Cortana policy Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.TeamsCortanaPolicies.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "teams_cortana_policy", "list", listResponse, nil)
+	labkit.WriteResponseFixture(t, "teams_cortana_policy", "list", listResponse, nil)
 	selected, selectionErr := globalCortanaPolicy(listed)
 	if err != nil || selectionErr != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
 		t.Fatal("Cortana policy Global selection differs")
@@ -168,13 +169,13 @@ func globalCortanaPolicy(values []resource.Policy) (*resource.Policy, error) {
 	for i := range values {
 		if strings.EqualFold(values[i].Identity, "Global") {
 			if found != nil {
-				return nil, errTeamOracle
+				return nil, labkit.ErrOracle
 			}
 			found = &values[i]
 		}
 	}
 	if found == nil {
-		return nil, errTeamOracle
+		return nil, labkit.ErrOracle
 	}
 	return found, nil
 }
@@ -203,7 +204,7 @@ func TestUnitCortanaOracleRestrictsOwnedIdentity(t *testing.T) {
 	t.Parallel()
 	const tenant = "00000000-0000-4000-8000-000000000003"
 	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-cortana-policy"
-	raw, err := os.ReadFile("../../../msteams/teams_admin_api/teams_cortana_policy/testdata/get_global.json")
+	raw, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/teams_cortana_policy/testdata/get_global.json")
 	if err != nil {
 		t.Fatal(err)
 	}

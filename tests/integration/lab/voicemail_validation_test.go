@@ -7,11 +7,12 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 )
@@ -27,21 +28,21 @@ type voicemailValidationObservation struct {
 
 func decodeVoicemailValidationOracle(raw []byte, tenant string) (voicemailValidationObservation, error) {
 	var v voicemailValidationObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
-		return v, errTeamOracle
+	if len(raw) > labkit.MaxOracleBytes || !labkit.DirectoryID.MatchString(tenant) {
+		return v, labkit.ErrOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || !strings.EqualFold(v.Identity, "Global") || len(v.Settings) != len(voicemailValidationScalars) {
-		return voicemailValidationObservation{}, errTeamOracle
+		return voicemailValidationObservation{}, labkit.ErrOracle
 	}
 	var extra any
 	if d.Decode(&extra) != io.EOF {
-		return voicemailValidationObservation{}, errTeamOracle
+		return voicemailValidationObservation{}, labkit.ErrOracle
 	}
 	for _, name := range voicemailValidationScalars {
 		if _, ok := v.Settings[name]; !ok {
-			return voicemailValidationObservation{}, errTeamOracle
+			return voicemailValidationObservation{}, labkit.ErrOracle
 		}
 	}
 	return v, nil
@@ -54,7 +55,7 @@ func voicemailValidationOracle(t *testing.T, ctx context.Context, tenant string)
 		t.Fatal("invalid voicemail oracle selector")
 	}
 	defer clear(input)
-	cmd := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-voicemail-validation.ps1")
+	cmd := labkit.OracleCommand(ctx, "read-voicemail-validation.ps1")
 	cmd.WaitDelay = time.Second
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR", "PSModuleAnalysisCachePath"} {
 		if value, ok := os.LookupEnv(key); ok {
@@ -62,14 +63,14 @@ func voicemailValidationOracle(t *testing.T, ctx context.Context, tenant string)
 		}
 	}
 	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
-	var output teamOracleBuffer
-	defer func() { clear(output.data) }()
+	var output labkit.OracleBuffer
+	defer func() { clear(output.Data) }()
 	cmd.Stdin = bytes.NewReader(input)
 	cmd.Stdout, cmd.Stderr = &output, io.Discard
-	if cmd.Run() != nil || output.exceeded {
+	if cmd.Run() != nil || output.Exceeded {
 		t.Fatal("pinned voicemail read failed; no output retained")
 	}
-	value, err := decodeVoicemailValidationOracle(output.data, tenant)
+	value, err := decodeVoicemailValidationOracle(output.Data, tenant)
 	if err != nil {
 		t.Fatal("pinned voicemail projection unavailable")
 	}
@@ -88,12 +89,12 @@ func TestAccVoicemailValidationReadOnly(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid lab enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
 	value, response, err := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations.GetByIdentity(ctx, "Global")
-	writeResponseFixture(t, "online_voicemail_validation_configuration", "get_global", response, nil)
+	labkit.WriteResponseFixture(t, "online_voicemail_validation_configuration", "get_global", response, nil)
 	if err != nil {
 		status := 0
 		if response != nil {
@@ -102,8 +103,8 @@ func TestAccVoicemailValidationReadOnly(t *testing.T) {
 		t.Fatalf("voicemail Global read failed (HTTP %d); no response payload retained", status)
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations.ListFiltered(ctx, "Global")
-	writeResponseFixture(t, "online_voicemail_validation_configuration", "list", listResponse, nil)
-	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !sameConfigurationFields(value.RawFields, listed[0].RawFields) {
+	labkit.WriteResponseFixture(t, "online_voicemail_validation_configuration", "list", listResponse, nil)
+	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !labkit.SameConfigurationFields(value.RawFields, listed[0].RawFields) {
 		t.Fatal("voicemail Global read/list observations differ")
 	}
 	if oracle {

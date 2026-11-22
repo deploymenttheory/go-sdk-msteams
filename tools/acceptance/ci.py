@@ -335,7 +335,10 @@ def prepare(args):
 def assertion_reasons(root=ROOT):
     """Retain checked-in assertion literals, never their format arguments."""
     reasons = set(FAILURE_REASONS)
-    for path in root.rglob('*_test.go'):
+    # Shared lab helpers live in ordinary .go files under tests/; their fixed
+    # assertion text is as public as the text in the _test.go files.
+    paths = set(root.rglob('*_test.go')) | set((root / 'tests').rglob('*.go'))
+    for path in sorted(paths):
         if '.git' in path.parts:
             continue
         for literal in re.findall(r'\bt\.(?:Fatalf?|Errorf?)\(\s*("(?:[^"\\]|\\.)*")', path.read_text()):

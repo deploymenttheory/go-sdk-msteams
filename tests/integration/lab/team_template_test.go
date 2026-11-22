@@ -6,13 +6,13 @@ import (
 	"errors"
 	"io"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	template "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
 )
 
@@ -28,11 +28,6 @@ func ownedTemplateReference(reference string) bool {
 
 func ownedTemplateName(name string) bool {
 	return strings.HasPrefix(name, "msteams-sdk-") && strings.HasSuffix(name, "-template")
-}
-
-func isHTTP(err error, status int) bool {
-	var apiError *client.APIError
-	return errors.As(err, &apiError) && apiError != nil && apiError.StatusCode == status
 }
 
 func (h templateCleanup) Resolve(ctx context.Context, entry lab.Entry) (string, error) {
@@ -81,7 +76,7 @@ func (h templateCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 		return lab.ErrUnresolved
 	}
 	value, _, err := h.service.GetByID(ctx, entry.ResourceID)
-	if isHTTP(err, 404) {
+	if labkit.IsHTTP(err, 404) {
 		return h.absent(ctx, entry)
 	}
 	if err != nil {
@@ -91,7 +86,7 @@ func (h templateCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 		return lab.ErrUnresolved
 	}
 	_, err = h.service.DeleteByID(ctx, entry.ResourceID)
-	if err != nil && !isHTTP(err, 404) {
+	if err != nil && !labkit.IsHTTP(err, 404) {
 		return err
 	}
 	return h.absent(ctx, entry)
@@ -99,12 +94,12 @@ func (h templateCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 }
 
 func (h templateCleanup) absent(ctx context.Context, entry lab.Entry) error {
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		_, _, err := h.service.GetByID(ctx, entry.ResourceID)
 		if err == nil {
 			return false, nil
 		}
-		if !isHTTP(err, 404) {
+		if !labkit.IsHTTP(err, 404) {
 			return false, err
 		}
 		values, _, err := h.service.List(ctx, nil)
@@ -134,7 +129,7 @@ func comparePowerShellTemplate(t *testing.T, ctx context.Context, reference, nam
 	if module == "" || !ownedTemplateName(name) || !ownedTemplateReference(reference) {
 		t.Fatal("explicit pinned module and owned template selectors are required")
 	}
-	command := exec.CommandContext(ctx, "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "oracle/read-team-template.ps1")
+	command := labkit.OracleCommand(ctx, "read-team-template.ps1")
 	command.WaitDelay = time.Second
 	command.Env = []string{}
 	for _, key := range []string{"PATH", "HOME", "TMPDIR", "TMP", "TEMP", "LANG", "DOTNET_ROOT", "SystemRoot", "WINDIR"} {
@@ -144,11 +139,11 @@ func comparePowerShellTemplate(t *testing.T, ctx context.Context, reference, nam
 	}
 	command.Env = append(command.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_MODULE_PATH="+module, "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"),
 		"MSTEAMS_LAB_TEMPLATE_FIXTURE="+name, "MSTEAMS_LAB_TEMPLATE_ID="+reference)
-	var output teamOracleBuffer
+	var output labkit.OracleBuffer
 	command.Stdout = &output
 	command.Stderr = io.Discard
-	defer func() { clear(output.data) }()
-	if command.Run() != nil || output.exceeded {
+	defer func() { clear(output.Data) }()
+	if command.Run() != nil || output.Exceeded {
 		t.Fatal("pinned PowerShell template read failed; no output retained")
 	}
 	var observed struct {
@@ -158,7 +153,7 @@ func comparePowerShellTemplate(t *testing.T, ctx context.Context, reference, nam
 		Description  string   `json:"description"`
 		ChannelNames []string `json:"channel_names"`
 	}
-	if json.Unmarshal(output.data, &observed) != nil || !observed.Success {
+	if json.Unmarshal(output.Data, &observed) != nil || !observed.Success {
 		t.Fatal("pinned PowerShell could not read the owned template")
 	}
 	if observed.DisplayName != name || observed.Short != short || observed.Description != description || len(observed.ChannelNames) != len(channels) {
@@ -190,7 +185,7 @@ func templateReadBack(t *testing.T, ctx context.Context, service *template.Servi
 	if len(names) != 1 || !strings.EqualFold(names[0], "General") {
 		t.Fatal("template General channel normalization was not observed")
 	}
-	writeResponseFixture(t, "team_template", fixtureLabel, response, replacements)
+	labkit.WriteResponseFixture(t, "team_template", fixtureLabel, response, replacements)
 	comparePowerShellTemplate(t, ctx, reference, name, short, description, names)
 	return value
 }
@@ -230,7 +225,7 @@ func labBodyDefinition(t *testing.T, value template.Definition) template.Definit
 
 func runTemplateCRUD(t *testing.T, cfg lab.Config, body bool) {
 	t.Helper()
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	service := sdk.TeamsAdminAPI.TeamTemplates
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -274,7 +269,7 @@ func runTemplateCRUD(t *testing.T, cfg lab.Config, body bool) {
 	}
 	replacements := map[string]string{name: "fixture-template"}
 	_, response, err := service.Create(ctx, identity.Locale, definition)
-	writeResponseFixture(t, "team_template", prefix+"create", response, replacements)
+	labkit.WriteResponseFixture(t, "team_template", prefix+"create", response, replacements)
 	if err != nil {
 		t.Fatal("live template creation failed; recovery journal retained")
 	}
@@ -300,7 +295,7 @@ func runTemplateCRUD(t *testing.T, cfg lab.Config, body bool) {
 		update = labBodyDefinition(t, update)
 	}
 	_, response, err = service.UpdateByID(ctx, identity.ODataID, update)
-	writeResponseFixture(t, "team_template", prefix+"update", response, replacements)
+	labkit.WriteResponseFixture(t, "team_template", prefix+"update", response, replacements)
 	if err != nil {
 		t.Fatal("live template update failed")
 	}
@@ -319,10 +314,10 @@ func runTemplateCRUD(t *testing.T, cfg lab.Config, body bool) {
 	if found != 1 {
 		t.Fatal("owned template missing or ambiguous in live list")
 	}
-	writeResponseFixture(t, "team_template", prefix+"owned_list", response, replacements)
+	labkit.WriteResponseFixture(t, "team_template", prefix+"owned_list", response, replacements)
 	t.Log("template list: passed")
 	response, err = service.DeleteByID(ctx, reference)
-	writeResponseFixture(t, "team_template", prefix+"delete", response, replacements)
+	labkit.WriteResponseFixture(t, "team_template", prefix+"delete", response, replacements)
 	if err != nil {
 		t.Fatal("live template delete failed")
 	}
@@ -338,9 +333,9 @@ func runTemplateCRUD(t *testing.T, cfg lab.Config, body bool) {
 			t.Fatal("deleted template remains in independent list")
 		}
 	}
-	writeResponseFixture(t, "team_template", prefix+"list_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "team_template", prefix+"list_deleted", response, replacements)
 	_, response, err = service.GetByID(ctx, reference)
-	if !isHTTP(err, 404) {
+	if !labkit.IsHTTP(err, 404) {
 		t.Fatal("deleted template absence was not verified")
 	}
 	var failure *template.Error
@@ -356,7 +351,7 @@ func runTemplateCRUD(t *testing.T, cfg lab.Config, body bool) {
 	if !codeRetained {
 		t.Fatal("actual template string errorCode was lost by shared normalization")
 	}
-	writeResponseFixture(t, "team_template", prefix+"get_deleted", response, replacements)
+	labkit.WriteResponseFixture(t, "team_template", prefix+"get_deleted", response, replacements)
 	t.Log("template delete/absence: passed")
 }
 
@@ -371,7 +366,7 @@ func TestAccTeamTemplateRecover(t *testing.T) {
 	if err != nil || cfg.Require(lab.Mutation) != nil {
 		t.Fatal("explicit mutation opt-in is required for template recovery")
 	}
-	sdk, binding, _ := labSDKClient(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	journal, err := lab.OpenJournal(file, binding)
 	if err != nil {
 		t.Fatal("private bound recovery journal unavailable")

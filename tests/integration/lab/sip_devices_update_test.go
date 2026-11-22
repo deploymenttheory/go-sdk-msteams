@@ -9,6 +9,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	configuration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_sip_devices_configuration"
@@ -41,7 +43,7 @@ func (h sipDevicesConfigurationCleanup) Restore(ctx context.Context, entry lab.E
 	if _, _, err := h.service.UpdateByIdentity(ctx, "Global", configuration.UpdateRequest{Settings: configuration.Settings{BulkSignIn: policy.Set(*snapshot.Value)}}); err != nil {
 		return err
 	}
-	return observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	return labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		v, _, e := h.service.GetByIdentity(ctx, "Global")
 		return e == nil && v != nil && v.BulkSignIn != nil && *v.BulkSignIn == *snapshot.Value, e
 	})
@@ -57,8 +59,8 @@ func TestAccSipDevicesConfigurationUpdateRestore(t *testing.T) {
 	} else if err != nil {
 		t.Fatal("invalid sip-devices configuration mutation enablement")
 	}
-	oracle := teamOracleEnabled(t)
-	sdk, binding, _ := labSDKClient(t)
+	oracle := labkit.OracleEnabled(t)
+	sdk, binding, _ := labkit.SDKClient(t)
 	s := sdk.TeamsAdminAPI.TeamsSipDevicesConfigurations
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
@@ -79,7 +81,7 @@ func TestAccSipDevicesConfigurationUpdateRestore(t *testing.T) {
 	defer cancel()
 	before, response, err := s.GetByIdentity(ctx, "Global")
 	if err != nil || before == nil || before.BulkSignIn == nil || (*before.BulkSignIn != "Enabled" && *before.BulkSignIn != "Disabled") {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("supported original sip-devices setting unavailable; update refused")
 	}
 	compare := func(v *configuration.Configuration) {
@@ -87,7 +89,7 @@ func TestAccSipDevicesConfigurationUpdateRestore(t *testing.T) {
 			return
 		}
 		tenant, _, ok := strings.Cut(binding, "|")
-		if !ok || !sameTemplateProjection(map[string]any{"BulkSignIn": v.BulkSignIn}, tenantConfigurationOracle(t, ctx, "sip-devices", tenant)) {
+		if !ok || !labkit.SameProjection(map[string]any{"BulkSignIn": v.BulkSignIn}, labkit.TenantConfigurationOracle(t, ctx, "sip-devices", tenant)) {
 			t.Fatal("Go and PowerShell sip-devices configuration getters differ")
 		}
 		t.Log("PowerShell 8.1.0 / Go configuration read parity: passed")
@@ -106,21 +108,21 @@ func TestAccSipDevicesConfigurationUpdateRestore(t *testing.T) {
 		want = "Enabled"
 	}
 	_, response, err = s.UpdateByIdentity(ctx, "Global", configuration.UpdateRequest{Settings: configuration.Settings{BulkSignIn: policy.Set(want)}})
-	writeResponseFixture(t, "teams_sip_devices_configuration", "update", response, nil)
+	labkit.WriteResponseFixture(t, "teams_sip_devices_configuration", "update", response, nil)
 	if err != nil {
-		logAccessResponse(t, response, err)
+		labkit.LogAccessResponse(t, response, err)
 		t.Fatal("sip-devices configuration update failed")
 	}
 	if err := journal.Applied(entry, "Global"); err != nil {
 		t.Fatal("sip-devices update receipt not journaled")
 	}
 	var updated *configuration.Configuration
-	if err := observeUntil(ctx, func(ctx context.Context) (bool, error) {
+	if err := labkit.ObserveUntil(ctx, func(ctx context.Context) (bool, error) {
 		v, r, e := s.GetByIdentity(ctx, "Global")
 		matched := e == nil && v != nil && v.BulkSignIn != nil && *v.BulkSignIn == want
 		if matched {
 			updated = v
-			writeResponseFixture(t, "teams_sip_devices_configuration", "update_readback", r, nil)
+			labkit.WriteResponseFixture(t, "teams_sip_devices_configuration", "update_readback", r, nil)
 		}
 		return matched, e
 	}); err != nil {
@@ -135,7 +137,7 @@ func TestAccSipDevicesConfigurationUpdateRestore(t *testing.T) {
 	if err != nil || restored == nil || restored.BulkSignIn == nil || *restored.BulkSignIn != *before.BulkSignIn {
 		t.Fatal("sip-devices original state not independently restored")
 	}
-	writeResponseFixture(t, "teams_sip_devices_configuration", "restored_readback", response, nil)
+	labkit.WriteResponseFixture(t, "teams_sip_devices_configuration", "restored_readback", response, nil)
 	compare(restored)
 	t.Log("configuration restoration/read-back: passed")
 }

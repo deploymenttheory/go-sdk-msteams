@@ -1,142 +1,16 @@
-package lab_test
+package labkit
 
 import (
 	"bytes"
 	"encoding/json"
 	"os"
-	"reflect"
 	"strings"
 	"testing"
 )
 
-// Compare complete JSON values. RawMessage byte equality treats harmless nested
-// object ordering and whitespace as configuration drift.
-func sameResponseFields(left, right map[string]json.RawMessage) bool {
-	if left == nil || right == nil {
-		return false
-	}
-	decode := func(fields map[string]json.RawMessage) (any, error) {
-		raw, err := json.Marshal(fields)
-		if err != nil {
-			return nil, err
-		}
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		decoder.UseNumber()
-		var value any
-		err = decoder.Decode(&value)
-		return value, err
-	}
-	a, err := decode(left)
-	if err != nil {
-		return false
-	}
-	b, err := decode(right)
-	return err == nil && reflect.DeepEqual(a, b)
-}
-
-// Compare management properties across separate Get/List observations. Key is
-// the server's XML backing object, not a property of the pinned BasePolicy DTO.
-// Its schema/XName metadata can differ across calls. Every other property,
-// including unknown extensions, ConfigId and ConfigMetadata, remains exact.
-// Each response's complete Key still belongs to RawFields/RawJSON and is covered
-// by the service's actual-response unit tests.
-func sameConfigurationFields(left, right map[string]json.RawMessage) bool {
-	if left == nil || right == nil {
-		return false
-	}
-	properties := func(fields map[string]json.RawMessage) map[string]json.RawMessage {
-		result := make(map[string]json.RawMessage, len(fields))
-		for name, value := range fields {
-			if name != "Key" {
-				result[name] = value
-			}
-		}
-		return result
-	}
-	return sameResponseFields(properties(left), properties(right))
-}
-
-// Return fixed diagnostics only; response values and unknown property names stay private.
-func responseComparisonFailure(left, right map[string]json.RawMessage) string {
-	if left == nil || right == nil {
-		return "read/list comparison: response fields missing"
-	}
-	if len(left) != len(right) {
-		return "read/list comparison: property sets differ"
-	}
-	metadata, identity, settings := false, false, false
-	for key, value := range left {
-		other, ok := right[key]
-		if !ok {
-			return "read/list comparison: property sets differ"
-		}
-		if sameResponseFields(map[string]json.RawMessage{key: value}, map[string]json.RawMessage{key: other}) {
-			continue
-		}
-		switch key {
-		case "Key", "ConfigMetadata", "ConfigId":
-			metadata = true
-		case "Identity":
-			identity = true
-		default:
-			settings = true
-		}
-	}
-	if identity {
-		return "read/list comparison: identity values differ"
-	}
-	if settings {
-		return "read/list comparison: setting or extension values differ"
-	}
-	if metadata {
-		return "read/list comparison: metadata values differ"
-	}
-	return ""
-}
-
-// Metadata diagnostics enumerate only known public schema paths; no response
-// values or server-supplied property names are emitted.
-var metadataDiagnosticPaths = []string{
-	"Key.ScopeClass", "Key.SchemaId", "Key.AuthorityId",
-	"Key.DefaultXml.SchemaId", "Key.DefaultXml.Data", "Key.DefaultXml.ConfigObject",
-	"Key.DefaultXml.Signature", "Key.DefaultXml.IsModified", "Key.XmlRoot",
-	"ConfigMetadata", "ConfigId",
-}
-
-func metadataMismatchReasons(left, right map[string]json.RawMessage) []string {
-	lookup := func(fields map[string]json.RawMessage, path string) json.RawMessage {
-		raw, _ := json.Marshal(fields)
-		for _, segment := range strings.Split(path, ".") {
-			var value map[string]json.RawMessage
-			if json.Unmarshal(raw, &value) != nil {
-				return nil
-			}
-			raw = value[segment]
-		}
-		return raw
-	}
-	var reasons []string
-	for _, path := range metadataDiagnosticPaths {
-		a, b := lookup(left, path), lookup(right, path)
-		if a == nil && b == nil {
-			continue
-		}
-		if sameResponseFields(map[string]json.RawMessage{"value": a}, map[string]json.RawMessage{"value": b}) {
-			continue
-		}
-		reasons = append(reasons, "read/list metadata: "+path+" differs")
-	}
-	return reasons
-}
-func logMetadataMismatches(t *testing.T, left, right map[string]json.RawMessage) {
-	t.Helper()
-	for _, reason := range metadataMismatchReasons(left, right) {
-		t.Log(reason)
-	}
-}
 func TestUnitMetadataDiagnosticsUseFixedPathsAndRetainPrivateValues(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/testdata/get_global.json")
+	raw, e := os.ReadFile(Root + "/msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/testdata/get_global.json")
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -175,7 +49,7 @@ func TestUnitResponseComparisonUsesAcceptanceJSONValues(t *testing.T) {
 	t.Parallel()
 	for _, service := range []string{"acs_federation_configuration", "application_meeting_configuration", "meeting_branding", "online_voicemail_policy", "online_voicemail_validation_configuration"} {
 		t.Run(service, func(t *testing.T) {
-			directory, err := os.OpenRoot("../../../msteams/teams_admin_api/" + service + "/testdata")
+			directory, err := os.OpenRoot(Root + "/msteams/teams_admin_api/" + service + "/testdata")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -200,7 +74,7 @@ func TestUnitResponseComparisonUsesAcceptanceJSONValues(t *testing.T) {
 				}
 				reformatted[key] = append([]byte(" \n"), out.Bytes()...)
 			}
-			if !sameResponseFields(original, reformatted) {
+			if !SameResponseFields(original, reformatted) {
 				t.Fatal("JSON formatting changed comparison of identical response values")
 			}
 			for key := range original {
@@ -209,7 +83,7 @@ func TestUnitResponseComparisonUsesAcceptanceJSONValues(t *testing.T) {
 					removed[k] = v
 				}
 				delete(removed, key)
-				if sameResponseFields(original, removed) {
+				if SameResponseFields(original, removed) {
 					t.Fatal("missing response property was ignored")
 				}
 				changed := make(map[string]json.RawMessage, len(original))
@@ -221,11 +95,11 @@ func TestUnitResponseComparisonUsesAcceptanceJSONValues(t *testing.T) {
 				} else {
 					changed[key] = json.RawMessage("null")
 				}
-				if sameResponseFields(original, changed) {
+				if SameResponseFields(original, changed) {
 					t.Fatal("changed response property was ignored")
 				}
 			}
-			if sameResponseFields(original, map[string]json.RawMessage{"malformed": json.RawMessage("{")}) {
+			if SameResponseFields(original, map[string]json.RawMessage{"malformed": json.RawMessage("{")}) {
 				t.Fatal("malformed JSON accepted")
 			}
 		})
@@ -234,7 +108,7 @@ func TestUnitResponseComparisonUsesAcceptanceJSONValues(t *testing.T) {
 
 func TestUnitResponseMismatchReasonsKeepValuesPrivate(t *testing.T) {
 	t.Parallel()
-	raw, e := os.ReadFile("../../../msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json")
+	raw, e := os.ReadFile(Root + "/msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json")
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -256,22 +130,22 @@ func TestUnitResponseMismatchReasonsKeepValuesPrivate(t *testing.T) {
 			if tc.field != "" {
 				next[tc.field] = json.RawMessage(tc.value)
 			}
-			if got := responseComparisonFailure(original, next); got != tc.want {
+			if got := ResponseComparisonFailure(original, next); got != tc.want {
 				t.Fatal("fixed mismatch classification differs")
 			}
 		})
 	}
-	if responseComparisonFailure(nil, original) != "read/list comparison: response fields missing" {
+	if ResponseComparisonFailure(nil, original) != "read/list comparison: response fields missing" {
 		t.Fatal("missing fields not classified")
 	}
-	if responseComparisonFailure(original, map[string]json.RawMessage{}) != "read/list comparison: property sets differ" {
+	if ResponseComparisonFailure(original, map[string]json.RawMessage{}) != "read/list comparison: property sets differ" {
 		t.Fatal("missing property not classified")
 	}
 }
 
 func TestUnitConfigurationComparisonKeepsStateAndExtensionsSeparateFromXmlKey(t *testing.T) {
 	t.Parallel()
-	directory, e := os.OpenRoot("../../../msteams/teams_admin_api")
+	directory, e := os.OpenRoot(Root + "/msteams/teams_admin_api")
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -290,7 +164,7 @@ func TestUnitConfigurationComparisonKeepsStateAndExtensionsSeparateFromXmlKey(t 
 			t.Fatal("actual acceptance fixture missing its XML backing metadata")
 		}
 		right["Key"] = json.RawMessage(`{"SchemaId":{"XName":{"name":"alternate-server-serialization"}}}`)
-		if sameResponseFields(left, right) || !sameConfigurationFields(left, right) {
+		if SameResponseFields(left, right) || !SameConfigurationFields(left, right) {
 			t.Fatal("raw equality or management-property comparison changed incorrectly")
 		}
 		for key := range left {
@@ -302,19 +176,19 @@ func TestUnitConfigurationComparisonKeepsStateAndExtensionsSeparateFromXmlKey(t 
 				altered[k] = v
 			}
 			delete(altered, key)
-			if sameConfigurationFields(left, altered) {
+			if SameConfigurationFields(left, altered) {
 				t.Fatal("missing management/extension property ignored")
 			}
 			altered[key] = json.RawMessage(`{"changed":true}`)
-			if sameConfigurationFields(left, altered) {
+			if SameConfigurationFields(left, altered) {
 				t.Fatal("changed management/extension property ignored")
 			}
 		}
 		right["future-extension"] = json.RawMessage(`{"value":9007199254740993}`)
-		if sameConfigurationFields(left, right) {
+		if SameConfigurationFields(left, right) {
 			t.Fatal("unknown extension was ignored")
 		}
-		if sameConfigurationFields(nil, right) || sameConfigurationFields(left, nil) {
+		if SameConfigurationFields(nil, right) || SameConfigurationFields(left, nil) {
 			t.Fatal("missing snapshot accepted")
 		}
 		numericLeft := make(map[string]json.RawMessage, len(left))
@@ -325,12 +199,34 @@ func TestUnitConfigurationComparisonKeepsStateAndExtensionsSeparateFromXmlKey(t 
 		}
 		numericLeft["future-number"] = json.RawMessage(`9007199254740993`)
 		numericRight["future-number"] = json.RawMessage(`9007199254740992`)
-		if sameConfigurationFields(numericLeft, numericRight) {
+		if SameConfigurationFields(numericLeft, numericRight) {
 			t.Fatal("management comparison rounded unknown numeric extension")
 		}
 		var original map[string]json.RawMessage
-		if json.Unmarshal(raw, &original) != nil || !sameResponseFields(left, original) {
+		if json.Unmarshal(raw, &original) != nil || !SameResponseFields(left, original) {
 			t.Fatal("comparison mutated the complete original snapshot")
 		}
+	}
+}
+
+func TestUnitGetterComparisonPreservesAllUInt64Bits(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		name, left, right string
+		equal             bool
+	}{
+		{"above-float-integer-precision", "9007199254740993", "9007199254740992", false},
+		{"uint64-upper-bound", "18446744073709551615", "18446744073709551614", false},
+		{"equal-upper-bound", "18446744073709551615", "18446744073709551615", true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var left uint64
+			if json.Unmarshal([]byte(tc.left), &left) != nil {
+				t.Fatal("invalid source UInt64 vector")
+			}
+			if SameProjection(map[string]any{"LowSeatLimit": left}, map[string]json.RawMessage{"LowSeatLimit": json.RawMessage(tc.right)}) != tc.equal {
+				t.Fatal("getter comparison rounded an unsigned value")
+			}
+		})
 	}
 }
