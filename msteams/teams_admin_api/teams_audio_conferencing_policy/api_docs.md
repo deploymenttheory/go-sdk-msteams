@@ -68,3 +68,21 @@ credentials. Successful authorization, cloud/flight availability, writes,
 read-back, cleanup and effective invite/assignment changes remain open. See
 [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/audio-conferencing-policy-lab-acceptance.md).
+
+### Executed owned CRUD
+
+`TestAccAudioConferencingPolicyCRUD` passed with certificate and client-secret authentication.
+It creates an owned unassigned policy, checks non-default read-back, updates a
+setting while verifying omission, checks the list and independently verifies
+selected HTTP404 and list absence after deletion. Each run has two public
+MicrosoftTeams 8.1.0 read comparisons and one cleaned private journal entry.
+Creation disables toll-free dial-in and explicitly sets an empty invite phone
+list. A sparse PUT enables toll-free dial-in while retaining that empty list.
+Both modern getter fields match the pinned public ForceModern read. No phone
+numbers, calls or assigned users are involved.
+
+The actual HTTP201/204 replies, created/updated JSON, owned list and deleted404
+body supply `TestUnitOwnedCRUDUsesAcceptanceResponses`. Unit checks retain exact
+requests, typed settings, complete snapshots and typed errors. CI requires every
+CRUD milestone, both comparisons and verified journal cleanup. Global, grants,
+media behavior and remaining command/parameter variants are separate scenarios.
