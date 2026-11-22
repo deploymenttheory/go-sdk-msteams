@@ -20,6 +20,12 @@ func TestUnitCallPolicyCleanupRequiresIndependentAbsence(t *testing.T) {
 		modern                  bool
 		handler                 func(*msteams.Client) lab.Handler
 	}{
+		{"events-policy", "TeamsEventsPolicy", "teams_events_policy", false, func(sdk *msteams.Client) lab.Handler {
+			return eventsPolicyCleanup{sdk.TeamsAdminAPI.TeamsEventsPolicies}
+		}},
+		{"enhanced-encryption-policy", "TeamsEnhancedEncryptionPolicy", "teams_enhanced_encryption_policy", true, func(sdk *msteams.Client) lab.Handler {
+			return enhancedEncryptionPolicyCleanup{sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies}
+		}},
 		{"channels-policy", "TeamsChannelsPolicy", "teams_channels_policy", false, func(sdk *msteams.Client) lab.Handler {
 			return channelsPolicyCleanup{sdk.TeamsAdminAPI.TeamsChannelsPolicies}
 		}},

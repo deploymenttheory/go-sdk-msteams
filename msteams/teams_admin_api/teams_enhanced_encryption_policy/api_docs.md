@@ -65,3 +65,20 @@ not tenant authorization, persistence or effective encryption. See
 [unit tests](service_test.go)
 and the [lab acceptance record](../../../docs/implementation/policies/enhanced-encryption-lab-acceptance.md).
 Issue #117 and full command/tenant qualification remain open.
+
+## Owned CRUD acceptance
+
+`TestAccEnhancedEncryptionPolicyCRUD` creates a uniquely named unassigned policy with
+non-default settings, verifies read-back, updates its description, checks list
+membership, deletes it and confirms GET404 plus list absence. `CallingEndtoEndEncryptionEnabledType: Disabled` survives a description-only update.
+Created/updated reads are compared with MicrosoftTeams 8.1.0. Certificate and
+client-secret lab runs passed with independently verified cleanup.
+
+`TestUnitOwnedCRUDUsesAcceptanceResponses` loads seven actual responses from
+`testdata`, checking requests, typed projections, sparse updates, native statuses
+and deleted-resource errors. CI requires four CRUD milestones, two pinned
+comparisons per test and verified cleanup.
+
+Assignments/clear, effective client behavior, delegated authentication, other
+clouds and remaining parameter scenarios still need acceptance; the feature
+ticket remains open.

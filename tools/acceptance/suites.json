@@ -44,7 +44,9 @@
       "TestAccCallHoldPolicyCRUD",
       "TestAccCallParkPolicyCRUD",
       "TestAccChannelsPolicyCRUD",
-      "TestAccCortanaPolicyCRUD"
+      "TestAccCortanaPolicyCRUD",
+      "TestAccEventsPolicyCRUD",
+      "TestAccEnhancedEncryptionPolicyCRUD"
     ]
   },
   "tenant-access-outcomes": {
