@@ -36,6 +36,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 		"external-access-policy":    externalPolicyCleanup{sdk.TeamsAdminAPI.ExternalAccessPolicies},
 		"call-hold-policy":          callHoldPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallHoldPolicies},
 		"call-park-policy":          callParkPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallParkPolicies},
+		"channels-policy":           channelsPolicyCleanup{sdk.TeamsAdminAPI.TeamsChannelsPolicies},
+		"cortana-policy":            cortanaPolicyCleanup{sdk.TeamsAdminAPI.TeamsCortanaPolicies},
 		"calling-policy":            callingPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallingPolicies},
 	})
 	if err != nil {

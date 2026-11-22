@@ -42,7 +42,9 @@
       "TestAccExternalAccessPolicyCRUD",
       "TestAccCallingPolicyCRUD",
       "TestAccCallHoldPolicyCRUD",
-      "TestAccCallParkPolicyCRUD"
+      "TestAccCallParkPolicyCRUD",
+      "TestAccChannelsPolicyCRUD",
+      "TestAccCortanaPolicyCRUD"
     ]
   },
   "tenant-access-outcomes": {

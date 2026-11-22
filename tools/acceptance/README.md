@@ -15,7 +15,7 @@ Runs serialize without automatically cancelling an in-flight mutation.
 The certificate/client-secret matrix executes the explicit selections in
 [suites.json](suites.json): authentication, 22 resource read tests, preflight,
 service discovery, three tenant access-outcome checks, and owned unassigned
-application-access, external-access, calling, call-hold and call-park policy CRUD.
+application-access, external-access, calling, call-hold, call-park, channels and Cortana policy CRUD.
 Authentication jobs run one at a time because concurrent writes to the tenant's
 policy collection can conflict even when resource names differ. The shared
 workflow group uses `queue: max`, so a new PR, main push or release update waits
@@ -120,7 +120,7 @@ Successful reads and mutations for these resources remain pending on issues #95,
 `pending.json` until a suitable tenant or identity is available. No resource
 coverage state is promoted by a passing denial test.
 
-For application-access, external-access, calling, call-hold and call-park policy journals, run
+For application-access, external-access, calling, call-hold, call-park, channels and Cortana policy journals, run
 `TestAccRecoverOwnedPolicies` with `MSTEAMS_LAB_RECOVERY_FILE` pointing to the
 private decrypted journal, the same lab identity and normal mutation opt-in.
 It verifies ownership and requires typed GET404 plus list absence after deletion.
