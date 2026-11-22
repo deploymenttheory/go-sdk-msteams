@@ -16,7 +16,7 @@ read-only jobs run in parallel.
 The certificate/client-secret matrix executes the explicit selections in
 [suites.json](suites.json): authentication, 22 resource read tests, preflight,
 service discovery, three tenant access-outcome checks, and owned unassigned
-application-access, external-access, calling, call-hold, call-park, channels, Cortana, events, enhanced-encryption, feedback, files, online-voicemail, audio-conferencing, app-permission and app-setup policy CRUD. A separate owned-user suite assigns and clears an application-access
+application-access, external-access, calling, call-hold, call-park, channels, Cortana, events, enhanced-encryption, feedback, files, online-voicemail, audio-conferencing, app-permission, app-setup and meeting-branding policy CRUD. A separate owned-user suite assigns and clears an application-access
 policy on the dedicated SDK user. An owned-group suite creates, updates, deletes
 and grants an application-access assignment on the dedicated empty security group.
 The matrix separates `reads` and `writes` for each authentication method.
@@ -36,7 +36,7 @@ assigned and restored), and both policy and user-restoration journal entries. Gr
 all five phase assertions, six pinned comparisons and three cleaned entries
 (two owned policies and group restoration).
 
-The remaining 23 acceptance tests are listed in `pending.json` with their missing
+The remaining 22 acceptance tests are listed in `pending.json` with their missing
 fixtures, permissions, capabilities or execution mode. Resource tickets stay open
 until their successful operations are qualified. The first supported release
 requires complete command and parameter-set qualification.
@@ -169,3 +169,19 @@ user automatically.
 Group recovery also requires `MSTEAMS_LAB_GROUP_FIXTURE_FILE` for group journals.
 The handler is bound to that group and an empty original snapshot; policy cleanup
 refuses deletion while its application-access assignment remains.
+
+## Owned team templates
+
+The template suite runs `expanded` and `json-body` input variants in both
+certificate and client-secret modes. Each variant must pass its own create/read,
+update/read, list and delete/absence assertions and two pinned PowerShell reads.
+The suite requires both named children and two cleaned journal entries. A passing
+parent or another variant cannot substitute for a missing/skipped variant.
+
+Cleanup checks selected HTTP404 plus a complete list without the owned template.
+Recovery validates its tenant-scope reference and owned display name before a
+mutation. Actual create/update receipts, nested detail envelopes, owned/deleted
+lists and deleted404 responses supply the permanent unit fixtures. The public
+General-channel name/ID and controlled fixture selector remain consistent across
+responses. Ordinary CI never rewrites those files. No team, membership, app
+installation or public template is created or changed by this suite.

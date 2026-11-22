@@ -59,6 +59,12 @@ func fixtureString(key, parent, value string, replacements map[string]string) st
 			return "fixture-secret"
 		}
 	}
+	if (normalized == "name" || normalized == "displayname") && value == "fixture-template" {
+		return value
+	}
+	if (normalized == "id" || normalized == "name" || normalized == "displayname") && value == "General" {
+		return value
+	}
 	switch normalized {
 	case "audiofileid":
 		// Audio uploads can use compact IDs without UUID separators.
@@ -344,5 +350,14 @@ func TestUnitResponseFixtureRedactsCompactAudioID(t *testing.T) {
 	again, err := fixtureJSON(raw, nil)
 	if err != nil || !bytes.Equal(again, raw) {
 		t.Fatal("sanitized fixture is not stable")
+	}
+}
+
+func TestUnitResponseFixtureKeepsOwnedTemplateSelectorsConsistent(t *testing.T) {
+	t.Parallel()
+	raw := []byte(`{"name":"owned-template","displayName":"owned-template","channel":{"id":"General","displayName":"General"},"other":{"name":"private-name"}}`)
+	value, err := fixtureJSON(raw, map[string]string{"owned-template": "fixture-template"})
+	if err != nil || !bytes.Contains(value, []byte(`"name": "fixture-template"`)) || !bytes.Contains(value, []byte(`"displayName": "fixture-template"`)) || !bytes.Contains(value, []byte(`"id": "General"`)) || !bytes.Contains(value, []byte(`"displayName": "General"`)) || bytes.Contains(value, []byte("private-name")) {
+		t.Fatal("template selector consistency or private-name redaction changed")
 	}
 }

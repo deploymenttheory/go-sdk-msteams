@@ -35,10 +35,18 @@ GROUP_ASSIGNMENT_MARKERS = [
     'group assignment cleanup: passed',
 ]
 GROUP_ASSIGNMENT_ORACLE = 'PowerShell 8.1.0 / Go group assignment parity: passed'
+TEMPLATE_MARKERS = [
+    'template create/read-back and General channel: passed',
+    'template update/read-back: passed',
+    'template list: passed',
+    'template delete/absence: passed',
+]
+TEMPLATE_ORACLE = 'PowerShell 8.1.0 / Go template read parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
     'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
+    'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
 }
 # Publish fixed assertion text only. HTTP payloads and dynamic fixture names
 # remain private even when a test fails.
@@ -206,7 +214,7 @@ def assertion_reasons(root=ROOT):
     return tuple(sorted(reasons, key=lambda value: (-len(value), value)))
 
 
-def evaluate(events, expected, process_exit, require_crud=False, proof=None):
+def evaluate(events, expected, process_exit, require_crud=False, proof=None, expected_children=None):
     proof = proof or ('owned-crud' if require_crud else None)
     proof_markers, oracle_marker, oracle_count = PROOFS[proof] if proof else ([], None, 0)
     outcomes = {}
@@ -216,9 +224,13 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None):
     service_codes = {name: [] for name in expected}
     failure_reasons = {name: set() for name in expected}
     reasons = assertion_reasons()
+    child_results = {name + '/' + child: None for name, children in (expected_children or {}).items() for child in children}
+    child_markers = {name: [] for name in child_results}
     for event in events:
         test = event.get('Test', '')
         action = event.get('Action')
+        if test in child_results and action in {'pass', 'fail', 'skip'}:
+            child_results[test] = action
         if test in expected and action in {'pass', 'fail', 'skip'}:
             outcomes[test] = action
         if '/' in test and test.split('/', 1)[0] in expected and action in child_counts:
@@ -232,18 +244,30 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None):
             matched = next((reason for reason in reasons if reason in event.get('Output', '')), None)
             if matched:
                 failure_reasons[owner].add(prefix + matched)
-        if test in markers and action == 'output':
+        if owner in markers and action == 'output':
             for marker in proof_markers + ([oracle_marker] if oracle_marker else []):
                 if marker in event.get('Output', ''):
-                    markers[test].append(marker)
+                    markers[owner].append(marker)
+                    if test in child_markers:
+                        child_markers[test].append(marker)
     tests = [{'name': name, 'outcome': outcomes.get(name, 'not-run')} for name in expected]
     passed = bool(expected) and len(set(expected)) == len(expected) and process_exit == 0
     passed = passed and all(item['outcome'] == 'pass' for item in tests) and not child_counts['skip'] and not child_counts['fail']
+    passed = passed and all(value == 'pass' for value in child_results.values())
     if proof:
         passed = passed and all(all(marker in markers[name] for marker in proof_markers) and markers[name].count(oracle_marker) == oracle_count for name in expected)
+    child_checks = {}
+    if proof and expected_children:
+        for name, seen in child_markers.items():
+            count = len(expected_children[name.split('/', 1)[0]])
+            child_checks[name] = (oracle_count % count == 0 and all(marker in seen for marker in proof_markers)
+                                  and seen.count(oracle_marker) == oracle_count // count)
+        passed = passed and all(child_checks.values())
     return {
         'outcome': 'passed' if passed else 'failed', 'tests': tests,
         'child_outcomes': child_counts, 'process_exit': process_exit,
+        'required_child_outcomes': child_results,
+        'required_child_checks': child_checks,
         'http_statuses': {name: sorted(set(values)) for name, values in http_statuses.items() if values},
         'service_error_codes': {name: sorted(set(values)) for name, values in service_codes.items() if values},
         'failure_reasons': {name: sorted(values) for name, values in failure_reasons.items() if values},
@@ -299,7 +323,7 @@ def run(args):
                 events.append(json.loads(line))
             except ValueError:
                 pass
-        report = evaluate(events, suite['tests'], result.returncode, proof=suite.get('proof'))
+        report = evaluate(events, suite['tests'], result.returncode, proof=suite.get('proof'), expected_children=suite.get('children'))
         if suite.get('mutation'):
             new_journals = set((private / 'journals').glob('*.json')) - previous_journals
             entries = [entry for path in new_journals for entry in json.loads(path.read_text())['entries']]
@@ -351,6 +375,12 @@ def print_report(report):
     for state in ['fail', 'skip']:
         if children.get(state, 0):
             print(f"FAIL {report['suite']}: {children[state]} child tests {state}", flush=True)
+    for name, outcome in report.get('required_child_outcomes', {}).items():
+        if outcome != 'pass':
+            print(f'FAIL {name}: {outcome or "not-run"}', flush=True)
+    for name, passed in report.get('required_child_checks', {}).items():
+        if not passed:
+            print(f'FAIL {name}: missing CRUD assertion or pinned comparison', flush=True)
     assertions = report.get('mutation_assertions_observed', report.get('crud_assertions_observed', {}))
     for name, observed in assertions.items():
         if not observed:

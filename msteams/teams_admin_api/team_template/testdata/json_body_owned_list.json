@@ -1,0 +1,288 @@
+{
+  "value": [
+    {
+      "id": "00000000-0000-4000-8000-ab105af6736f",
+      "locale": "en-US",
+      "name": "fixture-template",
+      "description": "SDK lab non-default updated description",
+      "shortDescription": "SDK lab non-default updated summary",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/default_tenant.svg",
+      "channelCount": 1,
+      "modifiedOn": "2026-11-22T02:16:28.6132169Z",
+      "modifiedBy": "00000000-0000-4000-8000-a12da7e13b12",
+      "scope": "Tenant",
+      "visibility": "Private",
+      "@odata.id": "/api/teamtemplates/v1.0/00000000-0000-4000-8000-ab105af6736f/Tenant/en-US"
+    },
+    {
+      "id": "fixture-record-7bacc42c",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Coordinate your project.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/project_management.svg",
+      "channelCount": 4,
+      "appCount": 7,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "General"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.ManageAProject/Public/en-US"
+    },
+    {
+      "id": "fixture-record-c8009155",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Improve your event management and collaboration.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/events.svg",
+      "channelCount": 7,
+      "appCount": 8,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "General"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.ManageAnEvent/Public/en-US"
+    },
+    {
+      "id": "fixture-record-ec28b27d",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Create a central experience to onboard employees.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/employee_onboarding.svg",
+      "channelCount": 4,
+      "appCount": 7,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "General"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.OnboardEmployees/Public/en-US"
+    },
+    {
+      "id": "fixture-record-78230e95",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Create a Champion community to drive adoption.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/champion_program.svg",
+      "channelCount": 5,
+      "appCount": 2,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "General"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.AdoptOffice365/Public/en-US"
+    },
+    {
+      "id": "fixture-record-37c3a54c",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Bring resources together to build your help desk.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/help_desk.svg",
+      "channelCount": 3,
+      "appCount": 6,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "General"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.OrganizeHelpDesk/Public/en-US"
+    },
+    {
+      "id": "fixture-record-838f4341",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Centralize resources and communications for an incident response.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/incident_response.svg",
+      "channelCount": 6,
+      "appCount": 8,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "Government"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.CoordinateIncidentResponse/Public/en-US"
+    },
+    {
+      "id": "fixture-record-d2cd3e81",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Create a place for your team to coordinate on a major crisis.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/incident_response.svg",
+      "channelCount": 5,
+      "appCount": 7,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "Financial Services"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.CollaborateOnAGlobalCrisisOrEvent/Public/en-US"
+    },
+    {
+      "id": "fixture-record-9ee8c961",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Collaborate with your retail store employees.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/retail_store.svg",
+      "channelCount": 4,
+      "appCount": 6,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "Retail"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/retailStore/Public/en-US"
+    },
+    {
+      "id": "fixture-record-1f803737",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Create a place for bank branch collaboration.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/bank_branch.svg",
+      "channelCount": 12,
+      "appCount": 6,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "Financial Services"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.CollaborateWithinABankBranch/Public/en-US"
+    },
+    {
+      "id": "fixture-record-330ce8cf",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Collaborate on patient care in a hospital ward or department.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/hospital.svg",
+      "channelCount": 6,
+      "appCount": 5,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "Healthcare"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/healthcareWard/Public/en-US"
+    },
+    {
+      "id": "fixture-record-d1542bc2",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Facilitate collaboration within a hospital.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/hospital.svg",
+      "channelCount": 6,
+      "appCount": 6,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "Healthcare"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/healthcareHospital/Public/en-US"
+    },
+    {
+      "id": "fixture-record-0f832ee9",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Centralize communication and plant operations.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/manufacturing_plans.svg",
+      "channelCount": 9,
+      "appCount": 5,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "Manufacturing"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.QualitySafety/Public/en-US"
+    },
+    {
+      "id": "fixture-record-abe43ad8",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Collaborate with managers across stores, regions, etc.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/retail_store.svg",
+      "channelCount": 3,
+      "appCount": 4,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "Retail"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/retailManagerCollaboration/Public/en-US"
+    },
+    {
+      "id": "fixture-record-25d2974e",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Collaborate on everything you need to empower volunteers.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/employee_onboarding.svg",
+      "channelCount": 6,
+      "appCount": 7,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "General"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.ManageVolunteers/Public/en-US"
+    },
+    {
+      "id": "fixture-record-c3aa13dc",
+      "locale": "en-US",
+      "name": "Fixture name",
+      "description": "Fixture description",
+      "shortDescription": "Bring your frontline team together to stay connected.",
+      "iconUri": "https://fixture.example.invalid/evergreen-assets/teamtemplates/icons/employee_onboarding.svg",
+      "channelCount": 5,
+      "appCount": 6,
+      "modifiedOn": "0001-01-01T00:00:00.0000000",
+      "scope": "Public",
+      "publishedBy": "Microsoft",
+      "visibility": "Private",
+      "categories": [
+        "General"
+      ],
+      "@odata.id": "/api/teamtemplates/v1.0/com.microsoft.teams.template.Frontline/Public/en-US"
+    }
+  ]
+}

@@ -13,7 +13,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
-func TestUnitPolicyRPErrorCodesUseAcceptanceResponses(t *testing.T) {
+func TestUnitBackendErrorCodesUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	root, err := os.OpenRoot("../teams_admin_api")
 	if err != nil {
@@ -31,6 +31,7 @@ func TestUnitPolicyRPErrorCodesUseAcceptanceResponses(t *testing.T) {
 		{"migration", "assignment_migration/testdata/list_400.json", "ClientError", 400, 40003},
 		{"prompts", "audio_conferencing_prompts/testdata/get_global_400.json", "ClientError", 400, 40003},
 		{"privacy", "privacy_configuration/testdata/get_global_403.json", "Forbidden", 403, 40301},
+		{"template", "team_template/testdata/expanded_get_deleted_404.json", "Unknown", 404, 0},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			body, err := root.ReadFile(test.path)
@@ -38,14 +39,22 @@ func TestUnitPolicyRPErrorCodesUseAcceptanceResponses(t *testing.T) {
 				t.Fatal(err)
 			}
 			api := client.NewAPIError(client.TeamsAdmin, test.status, http.Header{}, body)
-			if !reflect.DeepEqual(api.Codes, []string{test.code}) || !reflect.DeepEqual(api.ServiceErrorCodes, []int{test.serviceCode}) {
+			var numeric []int
+			if test.serviceCode != 0 {
+				numeric = []int{test.serviceCode}
+			}
+			if !reflect.DeepEqual(api.Codes, []string{test.code}) || !reflect.DeepEqual(api.ServiceErrorCodes, numeric) {
 				t.Fatalf("service error codes lost: %v", api.ServiceErrorCodes)
 			}
 			if errors.Is(api, auth.ErrTenantCapabilityUnavailable) {
 				t.Fatal("generic transport inferred resource capability")
 			}
 			for _, format := range []string{"%v", "%+v", "%#v"} {
-				if strings.Contains(fmt.Sprintf(format, api), fmt.Sprint(test.serviceCode)) {
+				private := test.code
+				if test.serviceCode != 0 {
+					private = fmt.Sprint(test.serviceCode)
+				}
+				if strings.Contains(fmt.Sprintf(format, api), private) {
 					t.Fatal("error formatting leaked service diagnostics")
 				}
 			}

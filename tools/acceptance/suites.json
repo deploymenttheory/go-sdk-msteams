@@ -52,7 +52,8 @@
       "TestAccOnlineVoicemailPolicyCRUD",
       "TestAccAudioConferencingPolicyCRUD",
       "TestAccAppPermissionPolicyCRUD",
-      "TestAccAppSetupPolicyCRUD"
+      "TestAccAppSetupPolicyCRUD",
+      "TestAccMeetingBrandingPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1
@@ -82,5 +83,20 @@
     "tests": [
       "TestAccApplicationAccessPolicyGroupAssignment"
     ]
+  },
+  "owned-team-templates": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "template-crud",
+    "journal_entries_per_test": 2,
+    "tests": [
+      "TestAccTeamTemplateCRUD"
+    ],
+    "children": {
+      "TestAccTeamTemplateCRUD": [
+        "expanded",
+        "json-body"
+      ]
+    }
   }
 }

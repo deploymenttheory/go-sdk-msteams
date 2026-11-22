@@ -149,3 +149,28 @@ An incomplete list, failed lookup, foreign reference, renamed fixture or
 ambiguous match remains unresolved rather than authorizing deletion.
 An unresolved creation with no verified reference also remains retained when a
 list is empty; recovery does not turn that uncertainty into verified absence.
+
+## Executed tenant acceptance
+
+`TestAccTeamTemplateCRUD` passed both expanded and JSON-body workflows with
+certificate and client-secret authentication. It verifies non-default display
+name, summary/description, automatic General-channel normalization, update,
+complete list presence and independent selected404/list absence after deletion.
+Each variant has two public MicrosoftTeams 8.1.0 read comparisons and its own
+cleaned recovery entry. The bounded oracle uses the selected authentication mode.
+
+`TestUnitTemplateCRUDUsesAcceptanceResponses` consumes the actual create/update
+receipts, nested detail and list envelopes, empty delete reply and deleted404
+body. It checks exact paths/bodies, typed values, General channel, complete
+snapshots, list selection and preserved operation/error-envelope diagnostics.
+Cleanup unit coverage rejects foreign selectors and requires both absence reads.
+CI requires both named variants, their own assertions/comparisons and two cleaned
+entries. Remaining optional model/command variants keep their ledger distinctions;
+this test does not create a team or establish effective client behavior.
+
+The lab's deleted-template response uses `errors[].errorCode` as a string. The
+service now projects it into `ErrorDetail.Code` (with legacy `code` fallback),
+and the shared error exposes it in `APIError.Codes`. Numeric direct PolicyRP
+error codes keep their separate contract. Original error members and operation
+identifiers remain available; formatted errors remain redacted. Regression tests
+use the actual deleted-template JSON in both the service and shared client.

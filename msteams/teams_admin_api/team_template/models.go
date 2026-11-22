@@ -121,7 +121,7 @@ func (r ListResult) MarshalJSON() ([]byte, error) {
 	return json.Marshal(plain(r))
 }
 
-// ErrorDetail preserves the template service's code/message/action model and
+// ErrorDetail preserves the template service's errorCode/message/action model and
 // unknown fields. These values can contain tenant data and are never formatted
 // by Error.Error, String or GoString.
 type ErrorDetail struct {
@@ -136,8 +136,16 @@ func (e *ErrorDetail) UnmarshalJSON(raw []byte) error {
 	if e == nil || !ok {
 		return ErrInput
 	}
-	*e = ErrorDetail{Code: stringField(fields, "code"), Message: stringField(fields, "message"), Action: stringField(fields, "action"), RawFields: fields}
+	*e = *errorDetail(fields)
 	return nil
+}
+
+func errorDetail(fields map[string]json.RawMessage) *ErrorDetail {
+	key := "code"
+	if _, present := fields["errorCode"]; present {
+		key = "errorCode"
+	}
+	return &ErrorDetail{Code: stringField(fields, key), Message: stringField(fields, "message"), Action: stringField(fields, "action"), RawFields: fields}
 }
 
 func (e ErrorDetail) MarshalJSON() ([]byte, error) {
@@ -160,9 +168,7 @@ func (e *ErrorEnvelope) UnmarshalJSON(raw []byte) error {
 		return ErrInput
 	}
 	*e = ErrorEnvelope{OperationID: stringField(fields, "operationId"), RawFields: fields,
-		Errors: objectItems(fields["errors"], func(item map[string]json.RawMessage) *ErrorDetail {
-			return &ErrorDetail{Code: stringField(item, "code"), Message: stringField(item, "message"), Action: stringField(item, "action"), RawFields: item}
-		})}
+		Errors: objectItems(fields["errors"], errorDetail)}
 	return nil
 }
 
