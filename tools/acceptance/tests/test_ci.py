@@ -464,6 +464,18 @@ func TestAccRead(t *testing.T) {
             incomplete = [event for event in events if event.get('Output') != omitted]
             self.assertEqual(ci.evaluate(incomplete, [name], 0, proof='populated-template-access')['outcome'], 'failed')
 
+    def test_notification_crud_requires_the_null_read_and_three_comparisons(self):
+        name = 'TestAccNotificationAndFeedsPolicyCRUD'
+        markers, oracle, count = ci.PROOFS['owned-notification-crud']
+        events = [{'Test': name, 'Action': 'output', 'Output': marker} for marker in markers + [oracle] * count]
+        events.append({'Test': name, 'Action': 'pass'})
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='owned-notification-crud')['outcome'], 'passed')
+        self.assertEqual(count, 3)
+        incomplete = [event for event in events if event.get('Output') != 'notification explicit-null update/read-back: passed']
+        self.assertEqual(ci.evaluate(incomplete, [name], 0, proof='owned-notification-crud')['outcome'], 'failed')
+        events.remove(next(event for event in events if event.get('Output') == oracle))
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='owned-notification-crud')['outcome'], 'failed')
+
 
 if __name__ == '__main__':
     unittest.main()

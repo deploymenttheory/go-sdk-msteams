@@ -211,3 +211,11 @@ restores only the journaled CopilotFromHomeTenant string on Global. The recovery
 handler accepts only the documented Enabled/Disabled baseline used by the test.
 CI reports fixed parity, persistence and restoration failure reasons without
 publishing raw responses or resource names.
+
+Network roaming runs in the owned-policy CRUD suite using modern POST/PUT/DELETE.
+Notification/feeds runs in `owned-notification-policy`, whose extra explicit-null
+Description check and three pinned comparisons are mandatory. Its native create
+is evidenced by the pinned unexported compiled New implementation and live tenant
+acceptance; public baseline mappings still contain only Get/Set/Remove. Both
+policy kinds have bound owned-resource recovery handlers and require GET404 plus
+list absence. Their fixtures are permanent service testdata, with no capture store.

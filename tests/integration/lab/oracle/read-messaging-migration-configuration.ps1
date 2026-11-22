@@ -7,7 +7,7 @@ try {
  if($env:MSTEAMS_LAB_READ_ONLY -ne '1' -or $env:MSTEAMS_LAB_POWERSHELL_ORACLE -ne '1'){throw 'Explicit read oracle opt-in required.'}
  $request=[Console]::In.ReadToEnd() | ConvertFrom-Json;$tenant=[Guid]::Parse($request.tenant_id).ToString()
  $selected=[string]$request.identity
- if($selected -ine 'Global' -or $request.kind -notin @('messaging','migration','mobility','multi-tenant')){throw 'Explicit configuration read required.'}
+ if($selected -ine 'Global' -or $request.kind -notin @('messaging','migration','mobility','multi-tenant','roaming','notification')){throw 'Explicit configuration read required.'}
  $manifest=Join-Path $env:MSTEAMS_LAB_MODULE_PATH 'MicrosoftTeams.psd1'
  if((Import-PowerShellDataFile -LiteralPath $manifest).ModuleVersion -ne '8.1.0'){throw 'Wrong baseline.'}
  $assemblies=@(
@@ -31,9 +31,9 @@ try {
   Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $tenant -ErrorAction Stop -InformationAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
  }else{throw 'Unknown auth method.'}
  $connected=$true
- $values=@(if($request.kind -eq 'messaging'){Get-CsTeamsMessagingConfiguration -Identity Global -ErrorAction Stop}elseif($request.kind -eq 'migration'){Get-CsTeamsMigrationConfiguration -Identity Global -ErrorAction Stop}elseif($request.kind -eq 'mobility'){Get-CsTeamsMobilityPolicy -Identity Global -ErrorAction Stop}else{Get-CsTeamsMultiTenantOrganizationConfiguration -Identity Global -ErrorAction Stop})
+ $values=@(if($request.kind -eq 'messaging'){Get-CsTeamsMessagingConfiguration -Identity Global -ErrorAction Stop}elseif($request.kind -eq 'migration'){Get-CsTeamsMigrationConfiguration -Identity Global -ErrorAction Stop}elseif($request.kind -eq 'mobility'){Get-CsTeamsMobilityPolicy -Identity Global -ErrorAction Stop}elseif($request.kind -eq 'roaming'){Get-CsTeamsNetworkRoamingPolicy -Identity Global -ErrorAction Stop}elseif($request.kind -eq 'notification'){Get-CsTeamsNotificationAndFeedsPolicy -Identity Global -ErrorAction Stop}else{Get-CsTeamsMultiTenantOrganizationConfiguration -Identity Global -ErrorAction Stop})
  if($values.Count -ne 1 -or [string]$values[0].Identity -ine 'Global'){throw 'Expected Global configuration.'}
- $names=if($request.kind -eq 'messaging'){@('EnableVideoMessageCaptions','EnableInOrganizationChatControl','CustomEmojis','Storyline','Communities','MessagingNotes','FileTypeCheck','UrlReputationCheck','ContentBasedPhishingCheck','ReportIncorrectSecurityDetections','FileTypeCustomizationSetting','FileTypeBlockList')}elseif($request.kind -eq 'migration'){@('EnableLegacyClientInterop')}elseif($request.kind -eq 'mobility'){@('Description','IPAudioMobileMode','IPVideoMobileMode','MobileDialerPreference','LinksInTeams')}else{@('CopilotFromHomeTenant')}
+ $names=if($request.kind -eq 'messaging'){@('EnableVideoMessageCaptions','EnableInOrganizationChatControl','CustomEmojis','Storyline','Communities','MessagingNotes','FileTypeCheck','UrlReputationCheck','ContentBasedPhishingCheck','ReportIncorrectSecurityDetections','FileTypeCustomizationSetting','FileTypeBlockList')}elseif($request.kind -eq 'migration'){@('EnableLegacyClientInterop')}elseif($request.kind -eq 'mobility'){@('Description','IPAudioMobileMode','IPVideoMobileMode','MobileDialerPreference','LinksInTeams')}elseif($request.kind -eq 'roaming'){@('Description','AllowIPVideo','MediaBitRateKb')}elseif($request.kind -eq 'notification'){@('Description','SuggestedFeedsEnabledType','TrendingFeedsEnabledType')}else{@('CopilotFromHomeTenant')}
  $settings=@{}
  foreach($name in $names){$property=$values[0].PSObject.Properties[$name];if($null -eq $property){throw 'Missing configuration getter.'};$settings[$name]=$property.Value}
  $report=@{success=$true;tenant_id=$tenant;identity=[string]$values[0].Identity;settings=$settings}
