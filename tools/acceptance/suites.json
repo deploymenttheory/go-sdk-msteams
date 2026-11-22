@@ -47,7 +47,9 @@
       "TestAccCortanaPolicyCRUD",
       "TestAccEventsPolicyCRUD",
       "TestAccEnhancedEncryptionPolicyCRUD"
-    ]
+    ],
+    "proof": "owned-crud",
+    "journal_entries_per_test": 1
   },
   "tenant-access-outcomes": {
     "package": "./tests/integration/lab",
@@ -55,6 +57,15 @@
       "TestAccAssignmentMigrationCapabilityUnavailable",
       "TestAccAudioConferencingPromptsCapabilityUnavailable",
       "TestAccPrivacyConfigurationAuthorizationDenied"
+    ]
+  },
+  "owned-user-assignments": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "user-assignment",
+    "journal_entries_per_test": 2,
+    "tests": [
+      "TestAccApplicationAccessPolicyUserAssignment"
     ]
   }
 }

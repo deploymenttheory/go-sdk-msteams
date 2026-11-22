@@ -1,0 +1,14 @@
+[
+  {
+    "policyType": "ApplicationAccessPolicy",
+    "policyName": "fixture-policy",
+    "policySource": [
+      {
+        "policyName": "fixture-policy",
+        "policyType": "ApplicationAccessPolicy",
+        "assignmentType": "Direct",
+        "reference": "Direct"
+      }
+    ]
+  }
+]

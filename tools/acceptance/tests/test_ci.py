@@ -53,8 +53,30 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertIn('MSTEAMS_LAB_CLIENT_ID', str(failure.exception))
         self.assertIn('MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM', str(failure.exception))
         self.assertIn('MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID', str(failure.exception))
+        self.assertIn('MSTEAMS_LAB_USER_FIXTURE_JSON', str(failure.exception))
         self.assertNotIn('MSTEAMS_LAB_TENANT_ID', str(failure.exception))
         self.assertNotIn('private-tenant-value', str(failure.exception))
+
+    def test_failure_reason_keeps_fixed_assertion_and_public_case_only(self):
+        name = 'TestAccFederationReadOnly'
+        reason = 'pinned federation read oracle failed; no output retained'
+        events = [
+            {'Test': name + '/acs', 'Action': 'output', 'Output': reason + ': private-response'},
+            {'Test': name + '/private-user', 'Action': 'output', 'Output': 'Global federation read/list observations differ private-token'},
+            {'Test': name, 'Action': 'fail'},
+        ]
+        report = ci.evaluate(events, [name], 1)
+        report.update(suite='resource-reads', auth_method='client-secret')
+        output = io.StringIO()
+        with tempfile.TemporaryDirectory() as directory:
+            summary = Path(directory) / 'summary.md'
+            with patch.dict(os.environ, {'GITHUB_STEP_SUMMARY': str(summary)}), contextlib.redirect_stdout(output):
+                ci.print_report(report)
+                ci.write_summary([report])
+            published = json.dumps(report) + output.getvalue() + summary.read_text()
+        self.assertIn('acs: ' + reason, published)
+        self.assertIn('Global federation read/list observations differ', published)
+        self.assertNotIn('private-', published)
 
     def test_passing_parent_does_not_hide_skipped_child_in_output(self):
         report = ci.evaluate([
@@ -123,7 +145,7 @@ class AcceptanceGuardTests(unittest.TestCase):
             private = root / 'msteams-acceptance-fixture'
             private.mkdir()
             test = 'TestAccApplicationAccessPolicyCRUD'
-            (root / 'suites.json').write_text(json.dumps({'crud': {'package': './fixture', 'tests': [test], 'mutation': True}}))
+            (root / 'suites.json').write_text(json.dumps({'crud': {'package': './fixture', 'tests': [test], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1}}))
 
             def process(command, **kwargs):
                 if command[0] == 'git':
@@ -139,6 +161,107 @@ class AcceptanceGuardTests(unittest.TestCase):
                     outcome = ci.run(argparse.Namespace(suite=['crud'], report_directory=root / 'reports'))
             self.assertEqual(outcome, 1)
             self.assertEqual(json.loads((root / 'reports/crud.json').read_text())['cleanup_journal_entries'], 0)
+
+    def test_user_assignment_requires_clear_cleanup_and_three_comparisons(self):
+        name = 'TestAccApplicationAccessPolicyUserAssignment'
+        events = [{'Test': name, 'Action': 'pass'}]
+        events += [{'Test': name, 'Action': 'output', 'Output': marker} for marker in ci.USER_ASSIGNMENT_MARKERS]
+        events += [{'Test': name, 'Action': 'output', 'Output': ci.USER_ASSIGNMENT_ORACLE} for _ in range(2)]
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='user-assignment')['outcome'], 'failed')
+        events.append({'Test': name, 'Action': 'output', 'Output': ci.USER_ASSIGNMENT_ORACLE})
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='user-assignment')['outcome'], 'passed')
+        events = [event for event in events if event.get('Output') != ci.USER_ASSIGNMENT_MARKERS[1]]
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='user-assignment')['outcome'], 'failed')
+
+    def test_user_fixture_secret_cannot_select_a_foreign_tenant_or_label(self):
+        tenant = '00000000-0000-4000-8000-000000000001'
+        fixture = {'tenant_id': tenant, 'user_id': '00000000-0000-4000-8000-000000000010',
+                   'user_principal_name': 'go-sdk-msteams-acceptance@fixture.example',
+                   'display_name': 'go-sdk-msteams acceptance user'}
+        values = {'TENANT_ID': tenant, 'USER_FIXTURE_JSON': json.dumps(fixture)}
+        self.assertEqual(ci.user_fixture(values), fixture)
+        for change in [{'tenant_id': '00000000-0000-4000-8000-000000000002'},
+                       {'user_id': 'private-user-id'}, {'user_principal_name': 'private-user@fixture.example'},
+                       {'display_name': 'private-user'}, {'password': 'private-password'}]:
+            with self.subTest(field=next(iter(change))):
+                with self.assertRaises(ci.AcceptanceFailure) as failure:
+                    ci.user_fixture(dict(values, USER_FIXTURE_JSON=json.dumps(dict(fixture, **change))))
+                self.assertEqual(str(failure.exception), 'Invalid repository Actions secret: MSTEAMS_LAB_USER_FIXTURE_JSON')
+                self.assertNotIn('private-', str(failure.exception))
+
+    def test_cleaned_policy_without_assignment_restore_entry_cannot_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            private = root / 'msteams-acceptance-fixture'
+            (private / 'journals').mkdir(parents=True)
+            name = 'TestAccApplicationAccessPolicyUserAssignment'
+            (root / 'suites.json').write_text(json.dumps({'assign': {'package': './fixture', 'tests': [name],
+                'mutation': True, 'proof': 'user-assignment', 'journal_entries_per_test': 2}}))
+
+            def process(command, **kwargs):
+                if command[0] == 'git':
+                    return subprocess.CompletedProcess(command, 0, stdout='a' * 40 + '\n')
+                events = [{'Test': name, 'Action': 'pass'}]
+                events += [{'Test': name, 'Action': 'output', 'Output': marker}
+                           for marker in ci.USER_ASSIGNMENT_MARKERS + [ci.USER_ASSIGNMENT_ORACLE] * 3]
+                for event in events:
+                    kwargs['stdout'].write(json.dumps(event) + '\n')
+                (private / 'journals/only-policy.json').write_text(json.dumps({'entries': [{'state': 'cleaned'}]}))
+                return subprocess.CompletedProcess(command, 0)
+
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}), patch.object(ci.subprocess, 'run', side_effect=process):
+                with contextlib.redirect_stdout(io.StringIO()):
+                    result = ci.run(argparse.Namespace(suite=['assign'], report_directory=root / 'reports'))
+            report = json.loads((root / 'reports/assign.json').read_text())
+            self.assertEqual(result, 1)
+            self.assertEqual(report['cleanup_journal_entries_cleaned'], 1)
+            self.assertEqual(report['expected_cleanup_journal_entries'], 2)
+
+    def test_aggregate_requires_every_suite_in_both_authentication_modes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'suites.json').write_text(json.dumps({'reads': {}, 'writes': {}}))
+            reports = root / 'reports'
+            reports.mkdir()
+            for mode in ['certificate', 'client-secret']:
+                for suite in ['reads', 'writes']:
+                    (reports / (mode + '-' + suite + '.json')).write_text(json.dumps({
+                        'suite': suite, 'auth_method': mode, 'outcome': 'passed',
+                        'tests': [{'name': 'TestAccFixture', 'outcome': 'pass'}]}))
+            with patch.object(ci, 'HERE', root), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 0)
+                (reports / 'client-secret-writes.json').unlink()
+                self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 1)
+                (reports / 'duplicate.json').write_text((reports / 'certificate-reads.json').read_text())
+                self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 1)
+
+    def test_read_selection_cannot_enable_mutations(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            private = root / 'msteams-acceptance-fixture'
+            private.mkdir()
+            (root / 'suites.json').write_text(json.dumps({
+                'reads': {'package': './fixture', 'tests': ['TestAccRead']},
+                'writes': {'package': './fixture', 'tests': ['TestAccWrite'], 'mutation': True,
+                           'proof': 'owned-crud', 'journal_entries_per_test': 1}}))
+            invoked = []
+
+            def process(command, **kwargs):
+                if command[0] == 'git':
+                    return subprocess.CompletedProcess(command, 0, stdout='a' * 40 + '\n')
+                invoked.append((command, kwargs['env']['MSTEAMS_LAB_MUTATIONS']))
+                kwargs['stdout'].write(json.dumps({'Test': 'TestAccRead', 'Action': 'pass'}) + '\n')
+                return subprocess.CompletedProcess(command, 0)
+
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(private)}), patch.object(ci.subprocess, 'run', side_effect=process):
+                with contextlib.redirect_stdout(io.StringIO()):
+                    result = ci.run(argparse.Namespace(suite=None, kind='reads', report_directory=root / 'reports'))
+            self.assertEqual(result, 0)
+            self.assertEqual(len(invoked), 1)
+            self.assertEqual(invoked[0][1], '0')
+            self.assertIn('TestAccRead', ' '.join(invoked[0][0]))
+            self.assertNotIn('TestAccWrite', ' '.join(invoked[0][0]))
+            self.assertFalse((root / 'reports/writes.json').exists())
 
     def test_naming_guard_distinguishes_test_account_from_test_acc(self):
         with tempfile.TemporaryDirectory() as directory:
