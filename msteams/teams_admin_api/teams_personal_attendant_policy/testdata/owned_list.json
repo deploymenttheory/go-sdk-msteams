@@ -1,0 +1,34 @@
+[
+  {
+    "PersonalAttendant": "EnabledUserOverride",
+    "CallScreening": "EnabledUserOverride",
+    "CalendarBookings": "EnabledUserOverride",
+    "InboundInternalCalls": "EnabledUserOverride",
+    "InboundFederatedCalls": "EnabledUserOverride",
+    "InboundPSTNCalls": "EnabledUserOverride",
+    "AutomaticTranscription": "EnabledUserOverride",
+    "AutomaticRecording": "EnabledUserOverride",
+    "Identity": "Global",
+    "SchemaVersion": "0.0.1",
+    "ConfigId": "Global",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    }
+  },
+  {
+    "PersonalAttendant": "EnabledUserOverride",
+    "CallScreening": "EnabledUserOverride",
+    "CalendarBookings": "EnabledUserOverride",
+    "InboundInternalCalls": "EnabledUserOverride",
+    "InboundFederatedCalls": "EnabledUserOverride",
+    "InboundPSTNCalls": "EnabledUserOverride",
+    "AutomaticTranscription": "Disabled",
+    "AutomaticRecording": "Disabled",
+    "Identity": "fixture-policy",
+    "SchemaVersion": "0.0.1",
+    "ConfigId": "fixture-config-d940b609",
+    "ConfigMetadata": {
+      "Authority": "Tenant"
+    }
+  }
+]

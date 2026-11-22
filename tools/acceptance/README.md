@@ -219,3 +219,10 @@ is evidenced by the pinned unexported compiled New implementation and live tenan
 acceptance; public baseline mappings still contain only Get/Set/Remove. Both
 policy kinds have bound owned-resource recovery handlers and require GET404 plus
 list absence. Their fixtures are permanent service testdata, with no capture store.
+
+Personal-attendant and recording-rollout policies join owned CRUD. The former
+updates only recording/transcription controls and retains the observed unprefixed
+identity. The latter checks exact sparse request bytes as well as two persisted
+ownership values. Both require two pinned comparisons and a cleaned create intent;
+recovery kinds are `personal-policy` and `recording-rollout-policy`. These tests
+do not grant policies or qualify effective attendant/recording behavior.
