@@ -61,3 +61,20 @@ See [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/events-policy-lab-acceptance.md).
 All five commands/nine sets are mapped. Issue #118 remains open for full command
 and tenant qualification.
+
+## Owned CRUD acceptance
+
+`TestAccEventsPolicyCRUD` creates a uniquely named unassigned policy with
+non-default settings, verifies read-back, updates its description, checks list
+membership, deletes it and confirms GET404 plus list absence. `AllowEventIntegrations: false` survives a description-only update.
+Created/updated reads are compared with MicrosoftTeams 8.1.0. Certificate and
+client-secret lab runs passed with independently verified cleanup.
+
+`TestUnitOwnedCRUDUsesAcceptanceResponses` loads seven actual responses from
+`testdata`, checking requests, typed projections, sparse updates, native statuses
+and deleted-resource errors. CI requires four CRUD milestones, two pinned
+comparisons per test and verified cleanup.
+
+Assignments/clear, effective client behavior, delegated authentication, other
+clouds and remaining parameter scenarios still need acceptance; the feature
+ticket remains open.

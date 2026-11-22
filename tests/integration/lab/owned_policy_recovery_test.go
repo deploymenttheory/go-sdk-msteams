@@ -32,13 +32,15 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	_, err = journal.Recover(ctx, map[string]lab.Handler{
-		"application-access-policy": policyCleanup{sdk.TeamsAdminAPI.ApplicationAccessPolicies},
-		"external-access-policy":    externalPolicyCleanup{sdk.TeamsAdminAPI.ExternalAccessPolicies},
-		"call-hold-policy":          callHoldPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallHoldPolicies},
-		"call-park-policy":          callParkPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallParkPolicies},
-		"channels-policy":           channelsPolicyCleanup{sdk.TeamsAdminAPI.TeamsChannelsPolicies},
-		"cortana-policy":            cortanaPolicyCleanup{sdk.TeamsAdminAPI.TeamsCortanaPolicies},
-		"calling-policy":            callingPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallingPolicies},
+		"application-access-policy":  policyCleanup{sdk.TeamsAdminAPI.ApplicationAccessPolicies},
+		"external-access-policy":     externalPolicyCleanup{sdk.TeamsAdminAPI.ExternalAccessPolicies},
+		"call-hold-policy":           callHoldPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallHoldPolicies},
+		"call-park-policy":           callParkPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallParkPolicies},
+		"channels-policy":            channelsPolicyCleanup{sdk.TeamsAdminAPI.TeamsChannelsPolicies},
+		"cortana-policy":             cortanaPolicyCleanup{sdk.TeamsAdminAPI.TeamsCortanaPolicies},
+		"events-policy":              eventsPolicyCleanup{sdk.TeamsAdminAPI.TeamsEventsPolicies},
+		"enhanced-encryption-policy": enhancedEncryptionPolicyCleanup{sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies},
+		"calling-policy":             callingPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallingPolicies},
 	})
 	if err != nil {
 		t.Fatal("owned-policy recovery incomplete; private journal retained")
