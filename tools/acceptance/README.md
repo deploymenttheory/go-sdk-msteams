@@ -16,7 +16,7 @@ read-only jobs run in parallel.
 The certificate/client-secret matrix executes the explicit selections in
 [suites.json](suites.json): authentication, 22 resource read tests, preflight,
 service discovery, three tenant access-outcome checks, and owned unassigned
-application-access, external-access, calling, call-hold, call-park, channels, Cortana, events and enhanced-encryption policy CRUD. A separate owned-user suite assigns and clears an application-access
+application-access, external-access, calling, call-hold, call-park, channels, Cortana, events, enhanced-encryption, feedback and files policy CRUD. A separate owned-user suite assigns and clears an application-access
 policy on the dedicated SDK user. An owned-group suite creates, updates, deletes
 and grants an application-access assignment on the dedicated empty security group.
 The matrix separates `reads` and `writes` for each authentication method.

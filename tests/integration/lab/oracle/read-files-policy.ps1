@@ -1,11 +1,14 @@
-# Optional pinned compiled files policy Global read; no tenant writes.
+# Optional pinned compiled files policy explicit policy read; no tenant writes.
 $ErrorActionPreference='Stop'
 $ProgressPreference='SilentlyContinue';$InformationPreference='SilentlyContinue'
 $WarningPreference='SilentlyContinue';$VerbosePreference='SilentlyContinue';$DebugPreference='SilentlyContinue'
-$report=@{success=$false};$connected=$false;$certificate=$null
+$stage='module';$report=@{success=$false};$connected=$false;$certificate=$null
 try {
  if($env:MSTEAMS_LAB_READ_ONLY -ne '1' -or $env:MSTEAMS_LAB_POWERSHELL_ORACLE -ne '1'){throw 'Explicit read oracle opt-in required.'}
  $request=[Console]::In.ReadToEnd() | ConvertFrom-Json;$tenant=[Guid]::Parse($request.tenant_id).ToString()
+ $selected=[string]$request.identity;if([string]::IsNullOrEmpty($selected)){$selected='Global'}
+ $fixture=$selected -replace '^(?i)tag:',''
+ if($selected -ine 'Global' -and $fixture -notmatch '^msteams-sdk-[a-z2-7]{26,64}-files-policy$'){throw 'Owned policy selector required.'}
  $manifest=Join-Path $env:MSTEAMS_LAB_MODULE_PATH 'MicrosoftTeams.psd1'
  if((Import-PowerShellDataFile -LiteralPath $manifest).ModuleVersion -ne '8.1.0'){throw 'Wrong baseline.'}
  $assemblies=@(
@@ -16,15 +19,26 @@ try {
  Import-Module $manifest -Force -WarningAction SilentlyContinue
  $identity=Get-Content -LiteralPath $env:MSTEAMS_LAB_IDENTITY_FILE -Raw | ConvertFrom-Json
  if([Guid]::Parse($identity.tenant_id).ToString() -ne $tenant){throw 'Tenant binding differs.'}
- $certificate=[Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromPemFile($identity.certificate_file,$identity.private_key_file)
- Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $identity.tenant_id -ErrorAction Stop -InformationAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
- $connected=$true;$values=@(Get-CsTeamsFilesPolicy -Identity Global -ErrorAction Stop)
- if($values.Count -ne 1 -or [string]$values[0].Identity -ine 'Global'){throw 'Expected Global policy.'}
+ $stage='authentication'
+ if($env:MSTEAMS_LAB_AUTH_METHOD -eq 'client-secret'){
+  $tokens=@()
+  foreach($scope in @('https://graph.microsoft.com/.default','48ac35b8-9aa8-4d74-927d-1f4a14a0b239/.default')){
+   $token=Invoke-RestMethod -Method Post -Uri "https://login.microsoftonline.com/$tenant/oauth2/v2.0/token" -Body @{grant_type='client_credentials';client_id=$identity.client_id;client_secret=$identity.client_secret;scope=$scope}
+   $tokens+= $token.access_token
+  }
+  Connect-MicrosoftTeams -AccessTokens $tokens -ErrorAction Stop -InformationAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
+ }elseif([string]::IsNullOrEmpty($env:MSTEAMS_LAB_AUTH_METHOD) -or $env:MSTEAMS_LAB_AUTH_METHOD -eq 'certificate'){
+  $certificate=[Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromPemFile($identity.certificate_file,$identity.private_key_file)
+  Connect-MicrosoftTeams -Certificate $certificate -ApplicationId $identity.client_id -TenantId $tenant -ErrorAction Stop -InformationAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
+ }else{throw 'Unknown auth method.'}
+ $connected=$true;$stage='read';$values=@(Get-CsTeamsFilesPolicy -Identity $selected -ErrorAction Stop)
+ if($values.Count -ne 1 -or (([string]$values[0].Identity -replace '^(?i)tag:','') -ine $fixture)){throw 'Expected selected policy.'}
+ $stage='projection'
  $settings=@{}
  foreach($name in @('NativeFileEntryPoints','SPChannelFilesTab','DefaultFileUploadAppId','FileSharingInChatswithExternalUsers')){
   $property=$values[0].PSObject.Properties[$name];if($null -eq $property){throw 'Incomplete files policy projection.'};$settings[$name]=$property.Value
  }
  $report=@{success=$true;tenant_id=$tenant;identity=[string]$values[0].Identity;settings=$settings}
-} catch {$report=@{success=$false}}
+} catch {$report=@{success=$false;failure_stage=$stage}}
 finally{if($connected){Disconnect-MicrosoftTeams -Confirm:$false -ErrorAction SilentlyContinue | Out-Null};if($null -ne $certificate){$certificate.Dispose()}}
 [Console]::Out.Write(($report | ConvertTo-Json -Depth 12 -Compress))

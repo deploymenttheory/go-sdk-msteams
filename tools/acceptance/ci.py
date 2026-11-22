@@ -1,5 +1,6 @@
 """Run TestAcc tests and print their results."""
 import argparse
+import functools
 import importlib.util
 import io
 import json
@@ -49,6 +50,14 @@ FAILURE_REASONS = (
     'selected federation read failed',
     'Global federation read/list observations differ',
     'canonical tenant binding required',
+    'pinned files policy read failed; no output retained',
+    'pinned files policy projection unavailable',
+    'SDK and PowerShell files policy projections differ',
+    'oracle failure stage: module',
+    'oracle failure stage: authentication',
+    'oracle failure stage: read',
+    'oracle failure stage: projection',
+    'oracle failure stage: unknown',
 )
 FEDERATION_CASES = {'external-policy', 'acs', 'external-users', 'tenant'}
 
@@ -176,6 +185,23 @@ def prepare(args):
     print(f'Repository secrets loaded: {len(values)}. MicrosoftTeams 8.1.0 checksum verified.', flush=True)
 
 
+@functools.cache
+def assertion_reasons(root=ROOT):
+    """Retain checked-in assertion literals, never their format arguments."""
+    reasons = set(FAILURE_REASONS)
+    for path in root.rglob('*_test.go'):
+        if '.git' in path.parts:
+            continue
+        for literal in re.findall(r'\bt\.(?:Fatalf?|Errorf?)\(\s*("(?:[^"\\]|\\.)*")', path.read_text()):
+            try:
+                prefix = json.loads(literal).split('%', 1)[0].strip()
+            except ValueError:
+                continue
+            if 8 <= len(prefix) <= 240 and not any(char in prefix for char in '\r\n'):
+                reasons.add(prefix)
+    return tuple(sorted(reasons, key=lambda value: (-len(value), value)))
+
+
 def evaluate(events, expected, process_exit, require_crud=False, proof=None):
     proof = proof or ('owned-crud' if require_crud else None)
     proof_markers, oracle_marker, oracle_count = PROOFS[proof] if proof else ([], None, 0)
@@ -185,6 +211,7 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None):
     http_statuses = {name: [] for name in expected}
     service_codes = {name: [] for name in expected}
     failure_reasons = {name: set() for name in expected}
+    reasons = assertion_reasons()
     for event in events:
         test = event.get('Test', '')
         action = event.get('Action')
@@ -198,7 +225,9 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None):
             service_codes[owner].extend(int(value) for value in re.findall(r'PolicyRP (\d+)\b', event.get('Output', '')))
             case = test.removeprefix('TestAccFederationReadOnly/')
             prefix = case + ': ' if owner == 'TestAccFederationReadOnly' and case in FEDERATION_CASES else ''
-            failure_reasons[owner].update(prefix + reason for reason in FAILURE_REASONS if reason in event.get('Output', ''))
+            matched = next((reason for reason in reasons if reason in event.get('Output', '')), None)
+            if matched:
+                failure_reasons[owner].add(prefix + matched)
         if test in markers and action == 'output':
             for marker in proof_markers + ([oracle_marker] if oracle_marker else []):
                 if marker in event.get('Output', ''):

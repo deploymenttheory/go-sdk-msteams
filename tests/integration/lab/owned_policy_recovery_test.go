@@ -32,6 +32,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	handlers := map[string]lab.Handler{
+		"feedback-policy":            feedbackPolicyCleanup{sdk.TeamsAdminAPI.TeamsFeedbackPolicies},
+		"files-policy":               filesPolicyCleanup{sdk.TeamsAdminAPI.TeamsFilesPolicies},
 		"application-access-policy":  policyCleanup{sdk.TeamsAdminAPI.ApplicationAccessPolicies},
 		"external-access-policy":     externalPolicyCleanup{sdk.TeamsAdminAPI.ExternalAccessPolicies},
 		"call-hold-policy":           callHoldPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallHoldPolicies},
