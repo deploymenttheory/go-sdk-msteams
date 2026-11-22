@@ -14,6 +14,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	messaging "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_messaging_configuration"
 	migration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_migration_configuration"
+	shiftsApp "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shifts_app_policy"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -50,6 +51,20 @@ func migrationSingleton(sdk *msteams.Client) singletonConfiguration {
 		return s.UpdateGlobal(ctx, migration.UpdateRequest{EnableLegacyClientInterop: &value})
 	}}
 }
+
+func shiftsAppSingleton(sdk *msteams.Client) singletonConfiguration {
+	s := sdk.TeamsAdminAPI.TeamsShiftsAppPolicies
+	return singletonConfiguration{"shifts-app", "AllowTimeClockLocationDetection", func(ctx context.Context) (map[string]any, *resty.Response, error) {
+		v, r, e := s.GetByIdentity(ctx, "Global")
+		if e != nil || v == nil {
+			return nil, r, e
+		}
+		return map[string]any{"AllowTimeClockLocationDetection": v.AllowTimeClockLocationDetection}, r, nil
+	}, func(ctx context.Context, value bool) (*resty.Response, error) {
+		return s.UpdateGlobal(ctx, shiftsApp.UpdateRequest{AllowTimeClockLocationDetection: &value})
+	}}
+}
+func TestAccShiftsAppPolicyUpdateRestore(t *testing.T) { testSingletonUpdate(t, shiftsAppSingleton) }
 
 type configurationRestore struct{ singletonConfiguration }
 
@@ -98,6 +113,10 @@ func testSingletonUpdate(t *testing.T, build func(*msteams.Client) singletonConf
 	oracle := teamOracleEnabled(t)
 	sdk, binding, _ := labSDKClient(t)
 	s := build(sdk)
+	fixturePackage := "teams_" + s.kind + "_configuration"
+	if s.kind == "shifts-app" {
+		fixturePackage = "teams_shifts_app_policy"
+	}
 	journal, err := lab.NewJournal(cfg.JournalDirectory, binding)
 	if err != nil {
 		t.Fatal("private configuration recovery journal unavailable")
@@ -144,7 +163,7 @@ func testSingletonUpdate(t *testing.T, build func(*msteams.Client) singletonConf
 		t.Fatal("configuration restoration intent not journaled")
 	}
 	response, err = s.set(ctx, !*value)
-	writeResponseFixture(t, "teams_"+s.kind+"_configuration", "update", response, nil)
+	writeResponseFixture(t, fixturePackage, "update", response, nil)
 	if err != nil {
 		logAccessResponse(t, response, err)
 		t.Fatal("configuration update failed; restoration journal retained")
@@ -164,7 +183,7 @@ func testSingletonUpdate(t *testing.T, build func(*msteams.Client) singletonConf
 		matched := err == nil && sameTemplateProjection(want, read)
 		if matched {
 			updated = read
-			writeResponseFixture(t, "teams_"+s.kind+"_configuration", "update_readback", r, nil)
+			writeResponseFixture(t, fixturePackage, "update_readback", r, nil)
 		}
 		return matched, err
 	}); err != nil {
@@ -179,7 +198,7 @@ func testSingletonUpdate(t *testing.T, build func(*msteams.Client) singletonConf
 	if err != nil || !sameTemplateProjection(before, restored) {
 		t.Fatal("configuration original getter state was not independently restored")
 	}
-	writeResponseFixture(t, "teams_"+s.kind+"_configuration", "restored_readback", response, nil)
+	writeResponseFixture(t, fixturePackage, "restored_readback", response, nil)
 	compare(restored)
 	t.Log("configuration restoration/read-back: passed")
 }

@@ -13,12 +13,11 @@ does not use `pull_request_target` or execute fork code with privileged credenti
 Write jobs serialize without automatically cancelling an in-flight mutation;
 read-only jobs run in parallel.
 
-The certificate/client-secret matrix executes the explicit selections in
-[suites.json](suites.json): authentication, 22 resource read tests, preflight,
-service discovery, three tenant access-outcome checks, and owned unassigned
-application-access, external-access, calling, call-hold, call-park, channels, Cortana, events, enhanced-encryption, feedback, files, online-voicemail, audio-conferencing, app-permission, app-setup and meeting-branding policy CRUD. A separate owned-user suite assigns and clears an application-access
-policy on the dedicated SDK user. An owned-group suite creates, updates, deletes
-and grants an application-access assignment on the dedicated empty security group.
+The certificate/client-secret matrix executes the selections in
+[suites.json](suites.json): authentication, resource reads, tenant access-outcome
+checks, owned unassigned policy CRUD, dedicated-user/group assignments, team
+templates and journaled singleton update/restoration. The registry is the
+current source of test names and assertion requirements.
 The matrix separates `reads` and `writes` for each authentication method.
 Read-only jobs can run concurrently. Every write job shares the
 `msteams-lab-tenant-acceptance` concurrency group because concurrent policy writes
@@ -281,3 +280,10 @@ emergency_numbers. The test uses those references without changing the account o
 phone assignments, checks list preservation/edit/clear, and sanitizes phone values.
 Its empty-list CRUD test does not qualify the populated scenario. Recovery kinds
 are room-video-policy and shared-calling-policy.
+
+Shifts policy CRUD runs in `owned-policy-crud` and compares all six public getters
+with PowerShell before/after a grace-period update. Its bound recovery kind is
+`shifts-policy`. Shifts app Global reads and Boolean update/restoration run in the
+serialized singleton suites, with three pinned comparisons and one cleaned
+`shifts-app-configuration` restore entry. Permanent response fixtures feed both
+service unit suites; additional grants and effective behavior remain separate.

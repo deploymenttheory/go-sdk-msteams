@@ -32,6 +32,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
 	handlers := map[string]lab.Handler{
+		"shifts-policy":              shiftsPolicyCleanup{sdk.TeamsAdminAPI.TeamsShiftsPolicies},
+		"shifts-app-configuration":   configurationRestore{shiftsAppSingleton(sdk)},
 		"room-video-policy":          roomVideoPolicyCleanup{sdk.TeamsAdminAPI.TeamsRoomVideoTeleConferencingPolicies},
 		"shared-calling-policy":      sharedCallingPolicyCleanup{sdk.TeamsAdminAPI.TeamsSharedCallingRoutingPolicies},
 		"personal-policy":            personalPolicyCleanup{sdk.TeamsAdminAPI.TeamsPersonalAttendantPolicies},

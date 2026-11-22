@@ -73,6 +73,10 @@ func tenantConfigurationOracle(t *testing.T, ctx context.Context, kind, tenant s
 	}
 	names := []string{"EnableVideoMessageCaptions", "EnableInOrganizationChatControl", "CustomEmojis", "Storyline", "Communities", "MessagingNotes", "FileTypeCheck", "UrlReputationCheck", "ContentBasedPhishingCheck", "ReportIncorrectSecurityDetections", "FileTypeCustomizationSetting", "FileTypeBlockList"}
 	switch kind {
+	case "shifts":
+		names = []string{"ShiftNoticeFrequency", "ShiftNoticeMessageType", "ShiftNoticeMessageCustom", "AccessType", "AccessGracePeriodMinutes", "EnableScheduleOwnerPermissions"}
+	case "shifts-app":
+		names = []string{"AllowTimeClockLocationDetection"}
 	case "migration":
 		names = []string{"EnableLegacyClientInterop"}
 	case "mobility":

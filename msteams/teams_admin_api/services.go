@@ -54,6 +54,8 @@ import (
 	teamsrecordingrolloutpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_recording_roll_out_policy"
 	teamsroomvideoteleconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_room_video_tele_conferencing_policy"
 	teamssharedcallingroutingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shared_calling_routing_policy"
+	teamsshiftsapppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shifts_app_policy"
+	teamsshiftspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shifts_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
@@ -64,6 +66,8 @@ type Services struct {
 	TeamsSharedCallingRoutingPolicies          *teamssharedcallingroutingpolicy.Service
 	TeamsPersonalAttendantPolicies             *teamspersonalattendantpolicy.Service
 	TeamsRecordingRollOutPolicies              *teamsrecordingrolloutpolicy.Service
+	TeamsShiftsPolicies                        *teamsshiftspolicy.Service
+	TeamsShiftsAppPolicies                     *teamsshiftsapppolicy.Service
 	TeamsNetworkRoamingPolicies                *teamsnetworkroamingpolicy.Service
 	TeamsNotificationAndFeedsPolicies          *teamsnotificationandfeedspolicy.Service
 	TeamsMobilityPolicies                      *teamsmobilitypolicy.Service
@@ -138,6 +142,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsSharedCallingRoutingPolicies:          teamssharedcallingroutingpolicy.NewService(scope),
 		TeamsPersonalAttendantPolicies:             teamspersonalattendantpolicy.NewService(scope),
 		TeamsRecordingRollOutPolicies:              teamsrecordingrolloutpolicy.NewService(scope),
+		TeamsShiftsPolicies:                        teamsshiftspolicy.NewService(scope),
+		TeamsShiftsAppPolicies:                     teamsshiftsapppolicy.NewService(backend),
 		TeamsNetworkRoamingPolicies:                teamsnetworkroamingpolicy.NewService(backend),
 		TeamsNotificationAndFeedsPolicies:          teamsnotificationandfeedspolicy.NewService(scope),
 		TeamsMobilityPolicies:                      teamsmobilitypolicy.NewService(scope),
