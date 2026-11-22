@@ -175,6 +175,22 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertEqual(report['failure_reasons'][test], ['read/list comparison: metadata values differ'])
         self.assertNotIn('private-tenant-value', json.dumps(report))
 
+    def test_metadata_paths_publish_fixed_schema_names_without_values(self):
+        test = 'TestAccRoomVideoTeleConferencingPolicyReadOnly'
+        paths = ['Key.ScopeClass', 'Key.SchemaId', 'Key.AuthorityId',
+                 'Key.DefaultXml.SchemaId', 'Key.DefaultXml.Data', 'Key.DefaultXml.ConfigObject',
+                 'Key.DefaultXml.Signature', 'Key.DefaultXml.IsModified', 'Key.XmlRoot',
+                 'ConfigMetadata', 'ConfigId']
+        for path in paths:
+            reason = 'read/list metadata: ' + path + ' differs'
+            report = ci.evaluate([
+                {'Test': test, 'Action': 'output', 'Output': reason + ' private-value'},
+                {'Test': test, 'Action': 'output', 'Output': 'read/list metadata: private-property differs'},
+                {'Test': test, 'Action': 'fail'},
+            ], [test], 1)
+            self.assertEqual(report['failure_reasons'][test], [reason])
+            self.assertNotIn('private-', json.dumps(report))
+
     def test_populated_team_templates_require_edit_clear_and_four_comparisons(self):
         test = 'TestAccTemplatePermissionPopulatedCRUD'
         proof = 'owned-template-permission-populated-crud'

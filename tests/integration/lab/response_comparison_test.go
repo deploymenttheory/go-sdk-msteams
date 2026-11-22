@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -69,6 +70,83 @@ func responseComparisonFailure(left, right map[string]json.RawMessage) string {
 		return "read/list comparison: metadata values differ"
 	}
 	return ""
+}
+
+// Metadata diagnostics enumerate only known public schema paths; no response
+// values or server-supplied property names are emitted.
+var metadataDiagnosticPaths = []string{
+	"Key.ScopeClass", "Key.SchemaId", "Key.AuthorityId",
+	"Key.DefaultXml.SchemaId", "Key.DefaultXml.Data", "Key.DefaultXml.ConfigObject",
+	"Key.DefaultXml.Signature", "Key.DefaultXml.IsModified", "Key.XmlRoot",
+	"ConfigMetadata", "ConfigId",
+}
+
+func metadataMismatchReasons(left, right map[string]json.RawMessage) []string {
+	lookup := func(fields map[string]json.RawMessage, path string) json.RawMessage {
+		raw, _ := json.Marshal(fields)
+		for _, segment := range strings.Split(path, ".") {
+			var value map[string]json.RawMessage
+			if json.Unmarshal(raw, &value) != nil {
+				return nil
+			}
+			raw = value[segment]
+		}
+		return raw
+	}
+	var reasons []string
+	for _, path := range metadataDiagnosticPaths {
+		a, b := lookup(left, path), lookup(right, path)
+		if a == nil && b == nil {
+			continue
+		}
+		if sameResponseFields(map[string]json.RawMessage{"value": a}, map[string]json.RawMessage{"value": b}) {
+			continue
+		}
+		reasons = append(reasons, "read/list metadata: "+path+" differs")
+	}
+	return reasons
+}
+func logMetadataMismatches(t *testing.T, left, right map[string]json.RawMessage) {
+	t.Helper()
+	for _, reason := range metadataMismatchReasons(left, right) {
+		t.Log(reason)
+	}
+}
+func TestUnitMetadataDiagnosticsUseFixedPathsAndRetainPrivateValues(t *testing.T) {
+	t.Parallel()
+	raw, e := os.ReadFile("../../../msteams/teams_admin_api/teams_room_video_tele_conferencing_policy/testdata/get_global.json")
+	if e != nil {
+		t.Fatal(e)
+	}
+	for _, path := range metadataDiagnosticPaths {
+		var left, right map[string]json.RawMessage
+		if json.Unmarshal(raw, &left) != nil || json.Unmarshal(raw, &right) != nil {
+			t.Fatal("invalid acceptance fixture")
+		}
+		parts := strings.Split(path, ".")
+		var alter func(map[string]json.RawMessage, []string)
+		alter = func(fields map[string]json.RawMessage, parts []string) {
+			if len(parts) == 1 {
+				fields[parts[0]] = json.RawMessage(`"private-canary"`)
+				return
+			}
+			var nested map[string]json.RawMessage
+			if json.Unmarshal(fields[parts[0]], &nested) != nil || nested == nil {
+				t.Fatal("missing fixed metadata path")
+			}
+			alter(nested, parts[1:])
+			encoded, e := json.Marshal(nested)
+			if e != nil {
+				t.Fatal(e)
+			}
+			fields[parts[0]] = encoded
+		}
+		alter(right, parts)
+		reasons := metadataMismatchReasons(left, right)
+		if len(reasons) != 1 || reasons[0] != "read/list metadata: "+path+" differs" || strings.Contains(reasons[0], "private-canary") {
+			t.Fatal("metadata diagnostic leaked or lost a changed fixed path")
+		}
+	}
 }
 
 func TestUnitResponseComparisonUsesAcceptanceJSONValues(t *testing.T) {

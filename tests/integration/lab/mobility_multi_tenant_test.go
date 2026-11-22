@@ -63,6 +63,7 @@ func testCompiledScalarGlobal(t *testing.T, kind, family string, read func(*mste
 	}
 	if reason := responseComparisonFailure(v.fields, values[0].fields); reason != "" {
 		t.Log(reason)
+		logMetadataMismatches(t, v.fields, values[0].fields)
 		t.Fatal("compiled scalar Global read/list differ")
 	}
 	if !sameTemplateProjection(v.settings, values[0].settings) {
