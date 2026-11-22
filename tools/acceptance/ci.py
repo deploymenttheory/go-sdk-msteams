@@ -26,9 +26,18 @@ USER_ASSIGNMENT_MARKERS = [
     'user assignment cleanup: passed',
 ]
 USER_ASSIGNMENT_ORACLE = 'PowerShell 8.1.0 / Go user assignment parity: passed'
+GROUP_ASSIGNMENT_MARKERS = [
+    'group policy create/read-back: passed',
+    'group policy update/read-back: passed',
+    'group policy delete/absence: passed',
+    'group policy grant/read-back: passed',
+    'group assignment cleanup: passed',
+]
+GROUP_ASSIGNMENT_ORACLE = 'PowerShell 8.1.0 / Go group assignment parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
+    'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
 }
 # Publish fixed assertion text only. HTTP payloads and dynamic fixture names
 # remain private even when a test fails.
@@ -106,8 +115,26 @@ def user_fixture(values):
     return fixture
 
 
+def group_fixture(values):
+    try:
+        fixture = json.loads(values['GROUP_FIXTURE_JSON'])
+        valid = (set(fixture) == {'tenant_id', 'group_id', 'display_name', 'mail_nickname',
+                                 'security_enabled', 'mail_enabled', 'role_assignable', 'empty_membership_verified'}
+                 and fixture['tenant_id'].lower() == values['TENANT_ID'].lower()
+                 and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', fixture['group_id'])
+                 and fixture['display_name'] == 'go-sdk-msteams acceptance policy group'
+                 and fixture['mail_nickname'] == 'go-sdk-msteams-acceptance-policy'
+                 and fixture['security_enabled'] is True and fixture['mail_enabled'] is False
+                 and fixture['role_assignable'] is False and fixture['empty_membership_verified'] is True)
+    except (ValueError, TypeError, AttributeError, KeyError):
+        valid = False
+    if not valid:
+        raise AcceptanceFailure('Invalid repository Actions secret: MSTEAMS_LAB_GROUP_FIXTURE_JSON')
+    return fixture
+
+
 def prepare(args):
-    keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'CERTIFICATE_PEM', 'PRIVATE_KEY_PEM', 'RECOVERY_CERTIFICATE_PEM', 'CALL_HOLD_AUDIO_FILE_ID', 'USER_FIXTURE_JSON']
+    keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'CERTIFICATE_PEM', 'PRIVATE_KEY_PEM', 'RECOVERY_CERTIFICATE_PEM', 'CALL_HOLD_AUDIO_FILE_ID', 'USER_FIXTURE_JSON', 'GROUP_FIXTURE_JSON']
     values = {key: os.environ.get('MSTEAMS_LAB_' + key, '') for key in keys}
     missing = ['MSTEAMS_LAB_' + key for key, value in values.items() if not value.strip()]
     if missing:
@@ -115,6 +142,7 @@ def prepare(args):
     if not re.fullmatch(r'(?:[0-9a-fA-F]{32}|[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})', values['CALL_HOLD_AUDIO_FILE_ID']):
         raise AcceptanceFailure('Invalid repository Actions secret: MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID')
     fixture = user_fixture(values)
+    group = group_fixture(values)
     base = Path(os.environ['RUNNER_TEMP']).resolve()
     private = Path(tempfile.mkdtemp(prefix='msteams-acceptance-', dir=base))
     certificate = private / 'certificate.pem'
@@ -123,6 +151,7 @@ def prepare(args):
     write_private(key, values['PRIVATE_KEY_PEM'])
     write_private(private / 'recovery-certificate.pem', values['RECOVERY_CERTIFICATE_PEM'])
     write_json(private / 'user-fixture.json', fixture)
+    write_json(private / 'group-fixture.json', group)
     write_json(private / 'identity.json', {
         'tenant_id': values['TENANT_ID'], 'client_id': values['CLIENT_ID'],
         'client_secret': values['CLIENT_SECRET'],
@@ -218,6 +247,7 @@ def run(args):
             'MSTEAMS_LAB_CONSEQUENTIAL': '0', 'MSTEAMS_LAB_TIMEOUT_SECONDS': '300',
             'MSTEAMS_LAB_IDENTITY_FILE': str(private / 'identity.json'),
             'MSTEAMS_LAB_USER_FIXTURE_FILE': str(private / 'user-fixture.json'),
+            'MSTEAMS_LAB_GROUP_FIXTURE_FILE': str(private / 'group-fixture.json'),
             'MSTEAMS_LAB_MODULE_PATH': str(private / 'module'),
             'MSTEAMS_LAB_JOURNAL_DIRECTORY': str(private / 'journals'),
             'MSTEAMS_LAB_POWERSHELL_ORACLE': '1', 'MSTEAMS_LAB_AUTH_METHOD': mode,

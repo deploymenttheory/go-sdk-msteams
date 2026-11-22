@@ -67,5 +67,14 @@
     "tests": [
       "TestAccApplicationAccessPolicyUserAssignment"
     ]
+  },
+  "owned-group-assignments": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "group-assignment",
+    "journal_entries_per_test": 3,
+    "tests": [
+      "TestAccApplicationAccessPolicyGroupAssignment"
+    ]
   }
 }

@@ -17,7 +17,8 @@ The certificate/client-secret matrix executes the explicit selections in
 [suites.json](suites.json): authentication, 22 resource read tests, preflight,
 service discovery, three tenant access-outcome checks, and owned unassigned
 application-access, external-access, calling, call-hold, call-park, channels, Cortana, events and enhanced-encryption policy CRUD. A separate owned-user suite assigns and clears an application-access
-policy on the dedicated SDK user.
+policy on the dedicated SDK user. An owned-group suite creates, updates, deletes
+and grants an application-access assignment on the dedicated empty security group.
 The matrix separates `reads` and `writes` for each authentication method.
 Read-only jobs can run concurrently. Every write job shares the
 `msteams-lab-tenant-acceptance` concurrency group because concurrent policy writes
@@ -31,7 +32,9 @@ missing tests, setup failures and unsuccessful cleanup fail CI. CRUD also requir
 all assertion milestones, two PowerShell comparisons per owned CRUD test and
 one cleaned journal entry per test. User assignment requires assign/read-back,
 clear/restoration, independent cleanup, three pinned comparisons (before,
-assigned and restored), and both policy and user-restoration journal entries.
+assigned and restored), and both policy and user-restoration journal entries. Group assignment requires
+all five phase assertions, six pinned comparisons and three cleaned entries
+(two owned policies and group restoration).
 
 The remaining 23 acceptance tests are listed in `pending.json` with their missing
 fixtures, permissions, capabilities or execution mode. Resource tickets stay open
@@ -50,6 +53,7 @@ The dedicated lab identity is supplied through these repository secrets:
 - `MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM` (public recovery certificate)
 - `MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID` (dedicated lab audio fixture)
 - `MSTEAMS_LAB_USER_FIXTURE_JSON` (bound dedicated user identifiers; no password)
+- `MSTEAMS_LAB_GROUP_FIXTURE_JSON` (bound dedicated empty security-group identifiers/flags)
 
 Only the prepare step receives the secret values. It writes private mode-0600
 files under an isolated runner-temp directory. Subsequent tests receive paths,
@@ -83,9 +87,20 @@ assignment, journals restoration before grant, verifies the direct source,
 clears it and independently deletes its owned policy. Certificate and client-secret
 lab runs both passed without assigning a license or administrator role.
 
+The dedicated `go-sdk-msteams acceptance policy group` is an empty security group,
+with mail disabled and no directory-role assignment capability. The private
+receipt is selected locally with `MSTEAMS_LAB_GROUP_FIXTURE_FILE`. CI accepts only
+the same tenant, GUID, exact SDK label/nickname and expected boolean flags in its
+fixture secret. Group configuration tests verify rank 1 and a policy-name update;
+they do not qualify priority reordering across groups or member propagation. Both
+authentication modes passed with six pinned read comparisons. Recovery restores
+the original empty assignment state before deleting either owned policy; failed
+group restoration prevents policy deletion. No tenant-default assignment changes.
+
 ## Test results and interrupted-run recovery
 
-The job summary lists failed test names and their HTTP status codes. Missing
+The job summary lists failed test names, their HTTP status codes and allowlisted
+fixed federation assertion reasons. Raw output and dynamic names remain private. Missing
 credentials name the repository secret that needs fixing.
 
 Uploaded JSON contains checked-out revision, auth method, exact selected test
@@ -150,3 +165,7 @@ running `TestAccRecoverOwnedPolicies`. The bound handler clears only the configu
 SDK user and verifies its original empty direct-assignment state. Missing fixture
 configuration leaves the restoration entry unresolved; it never selects another
 user automatically.
+
+Group recovery also requires `MSTEAMS_LAB_GROUP_FIXTURE_FILE` for group journals.
+The handler is bound to that group and an empty original snapshot; policy cleanup
+refuses deletion while its application-access assignment remains.

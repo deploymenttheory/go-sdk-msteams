@@ -46,6 +46,12 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 		fixture := loadAssignmentUserFixture(t, binding)
 		handlers["app-access-user-assignment"] = userAssignmentCleanup{sdk, fixture.UserID}
 	}
+	if os.Getenv("MSTEAMS_LAB_GROUP_FIXTURE_FILE") != "" {
+		fixture := loadAssignmentGroupFixture(t, binding)
+		handler := groupAssignmentCleanup{sdk, fixture.GroupID}
+		handlers["app-access-group-assignment"] = handler
+		handlers["group-app-access-policy"] = groupOwnedPolicyCleanup{policyCleanup{sdk.TeamsAdminAPI.ApplicationAccessPolicies}, handler}
+	}
 	_, err = journal.Recover(ctx, handlers)
 	if err != nil {
 		t.Fatal("owned-policy recovery incomplete; private journal retained")
