@@ -297,3 +297,14 @@ existing team-template IDs, verifies sparse omission, Add/Remove and clear with
 four pinned comparisons, and independently deletes its owned policy. Recovery
 kind: `template-permission-policy`. Empty and populated workflows write distinct
 permanent fixture names. Both new service scenarios run in each auth mode.
+
+Update-management policy runs in `owned-update-management-policy`. CI requires
+all CRUD assertions, DateTime persistence, message-list edit/clear, five pinned
+comparisons and one cleaned owned-policy entry. Compiled CRUD and modern grant
+requests remain distinct. Its fifteen actual response fixtures feed unit replay.
+Tenant-abuse's current lab identity receives HTTP403/PolicyRP40301 in both SDK and
+pinned PowerShell. Denial parity runs in each auth mode; successful read and
+UInt64 update/restoration tests are configured skips with public reasons. They
+remain executable with an authorized identity. The update refuses mutation without
+a readable original and its bound recovery restores only LowSeatLimit on Global.
+No additional role or credential was provisioned for these cases.

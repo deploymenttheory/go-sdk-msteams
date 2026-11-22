@@ -44,6 +44,7 @@ TEMPLATE_MARKERS = [
 TEMPLATE_ORACLE = 'PowerShell 8.1.0 / Go template read parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
+    'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
     'owned-template-permission-populated-crud': (PROOF_MARKERS + ['policy hidden-list edit/read-back: passed','policy hidden-list clear/read-back: passed'], ORACLE_MARKER, 4),
     'owned-notification-crud': (PROOF_MARKERS + ['notification explicit-null update/read-back: passed'], ORACLE_MARKER, 3),
     'owned-shared-calling-populated-crud': (PROOF_MARKERS + ['shared calling populated list edit/clear: passed'], ORACLE_MARKER, 4),

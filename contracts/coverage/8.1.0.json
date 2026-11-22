@@ -9800,31 +9800,80 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/170/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/response_test.go",
+              "name": "TestUnitAuthorizationUsesActualTenantResponse"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_abuse_update_test.go",
+              "name": "TestAccTenantAbuseConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/170/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/response_test.go",
+              "name": "TestUnitAuthorizationUsesActualTenantResponse"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_abuse_update_test.go",
+              "name": "TestAccTenantAbuseConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Tenant-abuse receives matched HTTP403/40301 in both app modes; successful read/update are configured skips and denial parity runs. Update-management owned CRUD, sparse preservation, DateTime and list edit/clear passed both modes; grant persistence and remaining scenarios are separate.",
+        "evidence": [
+          "docs/implementation/policies/tenant-abuse-update-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -9917,22 +9966,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/173/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_abuse_update_test.go",
+              "name": "TestAccUpdateManagementPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/173/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_abuse_update_test.go",
+              "name": "TestAccUpdateManagementPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9940,8 +10036,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Tenant-abuse receives matched HTTP403/40301 in both app modes; successful read/update are configured skips and denial parity runs. Update-management owned CRUD, sparse preservation, DateTime and list edit/clear passed both modes; grant persistence and remaining scenarios are separate.",
+        "evidence": [
+          "docs/implementation/policies/tenant-abuse-update-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -16594,29 +16692,88 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/262/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/262/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/262/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -16624,8 +16781,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Tenant-abuse receives matched HTTP403/40301 in both app modes; successful read/update are configured skips and denial parity runs. Update-management owned CRUD, sparse preservation, DateTime and list edit/clear passed both modes; grant persistence and remaining scenarios are separate.",
+        "evidence": [
+          "docs/implementation/policies/tenant-abuse-update-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -22725,15 +22884,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/391/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDDateTimeAndListEditsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/update_management_crud_test.go",
+              "name": "TestAccUpdateManagementPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -22741,8 +22920,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Tenant-abuse receives matched HTTP403/40301 in both app modes; successful read/update are configured skips and denial parity runs. Update-management owned CRUD, sparse preservation, DateTime and list edit/clear passed both modes; grant persistence and remaining scenarios are separate.",
+        "evidence": [
+          "docs/implementation/policies/tenant-abuse-update-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -27423,15 +27604,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/500/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDDateTimeAndListEditsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/update_management_crud_test.go",
+              "name": "TestAccUpdateManagementPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27439,8 +27640,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Tenant-abuse receives matched HTTP403/40301 in both app modes; successful read/update are configured skips and denial parity runs. Update-management owned CRUD, sparse preservation, DateTime and list edit/clear passed both modes; grant persistence and remaining scenarios are separate.",
+        "evidence": [
+          "docs/implementation/policies/tenant-abuse-update-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -33865,24 +34068,54 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/633/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/settings_test.go",
+              "name": "TestUnitAllPinnedSettingsBindExactValuesAndNull"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_abuse_update_restore_test.go",
+              "name": "TestAccTenantAbuseConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
         "evidence": []
       },
       "live": {
-        "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "status": "unavailable",
+        "reason": "Tenant-abuse receives matched HTTP403/40301 in both app modes; successful read/update are configured skips and denial parity runs. Update-management owned CRUD, sparse preservation, DateTime and list edit/clear passed both modes; grant persistence and remaining scenarios are separate.",
+        "evidence": [
+          "docs/implementation/policies/tenant-abuse-update-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -33961,15 +34194,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/636/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_update_management_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDDateTimeAndListEditsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/update_management_crud_test.go",
+              "name": "TestAccUpdateManagementPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_update_management_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -33977,8 +34238,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Tenant-abuse receives matched HTTP403/40301 in both app modes; successful read/update are configured skips and denial parity runs. Update-management owned CRUD, sparse preservation, DateTime and list edit/clear passed both modes; grant persistence and remaining scenarios are separate.",
+        "evidence": [
+          "docs/implementation/policies/tenant-abuse-update-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

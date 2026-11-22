@@ -59,7 +59,11 @@ func sameTemplateProjection(left, right any) bool {
 		return false
 	}
 	var x, y any
-	return json.Unmarshal(a, &x) == nil && json.Unmarshal(b, &y) == nil && reflect.DeepEqual(x, y)
+	leftDecoder := json.NewDecoder(bytes.NewReader(a))
+	rightDecoder := json.NewDecoder(bytes.NewReader(b))
+	leftDecoder.UseNumber()
+	rightDecoder.UseNumber()
+	return leftDecoder.Decode(&x) == nil && rightDecoder.Decode(&y) == nil && reflect.DeepEqual(x, y)
 }
 func meetingTemplateReadEnabled(t *testing.T) lab.Config {
 	t.Helper()

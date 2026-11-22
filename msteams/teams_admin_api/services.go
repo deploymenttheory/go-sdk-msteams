@@ -58,12 +58,16 @@ import (
 	teamsshiftspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shifts_policy"
 	teamssipdevicesconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_sip_devices_configuration"
 	teamstemplatepermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_template_permission_policy"
+	teamstenantabuseconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_tenant_abuse_configuration"
+	teamsupdatemanagementpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_update_management_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsTenantAbuseConfigurations             *teamstenantabuseconfiguration.Service
+	TeamsUpdateManagementPolicies              *teamsupdatemanagementpolicy.Service
 	TeamsTemplatePermissionPolicies            *teamstemplatepermissionpolicy.Service
 	TeamsSipDevicesConfigurations              *teamssipdevicesconfiguration.Service
 	TeamsRoomVideoTeleConferencingPolicies     *teamsroomvideoteleconferencingpolicy.Service
@@ -142,6 +146,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsTenantAbuseConfigurations:             teamstenantabuseconfiguration.NewService(scope),
+		TeamsUpdateManagementPolicies:              teamsupdatemanagementpolicy.NewService(scope),
 		TeamsTemplatePermissionPolicies:            teamstemplatepermissionpolicy.NewService(scope),
 		TeamsSipDevicesConfigurations:              teamssipdevicesconfiguration.NewService(scope),
 		TeamsRoomVideoTeleConferencingPolicies:     teamsroomvideoteleconferencingpolicy.NewService(backend),

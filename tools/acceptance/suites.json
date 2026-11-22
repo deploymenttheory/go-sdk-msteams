@@ -44,7 +44,8 @@
       "TestAccRoomVideoTeleConferencingPolicyReadOnly",
       "TestAccSharedCallingRoutingPolicyReadOnly",
       "TestAccShiftsPolicyReadOnly",
-      "TestAccTemplatePermissionPolicyReadOnly"
+      "TestAccTemplatePermissionPolicyReadOnly",
+      "TestAccUpdateManagementPolicyReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -87,7 +88,8 @@
     "tests": [
       "TestAccAssignmentMigrationCapabilityUnavailable",
       "TestAccAudioConferencingPromptsCapabilityUnavailable",
-      "TestAccPrivacyConfigurationAuthorizationDenied"
+      "TestAccPrivacyConfigurationAuthorizationDenied",
+      "TestAccTenantAbuseConfigurationAuthorizationDenied"
     ]
   },
   "owned-user-assignments": {
@@ -140,7 +142,8 @@
       "TestAccMigrationConfigurationReadOnly",
       "TestAccMultiTenantOrganizationConfigurationReadOnly",
       "TestAccShiftsAppPolicyReadOnly",
-      "TestAccSipDevicesConfigurationReadOnly"
+      "TestAccSipDevicesConfigurationReadOnly",
+      "TestAccTenantAbuseConfigurationReadOnly"
     ]
   },
   "singleton-configuration-updates": {
@@ -153,7 +156,8 @@
       "TestAccMigrationConfigurationUpdateRestore",
       "TestAccMultiTenantOrganizationConfigurationUpdateRestore",
       "TestAccShiftsAppPolicyUpdateRestore",
-      "TestAccSipDevicesConfigurationUpdateRestore"
+      "TestAccSipDevicesConfigurationUpdateRestore",
+      "TestAccTenantAbuseConfigurationUpdateRestore"
     ]
   },
   "owned-notification-policy": {
@@ -181,6 +185,15 @@
     "journal_entries_per_test": 1,
     "tests": [
       "TestAccTemplatePermissionPopulatedCRUD"
+    ]
+  },
+  "owned-update-management-policy": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "owned-update-management-crud",
+    "journal_entries_per_test": 1,
+    "tests": [
+      "TestAccUpdateManagementPolicyCRUD"
     ]
   }
 }

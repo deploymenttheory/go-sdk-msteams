@@ -1,3 +1,5 @@
 {
-  "TestAccSharedCallingRoutingPolicyPopulatedCRUD": "Lab has no resource account or phone inventory. Requires a bound resource account and two valid unassigned emergency callback numbers."
+  "TestAccSharedCallingRoutingPolicyPopulatedCRUD": "Lab has no resource account or phone inventory. Requires a bound resource account and two valid unassigned emergency callback numbers.",
+  "TestAccTenantAbuseConfigurationReadOnly": "The lab Teams Administrator application receives HTTP 403 / PolicyRP 40301 in both SDK and pinned PowerShell. Successful reads and journaled threshold updates require an authorized identity; denial parity runs separately.",
+  "TestAccTenantAbuseConfigurationUpdateRestore": "The lab identity cannot read the original tenant-abuse settings (HTTP 403 / PolicyRP 40301 in SDK and PowerShell). Mutation is refused without a readable, journaled original; authorized update/restoration remains executable."
 }

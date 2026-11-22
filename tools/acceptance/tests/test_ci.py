@@ -188,6 +188,19 @@ class AcceptanceGuardTests(unittest.TestCase):
             with self.subTest(absent=absent):
                 self.assertEqual(ci.evaluate(missing, [test], 0, proof=proof)['outcome'], 'failed')
 
+    def test_update_management_requires_datetime_list_phases_and_five_comparisons(self):
+        test = 'TestAccUpdateManagementPolicyCRUD'
+        proof = 'owned-update-management-crud'
+        markers, oracle, count = ci.PROOFS[proof]
+        events = [{'Test': test, 'Action': 'output', 'Output': marker} for marker in markers + [oracle] * count]
+        events.append({'Test': test, 'Action': 'pass'})
+        self.assertEqual(ci.evaluate(events, [test], 0, proof=proof)['outcome'], 'passed')
+        for absent in ['update-management DateTime update/read-back: passed', 'update-management list edit/read-back: passed', 'update-management list clear/read-back: passed', oracle]:
+            missing = events.copy()
+            missing.remove(next(event for event in missing if event.get('Output') == absent))
+            with self.subTest(absent=absent):
+                self.assertEqual(ci.evaluate(missing, [test], 0, proof=proof)['outcome'], 'failed')
+
     def test_skip_missing_empty_and_failed_process_cannot_pass(self):
         for events, expected, code in [
             ([{'Test': 'TestAccRead', 'Action': 'skip'}], ['TestAccRead'], 0),
