@@ -59,3 +59,12 @@ configuration. Remaining live scope includes populated shared calling, room call
 settings beyond the tested Boolean, scoped grants, effective calls, delegated modes,
 locale-specific filters and other clouds. Selected-operation CI does not close
 these whole-ticket or release requirements.
+
+PR #291's initial certificate read job reported voicemail and notification
+read/list differences. Original response values were removed during normal CI
+cleanup. Forty isolated live read/list pairs and the exact 35-test CI read suite
+passed locally; the original differences have not been reproduced. Failure
+diagnostics now distinguish HTTP errors, selection, missing properties, identity,
+metadata and setting/extension differences without publishing response values.
+Complete raw-value and typed getter assertions remain unchanged; fresh remote CI
+is required. No root-cause fix is claimed from a later passing run.

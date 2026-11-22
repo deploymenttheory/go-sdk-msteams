@@ -33,6 +33,44 @@ func sameResponseFields(left, right map[string]json.RawMessage) bool {
 	return err == nil && reflect.DeepEqual(a, b)
 }
 
+// Return fixed diagnostics only; response values and unknown property names stay private.
+func responseComparisonFailure(left, right map[string]json.RawMessage) string {
+	if left == nil || right == nil {
+		return "read/list comparison: response fields missing"
+	}
+	if len(left) != len(right) {
+		return "read/list comparison: property sets differ"
+	}
+	metadata, identity, settings := false, false, false
+	for key, value := range left {
+		other, ok := right[key]
+		if !ok {
+			return "read/list comparison: property sets differ"
+		}
+		if sameResponseFields(map[string]json.RawMessage{key: value}, map[string]json.RawMessage{key: other}) {
+			continue
+		}
+		switch key {
+		case "Key", "ConfigMetadata", "ConfigId":
+			metadata = true
+		case "Identity":
+			identity = true
+		default:
+			settings = true
+		}
+	}
+	if identity {
+		return "read/list comparison: identity values differ"
+	}
+	if settings {
+		return "read/list comparison: setting or extension values differ"
+	}
+	if metadata {
+		return "read/list comparison: metadata values differ"
+	}
+	return ""
+}
+
 func TestUnitResponseComparisonUsesAcceptanceJSONValues(t *testing.T) {
 	t.Parallel()
 	for _, service := range []string{"acs_federation_configuration", "application_meeting_configuration", "meeting_branding", "online_voicemail_policy", "online_voicemail_validation_configuration"} {
@@ -91,5 +129,42 @@ func TestUnitResponseComparisonUsesAcceptanceJSONValues(t *testing.T) {
 				t.Fatal("malformed JSON accepted")
 			}
 		})
+	}
+}
+
+func TestUnitResponseMismatchReasonsKeepValuesPrivate(t *testing.T) {
+	t.Parallel()
+	raw, e := os.ReadFile("../../../msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json")
+	if e != nil {
+		t.Fatal(e)
+	}
+	var original map[string]json.RawMessage
+	if json.Unmarshal(raw, &original) != nil {
+		t.Fatal("invalid acceptance response")
+	}
+	for _, tc := range []struct{ name, field, value, want string }{
+		{"same", "", "", ""},
+		{"metadata", "Key", `"private-metadata-value"`, "read/list comparison: metadata values differ"},
+		{"identity", "Identity", `"private-identity-value"`, "read/list comparison: identity values differ"},
+		{"setting", "EnableTranscription", `null`, "read/list comparison: setting or extension values differ"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			next := make(map[string]json.RawMessage, len(original))
+			for key, value := range original {
+				next[key] = value
+			}
+			if tc.field != "" {
+				next[tc.field] = json.RawMessage(tc.value)
+			}
+			if got := responseComparisonFailure(original, next); got != tc.want {
+				t.Fatal("fixed mismatch classification differs")
+			}
+		})
+	}
+	if responseComparisonFailure(nil, original) != "read/list comparison: response fields missing" {
+		t.Fatal("missing fields not classified")
+	}
+	if responseComparisonFailure(original, map[string]json.RawMessage{}) != "read/list comparison: property sets differ" {
+		t.Fatal("missing property not classified")
 	}
 }

@@ -165,6 +165,16 @@ class AcceptanceGuardTests(unittest.TestCase):
                 ci.shared_calling_fixture(tenant, json.dumps(fixture | update))
             self.assertNotIn('private-value', str(failure.exception))
 
+    def test_read_mismatch_diagnostics_publish_only_fixed_reasons(self):
+        test = 'TestAccNotificationAndFeedsPolicyReadOnly'
+        events = [
+            {'Test': test, 'Action': 'output', 'Output': 'read/list comparison: metadata values differ private-tenant-value'},
+            {'Test': test, 'Action': 'fail'},
+        ]
+        report = ci.evaluate(events, [test], 1)
+        self.assertEqual(report['failure_reasons'][test], ['read/list comparison: metadata values differ'])
+        self.assertNotIn('private-tenant-value', json.dumps(report))
+
     def test_skip_missing_empty_and_failed_process_cannot_pass(self):
         for events, expected, code in [
             ([{'Test': 'TestAccRead', 'Action': 'skip'}], ['TestAccRead'], 0),
