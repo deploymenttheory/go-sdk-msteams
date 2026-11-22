@@ -47,7 +47,9 @@
       "TestAccTemplatePermissionPolicyReadOnly",
       "TestAccUpdateManagementPolicyReadOnly",
       "TestAccUpgradePolicyReadOnly",
-      "TestAccUpgradeGrantMigrationBinding"
+      "TestAccUpgradeGrantMigrationBinding",
+      "TestAccVDIPolicyReadOnly",
+      "TestAccVirtualAppointmentsPolicyReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -212,6 +214,16 @@
     "serial": true,
     "tests": [
       "TestAccUpgradeConfigurationReadOnly"
+    ]
+  },
+  "owned-vdi-virtual-appointments": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "owned-crud",
+    "journal_entries_per_test": 1,
+    "tests": [
+      "TestAccVDIPolicyCRUD",
+      "TestAccVirtualAppointmentsPolicyCRUD"
     ]
   }
 }

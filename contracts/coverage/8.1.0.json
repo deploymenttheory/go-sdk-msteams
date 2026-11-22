@@ -10230,22 +10230,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/176/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/vdi_virtual_read_test.go",
+              "name": "TestAccVDIPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/176/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/vdi_virtual_read_test.go",
+              "name": "TestAccVDIPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10253,8 +10300,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -10308,22 +10357,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/178/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/vdi_virtual_read_test.go",
+              "name": "TestAccVirtualAppointmentsPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/178/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/vdi_virtual_read_test.go",
+              "name": "TestAccVirtualAppointmentsPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10331,8 +10427,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -17019,36 +17117,93 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/264/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/failure_test.go",
+              "name": "TestUnitVDIPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/264/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/failure_test.go",
+              "name": "TestUnitVDIPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/264/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/failure_test.go",
+              "name": "TestUnitVDIPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/264/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/failure_test.go",
+              "name": "TestUnitVDIPolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/assignment.go",
+            "name": "Service.AssignUser"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/assignment.go",
+            "name": "Service.Assign"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -17056,8 +17211,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -17118,36 +17275,93 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/266/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/failure_test.go",
+              "name": "TestUnitVirtualAppointmentsPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/266/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/failure_test.go",
+              "name": "TestUnitVirtualAppointmentsPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/266/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/failure_test.go",
+              "name": "TestUnitVirtualAppointmentsPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/266/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/failure_test.go",
+              "name": "TestUnitVirtualAppointmentsPolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/assignment.go",
+            "name": "Service.AssignUser"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/assignment.go",
+            "name": "Service.Assign"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -17155,8 +17369,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -23112,15 +23328,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/392/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/vdi_policy_crud_test.go",
+              "name": "TestAccVDIPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -23128,8 +23364,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -23144,15 +23382,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/393/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/virtual_appointments_policy_crud_test.go",
+              "name": "TestAccVirtualAppointmentsPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -23160,8 +23418,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -27832,15 +28092,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/501/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/vdi_policy_crud_test.go",
+              "name": "TestAccVDIPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27848,8 +28128,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -27864,15 +28146,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/502/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/virtual_appointments_policy_crud_test.go",
+              "name": "TestAccVirtualAppointmentsPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27880,8 +28182,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -34492,15 +34796,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/638/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_vdi_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/vdi_policy_crud_test.go",
+              "name": "TestAccVDIPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_vdi_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -34508,8 +34840,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -34524,15 +34858,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/639/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/virtual_appointments_policy_crud_test.go",
+              "name": "TestAccVirtualAppointmentsPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_virtual_appointments_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -34540,8 +34902,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Both app modes passed Global reads and actual owned CRUD with pinned comparisons, sparse preservation and independent cleanup. Grant persistence/clear and remaining full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/policies/vdi-virtual-appointments-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

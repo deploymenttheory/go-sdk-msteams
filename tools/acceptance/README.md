@@ -308,3 +308,11 @@ UInt64 update/restoration tests are configured skips with public reasons. They
 remain executable with an authorized identity. The update refuses mutation without
 a readable original and its bound recovery restores only LowSeatLimit on Global.
 No additional role or credential was provisioned for these cases.
+
+VDI and virtual-appointments reads/owned CRUD are registered in resource-reads and
+owned-vdi-virtual-appointments. Each requires two pinned comparisons, exact sparse-field
+assertions, non-default read-back and independent deletion, with one cleaned
+journal entry. VDI verifies both disable flags survive an optimization-only update;
+virtual appointments verifies false-to-true SMS persistence. Permanent sanitized
+service testdata supplies unit replay. Grants remain outside the qualified live
+CRUD claim. Existing policies and assignments are untouched.
