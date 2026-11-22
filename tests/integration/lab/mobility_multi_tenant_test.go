@@ -61,7 +61,8 @@ func testCompiledScalarGlobal(t *testing.T, kind, family string, read func(*mste
 	if len(values) != 1 || values[0] == nil {
 		t.Fatal("compiled scalar Global list selection differs")
 	}
-	if reason := responseComparisonFailure(v.fields, values[0].fields); reason != "" {
+	if !sameConfigurationFields(v.fields, values[0].fields) {
+		reason := responseComparisonFailure(v.fields, values[0].fields)
 		t.Log(reason)
 		logMetadataMismatches(t, v.fields, values[0].fields)
 		t.Fatal("compiled scalar Global read/list differ")

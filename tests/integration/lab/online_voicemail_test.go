@@ -129,7 +129,8 @@ func TestAccOnlineVoicemailReadOnly(t *testing.T) {
 	if len(listed) != 1 || listed[0] == nil {
 		t.Fatal("voicemail Global list selection differs")
 	}
-	if reason := responseComparisonFailure(value.RawFields, listed[0].RawFields); reason != "" {
+	if !sameConfigurationFields(value.RawFields, listed[0].RawFields) {
+		reason := responseComparisonFailure(value.RawFields, listed[0].RawFields)
 		t.Log(reason)
 		t.Fatal("voicemail Global read/list observations differ")
 	}

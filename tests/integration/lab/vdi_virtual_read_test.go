@@ -24,7 +24,8 @@ func TestAccVDIPolicyReadOnly(t *testing.T) {
 	if e != nil || len(values) != 1 || values[0] == nil {
 		t.Fatal("Global list selection failed")
 	}
-	if reason := responseComparisonFailure(v.RawFields, values[0].RawFields); reason != "" {
+	if !sameConfigurationFields(v.RawFields, values[0].RawFields) {
+		reason := responseComparisonFailure(v.RawFields, values[0].RawFields)
 		t.Log(reason)
 		t.Fatal("Global read/list mismatch")
 	}
@@ -54,7 +55,8 @@ func TestAccVirtualAppointmentsPolicyReadOnly(t *testing.T) {
 	if e != nil || len(values) != 1 || values[0] == nil {
 		t.Fatal("Global list selection failed")
 	}
-	if reason := responseComparisonFailure(v.RawFields, values[0].RawFields); reason != "" {
+	if !sameConfigurationFields(v.RawFields, values[0].RawFields) {
+		reason := responseComparisonFailure(v.RawFields, values[0].RawFields)
 		t.Log(reason)
 		t.Fatal("Global read/list mismatch")
 	}

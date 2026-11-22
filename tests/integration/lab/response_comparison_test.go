@@ -34,6 +34,28 @@ func sameResponseFields(left, right map[string]json.RawMessage) bool {
 	return err == nil && reflect.DeepEqual(a, b)
 }
 
+// Compare management properties across separate Get/List observations. Key is
+// the server's XML backing object, not a property of the pinned BasePolicy DTO.
+// Its schema/XName metadata can differ across calls. Every other property,
+// including unknown extensions, ConfigId and ConfigMetadata, remains exact.
+// Each response's complete Key still belongs to RawFields/RawJSON and is covered
+// by the service's actual-response unit tests.
+func sameConfigurationFields(left, right map[string]json.RawMessage) bool {
+	if left == nil || right == nil {
+		return false
+	}
+	properties := func(fields map[string]json.RawMessage) map[string]json.RawMessage {
+		result := make(map[string]json.RawMessage, len(fields))
+		for name, value := range fields {
+			if name != "Key" {
+				result[name] = value
+			}
+		}
+		return result
+	}
+	return sameResponseFields(properties(left), properties(right))
+}
+
 // Return fixed diagnostics only; response values and unknown property names stay private.
 func responseComparisonFailure(left, right map[string]json.RawMessage) string {
 	if left == nil || right == nil {
@@ -244,5 +266,71 @@ func TestUnitResponseMismatchReasonsKeepValuesPrivate(t *testing.T) {
 	}
 	if responseComparisonFailure(original, map[string]json.RawMessage{}) != "read/list comparison: property sets differ" {
 		t.Fatal("missing property not classified")
+	}
+}
+
+func TestUnitConfigurationComparisonKeepsStateAndExtensionsSeparateFromXmlKey(t *testing.T) {
+	t.Parallel()
+	directory, e := os.OpenRoot("../../../msteams/teams_admin_api")
+	if e != nil {
+		t.Fatal(e)
+	}
+	t.Cleanup(func() {
+		if directory.Close() != nil {
+			t.Error("acceptance fixture root close failed")
+		}
+	})
+	for _, service := range []string{"teams_shifts_policy", "teams_room_video_tele_conferencing_policy", "online_voicemail_policy", "meeting_branding"} {
+		raw, e := directory.ReadFile(service + "/testdata/get_global.json")
+		if e != nil {
+			t.Fatal(e)
+		}
+		var left, right map[string]json.RawMessage
+		if json.Unmarshal(raw, &left) != nil || json.Unmarshal(raw, &right) != nil || left["Key"] == nil {
+			t.Fatal("actual acceptance fixture missing its XML backing metadata")
+		}
+		right["Key"] = json.RawMessage(`{"SchemaId":{"XName":{"name":"alternate-server-serialization"}}}`)
+		if sameResponseFields(left, right) || !sameConfigurationFields(left, right) {
+			t.Fatal("raw equality or management-property comparison changed incorrectly")
+		}
+		for key := range left {
+			if key == "Key" {
+				continue
+			}
+			altered := make(map[string]json.RawMessage, len(right))
+			for k, v := range right {
+				altered[k] = v
+			}
+			delete(altered, key)
+			if sameConfigurationFields(left, altered) {
+				t.Fatal("missing management/extension property ignored")
+			}
+			altered[key] = json.RawMessage(`{"changed":true}`)
+			if sameConfigurationFields(left, altered) {
+				t.Fatal("changed management/extension property ignored")
+			}
+		}
+		right["future-extension"] = json.RawMessage(`{"value":9007199254740993}`)
+		if sameConfigurationFields(left, right) {
+			t.Fatal("unknown extension was ignored")
+		}
+		if sameConfigurationFields(nil, right) || sameConfigurationFields(left, nil) {
+			t.Fatal("missing snapshot accepted")
+		}
+		numericLeft := make(map[string]json.RawMessage, len(left))
+		numericRight := make(map[string]json.RawMessage, len(left))
+		for key, value := range left {
+			numericLeft[key] = value
+			numericRight[key] = value
+		}
+		numericLeft["future-number"] = json.RawMessage(`9007199254740993`)
+		numericRight["future-number"] = json.RawMessage(`9007199254740992`)
+		if sameConfigurationFields(numericLeft, numericRight) {
+			t.Fatal("management comparison rounded unknown numeric extension")
+		}
+		var original map[string]json.RawMessage
+		if json.Unmarshal(raw, &original) != nil || !sameResponseFields(left, original) {
+			t.Fatal("comparison mutated the complete original snapshot")
+		}
 	}
 }
