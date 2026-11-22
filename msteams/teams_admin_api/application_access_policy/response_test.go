@@ -14,6 +14,18 @@ import (
 const responsePolicyID = "fixture-policy"
 const responseApplicationID = "00000000-0000-4000-8000-000000000001"
 
+func TestUnitGroupGrantUsesAcceptanceResponse(t *testing.T) {
+	t.Parallel()
+	const group = "00000000-0000-4000-8000-000000000020"
+	sdk, calls := scriptedClient(t, []wireCase{{Method: "POST", URL: policyOrigin + "/Skype.Policy/groupPolicyAssignments/" + group + "/policyTypes/ApplicationAccessPolicy",
+		Body: json.RawMessage(`{"policyName":"fixture-policy-a","priority":1}`), Status: 204, Response: applicationResponseFixture(t, "assign_group_204.body")}})
+	rank := 1
+	value, response, err := sdk.TeamsAdminAPI.ApplicationAccessPolicies.AssignToGroup(t.Context(), group, "fixture-policy-a", &rank)
+	if err != nil || response == nil || response.StatusCode() != 204 || value == nil || value.Accepted || value.OperationID != "" || *calls != 2 {
+		t.Fatal("actual HTTP204 group grant fabricated asynchronous operation data or changed its request")
+	}
+}
+
 func applicationResponseFixture(t *testing.T, name string) string {
 	t.Helper()
 	root, err := os.OpenRoot("testdata")

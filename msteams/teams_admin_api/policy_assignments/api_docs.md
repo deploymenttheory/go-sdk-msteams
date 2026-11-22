@@ -124,3 +124,19 @@ complete direct-assignment source fields against those responses.
 
 This covers these user reads only. Group/batch/OCE operations, effective client
 behavior and other policy types remain separately qualified.
+
+### Lab group assignment qualification
+
+`TestAccApplicationAccessPolicyGroupAssignment` passed with certificate and
+client-secret authentication against the dedicated empty security group. It
+exercises assignment PUT, selected GET, group list, PATCH to a second owned
+policy, DELETE/GET404/list absence, and application-access group POST grant,
+then restores the original empty assignment and deletes both owned policies.
+Each run compares six configuration states with public MicrosoftTeams 8.1.0
+`Get-CsGroupPolicyAssignment`. Actual responses supply the committed per-service
+unit fixtures, including empty HTTP204 replies and PolicyRP40404 absence.
+
+Rank 1 and the policy-name update are verified. Member propagation, effective
+user precedence, cross-group rank changes, tenant-default grants and batch/OCE
+operations remain separately qualified. A successful write or HTTP204 does not
+imply effective-user convergence or an asynchronous operation identifier.

@@ -1,0 +1,8 @@
+{
+  "groupId": "00000000-0000-4000-8000-000000000020",
+  "priority": 1,
+  "policyType": "ApplicationAccessPolicy",
+  "policyName": "fixture-policy-b",
+  "createdBy": "00000000-0000-4000-8000-712a1d93ea5c",
+  "createdTime": "2026-11-22T01:14:43.0640961+00:00"
+}

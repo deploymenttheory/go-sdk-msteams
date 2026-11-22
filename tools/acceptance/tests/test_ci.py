@@ -54,6 +54,7 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertIn('MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM', str(failure.exception))
         self.assertIn('MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID', str(failure.exception))
         self.assertIn('MSTEAMS_LAB_USER_FIXTURE_JSON', str(failure.exception))
+        self.assertIn('MSTEAMS_LAB_GROUP_FIXTURE_JSON', str(failure.exception))
         self.assertNotIn('MSTEAMS_LAB_TENANT_ID', str(failure.exception))
         self.assertNotIn('private-tenant-value', str(failure.exception))
 
@@ -216,6 +217,38 @@ class AcceptanceGuardTests(unittest.TestCase):
             self.assertEqual(result, 1)
             self.assertEqual(report['cleanup_journal_entries_cleaned'], 1)
             self.assertEqual(report['expected_cleanup_journal_entries'], 2)
+
+    def test_group_assignment_requires_every_phase_and_six_comparisons(self):
+        name = 'TestAccApplicationAccessPolicyGroupAssignment'
+        events = [{'Test': name, 'Action': 'pass'}]
+        events += [{'Test': name, 'Action': 'output', 'Output': marker} for marker in ci.GROUP_ASSIGNMENT_MARKERS]
+        events += [{'Test': name, 'Action': 'output', 'Output': ci.GROUP_ASSIGNMENT_ORACLE} for _ in range(5)]
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='group-assignment')['outcome'], 'failed')
+        events.append({'Test': name, 'Action': 'output', 'Output': ci.GROUP_ASSIGNMENT_ORACLE})
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='group-assignment')['outcome'], 'passed')
+        for marker in ci.GROUP_ASSIGNMENT_MARKERS:
+            with self.subTest(marker=marker):
+                incomplete = [event for event in events if event.get('Output') != marker]
+                self.assertEqual(ci.evaluate(incomplete, [name], 0, proof='group-assignment')['outcome'], 'failed')
+
+    def test_group_fixture_secret_is_bound_to_the_dedicated_empty_security_group(self):
+        tenant = '00000000-0000-4000-8000-000000000001'
+        fixture = {'tenant_id': tenant, 'group_id': '00000000-0000-4000-8000-000000000020',
+                   'display_name': 'go-sdk-msteams acceptance policy group',
+                   'mail_nickname': 'go-sdk-msteams-acceptance-policy', 'security_enabled': True,
+                   'mail_enabled': False, 'role_assignable': False, 'empty_membership_verified': True}
+        values = {'TENANT_ID': tenant, 'GROUP_FIXTURE_JSON': json.dumps(fixture)}
+        self.assertEqual(ci.group_fixture(values), fixture)
+        for change in [{'tenant_id': '00000000-0000-4000-8000-000000000002'},
+                       {'group_id': 'private-group'}, {'display_name': 'private-group'},
+                       {'mail_nickname': 'private-group'}, {'security_enabled': False},
+                       {'mail_enabled': True}, {'role_assignable': True},
+                       {'empty_membership_verified': False}, {'role_assignable': 0},
+                       {'password': 'private-password'}]:
+            with self.subTest(field=next(iter(change))):
+                with self.assertRaises(ci.AcceptanceFailure) as failure:
+                    ci.group_fixture(dict(values, GROUP_FIXTURE_JSON=json.dumps(dict(fixture, **change))))
+                self.assertEqual(str(failure.exception), 'Invalid repository Actions secret: MSTEAMS_LAB_GROUP_FIXTURE_JSON')
 
     def test_aggregate_requires_every_suite_in_both_authentication_modes(self):
         with tempfile.TemporaryDirectory() as directory:
