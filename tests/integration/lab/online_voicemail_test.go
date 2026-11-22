@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -25,14 +26,26 @@ type voicemailObservation struct {
 	Settings map[string]json.RawMessage `json:"settings"`
 }
 
+var voicemailOwnedIdentity = regexp.MustCompile(`(?i)^(?:tag:)?msteams-sdk-[a-z2-7]{26,64}-voicemail-policy$`)
+
 func decodeVoicemailOracle(raw []byte, tenant string) (voicemailObservation, error) {
+	return decodeVoicemailOracleForIdentity(raw, tenant, "Global")
+}
+func decodeVoicemailOracleForIdentity(raw []byte, tenant, identity string) (voicemailObservation, error) {
 	var v voicemailObservation
-	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) {
+	if len(raw) > maxTeamOracleBytes || !labDirectoryID.MatchString(tenant) || !strings.EqualFold(identity, "Global") && !voicemailOwnedIdentity.MatchString(identity) {
 		return v, errTeamOracle
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
-	if d.Decode(&v) != nil || !v.Success || !strings.EqualFold(v.Tenant, tenant) || !strings.EqualFold(v.Identity, "Global") || len(v.Settings) != len(voicemailScalars) {
+	if d.Decode(&v) != nil {
+		return voicemailObservation{}, errTeamOracle
+	}
+	identityMatches := strings.EqualFold(v.Identity, "Global")
+	if !strings.EqualFold(identity, "Global") {
+		identityMatches = samePolicyName(v.Identity, identity)
+	}
+	if !v.Success || !strings.EqualFold(v.Tenant, tenant) || !identityMatches || len(v.Settings) != len(voicemailScalars) {
 		return voicemailObservation{}, errTeamOracle
 	}
 	var extra any
@@ -48,8 +61,11 @@ func decodeVoicemailOracle(raw []byte, tenant string) (voicemailObservation, err
 }
 
 func voicemailOracle(t *testing.T, ctx context.Context, tenant string) voicemailObservation {
+	return voicemailOracleForIdentity(t, ctx, tenant, "Global")
+}
+func voicemailOracleForIdentity(t *testing.T, ctx context.Context, tenant, identity string) voicemailObservation {
 	t.Helper()
-	input, err := json.Marshal(map[string]string{"tenant_id": tenant})
+	input, err := json.Marshal(map[string]string{"tenant_id": tenant, "identity": identity})
 	if err != nil {
 		t.Fatal("invalid voicemail oracle selector")
 	}
@@ -61,7 +77,7 @@ func voicemailOracle(t *testing.T, ctx context.Context, tenant string) voicemail
 			cmd.Env = append(cmd.Env, key+"="+value)
 		}
 	}
-	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
+	cmd.Env = append(cmd.Env, "MSTEAMS_LAB_AUTH_METHOD="+os.Getenv("MSTEAMS_LAB_AUTH_METHOD"), "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_MODULE_PATH="+os.Getenv("MSTEAMS_LAB_MODULE_PATH"), "MSTEAMS_LAB_IDENTITY_FILE="+os.Getenv("MSTEAMS_LAB_IDENTITY_FILE"))
 	var output teamOracleBuffer
 	defer func() { clear(output.data) }()
 	cmd.Stdin = bytes.NewReader(input)
@@ -69,7 +85,7 @@ func voicemailOracle(t *testing.T, ctx context.Context, tenant string) voicemail
 	if cmd.Run() != nil || output.exceeded {
 		t.Fatal("pinned voicemail read failed; no output retained")
 	}
-	value, err := decodeVoicemailOracle(output.data, tenant)
+	value, err := decodeVoicemailOracleForIdentity(output.data, tenant, identity)
 	if err != nil {
 		t.Fatal("pinned voicemail projection unavailable")
 	}
@@ -138,5 +154,46 @@ func TestUnitVoicemailOracleRejectsIncompleteWrongTenantAndMixedOutput(t *testin
 	}
 	if _, err := decodeVoicemailOracle([]byte(valid), tenant); err != nil {
 		t.Fatal("complete nullable voicemail projection rejected")
+	}
+}
+
+func TestUnitVoicemailOracleRestrictsOwnedIdentity(t *testing.T) {
+	t.Parallel()
+	const tenant = "00000000-0000-4000-8000-000000000003"
+	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-voicemail-policy"
+	raw, err := os.ReadFile("../../../msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var settings map[string]json.RawMessage
+	if json.Unmarshal(raw, &settings) != nil {
+		t.Fatal("invalid acceptance response")
+	}
+	projection := map[string]json.RawMessage{}
+	for _, field := range voicemailScalars {
+		projection[field] = settings[field]
+	}
+	for _, tc := range []struct {
+		name, selected, returned string
+		valid                    bool
+	}{
+		{"global", "Global", "global", true},
+		{"owned-bare", name, "Tag:" + name, true},
+		{"owned-tagged", "Tag:" + name, name, true},
+		{"foreign-selection", "other-policy", "other-policy", false},
+		{"wrong-owned-policy", name, strings.Replace(name, "aaaa", "bbbb", 1), false},
+		{"tagged-global", "Global", "Tag:Global", false},
+		{"wrong-kind", strings.Replace(name, "voicemail-policy", "calling-policy", 1), name, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			body, err := json.Marshal(map[string]any{"success": true, "tenant_id": tenant, "identity": tc.returned, "settings": projection})
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = decodeVoicemailOracleForIdentity(body, tenant, tc.selected)
+			if (err == nil) != tc.valid {
+				t.Fatal("oracle accepted a different identity or rejected its owned policy")
+			}
+		})
 	}
 }

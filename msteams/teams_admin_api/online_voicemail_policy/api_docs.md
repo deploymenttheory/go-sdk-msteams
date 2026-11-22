@@ -55,3 +55,19 @@ Writes never replay automatically. Read-back, rollback, atomic/ETag guarantees a
 propagation are explicit caller concerns. The [unit tests](service_test.go)
 and [lab plan](../../../docs/implementation/policies/online-voicemail-lab-acceptance.md)
 separate candidate request correctness from successful tenant qualification.
+
+### Executed owned CRUD
+
+`TestAccOnlineVoicemailPolicyCRUD` passed with certificate and client-secret authentication.
+It creates an owned unassigned policy, checks non-default read-back, updates a
+setting while verifying omission, checks the list and independently verifies
+selected HTTP404 and list absence after deletion. Each run has two public
+MicrosoftTeams 8.1.0 read comparisons and one cleaned private journal entry.
+The sparse description update preserves disabled transcription. The pinned
+comparison covers Description, EnableTranscription and MaximumRecordingLength.
+
+The actual HTTP201/204 replies, created/updated JSON, owned list and deleted404
+body supply `TestUnitOwnedCRUDUsesAcceptanceResponses`. Unit checks retain exact
+requests, typed settings, complete snapshots and typed errors. CI requires every
+CRUD milestone, both comparisons and verified journal cleanup. Global, grants,
+media behavior and remaining command/parameter variants are separate scenarios.

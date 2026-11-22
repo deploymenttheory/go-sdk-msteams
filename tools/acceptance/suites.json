@@ -48,7 +48,9 @@
       "TestAccEventsPolicyCRUD",
       "TestAccEnhancedEncryptionPolicyCRUD",
       "TestAccFeedbackPolicyCRUD",
-      "TestAccFilesPolicyCRUD"
+      "TestAccFilesPolicyCRUD",
+      "TestAccOnlineVoicemailPolicyCRUD",
+      "TestAccAudioConferencingPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1

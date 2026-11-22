@@ -1,0 +1,267 @@
+[
+  {
+    "Description": null,
+    "EnableTranscription": true,
+    "ShareData": "Defer",
+    "EnableTranscriptionProfanityMasking": false,
+    "EnableEditingCallAnswerRulesSetting": true,
+    "MaximumRecordingLength": "00:05:00",
+    "EnableTranscriptionTranslation": true,
+    "PrimarySystemPromptLanguage": null,
+    "SecondarySystemPromptLanguage": null,
+    "PreambleAudioFile": null,
+    "PostambleAudioFile": null,
+    "PreamblePostambleMandatory": false,
+    "EnableVoicemailTriage": false,
+    "Key": {
+      "ScopeClass": "Global",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "OnlineVoicemailPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.OnlineVoicemail.2016"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Global",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "Global"
+  },
+  {
+    "Description": "SDK lab non-default updated description",
+    "EnableTranscription": false,
+    "ShareData": "Defer",
+    "EnableTranscriptionProfanityMasking": false,
+    "EnableEditingCallAnswerRulesSetting": true,
+    "MaximumRecordingLength": "00:05:00",
+    "EnableTranscriptionTranslation": true,
+    "PrimarySystemPromptLanguage": null,
+    "SecondarySystemPromptLanguage": null,
+    "PreambleAudioFile": null,
+    "PostambleAudioFile": null,
+    "PreamblePostambleMandatory": false,
+    "EnableVoicemailTriage": false,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Tenant",
+        "InstanceId": "00000000-0000-4000-8000-0b617a16f800",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "OnlineVoicemailPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.OnlineVoicemail.2016"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Tag:fixture-policy",
+    "ConfigMetadata": {
+      "Authority": "Tenant"
+    },
+    "ConfigId": "fixture-config-2e5a4f2a"
+  },
+  {
+    "Description": null,
+    "EnableTranscription": true,
+    "ShareData": "Defer",
+    "EnableTranscriptionProfanityMasking": false,
+    "EnableEditingCallAnswerRulesSetting": true,
+    "MaximumRecordingLength": "00:05:00",
+    "EnableTranscriptionTranslation": true,
+    "PrimarySystemPromptLanguage": null,
+    "SecondarySystemPromptLanguage": null,
+    "PreambleAudioFile": null,
+    "PostambleAudioFile": null,
+    "PreamblePostambleMandatory": false,
+    "EnableVoicemailTriage": false,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "OnlineVoicemailPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.OnlineVoicemail.2016"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-5016ca81",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-b8252706"
+  },
+  {
+    "Description": null,
+    "EnableTranscription": false,
+    "ShareData": "Defer",
+    "EnableTranscriptionProfanityMasking": false,
+    "EnableEditingCallAnswerRulesSetting": true,
+    "MaximumRecordingLength": "00:05:00",
+    "EnableTranscriptionTranslation": true,
+    "PrimarySystemPromptLanguage": null,
+    "SecondarySystemPromptLanguage": null,
+    "PreambleAudioFile": null,
+    "PostambleAudioFile": null,
+    "PreamblePostambleMandatory": false,
+    "EnableVoicemailTriage": false,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "OnlineVoicemailPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.OnlineVoicemail.2016"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-c9cb33de",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-f665ebc2"
+  },
+  {
+    "Description": null,
+    "EnableTranscription": true,
+    "ShareData": "Defer",
+    "EnableTranscriptionProfanityMasking": true,
+    "EnableEditingCallAnswerRulesSetting": true,
+    "MaximumRecordingLength": "00:05:00",
+    "EnableTranscriptionTranslation": true,
+    "PrimarySystemPromptLanguage": null,
+    "SecondarySystemPromptLanguage": null,
+    "PreambleAudioFile": null,
+    "PostambleAudioFile": null,
+    "PreamblePostambleMandatory": false,
+    "EnableVoicemailTriage": false,
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "OnlineVoicemailPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.OnlineVoicemail.2016"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-3a8e615d",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-1002d3bb"
+  }
+]
