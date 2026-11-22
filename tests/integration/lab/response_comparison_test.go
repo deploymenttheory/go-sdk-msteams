@@ -35,7 +35,7 @@ func sameResponseFields(left, right map[string]json.RawMessage) bool {
 
 func TestUnitResponseComparisonUsesAcceptanceJSONValues(t *testing.T) {
 	t.Parallel()
-	for _, service := range []string{"acs_federation_configuration", "application_meeting_configuration"} {
+	for _, service := range []string{"acs_federation_configuration", "application_meeting_configuration", "meeting_branding", "online_voicemail_policy", "online_voicemail_validation_configuration"} {
 		t.Run(service, func(t *testing.T) {
 			directory, err := os.OpenRoot("../../../msteams/teams_admin_api/" + service + "/testdata")
 			if err != nil {

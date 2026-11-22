@@ -104,7 +104,7 @@ func TestAccPrivacyConfigurationReadOnly(t *testing.T) {
 	}
 	listed, listResponse, err := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, "Global")
 	writeResponseFixture(t, "privacy_configuration", "list", listResponse, nil)
-	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !reflect.DeepEqual(value.RawFields, listed[0].RawFields) {
+	if err != nil || value == nil || value.Identity == nil || !strings.EqualFold(*value.Identity, "Global") || len(listed) != 1 || !sameResponseFields(value.RawFields, listed[0].RawFields) {
 		t.Fatal("privacy configuration Global read/list observations differ")
 	}
 	if oracle {
