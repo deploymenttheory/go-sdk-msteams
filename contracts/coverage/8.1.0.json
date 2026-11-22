@@ -643,15 +643,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/11/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service.go",
+              "name": "Service.GetContentByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
+              "name": "TestUnitAudioFileLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
+              "name": "TestUnitAudioFileExportAcceptsURLSafeUnpaddedBase64"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/audio_prompts/audio_prompts_test.go",
+              "name": "TestAccAudioFileLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/audio_prompts/service.go",
+            "name": "Service.GetContentByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -659,8 +683,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned TenantGlobal import/get/list/export/soft-delete lifecycle with pinned PowerShell export parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/audio-prompts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3093,15 +3119,51 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/54/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
+              "name": "TestUnitAudioFileLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
+              "name": "TestUnitAudioFileListNormalizesApplicationAndPreservesNulls"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
+              "name": "TestUnitAudioFileGetSendsDurationOnlyWhenSet"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/audio_prompts/audio_prompts_test.go",
+              "name": "TestAccAudioFileLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/audio_prompts/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/audio_prompts/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3109,8 +3171,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned TenantGlobal import/get/list/export/soft-delete lifecycle with pinned PowerShell export parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/audio-prompts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -17877,15 +17941,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/273/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
+              "name": "TestUnitAudioFileLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/audio_prompts/audio_prompts_test.go",
+              "name": "TestAccAudioFileLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/audio_prompts/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -17893,8 +17977,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned TenantGlobal import/get/list/export/soft-delete lifecycle with pinned PowerShell export parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/audio-prompts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19359,15 +19445,34 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/297/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/edits.go",
+              "name": "NewPrompt"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/models_test.go",
+              "name": "TestUnitTypedPromptConstructors"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/failure_test.go",
+              "name": "TestUnitPromptsBuildersNeverAcquireCredentialsOrHTTP"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/audio_conferencing_prompts/edits.go",
+            "name": "NewPrompt"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19375,8 +19480,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Local constructors perform no I/O; they are exercised through the audio conferencing custom prompts configuration, whose prompt edits need the tenant flight.",
+        "evidence": [
+          "docs/implementation/calls/audio-prompts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19391,15 +19498,34 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/298/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/edits.go",
+              "name": "NewPromptPackage"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/models_test.go",
+              "name": "TestUnitTypedPromptConstructors"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/failure_test.go",
+              "name": "TestUnitPromptsBuildersNeverAcquireCredentialsOrHTTP"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/audio_conferencing_prompts/edits.go",
+            "name": "NewPromptPackage"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19407,8 +19533,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Local constructors perform no I/O; they are exercised through the audio conferencing custom prompts configuration, whose prompt edits need the tenant flight.",
+        "evidence": [
+          "docs/implementation/calls/audio-prompts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -25399,15 +25527,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/430/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
+              "name": "TestUnitAudioFileLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
+              "name": "TestUnitAudioFileServiceFailuresStayTyped"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/audio_prompts/audio_prompts_test.go",
+              "name": "TestAccAudioFileLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/audio_prompts/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25415,8 +25567,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned TenantGlobal import/get/list/export/soft-delete lifecycle with pinned PowerShell export parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/audio-prompts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

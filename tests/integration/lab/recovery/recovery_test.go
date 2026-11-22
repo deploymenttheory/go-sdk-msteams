@@ -13,6 +13,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	applicationaccesspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/application_access_policy"
+	audiopromptsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/audio_prompts"
 	externalaccesspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 	meetingbrandingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/meeting_branding"
@@ -60,6 +61,7 @@ import (
 func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 	return []map[string]lab.Handler{
 		applicationaccesspolicyacc.RecoveryHandlers(sdk),
+		audiopromptsacc.RecoveryHandlers(sdk),
 		externalaccesspolicyacc.RecoveryHandlers(sdk),
 		meetingbrandingacc.RecoveryHandlers(sdk),
 		onlinevoicemailpolicyacc.RecoveryHandlers(sdk),
@@ -131,6 +133,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"app-permission-policy",
 		"app-setup-policy",
 		"application-access-policy",
+		"audio-file",
 		"audio-policy",
 		"branding-policy",
 		"call-hold-policy",

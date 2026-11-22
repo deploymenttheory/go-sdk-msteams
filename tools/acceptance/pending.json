@@ -90,5 +90,9 @@
   "TestAccMeetingTemplatePermissionPopulatedCRUD": {
     "file": "tests/integration/lab/teams_meeting_template_permission_policy/meeting_template_permission_crud_test.go",
     "reason": "With both application auth methods, native and pinned PowerShell populated-list create return PolicyRP 40013 with downstream HTTP 401. Full populated-list CRUD requires a separately qualified authentication fixture; delegated browser access is currently unavailable. Empty-list CRUD and exact app-only denial parity run separately in CI."
+  },
+  "TestAccAudioFileRecover": {
+    "file": "tests/integration/lab/audio_prompts/audio_prompts_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
   }
 }

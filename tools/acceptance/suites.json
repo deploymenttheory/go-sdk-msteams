@@ -87,6 +87,20 @@
         }
       ]
     },
+    "audio_prompts": {
+      "package": "./tests/integration/lab/audio_prompts",
+      "steps": [
+        {
+          "id": "lifecycle",
+          "mutation": true,
+          "proof": "audio-file-lifecycle",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccAudioFileLifecycle"
+          ]
+        }
+      ]
+    },
     "external_access_policy": {
       "package": "./tests/integration/lab/external_access_policy",
       "steps": [

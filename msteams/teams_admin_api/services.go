@@ -8,6 +8,7 @@ import (
 	applicationmeetingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_meeting_configuration"
 	assignmentmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
 	audioconferencingprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_conferencing_prompts"
+	audioprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_prompts"
 	batchdeployment "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/batch_deployment"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
@@ -132,6 +133,7 @@ type Services struct {
 	ApplicationMeetingConfigurations           *applicationmeetingconfiguration.Service
 	TenantFederationConfigurations             *tenantfederationconfiguration.Service
 	TeamTemplates                              *teamtemplate.Service
+	AudioFiles                                 *audioprompts.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -219,6 +221,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		ApplicationMeetingConfigurations:           applicationmeetingconfiguration.NewService(backend),
 		TenantFederationConfigurations:             tenantfederationconfiguration.NewService(backend),
 		TeamTemplates:                              teamtemplate.NewService(backend),
+		AudioFiles:                                 audioprompts.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),

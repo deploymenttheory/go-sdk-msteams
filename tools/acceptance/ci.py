@@ -42,6 +42,14 @@ TEMPLATE_MARKERS = [
     'template delete/absence: passed',
 ]
 TEMPLATE_ORACLE = 'PowerShell 8.1.0 / Go template read parity: passed'
+AUDIO_FILE_MARKERS = [
+    'audio import: passed',
+    'audio get: passed',
+    'audio list: passed',
+    'audio export round trip: passed',
+    'audio delete/soft-delete observation: passed',
+]
+AUDIO_FILE_ORACLE = 'PowerShell 8.1.0 / Go audio file parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
@@ -51,6 +59,7 @@ PROOFS = {
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
     'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
     'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
+    'audio-file-lifecycle': (AUDIO_FILE_MARKERS, AUDIO_FILE_ORACLE, 1),
     'populated-template-access': (['native populated-list create denial: verified', 'populated-list comparison cleanup: passed'], 'PowerShell 8.1.0 / Go populated-list authorization parity: passed', 1),
     'configuration-update': (['configuration update/read-back and omission: passed', 'configuration restoration/read-back: passed'], 'PowerShell 8.1.0 / Go configuration read parity: passed', 3),
 }

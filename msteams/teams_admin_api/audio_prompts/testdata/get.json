@@ -1,0 +1,15 @@
+{
+  "OriginalFilename": "fixture-audio.wav",
+  "ConvertedFilename": "fixture-audio.wav",
+  "Content": "",
+  "UploadedTimestampOffset": "2026-11-22T21:43:40.7802867+00:00",
+  "LastAccessedTimestampOffset": null,
+  "DownloadUri": "https://fixture.example.invalid/fixture-group/0123456789abcdef0123456789abcdef?se=fixture-value\u0026sig=fixture-value\u0026ske=fixture-value\u0026skoid=fixture-value\u0026sks=fixture-value\u0026skt=fixture-value\u0026sktid=fixture-value\u0026skv=fixture-value\u0026sp=fixture-value\u0026sr=fixture-value\u0026sv=fixture-value",
+  "Duration": "00:00:00.2500000",
+  "DeletionTimestampOffset": null,
+  "DownloadUriExpiryTimestampOffset": "2026-11-22T22:43:41.1863955+00:00",
+  "ContextId": null,
+  "Id": "fixture-record-3eb1bd43",
+  "GroupId": "fixture-group-358ed3d0",
+  "ApplicationId": "TenantGlobal"
+}
