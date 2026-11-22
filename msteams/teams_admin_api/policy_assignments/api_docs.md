@@ -110,3 +110,17 @@ fourteen commands and twenty-five sets. Successful tenant CRUD, OCE eligibility,
 complete shell binding/coercion and cloud behavior remain unqualified.
 [unit tests](service_test.go)
 records the captures, actual lab denials and remaining work.
+
+## Dedicated user assignment acceptance
+
+`TestAccApplicationAccessPolicyUserAssignment` reads the dedicated SDK user's
+application-access assignments before grant, after grant and after clear. All
+three projections match MicrosoftTeams 8.1.0 in certificate and client-secret lab
+runs, and cleanup verifies the user's restored state before policy deletion.
+The real responses are stored in `testdata` and consumed by
+`TestUnitUserReadsUseAcceptanceResponses` for both identity entry points. A
+cross-service unit workflow also validates native grant/clear requests and the
+complete direct-assignment source fields against those responses.
+
+This covers these user reads only. Group/batch/OCE operations, effective client
+behavior and other policy types remain separately qualified.

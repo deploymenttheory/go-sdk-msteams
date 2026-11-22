@@ -10,20 +10,28 @@ Adding an unregistered acceptance test fails that guard.
 and manual dispatch. Fork/Dependabot code receives no lab secrets; the aggregate
 acceptance result fails if its lab jobs did not execute successfully. The workflow
 does not use `pull_request_target` or execute fork code with privileged credentials.
-Runs serialize without automatically cancelling an in-flight mutation.
+Write jobs serialize without automatically cancelling an in-flight mutation;
+read-only jobs run in parallel.
 
 The certificate/client-secret matrix executes the explicit selections in
 [suites.json](suites.json): authentication, 22 resource read tests, preflight,
 service discovery, three tenant access-outcome checks, and owned unassigned
-application-access, external-access, calling, call-hold, call-park, channels, Cortana, events and enhanced-encryption policy CRUD.
-Authentication jobs run one at a time because concurrent writes to the tenant's
-policy collection can conflict even when resource names differ. The shared
-workflow group uses `queue: max`, so a new PR, main push or release update waits
-instead of replacing an existing pending run. GitHub documents the
+application-access, external-access, calling, call-hold, call-park, channels, Cortana, events and enhanced-encryption policy CRUD. A separate owned-user suite assigns and clears an application-access
+policy on the dedicated SDK user.
+The matrix separates `reads` and `writes` for each authentication method.
+Read-only jobs can run concurrently. Every write job shares the
+`msteams-lab-tenant-acceptance` concurrency group because concurrent policy writes
+can conflict even with distinct resource names. Job-level `queue: max` retains
+pending write jobs. The group name is unchanged, so older workflow-level locks
+also exclude new write jobs during migration. GitHub documents the
 [workflow queue behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency). Selected tests
-and child cases must pass. Skips,
+and child cases must pass. The aggregate result requires every selected suite
+in both authentication modes and rejects missing or duplicate reports. Skips,
 missing tests, setup failures and unsuccessful cleanup fail CI. CRUD also requires
-all assertion milestones, two PowerShell comparisons for each selected mutation test and new cleaned journals.
+all assertion milestones, two PowerShell comparisons per owned CRUD test and
+one cleaned journal entry per test. User assignment requires assign/read-back,
+clear/restoration, independent cleanup, three pinned comparisons (before,
+assigned and restored), and both policy and user-restoration journal entries.
 
 The remaining 23 acceptance tests are listed in `pending.json` with their missing
 fixtures, permissions, capabilities or execution mode. Resource tickets stay open
@@ -41,6 +49,7 @@ The dedicated lab identity is supplied through these repository secrets:
 - `MSTEAMS_LAB_PRIVATE_KEY_PEM`
 - `MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM` (public recovery certificate)
 - `MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID` (dedicated lab audio fixture)
+- `MSTEAMS_LAB_USER_FIXTURE_JSON` (bound dedicated user identifiers; no password)
 
 Only the prepare step receives the secret values. It writes private mode-0600
 files under an isolated runner-temp directory. Subsequent tests receive paths,
@@ -62,6 +71,17 @@ the private configuration and repo secret, then remove the old fixture using
 [Microsoft's music-on-hold setup](https://learn.microsoft.com/en-us/microsoftteams/music-on-hold)
 documents this prerequisite. Streaming/audio playback and policy assignment
 remain separate acceptance scenarios.
+
+The dedicated `go-sdk-msteams acceptance user` is an ordinary, unlicensed account.
+Its local credentials and receipt remain in the private lab directory. CI receives
+only `tenant_id`, `user_id`, `user_principal_name` and `display_name` in the fixture
+secret. Preparation rejects a different tenant, unrelated account label, invalid
+ID or extra fields. No bootstrap credentials or user password are uploaded.
+Local assignment tests select the private receipt with
+`MSTEAMS_LAB_USER_FIXTURE_FILE`. The test requires an empty initial application
+assignment, journals restoration before grant, verifies the direct source,
+clears it and independently deletes its owned policy. Certificate and client-secret
+lab runs both passed without assigning a license or administrator role.
 
 ## Test results and interrupted-run recovery
 
@@ -124,3 +144,9 @@ For application-access, external-access, calling, call-hold, call-park, channels
 `TestAccRecoverOwnedPolicies` with `MSTEAMS_LAB_RECOVERY_FILE` pointing to the
 private decrypted journal, the same lab identity and normal mutation opt-in.
 It verifies ownership and requires typed GET404 plus list absence after deletion.
+
+User-assignment journals additionally need `MSTEAMS_LAB_USER_FIXTURE_FILE` when
+running `TestAccRecoverOwnedPolicies`. The bound handler clears only the configured
+SDK user and verifies its original empty direct-assignment state. Missing fixture
+configuration leaves the restoration entry unresolved; it never selects another
+user automatically.

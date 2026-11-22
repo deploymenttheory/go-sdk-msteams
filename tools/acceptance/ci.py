@@ -20,6 +20,16 @@ PROOF_MARKERS = [
     'policy delete/absence: passed',
 ]
 ORACLE_MARKER = 'PowerShell 8.1.0 / Go policy read parity: passed'
+USER_ASSIGNMENT_MARKERS = [
+    'user policy assignment/read-back: passed',
+    'user policy clear/restoration: passed',
+    'user assignment cleanup: passed',
+]
+USER_ASSIGNMENT_ORACLE = 'PowerShell 8.1.0 / Go user assignment parity: passed'
+PROOFS = {
+    'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
+    'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
+}
 
 
 class AcceptanceFailure(ValueError):
@@ -69,14 +79,30 @@ def check_names(root=ROOT):
     return counts
 
 
+def user_fixture(values):
+    try:
+        fixture = json.loads(values['USER_FIXTURE_JSON'])
+        valid = (set(fixture) == {'tenant_id', 'user_id', 'user_principal_name', 'display_name'}
+                 and fixture['tenant_id'].lower() == values['TENANT_ID'].lower()
+                 and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', fixture['user_id'])
+                 and re.fullmatch(r'go-sdk-msteams-acceptance@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', fixture['user_principal_name'])
+                 and fixture['display_name'] == 'go-sdk-msteams acceptance user')
+    except (ValueError, TypeError, AttributeError, KeyError):
+        valid = False
+    if not valid:
+        raise AcceptanceFailure('Invalid repository Actions secret: MSTEAMS_LAB_USER_FIXTURE_JSON')
+    return fixture
+
+
 def prepare(args):
-    keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'CERTIFICATE_PEM', 'PRIVATE_KEY_PEM', 'RECOVERY_CERTIFICATE_PEM', 'CALL_HOLD_AUDIO_FILE_ID']
+    keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'CERTIFICATE_PEM', 'PRIVATE_KEY_PEM', 'RECOVERY_CERTIFICATE_PEM', 'CALL_HOLD_AUDIO_FILE_ID', 'USER_FIXTURE_JSON']
     values = {key: os.environ.get('MSTEAMS_LAB_' + key, '') for key in keys}
     missing = ['MSTEAMS_LAB_' + key for key, value in values.items() if not value.strip()]
     if missing:
         raise AcceptanceFailure('Missing repository Actions secrets: ' + ', '.join(missing))
     if not re.fullmatch(r'(?:[0-9a-fA-F]{32}|[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})', values['CALL_HOLD_AUDIO_FILE_ID']):
         raise AcceptanceFailure('Invalid repository Actions secret: MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID')
+    fixture = user_fixture(values)
     base = Path(os.environ['RUNNER_TEMP']).resolve()
     private = Path(tempfile.mkdtemp(prefix='msteams-acceptance-', dir=base))
     certificate = private / 'certificate.pem'
@@ -84,6 +110,7 @@ def prepare(args):
     write_private(certificate, values['CERTIFICATE_PEM'])
     write_private(key, values['PRIVATE_KEY_PEM'])
     write_private(private / 'recovery-certificate.pem', values['RECOVERY_CERTIFICATE_PEM'])
+    write_json(private / 'user-fixture.json', fixture)
     write_json(private / 'identity.json', {
         'tenant_id': values['TENANT_ID'], 'client_id': values['CLIENT_ID'],
         'client_secret': values['CLIENT_SECRET'],
@@ -105,10 +132,12 @@ def prepare(args):
     info = baseline.gallery_metadata(metadata.read_bytes(), baseline.VERSION)
     baseline.verify_archive(archive, info, baseline.PIN)
     baseline.extract_archive(archive, private / 'module')
-    print('Repository secrets loaded: 7. MicrosoftTeams 8.1.0 checksum verified.', flush=True)
+    print(f'Repository secrets loaded: {len(values)}. MicrosoftTeams 8.1.0 checksum verified.', flush=True)
 
 
-def evaluate(events, expected, process_exit, require_crud=False):
+def evaluate(events, expected, process_exit, require_crud=False, proof=None):
+    proof = proof or ('owned-crud' if require_crud else None)
+    proof_markers, oracle_marker, oracle_count = PROOFS[proof] if proof else ([], None, 0)
     outcomes = {}
     markers = {name: [] for name in expected}
     child_counts = {'pass': 0, 'fail': 0, 'skip': 0}
@@ -126,29 +155,35 @@ def evaluate(events, expected, process_exit, require_crud=False):
             http_statuses[owner].extend(int(value) for value in re.findall(r'HTTP (\d{3})\b', event.get('Output', '')))
             service_codes[owner].extend(int(value) for value in re.findall(r'PolicyRP (\d+)\b', event.get('Output', '')))
         if test in markers and action == 'output':
-            for marker in PROOF_MARKERS + [ORACLE_MARKER]:
+            for marker in proof_markers + ([oracle_marker] if oracle_marker else []):
                 if marker in event.get('Output', ''):
                     markers[test].append(marker)
     tests = [{'name': name, 'outcome': outcomes.get(name, 'not-run')} for name in expected]
     passed = bool(expected) and len(set(expected)) == len(expected) and process_exit == 0
     passed = passed and all(item['outcome'] == 'pass' for item in tests) and not child_counts['skip'] and not child_counts['fail']
-    if require_crud:
-        passed = passed and all(all(marker in markers[name] for marker in PROOF_MARKERS) and markers[name].count(ORACLE_MARKER) == 2 for name in expected)
+    if proof:
+        passed = passed and all(all(marker in markers[name] for marker in proof_markers) and markers[name].count(oracle_marker) == oracle_count for name in expected)
     return {
         'outcome': 'passed' if passed else 'failed', 'tests': tests,
         'child_outcomes': child_counts, 'process_exit': process_exit,
         'http_statuses': {name: sorted(set(values)) for name, values in http_statuses.items() if values},
         'service_error_codes': {name: sorted(set(values)) for name, values in service_codes.items() if values},
-        'crud_assertions_observed': {(name + ': ' if len(expected) > 1 else '') + marker: marker in markers[name] for name in expected for marker in PROOF_MARKERS} if require_crud else {},
-        'crud_powershell_comparisons': sum(values.count(ORACLE_MARKER) for values in markers.values()),
-        'crud_powershell_comparisons_by_test': {name: values.count(ORACLE_MARKER) for name, values in markers.items()} if require_crud else {},
+        'mutation_assertions_observed': {(name + ': ' if len(expected) > 1 else '') + marker: marker in markers[name] for name in expected for marker in proof_markers},
+        'mutation_powershell_comparisons': sum(values.count(oracle_marker) for values in markers.values()) if oracle_marker else 0,
+        'mutation_powershell_comparisons_by_test': {name: values.count(oracle_marker) for name, values in markers.items()} if proof else {},
+        'expected_powershell_comparisons': oracle_count,
     }
 
 
 def run(args):
     private = Path(os.environ['MSTEAMS_LAB_PRIVATE_DIRECTORY']).resolve()
     suites = json.loads((HERE / 'suites.json').read_text())
-    selected = [name for name in suites if not args.suite or name in args.suite]
+    kind = getattr(args, 'kind', None)
+    if kind not in {None, 'reads', 'writes'} or kind and args.suite:
+        raise ValueError('choose a suite selection or a read/write group')
+    selected = [name for name, suite in suites.items()
+                if (not args.suite or name in args.suite)
+                and (not kind or bool(suite.get('mutation')) == (kind == 'writes'))]
     if not selected or args.suite and set(args.suite) - set(suites):
         raise ValueError('unknown acceptance suite')
     revision = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
@@ -158,11 +193,14 @@ def run(args):
     reports = []
     for name in selected:
         suite = suites[name]
+        if suite.get('mutation') and (suite.get('proof') not in PROOFS or type(suite.get('journal_entries_per_test')) is not int or suite['journal_entries_per_test'] < 1):
+            raise ValueError('mutation suite requires explicit checks and journal entry count')
         env = {key: value for key, value in os.environ.items() if not key.startswith('MSTEAMS_')}
         env.update({
             'MSTEAMS_LAB_READ_ONLY': '1', 'MSTEAMS_LAB_MUTATIONS': '1' if suite.get('mutation') else '0',
             'MSTEAMS_LAB_CONSEQUENTIAL': '0', 'MSTEAMS_LAB_TIMEOUT_SECONDS': '300',
             'MSTEAMS_LAB_IDENTITY_FILE': str(private / 'identity.json'),
+            'MSTEAMS_LAB_USER_FIXTURE_FILE': str(private / 'user-fixture.json'),
             'MSTEAMS_LAB_MODULE_PATH': str(private / 'module'),
             'MSTEAMS_LAB_JOURNAL_DIRECTORY': str(private / 'journals'),
             'MSTEAMS_LAB_POWERSHELL_ORACLE': '1', 'MSTEAMS_LAB_AUTH_METHOD': mode,
@@ -181,13 +219,14 @@ def run(args):
                 events.append(json.loads(line))
             except ValueError:
                 pass
-        report = evaluate(events, suite['tests'], result.returncode, suite.get('mutation', False))
+        report = evaluate(events, suite['tests'], result.returncode, proof=suite.get('proof'))
         if suite.get('mutation'):
             new_journals = set((private / 'journals').glob('*.json')) - previous_journals
             entries = [entry for path in new_journals for entry in json.loads(path.read_text())['entries']]
             report['cleanup_journal_entries'] = len(entries)
             report['cleanup_journal_entries_cleaned'] = sum(entry['state'] == 'cleaned' for entry in entries)
-            if not entries or report['cleanup_journal_entries_cleaned'] != len(entries):
+            report['expected_cleanup_journal_entries'] = len(suite['tests']) * suite['journal_entries_per_test']
+            if len(entries) != report['expected_cleanup_journal_entries'] or report['cleanup_journal_entries_cleaned'] != len(entries):
                 report['outcome'] = 'failed'
         report.update(suite=name, revision=revision, auth_method=mode, cloud='commercial', baseline_version='8.1.0',
                       powershell_oracle_enabled=True)
@@ -226,17 +265,21 @@ def print_report(report):
     for state in ['fail', 'skip']:
         if children.get(state, 0):
             print(f"FAIL {report['suite']}: {children[state]} child tests {state}", flush=True)
-    assertions = report.get('crud_assertions_observed', {})
+    assertions = report.get('mutation_assertions_observed', report.get('crud_assertions_observed', {}))
     for name, observed in assertions.items():
         if not observed:
-            print('FAIL missing CRUD check: ' + name.removesuffix(': passed'), flush=True)
-    for name, count in report.get('crud_powershell_comparisons_by_test', {}).items():
-        if count != 2:
-            print(f'FAIL {name} PowerShell comparisons: {count}/2', flush=True)
+            print('FAIL missing mutation check: ' + name.removesuffix(': passed'), flush=True)
+    expected_comparisons = report.get('expected_powershell_comparisons', 2)
+    for name, count in report.get('mutation_powershell_comparisons_by_test', report.get('crud_powershell_comparisons_by_test', {})).items():
+        if count != expected_comparisons:
+            print(f'FAIL {name} PowerShell comparisons: {count}/{expected_comparisons}', flush=True)
     entries = report.get('cleanup_journal_entries')
     cleaned = report.get('cleanup_journal_entries_cleaned', 0)
-    if entries is not None and (entries == 0 or entries != cleaned):
+    expected_entries = report.get('expected_cleanup_journal_entries', entries)
+    if entries is not None and (entries == 0 or entries != cleaned or entries != expected_entries):
         print(f'FAIL cleanup journals: {cleaned}/{entries} entries completed', flush=True)
+        if entries != expected_entries:
+            print(f'FAIL cleanup journal count: {entries}/{expected_entries} required entries', flush=True)
 
 
 def write_summary(reports):
@@ -275,10 +318,18 @@ def summarize(args):
             reports.append(report)
     if not reports:
         raise AcceptanceFailure('No TestAcc reports were produced. Check the setup steps in the authentication jobs.')
+    suites = json.loads((HERE / 'suites.json').read_text())
+    expected = {(mode, name) for mode in ['certificate', 'client-secret'] for name in suites}
+    actual = [(report.get('auth_method'), report.get('suite')) for report in reports]
+    complete = set(actual) == expected and len(actual) == len(expected)
+    for mode, name in sorted(expected - set(actual)):
+        print(f'FAIL missing TestAcc suite: {mode}/{name}', flush=True)
+    if set(actual) - expected or len(actual) != len(set(actual)):
+        print('FAIL unexpected or duplicate TestAcc suite reports', flush=True)
     for report in reports:
         print_report(report)
     write_summary(reports)
-    return 0 if all(report['outcome'] == 'passed' for report in reports) else 1
+    return 0 if complete and all(report['outcome'] == 'passed' for report in reports) else 1
 
 
 def finalize(args):
@@ -326,6 +377,7 @@ def main():
         child.add_argument('--report-directory', type=Path, required=True)
         if name == 'run':
             child.add_argument('--suite', action='append')
+            child.add_argument('--kind', choices=['reads', 'writes'])
     args = parser.parse_args()
     try:
         if args.command == 'check-names':

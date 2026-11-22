@@ -9,11 +9,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: msteams-lab-tenant-acceptance
-  queue: max
-  cancel-in-progress: false
-
 env:
   GOFLAGS: -mod=readonly
   GOTOOLCHAIN: local
@@ -21,19 +16,24 @@ env:
 
 jobs:
   lab:
-    name: TestAcc (${{ matrix.auth }})
+    name: TestAcc ${{ matrix.kind }} (${{ matrix.auth }})
     if: >-
       github.event_name != 'pull_request' ||
       (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
     strategy:
       fail-fast: false
-      max-parallel: 1
       matrix:
         auth: [certificate, client-secret]
+        kind: [reads, writes]
+    concurrency:
+      group: ${{ matrix.kind == 'writes' && 'msteams-lab-tenant-acceptance' || format('msteams-lab-reads-{0}-{1}', github.run_id, matrix.auth) }}
+      queue: max
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
       MSTEAMS_LAB_AUTH_METHOD: ${{ matrix.auth }}
+      ACCEPTANCE_KIND: ${{ matrix.kind }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -52,11 +52,12 @@ jobs:
           MSTEAMS_LAB_CLIENT_SECRET: ${{ secrets.MSTEAMS_LAB_CLIENT_SECRET }}
           MSTEAMS_LAB_CERTIFICATE_PEM: ${{ secrets.MSTEAMS_LAB_CERTIFICATE_PEM }}
           MSTEAMS_LAB_PRIVATE_KEY_PEM: ${{ secrets.MSTEAMS_LAB_PRIVATE_KEY_PEM }}
+          MSTEAMS_LAB_USER_FIXTURE_JSON: ${{ secrets.MSTEAMS_LAB_USER_FIXTURE_JSON }}
           MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID: ${{ secrets.MSTEAMS_LAB_CALL_HOLD_AUDIO_FILE_ID }}
           MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM: ${{ secrets.MSTEAMS_LAB_RECOVERY_CERTIFICATE_PEM }}
         run: python3 tools/acceptance/ci.py prepare
       - name: Run TestAcc tests
-        run: python3 tools/acceptance/ci.py run --report-directory "$RUNNER_TEMP/acceptance-report"
+        run: python3 tools/acceptance/ci.py run --kind "$ACCEPTANCE_KIND" --report-directory "$RUNNER_TEMP/acceptance-report"
       - name: Save recovery journals and remove credentials
         if: always() && env.MSTEAMS_LAB_PRIVATE_DIRECTORY != ''
         run: python3 tools/acceptance/ci.py finalize --report-directory "$RUNNER_TEMP/acceptance-report"
@@ -64,7 +65,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          name: tenant-acceptance-${{ matrix.auth }}
+          name: tenant-acceptance-${{ matrix.kind }}-${{ matrix.auth }}
           path: |
             ${{ runner.temp }}/acceptance-report/*.json
             ${{ runner.temp }}/acceptance-report/recovery.cms

@@ -81,3 +81,16 @@ Set `MSTEAMS_LAB_READ_ONLY=1`, `MSTEAMS_LAB_MUTATIONS=1`,
 PowerShell 8.1.0 reads of the same owned policy after create/update and compares
 Identity, AppIds and Description in memory. Tenant values/credentials are not
 written to repository artifacts or test logs.
+
+`TestAccApplicationAccessPolicyUserAssignment` additionally qualifies user grant
+and clear on the dedicated SDK-owned account. It compares the initial empty
+state, assigned policy/source and restored state against MicrosoftTeams 8.1.0,
+journals restoration before grant, then independently verifies restoration and
+policy deletion. Certificate and client-secret runs passed; the account has no
+license or administrator role. This qualifies assignment management, while
+online-meeting access and client effects remain separate scenarios.
+
+The unit assignment workflow loads the actual grant/clear replies and three
+assignment-state responses from `policy_assignments/testdata`. Tenant/group grant
+and clear, rank/async behavior and remaining parameter variants still need live
+qualification on this ticket.
