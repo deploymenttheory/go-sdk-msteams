@@ -166,6 +166,27 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertEqual(report['failure_reasons'][name], ['oracle failure stage: read', reason])
         self.assertNotIn('private-', json.dumps(report))
 
+    def test_assertion_catalog_excludes_format_arguments_and_dynamic_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'resource_test.go').write_text('''package resource
+func TestAccRead(t *testing.T) {
+ t.Fatalf("policy parity differs for %s: %v", privateID, privateResponse)
+ t.Fatal("policy parity differs")
+ t.Log("private-log-message")
+}
+''')
+            reasons = ci.assertion_reasons(root)
+            self.assertIn('policy parity differs for', reasons)
+            self.assertNotIn('private-log-message', reasons)
+            with patch.object(ci, 'assertion_reasons', return_value=reasons):
+                report = ci.evaluate([
+                    {'Test': 'TestAccRead', 'Action': 'output', 'Output': 'resource_test.go:3: policy parity differs for private-id: private-response'},
+                    {'Test': 'TestAccRead', 'Action': 'fail'},
+                ], ['TestAccRead'], 1)
+            self.assertEqual(report['failure_reasons']['TestAccRead'], ['policy parity differs for'])
+            self.assertNotIn('private-', json.dumps(report))
+
     def test_mutation_cannot_pass_without_a_new_cleaned_journal(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
