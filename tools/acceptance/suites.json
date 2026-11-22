@@ -42,7 +42,8 @@
       "TestAccPersonalAttendantPolicyReadOnly",
       "TestAccRecordingRollOutPolicyReadOnly",
       "TestAccRoomVideoTeleConferencingPolicyReadOnly",
-      "TestAccSharedCallingRoutingPolicyReadOnly"
+      "TestAccSharedCallingRoutingPolicyReadOnly",
+      "TestAccShiftsPolicyReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -73,7 +74,8 @@
       "TestAccPersonalAttendantPolicyCRUD",
       "TestAccRecordingRollOutPolicyCRUD",
       "TestAccRoomVideoTeleConferencingPolicyCRUD",
-      "TestAccSharedCallingRoutingPolicyCRUD"
+      "TestAccSharedCallingRoutingPolicyCRUD",
+      "TestAccShiftsPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1
@@ -134,7 +136,8 @@
     "tests": [
       "TestAccMessagingConfigurationReadOnly",
       "TestAccMigrationConfigurationReadOnly",
-      "TestAccMultiTenantOrganizationConfigurationReadOnly"
+      "TestAccMultiTenantOrganizationConfigurationReadOnly",
+      "TestAccShiftsAppPolicyReadOnly"
     ]
   },
   "singleton-configuration-updates": {
@@ -145,7 +148,8 @@
     "tests": [
       "TestAccMessagingConfigurationUpdateRestore",
       "TestAccMigrationConfigurationUpdateRestore",
-      "TestAccMultiTenantOrganizationConfigurationUpdateRestore"
+      "TestAccMultiTenantOrganizationConfigurationUpdateRestore",
+      "TestAccShiftsAppPolicyUpdateRestore"
     ]
   },
   "owned-notification-policy": {
