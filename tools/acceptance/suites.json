@@ -31,7 +31,9 @@
       "TestAccMeetingBrandingReadOnly",
       "TestAccOnlineVoicemailReadOnly",
       "TestAccRecordingMessagesReadOnly",
-      "TestAccVoicemailValidationReadOnly"
+      "TestAccVoicemailValidationReadOnly",
+      "TestAccMeetingPolicyReadOnly",
+      "TestAccMessagingPolicyReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -53,7 +55,9 @@
       "TestAccAudioConferencingPolicyCRUD",
       "TestAccAppPermissionPolicyCRUD",
       "TestAccAppSetupPolicyCRUD",
-      "TestAccMeetingBrandingPolicyCRUD"
+      "TestAccMeetingBrandingPolicyCRUD",
+      "TestAccMeetingPolicyCRUD",
+      "TestAccMessagingPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1

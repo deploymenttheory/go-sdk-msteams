@@ -46,6 +46,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 		"call-park-policy":           callParkPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallParkPolicies},
 		"channels-policy":            channelsPolicyCleanup{sdk.TeamsAdminAPI.TeamsChannelsPolicies},
 		"cortana-policy":             cortanaPolicyCleanup{sdk.TeamsAdminAPI.TeamsCortanaPolicies},
+		"meeting-policy":             meetingPolicyCleanup{sdk.TeamsAdminAPI.TeamsMeetingPolicies},
+		"messaging-policy":           messagingPolicyCleanup{sdk.TeamsAdminAPI.TeamsMessagingPolicies},
 		"events-policy":              eventsPolicyCleanup{sdk.TeamsAdminAPI.TeamsEventsPolicies},
 		"enhanced-encryption-policy": enhancedEncryptionPolicyCleanup{sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies},
 		"calling-policy":             callingPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallingPolicies},

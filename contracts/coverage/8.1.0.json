@@ -7436,22 +7436,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/136/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/meeting_policy_test.go",
+              "name": "TestAccMeetingPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/136/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/meeting_policy_test.go",
+              "name": "TestAccMeetingPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -7459,8 +7506,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/meeting-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -7592,22 +7641,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/140/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/messaging_policy_test.go",
+              "name": "TestAccMessagingPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/140/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/messaging_policy_test.go",
+              "name": "TestAccMessagingPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -7615,8 +7711,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/messaging-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -14517,29 +14615,96 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/252/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/assignment_test.go",
+              "name": "TestUnitMutationsKeepFailuresAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/252/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/assignment_test.go",
+              "name": "TestUnitMutationsKeepFailuresAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/252/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/assignment_test.go",
+              "name": "TestUnitMutationsKeepFailuresAndNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -14547,8 +14712,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/meeting-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -14616,29 +14783,96 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/254/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/assignment_test.go",
+              "name": "TestUnitMutationsKeepFailuresAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/254/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/assignment_test.go",
+              "name": "TestUnitMutationsKeepFailuresAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/254/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/assignment_test.go",
+              "name": "TestUnitMutationsKeepFailuresAndNeverReplay"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -14646,8 +14880,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/messaging-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -20039,15 +20275,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/369/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/meeting_policy_crud_test.go",
+              "name": "TestAccMeetingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20055,8 +20311,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/meeting-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -20103,15 +20361,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/371/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/messaging_policy_crud_test.go",
+              "name": "TestAccMessagingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20119,8 +20397,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/messaging-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -24488,15 +24768,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/477/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/meeting_policy_crud_test.go",
+              "name": "TestAccMeetingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -24504,8 +24804,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/meeting-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -24552,15 +24854,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/479/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/messaging_policy_crud_test.go",
+              "name": "TestAccMessagingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -24568,8 +24890,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/messaging-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -30310,15 +30634,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/608/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/meeting_policy_crud_test.go",
+              "name": "TestAccMeetingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30326,8 +30678,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/meeting-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -30406,15 +30760,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/611/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/messaging_policy_crud_test.go",
+              "name": "TestAccMessagingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_messaging_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30422,8 +30804,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Full command qualification is pending. Selected tenant reads and owned CRUD passed under both application authentication methods; grants and remaining parameter scenarios are not qualified.",
+        "evidence": [
+          "docs/implementation/policies/messaging-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },

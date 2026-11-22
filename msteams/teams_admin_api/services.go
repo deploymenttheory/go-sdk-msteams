@@ -40,12 +40,16 @@ import (
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	teamsfeedbackpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 	teamsfilespolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
+	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
+	teamsmessagingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_messaging_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsMessagingPolicies                  *teamsmessagingpolicy.Service
+	TeamsMeetingPolicies                    *teamsmeetingpolicy.Service
 	TeamsEventsPolicies                     *teamseventspolicy.Service
 	TeamsFilesPolicies                      *teamsfilespolicy.Service
 	TeamsEnhancedEncryptionPolicies         *teamsenhancedencryptionpolicy.Service
@@ -106,6 +110,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		TeamsMessagingPolicies:                  teamsmessagingpolicy.NewService(scope),
+		TeamsMeetingPolicies:                    teamsmeetingpolicy.NewService(scope),
 		TeamsEventsPolicies:                     teamseventspolicy.NewService(scope),
 		TeamsFilesPolicies:                      teamsfilespolicy.NewService(scope),
 		TeamsEnhancedEncryptionPolicies:         teamsenhancedencryptionpolicy.NewService(backend),
