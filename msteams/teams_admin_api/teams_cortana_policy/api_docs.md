@@ -62,3 +62,21 @@ ETag or atomicity guarantee. See [unit tests](service_test.go)
 and [lab acceptance](../../../docs/implementation/policies/cortana-policy-lab-acceptance.md).
 All five commands and eight exact parameter sets have native/test mappings;
 issue #113 and full qualification remain open.
+
+## Owned CRUD acceptance
+
+`TestAccCortanaPolicyCRUD` creates a uniquely named unassigned policy with a
+non-default description and `AllowCortanaAmbientListening: false`. A description-only update
+preserves that omitted flag. The test verifies list membership, deletes the
+policy and confirms GET404 plus list absence. Both created/updated reads are
+compared against MicrosoftTeams 8.1.0. Certificate and client-secret lab runs
+passed; cleanup is independently verified.
+
+`TestUnitOwnedCRUDUsesAcceptanceResponses` loads seven actual acceptance
+responses from `testdata`, covering requests, read projections, sparse updates,
+native statuses and typed absence. CI requires each owned CRUD test to reach
+all four milestones, two PowerShell comparisons and verified cleanup.
+
+User/tenant/group assignments and clear operations, effective client behavior,
+delegated authentication, other clouds and remaining parameter scenarios still
+require acceptance. The feature ticket stays open.

@@ -1,0 +1,77 @@
+{
+  "Description": "SDK lab non-default updated description",
+  "AllowOrgWideTeamCreation": true,
+  "AllowPrivateTeamDiscovery": true,
+  "EnablePrivateTeamDiscovery": true,
+  "AllowPrivateChannelCreation": false,
+  "AllowSharedChannelCreation": true,
+  "AllowChannelSharingToExternalUser": true,
+  "AllowUserToParticipateInExternalSharedChannel": true,
+  "ThreadedChannelCreation": "Enabled",
+  "AllowCreateChannel": "Unset",
+  "AllowCreateClassicChannel": "Unset",
+  "AllowCreatePrivateChannel": "Unset",
+  "AllowCreateSharedChannel": "Unset",
+  "CreateSharedChannelsByDefault": "Unset",
+  "AllowUsersFromOutsideTeam": "Unset",
+  "AllowGuestsFromOutsideTeam": "Unset",
+  "AllowUsersFromOutsideTeamInPrivateChannel": "Unset",
+  "AllowGuestsFromOutsideTeamInPrivateChannel": "Unset",
+  "AllowSharingWithTeamInOrg": "Unset",
+  "AllowSharingPrivateChannelWithTeamInOrg": "Unset",
+  "DefaultChannelTypeOnCreation": "Unset",
+  "Key": {
+    "ScopeClass": "Tag",
+    "SchemaId": {
+      "XName": {
+        "LocalName": "TeamsChannelsPolicy",
+        "Namespace": {
+          "NamespaceName": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+        },
+        "NamespaceName": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+      }
+    },
+    "AuthorityId": {
+      "Class": "Tenant",
+      "InstanceId": "00000000-0000-4000-8000-0b617a16f800",
+      "XmlRoot": {
+        "LocalName": "AuthorityId",
+        "Namespace": {
+          "NamespaceName": "urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008"
+        },
+        "NamespaceName": "urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008"
+      }
+    },
+    "DefaultXml": {
+      "SchemaId": {
+        "XName": {
+          "LocalName": "TeamsChannelsPolicy",
+          "Namespace": {
+            "NamespaceName": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          },
+          "NamespaceName": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+        }
+      },
+      "Data": {
+        "TeamsChannelsPolicy": {
+          "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+        }
+      },
+      "ConfigObject": null,
+      "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+      "IsModified": true
+    },
+    "XmlRoot": {
+      "LocalName": "AnchoredXmlKey",
+      "Namespace": {
+        "NamespaceName": "urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008"
+      },
+      "NamespaceName": "urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008"
+    }
+  },
+  "Identity": "Tag:fixture-policy",
+  "ConfigMetadata": {
+    "Authority": "Tenant"
+  },
+  "ConfigId": "fixture-config-5872e2f6"
+}
