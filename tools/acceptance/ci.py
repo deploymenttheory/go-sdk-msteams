@@ -55,6 +55,11 @@ PROOFS = {
 # Publish fixed assertion text only. HTTP payloads and dynamic fixture names
 # remain private even when a test fails.
 FAILURE_REASONS = (
+    'read/list comparison: response fields missing',
+    'read/list comparison: property sets differ',
+    'read/list comparison: identity values differ',
+    'read/list comparison: setting or extension values differ',
+    'read/list comparison: metadata values differ',
     'pinned federation read oracle failed; no output retained',
     'pinned federation read could not be verified',
     'pinned federation identity differs',
