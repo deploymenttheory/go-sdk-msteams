@@ -40,7 +40,7 @@ it does not assume server ordering. The child never calls Remove-SharedWithTeam.
 Ordinary checks run with all lab flags unset. To run only this qualified probe:
 
 ```sh
-go test -count=1 -run '^TestAccSharedChannelReadOnly$' ./tests/integration/lab
+go test -count=1 -run '^TestAccSharedChannelReadOnly$' ./tests/integration/lab/graph
 ```
 
 Remaining qualification: positive/denied visibility for host and recipient,

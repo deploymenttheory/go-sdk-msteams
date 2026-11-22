@@ -361,3 +361,23 @@ Description-only update; workload preserves all six Boolean settings across a
 Description-only PUT. Each request is asserted sparse and each delete requires
 independent GET404/list absence. Eighteen actual response fixtures supply units;
 Grant persistence is a separate unqualified operation.
+
+## Test layout
+
+Each service partition's acceptance and offline tests live in
+`tests/integration/lab/<service>/` (package `<service without underscores>acc`),
+so `go test ./tests/integration/lab/teams_call_hold_policy` runs exactly one
+service. `platform` holds preflight and service discovery, `graph` the Microsoft
+Graph team resources and `recovery` the journal recovery that merges every
+service's `RecoveryHandlers`. Helpers shared by several services are in
+`tests/integration/lab/internal/labkit`; PowerShell oracles stay in
+`tests/integration/lab/oracle`. `check-names` rejects Go files placed directly in
+`tests/integration/lab`.
+
+To recover a retained journal after a failed cleanup, with the same lab identity,
+mutation opt-in and fixture files described above:
+
+```sh
+MSTEAMS_LAB_RECOVERY_FILE=/private/lab/journal.jsonl \
+  go test -count=1 -run '^TestAccRecoverOwnedPolicies$' ./tests/integration/lab/recovery
+```

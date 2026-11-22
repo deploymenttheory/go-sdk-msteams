@@ -672,9 +672,10 @@ func TestAccRead(t *testing.T) {
             root = Path(directory)
             output = root / 'github-output'
             fixture = {'auth': registry()['auth'], 'services': {
-                'platform': {'package': './fixture', 'steps': [{'id': 'reads', 'tests': ['TestAccOrdinaryRead']}]},
-                'teams_messaging_configuration': {'package': './fixture', 'steps': [{'id': 'global-reads', 'serial': True, 'tests': ['TestAccSingletonRead']}]},
-                'teams_call_hold_policy': {'package': './fixture', 'steps': [
+                'platform': {'package': './tests/integration/lab/platform', 'steps': [{'id': 'reads', 'tests': ['TestAccOrdinaryRead']}]},
+                'teams_messaging_configuration': {'package': './tests/integration/lab/teams_messaging_configuration',
+                                                  'steps': [{'id': 'global-reads', 'serial': True, 'tests': ['TestAccSingletonRead']}]},
+                'teams_call_hold_policy': {'package': './tests/integration/lab/teams_call_hold_policy', 'steps': [
                     {'id': 'reads', 'tests': ['TestAccCallHoldRead']},
                     {'id': 'crud', 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1, 'tests': ['TestAccCallHoldWrite']}]}}}
             (root / 'suites.json').write_text(json.dumps(fixture))
@@ -693,11 +694,13 @@ func TestAccRead(t *testing.T) {
                     ci.plan(argparse.Namespace())
 
     def test_registry_rejects_unordered_unknown_or_unchecked_partitions(self):
-        base = registry({'id': 'reads', 'tests': ['TestAccRead']}, service='platform')
+        base = registry({'id': 'reads', 'tests': ['TestAccRead']}, service='platform', package='./tests/integration/lab/platform')
         ci.validate_registry(base)
         crud = {'id': 'crud', 'tests': ['TestAccWrite'], 'mutation': True, 'proof': 'owned-crud', 'journal_entries_per_test': 1}
         for change in [
             lambda r: r['services'].update(teams_unknown_service=r['services'].pop('platform')),
+            lambda r: r['services']['platform'].update(package='./tests/integration/lab'),
+            lambda r: r['services']['platform'].update(package='./tests/integration/lab/graph'),
             lambda r: r['services']['platform']['steps'].insert(0, crud),
             lambda r: r['services']['platform']['steps'].append(dict(crud, proof='unknown')),
             lambda r: r['services']['platform']['steps'].append(dict(crud, id='reads')),

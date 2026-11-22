@@ -158,6 +158,8 @@ SERVICE_ROOT = 'msteams/teams_admin_api'
 # Microsoft Graph team resources.
 EXTRA_SERVICES = {'platform', 'graph'}
 SERVICE_AUTH_METHOD = 'client-secret'
+# Each service partition's tests live in their own Go package here.
+LAB_ROOT = Path('tests/integration/lab')
 # The auth partition loads every credential kind; its tests prove each one.
 AUTH_PARTITION_METHOD = 'all'
 
@@ -208,6 +210,8 @@ def validate_registry(registry, root=ROOT):
     for name, entry in services.items():
         if name not in EXTRA_SERVICES and not (root / SERVICE_ROOT / name).is_dir():
             raise AcceptanceFailure('acceptance partition is not a teams_admin_api service: ' + name)
+        if entry.get('package') != './' + (LAB_ROOT / name).as_posix():
+            raise AcceptanceFailure('service partition package must be ./' + (LAB_ROOT / name).as_posix() + ': ' + name)
         ids = [step.get('id') for step in entry.get('steps', [])]
         if not ids or len(ids) != len(set(ids)) or not all(isinstance(i, str) and re.fullmatch(r'[a-z][a-z0-9-]*', i) for i in ids):
             raise AcceptanceFailure('service steps need unique lowercase ids: ' + name)
@@ -249,6 +253,12 @@ def check_names(root=ROOT):
             raise AcceptanceFailure('every TestAcc must have one CI step or an explicit pending disposition')
         if any(not entry.get('reason') or not (ROOT / entry['file']).is_file() for entry in pending.values()):
             raise AcceptanceFailure('pending acceptance requires an existing test file and a concrete reason')
+        moved = sorted(test for test, entry in pending.items() if Path(entry['file']).parent != acceptance[test])
+        if moved:
+            raise AcceptanceFailure('pending acceptance file must define the test: ' + ', '.join(moved))
+        stray = sorted(path.name for path in (root / LAB_ROOT).glob('*.go'))
+        if stray:
+            raise AcceptanceFailure('lab tests belong in a service package under ' + LAB_ROOT.as_posix() + ': ' + ', '.join(stray))
         misplaced = sorted(test for unit in registry_steps(registry) for test in unit['tests']
                            if Path(unit['package']) != acceptance[test])
         if misplaced:

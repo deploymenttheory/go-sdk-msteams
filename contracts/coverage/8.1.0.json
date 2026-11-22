@@ -72,7 +72,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channel_membership_test.go",
+              "file": "tests/integration/lab/graph/channel_membership_test.go",
               "name": "TestAccChannelMembershipCRUD"
             }
           ]
@@ -204,7 +204,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_membership_test.go",
+              "file": "tests/integration/lab/graph/team_membership_test.go",
               "name": "TestAccTeamMembershipCRUD"
             }
           ]
@@ -829,7 +829,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shared_channel_test.go",
+              "file": "tests/integration/lab/graph/shared_channel_test.go",
               "name": "TestAccSharedChannelReadOnly"
             }
           ]
@@ -1013,7 +1013,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/application_access_policy_test.go",
+              "file": "tests/integration/lab/application_access_policy/application_access_policy_test.go",
               "name": "TestAccApplicationAccessPolicyCRUD"
             }
           ]
@@ -1051,7 +1051,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/application_access_policy_test.go",
+              "file": "tests/integration/lab/application_access_policy/application_access_policy_test.go",
               "name": "TestAccApplicationAccessPolicyCRUD"
             }
           ]
@@ -1115,7 +1115,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/application_meeting_configuration_test.go",
+              "file": "tests/integration/lab/application_meeting_configuration/application_meeting_configuration_test.go",
               "name": "TestAccApplicationMeetingConfigurationReadOnly"
             }
           ]
@@ -1145,7 +1145,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/application_meeting_configuration_test.go",
+              "file": "tests/integration/lab/application_meeting_configuration/application_meeting_configuration_test.go",
               "name": "TestAccApplicationMeetingConfigurationReadOnly"
             }
           ]
@@ -1500,7 +1500,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/policy_assignments_test.go",
+              "file": "tests/integration/lab/policy_assignments/policy_assignments_test.go",
               "name": "TestAccPolicyAssignmentsOCEReadOnly"
             }
           ]
@@ -1607,7 +1607,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/policy_assignments_test.go",
+              "file": "tests/integration/lab/policy_assignments/policy_assignments_test.go",
               "name": "TestAccPolicyAssignmentsReadOnly"
             }
           ]
@@ -1684,7 +1684,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/deployment_migration_test.go",
+              "file": "tests/integration/lab/batch_deployment/deployment_migration_test.go",
               "name": "TestAccBatchDeploymentStatusReadOnly"
             }
           ]
@@ -1710,7 +1710,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/deployment_migration_test.go",
+              "file": "tests/integration/lab/batch_deployment/deployment_migration_test.go",
               "name": "TestAccBatchDeploymentStatusReadOnly"
             }
           ]
@@ -2120,7 +2120,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/federation_test.go",
+              "file": "tests/integration/lab/external_access_policy/federation_test.go",
               "name": "TestAccExternalAccessPolicyReadOnly"
             }
           ]
@@ -2150,7 +2150,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/federation_test.go",
+              "file": "tests/integration/lab/external_access_policy/federation_test.go",
               "name": "TestAccExternalAccessPolicyReadOnly"
             }
           ]
@@ -4051,7 +4051,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/online_voicemail_test.go",
+              "file": "tests/integration/lab/online_voicemail_policy/online_voicemail_test.go",
               "name": "TestAccOnlineVoicemailReadOnly"
             }
           ]
@@ -4077,7 +4077,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/online_voicemail_test.go",
+              "file": "tests/integration/lab/online_voicemail_policy/online_voicemail_test.go",
               "name": "TestAccOnlineVoicemailReadOnly"
             }
           ]
@@ -4173,7 +4173,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/voicemail_validation_test.go",
+              "file": "tests/integration/lab/online_voicemail_validation_configuration/voicemail_validation_test.go",
               "name": "TestAccVoicemailValidationReadOnly"
             }
           ]
@@ -4203,7 +4203,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/voicemail_validation_test.go",
+              "file": "tests/integration/lab/online_voicemail_validation_configuration/voicemail_validation_test.go",
               "name": "TestAccVoicemailValidationReadOnly"
             }
           ]
@@ -4540,7 +4540,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/policy_packages_test.go",
+              "file": "tests/integration/lab/policy_packages/policy_packages_test.go",
               "name": "TestAccPolicyPackagesReadOnly"
             }
           ]
@@ -4638,7 +4638,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/privacy_configuration_test.go",
+              "file": "tests/integration/lab/privacy_configuration/privacy_configuration_test.go",
               "name": "TestAccPrivacyConfigurationReadOnly"
             }
           ]
@@ -4668,7 +4668,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/privacy_configuration_test.go",
+              "file": "tests/integration/lab/privacy_configuration/privacy_configuration_test.go",
               "name": "TestAccPrivacyConfigurationReadOnly"
             }
           ]
@@ -4948,7 +4948,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/federation_test.go",
+              "file": "tests/integration/lab/acs_federation_configuration/federation_test.go",
               "name": "TestAccACSFederationConfigurationReadOnly"
             }
           ]
@@ -4978,7 +4978,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/federation_test.go",
+              "file": "tests/integration/lab/acs_federation_configuration/federation_test.go",
               "name": "TestAccACSFederationConfigurationReadOnly"
             }
           ]
@@ -5077,7 +5077,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/app_permission_policy_test.go",
+              "file": "tests/integration/lab/teams_app_permission_policy/app_permission_policy_test.go",
               "name": "TestAccAppPermissionPolicyReadOnly"
             }
           ]
@@ -5103,7 +5103,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/app_permission_policy_test.go",
+              "file": "tests/integration/lab/teams_app_permission_policy/app_permission_policy_test.go",
               "name": "TestAccAppPermissionPolicyReadOnly"
             }
           ]
@@ -5187,7 +5187,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/app_setup_policy_test.go",
+              "file": "tests/integration/lab/teams_app_setup_policy/app_setup_policy_test.go",
               "name": "TestAccAppSetupPolicyReadOnly"
             }
           ]
@@ -5213,7 +5213,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/app_setup_policy_test.go",
+              "file": "tests/integration/lab/teams_app_setup_policy/app_setup_policy_test.go",
               "name": "TestAccAppSetupPolicyReadOnly"
             }
           ]
@@ -5273,7 +5273,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/audio_conferencing_prompts_test.go",
+              "file": "tests/integration/lab/audio_conferencing_prompts/audio_conferencing_prompts_test.go",
               "name": "TestAccAudioConferencingPromptsReadOnly"
             }
           ]
@@ -5299,7 +5299,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/audio_conferencing_prompts_test.go",
+              "file": "tests/integration/lab/audio_conferencing_prompts/audio_conferencing_prompts_test.go",
               "name": "TestAccAudioConferencingPromptsReadOnly"
             }
           ]
@@ -5359,7 +5359,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/audio_conferencing_policy_test.go",
+              "file": "tests/integration/lab/teams_audio_conferencing_policy/audio_conferencing_policy_test.go",
               "name": "TestAccAudioConferencingPolicyReadOnly"
             }
           ]
@@ -5385,7 +5385,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/audio_conferencing_policy_test.go",
+              "file": "tests/integration/lab/teams_audio_conferencing_policy/audio_conferencing_policy_test.go",
               "name": "TestAccAudioConferencingPolicyReadOnly"
             }
           ]
@@ -5484,7 +5484,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/call_hold_policy_test.go",
+              "file": "tests/integration/lab/teams_call_hold_policy/call_hold_policy_test.go",
               "name": "TestAccCallHoldPolicyReadOnly"
             }
           ]
@@ -5510,7 +5510,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/call_hold_policy_test.go",
+              "file": "tests/integration/lab/teams_call_hold_policy/call_hold_policy_test.go",
               "name": "TestAccCallHoldPolicyReadOnly"
             }
           ]
@@ -5570,7 +5570,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/calling_policy_test.go",
+              "file": "tests/integration/lab/teams_calling_policy/calling_policy_test.go",
               "name": "TestAccCallingPolicyReadOnly"
             }
           ]
@@ -5596,7 +5596,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/calling_policy_test.go",
+              "file": "tests/integration/lab/teams_calling_policy/calling_policy_test.go",
               "name": "TestAccCallingPolicyReadOnly"
             }
           ]
@@ -5656,7 +5656,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/call_park_policy_test.go",
+              "file": "tests/integration/lab/teams_call_park_policy/call_park_policy_test.go",
               "name": "TestAccCallParkPolicyReadOnly"
             }
           ]
@@ -5682,7 +5682,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/call_park_policy_test.go",
+              "file": "tests/integration/lab/teams_call_park_policy/call_park_policy_test.go",
               "name": "TestAccCallParkPolicyReadOnly"
             }
           ]
@@ -5781,7 +5781,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channels_policy_test.go",
+              "file": "tests/integration/lab/teams_channels_policy/channels_policy_test.go",
               "name": "TestAccChannelsPolicyReadOnly"
             }
           ]
@@ -5807,7 +5807,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channels_policy_test.go",
+              "file": "tests/integration/lab/teams_channels_policy/channels_policy_test.go",
               "name": "TestAccChannelsPolicyReadOnly"
             }
           ]
@@ -5867,7 +5867,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/client_configuration_test.go",
+              "file": "tests/integration/lab/teams_client_configuration/client_configuration_test.go",
               "name": "TestAccClientConfigurationReadOnly"
             }
           ]
@@ -5893,7 +5893,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/client_configuration_test.go",
+              "file": "tests/integration/lab/teams_client_configuration/client_configuration_test.go",
               "name": "TestAccClientConfigurationReadOnly"
             }
           ]
@@ -6038,7 +6038,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/cortana_policy_test.go",
+              "file": "tests/integration/lab/teams_cortana_policy/cortana_policy_test.go",
               "name": "TestAccCortanaPolicyReadOnly"
             }
           ]
@@ -6064,7 +6064,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/cortana_policy_test.go",
+              "file": "tests/integration/lab/teams_cortana_policy/cortana_policy_test.go",
               "name": "TestAccCortanaPolicyReadOnly"
             }
           ]
@@ -6124,7 +6124,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/banner_text_test.go",
+              "file": "tests/integration/lab/teams_custom_banner_text/banner_text_test.go",
               "name": "TestAccBannerTextReadOnly"
             }
           ]
@@ -6150,7 +6150,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/banner_text_test.go",
+              "file": "tests/integration/lab/teams_custom_banner_text/banner_text_test.go",
               "name": "TestAccBannerTextReadOnly"
             }
           ]
@@ -6172,7 +6172,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/banner_text_test.go",
+              "file": "tests/integration/lab/teams_custom_banner_text/banner_text_test.go",
               "name": "TestAccBannerTextReadOnly"
             }
           ]
@@ -6240,7 +6240,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/education_assignments_test.go",
+              "file": "tests/integration/lab/teams_education_assignments_app_policy/education_assignments_test.go",
               "name": "TestAccEducationAssignmentsReadOnly"
             }
           ]
@@ -6270,7 +6270,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/education_assignments_test.go",
+              "file": "tests/integration/lab/teams_education_assignments_app_policy/education_assignments_test.go",
               "name": "TestAccEducationAssignmentsReadOnly"
             }
           ]
@@ -6334,7 +6334,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/education_configuration_test.go",
+              "file": "tests/integration/lab/teams_education_configuration/education_configuration_test.go",
               "name": "TestAccEducationConfigurationReadOnly"
             }
           ]
@@ -6364,7 +6364,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/education_configuration_test.go",
+              "file": "tests/integration/lab/teams_education_configuration/education_configuration_test.go",
               "name": "TestAccEducationConfigurationReadOnly"
             }
           ]
@@ -6502,7 +6502,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/enhanced_encryption_test.go",
+              "file": "tests/integration/lab/teams_enhanced_encryption_policy/enhanced_encryption_test.go",
               "name": "TestAccEnhancedEncryptionReadOnly"
             }
           ]
@@ -6528,7 +6528,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/enhanced_encryption_test.go",
+              "file": "tests/integration/lab/teams_enhanced_encryption_policy/enhanced_encryption_test.go",
               "name": "TestAccEnhancedEncryptionReadOnly"
             }
           ]
@@ -6592,7 +6592,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/events_policy_test.go",
+              "file": "tests/integration/lab/teams_events_policy/events_policy_test.go",
               "name": "TestAccEventsPolicyReadOnly"
             }
           ]
@@ -6622,7 +6622,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/events_policy_test.go",
+              "file": "tests/integration/lab/teams_events_policy/events_policy_test.go",
               "name": "TestAccEventsPolicyReadOnly"
             }
           ]
@@ -6688,7 +6688,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/federation_test.go",
+              "file": "tests/integration/lab/teams_external_access_configuration/federation_test.go",
               "name": "TestAccTeamsExternalAccessConfigurationReadOnly"
             }
           ]
@@ -6718,7 +6718,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/federation_test.go",
+              "file": "tests/integration/lab/teams_external_access_configuration/federation_test.go",
               "name": "TestAccTeamsExternalAccessConfigurationReadOnly"
             }
           ]
@@ -6786,7 +6786,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/feedback_policy_test.go",
+              "file": "tests/integration/lab/teams_feedback_policy/feedback_policy_test.go",
               "name": "TestAccFeedbackPolicyReadOnly"
             }
           ]
@@ -6816,7 +6816,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/feedback_policy_test.go",
+              "file": "tests/integration/lab/teams_feedback_policy/feedback_policy_test.go",
               "name": "TestAccFeedbackPolicyReadOnly"
             }
           ]
@@ -6882,7 +6882,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/files_policy_test.go",
+              "file": "tests/integration/lab/teams_files_policy/files_policy_test.go",
               "name": "TestAccFilesPolicyReadOnly"
             }
           ]
@@ -6912,7 +6912,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/files_policy_test.go",
+              "file": "tests/integration/lab/teams_files_policy/files_policy_test.go",
               "name": "TestAccFilesPolicyReadOnly"
             }
           ]
@@ -7247,7 +7247,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_branding_test.go",
+              "file": "tests/integration/lab/meeting_branding/meeting_branding_test.go",
               "name": "TestAccMeetingBrandingReadOnly"
             }
           ]
@@ -7273,7 +7273,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_branding_test.go",
+              "file": "tests/integration/lab/meeting_branding/meeting_branding_test.go",
               "name": "TestAccMeetingBrandingReadOnly"
             }
           ]
@@ -7450,7 +7450,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_policy_test.go",
+              "file": "tests/integration/lab/teams_meeting_policy/meeting_policy_test.go",
               "name": "TestAccMeetingPolicyReadOnly"
             }
           ]
@@ -7476,7 +7476,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_policy_test.go",
+              "file": "tests/integration/lab/teams_meeting_policy/meeting_policy_test.go",
               "name": "TestAccMeetingPolicyReadOnly"
             }
           ]
@@ -7538,7 +7538,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_template_policies_test.go",
+              "file": "tests/integration/lab/teams_meeting_template_configuration/meeting_template_policies_test.go",
               "name": "TestAccMeetingTemplateConfigurationReadOnly"
             }
           ]
@@ -7564,7 +7564,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_template_policies_test.go",
+              "file": "tests/integration/lab/teams_meeting_template_configuration/meeting_template_policies_test.go",
               "name": "TestAccMeetingTemplateConfigurationReadOnly"
             }
           ]
@@ -7626,7 +7626,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_template_policies_test.go",
+              "file": "tests/integration/lab/teams_meeting_template_permission_policy/meeting_template_policies_test.go",
               "name": "TestAccMeetingTemplatePermissionReadOnly"
             }
           ]
@@ -7652,7 +7652,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_template_policies_test.go",
+              "file": "tests/integration/lab/teams_meeting_template_permission_policy/meeting_template_policies_test.go",
               "name": "TestAccMeetingTemplatePermissionReadOnly"
             }
           ]
@@ -7714,7 +7714,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/messaging_migration_configuration_test.go",
+              "file": "tests/integration/lab/teams_messaging_configuration/messaging_migration_configuration_test.go",
               "name": "TestAccMessagingConfigurationReadOnly"
             }
           ]
@@ -7740,7 +7740,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/messaging_migration_configuration_test.go",
+              "file": "tests/integration/lab/teams_messaging_configuration/messaging_migration_configuration_test.go",
               "name": "TestAccMessagingConfigurationReadOnly"
             }
           ]
@@ -7802,7 +7802,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/messaging_policy_test.go",
+              "file": "tests/integration/lab/teams_messaging_policy/messaging_policy_test.go",
               "name": "TestAccMessagingPolicyReadOnly"
             }
           ]
@@ -7828,7 +7828,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/messaging_policy_test.go",
+              "file": "tests/integration/lab/teams_messaging_policy/messaging_policy_test.go",
               "name": "TestAccMessagingPolicyReadOnly"
             }
           ]
@@ -7890,7 +7890,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/messaging_migration_configuration_test.go",
+              "file": "tests/integration/lab/teams_migration_configuration/messaging_migration_configuration_test.go",
               "name": "TestAccMigrationConfigurationReadOnly"
             }
           ]
@@ -7916,7 +7916,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/messaging_migration_configuration_test.go",
+              "file": "tests/integration/lab/teams_migration_configuration/messaging_migration_configuration_test.go",
               "name": "TestAccMigrationConfigurationReadOnly"
             }
           ]
@@ -7978,7 +7978,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/mobility_multi_tenant_test.go",
+              "file": "tests/integration/lab/teams_mobility_policy/mobility_multi_tenant_test.go",
               "name": "TestAccMobilityPolicyReadOnly"
             }
           ]
@@ -8004,7 +8004,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/mobility_multi_tenant_test.go",
+              "file": "tests/integration/lab/teams_mobility_policy/mobility_multi_tenant_test.go",
               "name": "TestAccMobilityPolicyReadOnly"
             }
           ]
@@ -8066,7 +8066,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/mobility_multi_tenant_test.go",
+              "file": "tests/integration/lab/teams_multi_tenant_organization_configuration/mobility_multi_tenant_test.go",
               "name": "TestAccMultiTenantOrganizationConfigurationReadOnly"
             }
           ]
@@ -8092,7 +8092,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/mobility_multi_tenant_test.go",
+              "file": "tests/integration/lab/teams_multi_tenant_organization_configuration/mobility_multi_tenant_test.go",
               "name": "TestAccMultiTenantOrganizationConfigurationReadOnly"
             }
           ]
@@ -8154,7 +8154,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/network_notification_test.go",
+              "file": "tests/integration/lab/teams_network_roaming_policy/network_notification_test.go",
               "name": "TestAccNetworkRoamingPolicyReadOnly"
             }
           ]
@@ -8180,7 +8180,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/network_notification_test.go",
+              "file": "tests/integration/lab/teams_network_roaming_policy/network_notification_test.go",
               "name": "TestAccNetworkRoamingPolicyReadOnly"
             }
           ]
@@ -8242,7 +8242,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/network_notification_test.go",
+              "file": "tests/integration/lab/teams_notification_and_feeds_policy/network_notification_test.go",
               "name": "TestAccNotificationAndFeedsPolicyReadOnly"
             }
           ]
@@ -8268,7 +8268,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/network_notification_test.go",
+              "file": "tests/integration/lab/teams_notification_and_feeds_policy/network_notification_test.go",
               "name": "TestAccNotificationAndFeedsPolicyReadOnly"
             }
           ]
@@ -8330,7 +8330,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/personal_recording_test.go",
+              "file": "tests/integration/lab/teams_personal_attendant_policy/personal_recording_test.go",
               "name": "TestAccPersonalAttendantPolicyReadOnly"
             }
           ]
@@ -8356,7 +8356,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/personal_recording_test.go",
+              "file": "tests/integration/lab/teams_personal_attendant_policy/personal_recording_test.go",
               "name": "TestAccPersonalAttendantPolicyReadOnly"
             }
           ]
@@ -8418,7 +8418,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/recording_messages_test.go",
+              "file": "tests/integration/lab/recording_messages/recording_messages_test.go",
               "name": "TestAccRecordingMessagesReadOnly"
             }
           ]
@@ -8444,7 +8444,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/recording_messages_test.go",
+              "file": "tests/integration/lab/recording_messages/recording_messages_test.go",
               "name": "TestAccRecordingMessagesReadOnly"
             }
           ]
@@ -8466,7 +8466,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/recording_messages_test.go",
+              "file": "tests/integration/lab/recording_messages/recording_messages_test.go",
               "name": "TestAccRecordingMessagesReadOnly"
             }
           ]
@@ -8530,7 +8530,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/personal_recording_test.go",
+              "file": "tests/integration/lab/teams_recording_roll_out_policy/personal_recording_test.go",
               "name": "TestAccRecordingRollOutPolicyReadOnly"
             }
           ]
@@ -8556,7 +8556,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/personal_recording_test.go",
+              "file": "tests/integration/lab/teams_recording_roll_out_policy/personal_recording_test.go",
               "name": "TestAccRecordingRollOutPolicyReadOnly"
             }
           ]
@@ -8703,7 +8703,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/room_shared_calling_test.go",
+              "file": "tests/integration/lab/teams_room_video_tele_conferencing_policy/room_shared_calling_test.go",
               "name": "TestAccRoomVideoTeleConferencingPolicyReadOnly"
             }
           ]
@@ -8729,7 +8729,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/room_shared_calling_test.go",
+              "file": "tests/integration/lab/teams_room_video_tele_conferencing_policy/room_shared_calling_test.go",
               "name": "TestAccRoomVideoTeleConferencingPolicyReadOnly"
             }
           ]
@@ -8823,7 +8823,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/room_shared_calling_test.go",
+              "file": "tests/integration/lab/teams_shared_calling_routing_policy/room_shared_calling_test.go",
               "name": "TestAccSharedCallingRoutingPolicyReadOnly"
             }
           ]
@@ -8849,7 +8849,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/room_shared_calling_test.go",
+              "file": "tests/integration/lab/teams_shared_calling_routing_policy/room_shared_calling_test.go",
               "name": "TestAccSharedCallingRoutingPolicyReadOnly"
             }
           ]
@@ -8911,7 +8911,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shifts_policies_test.go",
+              "file": "tests/integration/lab/teams_shifts_app_policy/shifts_policies_test.go",
               "name": "TestAccShiftsAppPolicyReadOnly"
             }
           ]
@@ -8937,7 +8937,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shifts_policies_test.go",
+              "file": "tests/integration/lab/teams_shifts_app_policy/shifts_policies_test.go",
               "name": "TestAccShiftsAppPolicyReadOnly"
             }
           ]
@@ -9378,7 +9378,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shifts_policies_test.go",
+              "file": "tests/integration/lab/teams_shifts_policy/shifts_policies_test.go",
               "name": "TestAccShiftsPolicyReadOnly"
             }
           ]
@@ -9404,7 +9404,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shifts_policies_test.go",
+              "file": "tests/integration/lab/teams_shifts_policy/shifts_policies_test.go",
               "name": "TestAccShiftsPolicyReadOnly"
             }
           ]
@@ -9466,7 +9466,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/sip_template_policy_test.go",
+              "file": "tests/integration/lab/teams_sip_devices_configuration/sip_template_policy_test.go",
               "name": "TestAccSipDevicesConfigurationReadOnly"
             }
           ]
@@ -9492,7 +9492,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/sip_template_policy_test.go",
+              "file": "tests/integration/lab/teams_sip_devices_configuration/sip_template_policy_test.go",
               "name": "TestAccSipDevicesConfigurationReadOnly"
             }
           ]
@@ -9636,7 +9636,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/targeting_test.go",
+              "file": "tests/integration/lab/targeting_policy/targeting_test.go",
               "name": "TestAccTargetingPolicyReadOnly"
             }
           ]
@@ -9666,7 +9666,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/targeting_test.go",
+              "file": "tests/integration/lab/targeting_policy/targeting_test.go",
               "name": "TestAccTargetingPolicyReadOnly"
             }
           ]
@@ -9726,7 +9726,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/sip_template_policy_test.go",
+              "file": "tests/integration/lab/teams_template_permission_policy/sip_template_policy_test.go",
               "name": "TestAccTemplatePermissionPolicyReadOnly"
             }
           ]
@@ -9752,7 +9752,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/sip_template_policy_test.go",
+              "file": "tests/integration/lab/teams_template_permission_policy/sip_template_policy_test.go",
               "name": "TestAccTemplatePermissionPolicyReadOnly"
             }
           ]
@@ -9814,7 +9814,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/tenant_abuse_update_test.go",
+              "file": "tests/integration/lab/teams_tenant_abuse_configuration/tenant_abuse_update_test.go",
               "name": "TestAccTenantAbuseConfigurationReadOnly"
             }
           ]
@@ -9840,7 +9840,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/tenant_abuse_update_test.go",
+              "file": "tests/integration/lab/teams_tenant_abuse_configuration/tenant_abuse_update_test.go",
               "name": "TestAccTenantAbuseConfigurationReadOnly"
             }
           ]
@@ -9980,7 +9980,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/tenant_abuse_update_test.go",
+              "file": "tests/integration/lab/teams_update_management_policy/tenant_abuse_update_test.go",
               "name": "TestAccUpdateManagementPolicyReadOnly"
             }
           ]
@@ -10006,7 +10006,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/tenant_abuse_update_test.go",
+              "file": "tests/integration/lab/teams_update_management_policy/tenant_abuse_update_test.go",
               "name": "TestAccUpdateManagementPolicyReadOnly"
             }
           ]
@@ -10068,7 +10068,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/upgrade_read_test.go",
+              "file": "tests/integration/lab/teams_upgrade_configuration/upgrade_read_test.go",
               "name": "TestAccUpgradeConfigurationReadOnly"
             }
           ]
@@ -10094,7 +10094,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/upgrade_read_test.go",
+              "file": "tests/integration/lab/teams_upgrade_configuration/upgrade_read_test.go",
               "name": "TestAccUpgradeConfigurationReadOnly"
             }
           ]
@@ -10156,7 +10156,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/upgrade_read_test.go",
+              "file": "tests/integration/lab/teams_upgrade_policy/upgrade_read_test.go",
               "name": "TestAccUpgradePolicyReadOnly"
             }
           ]
@@ -10182,7 +10182,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/upgrade_read_test.go",
+              "file": "tests/integration/lab/teams_upgrade_policy/upgrade_read_test.go",
               "name": "TestAccUpgradePolicyReadOnly"
             }
           ]
@@ -10244,7 +10244,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/vdi_virtual_read_test.go",
+              "file": "tests/integration/lab/teams_vdi_policy/vdi_virtual_read_test.go",
               "name": "TestAccVDIPolicyReadOnly"
             }
           ]
@@ -10270,7 +10270,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/vdi_virtual_read_test.go",
+              "file": "tests/integration/lab/teams_vdi_policy/vdi_virtual_read_test.go",
               "name": "TestAccVDIPolicyReadOnly"
             }
           ]
@@ -10371,7 +10371,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/vdi_virtual_read_test.go",
+              "file": "tests/integration/lab/teams_virtual_appointments_policy/vdi_virtual_read_test.go",
               "name": "TestAccVirtualAppointmentsPolicyReadOnly"
             }
           ]
@@ -10397,7 +10397,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/vdi_virtual_read_test.go",
+              "file": "tests/integration/lab/teams_virtual_appointments_policy/vdi_virtual_read_test.go",
               "name": "TestAccVirtualAppointmentsPolicyReadOnly"
             }
           ]
@@ -10459,7 +10459,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/voice_workload_read_test.go",
+              "file": "tests/integration/lab/teams_voice_applications_policy/voice_workload_read_test.go",
               "name": "TestAccVoiceApplicationsPolicyReadOnly"
             }
           ]
@@ -10485,7 +10485,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/voice_workload_read_test.go",
+              "file": "tests/integration/lab/teams_voice_applications_policy/voice_workload_read_test.go",
               "name": "TestAccVoiceApplicationsPolicyReadOnly"
             }
           ]
@@ -10547,7 +10547,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/voice_workload_read_test.go",
+              "file": "tests/integration/lab/teams_work_load_policy/voice_workload_read_test.go",
               "name": "TestAccWorkLoadPolicyReadOnly"
             }
           ]
@@ -10573,7 +10573,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/voice_workload_read_test.go",
+              "file": "tests/integration/lab/teams_work_load_policy/voice_workload_read_test.go",
               "name": "TestAccWorkLoadPolicyReadOnly"
             }
           ]
@@ -10674,7 +10674,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -10696,7 +10696,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -10748,7 +10748,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -10938,7 +10938,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/federation_test.go",
+              "file": "tests/integration/lab/tenant_federation_configuration/federation_test.go",
               "name": "TestAccTenantFederationConfigurationReadOnly"
             }
           ]
@@ -10968,7 +10968,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/federation_test.go",
+              "file": "tests/integration/lab/tenant_federation_configuration/federation_test.go",
               "name": "TestAccTenantFederationConfigurationReadOnly"
             }
           ]
@@ -11604,7 +11604,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/assignment_migration_test.go",
+              "file": "tests/integration/lab/assignment_migration/assignment_migration_test.go",
               "name": "TestAccAssignmentMigrationReadOnly"
             }
           ]
@@ -12035,7 +12035,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/deployment_migration_test.go",
+              "file": "tests/integration/lab/region/deployment_migration_test.go",
               "name": "TestAccMultiGeoRegionReadOnly"
             }
           ]
@@ -12131,7 +12131,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_operation_test.go",
+              "file": "tests/integration/lab/graph/team_operation_test.go",
               "name": "TestAccTeamOperationReadOnly"
             }
           ]
@@ -12199,7 +12199,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shared_channel_test.go",
+              "file": "tests/integration/lab/graph/shared_channel_test.go",
               "name": "TestAccSharedChannelReadOnly"
             }
           ]
@@ -12275,7 +12275,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shared_channel_test.go",
+              "file": "tests/integration/lab/graph/shared_channel_test.go",
               "name": "TestAccSharedChannelReadOnly"
             }
           ]
@@ -12363,7 +12363,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "file": "tests/integration/lab/graph/team_lifecycle_test.go",
               "name": "TestAccTeamLifecycle"
             }
           ]
@@ -12397,7 +12397,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "file": "tests/integration/lab/graph/team_lifecycle_test.go",
               "name": "TestAccTeamLifecycle"
             }
           ]
@@ -12477,7 +12477,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channel_test.go",
+              "file": "tests/integration/lab/graph/channel_test.go",
               "name": "TestAccChannelCRUD"
             }
           ]
@@ -12533,7 +12533,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channel_test.go",
+              "file": "tests/integration/lab/graph/channel_test.go",
               "name": "TestAccChannelCRUD"
             }
           ]
@@ -12601,7 +12601,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channel_membership_test.go",
+              "file": "tests/integration/lab/graph/channel_membership_test.go",
               "name": "TestAccChannelMembershipCRUD"
             }
           ]
@@ -12665,7 +12665,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channel_test.go",
+              "file": "tests/integration/lab/graph/channel_test.go",
               "name": "TestAccChannelCRUD"
             }
           ]
@@ -12821,7 +12821,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/targeting_test.go",
+              "file": "tests/integration/lab/targeting_hierarchy/targeting_test.go",
               "name": "TestAccTargetingHierarchyStatusReadOnly"
             }
           ]
@@ -12897,7 +12897,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_membership_test.go",
+              "file": "tests/integration/lab/graph/team_membership_test.go",
               "name": "TestAccTeamMembershipCRUD"
             }
           ]
@@ -12961,7 +12961,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/deployment_migration_test.go",
+              "file": "tests/integration/lab/private_channel_migration/deployment_migration_test.go",
               "name": "TestAccPrivateChannelMigrationReadOnly"
             }
           ]
@@ -17111,7 +17111,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/upgrade_grant_binding_test.go",
+              "file": "tests/integration/lab/teams_upgrade_policy/upgrade_grant_binding_test.go",
               "name": "TestAccUpgradeGrantMigrationBinding"
             }
           ]
@@ -17137,7 +17137,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/upgrade_grant_binding_test.go",
+              "file": "tests/integration/lab/teams_upgrade_policy/upgrade_grant_binding_test.go",
               "name": "TestAccUpgradeGrantMigrationBinding"
             }
           ]
@@ -17163,7 +17163,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/upgrade_grant_binding_test.go",
+              "file": "tests/integration/lab/teams_upgrade_policy/upgrade_grant_binding_test.go",
               "name": "TestAccUpgradeGrantMigrationBinding"
             }
           ]
@@ -18611,7 +18611,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/application_access_policy_test.go",
+              "file": "tests/integration/lab/application_access_policy/application_access_policy_test.go",
               "name": "TestAccApplicationAccessPolicyCRUD"
             }
           ]
@@ -19598,7 +19598,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/external_access_policy_test.go",
+              "file": "tests/integration/lab/external_access_policy/external_access_policy_test.go",
               "name": "TestAccExternalAccessPolicyCRUD"
             }
           ]
@@ -22397,7 +22397,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_meeting_policy/meeting_policy_crud_test.go",
               "name": "TestAccMeetingPolicyCRUD"
             }
           ]
@@ -22451,7 +22451,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_template_permission_crud_test.go",
+              "file": "tests/integration/lab/teams_meeting_template_permission_policy/meeting_template_permission_crud_test.go",
               "name": "TestAccMeetingTemplatePermissionPolicyCRUD"
             }
           ]
@@ -22505,7 +22505,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/messaging_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_messaging_policy/messaging_policy_crud_test.go",
               "name": "TestAccMessagingPolicyCRUD"
             }
           ]
@@ -22559,7 +22559,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/mobility_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_mobility_policy/mobility_policy_crud_test.go",
               "name": "TestAccMobilityPolicyCRUD"
             }
           ]
@@ -22668,7 +22668,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/roaming_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_network_roaming_policy/roaming_policy_crud_test.go",
               "name": "TestAccNetworkRoamingPolicyCRUD"
             }
           ]
@@ -22726,7 +22726,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/personal_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_personal_attendant_policy/personal_policy_crud_test.go",
               "name": "TestAccPersonalAttendantPolicyCRUD"
             }
           ]
@@ -22907,7 +22907,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/recording_rollout_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_recording_roll_out_policy/recording_rollout_policy_crud_test.go",
               "name": "TestAccRecordingRollOutPolicyCRUD"
             }
           ]
@@ -23004,7 +23004,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/room_video_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_room_video_tele_conferencing_policy/room_video_policy_crud_test.go",
               "name": "TestAccRoomVideoTeleConferencingPolicyCRUD"
             }
           ]
@@ -23062,7 +23062,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shared_calling_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_shared_calling_routing_policy/shared_calling_policy_crud_test.go",
               "name": "TestAccSharedCallingRoutingPolicyCRUD"
             }
           ]
@@ -23247,7 +23247,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shifts_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_shifts_policy/shifts_policy_crud_test.go",
               "name": "TestAccShiftsPolicyCRUD"
             }
           ]
@@ -23372,11 +23372,11 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "file": "tests/integration/lab/teams_template_permission_policy/template_permission_crud_test.go",
               "name": "TestAccTemplatePermissionPopulatedCRUD"
             },
             {
-              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "file": "tests/integration/lab/teams_template_permission_policy/template_permission_crud_test.go",
               "name": "TestAccTemplatePermissionPolicyCRUD"
             }
           ]
@@ -23508,7 +23508,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/update_management_crud_test.go",
+              "file": "tests/integration/lab/teams_update_management_policy/update_management_crud_test.go",
               "name": "TestAccUpdateManagementPolicyCRUD"
             }
           ]
@@ -23562,7 +23562,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/vdi_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_vdi_policy/vdi_policy_crud_test.go",
               "name": "TestAccVDIPolicyCRUD"
             }
           ]
@@ -23616,7 +23616,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/virtual_appointments_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_virtual_appointments_policy/virtual_appointments_policy_crud_test.go",
               "name": "TestAccVirtualAppointmentsPolicyCRUD"
             }
           ]
@@ -23670,7 +23670,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/voice_applications_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_voice_applications_policy/voice_applications_policy_crud_test.go",
               "name": "TestAccVoiceApplicationsPolicyCRUD"
             }
           ]
@@ -23728,7 +23728,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/work_load_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_work_load_policy/work_load_policy_crud_test.go",
               "name": "TestAccWorkLoadPolicyCRUD"
             }
           ]
@@ -23834,7 +23834,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -23872,7 +23872,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -23910,7 +23910,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -23948,7 +23948,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -24350,7 +24350,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "file": "tests/integration/lab/graph/team_lifecycle_test.go",
               "name": "TestAccTeamLifecycle"
             }
           ]
@@ -24392,7 +24392,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "file": "tests/integration/lab/graph/team_lifecycle_test.go",
               "name": "TestAccTeamLifecycle"
             }
           ]
@@ -24488,7 +24488,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channel_test.go",
+              "file": "tests/integration/lab/graph/channel_test.go",
               "name": "TestAccChannelCRUD"
             }
           ]
@@ -24691,7 +24691,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/application_access_policy_test.go",
+              "file": "tests/integration/lab/application_access_policy/application_access_policy_test.go",
               "name": "TestAccApplicationAccessPolicyCRUD"
             }
           ]
@@ -25019,7 +25019,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/external_access_policy_test.go",
+              "file": "tests/integration/lab/external_access_policy/external_access_policy_test.go",
               "name": "TestAccExternalAccessPolicyCRUD"
             }
           ]
@@ -27226,7 +27226,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_meeting_policy/meeting_policy_crud_test.go",
               "name": "TestAccMeetingPolicyCRUD"
             }
           ]
@@ -27280,7 +27280,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_template_permission_crud_test.go",
+              "file": "tests/integration/lab/teams_meeting_template_permission_policy/meeting_template_permission_crud_test.go",
               "name": "TestAccMeetingTemplatePermissionPolicyCRUD"
             }
           ]
@@ -27334,7 +27334,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/messaging_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_messaging_policy/messaging_policy_crud_test.go",
               "name": "TestAccMessagingPolicyCRUD"
             }
           ]
@@ -27388,7 +27388,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/mobility_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_mobility_policy/mobility_policy_crud_test.go",
               "name": "TestAccMobilityPolicyCRUD"
             }
           ]
@@ -27442,7 +27442,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/roaming_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_network_roaming_policy/roaming_policy_crud_test.go",
               "name": "TestAccNetworkRoamingPolicyCRUD"
             }
           ]
@@ -27496,7 +27496,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/notification_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_notification_and_feeds_policy/notification_policy_crud_test.go",
               "name": "TestAccNotificationAndFeedsPolicyCRUD"
             }
           ]
@@ -27550,7 +27550,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/personal_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_personal_attendant_policy/personal_policy_crud_test.go",
               "name": "TestAccPersonalAttendantPolicyCRUD"
             }
           ]
@@ -27676,7 +27676,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/recording_rollout_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_recording_roll_out_policy/recording_rollout_policy_crud_test.go",
               "name": "TestAccRecordingRollOutPolicyCRUD"
             }
           ]
@@ -27769,7 +27769,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/room_video_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_room_video_tele_conferencing_policy/room_video_policy_crud_test.go",
               "name": "TestAccRoomVideoTeleConferencingPolicyCRUD"
             }
           ]
@@ -27823,7 +27823,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shared_calling_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_shared_calling_routing_policy/shared_calling_policy_crud_test.go",
               "name": "TestAccSharedCallingRoutingPolicyCRUD"
             }
           ]
@@ -27994,7 +27994,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shifts_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_shifts_policy/shifts_policy_crud_test.go",
               "name": "TestAccShiftsPolicyCRUD"
             }
           ]
@@ -28202,11 +28202,11 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "file": "tests/integration/lab/teams_template_permission_policy/template_permission_crud_test.go",
               "name": "TestAccTemplatePermissionPopulatedCRUD"
             },
             {
-              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "file": "tests/integration/lab/teams_template_permission_policy/template_permission_crud_test.go",
               "name": "TestAccTemplatePermissionPolicyCRUD"
             }
           ]
@@ -28324,7 +28324,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/update_management_crud_test.go",
+              "file": "tests/integration/lab/teams_update_management_policy/update_management_crud_test.go",
               "name": "TestAccUpdateManagementPolicyCRUD"
             }
           ]
@@ -28378,7 +28378,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/vdi_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_vdi_policy/vdi_policy_crud_test.go",
               "name": "TestAccVDIPolicyCRUD"
             }
           ]
@@ -28432,7 +28432,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/virtual_appointments_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_virtual_appointments_policy/virtual_appointments_policy_crud_test.go",
               "name": "TestAccVirtualAppointmentsPolicyCRUD"
             }
           ]
@@ -28486,7 +28486,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/voice_applications_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_voice_applications_policy/voice_applications_policy_crud_test.go",
               "name": "TestAccVoiceApplicationsPolicyCRUD"
             }
           ]
@@ -28540,7 +28540,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/work_load_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_work_load_policy/work_load_policy_crud_test.go",
               "name": "TestAccWorkLoadPolicyCRUD"
             }
           ]
@@ -28626,7 +28626,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -28648,7 +28648,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -29048,7 +29048,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "file": "tests/integration/lab/graph/team_lifecycle_test.go",
               "name": "TestAccTeamLifecycle"
             }
           ]
@@ -29108,7 +29108,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channel_test.go",
+              "file": "tests/integration/lab/graph/channel_test.go",
               "name": "TestAccChannelCRUD"
             }
           ]
@@ -29192,7 +29192,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channel_membership_test.go",
+              "file": "tests/integration/lab/graph/channel_membership_test.go",
               "name": "TestAccChannelMembershipCRUD"
             }
           ]
@@ -29423,7 +29423,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_membership_test.go",
+              "file": "tests/integration/lab/graph/team_membership_test.go",
               "name": "TestAccTeamMembershipCRUD"
             }
           ]
@@ -29567,7 +29567,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/application_access_policy_test.go",
+              "file": "tests/integration/lab/application_access_policy/application_access_policy_test.go",
               "name": "TestAccApplicationAccessPolicyCRUD"
             }
           ]
@@ -29969,7 +29969,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/external_access_policy_test.go",
+              "file": "tests/integration/lab/external_access_policy/external_access_policy_test.go",
               "name": "TestAccExternalAccessPolicyCRUD"
             }
           ]
@@ -33430,7 +33430,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_meeting_policy/meeting_policy_crud_test.go",
               "name": "TestAccMeetingPolicyCRUD"
             }
           ]
@@ -33492,7 +33492,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/meeting_template_permission_crud_test.go",
+              "file": "tests/integration/lab/teams_meeting_template_permission_policy/meeting_template_permission_crud_test.go",
               "name": "TestAccMeetingTemplatePermissionPolicyCRUD"
             }
           ]
@@ -33554,7 +33554,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/configuration_update_test.go",
+              "file": "tests/integration/lab/teams_messaging_configuration/configuration_update_test.go",
               "name": "TestAccMessagingConfigurationUpdateRestore"
             }
           ]
@@ -33616,7 +33616,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/messaging_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_messaging_policy/messaging_policy_crud_test.go",
               "name": "TestAccMessagingPolicyCRUD"
             }
           ]
@@ -33678,7 +33678,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/configuration_update_test.go",
+              "file": "tests/integration/lab/teams_migration_configuration/configuration_update_test.go",
               "name": "TestAccMigrationConfigurationUpdateRestore"
             }
           ]
@@ -33740,7 +33740,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/mobility_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_mobility_policy/mobility_policy_crud_test.go",
               "name": "TestAccMobilityPolicyCRUD"
             }
           ]
@@ -33802,7 +33802,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/multi_tenant_update_test.go",
+              "file": "tests/integration/lab/teams_multi_tenant_organization_configuration/multi_tenant_update_test.go",
               "name": "TestAccMultiTenantOrganizationConfigurationUpdateRestore"
             }
           ]
@@ -33864,7 +33864,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/roaming_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_network_roaming_policy/roaming_policy_crud_test.go",
               "name": "TestAccNetworkRoamingPolicyCRUD"
             }
           ]
@@ -33926,7 +33926,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/notification_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_notification_and_feeds_policy/notification_policy_crud_test.go",
               "name": "TestAccNotificationAndFeedsPolicyCRUD"
             }
           ]
@@ -33988,7 +33988,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/personal_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_personal_attendant_policy/personal_policy_crud_test.go",
               "name": "TestAccPersonalAttendantPolicyCRUD"
             }
           ]
@@ -34142,7 +34142,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/recording_rollout_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_recording_roll_out_policy/recording_rollout_policy_crud_test.go",
               "name": "TestAccRecordingRollOutPolicyCRUD"
             }
           ]
@@ -34243,7 +34243,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/room_video_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_room_video_tele_conferencing_policy/room_video_policy_crud_test.go",
               "name": "TestAccRoomVideoTeleConferencingPolicyCRUD"
             }
           ]
@@ -34337,7 +34337,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shared_calling_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_shared_calling_routing_policy/shared_calling_policy_crud_test.go",
               "name": "TestAccSharedCallingRoutingPolicyCRUD"
             }
           ]
@@ -34399,7 +34399,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/configuration_update_test.go",
+              "file": "tests/integration/lab/teams_shifts_app_policy/configuration_update_test.go",
               "name": "TestAccShiftsAppPolicyUpdateRestore"
             }
           ]
@@ -34567,7 +34567,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/shifts_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_shifts_policy/shifts_policy_crud_test.go",
               "name": "TestAccShiftsPolicyCRUD"
             }
           ]
@@ -34629,7 +34629,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/sip_devices_update_test.go",
+              "file": "tests/integration/lab/teams_sip_devices_configuration/sip_devices_update_test.go",
               "name": "TestAccSipDevicesConfigurationUpdateRestore"
             }
           ]
@@ -34814,11 +34814,11 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "file": "tests/integration/lab/teams_template_permission_policy/template_permission_crud_test.go",
               "name": "TestAccTemplatePermissionPopulatedCRUD"
             },
             {
-              "file": "tests/integration/lab/template_permission_crud_test.go",
+              "file": "tests/integration/lab/teams_template_permission_policy/template_permission_crud_test.go",
               "name": "TestAccTemplatePermissionPolicyCRUD"
             }
           ]
@@ -34880,7 +34880,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/tenant_abuse_update_restore_test.go",
+              "file": "tests/integration/lab/teams_tenant_abuse_configuration/tenant_abuse_update_restore_test.go",
               "name": "TestAccTenantAbuseConfigurationUpdateRestore"
             }
           ]
@@ -35006,7 +35006,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/update_management_crud_test.go",
+              "file": "tests/integration/lab/teams_update_management_policy/update_management_crud_test.go",
               "name": "TestAccUpdateManagementPolicyCRUD"
             }
           ]
@@ -35068,7 +35068,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/upgrade_configuration_update_test.go",
+              "file": "tests/integration/lab/teams_upgrade_configuration/upgrade_configuration_update_test.go",
               "name": "TestAccUpgradeConfigurationUpdateRestore"
             }
           ]
@@ -35130,7 +35130,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/vdi_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_vdi_policy/vdi_policy_crud_test.go",
               "name": "TestAccVDIPolicyCRUD"
             }
           ]
@@ -35192,7 +35192,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/virtual_appointments_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_virtual_appointments_policy/virtual_appointments_policy_crud_test.go",
               "name": "TestAccVirtualAppointmentsPolicyCRUD"
             }
           ]
@@ -35254,7 +35254,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/voice_applications_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_voice_applications_policy/voice_applications_policy_crud_test.go",
               "name": "TestAccVoiceApplicationsPolicyCRUD"
             }
           ]
@@ -35316,7 +35316,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/work_load_policy_crud_test.go",
+              "file": "tests/integration/lab/teams_work_load_policy/work_load_policy_crud_test.go",
               "name": "TestAccWorkLoadPolicyCRUD"
             }
           ]
@@ -35984,7 +35984,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "file": "tests/integration/lab/graph/team_lifecycle_test.go",
               "name": "TestAccTeamLifecycle"
             }
           ]
@@ -36080,7 +36080,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "file": "tests/integration/lab/graph/team_lifecycle_test.go",
               "name": "TestAccTeamLifecycle"
             }
           ]
@@ -36160,7 +36160,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/channel_test.go",
+              "file": "tests/integration/lab/graph/channel_test.go",
               "name": "TestAccChannelCRUD"
             }
           ]
@@ -36228,7 +36228,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_lifecycle_test.go",
+              "file": "tests/integration/lab/graph/team_lifecycle_test.go",
               "name": "TestAccTeamLifecycle"
             }
           ]
@@ -36973,7 +36973,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -37011,7 +37011,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -37049,7 +37049,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]
@@ -37087,7 +37087,7 @@
           ],
           "live_tests": [
             {
-              "file": "tests/integration/lab/team_template_test.go",
+              "file": "tests/integration/lab/team_template/team_template_test.go",
               "name": "TestAccTeamTemplateCRUD"
             }
           ]

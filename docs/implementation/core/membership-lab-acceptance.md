@@ -40,7 +40,7 @@ MSTEAMS_LAB_READ_ONLY=1 \
 MSTEAMS_LAB_MUTATIONS=1 \
 MSTEAMS_LAB_CONSEQUENTIAL=1 \
 MSTEAMS_LAB_TIMEOUT_SECONDS=300 \
-go test -count=1 -run '^TestAccTeamMembershipCRUD$' ./tests/integration/lab
+go test -count=1 -run '^TestAccTeamMembershipCRUD$' ./tests/integration/lab/graph
 ```
 
 The command does not create a user, license an account, grant Graph consent or

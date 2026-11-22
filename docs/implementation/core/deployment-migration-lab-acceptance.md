@@ -36,9 +36,9 @@ A matching delegated PowerShell session/oracle remains further qualification.
 With explicitly selected private inputs, run only the intended case:
 
 ```sh
-go test -count=1 -run '^TestAccBatchDeploymentStatusReadOnly$' ./tests/integration/lab
-go test -count=1 -run '^TestAccPrivateChannelMigrationReadOnly$' ./tests/integration/lab
-go test -count=1 -run '^TestAccMultiGeoRegionReadOnly$' ./tests/integration/lab
+go test -count=1 -run '^TestAccBatchDeploymentStatusReadOnly$' ./tests/integration/lab/batch_deployment
+go test -count=1 -run '^TestAccPrivateChannelMigrationReadOnly$' ./tests/integration/lab/private_channel_migration
+go test -count=1 -run '^TestAccMultiGeoRegionReadOnly$' ./tests/integration/lab/region
 ```
 
 Never automate deployment submission merely to obtain a status fixture. Before

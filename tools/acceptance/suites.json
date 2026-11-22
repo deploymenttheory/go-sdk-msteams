@@ -12,7 +12,7 @@
   },
   "services": {
     "acs_federation_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/acs_federation_configuration",
       "steps": [
         {
           "id": "reads",
@@ -23,7 +23,7 @@
       ]
     },
     "application_access_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/application_access_policy",
       "steps": [
         {
           "id": "crud",
@@ -55,7 +55,7 @@
       ]
     },
     "application_meeting_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/application_meeting_configuration",
       "steps": [
         {
           "id": "reads",
@@ -66,7 +66,7 @@
       ]
     },
     "assignment_migration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/assignment_migration",
       "steps": [
         {
           "id": "tenant-access-outcomes",
@@ -77,7 +77,7 @@
       ]
     },
     "audio_conferencing_prompts": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/audio_conferencing_prompts",
       "steps": [
         {
           "id": "tenant-access-outcomes",
@@ -88,7 +88,7 @@
       ]
     },
     "external_access_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/external_access_policy",
       "steps": [
         {
           "id": "reads",
@@ -108,7 +108,7 @@
       ]
     },
     "meeting_branding": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/meeting_branding",
       "steps": [
         {
           "id": "reads",
@@ -128,7 +128,7 @@
       ]
     },
     "online_voicemail_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/online_voicemail_policy",
       "steps": [
         {
           "id": "reads",
@@ -148,7 +148,7 @@
       ]
     },
     "online_voicemail_validation_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/online_voicemail_validation_configuration",
       "steps": [
         {
           "id": "reads",
@@ -159,7 +159,7 @@
       ]
     },
     "platform": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/platform",
       "steps": [
         {
           "id": "reads",
@@ -171,7 +171,7 @@
       ]
     },
     "privacy_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/privacy_configuration",
       "steps": [
         {
           "id": "tenant-access-outcomes",
@@ -182,7 +182,7 @@
       ]
     },
     "recording_messages": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/recording_messages",
       "steps": [
         {
           "id": "reads",
@@ -193,7 +193,7 @@
       ]
     },
     "team_template": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/team_template",
       "steps": [
         {
           "id": "crud",
@@ -213,7 +213,7 @@
       ]
     },
     "teams_app_permission_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_app_permission_policy",
       "steps": [
         {
           "id": "reads",
@@ -233,7 +233,7 @@
       ]
     },
     "teams_app_setup_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_app_setup_policy",
       "steps": [
         {
           "id": "reads",
@@ -253,7 +253,7 @@
       ]
     },
     "teams_audio_conferencing_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_audio_conferencing_policy",
       "steps": [
         {
           "id": "reads",
@@ -273,7 +273,7 @@
       ]
     },
     "teams_call_hold_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_call_hold_policy",
       "steps": [
         {
           "id": "reads",
@@ -293,7 +293,7 @@
       ]
     },
     "teams_call_park_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_call_park_policy",
       "steps": [
         {
           "id": "reads",
@@ -313,7 +313,7 @@
       ]
     },
     "teams_calling_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_calling_policy",
       "steps": [
         {
           "id": "reads",
@@ -333,7 +333,7 @@
       ]
     },
     "teams_channels_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_channels_policy",
       "steps": [
         {
           "id": "reads",
@@ -353,7 +353,7 @@
       ]
     },
     "teams_client_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_client_configuration",
       "steps": [
         {
           "id": "reads",
@@ -364,7 +364,7 @@
       ]
     },
     "teams_cortana_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_cortana_policy",
       "steps": [
         {
           "id": "reads",
@@ -384,7 +384,7 @@
       ]
     },
     "teams_custom_banner_text": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_custom_banner_text",
       "steps": [
         {
           "id": "reads",
@@ -395,7 +395,7 @@
       ]
     },
     "teams_education_assignments_app_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_education_assignments_app_policy",
       "steps": [
         {
           "id": "reads",
@@ -406,7 +406,7 @@
       ]
     },
     "teams_education_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_education_configuration",
       "steps": [
         {
           "id": "reads",
@@ -417,7 +417,7 @@
       ]
     },
     "teams_enhanced_encryption_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_enhanced_encryption_policy",
       "steps": [
         {
           "id": "reads",
@@ -437,7 +437,7 @@
       ]
     },
     "teams_events_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_events_policy",
       "steps": [
         {
           "id": "reads",
@@ -457,7 +457,7 @@
       ]
     },
     "teams_external_access_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_external_access_configuration",
       "steps": [
         {
           "id": "reads",
@@ -468,7 +468,7 @@
       ]
     },
     "teams_feedback_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_feedback_policy",
       "steps": [
         {
           "id": "reads",
@@ -488,7 +488,7 @@
       ]
     },
     "teams_files_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_files_policy",
       "steps": [
         {
           "id": "reads",
@@ -508,7 +508,7 @@
       ]
     },
     "teams_meeting_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_meeting_policy",
       "steps": [
         {
           "id": "reads",
@@ -528,7 +528,7 @@
       ]
     },
     "teams_meeting_template_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_meeting_template_configuration",
       "steps": [
         {
           "id": "reads",
@@ -539,7 +539,7 @@
       ]
     },
     "teams_meeting_template_permission_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_meeting_template_permission_policy",
       "steps": [
         {
           "id": "reads",
@@ -568,7 +568,7 @@
       ]
     },
     "teams_messaging_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_messaging_configuration",
       "steps": [
         {
           "id": "global-reads",
@@ -589,7 +589,7 @@
       ]
     },
     "teams_messaging_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_messaging_policy",
       "steps": [
         {
           "id": "reads",
@@ -609,7 +609,7 @@
       ]
     },
     "teams_migration_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_migration_configuration",
       "steps": [
         {
           "id": "global-reads",
@@ -630,7 +630,7 @@
       ]
     },
     "teams_mobility_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_mobility_policy",
       "steps": [
         {
           "id": "reads",
@@ -650,7 +650,7 @@
       ]
     },
     "teams_multi_tenant_organization_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_multi_tenant_organization_configuration",
       "steps": [
         {
           "id": "global-reads",
@@ -671,7 +671,7 @@
       ]
     },
     "teams_network_roaming_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_network_roaming_policy",
       "steps": [
         {
           "id": "reads",
@@ -691,7 +691,7 @@
       ]
     },
     "teams_notification_and_feeds_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_notification_and_feeds_policy",
       "steps": [
         {
           "id": "reads",
@@ -711,7 +711,7 @@
       ]
     },
     "teams_personal_attendant_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_personal_attendant_policy",
       "steps": [
         {
           "id": "reads",
@@ -731,7 +731,7 @@
       ]
     },
     "teams_recording_roll_out_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_recording_roll_out_policy",
       "steps": [
         {
           "id": "reads",
@@ -751,7 +751,7 @@
       ]
     },
     "teams_room_video_tele_conferencing_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_room_video_tele_conferencing_policy",
       "steps": [
         {
           "id": "reads",
@@ -771,7 +771,7 @@
       ]
     },
     "teams_shared_calling_routing_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_shared_calling_routing_policy",
       "steps": [
         {
           "id": "reads",
@@ -800,7 +800,7 @@
       ]
     },
     "teams_shifts_app_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_shifts_app_policy",
       "steps": [
         {
           "id": "global-reads",
@@ -821,7 +821,7 @@
       ]
     },
     "teams_shifts_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_shifts_policy",
       "steps": [
         {
           "id": "reads",
@@ -841,7 +841,7 @@
       ]
     },
     "teams_sip_devices_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_sip_devices_configuration",
       "steps": [
         {
           "id": "global-reads",
@@ -862,7 +862,7 @@
       ]
     },
     "teams_template_permission_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_template_permission_policy",
       "steps": [
         {
           "id": "reads",
@@ -891,7 +891,7 @@
       ]
     },
     "teams_tenant_abuse_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_tenant_abuse_configuration",
       "steps": [
         {
           "id": "tenant-access-outcomes",
@@ -918,7 +918,7 @@
       ]
     },
     "teams_update_management_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_update_management_policy",
       "steps": [
         {
           "id": "reads",
@@ -938,7 +938,7 @@
       ]
     },
     "teams_upgrade_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_upgrade_configuration",
       "steps": [
         {
           "id": "global-reads",
@@ -959,7 +959,7 @@
       ]
     },
     "teams_upgrade_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_upgrade_policy",
       "steps": [
         {
           "id": "reads",
@@ -971,7 +971,7 @@
       ]
     },
     "teams_vdi_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_vdi_policy",
       "steps": [
         {
           "id": "reads",
@@ -991,7 +991,7 @@
       ]
     },
     "teams_virtual_appointments_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_virtual_appointments_policy",
       "steps": [
         {
           "id": "reads",
@@ -1011,7 +1011,7 @@
       ]
     },
     "teams_voice_applications_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_voice_applications_policy",
       "steps": [
         {
           "id": "reads",
@@ -1031,7 +1031,7 @@
       ]
     },
     "teams_work_load_policy": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/teams_work_load_policy",
       "steps": [
         {
           "id": "reads",
@@ -1051,7 +1051,7 @@
       ]
     },
     "tenant_federation_configuration": {
-      "package": "./tests/integration/lab",
+      "package": "./tests/integration/lab/tenant_federation_configuration",
       "steps": [
         {
           "id": "reads",

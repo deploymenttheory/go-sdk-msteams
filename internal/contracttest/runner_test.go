@@ -291,7 +291,7 @@ func TestUnitRunPermanentServiceTestdataSources(t *testing.T) {
 		{name: "graph service", source: "msteams/graph_api/channel/testdata/channel.json"},
 		{name: "administration service pointer", source: "msteams/teams_admin_api/application_access_policy/testdata/policy.json#/body"},
 		{name: "service Go test vectors", source: "msteams/graph_api/channel/service_test.go"},
-		{name: "adversarial recovery vectors", source: "tests/integration/lab/team_lifecycle_cleanup_test.go"},
+		{name: "adversarial recovery vectors", source: "tests/integration/lab/graph/team_lifecycle_cleanup_test.go"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()

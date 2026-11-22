@@ -12,7 +12,7 @@ and consequential opt-ins unset. Normal repository tests skip live reads.
 The selected family can be run with:
 
 ```sh
-go test -count=1 -run '^TestAccAudioConferencingPromptsReadOnly$' -v ./tests/integration/lab
+go test -count=1 -run '^TestAccAudioConferencingPromptsReadOnly$' -v ./tests/integration/lab/audio_conferencing_prompts
 ```
 
 On 2026-11-21 both actual credential modes reached the selected resource and
