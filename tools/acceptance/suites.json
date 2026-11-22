@@ -36,7 +36,9 @@
       "TestAccMessagingPolicyReadOnly",
       "TestAccMeetingTemplateConfigurationReadOnly",
       "TestAccMeetingTemplatePermissionReadOnly",
-      "TestAccMobilityPolicyReadOnly"
+      "TestAccMobilityPolicyReadOnly",
+      "TestAccNetworkRoamingPolicyReadOnly",
+      "TestAccNotificationAndFeedsPolicyReadOnly"
     ]
   },
   "owned-policy-crud": {
@@ -62,7 +64,8 @@
       "TestAccMeetingPolicyCRUD",
       "TestAccMessagingPolicyCRUD",
       "TestAccMeetingTemplatePermissionPolicyCRUD",
-      "TestAccMobilityPolicyCRUD"
+      "TestAccMobilityPolicyCRUD",
+      "TestAccNetworkRoamingPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1
@@ -135,6 +138,15 @@
       "TestAccMessagingConfigurationUpdateRestore",
       "TestAccMigrationConfigurationUpdateRestore",
       "TestAccMultiTenantOrganizationConfigurationUpdateRestore"
+    ]
+  },
+  "owned-notification-policy": {
+    "package": "./tests/integration/lab",
+    "mutation": true,
+    "proof": "owned-notification-crud",
+    "journal_entries_per_test": 1,
+    "tests": [
+      "TestAccNotificationAndFeedsPolicyCRUD"
     ]
   }
 }

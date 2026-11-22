@@ -44,6 +44,7 @@ TEMPLATE_MARKERS = [
 TEMPLATE_ORACLE = 'PowerShell 8.1.0 / Go template read parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
+    'owned-notification-crud': (PROOF_MARKERS + ['notification explicit-null update/read-back: passed'], ORACLE_MARKER, 3),
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
     'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
     'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
@@ -92,6 +93,16 @@ FAILURE_REASONS = (
     'multi-tenant configuration update did not persist',
     'multi-tenant original setting restoration failed',
     'multi-tenant original state not independently restored',
+    'pinned roaming policy projection unavailable',
+    'pinned notification policy projection unavailable',
+    'SDK and PowerShell NetworkRoaming policy projections differ',
+    'SDK and PowerShell notification policy projections differ',
+    'NetworkRoaming non-default create read-back did not converge',
+    'NetworkRoaming update or omitted-field preservation did not converge',
+    'notification non-default create read-back did not converge',
+    'notification update or omitted-field preservation did not converge',
+    'notification explicit-null description update failed',
+    'notification explicit-null read-back did not converge',
 )
 FEDERATION_CASES = {'external-policy', 'acs', 'external-users', 'tenant'}
 
