@@ -50,7 +50,9 @@
       "TestAccFeedbackPolicyCRUD",
       "TestAccFilesPolicyCRUD",
       "TestAccOnlineVoicemailPolicyCRUD",
-      "TestAccAudioConferencingPolicyCRUD"
+      "TestAccAudioConferencingPolicyCRUD",
+      "TestAccAppPermissionPolicyCRUD",
+      "TestAccAppSetupPolicyCRUD"
     ],
     "proof": "owned-crud",
     "journal_entries_per_test": 1

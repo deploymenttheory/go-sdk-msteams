@@ -16,7 +16,7 @@ read-only jobs run in parallel.
 The certificate/client-secret matrix executes the explicit selections in
 [suites.json](suites.json): authentication, 22 resource read tests, preflight,
 service discovery, three tenant access-outcome checks, and owned unassigned
-application-access, external-access, calling, call-hold, call-park, channels, Cortana, events, enhanced-encryption, feedback, files, online-voicemail and audio-conferencing policy CRUD. A separate owned-user suite assigns and clears an application-access
+application-access, external-access, calling, call-hold, call-park, channels, Cortana, events, enhanced-encryption, feedback, files, online-voicemail, audio-conferencing, app-permission and app-setup policy CRUD. A separate owned-user suite assigns and clears an application-access
 policy on the dedicated SDK user. An owned-group suite creates, updates, deletes
 and grants an application-access assignment on the dedicated empty security group.
 The matrix separates `reads` and `writes` for each authentication method.
@@ -100,7 +100,7 @@ group restoration prevents policy deletion. No tenant-default assignment changes
 ## Test results and interrupted-run recovery
 
 The job summary lists failed test names, their HTTP status codes and allowlisted
-fixed federation assertion reasons. Raw output and dynamic names remain private. Missing
+fixed federation/voicemail assertion reasons. Raw output and dynamic names remain private. Missing
 credentials name the repository secret that needs fixing.
 
 Uploaded JSON contains checked-out revision, auth method, exact selected test

@@ -70,3 +70,20 @@ data. Application/delegated synthetic modes prove routing, not tenant roles,
 cloud/feature support, full shell/Newtonsoft coercion or effective layout.
 Qualification remains open under #105. See [unit tests](service_test.go)
 and the [lab plan](../../../docs/implementation/policies/teams-app-setup-policy-lab-acceptance.md).
+
+### Executed owned policy CRUD
+
+`TestAccAppSetupPolicyCRUD` passed with certificate and client-secret authentication.
+Each workflow creates an owned unassigned policy, verifies non-default read-back,
+updates Description sparsely, checks list presence and independently verifies
+selected HTTP404 and list absence after deletion. Two pinned public MicrosoftTeams
+8.1.0 reads match the complete known scalar/collection getter projection.
+Description changes while the explicitly disabled `AllowUserPinning` setting
+remains unchanged.
+
+Actual HTTP201/204, created/updated, owned-list and deleted404 responses supply
+`TestUnitOwnedCRUDUsesAcceptanceResponses`. It checks exact requests, native Set
+preparation/acceptance, typed settings, complete raw snapshots and preservation
+of every omitted app collection. CI requires all CRUD assertions, both pinned
+comparisons and one cleaned journal entry. Global, policy assignments, installed
+apps, collection-edit variants and effective user behavior remain separate tests.

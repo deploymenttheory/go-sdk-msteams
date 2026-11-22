@@ -58,6 +58,20 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.assertNotIn('MSTEAMS_LAB_TENANT_ID', str(failure.exception))
         self.assertNotIn('private-tenant-value', str(failure.exception))
 
+    def test_voicemail_failure_keeps_the_assertion_without_raw_output(self):
+        name = 'TestAccOnlineVoicemailReadOnly'
+        reason = 'pinned voicemail projection unavailable'
+        report = ci.evaluate([
+            {'Test': name, 'Action': 'output', 'Output': reason + ': private-response'},
+            {'Test': name, 'Action': 'fail'},
+        ], [name], 1)
+        report.update(suite='resource-reads', auth_method='client-secret')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            ci.print_report(report)
+        self.assertIn(name + ': ' + reason, output.getvalue())
+        self.assertNotIn('private-response', output.getvalue() + json.dumps(report))
+
     def test_failure_reason_keeps_fixed_assertion_and_public_case_only(self):
         name = 'TestAccFederationReadOnly'
         reason = 'pinned federation read oracle failed; no output retained'
@@ -139,6 +153,39 @@ class AcceptanceGuardTests(unittest.TestCase):
         report = json.dumps(ci.evaluate(events, ['TestAccRead'], 0))
         self.assertNotIn('private-', report)
         self.assertIn('passed', report)
+
+    def test_files_oracle_failure_retains_fixed_reason_and_stage(self):
+        name = 'TestAccFilesPolicyCRUD'
+        reason = 'pinned files policy projection unavailable'
+        events = [
+            {'Test': name, 'Action': 'output', 'Output': 'oracle failure stage: read private-response'},
+            {'Test': name, 'Action': 'output', 'Output': reason + ' private-token'},
+            {'Test': name, 'Action': 'fail'},
+        ]
+        report = ci.evaluate(events, [name], 1)
+        self.assertEqual(report['failure_reasons'][name], ['oracle failure stage: read', reason])
+        self.assertNotIn('private-', json.dumps(report))
+
+    def test_assertion_catalog_excludes_format_arguments_and_dynamic_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'resource_test.go').write_text('''package resource
+func TestAccRead(t *testing.T) {
+ t.Fatalf("policy parity differs for %s: %v", privateID, privateResponse)
+ t.Fatal("policy parity differs")
+ t.Log("private-log-message")
+}
+''')
+            reasons = ci.assertion_reasons(root)
+            self.assertIn('policy parity differs for', reasons)
+            self.assertNotIn('private-log-message', reasons)
+            with patch.object(ci, 'assertion_reasons', return_value=reasons):
+                report = ci.evaluate([
+                    {'Test': 'TestAccRead', 'Action': 'output', 'Output': 'resource_test.go:3: policy parity differs for private-id: private-response'},
+                    {'Test': 'TestAccRead', 'Action': 'fail'},
+                ], ['TestAccRead'], 1)
+            self.assertEqual(report['failure_reasons']['TestAccRead'], ['policy parity differs for'])
+            self.assertNotIn('private-', json.dumps(report))
 
     def test_mutation_cannot_pass_without_a_new_cleaned_journal(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -341,39 +388,6 @@ class AcceptanceGuardTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     ci.finalize(argparse.Namespace(report_directory=root / 'reports'))
             self.assertTrue(private.exists())
-
-    def test_files_oracle_failure_retains_fixed_reason_and_stage(self):
-        name = 'TestAccFilesPolicyCRUD'
-        reason = 'pinned files policy projection unavailable'
-        events = [
-            {'Test': name, 'Action': 'output', 'Output': 'oracle failure stage: read private-response'},
-            {'Test': name, 'Action': 'output', 'Output': reason + ' private-token'},
-            {'Test': name, 'Action': 'fail'},
-        ]
-        report = ci.evaluate(events, [name], 1)
-        self.assertEqual(report['failure_reasons'][name], ['oracle failure stage: read', reason])
-        self.assertNotIn('private-', json.dumps(report))
-
-    def test_assertion_catalog_excludes_format_arguments_and_dynamic_output(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            (root / 'resource_test.go').write_text('''package resource
-func TestAccRead(t *testing.T) {
- t.Fatalf("policy parity differs for %s: %v", privateID, privateResponse)
- t.Fatal("policy parity differs")
- t.Log("private-log-message")
-}
-''')
-            reasons = ci.assertion_reasons(root)
-            self.assertIn('policy parity differs for', reasons)
-            self.assertNotIn('private-log-message', reasons)
-            with patch.object(ci, 'assertion_reasons', return_value=reasons):
-                report = ci.evaluate([
-                    {'Test': 'TestAccRead', 'Action': 'output', 'Output': 'resource_test.go:3: policy parity differs for private-id: private-response'},
-                    {'Test': 'TestAccRead', 'Action': 'fail'},
-                ], ['TestAccRead'], 1)
-            self.assertEqual(report['failure_reasons']['TestAccRead'], ['policy parity differs for'])
-            self.assertNotIn('private-', json.dumps(report))
 
 
 if __name__ == '__main__':
