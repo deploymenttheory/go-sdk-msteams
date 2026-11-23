@@ -44,18 +44,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
+      services: ${{ steps.plan.outputs.services }}
       services_unlocked: ${{ steps.plan.outputs.services_unlocked }}
       services_locked: ${{ steps.plan.outputs.services_locked }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           persist-credentials: false
+          # The PR merge commit and its base parent, for the changed-file plan.
+          fetch-depth: 2
       - name: Check TestUnit and TestAcc names
         run: |
           python3 tools/acceptance/ci.py check-names
           python3 -m unittest discover -s tools/acceptance/tests -v
       - name: Plan auth and service partitions
         id: plan
+        env:
+          # Pull requests run only the service partitions they touch (all of
+          # them for shared changes); pushes to main run every partition.
+          MSTEAMS_ACC_DIFF_BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || '' }}
         run: python3 tools/acceptance/ci.py plan
 
   # The one auth partition loads every credential kind and proves each
@@ -178,6 +185,7 @@ jobs:
         if: always()
         env:
           PLAN_RESULT: ${{ needs.plan.result }}
+          MSTEAMS_ACC_PLANNED_SERVICES: ${{ needs.plan.outputs.services }}
           JOB_RESULTS: ${{ needs.auth.result }} ${{ needs.services.result }} ${{ needs.services-locked.result }}
         run: |
           if [ "$PLAN_RESULT" = skipped ]; then

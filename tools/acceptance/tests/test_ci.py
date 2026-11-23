@@ -693,6 +693,54 @@ func TestAccRead(t *testing.T) {
                 with patch.dict(os.environ, {'MSTEAMS_ACC_SERVICES': 'teams_unknown'}), self.assertRaises(ci.AcceptanceFailure):
                     ci.plan(argparse.Namespace())
 
+    def test_pull_requests_plan_only_the_services_they_touch(self):
+        lab = './tests/integration/lab/'
+        fixture = {'auth': registry()['auth'], 'services': {
+            'platform': {'package': lab + 'platform', 'steps': [{'id': 'reads', 'tests': ['TestAccRead']}]},
+            'schedules': {'package': lab + 'schedules', 'steps': [{'id': 'reads', 'tests': ['TestAccSchedule']}]},
+            'region': {'package': lab + 'region', 'steps': [{'id': 'reads', 'tests': ['TestAccRegion']}]}}}
+        base = json.loads(json.dumps(fixture))
+        changed = lambda *files, base=base, references=None: ci.changed_services(fixture, list(files), base, references)
+        self.assertEqual(changed('docs/x.md', 'tools/acceptance/ci.py', 'contracts/coverage/8.1.0.json',
+                                 'msteams/teams_admin_api/services.go', 'tests/integration/lab/recovery/recovery_test.go',
+                                 'msteams/auth/scoped_test.go'), [])
+        self.assertEqual(changed('tests/integration/lab/schedules/schedules_test.go'), ['schedules'])
+        self.assertEqual(changed('msteams/teams_admin_api/region/service.go'), ['region'])
+        self.assertEqual(changed('msteams/teams_admin_api/region_extra/service.go'), [])
+        self.assertEqual(changed('tests/integration/lab/oracle/read-schedule.ps1', references={'schedules': ['read-schedule.ps1']}), ['schedules'])
+        edited = json.loads(json.dumps(fixture))
+        edited['services']['platform']['steps'][0]['tests'].append('TestAccOther')
+        self.assertEqual(ci.changed_services(fixture, ['tools/acceptance/suites.json'], edited), ['platform'])
+        self.assertEqual(ci.changed_services(fixture, ['tools/acceptance/suites.json'], {}), ['platform', 'schedules', 'region'])
+        for shared in ['go.mod', 'internal/policyrp/resource.go', 'tests/integration/lab/internal/labkit/fixtures.go',
+                       'msteams/client.go', 'msteams/client/request.go', 'msteams/teams_admin_api/batch.go',
+                       'msteams/teams_admin_api/internal/configapi/client.go', 'msteams/teams_admin_api/policy/service.go',
+                       '.github/workflows/tenant-acceptance.yml', 'tests/integration/auth/auth_test.go']:
+            self.assertEqual(changed(shared), ['platform', 'schedules', 'region'], shared)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            output = root / 'github-output'
+            (root / 'suites.json').write_text(json.dumps(fixture))
+            env = {'GITHUB_OUTPUT': str(output), 'MSTEAMS_ACC_DIFF_BASE': 'HEAD^1'}
+            with patch.object(ci, 'HERE', root), patch.object(ci, 'pull_request_services', return_value=['region']) as diff, \
+                    patch.dict(os.environ, env, clear=True), contextlib.redirect_stdout(io.StringIO()):
+                ci.plan(argparse.Namespace())
+                lines = dict(line.split('=', 1) for line in output.read_text().splitlines())
+                self.assertEqual((json.loads(lines['services']), json.loads(lines['services_unlocked'])), (['region'], ['region']))
+                diff.assert_called_once_with(fixture, 'HEAD^1')
+                output.write_text('')
+                # A dispatch selection overrides the changed-file plan.
+                with patch.dict(os.environ, {'MSTEAMS_ACC_SERVICES': 'platform'}):
+                    ci.plan(argparse.Namespace())
+                self.assertEqual(json.loads(dict(line.split('=', 1) for line in output.read_text().splitlines())['services']), ['platform'])
+                # The result job summarizes exactly the planned services, even none.
+                with patch.dict(os.environ, {'MSTEAMS_ACC_PLANNED_SERVICES': '[]'}):
+                    self.assertEqual(ci.selected_services(fixture), [])
+                with patch.dict(os.environ, {'MSTEAMS_ACC_PLANNED_SERVICES': '["schedules"]'}):
+                    self.assertEqual(ci.selected_services(fixture), ['schedules'])
+                with patch.dict(os.environ, {'MSTEAMS_ACC_PLANNED_SERVICES': '["nope"]'}), self.assertRaises(ci.AcceptanceFailure):
+                    ci.selected_services(fixture)
+
     def test_registry_rejects_unordered_unknown_or_unchecked_partitions(self):
         base = registry({'id': 'reads', 'tests': ['TestAccRead']}, service='platform', package='./tests/integration/lab/platform')
         ci.validate_registry(base)

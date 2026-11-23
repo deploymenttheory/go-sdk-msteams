@@ -536,21 +536,99 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None, exp
 
 
 def selected_services(registry):
-    """Services named by MSTEAMS_ACC_SERVICES (a dispatch rerun), else all."""
-    names = {value for value in re.split(r'[\s,]+', os.environ.get('MSTEAMS_ACC_SERVICES', '').strip()) if value}
+    """Services the plan job selected, else those named by MSTEAMS_ACC_SERVICES
+    (a dispatch rerun), else all."""
     services = registry.get('services', {})
+    planned = os.environ.get('MSTEAMS_ACC_PLANNED_SERVICES', '').strip()
+    if planned:
+        names = set(json.loads(planned))
+        if names - set(services):
+            raise AcceptanceFailure('Planned acceptance services must name registered service partitions exactly.')
+        return [name for name in services if name in names]
+    names = {value for value in re.split(r'[\s,]+', os.environ.get('MSTEAMS_ACC_SERVICES', '').strip()) if value}
     if names - set(services):
         raise AcceptanceFailure('Acceptance service selections must name registered service partitions exactly.')
     return [name for name in services if not names or name in names]
 
 
+# A pull request that changes any of these runs every service partition:
+# they are shared by all clients, lab tests or tenant setup.
+SHARED_PATTERNS = [re.compile(pattern) for pattern in [
+    r'^go\.(mod|sum)$',
+    r'^\.github/workflows/tenant-acceptance\.yml$',
+    r'^tools/baseline/',
+    r'^internal/',
+    r'^tests/integration/(auth|lab/internal)/',
+    r'^msteams/[^/]+\.go$',
+    r'^msteams/(auth|client|config|capabilities|internal)/',
+    r'^msteams/[^/]+/(?!services\.go$)[^/]+\.go$',
+    r'^msteams/[^/]+/(internal|policy)/',
+]]
+
+
+def changed_services(registry, files, base_registry, references=None):
+    """The service partitions a pull request touches.
+
+    A service is touched by a change to its lab test package, an SDK package
+    of the same name, its suites.json entry, or a PowerShell oracle script its
+    lab tests reference. A shared change (SHARED_PATTERNS) touches every
+    service; unit test files in shared packages do not. ci.py, ledger, docs and
+    services.go wiring changes touch none:
+    unit tests cover them, and pushes to main still run every partition."""
+    services = registry.get('services', {})
+    if any(pattern.search(path) for path in files if not path.endswith('_test.go') for pattern in SHARED_PATTERNS):
+        return list(services)
+    base_services = base_registry.get('services', {})
+    references = references or {}
+    oracles = {Path(path).name for path in files if path.startswith('tests/integration/lab/oracle/')}
+    selected = []
+    for name, entry in services.items():
+        package = entry['package'].removeprefix('./').rstrip('/') + '/'
+        sdk = re.compile(r'^msteams/[^/]+/' + re.escape(name) + '/')
+        if (entry != base_services.get(name)
+                or any(path.startswith(package) or sdk.search(path) for path in files)
+                or oracles & set(references.get(name, ()))):
+            selected.append(name)
+    return selected
+
+
+def oracle_references(registry):
+    """Oracle script names each service's lab test package mentions."""
+    references = {}
+    scripts = [path.name for path in (ROOT / 'tests/integration/lab/oracle').glob('*.ps1')]
+    for name, entry in registry.get('services', {}).items():
+        sources = ''.join(path.read_text() for path in (ROOT / entry['package']).glob('*.go'))
+        references[name] = [script for script in scripts if script in sources]
+    return references
+
+
+def pull_request_services(registry, base):
+    """Services changed between base (the PR merge commit's base parent) and HEAD."""
+    def git(*command):
+        return subprocess.run(['git', *command], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    files = [line for line in git('diff', '--name-only', base, 'HEAD').splitlines() if line]
+    try:
+        base_registry = json.loads(git('show', base + ':tools/acceptance/suites.json'))
+    except (subprocess.CalledProcessError, json.JSONDecodeError):
+        base_registry = {}
+    return changed_services(registry, files, base_registry, oracle_references(registry))
+
+
 def plan(args):
-    """Emit the service job matrices: locked and unlocked partitions."""
+    """Emit the service job matrices: locked and unlocked partitions.
+
+    A pull request (MSTEAMS_ACC_DIFF_BASE set) plans only the services it
+    touches, so concurrent PRs don't overflow the tenant-wide lock queue."""
     registry = load_registry()
     validate_registry(registry)
     services = selected_services(registry)
+    base = os.environ.get('MSTEAMS_ACC_DIFF_BASE', '').strip()
+    if base and not os.environ.get('MSTEAMS_ACC_SERVICES', '').strip():
+        changed = set(pull_request_services(registry, base))
+        services = [name for name in services if name in changed]
     entries = registry['services']
     outputs = {
+        'services': services,
         'services_unlocked': [name for name in services if not service_locked(entries[name])],
         'services_locked': [name for name in services if service_locked(entries[name])],
     }
