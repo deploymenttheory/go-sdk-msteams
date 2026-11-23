@@ -1,0 +1,12 @@
+{
+  "CallableEntity": {
+    "Id": "fixture-record-d480caa6",
+    "Type": "ExternalPstn",
+    "DisplayName": null,
+    "EnableTranscription": false,
+    "EnableSharedVoicemailSystemPromptSuppression": false,
+    "ConfigurationEndpointType": null,
+    "SharedVoicemailHistoryTemplateId": null
+  },
+  "Diagnostics": []
+}

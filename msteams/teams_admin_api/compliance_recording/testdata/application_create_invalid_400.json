@@ -1,0 +1,15 @@
+{
+  "code": "ClientError",
+  "message": "Fixture message",
+  "action": "Please refer to documentation. CorrelationId: 00000000-0000-4000-8000-85f05a53a017",
+  "errorCode": 40013,
+  "innerError": {
+    "ErrorCode": "ErrorComplianceRecordingApplicationIdentityNotAValidAppInstance",
+    "ErrorCodeMetadata": {
+      "ParameterList": [
+        "T",
+        "00000000-0000-4000-8000-000000000001"
+      ]
+    }
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "assignedPlans": [
+    {
+      "servicePlanId": "00000000-0000-4000-8000-5c30c90cd6e2",
+      "subscribedPlanId": "00000000-0000-4000-8000-1a44e78bf855",
+      "assignedTimestamp": "2026-11-20T10:13:34Z",
+      "capabilityStatus": "Enabled",
+      "capability": "Teams",
+      "isInGracePeriod": false
+    },
+    {
+      "servicePlanId": "00000000-0000-4000-8000-7fb850d8579b",
+      "subscribedPlanId": "00000000-0000-4000-8000-18ed942c6e59",
+      "assignedTimestamp": "2026-11-20T10:13:34Z",
+      "capabilityStatus": "Enabled",
+      "capability": "MICROSOFT_TEAMS_EVENTS",
+      "isInGracePeriod": false
+    },
+    {
+      "servicePlanId": "00000000-0000-4000-8000-8557905e2aca",
+      "subscribedPlanId": "00000000-0000-4000-8000-ede0288b3c6b",
+      "assignedTimestamp": "2026-11-20T10:13:34Z",
+      "capabilityStatus": "Enabled",
+      "capability": "MCO_TEAMS_IW",
+      "isInGracePeriod": false
+    },
+    {
+      "servicePlanId": "00000000-0000-4000-8000-dc00ffe29c0c",
+      "subscribedPlanId": "00000000-0000-4000-8000-9a978d10ba95",
+      "assignedTimestamp": "2019-10-09T12:09:07Z",
+      "capabilityStatus": "Enabled",
+      "capability": "MCOProfessional",
+      "isInGracePeriod": false
+    },
+    {
+      "servicePlanId": "00000000-0000-4000-8000-62e6324830d2",
+      "subscribedPlanId": "00000000-0000-4000-8000-7b716af85bd3",
+      "assignedTimestamp": "2021-05-29T07:27:59Z",
+      "capabilityStatus": "Enabled",
+      "capability": "MCOPSTNPP",
+      "isInGracePeriod": false
+    }
+  ],
+  "city": "Fixture city",
+  "companyPartnership": [],
+  "countryLetterCode": "GB",
+  "createdDateTime": "2019-10-09T12:08:53+00:00",
+  "dataProviderErrors": {},
+  "displayName": "Fixture displayname",
+  "objectId": "00000000-0000-4000-8000-0000000000aa",
+  "postalCode": "Fixture postalcode",
+  "preferredLanguage": "en",
+  "provisionedPlans": [
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Suspended",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "LockedOut",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "LockedOut",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    },
+    {
+      "capabilityStatus": "Deleted",
+      "provisioningStatus": "Success",
+      "service": "MicrosoftCommunicationsOnline"
+    }
+  ],
+  "serviceInfo": "[]",
+  "street": "Fixture street",
+  "verifiedDomains": [
+    {
+      "name": "Fixture name",
+      "status": "Enabled"
+    },
+    {
+      "name": "Fixture name",
+      "status": "Enabled"
+    },
+    {
+      "name": "Fixture name",
+      "status": "Enabled"
+    }
+  ],
+  "sipDomains": [
+    "fixture.example.invalid",
+    "fixture.example.invalid"
+  ],
+  "serviceInstance": "MicrosoftCommunicationsOnline/EMEA-GB1-S1",
+  "teamsUpgradeEffectiveMode": "TeamsOnly",
+  "teamsUpgradeNotificationsEnabled": false,
+  "teamsUpgradeOverridePolicy": "UpgradeToTeams",
+  "teamsUpgradePolicyIsReadOnly": "ModeAndNotifications",
+  "whenCreated": "2019-10-09T12:08:53+00:00",
+  "lastSyncTimeStamp": "2026-11-20T10:13:46.5392736+00:00",
+  "lastProvisionTimeStamps": {
+    "TenantSipDomains": "fixture.example.invalid",
+    "TenantRegistrarPool": "2026-11-20T10:13:47.2201116+00:00",
+    "ConfigDistributionStatus": "2022-12-06T07:29:29.7623286+00:00"
+  },
+  "lastPublishTimeStamps": {
+    "ProvisionedPlanPublishAuthoredProps": "2026-11-20T10:14:29.5904734+00:00",
+    "ProvisionCpcTenantConfigProcessor": "2026-02-25T11:26:06.2993465+00:00",
+    "UpdateBvdTenantProcessor": "2025-02-18T11:26:06.4898722+00:00",
+    "PublishProvisionedPlanProcessor": "2026-11-20T10:14:29.6025279+00:00",
+    "ProvisionCpcTenantBvdProcessor": "2026-02-25T11:26:07.2526092+00:00"
+  },
+  "serviceDiscovery": {
+    "Endpoints": {
+      "ConfigApiEndpoint": "api.interfaces.records.teams.microsoft.com",
+      "AdminServiceEndpoint": "admin.example.invalid"
+    },
+    "Headers": {
+      "X-MS-Forest": "gb1"
+    }
+  }
+}

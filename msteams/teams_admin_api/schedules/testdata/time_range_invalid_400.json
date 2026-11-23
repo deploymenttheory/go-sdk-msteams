@@ -1,0 +1,13 @@
+{
+  "code": "100001",
+  "message": "Fixture message",
+  "action": "Please input correct parameter values.",
+  "errorDetails": [
+    {
+      "ErrorCode": "TimeRange_InvalidTimeRangeBound",
+      "Message": "Fixture message",
+      "Target": "End",
+      "TargetEntityId": ""
+    }
+  ]
+}

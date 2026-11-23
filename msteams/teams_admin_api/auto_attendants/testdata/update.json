@@ -1,0 +1,127 @@
+{
+  "AutoAttendant": {
+    "Id": "00000000-0000-4000-8000-000000000003",
+    "Name": "Fixture name",
+    "TenantId": "00000000-0000-4000-8000-0000000000aa",
+    "LanguageId": "en-US",
+    "VoiceId": "Male",
+    "TimeZoneId": "GMT Standard Time",
+    "DefaultCallFlow": {
+      "Id": "00000000-0000-4000-8000-000000000004",
+      "Name": "Fixture name",
+      "Greetings": [
+        {
+          "ActiveType": "TextToSpeech",
+          "TextToSpeechPrompt": "Updated SDK probe greeting",
+          "AudioFilePrompt": null
+        }
+      ],
+      "Menu": {
+        "Name": "Fixture name",
+        "Prompts": [
+          {
+            "ActiveType": "TextToSpeech",
+            "TextToSpeechPrompt": "Press 1 for the SDK probe line",
+            "AudioFilePrompt": null
+          }
+        ],
+        "MenuOptions": [
+          {
+            "Action": "TransferCallToTarget",
+            "DtmfResponse": "Tone1",
+            "VoiceResponses": [],
+            "CallTarget": {
+              "Id": "fixture-record-d480caa6",
+              "Type": "ExternalPstn",
+              "DisplayName": null,
+              "EnableTranscription": false,
+              "EnableSharedVoicemailSystemPromptSuppression": false,
+              "ConfigurationEndpointType": null,
+              "SharedVoicemailHistoryTemplateId": null
+            },
+            "Prompt": null,
+            "Description": null,
+            "MainlineAttendantTarget": null,
+            "AgentTargetType": null,
+            "AgentTarget": null,
+            "AgentTargetTagTemplateId": null
+          }
+        ],
+        "DialByNameEnabled": false,
+        "DirectorySearchMethod": "None"
+      },
+      "ForceListenMenuEnabled": false,
+      "RingResourceAccountDelegates": false,
+      "TimeoutThreshold": null,
+      "TimeoutDisconnectPromptType": null,
+      "TimeoutDisconnectPromptCustomText": null,
+      "AiDisclaimerType": null,
+      "AiDisclaimerCustomText": null
+    },
+    "CallFlows": [
+      {
+        "Id": "00000000-0000-4000-8000-000000000005",
+        "Name": "Fixture name",
+        "Greetings": [],
+        "Menu": {
+          "Name": "Fixture name",
+          "Prompts": [],
+          "MenuOptions": [
+            {
+              "Action": "DisconnectCall",
+              "DtmfResponse": "Automatic",
+              "VoiceResponses": [],
+              "CallTarget": null,
+              "Prompt": null,
+              "Description": null,
+              "MainlineAttendantTarget": null,
+              "AgentTargetType": null,
+              "AgentTarget": null,
+              "AgentTargetTagTemplateId": null
+            }
+          ],
+          "DialByNameEnabled": false,
+          "DirectorySearchMethod": "None"
+        },
+        "ForceListenMenuEnabled": false,
+        "RingResourceAccountDelegates": false,
+        "TimeoutThreshold": null,
+        "TimeoutDisconnectPromptType": null,
+        "TimeoutDisconnectPromptCustomText": null,
+        "AiDisclaimerType": null,
+        "AiDisclaimerCustomText": null
+      }
+    ],
+    "Schedules": [],
+    "CallHandlingAssociations": [],
+    "VoiceResponseEnabled": false,
+    "DialByNameResourceId": null,
+    "DirectoryLookupScope": {
+      "InclusionScope": {
+        "Type": "Default",
+        "GroupDialScope": null
+      },
+      "ExclusionScope": {
+        "Type": "Default",
+        "GroupDialScope": null
+      }
+    },
+    "Operator": null,
+    "OperatorSharedVoicemail": null,
+    "ApplicationInstances": [],
+    "GreetingsSettingAuthorizedUsers": [],
+    "AuthorizedUsers": [],
+    "HideAuthorizedUsers": [],
+    "Status": null,
+    "UserNameExtension": "None",
+    "MainlineAttendantEnabled": false,
+    "MainlineAttendantAgentVoiceId": "None",
+    "SpamDetectionTemplateId": null,
+    "AutoRecordingTemplateId": null,
+    "AutoRecordingThread": null,
+    "AutoRecordingLibraryId": null,
+    "AutoRecordingLibraryDriveResourceId": null,
+    "SharedVoicemailTriageSettingsId": null
+  },
+  "Diagnostics": []
+}

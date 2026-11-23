@@ -43,7 +43,7 @@ MSTEAMS_LAB_IDENTITY_FILE='/private/lab/identity.json' \
 MSTEAMS_LAB_TEAM_OWNER_FILE='/private/lab/team-owner.json' \
 MSTEAMS_LAB_JOURNAL_DIRECTORY='/private/lab/journals' \
 MSTEAMS_LAB_TIMEOUT_SECONDS=300 \
-go test -count=1 -timeout=20m -run '^TestAccTeamLifecycle$' -v ./tests/integration/lab
+go test -count=1 -timeout=20m -run '^TestAccTeamLifecycle$' -v ./tests/integration/lab/graph
 ```
 
 The explicit identity helper defaults to certificate authentication; select
@@ -69,7 +69,7 @@ journal bound to the same tenant/cloud/application:
 ```sh
 # Keep the same three flags, identity, journal directory and timeout as above.
 MSTEAMS_LAB_RECOVERY_JOURNAL='/private/lab/journals/<reported basename>' \
-go test -count=1 -timeout=10m -run '^TestAccRecoverTeamLifecycle$' -v ./tests/integration/lab
+go test -count=1 -timeout=10m -run '^TestAccRecoverTeamLifecycle$' -v ./tests/integration/lab/graph
 ```
 
 The recovery handler recognizes only its own fixture kind. Other scenario entries

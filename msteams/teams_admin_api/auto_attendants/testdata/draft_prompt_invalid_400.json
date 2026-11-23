@@ -1,0 +1,13 @@
+{
+  "code": "100001",
+  "message": "Fixture message",
+  "action": "Please input correct parameter values.",
+  "errorDetails": [
+    {
+      "ErrorCode": "Prompt_EmptyPromptData",
+      "Message": "Fixture message",
+      "Target": null,
+      "TargetEntityId": ""
+    }
+  ]
+}

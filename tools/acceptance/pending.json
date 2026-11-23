@@ -4,91 +4,123 @@
     "reason": "Runs in the separate manual workload-authentication workflow; requires an explicitly configured GitHub OIDC federation trust."
   },
   "TestAccChannelMembershipCRUD": {
-    "file": "tests/integration/lab/channel_membership_test.go",
+    "file": "tests/integration/lab/graph/channel_membership_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
   "TestAccChannelCRUD": {
-    "file": "tests/integration/lab/channel_test.go",
+    "file": "tests/integration/lab/graph/channel_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
   "TestAccBatchDeploymentStatusReadOnly": {
-    "file": "tests/integration/lab/deployment_migration_test.go",
+    "file": "tests/integration/lab/batch_deployment/deployment_migration_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
   "TestAccPrivateChannelMigrationReadOnly": {
-    "file": "tests/integration/lab/deployment_migration_test.go",
+    "file": "tests/integration/lab/private_channel_migration/deployment_migration_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
   "TestAccMultiGeoRegionReadOnly": {
-    "file": "tests/integration/lab/deployment_migration_test.go",
+    "file": "tests/integration/lab/region/deployment_migration_test.go",
     "reason": "Requires an explicit delegated identity/scoped token fixture; application credentials must not substitute for the required mode."
   },
+  "TestAccUnifiedAppsDelegatedReadOnly": {
+    "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+    "reason": "Requires an explicit delegated AdminAppCatalog.ReadWrite.All scoped token fixture; the lab application identity is refused by the service and must not substitute."
+  },
   "TestAccPolicyAssignmentsReadOnly": {
-    "file": "tests/integration/lab/policy_assignments_test.go",
+    "file": "tests/integration/lab/policy_assignments/policy_assignments_test.go",
     "reason": "Additional assignment/OCE/targeting tenant scenarios have not been qualified; empty discovery responses do not establish action acceptance."
   },
   "TestAccPolicyAssignmentsOCEReadOnly": {
-    "file": "tests/integration/lab/policy_assignments_test.go",
+    "file": "tests/integration/lab/policy_assignments/policy_assignments_test.go",
     "reason": "Additional assignment/OCE/targeting tenant scenarios have not been qualified; empty discovery responses do not establish action acceptance."
   },
   "TestAccPolicyPackagesReadOnly": {
-    "file": "tests/integration/lab/policy_packages_test.go",
+    "file": "tests/integration/lab/policy_packages/policy_packages_test.go",
     "reason": "Requires an explicit delegated identity/scoped token fixture; application credentials must not substitute for the required mode."
   },
   "TestAccSharedChannelReadOnly": {
-    "file": "tests/integration/lab/shared_channel_test.go",
+    "file": "tests/integration/lab/graph/shared_channel_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
   "TestAccTargetingPolicyReadOnly": {
-    "file": "tests/integration/lab/targeting_test.go",
+    "file": "tests/integration/lab/targeting_policy/targeting_test.go",
     "reason": "Additional assignment/OCE/targeting tenant scenarios have not been qualified; empty discovery responses do not establish action acceptance."
   },
   "TestAccTargetingHierarchyStatusReadOnly": {
-    "file": "tests/integration/lab/targeting_test.go",
+    "file": "tests/integration/lab/targeting_hierarchy/targeting_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
   "TestAccTeamLifecycle": {
-    "file": "tests/integration/lab/team_lifecycle_test.go",
+    "file": "tests/integration/lab/graph/team_lifecycle_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
   "TestAccRecoverTeamLifecycle": {
-    "file": "tests/integration/lab/team_lifecycle_test.go",
+    "file": "tests/integration/lab/graph/team_lifecycle_test.go",
     "reason": "Requires an explicit private interrupted-run journal and same-tenant fixture recovery; operator-selected recovery is not a fresh CI CRUD scenario."
   },
   "TestAccTeamMembershipCRUD": {
-    "file": "tests/integration/lab/team_membership_test.go",
+    "file": "tests/integration/lab/graph/team_membership_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
   "TestAccRecoverTeamMembership": {
-    "file": "tests/integration/lab/team_membership_test.go",
+    "file": "tests/integration/lab/graph/team_membership_test.go",
     "reason": "Requires an explicit private interrupted-run journal and same-tenant fixture recovery; operator-selected recovery is not a fresh CI CRUD scenario."
   },
   "TestAccTeamOperationReadOnly": {
-    "file": "tests/integration/lab/team_operation_test.go",
+    "file": "tests/integration/lab/graph/team_operation_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
   "TestAccTeamTemplateRecover": {
-    "file": "tests/integration/lab/team_template_test.go",
+    "file": "tests/integration/lab/team_template/team_template_test.go",
     "reason": "Requires an explicit private interrupted-run journal and same-tenant fixture recovery; operator-selected recovery is not a fresh CI CRUD scenario."
   },
   "TestAccAssignmentMigrationReadOnly": {
-    "file": "tests/integration/lab/assignment_migration_test.go",
+    "file": "tests/integration/lab/assignment_migration/assignment_migration_test.go",
     "reason": "Successful migration reads require a tenant where the service is enabled. This lab returns PolicyRP 40003 (type not enabled in flighting); pinned PowerShell returns its no-status message. Capability-denial acceptance runs separately; issue #95 remains open."
   },
   "TestAccAudioConferencingPromptsReadOnly": {
-    "file": "tests/integration/lab/audio_conferencing_prompts_test.go",
+    "file": "tests/integration/lab/audio_conferencing_prompts/audio_conferencing_prompts_test.go",
     "reason": "Successful custom-prompt reads require this resource type to be enabled. SDK and pinned PowerShell both return PolicyRP 40003 in the current tenant. Capability-denial acceptance runs separately; issue #106 remains open."
   },
   "TestAccPrivacyConfigurationReadOnly": {
-    "file": "tests/integration/lab/privacy_configuration_test.go",
+    "file": "tests/integration/lab/privacy_configuration/privacy_configuration_test.go",
     "reason": "Successful privacy reads require an identity authorized for that resource. The approved Teams Administrator application receives PolicyRP 40301 in both SDK and pinned PowerShell. Authorization-denial acceptance runs separately; issue #102 remains open."
   },
   "TestAccRecoverOwnedPolicies": {
-    "file": "tests/integration/lab/owned_policy_recovery_test.go",
+    "file": "tests/integration/lab/recovery/recovery_test.go",
     "reason": "Operator-selected recovery for interrupted owned-policy tests. Requires a decrypted private journal and matching tenant/cloud/client binding; normal CI has no recovery-file selection."
   },
   "TestAccMeetingTemplatePermissionPopulatedCRUD": {
-    "file": "tests/integration/lab/meeting_template_permission_crud_test.go",
+    "file": "tests/integration/lab/teams_meeting_template_permission_policy/meeting_template_permission_crud_test.go",
     "reason": "With both application auth methods, native and pinned PowerShell populated-list create return PolicyRP 40013 with downstream HTTP 401. Full populated-list CRUD requires a separately qualified authentication fixture; delegated browser access is currently unavailable. Empty-list CRUD and exact app-only denial parity run separately in CI."
+  },
+  "TestAccAudioFileRecover": {
+    "file": "tests/integration/lab/audio_prompts/audio_prompts_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccScheduleRecover": {
+    "file": "tests/integration/lab/schedules/schedules_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccCallQueueRecover": {
+    "file": "tests/integration/lab/call_queues/call_queues_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccCallTemplateRecover": {
+    "file": "tests/integration/lab/call_templates/call_templates_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccMainlineAttendantRecover": {
+    "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccAIAgentRecover": {
+    "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccAutoAttendantRecover": {
+    "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
   }
 }

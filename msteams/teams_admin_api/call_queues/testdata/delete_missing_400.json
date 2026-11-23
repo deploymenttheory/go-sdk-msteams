@@ -1,0 +1,13 @@
+{
+  "code": "100001",
+  "message": "Fixture message",
+  "action": "Please input correct parameter values.",
+  "errorDetails": [
+    {
+      "ErrorCode": "CallQueue_IdentityInvalid",
+      "Message": "Fixture message",
+      "Target": null,
+      "TargetEntityId": "00000000-0000-4000-8000-000000000003"
+    }
+  ]
+}

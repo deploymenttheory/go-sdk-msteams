@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "NotFound",
+    "message": "Fixture message",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "correlationId": "00000000-0000-4000-8000-6da64a7ead93",
+    "timeStampUtc": "11/23/2026 4:24:35 AM"
+  }
+}

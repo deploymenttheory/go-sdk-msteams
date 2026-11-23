@@ -3,38 +3,74 @@
 All Go unit/offline contract tests use `TestUnit`; tenant tests use `TestAcc`.
 `Example` and `TestMain` retain their Go toolchain meanings. Ordinary quality CI
 runs `go test -run '^(TestUnit|Example)'`. The naming guard also reconciles every
-`TestAcc` with a CI suite or a concrete [pending disposition](pending.json).
-Adding an unregistered acceptance test fails that guard.
+`TestAcc` with exactly one partition step in [suites.json](suites.json) or a
+concrete [pending disposition](pending.json), and requires each registered test
+to live in its partition's Go package. Adding an unregistered acceptance test
+fails that guard.
 
 `tenant-acceptance.yml` runs on pull requests from this repository, pushes to main
 and manual dispatch. Fork/Dependabot code receives no lab secrets; the aggregate
 acceptance result fails if its lab jobs did not execute successfully. The workflow
 does not use `pull_request_target` or execute fork code with privileged credentials.
-Write jobs serialize without automatically cancelling an in-flight mutation;
-read-only jobs run in parallel.
 
-The certificate/client-secret matrix executes the selections in
-[suites.json](suites.json): authentication, resource reads, tenant access-outcome
-checks, owned unassigned policy CRUD, dedicated-user/group assignments, team
-templates and journaled singleton update/restoration. The registry is the
-current source of test names and assertion requirements.
-The matrix separates `reads` and `writes` for each authentication method.
-Read-only jobs can run concurrently. Every write job shares the
-`msteams-lab-tenant-acceptance` concurrency group because concurrent policy writes
-can conflict even with distinct resource names. Job-level `queue: max` retains
-pending write jobs. The group name is unchanged, so older workflow-level locks
-also exclude new write jobs during migration. GitHub documents the
-[workflow queue behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency). Selected tests
-and child cases must pass unless explicitly excluded as described below. The
-aggregate result requires every suite report in both authentication modes and
-rejects missing or duplicate reports. Unconfigured skips, missing tests, setup
-failures and unsuccessful cleanup fail CI. CRUD also requires
-all assertion milestones, two PowerShell comparisons per owned CRUD test and
-one cleaned journal entry per test. User assignment requires assign/read-back,
-clear/restoration, independent cleanup, three pinned comparisons (before,
-assigned and restored), and both policy and user-restoration journal entries. Group assignment requires
-all five phase assertions, six pinned comparisons and three cleaned entries
-(two owned policies and group restoration).
+## Partitions
+
+[suites.json](suites.json) is the source of test names, step order and assertion
+requirements. It has two kinds of partition:
+
+- **Auth** (`auth`): one job that loads every credential kind
+  (`MSTEAMS_LAB_AUTH_METHOD=all`) and proves client-secret and certificate
+  authentication. Only this job receives the certificate and private key.
+- **Services** (`services`): one job per `msteams/teams_admin_api/<service>`
+  directory, plus `platform` (preflight and service discovery) and `graph`
+  (Microsoft Graph team resources, currently pending). Every service job
+  authenticates with the client secret only; `ci.py` refuses certificate auth
+  for a service. Certificate support is proven once, not per resource.
+
+A service runs its steps in order: reads/list first, then mutating steps
+(owned CRUD, update/restore, assignments, populated scenarios). Validation rejects
+a read-only step after a mutating one. If a step fails, the service's later
+mutating steps do not start and report `not-run`.
+
+Service jobs start after the auth job passes. `ci.py plan` splits services into
+two matrices:
+
+- Read-only services run in parallel (at most 8 at a time) without a lock.
+- Services with any `mutation` or `serial` step hold the
+  `msteams-lab-tenant-acceptance` concurrency group for their whole read-then-write
+  sequence, because concurrent policy writes can conflict even with distinct
+  resource names. `serial` marks Global reads that must not observe another job's
+  temporary singleton changes; those steps never enable mutations. Job-level
+  `queue: max` retains pending jobs, and an in-flight mutation is never cancelled.
+  The group name is unchanged from the earlier read/write matrix. GitHub
+  documents the
+  [workflow queue behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
+
+Each job uploads its own artifact (`tenant-acceptance-auth` or
+`tenant-acceptance-service-<service>`), so a failed service can be re-run on its
+own. **Run workflow** also accepts `services` (comma-separated partition names) to
+run only those services after the auth job. The aggregate `TestAcc result` job
+then expects reports from those services only.
+
+Selected tests and child cases must pass unless explicitly excluded as described
+below. The aggregate requires exactly one report per auth step (`all`) and per
+selected service step (`client-secret`). It rejects missing, duplicate or
+unexpected reports. Unconfigured skips, missing tests, setup failures and
+unsuccessful cleanup fail CI. CRUD also requires all assertion milestones, two
+PowerShell comparisons per owned CRUD test and one cleaned journal entry per test.
+User assignment requires assign/read-back, clear/restoration, independent
+cleanup, three pinned comparisons (before, assigned and restored), and both
+policy and user-restoration journal entries. Group assignment requires all five
+phase assertions, six pinned comparisons and three cleaned entries (two owned
+policies and group restoration).
+
+To run a partition locally after preparing a private lab directory:
+
+```sh
+MSTEAMS_LAB_AUTH_METHOD=all python3 tools/acceptance/ci.py run --auth --report-directory /private/tmp/acceptance-results
+python3 tools/acceptance/ci.py run --service teams_call_hold_policy --report-directory /private/tmp/acceptance-results
+python3 tools/acceptance/ci.py run --service teams_call_hold_policy --step reads --report-directory /private/tmp/acceptance-results
+```
 
 The remaining acceptance tests are listed in `pending.json` with their missing
 fixtures, permissions, capabilities or execution mode. Resource tickets stay open
@@ -44,7 +80,7 @@ requires complete command and parameter-set qualification.
 ## Selective acceptance skips
 
 [skips.json](skips.json) maps exact registered `TestAcc` names to public reasons.
-These tests stay in their normal suites. The runner excludes them before starting
+These tests stay in their normal steps. The runner excludes them before starting
 Go, prints `SKIP <test>: <reason>`, and shows their names and reasons in the CI
 summary. Skipped tests count separately from passes and provide no acceptance
 evidence. The aggregate checks those exclusions against the same configuration.
@@ -58,7 +94,8 @@ edit/clear checks, four PowerShell comparisons and verified cleanup when enabled
 For a temporary local exclusion, after normal lab preparation:
 
 ```sh
-python3 tools/acceptance/ci.py run --kind writes --report-directory /private/tmp/acceptance-results \
+python3 tools/acceptance/ci.py run --service teams_room_video_tele_conferencing_policy \
+  --report-directory /private/tmp/acceptance-results \
   --skip-test TestAccRoomVideoTeleConferencingPolicyCRUD --skip-reason 'Lab maintenance.'
 ```
 
@@ -72,12 +109,12 @@ The file has `tenant_id`, `resource_account_id` and `emergency_numbers` (at leas
 two distinct real E.164 callback numbers). Never use example numbers as lab inventory.
 
 For CI, **Run workflow** provides `skip_tests` (comma-separated names),
-`skip_reason`, and `include_tests`. The same inputs reach each auth job and the
-aggregate. Local automation can use `MSTEAMS_ACC_SKIP_TESTS`,
+`skip_reason`, and `include_tests`. The same inputs reach every partition job and
+the aggregate. Local automation can use `MSTEAMS_ACC_SKIP_TESTS`,
 `MSTEAMS_ACC_SKIP_REASON` and `MSTEAMS_ACC_INCLUDE_TESTS`. Pass the same selections
 to `summarize` when aggregating local reports. Routine PR/main runs use the
 checked-in skip configuration. Remove its entry after a fixture is available and
-the test has passed in both auth modes.
+the test has passed in its service partition.
 
 The optional repository secret `MSTEAMS_LAB_SHARED_CALLING_FIXTURE_JSON` supplies
 that phone fixture when available. Preparation checks its tenant, account GUID,
@@ -150,7 +187,7 @@ credentials name the repository secret that needs fixing.
 Uploaded JSON contains checked-out revision, auth method, exact selected test
 names, outcomes, assertion flags and cleanup counts. It excludes credential values,
 tenant/resource IDs, response bodies, dynamic child-test names and raw Go logs.
-Results cover the tests listed in each suite.
+Results cover the tests listed in each step.
 
 The finalization step always attempts to seal only recovery journals into
 `recovery.cms` using CMS AES-256-GCM and RSA-OAEP-SHA256. It then removes the raw
@@ -216,10 +253,10 @@ refuses deletion while its application-access assignment remains.
 
 ## Owned team templates
 
-The template suite runs `expanded` and `json-body` input variants in both
-certificate and client-secret modes. Each variant must pass its own create/read,
+The `team_template` partition's `crud` step runs `expanded` and `json-body` input
+variants. Each variant must pass its own create/read,
 update/read, list and delete/absence assertions and two pinned PowerShell reads.
-The suite requires both named children and two cleaned journal entries. A passing
+The step requires both named children and two cleaned journal entries. A passing
 parent or another variant cannot substitute for a missing/skipped variant.
 
 Cleanup checks selected HTTP404 plus a complete list without the owned template.
@@ -228,13 +265,13 @@ mutation. Actual create/update receipts, nested detail envelopes, owned/deleted
 lists and deleted404 responses supply the permanent unit fixtures. The public
 General-channel name/ID and controlled fixture selector remain consistent across
 responses. Ordinary CI never rewrites those files. No team, membership, app
-installation or public template is created or changed by this suite.
+installation or public template is created or changed by this step.
 
 ## Singleton messaging and migration configurations
 
-The `singleton-configuration-reads` suite shares the tenant write lock through
-`serial: true` and keeps mutation enablement off. The update suite uses the same
-lock. This prevents parallel Global reads from observing its temporary changes.
+Each singleton service's `global-reads` step is `serial: true`: the service job
+holds the tenant write lock and keeps mutation enablement off for that step. Its
+`update-restore` step runs in the same locked job. This prevents parallel Global reads from observing its temporary changes.
 Each update journals the original non-null Boolean before mutation, toggles it,
 verifies all typed getter values, compares PowerShell before/after/restoration,
 and independently reads back the original state. Messaging updates preserve the
@@ -244,34 +281,34 @@ three comparisons, both assertions and one cleaned restore entry per test.
 Recovery selects `TestAccRecoverOwnedPolicies` with the bound private journal;
 `messaging-configuration` restores only `EnableVideoMessageCaptions`, and
 `migration-configuration` restores only `EnableLegacyClientInterop` on Global.
-Null or missing originals refuse mutation. This suite temporarily changes Global
+Null or missing originals refuse mutation. This step temporarily changes Global
 in the dedicated lab; it does not qualify user/client propagation.
 
-Mobility CRUD now runs in `owned-policy-crud`, with all five getters compared
+Mobility CRUD runs as its service's `crud` step, with all five getters compared
 against the pinned module before and after a sparse description update. Its
-recovery kind is `mobility-policy`. Multi-tenant Global reads/updates run in the
-serialized singleton suites; its `multi-tenant-configuration` recovery kind
+recovery kind is `mobility-policy`. Multi-tenant Global reads/updates run as
+serialized `global-reads` and `update-restore` steps; its `multi-tenant-configuration` recovery kind
 restores only the journaled CopilotFromHomeTenant string on Global. The recovery
 handler accepts only the documented Enabled/Disabled baseline used by the test.
 CI reports fixed parity, persistence and restoration failure reasons without
 publishing raw responses or resource names.
 
-Network roaming runs in the owned-policy CRUD suite using modern POST/PUT/DELETE.
-Notification/feeds runs in `owned-notification-policy`, whose extra explicit-null
+Network roaming runs its `crud` step using modern POST/PUT/DELETE.
+Notification/feeds runs its own `crud` step, whose extra explicit-null
 Description check and three pinned comparisons are mandatory. Its native create
 is evidenced by the pinned unexported compiled New implementation and live tenant
 acceptance; public baseline mappings still contain only Get/Set/Remove. Both
 policy kinds have bound owned-resource recovery handlers and require GET404 plus
 list absence. Their fixtures are permanent service testdata, with no capture store.
 
-Personal-attendant and recording-rollout policies join owned CRUD. The former
+Personal-attendant and recording-rollout policies each run a `crud` step. The former
 updates only recording/transcription controls and retains the observed unprefixed
 identity. The latter checks exact sparse request bytes as well as two persisted
 ownership values. Both require two pinned comparisons and a cleaned create intent;
 recovery kinds are `personal-policy` and `recording-rollout-policy`. These tests
 do not grant policies or qualify effective attendant/recording behavior.
 
-Room-video and unassociated shared-calling CRUD run with normal owned policy tests.
+Room-video and unassociated shared-calling CRUD run as their services' `crud` steps.
 Shared-calling's populated scenario is explicitly pending: the lab has no resource
 accounts or telephone numbers. Select its private fixture with
 MSTEAMS_LAB_SHARED_CALLING_FIXTURE_FILE only after providing tenant_id,
@@ -281,9 +318,66 @@ phone assignments, checks list preservation/edit/clear, and sanitizes phone valu
 Its empty-list CRUD test does not qualify the populated scenario. Recovery kinds
 are room-video-policy and shared-calling-policy.
 
-Shifts policy CRUD runs in `owned-policy-crud` and compares all six public getters
+Shifts policy CRUD runs as its service's `crud` step and compares all six public getters
 with PowerShell before/after a grace-period update. Its bound recovery kind is
-`shifts-policy`. Shifts app Global reads and Boolean update/restoration run in the
-serialized singleton suites, with three pinned comparisons and one cleaned
+`shifts-policy`. Shifts app Global reads and Boolean update/restoration run as
+serialized `global-reads` and `update-restore` steps, with three pinned comparisons and one cleaned
 `shifts-app-configuration` restore entry. Permanent response fixtures feed both
 service unit suites; additional grants and effective behavior remain separate.
+
+SIP devices Global reads/update-restoration share the tenant lock. Its bound
+`sip-devices-configuration` handler restores only the original Enabled/Disabled
+BulkSignIn string on Global; CI requires three pinned comparisons and a cleaned
+restore entry. Team template permission basic CRUD runs as its `crud` step.
+Its separate `populated-crud` step reads actual
+existing team-template IDs, verifies sparse omission, Add/Remove and clear with
+four pinned comparisons, and independently deletes its owned policy. Recovery
+kind: `template-permission-policy`. Empty and populated workflows write distinct
+permanent fixture names.
+
+Update-management policy runs as its service's `crud` step. CI requires
+all CRUD assertions, DateTime persistence, message-list edit/clear, five pinned
+comparisons and one cleaned owned-policy entry. Compiled CRUD and modern grant
+requests remain distinct. Its fifteen actual response fixtures feed unit replay.
+Tenant-abuse's current lab identity receives HTTP403/PolicyRP40301 in both SDK and
+pinned PowerShell. Denial parity runs in the service partition; successful read and
+UInt64 update/restoration tests are configured skips with public reasons. They
+remain executable with an authorized identity. The update refuses mutation without
+a readable original and its bound recovery restores only LowSeatLimit on Global.
+No additional role or credential was provisioned for these cases.
+
+VDI and virtual-appointments reads/owned CRUD are registered as the `reads` and
+`crud` steps of their service partitions. Each requires two pinned comparisons, exact sparse-field
+assertions, non-default read-back and independent deletion, with one cleaned
+journal entry. VDI verifies both disable flags survive an optimization-only update;
+virtual appointments verifies false-to-true SMS persistence. Permanent sanitized
+service testdata supplies unit replay. Grants remain outside the qualified live
+CRUD claim. Existing policies and assignments are untouched.
+
+Voice-applications and workload Global reads are their services' `reads` steps.
+Their `crud` steps require two pinned comparisons and one cleaned
+journal entry per test. Voice applications checks all 34 getters across a
+Description-only update; workload preserves all six Boolean settings across a
+Description-only PUT. Each request is asserted sparse and each delete requires
+independent GET404/list absence. Eighteen actual response fixtures supply units;
+Grant persistence is a separate unqualified operation.
+
+## Test layout
+
+Each service partition's acceptance and offline tests live in
+`tests/integration/lab/<service>/` (package `<service without underscores>acc`),
+so `go test ./tests/integration/lab/teams_call_hold_policy` runs exactly one
+service. `platform` holds preflight and service discovery, `graph` the Microsoft
+Graph team resources and `recovery` the journal recovery that merges every
+service's `RecoveryHandlers`. Helpers shared by several services are in
+`tests/integration/lab/internal/labkit`; PowerShell oracles stay in
+`tests/integration/lab/oracle`. `check-names` rejects Go files placed directly in
+`tests/integration/lab`.
+
+To recover a retained journal after a failed cleanup, with the same lab identity,
+mutation opt-in and fixture files described above:
+
+```sh
+MSTEAMS_LAB_RECOVERY_FILE=/private/lab/journal.jsonl \
+  go test -count=1 -run '^TestAccRecoverOwnedPolicies$' ./tests/integration/lab/recovery
+```

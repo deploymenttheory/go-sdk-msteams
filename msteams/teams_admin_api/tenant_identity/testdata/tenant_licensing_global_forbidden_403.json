@@ -1,0 +1,6 @@
+{
+  "code": "Forbidden",
+  "message": "Fixture message",
+  "action": "Please refer to documentation. CorrelationId: 00000000-0000-4000-8000-c4c1e0749849",
+  "errorCode": 40301
+}

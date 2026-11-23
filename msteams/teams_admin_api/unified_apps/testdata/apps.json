@@ -1,0 +1,11 @@
+[
+  {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "isBlocked": false,
+    "appName": "Fixture name",
+    "availableTo": {"availableToType": "Everyone", "lastUpdatedDate": "2026-11-01T10:00:00+00:00", "assignedBy": "00000000-0000-4000-8000-000000000003"},
+    "deployedTo": {"deployedToType": "Noone", "lastUpdatedDate": null, "deployedBy": null, "deployReason": null, "version": null},
+    "metadata": {"appName": "Fixture name"}
+  },
+  {"id": "00000000-0000-4000-8000-000000000002", "isBlocked": true, "availableTo": null, "deployedTo": null, "futureField": 7}
+]

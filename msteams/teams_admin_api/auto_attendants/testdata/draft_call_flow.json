@@ -1,0 +1,55 @@
+{
+  "CallFlow": {
+    "Id": "00000000-0000-4000-8000-000000000004",
+    "Name": "Fixture name",
+    "Greetings": [
+      {
+        "ActiveType": "TextToSpeech",
+        "TextToSpeechPrompt": "Welcome to the SDK probe",
+        "AudioFilePrompt": null
+      }
+    ],
+    "Menu": {
+      "Name": "Fixture name",
+      "Prompts": [
+        {
+          "ActiveType": "TextToSpeech",
+          "TextToSpeechPrompt": "Welcome to the SDK probe",
+          "AudioFilePrompt": null
+        }
+      ],
+      "MenuOptions": [
+        {
+          "Action": "TransferCallToTarget",
+          "DtmfResponse": "Tone1",
+          "VoiceResponses": [],
+          "CallTarget": {
+            "Id": "fixture-record-d480caa6",
+            "Type": "ExternalPstn",
+            "DisplayName": null,
+            "EnableTranscription": false,
+            "EnableSharedVoicemailSystemPromptSuppression": false,
+            "ConfigurationEndpointType": null,
+            "SharedVoicemailHistoryTemplateId": null
+          },
+          "Prompt": null,
+          "Description": null,
+          "MainlineAttendantTarget": null,
+          "AgentTargetType": null,
+          "AgentTarget": null,
+          "AgentTargetTagTemplateId": null
+        }
+      ],
+      "DialByNameEnabled": false,
+      "DirectorySearchMethod": "None"
+    },
+    "ForceListenMenuEnabled": false,
+    "RingResourceAccountDelegates": false,
+    "TimeoutThreshold": null,
+    "TimeoutDisconnectPromptType": null,
+    "TimeoutDisconnectPromptCustomText": null,
+    "AiDisclaimerType": null,
+    "AiDisclaimerCustomText": null
+  },
+  "Diagnostics": []
+}

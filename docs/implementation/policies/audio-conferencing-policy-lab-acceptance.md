@@ -10,7 +10,7 @@ Select `MSTEAMS_LAB_IDENTITY_FILE` and `MSTEAMS_LAB_AUTH_METHOD=client-secret`
 or `certificate`, with mutation/consequential opt-ins unset, then run:
 
 ```sh
-go test -count=1 -run '^TestAccAudioConferencingPolicyReadOnly$' -v ./tests/integration/lab
+go test -count=1 -run '^TestAccAudioConferencingPolicyReadOnly$' -v ./tests/integration/lab/teams_audio_conferencing_policy
 ```
 
 Both actual credential modes returned resource HTTP 403 on Global on

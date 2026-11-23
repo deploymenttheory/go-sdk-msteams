@@ -1,0 +1,52 @@
+{
+  "DisabledInProductMessages": [
+    "00000000-0000-4000-8000-4ae7c2e63076"
+  ],
+  "Description": "SDK lab non-default updated description",
+  "AllowManagedUpdates": true,
+  "AllowPreview": false,
+  "UpdateDayOfWeek": 3,
+  "UpdateTime": "19:30",
+  "UpdateTimeOfDay": "2026-11-22T18:45:00",
+  "AllowPublicPreview": "Enabled",
+  "UseNewTeamsClient": "MicrosoftChoice",
+  "BlockLegacyAuthorization": false,
+  "Key": {
+    "ScopeClass": "Tag",
+    "SchemaId": {
+      "XName": {
+        "name": "Fixture name"
+      }
+    },
+    "AuthorityId": {
+      "Class": "Tenant",
+      "InstanceId": "00000000-0000-4000-8000-0b617a16f800",
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+      }
+    },
+    "DefaultXml": {
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "Data": {
+        "TeamsUpdateManagementPolicy": {
+          "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+        }
+      },
+      "ConfigObject": null,
+      "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+      "IsModified": true
+    },
+    "XmlRoot": {
+      "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+    }
+  },
+  "Identity": "Tag:fixture-policy",
+  "ConfigMetadata": {
+    "Authority": "Tenant"
+  },
+  "ConfigId": "fixture-config-5d9c0e14"
+}

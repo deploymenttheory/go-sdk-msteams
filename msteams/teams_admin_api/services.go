@@ -4,22 +4,38 @@ package teamsadminapi
 import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	acsfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/acs_federation_configuration"
+	aiagents "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/ai_agents"
 	applicationaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
 	applicationmeetingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_meeting_configuration"
 	assignmentmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
 	audioconferencingprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_conferencing_prompts"
+	audioprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_prompts"
+	autoattendants "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/auto_attendants"
 	batchdeployment "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/batch_deployment"
+	callqueues "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_queues"
+	calltemplates "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_templates"
+	cloudcalldata "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data"
+	compliancerecording "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/compliance_recording"
+	configurationdiagnostics "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/configuration_diagnostics"
+	customappsettings "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/custom_app_settings"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
+	mainlineattendants "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/mainline_attendants"
 	meetingbranding "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
+	migration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/migration"
 	onlinevoicemailpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
 	voicemailvalidation "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_validation_configuration"
 	policyassignments "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 	policypackages "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_packages"
 	privacyconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/privacy_configuration"
 	privatechannelmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/private_channel_migration"
+	provisioningdiagnostics "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/provisioning_diagnostics"
 	recordingmessages "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/recording_messages"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
+	resourceaccounts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/resource_accounts"
+	schedules "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/schedules"
+	shiftsconnections "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/shifts_connections"
+	sipdevicesgateway "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/sip_devices_gateway"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
@@ -52,16 +68,41 @@ import (
 	teamsnotificationandfeedspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_notification_and_feeds_policy"
 	teamspersonalattendantpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_personal_attendant_policy"
 	teamsrecordingrolloutpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_recording_roll_out_policy"
+	teamsremotelogcollectionconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_remote_log_collection_configuration"
+	teamsremotelogcollectiondevice "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_remote_log_collection_device"
 	teamsroomvideoteleconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_room_video_tele_conferencing_policy"
 	teamssharedcallingroutingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shared_calling_routing_policy"
 	teamsshiftsapppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shifts_app_policy"
 	teamsshiftspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shifts_policy"
+	teamssipdevicesconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_sip_devices_configuration"
+	teamstemplatepermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_template_permission_policy"
+	teamstenantabuseconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_tenant_abuse_configuration"
+	teamsupdatemanagementpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_update_management_policy"
+	teamsupgradeconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_upgrade_configuration"
+	teamsupgradepolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_upgrade_policy"
+	teamsvdipolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_vdi_policy"
+	teamsvirtualappointmentspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_virtual_appointments_policy"
+	teamsvoiceapplicationspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_voice_applications_policy"
+	teamsworkloadpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_load_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
+	tenantidentity "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_identity"
+	unifiedapps "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/unified_apps"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	TeamsVoiceApplicationsPolicies   *teamsvoiceapplicationspolicy.Service
+	TeamsWorkLoadPolicies            *teamsworkloadpolicy.Service
+	TeamsVDIPolicies                 *teamsvdipolicy.Service
+	TeamsVirtualAppointmentsPolicies *teamsvirtualappointmentspolicy.Service
+
+	TeamsUpgradeConfigurations                 *teamsupgradeconfiguration.Service
+	TeamsUpgradePolicies                       *teamsupgradepolicy.Service
+	TeamsTenantAbuseConfigurations             *teamstenantabuseconfiguration.Service
+	TeamsUpdateManagementPolicies              *teamsupdatemanagementpolicy.Service
+	TeamsTemplatePermissionPolicies            *teamstemplatepermissionpolicy.Service
+	TeamsSipDevicesConfigurations              *teamssipdevicesconfiguration.Service
 	TeamsRoomVideoTeleConferencingPolicies     *teamsroomvideoteleconferencingpolicy.Service
 	TeamsSharedCallingRoutingPolicies          *teamssharedcallingroutingpolicy.Service
 	TeamsPersonalAttendantPolicies             *teamspersonalattendantpolicy.Service
@@ -111,11 +152,31 @@ type Services struct {
 	ApplicationMeetingConfigurations           *applicationmeetingconfiguration.Service
 	TenantFederationConfigurations             *tenantfederationconfiguration.Service
 	TeamTemplates                              *teamtemplate.Service
+	AudioFiles                                 *audioprompts.Service
+	CloudCallData                              *cloudcalldata.Service
+	ConfigurationDiagnostics                   *configurationdiagnostics.Service
+	ResourceAccounts                           *resourceaccounts.Service
+	Schedules                                  *schedules.Service
+	CallQueues                                 *callqueues.Service
+	TenantIdentity                             *tenantidentity.Service
+	CallTemplates                              *calltemplates.Service
+	ComplianceRecording                        *compliancerecording.Service
+	ShiftsConnections                          *shiftsconnections.Service
+	MainlineAttendants                         *mainlineattendants.Service
+	AIAgents                                   *aiagents.Service
+	ProvisioningDiagnostics                    *provisioningdiagnostics.Service
+	CustomAppSettings                          *customappsettings.Service
+	SIPDevicesGateway                          *sipdevicesgateway.Service
+	TeamsRemoteLogCollectionConfigurations     *teamsremotelogcollectionconfiguration.Service
+	TeamsRemoteLogCollectionDevices            *teamsremotelogcollectiondevice.Service
+	Migration                                  *migration.Service
+	AutoAttendants                             *autoattendants.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
 	PrivateChannelMigration                    *privatechannelmigration.Service
 	Regions                                    *region.Service
+	UnifiedApps                                *unifiedapps.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -137,7 +198,26 @@ func NewServices(session *client.Session) (*Services, error) {
 	if err != nil {
 		return nil, err
 	}
+	knowledgeScope, err := client.NewScope(client.AIGeneratedKnowledge, session)
+	if err != nil {
+		return nil, err
+	}
+	appCatalogScope, err := client.NewScope(client.AppCatalog, session)
+	if err != nil {
+		return nil, err
+	}
 	return &Services{
+		TeamsVoiceApplicationsPolicies:   teamsvoiceapplicationspolicy.NewService(scope),
+		TeamsWorkLoadPolicies:            teamsworkloadpolicy.NewService(backend),
+		TeamsVDIPolicies:                 teamsvdipolicy.NewService(scope),
+		TeamsVirtualAppointmentsPolicies: teamsvirtualappointmentspolicy.NewService(scope),
+
+		TeamsUpgradeConfigurations:                 teamsupgradeconfiguration.NewService(scope),
+		TeamsUpgradePolicies:                       teamsupgradepolicy.NewService(backend),
+		TeamsTenantAbuseConfigurations:             teamstenantabuseconfiguration.NewService(scope),
+		TeamsUpdateManagementPolicies:              teamsupdatemanagementpolicy.NewService(scope),
+		TeamsTemplatePermissionPolicies:            teamstemplatepermissionpolicy.NewService(scope),
+		TeamsSipDevicesConfigurations:              teamssipdevicesconfiguration.NewService(scope),
 		TeamsRoomVideoTeleConferencingPolicies:     teamsroomvideoteleconferencingpolicy.NewService(backend),
 		TeamsSharedCallingRoutingPolicies:          teamssharedcallingroutingpolicy.NewService(scope),
 		TeamsPersonalAttendantPolicies:             teamspersonalattendantpolicy.NewService(scope),
@@ -187,11 +267,31 @@ func NewServices(session *client.Session) (*Services, error) {
 		ApplicationMeetingConfigurations:           applicationmeetingconfiguration.NewService(backend),
 		TenantFederationConfigurations:             tenantfederationconfiguration.NewService(backend),
 		TeamTemplates:                              teamtemplate.NewService(backend),
+		AudioFiles:                                 audioprompts.NewService(backend),
+		CloudCallData:                              cloudcalldata.NewService(backend),
+		ConfigurationDiagnostics:                   configurationdiagnostics.NewService(backend, scope),
+		ResourceAccounts:                           resourceaccounts.NewService(backend),
+		Schedules:                                  schedules.NewService(backend),
+		CallQueues:                                 callqueues.NewService(backend),
+		TenantIdentity:                             tenantidentity.NewService(backend),
+		CallTemplates:                              calltemplates.NewService(backend),
+		ComplianceRecording:                        compliancerecording.NewService(scope),
+		ShiftsConnections:                          shiftsconnections.NewService(backend),
+		MainlineAttendants:                         mainlineattendants.NewService(backend),
+		AIAgents:                                   aiagents.NewService(backend, knowledgeScope),
+		ProvisioningDiagnostics:                    provisioningdiagnostics.NewService(backend),
+		CustomAppSettings:                          customappsettings.NewService(backend),
+		SIPDevicesGateway:                          sipdevicesgateway.NewService(backend),
+		TeamsRemoteLogCollectionConfigurations:     teamsremotelogcollectionconfiguration.NewService(scope),
+		TeamsRemoteLogCollectionDevices:            teamsremotelogcollectiondevice.NewService(scope),
+		Migration:                                  migration.NewService(backend),
+		AutoAttendants:                             autoattendants.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),
 		PrivateChannelMigration:                    privatechannelmigration.NewService(migrationScope),
 		Regions:                                    region.NewService(regionScope),
+		UnifiedApps:                                unifiedapps.NewService(appCatalogScope),
 	}, nil
 }
 

@@ -7,7 +7,7 @@ try {
  if($env:MSTEAMS_LAB_READ_ONLY -ne '1' -or $env:MSTEAMS_LAB_POWERSHELL_ORACLE -ne '1'){throw 'Explicit read oracle opt-in required.'}
  $request=[Console]::In.ReadToEnd() | ConvertFrom-Json
  $tenant=[Guid]::Parse($request.tenant_id).ToString()
- $commands=@{migration='Get-DirectToGroupAssignmentsMigrationStatus';prompts='Get-CsTeamsAudioConferencingCustomPromptsConfiguration';privacy='Get-CsPrivacyConfiguration'}
+ $commands=@{migration='Get-DirectToGroupAssignmentsMigrationStatus';prompts='Get-CsTeamsAudioConferencingCustomPromptsConfiguration';privacy='Get-CsPrivacyConfiguration';'tenant-abuse'='Get-CsTeamsTenantAbuseConfiguration'}
  if(-not $commands.ContainsKey([string]$request.resource)){throw 'Unknown read selector.'}
  $manifest=Join-Path $env:MSTEAMS_LAB_MODULE_PATH 'MicrosoftTeams.psd1'
  if((Import-PowerShellDataFile -LiteralPath $manifest).ModuleVersion -ne '8.1.0'){throw 'Wrong baseline.'}
@@ -36,6 +36,8 @@ try {
    if($values.Count -eq 1 -and $values[0] -is [string] -and $values[0] -ceq 'No migration status to show, please verify the migration event id.'){$outcome='migration-status-message'}
   }elseif($request.resource -eq 'prompts'){
    Get-CsTeamsAudioConferencingCustomPromptsConfiguration -Identity Global -ErrorAction Stop | Out-Null
+  }elseif($request.resource -eq 'tenant-abuse'){
+   Get-CsTeamsTenantAbuseConfiguration -Identity Global -ErrorAction Stop | Out-Null
   }else{
    Get-CsPrivacyConfiguration -Identity Global -ErrorAction Stop | Out-Null
   }
@@ -47,7 +49,7 @@ try {
     if($request.resource -eq 'prompts' -and $body.code -ceq 'ClientError' -and $body.errorCode -eq 40003 -and $body.message -ceq 'Type TeamsAudioConferencingCustomPromptsConfiguration is not currently enabled in flighting'){
      $outcome='feature-unavailable';$code='ClientError';$errorCode=40003;break
     }
-    if($request.resource -eq 'privacy' -and $body.code -ceq 'Forbidden' -and $body.errorCode -eq 40301){
+    if($request.resource -in @('privacy','tenant-abuse') -and $body.code -ceq 'Forbidden' -and $body.errorCode -eq 40301){
      $outcome='forbidden';$code='Forbidden';$errorCode=40301;break
     }
    }catch{}

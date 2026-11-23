@@ -1,0 +1,5 @@
+{
+  "code": "100004",
+  "message": "Fixture message",
+  "action": "Specified association not found. Please use a valid association identity."
+}

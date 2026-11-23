@@ -42,15 +42,86 @@ TEMPLATE_MARKERS = [
     'template delete/absence: passed',
 ]
 TEMPLATE_ORACLE = 'PowerShell 8.1.0 / Go template read parity: passed'
+AUDIO_FILE_MARKERS = [
+    'audio import: passed',
+    'audio get: passed',
+    'audio list: passed',
+    'audio export round trip: passed',
+    'audio delete/soft-delete observation: passed',
+]
+AUDIO_FILE_ORACLE = 'PowerShell 8.1.0 / Go audio file parity: passed'
+SCHEDULE_MARKERS = [
+    'schedule range drafts: passed',
+    'schedule create: passed',
+    'schedule get/list: passed',
+    'schedule update/read-back: passed',
+    'holiday routes: passed',
+    'schedule delete: passed',
+]
+SCHEDULE_ORACLE = 'PowerShell 8.1.0 / Go schedule parity: passed'
+CALL_QUEUE_MARKERS = [
+    'call queue missing get: passed',
+    'call queue create: passed',
+    'call queue get: passed',
+    'call queue list: passed',
+    'call queue update/read-back: passed',
+    'call queue delete: passed',
+]
+CALL_QUEUE_ORACLE = 'PowerShell 8.1.0 / Go call queue parity: passed'
+CALL_TEMPLATE_MARKERS = [
+    'call template create/read-back: passed',
+    'call template update/read-back: passed',
+    'call template list: passed',
+    'call template delete/absence: passed',
+]
+CALL_TEMPLATE_ORACLE = 'PowerShell 8.1.0 / Go call template parity: passed'
+MAINLINE_ATTENDANT_MARKERS = [
+    'spam detection template create/update/read-back: passed',
+    'appointment booking flow create/update/read-back: passed',
+    'question answer flow create/indexing/update/read-back: passed',
+    'mainline attendant flow list/filter: passed',
+    'spam detection template delete/absence: passed',
+    'appointment booking flow delete/absence: passed',
+    'question answer flow delete/absence: passed',
+]
+MAINLINE_ATTENDANT_ORACLE = 'PowerShell 8.1.0 / Go mainline attendant parity: passed'
+AI_AGENT_MARKERS = [
+    'AI agent create: passed',
+    'AI agent get/list: passed',
+    'AI agent update/read-back: passed',
+    'AI agent delete/absence: passed',
+]
+AI_AGENT_ORACLE = 'PowerShell 8.1.0 / Go AI agent parity: passed'
+AUTO_ATTENDANT_MARKERS = [
+    'auto attendant create: passed',
+    'auto attendant get/status: passed',
+    'auto attendant list: passed',
+    'auto attendant update/read-back: passed',
+    'auto attendant refresh: passed',
+    'auto attendant delete: passed',
+]
+AUTO_ATTENDANT_ORACLE = 'PowerShell 8.1.0 / Go auto attendant parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
+    'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
+    'owned-template-permission-populated-crud': (PROOF_MARKERS + ['policy hidden-list edit/read-back: passed','policy hidden-list clear/read-back: passed'], ORACLE_MARKER, 4),
     'owned-notification-crud': (PROOF_MARKERS + ['notification explicit-null update/read-back: passed'], ORACLE_MARKER, 3),
     'owned-shared-calling-populated-crud': (PROOF_MARKERS + ['shared calling populated list edit/clear: passed'], ORACLE_MARKER, 4),
+    'owned-compliance-recording-crud': (PROOF_MARKERS + ['application rejection and absence: passed'], ORACLE_MARKER, 2),
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
     'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
     'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
+    'audio-file-lifecycle': (AUDIO_FILE_MARKERS, AUDIO_FILE_ORACLE, 1),
+    'schedule-lifecycle': (SCHEDULE_MARKERS, SCHEDULE_ORACLE, 3),
+    'call-queue-lifecycle': (CALL_QUEUE_MARKERS, CALL_QUEUE_ORACLE, 1),
+    'call-template-lifecycle': (CALL_TEMPLATE_MARKERS, CALL_TEMPLATE_ORACLE, 1),
+    'auto-recording-denial': (['auto recording create denial: verified', 'auto recording missing-template writes: passed'], None, 0),
+    'mainline-attendant-lifecycle': (MAINLINE_ATTENDANT_MARKERS, MAINLINE_ATTENDANT_ORACLE, 1),
+    'ai-agent-lifecycle': (AI_AGENT_MARKERS, AI_AGENT_ORACLE, 1),
+    'auto-attendant-lifecycle': (AUTO_ATTENDANT_MARKERS, AUTO_ATTENDANT_ORACLE, 1),
     'populated-template-access': (['native populated-list create denial: verified', 'populated-list comparison cleanup: passed'], 'PowerShell 8.1.0 / Go populated-list authorization parity: passed', 1),
     'configuration-update': (['configuration update/read-back and omission: passed', 'configuration restoration/read-back: passed'], 'PowerShell 8.1.0 / Go configuration read parity: passed', 3),
+    'generic-configuration-lifecycle': (['configuration create/read-back: passed', 'configuration set/read-back: passed', 'configuration remove/absence: passed'], 'PowerShell 8.1.0 / Go generic configuration parity: passed', 1),
 }
 # Publish fixed assertion text only. HTTP payloads and dynamic fixture names
 # remain private even when a test fails.
@@ -60,6 +131,18 @@ FAILURE_REASONS = (
     'read/list comparison: identity values differ',
     'read/list comparison: setting or extension values differ',
     'read/list comparison: metadata values differ',
+    'read/list metadata: Key.ScopeClass differs',
+    'read/list metadata: Key.SchemaId differs',
+    'read/list metadata: Key.AuthorityId differs',
+    'read/list metadata: Key.DefaultXml.SchemaId differs',
+    'read/list metadata: Key.DefaultXml.Data differs',
+    'read/list metadata: Key.DefaultXml.ConfigObject differs',
+    'read/list metadata: Key.DefaultXml.Signature differs',
+    'read/list metadata: Key.DefaultXml.IsModified differs',
+    'read/list metadata: Key.XmlRoot differs',
+    'read/list metadata: ConfigMetadata differs',
+    'read/list metadata: ConfigId differs',
+
     'pinned federation read oracle failed; no output retained',
     'pinned federation read could not be verified',
     'pinned federation identity differs',
@@ -119,7 +202,6 @@ FAILURE_REASONS = (
     'recording rollout update or omitted-field preservation did not converge',
     'recording rollout sparse update included an unbound field',
 )
-FEDERATION_CASES = {'external-policy', 'acs', 'external-users', 'tenant'}
 
 
 class AcceptanceFailure(ValueError):
@@ -140,10 +222,83 @@ def write_private(path, value):
         stream.write(value)
 
 
+SERVICE_ROOT = 'msteams/teams_admin_api'
+# Partitions that are not teams_admin_api services: tenant/platform checks and
+# Microsoft Graph team resources.
+EXTRA_SERVICES = {'platform', 'graph'}
+SERVICE_AUTH_METHOD = 'client-secret'
+# Each service partition's tests live in their own Go package here.
+LAB_ROOT = Path('tests/integration/lab')
+# The auth partition loads every credential kind; its tests prove each one.
+AUTH_PARTITION_METHOD = 'all'
+
+
+def load_registry(here=None):
+    return json.loads(((here or HERE) / 'suites.json').read_text())
+
+
+def is_write(step):
+    """Mutating and serialized steps hold the tenant-wide write lock."""
+    return bool(step.get('mutation') or step.get('serial'))
+
+
+def registry_steps(registry, service=None, auth=False):
+    """Flatten the registry into ordered steps; each becomes one report."""
+    units = []
+    if not service:
+        section = registry.get('auth', {})
+        for step in section.get('steps', []):
+            units.append(dict(step, partition='auth', package=section['package'], suite='auth/' + step['id']))
+    if not auth:
+        for name, entry in registry.get('services', {}).items():
+            if service and name != service:
+                continue
+            for step in entry['steps']:
+                units.append(dict(step, partition=name, service=name, package=entry['package'], suite=name + '/' + step['id']))
+    return units
+
+
+def registered_tests(registry):
+    return [test for unit in registry_steps(registry) for test in unit['tests']]
+
+
+def service_locked(entry):
+    return any(is_write(step) for step in entry['steps'])
+
+
+def validate_registry(registry, root=ROOT):
+    """Reject registries that would run steps out of order or unlabelled."""
+    auth = registry.get('auth') or {}
+    if not auth.get('package') or not auth.get('steps') or any(not step.get('tests') for step in auth['steps']):
+        raise AcceptanceFailure('the auth partition needs a package and steps with tests')
+    if any(is_write(step) for step in auth['steps']):
+        raise AcceptanceFailure('the auth partition must not mutate the tenant')
+    services = registry.get('services') or {}
+    if not services:
+        raise AcceptanceFailure('no acceptance service partitions are registered')
+    for name, entry in services.items():
+        if name not in EXTRA_SERVICES and not (root / SERVICE_ROOT / name).is_dir():
+            raise AcceptanceFailure('acceptance partition is not a teams_admin_api service: ' + name)
+        if entry.get('package') != './' + (LAB_ROOT / name).as_posix():
+            raise AcceptanceFailure('service partition package must be ./' + (LAB_ROOT / name).as_posix() + ': ' + name)
+        ids = [step.get('id') for step in entry.get('steps', [])]
+        if not ids or len(ids) != len(set(ids)) or not all(isinstance(i, str) and re.fullmatch(r'[a-z][a-z0-9-]*', i) for i in ids):
+            raise AcceptanceFailure('service steps need unique lowercase ids: ' + name)
+        writes = [is_write(step) for step in entry['steps']]
+        if writes != sorted(writes):
+            raise AcceptanceFailure('read-only steps must run before mutating or serialized steps: ' + name)
+        for step in entry['steps']:
+            if not step.get('tests'):
+                raise AcceptanceFailure('service step has no tests: ' + name + '/' + step['id'])
+            if step.get('mutation') and (step.get('proof') not in PROOFS or type(step.get('journal_entries_per_test')) is not int
+                                         or step['journal_entries_per_test'] < 1):
+                raise AcceptanceFailure('mutation step requires explicit checks and journal entry count: ' + name + '/' + step['id'])
+
+
 def check_names(root=ROOT):
     errors = []
     counts = {'unit': 0, 'acceptance': 0}
-    acceptance = set()
+    acceptance = {}
     for path in root.rglob('*_test.go'):
         if '.git' in path.parts:
             continue
@@ -155,26 +310,37 @@ def check_names(root=ROOT):
             else:
                 counts['acceptance' if name.startswith('TestAcc') else 'unit'] += 1
                 if name.startswith('TestAcc'):
-                    acceptance.add(name)
+                    acceptance[name] = path.parent.relative_to(root)
     if errors:
-        raise ValueError('test names must start TestUnit or TestAcc: ' + ', '.join(sorted(set(errors))))
+        raise AcceptanceFailure('test names must start TestUnit or TestAcc: ' + ', '.join(sorted(set(errors))))
     if root == ROOT:
-        suites = json.loads((HERE / 'suites.json').read_text())
-        selected = [name for suite in suites.values() for name in suite['tests']]
+        registry = load_registry()
+        validate_registry(registry, root)
+        selected = registered_tests(registry)
         pending = json.loads((HERE / 'pending.json').read_text())
-        if len(selected) != len(set(selected)) or set(selected) & set(pending) or set(selected) | set(pending) != acceptance:
-            raise ValueError('every TestAcc must have one CI suite or an explicit pending disposition')
+        if len(selected) != len(set(selected)) or set(selected) & set(pending) or set(selected) | set(pending) != set(acceptance):
+            raise AcceptanceFailure('every TestAcc must have one CI step or an explicit pending disposition')
         if any(not entry.get('reason') or not (ROOT / entry['file']).is_file() for entry in pending.values()):
-            raise ValueError('pending acceptance requires an existing test file and a concrete reason')
-        selected_skips(suites)
+            raise AcceptanceFailure('pending acceptance requires an existing test file and a concrete reason')
+        moved = sorted(test for test, entry in pending.items() if Path(entry['file']).parent != acceptance[test])
+        if moved:
+            raise AcceptanceFailure('pending acceptance file must define the test: ' + ', '.join(moved))
+        stray = sorted(path.name for path in (root / LAB_ROOT).glob('*.go'))
+        if stray:
+            raise AcceptanceFailure('lab tests belong in a service package under ' + LAB_ROOT.as_posix() + ': ' + ', '.join(stray))
+        misplaced = sorted(test for unit in registry_steps(registry) for test in unit['tests']
+                           if Path(unit['package']) != acceptance[test])
+        if misplaced:
+            raise AcceptanceFailure('registered TestAcc must be defined in its partition package: ' + ', '.join(misplaced))
+        selected_skips(registry)
     return counts
 
 
-def selected_skips(suites, args=None):
+def selected_skips(registry, args=None):
     """Resolve exact test names before starting any tenant operation."""
     path = HERE / 'skips.json'
     skipped = json.loads(path.read_text()) if path.exists() else {}
-    known = {test for suite in suites.values() for test in suite.get('tests', [])}
+    known = set(registered_tests(registry))
     if not isinstance(skipped, dict):
         raise AcceptanceFailure('Acceptance skips must map exact TestAcc names to public reasons.')
 
@@ -270,8 +436,19 @@ def shared_calling_fixture(tenant_id, raw):
     return fixture
 
 
+def auth_method():
+    mode = os.environ.get('MSTEAMS_LAB_AUTH_METHOD', SERVICE_AUTH_METHOD)
+    if mode not in {'certificate', 'client-secret', AUTH_PARTITION_METHOD}:
+        raise ValueError('unsupported acceptance authentication method')
+    return mode
+
+
 def prepare(args):
-    keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'CERTIFICATE_PEM', 'PRIVATE_KEY_PEM', 'RECOVERY_CERTIFICATE_PEM', 'CALL_HOLD_AUDIO_FILE_ID', 'USER_FIXTURE_JSON', 'GROUP_FIXTURE_JSON']
+    # Service partitions authenticate with the client secret only; the
+    # certificate key material is delivered to the auth partition alone.
+    keys = ['TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'RECOVERY_CERTIFICATE_PEM', 'CALL_HOLD_AUDIO_FILE_ID', 'USER_FIXTURE_JSON', 'GROUP_FIXTURE_JSON']
+    if auth_method() != SERVICE_AUTH_METHOD:
+        keys[3:3] = ['CERTIFICATE_PEM', 'PRIVATE_KEY_PEM']
     values = {key: os.environ.get('MSTEAMS_LAB_' + key, '') for key in keys}
     missing = ['MSTEAMS_LAB_' + key for key, value in values.items() if not value.strip()]
     if missing:
@@ -286,8 +463,9 @@ def prepare(args):
     private = Path(tempfile.mkdtemp(prefix='msteams-acceptance-', dir=base))
     certificate = private / 'certificate.pem'
     key = private / 'private-key.pem'
-    write_private(certificate, values['CERTIFICATE_PEM'])
-    write_private(key, values['PRIVATE_KEY_PEM'])
+    if 'CERTIFICATE_PEM' in values:
+        write_private(certificate, values['CERTIFICATE_PEM'])
+        write_private(key, values['PRIVATE_KEY_PEM'])
     write_private(private / 'recovery-certificate.pem', values['RECOVERY_CERTIFICATE_PEM'])
     write_json(private / 'user-fixture.json', fixture)
     write_json(private / 'group-fixture.json', group)
@@ -305,14 +483,22 @@ def prepare(args):
     spec = importlib.util.spec_from_file_location('pinned_baseline', ROOT / 'tools/baseline/baseline.py')
     baseline = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(baseline)
-    metadata = args.metadata or private / 'gallery.xml'
-    archive = args.archive or private / 'module.zip'
-    if not args.metadata:
+    cache = getattr(args, 'cache_directory', None)
+    cached = cache is not None and (cache / 'gallery.xml').is_file() and (cache / 'module.zip').is_file()
+    metadata = args.metadata or (cache / 'gallery.xml' if cached else private / 'gallery.xml')
+    archive = args.archive or (cache / 'module.zip' if cached else private / 'module.zip')
+    if not args.metadata and not cached:
         baseline.fetch(f"{baseline.GALLERY}/api/v2/Packages(Id='MicrosoftTeams',Version='{baseline.VERSION}')", metadata, 1024 * 1024)
-    if not args.archive:
+    if not args.archive and not cached:
         baseline.fetch(f'{baseline.GALLERY}/api/v2/package/MicrosoftTeams/{baseline.VERSION}', archive)
+    # A cached download is only a transport optimisation: the pinned checksum
+    # is verified on every run before the module is extracted.
     info = baseline.gallery_metadata(metadata.read_bytes(), baseline.VERSION)
     baseline.verify_archive(archive, info, baseline.PIN)
+    if cache is not None and not cached:
+        cache.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(metadata, cache / 'gallery.xml')
+        shutil.copyfile(archive, cache / 'module.zip')
     baseline.extract_archive(archive, private / 'module')
     print(f'Repository secrets loaded: {len(values)}. MicrosoftTeams 8.1.0 checksum verified.', flush=True)
 
@@ -321,7 +507,10 @@ def prepare(args):
 def assertion_reasons(root=ROOT):
     """Retain checked-in assertion literals, never their format arguments."""
     reasons = set(FAILURE_REASONS)
-    for path in root.rglob('*_test.go'):
+    # Shared lab helpers live in ordinary .go files under tests/; their fixed
+    # assertion text is as public as the text in the _test.go files.
+    paths = set(root.rglob('*_test.go')) | set((root / 'tests').rglob('*.go'))
+    for path in sorted(paths):
         if '.git' in path.parts:
             continue
         for literal in re.findall(r'\bt\.(?:Fatalf?|Errorf?)\(\s*("(?:[^"\\]|\\.)*")', path.read_text()):
@@ -359,11 +548,9 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None, exp
         if owner in http_statuses and action == 'output':
             http_statuses[owner].extend(int(value) for value in re.findall(r'HTTP (\d{3})\b', event.get('Output', '')))
             service_codes[owner].extend(int(value) for value in re.findall(r'PolicyRP (\d+)\b', event.get('Output', '')))
-            case = test.removeprefix('TestAccFederationReadOnly/')
-            prefix = case + ': ' if owner == 'TestAccFederationReadOnly' and case in FEDERATION_CASES else ''
             matched = next((reason for reason in reasons if reason in event.get('Output', '')), None)
             if matched:
-                failure_reasons[owner].add(prefix + matched)
+                failure_reasons[owner].add(matched)
         if owner in markers and action == 'output':
             for marker in proof_markers + ([oracle_marker] if oracle_marker else []):
                 if marker in event.get('Output', ''):
@@ -398,31 +585,145 @@ def evaluate(events, expected, process_exit, require_crud=False, proof=None, exp
     }
 
 
+def selected_services(registry):
+    """Services the plan job selected, else those named by MSTEAMS_ACC_SERVICES
+    (a dispatch rerun), else all."""
+    services = registry.get('services', {})
+    planned = os.environ.get('MSTEAMS_ACC_PLANNED_SERVICES', '').strip()
+    if planned:
+        names = set(json.loads(planned))
+        if names - set(services):
+            raise AcceptanceFailure('Planned acceptance services must name registered service partitions exactly.')
+        return [name for name in services if name in names]
+    names = {value for value in re.split(r'[\s,]+', os.environ.get('MSTEAMS_ACC_SERVICES', '').strip()) if value}
+    if names - set(services):
+        raise AcceptanceFailure('Acceptance service selections must name registered service partitions exactly.')
+    return [name for name in services if not names or name in names]
+
+
+# A pull request that changes any of these runs every service partition:
+# they are shared by all clients, lab tests or tenant setup.
+SHARED_PATTERNS = [re.compile(pattern) for pattern in [
+    r'^go\.(mod|sum)$',
+    r'^tools/baseline/',
+    r'^internal/',
+    r'^tests/integration/(auth|lab/internal)/',
+    r'^msteams/[^/]+\.go$',
+    r'^msteams/(auth|client|config|capabilities|internal)/',
+    r'^msteams/[^/]+/(?!services\.go$)[^/]+\.go$',
+    r'^msteams/[^/]+/(internal|policy)/',
+]]
+
+
+def changed_services(registry, files, base_registry, references=None):
+    """The service partitions a pull request touches.
+
+    A service is touched by a change to its lab test package, an SDK package
+    of the same name, its suites.json entry, or a PowerShell oracle script its
+    lab tests reference. A shared change (SHARED_PATTERNS) touches every
+    service; unit test files in shared packages and acceptance workflow edits
+    do not (the always-run auth partition exercises the partition steps).
+    ci.py, ledger, docs and services.go wiring changes touch none: unit tests
+    cover them, and pushes to main still run every partition."""
+    services = registry.get('services', {})
+    if any(pattern.search(path) for path in files if not path.endswith('_test.go') for pattern in SHARED_PATTERNS):
+        return list(services)
+    base_services = base_registry.get('services', {})
+    references = references or {}
+    oracles = {Path(path).name for path in files if path.startswith('tests/integration/lab/oracle/')}
+    selected = []
+    for name, entry in services.items():
+        package = entry['package'].removeprefix('./').rstrip('/') + '/'
+        sdk = re.compile(r'^msteams/[^/]+/' + re.escape(name) + '/')
+        if (entry != base_services.get(name)
+                or any(path.startswith(package) or sdk.search(path) for path in files)
+                or oracles & set(references.get(name, ()))):
+            selected.append(name)
+    return selected
+
+
+def oracle_references(registry):
+    """Oracle script names each service's lab test package mentions."""
+    references = {}
+    scripts = [path.name for path in (ROOT / 'tests/integration/lab/oracle').glob('*.ps1')]
+    for name, entry in registry.get('services', {}).items():
+        sources = ''.join(path.read_text() for path in (ROOT / entry['package']).glob('*.go'))
+        references[name] = [script for script in scripts if script in sources]
+    return references
+
+
+def pull_request_services(registry, base):
+    """Services changed between base (the PR merge commit's base parent) and HEAD."""
+    def git(*command):
+        return subprocess.run(['git', *command], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    files = [line for line in git('diff', '--name-only', base, 'HEAD').splitlines() if line]
+    try:
+        base_registry = json.loads(git('show', base + ':tools/acceptance/suites.json'))
+    except (subprocess.CalledProcessError, json.JSONDecodeError):
+        base_registry = {}
+    return changed_services(registry, files, base_registry, oracle_references(registry))
+
+
+def plan(args):
+    """Emit the service job matrices: locked and unlocked partitions.
+
+    A pull request (MSTEAMS_ACC_DIFF_BASE set) plans only the services it
+    touches, so concurrent PRs don't overflow the tenant-wide lock queue."""
+    registry = load_registry()
+    validate_registry(registry)
+    services = selected_services(registry)
+    base = os.environ.get('MSTEAMS_ACC_DIFF_BASE', '').strip()
+    if base and not os.environ.get('MSTEAMS_ACC_SERVICES', '').strip():
+        changed = set(pull_request_services(registry, base))
+        services = [name for name in services if name in changed]
+    entries = registry['services']
+    outputs = {
+        'services': services,
+        'services_unlocked': [name for name in services if not service_locked(entries[name])],
+        'services_locked': [name for name in services if service_locked(entries[name])],
+    }
+    destination = os.environ.get('GITHUB_OUTPUT')
+    for key, value in outputs.items():
+        line = key + '=' + json.dumps(value, separators=(',', ':'))
+        print(line, flush=True)
+        if destination:
+            with Path(destination).open('a') as stream:
+                stream.write(line + '\n')
+    return 0
+
+
 def run(args):
     private = Path(os.environ['MSTEAMS_LAB_PRIVATE_DIRECTORY']).resolve()
-    suites = json.loads((HERE / 'suites.json').read_text())
-    kind = getattr(args, 'kind', None)
-    if kind not in {None, 'reads', 'writes'} or kind and args.suite:
-        raise ValueError('choose a suite selection or a read/write group')
-    selected = [name for name, suite in suites.items()
-                if (not args.suite or name in args.suite)
-                and (not kind or bool(suite.get('mutation') or suite.get('serial')) == (kind == 'writes'))]
-    if not selected or args.suite and set(args.suite) - set(suites):
-        raise ValueError('unknown acceptance suite')
-    skipped = selected_skips(suites, args)
+    registry = load_registry()
+    service = getattr(args, 'service', None)
+    auth = bool(getattr(args, 'auth', False))
+    if auth == bool(service):
+        raise ValueError('choose the auth partition or one service partition')
+    if service and service not in registry.get('services', {}):
+        raise AcceptanceFailure('Unknown acceptance service partition: ' + service)
+    units = registry_steps(registry, service=service, auth=auth)
+    wanted = set(getattr(args, 'step', None) or [])
+    if wanted - {unit['id'] for unit in units}:
+        raise ValueError('unknown acceptance step')
+    units = [unit for unit in units if not wanted or unit['id'] in wanted]
+    skipped = selected_skips(registry, args)
     revision = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
-    mode = os.environ.get('MSTEAMS_LAB_AUTH_METHOD', 'certificate')
-    if mode not in {'certificate', 'client-secret'}:
-        raise ValueError('unsupported acceptance authentication method')
+    mode = auth_method()
+    if auth and mode != AUTH_PARTITION_METHOD:
+        raise AcceptanceFailure('The auth partition runs with MSTEAMS_LAB_AUTH_METHOD=all so it can prove every credential kind.')
+    if service and mode != SERVICE_AUTH_METHOD:
+        # Certificate support is proven once by the auth partition; services
+        # do not repeat it for every resource.
+        raise AcceptanceFailure('Service partitions run with client-secret authentication only.')
     reports = []
-    for name in selected:
-        suite = suites[name]
-        if suite.get('mutation') and (suite.get('proof') not in PROOFS or type(suite.get('journal_entries_per_test')) is not int or suite['journal_entries_per_test'] < 1):
-            raise ValueError('mutation suite requires explicit checks and journal entry count')
-        active = [test for test in suite['tests'] if test not in skipped]
+    blocked = False
+    for unit in units:
+        if unit.get('mutation') and (unit.get('proof') not in PROOFS or type(unit.get('journal_entries_per_test')) is not int or unit['journal_entries_per_test'] < 1):
+            raise ValueError('mutation step requires explicit checks and journal entry count')
+        active = [test for test in unit['tests'] if test not in skipped]
         env = {key: value for key, value in os.environ.items() if not key.startswith('MSTEAMS_')}
         env.update({
-            'MSTEAMS_LAB_READ_ONLY': '1', 'MSTEAMS_LAB_MUTATIONS': '1' if suite.get('mutation') else '0',
+            'MSTEAMS_LAB_READ_ONLY': '1', 'MSTEAMS_LAB_MUTATIONS': '1' if unit.get('mutation') else '0',
             'MSTEAMS_LAB_CONSEQUENTIAL': '0', 'MSTEAMS_LAB_TIMEOUT_SECONDS': '300',
             'MSTEAMS_LAB_IDENTITY_FILE': str(private / 'identity.json'),
             'MSTEAMS_LAB_USER_FIXTURE_FILE': str(private / 'user-fixture.json'),
@@ -435,12 +736,16 @@ def run(args):
         if (private / 'shared-calling-fixture.json').is_file():
             env['MSTEAMS_LAB_SHARED_CALLING_FIXTURE_FILE'] = str(private / 'shared-calling-fixture.json')
         pattern = '^(' + '|'.join(re.escape(test) for test in active) + ')$'
-        command = ['go', 'test', '-json', '-count=1', '-race', '-timeout=12m', '-run', pattern, suite['package']]
+        command = ['go', 'test', '-json', '-count=1', '-race', '-timeout=12m', '-run', pattern, unit['package']]
         previous_journals = set((private / 'journals').glob('*.json'))
-        log = private / (name + '.jsonl')
+        label = unit['suite'].replace('/', '--')
+        log = private / (label + '.jsonl')
         events = []
         process_exit = 0
-        if active:
+        # A failed earlier step leaves the service in an unknown state, so its
+        # later mutations do not start; their tests report not-run.
+        started = bool(active) and not (blocked and unit.get('mutation'))
+        if started:
             fd = os.open(log, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
             with os.fdopen(fd, 'w') as stream:
                 process_exit = subprocess.run(command, cwd=ROOT, env=env, stdout=stream, stderr=subprocess.STDOUT).returncode
@@ -449,28 +754,34 @@ def run(args):
                     events.append(json.loads(line))
                 except ValueError:
                     pass
-        children = {test: cases for test, cases in suite.get('children', {}).items() if test in active}
-        report = evaluate(events, active, process_exit, proof=suite.get('proof'), expected_children=children)
+        children = {test: cases for test, cases in unit.get('children', {}).items() if test in active}
+        report = evaluate(events, active, process_exit, proof=unit.get('proof'), expected_children=children)
         if not active:
             report['outcome'] = 'skipped'
+        elif not started:
+            report['blocked_by_earlier_step'] = True
         outcomes = {test['name']: test for test in report['tests']}
-        report['tests'] = [outcomes[test] if test in outcomes else {'name': test, 'outcome': 'skip', 'skip_reason': skipped[test]} for test in suite['tests']]
-        if suite.get('mutation'):
+        report['tests'] = [outcomes[test] if test in outcomes else {'name': test, 'outcome': 'skip', 'skip_reason': skipped[test]} for test in unit['tests']]
+        if unit.get('mutation'):
             new_journals = set((private / 'journals').glob('*.json')) - previous_journals
             entries = [entry for path in new_journals for entry in json.loads(path.read_text())['entries']]
             report['cleanup_journal_entries'] = len(entries)
             report['cleanup_journal_entries_cleaned'] = sum(entry['state'] == 'cleaned' for entry in entries)
-            report['expected_cleanup_journal_entries'] = len(active) * suite['journal_entries_per_test']
+            report['expected_cleanup_journal_entries'] = len(active) * unit['journal_entries_per_test']
             if len(entries) != report['expected_cleanup_journal_entries'] or report['cleanup_journal_entries_cleaned'] != len(entries):
                 report['outcome'] = 'failed'
-        report.update(suite=name, revision=revision, auth_method=mode, cloud='commercial', baseline_version='8.1.0',
-                      powershell_oracle_enabled=True)
+        report.update(suite=unit['suite'], partition=unit['partition'], step=unit['id'], phase='writes' if is_write(unit) else 'reads',
+                      revision=revision, auth_method=mode, cloud='commercial', baseline_version='8.1.0', powershell_oracle_enabled=True)
+        if unit.get('service'):
+            report['service'] = unit['service']
+        blocked = blocked or report['outcome'] == 'failed'
         reports.append(report)
+        name = label
         write_json(args.report_directory / (name + '.json'), report)
         print_report(report)
     outcome = ('skipped' if all(r['outcome'] == 'skipped' for r in reports)
                else 'passed' if all(r['outcome'] in {'passed', 'skipped'} for r in reports) else 'failed')
-    summary = {'revision': revision, 'auth_method': mode, 'outcome': outcome,
+    summary = {'revision': revision, 'auth_method': mode, 'partition': 'auth' if auth else service, 'outcome': outcome,
                'passed_tests': sum(test['outcome'] == 'pass' for report in reports for test in report['tests']),
                'skipped_tests': sum(test['outcome'] == 'skip' for report in reports for test in report['tests']),
                'suites': [{'name': r['suite'], 'outcome': r['outcome']} for r in reports], 'coverage_claim': False}
@@ -501,7 +812,7 @@ def print_report(report):
         if os.environ.get('GITHUB_ACTIONS') == 'true':
             print('::error title=' + test['name'] + '::' + detail, flush=True)
 
-    if report['suite'] == 'tenant-access-outcomes':
+    if report.get('step') == 'tenant-access-outcomes':
         for test in report['tests']:
             if test['outcome'] == 'pass':
                 statuses = ', '.join(map(str, report.get('http_statuses', {}).get(test['name'], [])))
@@ -556,7 +867,7 @@ def write_summary(reports):
         lines += ['', '### Configured skips', '', 'Skipped tests did not run and provide no acceptance evidence.', '', '| Auth | Skipped test | Reason |', '|---|---|---|'] + skipped
     access = []
     for report in reports:
-        if report['suite'] != 'tenant-access-outcomes':
+        if report.get('step') != 'tenant-access-outcomes':
             continue
         for test in report['tests']:
             statuses = ', '.join(map(str, report.get('http_statuses', {}).get(test['name'], [])))
@@ -576,19 +887,23 @@ def summarize(args):
         if 'suite' in report and 'tests' in report:
             reports.append(report)
     if not reports:
-        raise AcceptanceFailure('No TestAcc reports were produced. Check the setup steps in the authentication jobs.')
-    suites = json.loads((HERE / 'suites.json').read_text())
-    skipped = selected_skips(suites, args)
-    expected = {(mode, name) for mode in ['certificate', 'client-secret'] for name in suites}
+        raise AcceptanceFailure('No TestAcc reports were produced. Check the setup steps in the auth and service jobs.')
+    registry = load_registry()
+    skipped = selected_skips(registry, args)
+    services = set(selected_services(registry))
+    # The auth partition proves every credential kind once; service steps run
+    # once each, with the client secret.
+    units = {unit['suite']: unit for unit in registry_steps(registry) if unit['partition'] == 'auth' or unit['partition'] in services}
+    expected = {(AUTH_PARTITION_METHOD if unit['partition'] == 'auth' else SERVICE_AUTH_METHOD, suite) for suite, unit in units.items()}
     actual = [(report.get('auth_method'), report.get('suite')) for report in reports]
     complete = set(actual) == expected and len(actual) == len(expected)
     for mode, name in sorted(expected - set(actual)):
-        print(f'FAIL missing TestAcc suite: {mode}/{name}', flush=True)
+        print(f'FAIL missing TestAcc report: {mode}/{name}', flush=True)
     if set(actual) - expected or len(actual) != len(set(actual)):
-        print('FAIL unexpected or duplicate TestAcc suite reports', flush=True)
+        print('FAIL unexpected or duplicate TestAcc reports', flush=True)
     for report in reports:
         print_report(report)
-        if report.get('suite') in suites and not report_matches_selection(report, suites[report['suite']], skipped):
+        if report.get('suite') in units and not report_matches_selection(report, units[report['suite']], skipped):
             print(f"FAIL TestAcc selection or outcomes differ: {report['auth_method']}/{report['suite']}", flush=True)
             complete = False
     write_summary(reports)
@@ -632,9 +947,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='command', required=True)
     commands.add_parser('check-names')
+    commands.add_parser('plan', help='Write the auth and service job matrices to GITHUB_OUTPUT.')
     prep = commands.add_parser('prepare')
     prep.add_argument('--archive', type=Path)
     prep.add_argument('--metadata', type=Path)
+    prep.add_argument('--cache-directory', type=Path, help='Reuse or populate a verified MicrosoftTeams download cache.')
     for name in ['run', 'finalize', 'summarize']:
         child = commands.add_parser(name)
         child.add_argument('--report-directory', type=Path, required=True)
@@ -643,13 +960,17 @@ def main():
             child.add_argument('--skip-reason', help='Public reason for the selective skips.')
             child.add_argument('--include-test', action='append', help='Run a test skipped by skips.json; repeat for multiple tests.')
         if name == 'run':
-            child.add_argument('--suite', action='append')
-            child.add_argument('--kind', choices=['reads', 'writes'])
+            target = child.add_mutually_exclusive_group(required=True)
+            target.add_argument('--auth', action='store_true', help='Run the auth partition (MSTEAMS_LAB_AUTH_METHOD=all).')
+            target.add_argument('--service', help='Run one service partition, in step order, with the client secret.')
+            child.add_argument('--step', action='append', help='Run only this step id of the partition; repeatable.')
     args = parser.parse_args()
     try:
         if args.command == 'check-names':
             print(json.dumps(check_names()))
             return 0
+        if args.command == 'plan':
+            return plan(args)
         if args.command == 'prepare':
             prepare(args)
             return 0

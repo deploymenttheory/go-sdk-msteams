@@ -30,8 +30,8 @@ prepared behavior, not a successful live or exported-command comparison.
 With those private variables explicitly set, select only the intended probe:
 
 ```sh
-go test -count=1 -run '^TestAccTargetingPolicyReadOnly$' ./tests/integration/lab
-go test -count=1 -run '^TestAccTargetingHierarchyStatusReadOnly$' ./tests/integration/lab
+go test -count=1 -run '^TestAccTargetingPolicyReadOnly$' ./tests/integration/lab/targeting_policy
+go test -count=1 -run '^TestAccTargetingHierarchyStatusReadOnly$' ./tests/integration/lab/targeting_hierarchy
 ```
 
 Upload replaces active tenant-wide hierarchy data. Delete removes that singleton;

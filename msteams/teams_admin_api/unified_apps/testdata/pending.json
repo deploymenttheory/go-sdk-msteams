@@ -1,0 +1,11 @@
+[
+  {
+    "id": "00000000-0000-4000-8000-000000000006",
+    "externalId": "00000000-0000-4000-8000-000000000007",
+    "iteration": "3",
+    "createdBy": "00000000-0000-4000-8000-000000000003",
+    "lastUpdateDateTime": "2026-11-03T10:00:00+00:00",
+    "reviewStatus": "PendingPublishing",
+    "metadata": {"appName": "Fixture name", "shortDescription": "Fixture description", "longDescription": "Fixture description", "copilotEnabled": false, "compatibleHubs": ["Teams"], "publishDateTime": "2026-11-03T10:00:00"}
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "BadArgument",
+    "message": "Fixture message",
+    "target": "00000000-0000-4000-8000-93d8b923abff",
+    "correlationId": "00000000-0000-4000-8000-ce63d247a083",
+    "timeStampUtc": "11/23/2026 4:25:20 AM"
+  }
+}

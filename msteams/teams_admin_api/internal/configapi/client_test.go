@@ -160,3 +160,32 @@ func TestUnitQueuedDiscoveryRespectsCancellation(t *testing.T) {
 		}
 	})
 }
+
+func TestUnitTargetSegmentExtendsForestAndRejectsPathText(t *testing.T) {
+	t.Parallel()
+	var targets []string
+	base := doFunc(func(_ context.Context, request client.Request, result any) (*resty.Response, error) {
+		if request.Path[0] == "Teams.Tenant" {
+			return metadata(200), json.Unmarshal([]byte(`{"Endpoints":{"AdminServiceEndpoint":"admin.example.invalid"}}`), result)
+		}
+		targets = append(targets, request.Header.Get("X-MS-Target-Uri"))
+		return metadata(200), nil
+	})
+	adapter := configapi.New(base)
+	for _, segment := range []string{"HostedMigration", ""} {
+		if _, err := adapter.DoTarget(t.Context(), segment, client.Request{Method: http.MethodPost, Path: []string{"Teams.HostedMigrationService", "ValidateUser"}}, nil); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if len(targets) != 2 || targets[0] != "https://admin.example.invalid/HostedMigration" || targets[1] != "https://admin.example.invalid/" {
+		t.Fatalf("target segment differs: %q", targets)
+	}
+	for _, segment := range []string{"a/b", `a\b`, "a?b", "a#b", "%2f", "a b", "..", ".", "a\x7f"} {
+		if _, err := adapter.DoTarget(t.Context(), segment, client.Request{Method: http.MethodPost, Path: []string{"x"}}, nil); !errors.Is(err, client.ErrRequest) {
+			t.Fatalf("segment %q was accepted", segment)
+		}
+	}
+	if len(targets) != 2 {
+		t.Fatal("rejected segment reached the backend")
+	}
+}

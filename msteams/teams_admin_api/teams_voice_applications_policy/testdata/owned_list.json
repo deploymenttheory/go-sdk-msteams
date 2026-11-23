@@ -1,0 +1,224 @@
+[
+  {
+    "Description": null,
+    "AllowAutoAttendantBusinessHoursGreetingChange": false,
+    "AllowAutoAttendantAfterHoursGreetingChange": false,
+    "AllowAutoAttendantHolidayGreetingChange": false,
+    "AllowAutoAttendantBusinessHoursChange": false,
+    "AllowAutoAttendantTimeZoneChange": false,
+    "AllowAutoAttendantLanguageChange": false,
+    "AllowAutoAttendantHolidaysChange": false,
+    "AllowAutoAttendantBusinessHoursRoutingChange": false,
+    "AllowAutoAttendantAfterHoursRoutingChange": false,
+    "AllowAutoAttendantHolidayRoutingChange": false,
+    "AllowCallQueueWelcomeGreetingChange": false,
+    "AllowCallQueueMusicOnHoldChange": false,
+    "AllowCallQueueOverflowSharedVoicemailGreetingChange": false,
+    "AllowCallQueueTimeoutSharedVoicemailGreetingChange": false,
+    "AllowCallQueueOptOutChange": false,
+    "AllowCallQueueAgentOptChange": false,
+    "AllowCallQueueMembershipChange": false,
+    "AllowCallQueueRoutingMethodChange": false,
+    "AllowCallQueuePresenceBasedRoutingChange": false,
+    "CallQueueAgentMonitorMode": "Disabled",
+    "CallQueueAgentMonitorNotificationMode": "Disabled",
+    "AllowCallQueueLanguageChange": false,
+    "AllowCallQueueOverflowRoutingChange": false,
+    "AllowCallQueueTimeoutRoutingChange": false,
+    "AllowCallQueueNoAgentsRoutingChange": false,
+    "AllowCallQueueConferenceModeChange": false,
+    "AllowCallQueueNoAgentSharedVoicemailGreetingChange": false,
+    "RealTimeAutoAttendantMetricsPermission": "Disabled",
+    "RealTimeCallQueueMetricsPermission": "Disabled",
+    "RealTimeAgentMetricsPermission": "Disabled",
+    "HistoricalAutoAttendantMetricsPermission": "Disabled",
+    "HistoricalCallQueueMetricsPermission": "Disabled",
+    "HistoricalAgentMetricsPermission": "Disabled",
+    "Key": {
+      "ScopeClass": "Global",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsVoiceApplicationsPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Global",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "Global"
+  },
+  {
+    "Description": null,
+    "AllowAutoAttendantBusinessHoursGreetingChange": false,
+    "AllowAutoAttendantAfterHoursGreetingChange": false,
+    "AllowAutoAttendantHolidayGreetingChange": false,
+    "AllowAutoAttendantBusinessHoursChange": false,
+    "AllowAutoAttendantTimeZoneChange": false,
+    "AllowAutoAttendantLanguageChange": false,
+    "AllowAutoAttendantHolidaysChange": false,
+    "AllowAutoAttendantBusinessHoursRoutingChange": false,
+    "AllowAutoAttendantAfterHoursRoutingChange": false,
+    "AllowAutoAttendantHolidayRoutingChange": false,
+    "AllowCallQueueWelcomeGreetingChange": false,
+    "AllowCallQueueMusicOnHoldChange": false,
+    "AllowCallQueueOverflowSharedVoicemailGreetingChange": false,
+    "AllowCallQueueTimeoutSharedVoicemailGreetingChange": false,
+    "AllowCallQueueOptOutChange": false,
+    "AllowCallQueueAgentOptChange": false,
+    "AllowCallQueueMembershipChange": false,
+    "AllowCallQueueRoutingMethodChange": false,
+    "AllowCallQueuePresenceBasedRoutingChange": false,
+    "CallQueueAgentMonitorMode": "Disabled",
+    "CallQueueAgentMonitorNotificationMode": "Disabled",
+    "AllowCallQueueLanguageChange": false,
+    "AllowCallQueueOverflowRoutingChange": false,
+    "AllowCallQueueTimeoutRoutingChange": false,
+    "AllowCallQueueNoAgentsRoutingChange": false,
+    "AllowCallQueueConferenceModeChange": false,
+    "AllowCallQueueNoAgentSharedVoicemailGreetingChange": false,
+    "RealTimeAutoAttendantMetricsPermission": "Disabled",
+    "RealTimeCallQueueMetricsPermission": "Disabled",
+    "RealTimeAgentMetricsPermission": "Disabled",
+    "HistoricalAutoAttendantMetricsPermission": "Disabled",
+    "HistoricalCallQueueMetricsPermission": "Disabled",
+    "HistoricalAgentMetricsPermission": "Disabled",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Host",
+        "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsVoiceApplicationsPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "fixture-policy-5016ca81",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    },
+    "ConfigId": "fixture-config-eaa39842"
+  },
+  {
+    "Description": "SDK lab non-default updated description",
+    "AllowAutoAttendantBusinessHoursGreetingChange": false,
+    "AllowAutoAttendantAfterHoursGreetingChange": false,
+    "AllowAutoAttendantHolidayGreetingChange": false,
+    "AllowAutoAttendantBusinessHoursChange": false,
+    "AllowAutoAttendantTimeZoneChange": false,
+    "AllowAutoAttendantLanguageChange": false,
+    "AllowAutoAttendantHolidaysChange": true,
+    "AllowAutoAttendantBusinessHoursRoutingChange": false,
+    "AllowAutoAttendantAfterHoursRoutingChange": false,
+    "AllowAutoAttendantHolidayRoutingChange": false,
+    "AllowCallQueueWelcomeGreetingChange": false,
+    "AllowCallQueueMusicOnHoldChange": false,
+    "AllowCallQueueOverflowSharedVoicemailGreetingChange": false,
+    "AllowCallQueueTimeoutSharedVoicemailGreetingChange": false,
+    "AllowCallQueueOptOutChange": true,
+    "AllowCallQueueAgentOptChange": false,
+    "AllowCallQueueMembershipChange": false,
+    "AllowCallQueueRoutingMethodChange": false,
+    "AllowCallQueuePresenceBasedRoutingChange": false,
+    "CallQueueAgentMonitorMode": "Disabled",
+    "CallQueueAgentMonitorNotificationMode": "Disabled",
+    "AllowCallQueueLanguageChange": false,
+    "AllowCallQueueOverflowRoutingChange": false,
+    "AllowCallQueueTimeoutRoutingChange": false,
+    "AllowCallQueueNoAgentsRoutingChange": false,
+    "AllowCallQueueConferenceModeChange": false,
+    "AllowCallQueueNoAgentSharedVoicemailGreetingChange": false,
+    "RealTimeAutoAttendantMetricsPermission": "Disabled",
+    "RealTimeCallQueueMetricsPermission": "Disabled",
+    "RealTimeAgentMetricsPermission": "Disabled",
+    "HistoricalAutoAttendantMetricsPermission": "Disabled",
+    "HistoricalCallQueueMetricsPermission": "Disabled",
+    "HistoricalAgentMetricsPermission": "Disabled",
+    "Key": {
+      "ScopeClass": "Tag",
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "AuthorityId": {
+        "Class": "Tenant",
+        "InstanceId": "00000000-0000-4000-8000-0b617a16f800",
+        "XmlRoot": {
+          "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+        }
+      },
+      "DefaultXml": {
+        "SchemaId": {
+          "XName": {
+            "name": "Fixture name"
+          }
+        },
+        "Data": {
+          "TeamsVoiceApplicationsPolicy": {
+            "@xmlns": "urn:schema:Microsoft.Rtc.Management.Policy.Teams.2017"
+          }
+        },
+        "ConfigObject": null,
+        "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+        "IsModified": true
+      },
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+      }
+    },
+    "Identity": "Tag:fixture-policy",
+    "ConfigMetadata": {
+      "Authority": "Tenant"
+    },
+    "ConfigId": "fixture-config-550aef62"
+  }
+]
