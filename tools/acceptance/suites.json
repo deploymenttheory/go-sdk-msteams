@@ -1194,6 +1194,24 @@
           ]
         }
       ]
+    },
+    "shifts_connections": {
+      "package": "./tests/integration/lab/shifts_connections",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccShiftsConnectionsAuthorizationDenied"
+          ]
+        },
+        {
+          "id": "rejected-writes",
+          "serial": true,
+          "tests": [
+            "TestAccShiftsConnectionsRejectedWrites"
+          ]
+        }
+      ]
     }
   }
 }
