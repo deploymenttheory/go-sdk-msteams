@@ -91,6 +91,24 @@ func TestUnitCloudCallDataGetDenialUsesAcceptanceResponse(t *testing.T) {
 		}})
 }
 
+func TestUnitCloudCallDataCreateDenialUsesAcceptanceResponse(t *testing.T) {
+	t.Parallel()
+	denied, err := os.ReadFile("testdata/create_403.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	run(t, contracttest.Case{Name: "actual-create-forbidden", Source: "msteams/teams_admin_api/cloud_call_data/testdata/create_403.json", Mappings: mapping(newCommand),
+		Steps: []contracttest.Exchange{discovery(t), wire("POST", newCommand, 403, denied)},
+		Want:  contracttest.Expected{Status: 403, Body: denied, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: []string{"Forbidden"}}},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			value, response, err := sdk.TeamsAdminAPI.CloudCallData.Create(ctx)
+			if value != nil || !errors.Is(err, auth.ErrForbidden) {
+				t.Fatal("create 403 was not classified as forbidden")
+			}
+			return contracttest.Observation{Value: value, Response: response, Err: err}
+		}})
+}
+
 func TestUnitCloudCallDataReturnsTokenWithoutPrintingIt(t *testing.T) {
 	t.Parallel()
 	body := []byte(`{"Token":"synthetic-token-value","Future":1}`)

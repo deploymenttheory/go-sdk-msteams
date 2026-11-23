@@ -26,6 +26,7 @@ it, and `RawFields` keeps every service property.
 ## Restrictions
 
 - App-only Teams Administrator credentials receive HTTP 403 `Forbidden` on
-  `Get`; `errors.Is(err, auth.ErrForbidden)` reports it.
+  both `Get` and `Create` (observed live), and the tenant is unchanged;
+  `errors.Is(err, auth.ErrForbidden)` reports it.
 - The connection is a tenant singleton and the module has no cmdlet to remove
   it, so `Create` is a one-way operation.
