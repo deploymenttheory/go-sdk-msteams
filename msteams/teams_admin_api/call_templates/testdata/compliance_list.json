@@ -1,0 +1,15 @@
+{
+  "ComplianceRecordings": [
+    {
+      "Name": "fixture-template",
+      "Id": "00000000-0000-4000-8000-083e6b1ff704",
+      "Description": "SDK lab non-default updated description",
+      "BotId": "00000000-0000-4000-8000-0000000000b0",
+      "RequiredDuringCall": false,
+      "RequiredBeforeCall": true,
+      "ConcurrentInvitationCount": 2,
+      "PairedApplication": null
+    }
+  ],
+  "Diagnostics": []
+}

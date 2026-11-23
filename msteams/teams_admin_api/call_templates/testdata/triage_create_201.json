@@ -1,0 +1,12 @@
+{
+  "SharedVoicemailTriageSettings": {
+    "Id": "00000000-0000-4000-8000-c02b9c2faec7",
+    "Name": "fixture-template",
+    "Description": "SDK lab non-default initial description",
+    "EnableUrgencyDetection": false,
+    "EnableCategoryDetection": true,
+    "EnableCallToActionDetection": true,
+    "EnableVoiceToTextSummary": true
+  },
+  "Diagnostics": []
+}

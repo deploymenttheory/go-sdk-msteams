@@ -78,6 +78,16 @@ class LedgerTests(unittest.TestCase):
         self.record['metadata_ref']='missing.json#/records/0'
         self.assertEqual(self.check()['result'],'failed')
 
+    def test_generic_receiver_methods_resolve(self):
+        self.implemented()
+        (self.root/'sample.go').write_text('package sample\ntype Set[T any] struct{}\nfunc (s *Set[T]) Get() {}\n',encoding='utf-8')
+        symbol=dict(file='sample.go',name='Set.Get')
+        self.record['implementation']['symbols']=[symbol]
+        self.record['parameter_sets'][0]['symbols']=[symbol]
+        self.assertEqual(self.check()['result'],'passed')
+        self.record['parameter_sets'][0]['symbols']=[dict(file='sample.go',name='Set.Put')]
+        self.assertEqual(self.check()['result'],'failed')
+
     def test_management_exclusion_or_research_reclassification_fails(self):
         self.record.update(kind='excluded',exclusion='not in my tenant')
         self.assertEqual(self.check()['result'],'failed')

@@ -102,5 +102,9 @@
   "TestAccCallQueueRecover": {
     "file": "tests/integration/lab/call_queues/call_queues_test.go",
     "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccCallTemplateRecover": {
+    "file": "tests/integration/lab/call_templates/call_templates_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
   }
 }

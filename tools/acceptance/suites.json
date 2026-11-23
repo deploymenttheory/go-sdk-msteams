@@ -101,6 +101,38 @@
         }
       ]
     },
+    "call_templates": {
+      "package": "./tests/integration/lab/call_templates",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccCallTemplateReads"
+          ]
+        },
+        {
+          "id": "lifecycle",
+          "mutation": true,
+          "proof": "call-template-lifecycle",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccComplianceRecordingTemplateLifecycle",
+            "TestAccSharedCallHistoryTemplateLifecycle",
+            "TestAccVoicemailTriageTemplateLifecycle",
+            "TestAccTagsTemplateLifecycle"
+          ]
+        },
+        {
+          "id": "auto-recording-denial",
+          "mutation": true,
+          "proof": "auto-recording-denial",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccAutoRecordingTemplateCreateDenied"
+          ]
+        }
+      ]
+    },
     "cloud_call_data": {
       "package": "./tests/integration/lab/cloud_call_data",
       "steps": [

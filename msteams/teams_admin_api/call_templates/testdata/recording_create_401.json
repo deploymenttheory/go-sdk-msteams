@@ -1,0 +1,13 @@
+{
+  "code": "100012",
+  "message": "Fixture message",
+  "action": "Please check and update relevant settings.",
+  "errorDetails": [
+    {
+      "ErrorCode": "SharePointClient_Unauthorized",
+      "Message": "Fixture message",
+      "Target": null,
+      "TargetEntityId": null
+    }
+  ]
+}

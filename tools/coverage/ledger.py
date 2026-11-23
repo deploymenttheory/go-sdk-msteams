@@ -103,7 +103,8 @@ def validate_symbol(root, ref, test=False, acceptance=False):
     # Structural lookup only; implementation review and executable tests prove semantics.
     if '.' in name:
         receiver, method = name.split('.')
-        pattern = r'(?m)^func\s+\(\s*\w+\s+\*?'+re.escape(receiver)+r'\s*\)\s+'+re.escape(method)+r'\s*\('
+        # Generic receivers carry type parameters: func (t *Templates[T]) List(
+        pattern = r'(?m)^func\s+\(\s*\w+\s+\*?'+re.escape(receiver)+r'(?:\[[\w\s,]+\])?\s*\)\s+'+re.escape(method)+r'\s*\('
     else:
         pattern = r'(?m)^(?:func|type)\s+'+re.escape(name)+r'\b'
     if not re.search(pattern, source):
