@@ -3,6 +3,7 @@ package graphapi
 
 import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	appcatalog "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/app_catalog"
 	associatedteam "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/associated_team"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
 	channelmember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_member"
@@ -17,6 +18,7 @@ import (
 	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
 	teamoperation "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_operation"
 	teamusermanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_user_management"
+	teamsartifact "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/teams_artifact"
 )
 
 // Services is the typed Graph service collection. Resource fields are added with
@@ -38,6 +40,8 @@ type Services struct {
 	UserResolver            *directoryuser.Resolver
 	TeamUserManagement      *teamusermanagement.Service
 	TeamManagement          *teammanagement.Service
+	AppCatalog              *appcatalog.Service
+	TeamsArtifacts          *teamsartifact.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -57,6 +61,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		GroupOwners: grouprelationship.NewOwnerService(scope), UserResolver: directoryuser.NewResolver(scope),
 		TeamUserManagement: teamusermanagement.NewService(scope),
 		TeamManagement:     teammanagement.NewService(scope),
+		AppCatalog:         appcatalog.NewService(scope),
+		TeamsArtifacts:     teamsartifact.NewService(scope),
 	}, nil
 }
 

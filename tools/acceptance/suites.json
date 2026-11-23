@@ -1288,6 +1288,24 @@
           ]
         }
       ]
+    },
+    "custom_app_settings": {
+      "package": "./tests/integration/lab/custom_app_settings",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccAppCatalogReads"
+          ]
+        },
+        {
+          "id": "writes",
+          "serial": true,
+          "tests": [
+            "TestAccAppCatalogWrites"
+          ]
+        }
+      ]
     }
   }
 }

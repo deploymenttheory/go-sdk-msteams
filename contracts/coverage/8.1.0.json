@@ -9926,15 +9926,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/152/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/service.go",
+              "name": "Service.Get"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
+              "name": "TestUnitCustomAppSettingsGetDecodesTheLabShape"
+            },
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
+              "name": "TestUnitCustomAppSettingsProjectionReportsNullAsFalse"
+            },
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
+              "name": "TestUnitCustomAppSettingsFailuresStayTyped"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/custom_app_settings/app_catalog_test.go",
+              "name": "TestAccAppCatalogReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/custom_app_settings/service.go",
+            "name": "Service.Get"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9942,8 +9970,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run read the settings with pinned PowerShell sideloading-flag parity; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/ext/app-catalog-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -14209,15 +14239,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/216/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/app_catalog/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/service.go",
+              "name": "Service.NewPager"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/app_catalog/service_test.go",
+              "name": "TestUnitAppCatalogListBuildsTheModuleFilterAndFollowsPages"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/service_test.go",
+              "name": "TestUnitAppCatalogListDenialUsesLabResponse"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/custom_app_settings/app_catalog_test.go",
+              "name": "TestAccAppCatalogReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/app_catalog/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/graph_api/app_catalog/service.go",
+            "name": "Service.NewPager"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -14225,8 +14287,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run confirmed the app-only HTTP 403 with pinned PowerShell parity. The lab identity lacks AppCatalog permissions, so a successful list needs separately authorized credentials.",
+        "evidence": [
+          "docs/implementation/ext/app-catalog-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -14265,15 +14329,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/217/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/teams_artifact/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/teams_artifact/service_test.go",
+              "name": "TestUnitTeamsArtifactsScanFollowsTheModuleRules"
+            },
+            {
+              "file": "msteams/graph_api/teams_artifact/service_test.go",
+              "name": "TestUnitTeamsArtifactsSharePointDenialUsesLabResponse"
+            },
+            {
+              "file": "msteams/graph_api/teams_artifact/service_test.go",
+              "name": "TestUnitTeamsArtifactsSelectorsAndPaging"
+            },
+            {
+              "file": "msteams/graph_api/teams_artifact/service_test.go",
+              "name": "TestUnitTeamsArtifactsRejectsInvalidOptions"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/custom_app_settings/app_catalog_test.go",
+              "name": "TestAccAppCatalogReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/teams_artifact/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -14281,8 +14377,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run confirmed the SharePoint site search HTTP 403 with pinned PowerShell parity (no artifacts, one error); scanning real drives needs Sites.Read.All and Files.Read.All; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/ext/app-catalog-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26986,15 +27084,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/408/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/app_catalog/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/app_catalog/service_test.go",
+              "name": "TestUnitAppCatalogPackageWrites"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/service_test.go",
+              "name": "TestUnitAppCatalogFailuresStayTyped"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/custom_app_settings/app_catalog_test.go",
+              "name": "TestAccAppCatalogWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/app_catalog/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27002,8 +27124,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run confirmed the app-only HTTP 403 for an empty package. The lab identity lacks AppCatalog permissions, so a successful create needs separately authorized credentials.",
+        "evidence": [
+          "docs/implementation/ext/app-catalog-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -32271,15 +32395,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/519/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/app_catalog/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/app_catalog/service_test.go",
+              "name": "TestUnitAppCatalogPackageWrites"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/service_test.go",
+              "name": "TestUnitAppCatalogFailuresStayTyped"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/custom_app_settings/app_catalog_test.go",
+              "name": "TestAccAppCatalogWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/app_catalog/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32287,8 +32435,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run confirmed the app-only HTTP 403 against a reserved app ID. The lab identity lacks AppCatalog permissions, so a successful delete needs separately authorized credentials.",
+        "evidence": [
+          "docs/implementation/ext/app-catalog-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -37765,15 +37915,51 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/622/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/service.go",
+              "name": "Service.SetSideloadedAppsInteraction"
+            },
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/service.go",
+              "name": "Service.Update"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
+              "name": "TestUnitCustomAppSettingsSetUsesTheModuleReadReplaceFlow"
+            },
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
+              "name": "TestUnitCustomAppSettingsUpdateSendsTheGivenDocument"
+            },
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
+              "name": "TestUnitCustomAppSettingsFailuresStayTyped"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/custom_app_settings/app_catalog_test.go",
+              "name": "TestAccAppCatalogWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/custom_app_settings/service.go",
+            "name": "Service.SetSideloadedAppsInteraction"
+          },
+          {
+            "file": "msteams/teams_admin_api/custom_app_settings/service.go",
+            "name": "Service.Update"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -37781,8 +37967,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run wrote the current sideloading flag back (HTTP 204, settings unchanged); changing the flag to a different value is not exercised; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/ext/app-catalog-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -39900,15 +40088,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/659/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/graph_api/app_catalog/service.go",
+              "name": "Service.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/graph_api/app_catalog/service_test.go",
+              "name": "TestUnitAppCatalogPackageWrites"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/service_test.go",
+              "name": "TestUnitAppCatalogFailuresStayTyped"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/custom_app_settings/app_catalog_test.go",
+              "name": "TestAccAppCatalogWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/graph_api/app_catalog/service.go",
+            "name": "Service.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -39916,8 +40128,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run confirmed the app-only HTTP 403 against a reserved app ID. The lab identity lacks AppCatalog permissions, so a successful update needs separately authorized credentials.",
+        "evidence": [
+          "docs/implementation/ext/app-catalog-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

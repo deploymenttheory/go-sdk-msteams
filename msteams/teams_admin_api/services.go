@@ -15,6 +15,7 @@ import (
 	calltemplates "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_templates"
 	cloudcalldata "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data"
 	compliancerecording "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/compliance_recording"
+	customappsettings "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/custom_app_settings"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
 	mainlineattendants "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/mainline_attendants"
@@ -157,6 +158,7 @@ type Services struct {
 	MainlineAttendants                         *mainlineattendants.Service
 	AIAgents                                   *aiagents.Service
 	ProvisioningDiagnostics                    *provisioningdiagnostics.Service
+	CustomAppSettings                          *customappsettings.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -265,6 +267,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		MainlineAttendants:                         mainlineattendants.NewService(backend),
 		AIAgents:                                   aiagents.NewService(backend, knowledgeScope),
 		ProvisioningDiagnostics:                    provisioningdiagnostics.NewService(backend),
+		CustomAppSettings:                          customappsettings.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),
