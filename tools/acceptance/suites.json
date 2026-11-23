@@ -192,6 +192,33 @@
         }
       ]
     },
+    "configuration_diagnostics": {
+      "package": "./tests/integration/lab/configuration_diagnostics",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccConfigurationDiagnosticsReads"
+          ]
+        },
+        {
+          "id": "support-denials",
+          "serial": true,
+          "tests": [
+            "TestAccConfigurationDiagnosticsSupportCommandsDenied"
+          ]
+        },
+        {
+          "id": "lifecycle",
+          "mutation": true,
+          "proof": "generic-configuration-lifecycle",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccConfigurationLifecycle"
+          ]
+        }
+      ]
+    },
     "external_access_policy": {
       "package": "./tests/integration/lab/external_access_policy",
       "steps": [

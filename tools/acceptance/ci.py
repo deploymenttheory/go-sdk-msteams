@@ -111,6 +111,7 @@ PROOFS = {
     'ai-agent-lifecycle': (AI_AGENT_MARKERS, AI_AGENT_ORACLE, 1),
     'populated-template-access': (['native populated-list create denial: verified', 'populated-list comparison cleanup: passed'], 'PowerShell 8.1.0 / Go populated-list authorization parity: passed', 1),
     'configuration-update': (['configuration update/read-back and omission: passed', 'configuration restoration/read-back: passed'], 'PowerShell 8.1.0 / Go configuration read parity: passed', 3),
+    'generic-configuration-lifecycle': (['configuration create/read-back: passed', 'configuration set/read-back: passed', 'configuration remove/absence: passed'], 'PowerShell 8.1.0 / Go generic configuration parity: passed', 1),
 }
 # Publish fixed assertion text only. HTTP payloads and dynamic fixture names
 # remain private even when a test fails.

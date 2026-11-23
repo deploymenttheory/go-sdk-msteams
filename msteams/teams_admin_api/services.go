@@ -15,6 +15,7 @@ import (
 	calltemplates "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_templates"
 	cloudcalldata "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data"
 	compliancerecording "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/compliance_recording"
+	configurationdiagnostics "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/configuration_diagnostics"
 	customappsettings "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/custom_app_settings"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
@@ -151,6 +152,7 @@ type Services struct {
 	TeamTemplates                              *teamtemplate.Service
 	AudioFiles                                 *audioprompts.Service
 	CloudCallData                              *cloudcalldata.Service
+	ConfigurationDiagnostics                   *configurationdiagnostics.Service
 	ResourceAccounts                           *resourceaccounts.Service
 	Schedules                                  *schedules.Service
 	CallQueues                                 *callqueues.Service
@@ -263,6 +265,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamTemplates:                              teamtemplate.NewService(backend),
 		AudioFiles:                                 audioprompts.NewService(backend),
 		CloudCallData:                              cloudcalldata.NewService(backend),
+		ConfigurationDiagnostics:                   configurationdiagnostics.NewService(backend, scope),
 		ResourceAccounts:                           resourceaccounts.NewService(backend),
 		Schedules:                                  schedules.NewService(backend),
 		CallQueues:                                 callqueues.NewService(backend),

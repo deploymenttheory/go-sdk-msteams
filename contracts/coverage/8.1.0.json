@@ -260,9 +260,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/3",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/configuration_diagnostics/service.go",
+            "name": "Service.ClearCache"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -270,8 +275,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent with inert inputs (a nonexistent key for a nonexistent region); a successful call needs support credentials and acts service-wide, so it remains unqualified. Pinned PowerShell, run in the module's own scope, fails the same way.",
+        "evidence": [
+          "docs/implementation/ext/configuration-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -2390,9 +2397,18 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/45",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/configuration_diagnostics/service.go",
+            "name": "Service.ListConfigurations"
+          },
+          {
+            "file": "msteams/teams_admin_api/configuration_diagnostics/service.go",
+            "name": "Service.GetConfiguration"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -2400,8 +2416,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run qualified an owned TeamsFeedbackPolicy instance through the generic route (create/read-back, replace/read-back, remove/absence) and the Global/missing/unknown-type reads, with pinned PowerShell parity via the module's internal command; the module exports this command only in support sessions, and no CI test run is recorded as evidence yet.",
+        "evidence": [
+          "docs/implementation/ext/configuration-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21445,9 +21463,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/341",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/configuration_diagnostics/service.go",
+            "name": "Service.CreateConfiguration"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21455,8 +21478,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run qualified an owned TeamsFeedbackPolicy instance through the generic route (create/read-back, replace/read-back, remove/absence) and the Global/missing/unknown-type reads, with pinned PowerShell parity via the module's internal command; the module exports this command only in support sessions, and no CI test run is recorded as evidence yet.",
+        "evidence": [
+          "docs/implementation/ext/configuration-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -27870,9 +27895,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/467",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/configuration_diagnostics/service.go",
+            "name": "Service.RemoveConfiguration"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27880,8 +27910,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run qualified an owned TeamsFeedbackPolicy instance through the generic route (create/read-back, replace/read-back, remove/absence) and the Global/missing/unknown-type reads, with pinned PowerShell parity via the module's internal command; the module exports this command only in support sessions, and no CI test run is recorded as evidence yet.",
+        "evidence": [
+          "docs/implementation/ext/configuration-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -33480,9 +33512,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/582",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/configuration_diagnostics/service.go",
+            "name": "Service.SetConfiguration"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -33490,8 +33527,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run qualified an owned TeamsFeedbackPolicy instance through the generic route (create/read-back, replace/read-back, remove/absence) and the Global/missing/unknown-type reads, with pinned PowerShell parity via the module's internal command; the module exports this command only in support sessions, and no CI test run is recorded as evidence yet.",
+        "evidence": [
+          "docs/implementation/ext/configuration-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -33900,8 +33939,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Not implemented: the module manifest lists the command but no cmdlet or function defines it, and its only request helper has no caller, so no wire contract is evidenced.",
+        "evidence": [
+          "docs/implementation/ext/configuration-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -35191,9 +35232,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/626",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/configuration_diagnostics/service.go",
+            "name": "Service.PublishPolicySchemaDefaults"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -35201,8 +35247,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent with inert inputs (an undefined policy type); a successful call needs support credentials and acts service-wide, so it remains unqualified. The compiled cmdlet needs an OCE login context, so it has no PowerShell parity run.",
+        "evidence": [
+          "docs/implementation/ext/configuration-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
