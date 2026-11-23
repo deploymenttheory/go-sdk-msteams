@@ -1,0 +1,8 @@
+{
+  "Prompt": {
+    "ActiveType": "TextToSpeech",
+    "TextToSpeechPrompt": "Welcome to the SDK probe",
+    "AudioFilePrompt": null
+  },
+  "Diagnostics": []
+}

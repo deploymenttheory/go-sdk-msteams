@@ -10,6 +10,7 @@ import (
 	assignmentmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
 	audioconferencingprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_conferencing_prompts"
 	audioprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_prompts"
+	autoattendants "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/auto_attendants"
 	batchdeployment "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/batch_deployment"
 	callqueues "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_queues"
 	calltemplates "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_templates"
@@ -169,6 +170,7 @@ type Services struct {
 	TeamsRemoteLogCollectionConfigurations     *teamsremotelogcollectionconfiguration.Service
 	TeamsRemoteLogCollectionDevices            *teamsremotelogcollectiondevice.Service
 	Migration                                  *migration.Service
+	AutoAttendants                             *autoattendants.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -283,6 +285,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsRemoteLogCollectionConfigurations:     teamsremotelogcollectionconfiguration.NewService(scope),
 		TeamsRemoteLogCollectionDevices:            teamsremotelogcollectiondevice.NewService(scope),
 		Migration:                                  migration.NewService(backend),
+		AutoAttendants:                             autoattendants.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),

@@ -118,5 +118,9 @@
   "TestAccAIAgentRecover": {
     "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
     "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccAutoAttendantRecover": {
+    "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
   }
 }

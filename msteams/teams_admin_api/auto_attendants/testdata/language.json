@@ -1,0 +1,26 @@
+{
+  "Language": {
+    "Id": "fixture-record-5c49f88d",
+    "DisplayName": "Fixture displayname",
+    "Voices": [
+      {
+        "Id": "fixture-record-03f8c127",
+        "Name": "Fixture name"
+      },
+      {
+        "Id": "fixture-record-e8cca808",
+        "Name": "Fixture name"
+      },
+      {
+        "Id": "fixture-record-e8cca808",
+        "Name": "Fixture name"
+      },
+      {
+        "Id": "fixture-record-e8cca808",
+        "Name": "Fixture name"
+      }
+    ],
+    "VoiceResponseSupported": true
+  },
+  "Diagnostics": []
+}
