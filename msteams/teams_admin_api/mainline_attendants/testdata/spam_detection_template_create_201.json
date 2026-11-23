@@ -1,0 +1,14 @@
+{
+  "SpamDetectionTemplate": {
+    "Name": "Fixture name",
+    "Identity": "00000000-0000-4000-8000-0000000000b1",
+    "RelatedConfigurationIds": [],
+    "Description": "Fixture description",
+    "EnableSpamDetection": true,
+    "Action": "DisconnectCall",
+    "CallTarget": null,
+    "InclusionScope": null,
+    "ExclusionScope": null
+  },
+  "Diagnostics": []
+}

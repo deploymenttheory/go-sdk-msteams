@@ -19,6 +19,7 @@ import (
 	compliancerecordingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/compliance_recording"
 	externalaccesspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+	mainlineattendantsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/mainline_attendants"
 	meetingbrandingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/meeting_branding"
 	onlinevoicemailpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/online_voicemail_policy"
 	schedulesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/schedules"
@@ -70,6 +71,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		calltemplatesacc.RecoveryHandlers(sdk),
 		compliancerecordingacc.RecoveryHandlers(sdk),
 		externalaccesspolicyacc.RecoveryHandlers(sdk),
+		mainlineattendantsacc.RecoveryHandlers(sdk),
 		meetingbrandingacc.RecoveryHandlers(sdk),
 		schedulesacc.RecoveryHandlers(sdk),
 		onlinevoicemailpolicyacc.RecoveryHandlers(sdk),
@@ -158,6 +160,9 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"external-access-policy",
 		"feedback-policy",
 		"files-policy",
+		"mainline-booking-flow",
+		"mainline-qa-flow",
+		"mainline-spam-template",
 		"meeting-policy",
 		"meeting-template-policy",
 		"messaging-configuration",

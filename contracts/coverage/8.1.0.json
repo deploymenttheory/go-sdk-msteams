@@ -2919,15 +2919,55 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/42/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.ListAppointmentBookingFlows"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.GetAppointmentBookingFlowByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantAppointmentBookingFlowLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.ListAppointmentBookingFlows"
+          },
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.GetAppointmentBookingFlowByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -2935,8 +2975,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -2951,15 +2993,63 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/43/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.ListFlows"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.GetFlowByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMissingResourcesAreTypedErrors"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantQuestionAnswerFlowLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMalformedResponsesFailDecode"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.ListFlows"
+          },
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.GetFlowByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -2967,8 +3057,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -2983,15 +3075,51 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/44/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.ListQuestionAnswerFlows"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.GetQuestionAnswerFlowByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.ListQuestionAnswerFlows"
+          },
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.GetQuestionAnswerFlowByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -2999,8 +3127,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3015,15 +3145,63 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/45/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.ListSpamDetectionTemplates"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.GetSpamDetectionTemplateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantSpamDetectionTemplateLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMissingResourcesAreTypedErrors"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMalformedResponsesFailDecode"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.ListSpamDetectionTemplates"
+          },
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.GetSpamDetectionTemplateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3031,8 +3209,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3047,15 +3227,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/46/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.GetTenantInformation"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantReadsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.GetTenantInformation"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3063,8 +3263,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the tenant information, list and missing-resource reads with pinned PowerShell tenant information parity; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3079,15 +3281,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/47/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.GetTenantInformation"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMalformedResponsesFailDecode"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.GetTenantInformation"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3095,8 +3321,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the tenant information, list and missing-resource reads with pinned PowerShell tenant information parity; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3111,15 +3339,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/48/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.GetTenantInformation"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMalformedResponsesFailDecode"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.GetTenantInformation"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3127,8 +3379,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the tenant information, list and missing-resource reads with pinned PowerShell tenant information parity; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21075,15 +21329,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/308/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.CreateAppointmentBookingFlow"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantAppointmentBookingFlowLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantCustomBookingSendsEnumsAsIntegers"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.CreateAppointmentBookingFlow"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21091,8 +21373,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup. The Custom platform needs real API definitions and is contract-tested only; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21107,15 +21391,51 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/309/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.CreateQuestionAnswerFlow"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "EncodeKnowledgeBase"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantQuestionAnswerFlowLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantEncodeKnowledgeBaseMatchesTheModule"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.CreateQuestionAnswerFlow"
+          },
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "EncodeKnowledgeBase"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21123,8 +21443,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21139,15 +21461,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/310/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.CreateSpamDetectionTemplate"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantSpamDetectionTemplateLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantSpamDetectionTemplateSendsCallTargetAsTheModule"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.CreateSpamDetectionTemplate"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21155,8 +21505,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26952,15 +27304,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/425/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.DeleteAppointmentBookingFlowByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantAppointmentBookingFlowLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMissingResourcesAreTypedErrors"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.DeleteAppointmentBookingFlowByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26968,8 +27344,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26984,15 +27362,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/426/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.DeleteQuestionAnswerFlowByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantQuestionAnswerFlowLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMalformedResponsesFailDecode"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.DeleteQuestionAnswerFlowByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27000,8 +27406,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -27016,15 +27424,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/427/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.DeleteSpamDetectionTemplateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantSpamDetectionTemplateLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMissingResourcesAreTypedErrors"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.DeleteSpamDetectionTemplateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27032,8 +27464,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -32270,15 +32704,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/534/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.UpdateAppointmentBookingFlowByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantAppointmentBookingFlowLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.UpdateAppointmentBookingFlowByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32286,8 +32744,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup. The Custom platform needs real API definitions and is contract-tested only; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -32302,15 +32762,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/535/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.UpdateQuestionAnswerFlowByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantQuestionAnswerFlowLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantMissingResourcesAreTypedErrors"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.UpdateQuestionAnswerFlowByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32318,8 +32802,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -32334,15 +32820,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/536/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+              "name": "Service.UpdateSpamDetectionTemplateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantSpamDetectionTemplateLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantSpamDetectionTemplateSendsCallTargetAsTheModule"
+            },
+            {
+              "file": "msteams/teams_admin_api/mainline_attendants/service_test.go",
+              "name": "TestUnitMainlineAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+              "name": "TestAccMainlineAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/mainline_attendants/service.go",
+            "name": "Service.UpdateSpamDetectionTemplateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32350,8 +32864,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* spam detection template, Microsoft Bookings appointment booking flow and question and answer flow lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/mainline-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

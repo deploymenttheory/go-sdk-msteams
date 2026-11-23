@@ -75,6 +75,16 @@ CALL_TEMPLATE_MARKERS = [
     'call template delete/absence: passed',
 ]
 CALL_TEMPLATE_ORACLE = 'PowerShell 8.1.0 / Go call template parity: passed'
+MAINLINE_ATTENDANT_MARKERS = [
+    'spam detection template create/update/read-back: passed',
+    'appointment booking flow create/update/read-back: passed',
+    'question answer flow create/indexing/update/read-back: passed',
+    'mainline attendant flow list/filter: passed',
+    'spam detection template delete/absence: passed',
+    'appointment booking flow delete/absence: passed',
+    'question answer flow delete/absence: passed',
+]
+MAINLINE_ATTENDANT_ORACLE = 'PowerShell 8.1.0 / Go mainline attendant parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
@@ -90,6 +100,7 @@ PROOFS = {
     'call-queue-lifecycle': (CALL_QUEUE_MARKERS, CALL_QUEUE_ORACLE, 1),
     'call-template-lifecycle': (CALL_TEMPLATE_MARKERS, CALL_TEMPLATE_ORACLE, 1),
     'auto-recording-denial': (['auto recording create denial: verified', 'auto recording missing-template writes: passed'], None, 0),
+    'mainline-attendant-lifecycle': (MAINLINE_ATTENDANT_MARKERS, MAINLINE_ATTENDANT_ORACLE, 1),
     'populated-template-access': (['native populated-list create denial: verified', 'populated-list comparison cleanup: passed'], 'PowerShell 8.1.0 / Go populated-list authorization parity: passed', 1),
     'configuration-update': (['configuration update/read-back and omission: passed', 'configuration restoration/read-back: passed'], 'PowerShell 8.1.0 / Go configuration read parity: passed', 3),
 }
