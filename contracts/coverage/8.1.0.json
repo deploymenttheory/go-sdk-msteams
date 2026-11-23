@@ -1452,22 +1452,93 @@
         {
           "name": "GetAllParamSet",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/21/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantOptionalQueriesAndNormalization"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         },
         {
           "name": "GetSpecificParamSet",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/21/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantOptionalQueriesAndNormalization"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1475,8 +1546,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -1545,15 +1618,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/23/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.GetStatusByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantOptionalQueriesAndNormalization"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.GetStatusByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1561,8 +1662,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -1577,15 +1680,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/24/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.ListSupportedLanguages"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.GetSupportedLanguageByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.ListSupportedLanguages"
+          },
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.GetSupportedLanguageByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1593,8 +1728,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -1609,15 +1746,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/25/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.ListSupportedTimeZones"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.GetSupportedTimeZoneByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantReadsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.ListSupportedTimeZones"
+          },
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.GetSupportedTimeZoneByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1625,8 +1790,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -1641,15 +1808,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/26/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.GetTenantInformation"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantReadsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.GetTenantInformation"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1657,8 +1844,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21164,15 +21353,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/280/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantOptionalQueriesAndNormalization"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21180,8 +21397,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21196,15 +21415,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/281/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DraftCallableEntity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.DraftCallableEntity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21212,8 +21451,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21228,15 +21469,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/282/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DraftCallFlow"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.DraftCallFlow"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21244,8 +21505,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21260,15 +21523,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/283/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DraftCallHandlingAssociation"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.DraftCallHandlingAssociation"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21276,8 +21563,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21292,15 +21581,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/284/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DraftGroupDialScope"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.DraftGroupDialScope"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21308,8 +21617,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "New-CsAutoAttendantDialScope posts to a group dial scope draft route; the lab run qualified only the unknown-group HTTP 404 rejection because no qualified group fixture is used for dial scopes. Full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21324,15 +21635,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/285/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DraftMenu"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.DraftMenu"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21340,8 +21671,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21356,15 +21689,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/286/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DraftMenuOption"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.DraftMenuOption"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21372,8 +21725,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21388,29 +21743,91 @@
         {
           "name": "AudioFileParamSet",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/287/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DraftPrompt"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         },
         {
           "name": "DualParamSet",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/287/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DraftPrompt"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         },
         {
           "name": "TextToSpeechParamSet",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/287/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DraftPrompt"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.DraftPrompt"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21418,8 +21835,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -28128,15 +28547,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/413/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -28144,8 +28591,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -33793,15 +34242,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/525/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/models.go",
+              "name": "AutoAttendant.Settings"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantOptionalQueriesAndNormalization"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.UpdateByID"
+          },
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/models.go",
+            "name": "AutoAttendant.Settings"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -33809,8 +34290,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -41623,15 +42106,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/671/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service.go",
+              "name": "Service.RefreshByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
+              "name": "TestUnitAutoAttendantLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
+              "name": "TestAccAutoAttendantReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/auto_attendants/service.go",
+            "name": "Service.RefreshByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -41639,8 +42146,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/auto-attendants-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

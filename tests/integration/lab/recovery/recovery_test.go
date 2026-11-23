@@ -15,6 +15,7 @@ import (
 	aiagentsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/ai_agents"
 	applicationaccesspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/application_access_policy"
 	audiopromptsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/audio_prompts"
+	autoattendantsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/auto_attendants"
 	callqueuesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_queues"
 	calltemplatesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_templates"
 	compliancerecordingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/compliance_recording"
@@ -70,6 +71,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		aiagentsacc.RecoveryHandlers(sdk),
 		applicationaccesspolicyacc.RecoveryHandlers(sdk),
 		audiopromptsacc.RecoveryHandlers(sdk),
+		autoattendantsacc.RecoveryHandlers(sdk),
 		callqueuesacc.RecoveryHandlers(sdk),
 		calltemplatesacc.RecoveryHandlers(sdk),
 		compliancerecordingacc.RecoveryHandlers(sdk),
@@ -151,6 +153,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"audio-file",
 		"audio-policy",
 		"auto-recording-template",
+		"auto-attendant",
 		"branding-policy",
 		"call-hold-policy",
 		"call-park-policy",

@@ -178,6 +178,26 @@
         }
       ]
     },
+    "auto_attendants": {
+      "package": "./tests/integration/lab/auto_attendants",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccAutoAttendantReads"
+          ]
+        },
+        {
+          "id": "lifecycle",
+          "mutation": true,
+          "proof": "auto-attendant-lifecycle",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccAutoAttendantLifecycle"
+          ]
+        }
+      ]
+    },
     "call_queues": {
       "package": "./tests/integration/lab/call_queues",
       "steps": [
