@@ -1174,6 +1174,26 @@
           ]
         }
       ]
+    },
+    "compliance_recording": {
+      "package": "./tests/integration/lab/compliance_recording",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccComplianceRecordingReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-compliance-recording-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccComplianceRecordingPolicyCRUD"
+          ]
+        }
+      ]
     }
   }
 }

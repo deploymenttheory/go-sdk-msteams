@@ -81,6 +81,7 @@ PROOFS = {
     'owned-template-permission-populated-crud': (PROOF_MARKERS + ['policy hidden-list edit/read-back: passed','policy hidden-list clear/read-back: passed'], ORACLE_MARKER, 4),
     'owned-notification-crud': (PROOF_MARKERS + ['notification explicit-null update/read-back: passed'], ORACLE_MARKER, 3),
     'owned-shared-calling-populated-crud': (PROOF_MARKERS + ['shared calling populated list edit/clear: passed'], ORACLE_MARKER, 4),
+    'owned-compliance-recording-crud': (PROOF_MARKERS + ['application rejection and absence: passed'], ORACLE_MARKER, 2),
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
     'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
     'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),

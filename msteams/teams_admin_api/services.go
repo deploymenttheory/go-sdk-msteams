@@ -13,6 +13,7 @@ import (
 	callqueues "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_queues"
 	calltemplates "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_templates"
 	cloudcalldata "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data"
+	compliancerecording "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/compliance_recording"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
 	meetingbranding "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
@@ -146,6 +147,7 @@ type Services struct {
 	CallQueues                                 *callqueues.Service
 	TenantIdentity                             *tenantidentity.Service
 	CallTemplates                              *calltemplates.Service
+	ComplianceRecording                        *compliancerecording.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -240,6 +242,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		CallQueues:                                 callqueues.NewService(backend),
 		TenantIdentity:                             tenantidentity.NewService(backend),
 		CallTemplates:                              calltemplates.NewService(backend),
+		ComplianceRecording:                        compliancerecording.NewService(scope),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),

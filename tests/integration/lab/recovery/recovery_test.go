@@ -16,6 +16,7 @@ import (
 	audiopromptsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/audio_prompts"
 	callqueuesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_queues"
 	calltemplatesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_templates"
+	compliancerecordingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/compliance_recording"
 	externalaccesspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 	meetingbrandingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/meeting_branding"
@@ -67,6 +68,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		audiopromptsacc.RecoveryHandlers(sdk),
 		callqueuesacc.RecoveryHandlers(sdk),
 		calltemplatesacc.RecoveryHandlers(sdk),
+		compliancerecordingacc.RecoveryHandlers(sdk),
 		externalaccesspolicyacc.RecoveryHandlers(sdk),
 		meetingbrandingacc.RecoveryHandlers(sdk),
 		schedulesacc.RecoveryHandlers(sdk),
@@ -149,6 +151,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"calling-policy",
 		"channels-policy",
 		"compliance-recording-template",
+		"compliance-recording-policy",
 		"cortana-policy",
 		"enhanced-encryption-policy",
 		"events-policy",
