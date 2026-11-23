@@ -14,7 +14,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 )
 
-func powerShellOutcome(t *testing.T, ctx context.Context) string {
+func powerShellOutcome(t *testing.T, ctx context.Context, action string) string {
 	t.Helper()
 	command := labkit.OracleCommand(ctx, "read-cloud-call-data.ps1")
 	command.WaitDelay = time.Second
@@ -27,12 +27,12 @@ func powerShellOutcome(t *testing.T, ctx context.Context) string {
 	for _, key := range []string{"MSTEAMS_LAB_IDENTITY_FILE", "MSTEAMS_LAB_MODULE_PATH", "MSTEAMS_LAB_AUTH_METHOD"} {
 		command.Env = append(command.Env, key+"="+os.Getenv(key))
 	}
-	command.Env = append(command.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1")
+	command.Env = append(command.Env, "MSTEAMS_LAB_READ_ONLY=1", "MSTEAMS_LAB_POWERSHELL_ORACLE=1", "MSTEAMS_LAB_CLOUD_CALL_DATA_ACTION="+action)
 	var output labkit.OracleBuffer
 	defer func() { clear(output.Data) }()
 	command.Stdout, command.Stderr = &output, io.Discard
 	if command.Run() != nil || output.Exceeded {
-		t.Fatal("pinned PowerShell cloud call data read failed; no output retained")
+		t.Fatal("pinned PowerShell cloud call data call failed; no output retained")
 	}
 	var observed struct {
 		Success bool   `json:"success"`
@@ -62,10 +62,40 @@ func TestAccCloudCallDataConnectionAuthorizationDenied(t *testing.T) {
 	}
 	labkit.WriteResponseFixture(t, "cloud_call_data", "get", response, nil)
 	if labkit.OracleEnabled(t) {
-		if powerShellOutcome(t, ctx) != "forbidden" {
+		if powerShellOutcome(t, ctx, "get") != "forbidden" {
 			t.Fatal("PowerShell and Go cloud call data outcomes differ")
 		}
 		t.Log("PowerShell 8.1.0 / Go cloud call data parity: passed")
 	}
 	t.Log("confirmed authorization denial: HTTP 403 Forbidden")
+}
+
+// TestAccCloudCallDataConnectionCreateOutcome sends the tenant singleton
+// create (New-CsCloudCallDataConnection), approved for the lab even though
+// the connection cannot be removed. App-only Teams Administrator credentials
+// are denied with HTTP 403 and the tenant is unchanged. The test is
+// idempotent: if the lab identity ever gains the right, a create that returns
+// the connection token is also accepted, and later runs observe the same.
+func TestAccCloudCallDataConnectionCreateOutcome(t *testing.T) {
+	cfg := labkit.ReadOnlyEnabled(t)
+	sdk, _, _ := labkit.SDKClient(t)
+	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
+	defer cancel()
+	value, response, err := sdk.TeamsAdminAPI.CloudCallData.Create(ctx)
+	labkit.LogAccessResponse(t, response, err)
+	switch {
+	case response != nil && response.StatusCode() == 403 && value == nil && errors.Is(err, auth.ErrForbidden):
+		labkit.WriteResponseFixture(t, "cloud_call_data", "create", response, nil)
+		if labkit.OracleEnabled(t) {
+			if powerShellOutcome(t, ctx, "new") != "forbidden" {
+				t.Fatal("PowerShell and Go cloud call data create outcomes differ")
+			}
+			t.Log("PowerShell 8.1.0 / Go cloud call data create parity: passed")
+		}
+		t.Log("confirmed create authorization denial: HTTP 403 Forbidden")
+	case err == nil && value != nil && value.Token != nil && *value.Token != "":
+		t.Log("cloud call data connection create returned a token; the tenant singleton exists")
+	default:
+		t.Fatal("cloud call data create outcome changed; neither the observed denial nor a token-bearing connection")
+	}
 }

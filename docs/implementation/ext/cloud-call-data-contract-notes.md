@@ -19,13 +19,24 @@ Lab observations (client-secret, app-only Teams Administrator):
   Denied.",…}` body; pinned PowerShell fails with
   `Forbidden,…GetCsCloudCallDataConnectionModern_Get` and writes a correlation ID
   line straight to the console.
-- New was not sent live. The connection is a tenant singleton with no remove
-  cmdlet, so a successful call cannot be undone, and the live probe was not
-  authorized in this session.
+- New was sent live on 2026-11-23 with explicit approval, accepting that a
+  success could not be undone (tenant singleton, no remove cmdlet). The POST
+  returns HTTP 403 with the same top-level `{"code":"Forbidden",…}` body as
+  GET, so no connection was created. Pinned PowerShell
+  New-CsCloudCallDataConnection also fails with a `Forbidden,…` error ID. A
+  second POST and a GET afterwards return the same 403.
 
-Acceptance: `TestAccCloudCallDataConnectionAuthorizationDenied` (read-only)
-checks the 403 classification and pinned PowerShell outcome parity; its
-sanitized response feeds the unit contract test. Token-bearing success bodies
-and every Create outcome are covered by synthetic contract cases only.
-Successful Get/Create need separately authorized credentials and remain
-unqualified.
+Acceptance:
+
+- `TestAccCloudCallDataConnectionAuthorizationDenied` (read-only) checks the
+  GET 403 classification and pinned PowerShell outcome parity.
+- `TestAccCloudCallDataConnectionCreateOutcome` (serial step `create-outcome`)
+  sends the create and checks the 403 classification and PowerShell New parity.
+  It is idempotent: it also accepts a token-bearing connection, in case the lab
+  identity is later authorized and the singleton exists. It never needs a
+  journal, because the denial changes nothing and a success cannot be removed.
+
+Both sanitized 403 responses feed unit contract tests. Token-bearing success
+bodies are covered by synthetic contract cases only. Successful Get/Create and
+the already-exists Create outcome need separately authorized (delegated or
+higher-privileged) credentials and remain unqualified.

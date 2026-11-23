@@ -2246,7 +2246,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Client-secret lab run confirmed the app-only HTTP 403 denial with pinned PowerShell parity; a successful token read needs separately authorized credentials.",
+        "reason": "Client-secret lab run confirmed the app-only HTTP 403 denial with pinned PowerShell parity, before and after the approved live create (also denied); a successful token read needs separately authorized credentials.",
         "evidence": [
           "docs/implementation/ext/cloud-call-data-contract-notes.md"
         ]
@@ -21340,6 +21340,10 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/cloud_call_data/service_test.go",
+              "name": "TestUnitCloudCallDataCreateDenialUsesAcceptanceResponse"
+            },
+            {
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go",
               "name": "TestUnitCloudCallDataReturnsTokenWithoutPrintingIt"
             },
             {
@@ -21347,7 +21351,12 @@
               "name": "TestUnitCloudCallDataFailuresStayTyped"
             }
           ],
-          "live_tests": []
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cloud_call_data/cloud_call_data_test.go",
+              "name": "TestAccCloudCallDataConnectionCreateOutcome"
+            }
+          ]
         }
       ],
       "implementation": {
@@ -21366,7 +21375,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Not sent live: the tenant singleton has no remove cmdlet, so a successful create cannot be undone; covered by contract tests only.",
+        "reason": "Sent live with approval (tenant singleton, no remove cmdlet): the client-secret app-only Teams Administrator gets HTTP 403 Forbidden, the tenant is unchanged, and pinned PowerShell New-CsCloudCallDataConnection fails Forbidden too; a successful create and the already-exists outcome need separately authorized credentials.",
         "evidence": [
           "docs/implementation/ext/cloud-call-data-contract-notes.md"
         ]

@@ -1,5 +1,7 @@
-# Opt-in, read-only oracle for Get-CsCloudCallDataConnection. It reports only
-# the outcome class; a returned token is never written.
+# Opt-in oracle for Get-CsCloudCallDataConnection and, with
+# MSTEAMS_LAB_CLOUD_CALL_DATA_ACTION=new, New-CsCloudCallDataConnection. It
+# reports only the outcome class; a returned token is never written. New is a
+# tenant singleton create with no remove cmdlet; it was approved for the lab.
 $ErrorActionPreference='Stop'
 $ProgressPreference='SilentlyContinue'
 $InformationPreference='SilentlyContinue'
@@ -10,6 +12,8 @@ $certificate=$null
 $report=@{success=$false}
 try{
     if($env:MSTEAMS_LAB_READ_ONLY -ne '1' -or $env:MSTEAMS_LAB_POWERSHELL_ORACLE -ne '1'){throw 'Explicit read oracle opt-in required.'}
+    $action=[string]$env:MSTEAMS_LAB_CLOUD_CALL_DATA_ACTION
+    if($action -notin @('','get','new')){throw 'Unknown cloud call data action.'}
     $module=$env:MSTEAMS_LAB_MODULE_PATH
     if((Import-PowerShellDataFile -LiteralPath (Join-Path $module 'MicrosoftTeams.psd1')).ModuleVersion -ne '8.1.0'){throw 'Wrong module baseline'}
     $assembly=Join-Path $module 'bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll'
@@ -34,7 +38,8 @@ try{
     $stdout=[Console]::Out
     [Console]::SetOut([IO.TextWriter]::Null)
     try{
-        $value=Get-CsCloudCallDataConnection -ErrorAction Stop 6>$null
+        if($action -eq 'new'){$value=New-CsCloudCallDataConnection -ErrorAction Stop 6>$null}
+        else{$value=Get-CsCloudCallDataConnection -ErrorAction Stop 6>$null}
         if($null -ne $value -and -not [string]::IsNullOrEmpty([string]$value.Token)){$outcome='token'}
     }catch{
         if(([string]$_.FullyQualifiedErrorId).StartsWith('Forbidden,')){$outcome='forbidden'}

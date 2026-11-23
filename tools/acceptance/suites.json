@@ -168,6 +168,13 @@
           "tests": [
             "TestAccCloudCallDataConnectionAuthorizationDenied"
           ]
+        },
+        {
+          "id": "create-outcome",
+          "serial": true,
+          "tests": [
+            "TestAccCloudCallDataConnectionCreateOutcome"
+          ]
         }
       ]
     },
