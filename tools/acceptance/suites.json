@@ -1306,6 +1306,53 @@
           ]
         }
       ]
+    },
+    "sip_devices_gateway": {
+      "package": "./tests/integration/lab/sip_devices_gateway",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccSIPDevicesGatewayDenied"
+          ]
+        },
+        {
+          "id": "rejected-writes",
+          "serial": true,
+          "tests": [
+            "TestAccSIPDevicesGatewayRejectedWrites"
+          ]
+        }
+      ]
+    },
+    "teams_remote_log_collection_configuration": {
+      "package": "./tests/integration/lab/teams_remote_log_collection_configuration",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccRemoteLogCollectionConfigurationReads"
+          ]
+        }
+      ]
+    },
+    "teams_remote_log_collection_device": {
+      "package": "./tests/integration/lab/teams_remote_log_collection_device",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccRemoteLogCollectionDeviceReads"
+          ]
+        },
+        {
+          "id": "rejected-writes",
+          "serial": true,
+          "tests": [
+            "TestAccRemoteLogCollectionDeviceRejectedWrites"
+          ]
+        }
+      ]
     }
   }
 }
