@@ -10,6 +10,7 @@ import (
 	audioconferencingprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_conferencing_prompts"
 	audioprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_prompts"
 	batchdeployment "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/batch_deployment"
+	callqueues "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_queues"
 	cloudcalldata "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
@@ -140,6 +141,7 @@ type Services struct {
 	CloudCallData                              *cloudcalldata.Service
 	ResourceAccounts                           *resourceaccounts.Service
 	Schedules                                  *schedules.Service
+	CallQueues                                 *callqueues.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -231,6 +233,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		CloudCallData:                              cloudcalldata.NewService(backend),
 		ResourceAccounts:                           resourceaccounts.NewService(backend),
 		Schedules:                                  schedules.NewService(backend),
+		CallQueues:                                 callqueues.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),

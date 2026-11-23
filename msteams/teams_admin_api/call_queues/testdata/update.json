@@ -1,0 +1,12 @@
+{
+  "Diagnostics": [
+    {
+      "Level": "Warning",
+      "Message": "Fixture message"
+    },
+    {
+      "Level": "Warning",
+      "Message": "Fixture message"
+    }
+  ]
+}

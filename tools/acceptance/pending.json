@@ -98,5 +98,9 @@
   "TestAccScheduleRecover": {
     "file": "tests/integration/lab/schedules/schedules_test.go",
     "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccCallQueueRecover": {
+    "file": "tests/integration/lab/call_queues/call_queues_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
   }
 }
