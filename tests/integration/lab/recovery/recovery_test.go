@@ -30,6 +30,7 @@ import (
 	teamsapppermissionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_permission_policy"
 	teamsappsetuppolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_setup_policy"
 	teamsaudioconferencingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_audio_conferencing_policy"
+	teamsbyodanddeskspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_byod_and_desks_policy"
 	teamscallholdpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_call_hold_policy"
 	teamscallparkpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_call_park_policy"
 	teamscallingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_calling_policy"
@@ -86,6 +87,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		teamsapppermissionpolicyacc.RecoveryHandlers(sdk),
 		teamsappsetuppolicyacc.RecoveryHandlers(sdk),
 		teamsaudioconferencingpolicyacc.RecoveryHandlers(sdk),
+		teamsbyodanddeskspolicyacc.RecoveryHandlers(sdk),
 		teamscallholdpolicyacc.RecoveryHandlers(sdk),
 		teamscallparkpolicyacc.RecoveryHandlers(sdk),
 		teamscallingpolicyacc.RecoveryHandlers(sdk),
@@ -157,6 +159,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"auto-recording-template",
 		"auto-attendant",
 		"branding-policy",
+		"byod-and-desks-policy",
 		"call-hold-policy",
 		"call-park-policy",
 		"call-queue",

@@ -284,6 +284,13 @@ Recovery selects `TestAccRecoverOwnedPolicies` with the bound private journal;
 Null or missing originals refuse mutation. This step temporarily changes Global
 in the dedicated lab; it does not qualify user/client propagation.
 
+BYOD and desks policy runs Global read/list/filter as its `reads` step and owned
+CRUD as its `crud` step, using the dedicated `read-byod-and-desks-policy.ps1`
+oracle. CRUD creates `DeviceDataCollection=Disabled` (Global is `Enabled`),
+updates it to `Enabled`, requires every other returned field unchanged and makes
+two pinned comparisons. Its recovery kind is `byod-and-desks-policy`; grants are
+not exercised live.
+
 Mobility CRUD runs as its service's `crud` step, with all five getters compared
 against the pinned module before and after a sparse description update. Its
 recovery kind is `mobility-policy`. Multi-tenant Global reads/updates run as

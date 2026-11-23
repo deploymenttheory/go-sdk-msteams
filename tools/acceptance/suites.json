@@ -476,6 +476,26 @@
         }
       ]
     },
+    "teams_byod_and_desks_policy": {
+      "package": "./tests/integration/lab/teams_byod_and_desks_policy",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccBYODAndDesksPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccBYODAndDesksPolicyCRUD"
+          ]
+        }
+      ]
+    },
     "teams_call_hold_policy": {
       "package": "./tests/integration/lab/teams_call_hold_policy",
       "steps": [

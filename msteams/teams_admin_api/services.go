@@ -42,6 +42,7 @@ import (
 	teamsapppermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
 	teamsappsetuppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_setup_policy"
 	teamsaudioconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
+	teamsbyodanddeskspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_byod_and_desks_policy"
 	teamscallholdpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_hold_policy"
 	teamscallparkpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
 	teamscallingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_calling_policy"
@@ -135,6 +136,7 @@ type Services struct {
 	TeamsCallParkPolicies                      *teamscallparkpolicy.Service
 	TeamsCallHoldPolicies                      *teamscallholdpolicy.Service
 	TeamsAudioConferencingPolicies             *teamsaudioconferencingpolicy.Service
+	TeamsBYODAndDesksPolicies                  *teamsbyodanddeskspolicy.Service
 	AudioConferencingCustomPrompts             *audioconferencingprompts.Service
 	TeamsAppSetupPolicies                      *teamsappsetuppolicy.Service
 	TeamsAppPermissionPolicies                 *teamsapppermissionpolicy.Service
@@ -251,6 +253,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsCallParkPolicies:                      teamscallparkpolicy.NewService(backend),
 		TeamsCallHoldPolicies:                      teamscallholdpolicy.NewService(scope),
 		TeamsAudioConferencingPolicies:             teamsaudioconferencingpolicy.NewService(backend),
+		TeamsBYODAndDesksPolicies:                  teamsbyodanddeskspolicy.NewService(scope),
 		AudioConferencingCustomPrompts:             audioconferencingprompts.NewService(scope),
 		TeamsAppSetupPolicies:                      teamsappsetuppolicy.NewService(scope),
 		TeamsAppPermissionPolicies:                 teamsapppermissionpolicy.NewService(scope),
