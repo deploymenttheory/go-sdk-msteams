@@ -78,6 +78,7 @@ import (
 	teamsworkloadpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_load_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 	tenantidentity "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_identity"
+	unifiedapps "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/unified_apps"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
@@ -159,6 +160,7 @@ type Services struct {
 	BatchDeployments                           *batchdeployment.Service
 	PrivateChannelMigration                    *privatechannelmigration.Service
 	Regions                                    *region.Service
+	UnifiedApps                                *unifiedapps.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -181,6 +183,10 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	knowledgeScope, err := client.NewScope(client.AIGeneratedKnowledge, session)
+	if err != nil {
+		return nil, err
+	}
+	appCatalogScope, err := client.NewScope(client.AppCatalog, session)
 	if err != nil {
 		return nil, err
 	}
@@ -261,6 +267,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		BatchDeployments:                           batchdeployment.NewService(backend),
 		PrivateChannelMigration:                    privatechannelmigration.NewService(migrationScope),
 		Regions:                                    region.NewService(regionScope),
+		UnifiedApps:                                unifiedapps.NewService(appCatalogScope),
 	}, nil
 }
 

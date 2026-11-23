@@ -124,6 +124,39 @@ func TestUnitNativeRegionRequiresExactDelegatedScopeBeforeOAuth(t *testing.T) {
 	}
 }
 
+func TestUnitNativeAppCatalogRequiresExactDelegatedScopeBeforeOAuth(t *testing.T) {
+	t.Parallel()
+	const audience = "08ff1ce2-4973-4b08-86a3-ebed13badc7f"
+	const scope = audience + "/AdminAppCatalog.ReadWrite.All"
+	for _, requested := range []string{"", scope, audience + "/.default"} {
+		service := newTokenService(t)
+		provider := application(t, appConfig(), service)
+		if _, err := provider.AcquireToken(t.Context(), provider.Binding().RequestScope(audience, requested)); err == nil || service.requests != 0 {
+			t.Fatal("application app catalog request reached OAuth")
+		}
+	}
+	for _, cloud := range []string{"gcc", "gcch", "dod", "china"} {
+		env, err := ResolveEnvironment(cloud, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if env.supportsAudience(audience) {
+			t.Fatal("app catalog audience escaped its commercial-only map")
+		}
+	}
+	service := &delegatedService{t: t, extraScopes: map[string]bool{scope: true}}
+	provider := newTestDelegated(t, delegatedConfig(Password), service)
+	for _, requested := range []string{"", audience + "/.default", audience + "/AdminAppCatalog.Read.All"} {
+		if _, err := provider.AcquireToken(t.Context(), provider.Binding().RequestScope(audience, requested)); !errors.Is(err, ErrUnsupportedScope) || service.requests != 0 {
+			t.Fatal("wrong delegated app catalog scope reached OAuth")
+		}
+	}
+	token, err := provider.AcquireToken(t.Context(), provider.Binding().RequestScope(audience, scope))
+	if err != nil || token.AccessToken != "fixture-access-"+scope {
+		t.Fatal("exact delegated app catalog scope failed")
+	}
+}
+
 func stringsContainScope(value, scope string) bool {
 	for _, part := range strings.Fields(value) {
 		if part == scope {

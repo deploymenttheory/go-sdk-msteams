@@ -909,15 +909,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/15/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppReadsDecodeCatalogShapes"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppFailuresStayTyped"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppProfileRejectsBeforeTokens"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsApplicationIdentityRefused"
+            },
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsDelegatedReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/unified_apps/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -925,8 +957,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Lab run confirmed application-mode refusal with pinned PowerShell parity (the service returns 401 to app-only tokens); delegated AdminAppCatalog.ReadWrite.All reads and all writes need a separately provisioned delegated identity.",
+        "evidence": [
+          "docs/implementation/ext/unified-apps-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -13254,15 +13288,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/204/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service.go",
+              "name": "Service.Get"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppReadsDecodeCatalogShapes"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppFailuresStayTyped"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppInvalidInputFailsLocally"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsApplicationIdentityRefused"
+            },
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsDelegatedReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/unified_apps/service.go",
+            "name": "Service.Get"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -13270,8 +13336,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Lab run confirmed application-mode refusal with pinned PowerShell parity (the service returns 401 to app-only tokens); delegated AdminAppCatalog.ReadWrite.All reads and all writes need a separately provisioned delegated identity.",
+        "evidence": [
+          "docs/implementation/ext/unified-apps-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -13286,15 +13354,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/205/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service.go",
+              "name": "Service.ListCustomPending"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppReadsDecodeCatalogShapes"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppProfileRejectsBeforeTokens"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsApplicationIdentityRefused"
+            },
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsDelegatedReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/unified_apps/service.go",
+            "name": "Service.ListCustomPending"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -13302,8 +13398,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Lab run confirmed application-mode refusal with pinned PowerShell parity (the service returns 401 to app-only tokens); delegated AdminAppCatalog.ReadWrite.All reads and all writes need a separately provisioned delegated identity.",
+        "evidence": [
+          "docs/implementation/ext/unified-apps-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -13318,15 +13416,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/206/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service.go",
+              "name": "Service.GetTenantSettings"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppReadsDecodeCatalogShapes"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppInvalidInputFailsLocally"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppProfileRejectsBeforeTokens"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsApplicationIdentityRefused"
+            },
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsDelegatedReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/unified_apps/service.go",
+            "name": "Service.GetTenantSettings"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -13334,8 +13464,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Lab run confirmed application-mode refusal with pinned PowerShell parity (the service returns 401 to app-only tokens); delegated AdminAppCatalog.ReadWrite.All reads and all writes need a separately provisioned delegated identity.",
+        "evidence": [
+          "docs/implementation/ext/unified-apps-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -40629,15 +40761,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/677/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service.go",
+              "name": "Service.Update"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppWritesSendModuleBodies"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppFailuresStayTyped"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppInvalidInputFailsLocally"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsApplicationIdentityRefused"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/unified_apps/service.go",
+            "name": "Service.Update"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -40645,8 +40805,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Lab run confirmed application-mode refusal with pinned PowerShell parity (the service returns 401 to app-only tokens); delegated AdminAppCatalog.ReadWrite.All reads and all writes need a separately provisioned delegated identity.",
+        "evidence": [
+          "docs/implementation/ext/unified-apps-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -40661,15 +40823,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/678/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service.go",
+              "name": "Service.ReviewCustomPending"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppReviewReadsEtagThenPuts"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppInvalidInputFailsLocally"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsApplicationIdentityRefused"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/unified_apps/service.go",
+            "name": "Service.ReviewCustomPending"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -40677,8 +40863,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Lab run confirmed application-mode refusal with pinned PowerShell parity (the service returns 401 to app-only tokens); delegated AdminAppCatalog.ReadWrite.All reads and all writes need a separately provisioned delegated identity.",
+        "evidence": [
+          "docs/implementation/ext/unified-apps-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -40693,15 +40881,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/679/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service.go",
+              "name": "Service.UpdateTenantSettings"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppWritesSendModuleBodies"
+            },
+            {
+              "file": "msteams/teams_admin_api/unified_apps/service_test.go",
+              "name": "TestUnitUnifiedAppInvalidInputFailsLocally"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/unified_apps/unified_apps_test.go",
+              "name": "TestAccUnifiedAppsApplicationIdentityRefused"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/unified_apps/service.go",
+            "name": "Service.UpdateTenantSettings"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -40709,8 +40921,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Lab run confirmed application-mode refusal with pinned PowerShell parity (the service returns 401 to app-only tokens); delegated AdminAppCatalog.ReadWrite.All reads and all writes need a separately provisioned delegated identity.",
+        "evidence": [
+          "docs/implementation/ext/unified-apps-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

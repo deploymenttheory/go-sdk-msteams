@@ -1,0 +1,22 @@
+{
+  "id": "00000000-0000-4000-8000-000000000001",
+  "isBlocked": false,
+  "appType": "ThirdParty",
+  "appName": "Fixture name",
+  "availableTo": {
+    "availableToType": "UsersAndGroups",
+    "users": [{"id": ["00000000-0000-4000-8000-000000000004"], "lastUpdatedDate": "2026-11-01T10:00:00+00:00", "assignedBy": ["00000000-0000-4000-8000-000000000003"]}],
+    "groups": [],
+    "lastUpdatedDate": "2026-11-01T10:00:00+00:00",
+    "assignedBy": "00000000-0000-4000-8000-000000000003"
+  },
+  "deployedTo": {
+    "deployedToType": "UsersAndGroups",
+    "lastUpdatedDate": "2026-11-02T10:00:00+00:00",
+    "deployedBy": "00000000-0000-4000-8000-000000000003",
+    "deployReason": "Admin",
+    "version": "1.0.0",
+    "users": [],
+    "groups": [{"id": ["00000000-0000-4000-8000-000000000005"], "lastUpdatedDate": null, "deployedBy": ["00000000-0000-4000-8000-000000000003"]}]
+  }
+}
