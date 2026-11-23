@@ -8,6 +8,15 @@ import re
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 BASELINE = ROOT/'contracts/powershell/8.1.0'
 TELEMETRY = 'invoke-csinternalpstelemetry'
+# Commands approved for exclusion, each with its recorded reason. Anything
+# else in the baseline must be implemented or stay open.
+APPROVED_EXCLUSIONS = {
+    TELEMETRY: 'Approved module telemetry plumbing exclusion: docs/implementation/backlog/issues/INDEX.md',
+    'set-csnotifycache': ('Approved: no evidenced wire contract in 8.1.0 (manifest-only export whose request helper has no caller): '
+                          'docs/implementation/ext/configuration-diagnostics-contract-notes.md'),
+    'get-cslogininfo': ('Approved: returns the module\'s own access token and sends no service request; SDK credentials come from msteams/auth: '
+                      'docs/implementation/ext/provisioning-diagnostics-contract-notes.md'),
+}
 COMMON = {
     'Debug': 'client logging configuration',
     'Verbose': 'client logging configuration',
@@ -193,10 +202,10 @@ def validate(ledger, reconciliation, runtime, known_tickets, root=ROOT, require_
                 fail(name,'invalid disposition')
             if kind=='research-candidate' and key in expected and expected[key]['implementation_owner']:
                 fail(name,'owned management command cannot become an unassigned research candidate')
-            if kind=='excluded' and (key!=TELEMETRY or not record.get('exclusion')):
+            if kind=='excluded' and record.get('exclusion')!=APPROVED_EXCLUSIONS.get(key):
                 fail(name,'unapproved exclusion of a management candidate')
-            if key!=TELEMETRY and record.get('exclusion'):
-                fail(name,'only telemetry may carry an exclusion')
+            if record.get('exclusion') and kind!='excluded':
+                fail(name,'only an excluded record may carry an exclusion')
             if record.get('research_owner') not in known_tickets:
                 fail(name,'missing or unknown research owner')
             if kind not in {'excluded','research-candidate'} and record.get('implementation_owner') not in known_tickets:

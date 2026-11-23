@@ -94,6 +94,25 @@ class LedgerTests(unittest.TestCase):
         self.record.update(kind='research-candidate',exclusion=None,implementation_owner=None)
         self.assertEqual(self.check()['result'],'failed')
 
+    def test_only_approved_exclusions_with_their_recorded_reason_pass(self):
+        approved=dict(name='Get-CsLoginInfo',disposition='observed-management-export',
+            family='provisioning_diagnostics',implementation_owner='EXT-20',research_owner='EXT-01')
+        self.reconciliation['records'].append(approved)
+        self.runtime['commands'].append(dict(name='Get-CsLoginInfo',parameter_sets=[dict(name='Identity',parameters=[])]))
+        self.write('contracts/powershell/8.1.0/reconciliation.json',self.reconciliation)
+        self.write('contracts/powershell/8.1.0/runtime.json',self.runtime)
+        self.ledger=seed(self.reconciliation,self.runtime)
+        record=self.ledger['records'][1]
+        record.update(kind='excluded',exclusion='close enough')
+        self.assertEqual(self.check()['result'],'failed')
+        from ledger import APPROVED_EXCLUSIONS
+        record.update(exclusion=APPROVED_EXCLUSIONS['get-cslogininfo'])
+        result=self.check()
+        self.assertEqual(result['result'],'passed',result['errors'])
+        self.assertEqual(result['excluded'],1)
+        record.update(kind='management')
+        self.assertEqual(self.check()['result'],'failed')
+
     def test_unsupported_stub_never_counts_as_implemented(self):
         self.implemented()
         self.record['implementation']['unsupported_stub']=True
