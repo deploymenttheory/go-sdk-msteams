@@ -1,0 +1,8 @@
+{
+  "code": "Forbidden",
+  "message": "Fixture message",
+  "target": null,
+  "details": null,
+  "innerError": null,
+  "action": "Provide different credential or request access."
+}

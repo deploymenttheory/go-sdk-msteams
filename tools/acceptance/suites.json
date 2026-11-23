@@ -101,6 +101,17 @@
         }
       ]
     },
+    "cloud_call_data": {
+      "package": "./tests/integration/lab/cloud_call_data",
+      "steps": [
+        {
+          "id": "tenant-access-outcomes",
+          "tests": [
+            "TestAccCloudCallDataConnectionAuthorizationDenied"
+          ]
+        }
+      ]
+    },
     "external_access_policy": {
       "package": "./tests/integration/lab/external_access_policy",
       "steps": [

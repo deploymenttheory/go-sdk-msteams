@@ -1899,15 +1899,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/32/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/cloud_call_data/service.go",
+              "name": "Service.Get"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go",
+              "name": "TestUnitCloudCallDataGetDenialUsesAcceptanceResponse"
+            },
+            {
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go",
+              "name": "TestUnitCloudCallDataReturnsTokenWithoutPrintingIt"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/cloud_call_data/cloud_call_data_test.go",
+              "name": "TestAccCloudCallDataConnectionAuthorizationDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/cloud_call_data/service.go",
+            "name": "Service.Get"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1915,8 +1939,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run confirmed the app-only HTTP 403 denial with pinned PowerShell parity; a successful token read needs separately authorized credentials.",
+        "evidence": [
+          "docs/implementation/ext/cloud-call-data-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19394,15 +19420,34 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/294/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/cloud_call_data/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go",
+              "name": "TestUnitCloudCallDataReturnsTokenWithoutPrintingIt"
+            },
+            {
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go",
+              "name": "TestUnitCloudCallDataFailuresStayTyped"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/cloud_call_data/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19410,8 +19455,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Not sent live: the tenant singleton has no remove cmdlet, so a successful create cannot be undone; covered by contract tests only.",
+        "evidence": [
+          "docs/implementation/ext/cloud-call-data-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
