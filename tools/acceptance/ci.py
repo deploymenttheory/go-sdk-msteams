@@ -581,9 +581,10 @@ def changed_services(registry, files, base_registry, references=None):
     A service is touched by a change to its lab test package, an SDK package
     of the same name, its suites.json entry, or a PowerShell oracle script its
     lab tests reference. A shared change (SHARED_PATTERNS) touches every
-    service; unit test files in shared packages do not. ci.py, ledger, docs and
-    services.go wiring changes touch none:
-    unit tests cover them, and pushes to main still run every partition."""
+    service; unit test files in shared packages and acceptance workflow edits
+    do not (the always-run auth partition exercises the partition steps).
+    ci.py, ledger, docs and services.go wiring changes touch none: unit tests
+    cover them, and pushes to main still run every partition."""
     services = registry.get('services', {})
     if any(pattern.search(path) for path in files if not path.endswith('_test.go') for pattern in SHARED_PATTERNS):
         return list(services)
