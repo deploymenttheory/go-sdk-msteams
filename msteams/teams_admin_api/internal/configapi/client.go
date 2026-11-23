@@ -33,8 +33,23 @@ func New(base client.Client) *Client {
 	return &Client{base: base, gate: make(chan struct{}, 1)}
 }
 
+// Base returns the injected client, for calls the module sends without forest
+// discovery or X-MS-Target-Uri.
+func (c *Client) Base() client.Client {
+	if c == nil {
+		return nil
+	}
+	return c.base
+}
+
 // Do discovers on first use and delegates all requests, errors and replay policy.
 func (c *Client) Do(ctx context.Context, request client.Request, result any) (*resty.Response, error) {
+	return c.DoTarget(ctx, "", request, result)
+}
+
+// DoTarget is Do with one path segment appended to the discovered forest in
+// X-MS-Target-Uri. The module routes HostedMigration operations this way.
+func (c *Client) DoTarget(ctx context.Context, segment string, request client.Request, result any) (*resty.Response, error) {
 	if ctx == nil {
 		return nil, client.ErrNilContext
 	}
@@ -44,6 +59,9 @@ func (c *Client) Do(ctx context.Context, request client.Request, result any) (*r
 	if c == nil || c.base == nil {
 		return nil, client.ErrClosed
 	}
+	if strings.ContainsAny(segment, "/\\?#%") || strings.ContainsFunc(segment, func(r rune) bool { return r <= ' ' || r == 0x7f }) || segment == "." || segment == ".." {
+		return nil, client.ErrRequest
+	}
 	target, metadata, err := c.discover(ctx)
 	if err != nil {
 		return metadata, err
@@ -52,6 +70,7 @@ func (c *Client) Do(ctx context.Context, request client.Request, result any) (*r
 	if request.Header == nil {
 		request.Header = make(http.Header)
 	}
+	target += segment
 	request.Header.Set("X-MS-Target-Uri", target)
 	return c.base.Do(ctx, request, result)
 }

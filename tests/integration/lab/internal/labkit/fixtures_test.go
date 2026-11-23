@@ -3,8 +3,40 @@ package labkit
 import (
 	"bytes"
 	"encoding/json"
+	"strings"
 	"testing"
 )
+
+func TestUnitResponseFixtureRedactsUPNsPhonesAddressesAndTenantIDs(t *testing.T) {
+	t.Parallel()
+	tenant := "8e1a2b3c-4d5e-4f60-8a7b-9c0d1e2f3a4b"
+	raw := []byte(`{"UserPrincipalName":"alice@contoso.example","TelephoneNumber":"+442071234567","LineUri":"tel:+14255550123;ext=1","Notes":"call +33123456789 now",` +
+		`"ClientIpAddress":"203.0.113.77","SourceIp":"2a01:111:f400::1","Version":"1.0.0.0","TenantId":"` + tenant + `","Owned":"+15555550100"}`)
+	got, err := fixtureJSON(raw, map[string]string{tenant: "00000000-0000-4000-8000-0000000000aa"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, private := range []string{"alice", "contoso", "442071234567", "14255550123", "33123456789", "203.0.113.77", "2a01:111", tenant} {
+		if bytes.Contains(got, []byte(private)) {
+			t.Fatalf("private fixture value %q retained", private)
+		}
+	}
+	var fields map[string]string
+	if json.Unmarshal(got, &fields) != nil {
+		t.Fatal("redacted fixture is not an object of strings")
+	}
+	if fields["Version"] != "1.0.0.0" || fields["Owned"] != "+15555550100" || fields["TenantId"] != "00000000-0000-4000-8000-0000000000aa" {
+		t.Fatal("public version, reserved number or tenant placeholder changed")
+	}
+	if !strings.HasPrefix(fields["ClientIpAddress"], "192.0.2.") || !strings.HasPrefix(fields["SourceIp"], "2001:db8::") ||
+		!strings.HasPrefix(fields["LineUri"], "tel:+1555") || !strings.HasSuffix(fields["LineUri"], ";ext=1") {
+		t.Fatal("addresses or telephone URI were not mapped to documentation values")
+	}
+	again, err := fixtureJSON(raw, map[string]string{tenant: "00000000-0000-4000-8000-0000000000aa"})
+	if err != nil || !bytes.Equal(got, again) {
+		t.Fatal("redaction is not deterministic")
+	}
+}
 
 func TestUnitResponseFixturePreservesJSONTypesAndRedactsPrivateValues(t *testing.T) {
 	t.Parallel()
