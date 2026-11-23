@@ -22,6 +22,33 @@
         }
       ]
     },
+    "ai_agents": {
+      "package": "./tests/integration/lab/ai_agents",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccAIAgentReads"
+          ]
+        },
+        {
+          "id": "rejected-writes",
+          "serial": true,
+          "tests": [
+            "TestAccAIAgentRejectedWrites"
+          ]
+        },
+        {
+          "id": "lifecycle",
+          "mutation": true,
+          "proof": "ai-agent-lifecycle",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccAIAgentLifecycle"
+          ]
+        }
+      ]
+    },
     "application_access_policy": {
       "package": "./tests/integration/lab/application_access_policy",
       "steps": [

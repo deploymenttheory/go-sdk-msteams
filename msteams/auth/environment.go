@@ -119,7 +119,7 @@ func (e Environment) supportsAudience(audience string) bool {
 	if audience == e.Endpoints.Graph || audience == e.Endpoints.TeamsAdminResource {
 		return true
 	}
-	for _, service := range []serviceprofile.Service{serviceprofile.Targeting, serviceprofile.Hierarchy, serviceprofile.PrivateChannelMigration, serviceprofile.Regions} {
+	for _, service := range []serviceprofile.Service{serviceprofile.Targeting, serviceprofile.Hierarchy, serviceprofile.PrivateChannelMigration, serviceprofile.Regions, serviceprofile.AIGeneratedKnowledge} {
 		profile, ok := serviceprofile.Resolve(service, e.Name)
 		if ok && audience == profile.Audience {
 			return true

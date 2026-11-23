@@ -851,15 +851,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/14/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.ListKnowledgeContainers"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIGeneratedKnowledgeUsesMCPSProfile"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/ai_agents/service.go",
+            "name": "Service.ListKnowledgeContainers"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -867,8 +891,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "MCPS rejects app-only tokens with HTTP 401 (the pinned module fails before sending in app-only sessions); only fabricated-thread rejection probes ran, so successful knowledge requests need delegated credentials and are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -1049,15 +1075,55 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/17/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentListOptionsAndCatalogFilters"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentReads"
+            },
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/ai_agents/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/ai_agents/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1065,8 +1131,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -1081,15 +1149,39 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/18/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.QueryPlatformAgents"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentListOptionsAndCatalogFilters"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/ai_agents/service.go",
+            "name": "Service.QueryPlatformAgents"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1097,8 +1189,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the catalog route through an empty unknown-provider page and a non-GUID 400 with PowerShell count parity; no published catalog entries exist in the lab, so populated pages are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19873,15 +19967,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/278/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentRejectedWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/ai_agents/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19889,8 +20011,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26596,15 +26720,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/410/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.DeleteKnowledge"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIGeneratedKnowledgeUsesMCPSProfile"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/ai_agents/service.go",
+            "name": "Service.DeleteKnowledge"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26612,8 +26760,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "MCPS rejects app-only tokens with HTTP 401 (the pinned module fails before sending in app-only sessions); only fabricated-thread rejection probes ran, so successful knowledge requests need delegated credentials and are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26628,15 +26778,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/411/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentRejectedWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/ai_agents/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26644,8 +26822,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -31981,15 +32161,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/522/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentRejectedWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/ai_agents/service.go",
+            "name": "Service.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -31997,8 +32205,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

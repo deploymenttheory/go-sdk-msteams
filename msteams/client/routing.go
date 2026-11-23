@@ -65,13 +65,16 @@ func (s *Scope) profile() (routeProfile, error) {
 		return routeProfile{host: strings.TrimPrefix(environment.Endpoints.Graph, "https://"), audience: environment.Endpoints.Graph, graph: true}, nil
 	case TeamsAdmin:
 		return routeProfile{host: strings.TrimPrefix(environment.Endpoints.TeamsAdmin, "https://"), audience: environment.Endpoints.TeamsAdminResource}, nil
-	case Targeting, Hierarchy, PrivateChannelMigration, Regions:
+	case Targeting, Hierarchy, PrivateChannelMigration, Regions, AIGeneratedKnowledge:
 		service := serviceprofile.Targeting
 		if s.backend == Hierarchy {
 			service = serviceprofile.Hierarchy
 		}
 		if s.backend == PrivateChannelMigration {
 			service = serviceprofile.PrivateChannelMigration
+		}
+		if s.backend == AIGeneratedKnowledge {
+			service = serviceprofile.AIGeneratedKnowledge
 		}
 		if s.backend == Regions {
 			if s.session.binding.Mode != auth.Delegated {

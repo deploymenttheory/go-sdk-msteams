@@ -12,6 +12,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
+	aiagentsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/ai_agents"
 	applicationaccesspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/application_access_policy"
 	audiopromptsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/audio_prompts"
 	callqueuesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_queues"
@@ -65,6 +66,7 @@ import (
 // handlerSets lists every service's recovery handlers.
 func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 	return []map[string]lab.Handler{
+		aiagentsacc.RecoveryHandlers(sdk),
 		applicationaccesspolicyacc.RecoveryHandlers(sdk),
 		audiopromptsacc.RecoveryHandlers(sdk),
 		callqueuesacc.RecoveryHandlers(sdk),
@@ -140,6 +142,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 	}
 	handlers := mergeHandlers(t, handlerSets(sdk)...)
 	want := []string{
+		"ai-agent",
 		"app-permission-policy",
 		"app-setup-policy",
 		"application-access-policy",

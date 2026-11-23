@@ -1,0 +1,13 @@
+{
+  "AIAgents": [
+    {
+      "ConfigurationId": "00000000-0000-4000-8000-0000000000c1",
+      "Name": "Fixture name",
+      "AgentId": "00000000-0000-4000-8000-0000000000a1",
+      "AgentType": "MicrosoftCopilotStudio",
+      "AgentTargetTagTemplateId": null
+    }
+  ],
+  "AgentCount": 1,
+  "Diagnostics": []
+}
