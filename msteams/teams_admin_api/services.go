@@ -27,6 +27,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
 	resourceaccounts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/resource_accounts"
 	schedules "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/schedules"
+	shiftsconnections "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/shifts_connections"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
@@ -148,6 +149,7 @@ type Services struct {
 	TenantIdentity                             *tenantidentity.Service
 	CallTemplates                              *calltemplates.Service
 	ComplianceRecording                        *compliancerecording.Service
+	ShiftsConnections                          *shiftsconnections.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -243,6 +245,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TenantIdentity:                             tenantidentity.NewService(backend),
 		CallTemplates:                              calltemplates.NewService(backend),
 		ComplianceRecording:                        compliancerecording.NewService(scope),
+		ShiftsConnections:                          shiftsconnections.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),
