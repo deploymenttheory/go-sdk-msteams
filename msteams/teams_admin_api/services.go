@@ -32,6 +32,7 @@ import (
 	resourceaccounts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/resource_accounts"
 	schedules "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/schedules"
 	shiftsconnections "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/shifts_connections"
+	sipdevicesgateway "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/sip_devices_gateway"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
@@ -64,6 +65,8 @@ import (
 	teamsnotificationandfeedspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_notification_and_feeds_policy"
 	teamspersonalattendantpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_personal_attendant_policy"
 	teamsrecordingrolloutpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_recording_roll_out_policy"
+	teamsremotelogcollectionconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_remote_log_collection_configuration"
+	teamsremotelogcollectiondevice "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_remote_log_collection_device"
 	teamsroomvideoteleconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_room_video_tele_conferencing_policy"
 	teamssharedcallingroutingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shared_calling_routing_policy"
 	teamsshiftsapppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shifts_app_policy"
@@ -159,6 +162,9 @@ type Services struct {
 	AIAgents                                   *aiagents.Service
 	ProvisioningDiagnostics                    *provisioningdiagnostics.Service
 	CustomAppSettings                          *customappsettings.Service
+	SIPDevicesGateway                          *sipdevicesgateway.Service
+	TeamsRemoteLogCollectionConfigurations     *teamsremotelogcollectionconfiguration.Service
+	TeamsRemoteLogCollectionDevices            *teamsremotelogcollectiondevice.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -268,6 +274,9 @@ func NewServices(session *client.Session) (*Services, error) {
 		AIAgents:                                   aiagents.NewService(backend, knowledgeScope),
 		ProvisioningDiagnostics:                    provisioningdiagnostics.NewService(backend),
 		CustomAppSettings:                          customappsettings.NewService(backend),
+		SIPDevicesGateway:                          sipdevicesgateway.NewService(backend),
+		TeamsRemoteLogCollectionConfigurations:     teamsremotelogcollectionconfiguration.NewService(scope),
+		TeamsRemoteLogCollectionDevices:            teamsremotelogcollectiondevice.NewService(scope),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),

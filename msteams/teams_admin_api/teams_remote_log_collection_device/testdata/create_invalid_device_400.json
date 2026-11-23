@@ -1,0 +1,10 @@
+{
+  "code": "ClientError",
+  "message": "Fixture message",
+  "action": "Please refer to documentation. CorrelationId: 00000000-0000-4000-8000-da194d9b2334",
+  "errorCode": 40013,
+  "innerError": {
+    "ErrorCode": "ErrorTeamsRemoteLogCollectionConfigurationInvalidDeviceId",
+    "ErrorCodeMetadata": null
+  }
+}

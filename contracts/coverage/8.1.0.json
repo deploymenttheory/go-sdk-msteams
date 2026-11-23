@@ -5632,15 +5632,39 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/93/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+              "name": "Service.ListBulkSignInRequests"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service_test.go",
+              "name": "TestUnitSIPDevicesGatewayDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service_test.go",
+              "name": "TestUnitSIPDevicesGatewaySuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/sip_devices_gateway/sip_devices_gateway_test.go",
+              "name": "TestAccSIPDevicesGatewayDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+            "name": "Service.ListBulkSignInRequests"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -5648,8 +5672,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run: the app-only Teams Administrator is denied (403) by every SIP devices gateway route; successful gateway operations need delegated SDG access and real devices and remain unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -5664,15 +5690,39 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/94/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+              "name": "Service.GetBulkSignInRequestStatus"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service_test.go",
+              "name": "TestUnitSIPDevicesGatewayDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service_test.go",
+              "name": "TestUnitSIPDevicesGatewaySuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/sip_devices_gateway/sip_devices_gateway_test.go",
+              "name": "TestAccSIPDevicesGatewayDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+            "name": "Service.GetBulkSignInRequestStatus"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -5680,8 +5730,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run: the app-only Teams Administrator is denied (403) by every SIP devices gateway route; successful gateway operations need delegated SDG access and real devices and remain unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -9753,22 +9805,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/149/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_configuration/service_test.go",
+              "name": "TestUnitConfigurationEmbeddedDevicesAndFilter"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_remote_log_collection_configuration/teams_remote_log_collection_configuration_test.go",
+              "name": "TestAccRemoteLogCollectionConfigurationReads"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/149/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_configuration/service_test.go",
+              "name": "TestUnitConfigurationReadsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_remote_log_collection_configuration/teams_remote_log_collection_configuration_test.go",
+              "name": "TestAccRemoteLogCollectionConfigurationReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9776,8 +9875,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the reads with pinned PowerShell parity against a tenant without remote log collection devices; populated reads remain unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -9792,29 +9893,90 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/150/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceListFilterMatchesIdentityLocally"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/150/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceReadsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_remote_log_collection_device/teams_remote_log_collection_device_test.go",
+              "name": "TestAccRemoteLogCollectionDeviceReads"
+            }
+          ]
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/150/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceReadsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_remote_log_collection_device/teams_remote_log_collection_device_test.go",
+              "name": "TestAccRemoteLogCollectionDeviceReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9822,8 +9984,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the reads with pinned PowerShell parity against a tenant without remote log collection devices; populated reads remain unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -23032,15 +23196,51 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/332/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+              "name": "Service.CreateBulkSignInRequest"
+            },
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+              "name": "ReadBulkSignInItems"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service_test.go",
+              "name": "TestUnitSIPDevicesGatewayDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service_test.go",
+              "name": "TestUnitSIPDevicesGatewaySuccessShapesPreserveFields"
+            },
+            {
+              "file": "msteams/teams_admin_api/sip_devices_gateway/service_test.go",
+              "name": "TestUnitReadBulkSignInItemsMatchesImportCsv"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/sip_devices_gateway/sip_devices_gateway_test.go",
+              "name": "TestAccSIPDevicesGatewayRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+            "name": "Service.CreateBulkSignInRequest"
+          },
+          {
+            "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+            "name": "ReadBulkSignInItems"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -23048,8 +23248,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run: the app-only Teams Administrator is denied (403) by every SIP devices gateway route; successful gateway operations need delegated SDG access and real devices and remain unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -23062,9 +23264,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/380",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+            "name": "Service.CreateDeviceTaggingRequest"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -23072,8 +23279,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run: the app-only Teams Administrator is denied (403) by every SIP devices gateway route; successful gateway operations need delegated SDG access and real devices and remain unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -23086,9 +23295,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/381",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/sip_devices_gateway/service.go",
+            "name": "Service.CreateDeviceTransferRequest"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -23096,8 +23310,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run: the app-only Teams Administrator is denied (403) by every SIP devices gateway route; successful gateway operations need delegated SDG access and real devices and remain unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -25419,22 +25635,72 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/379/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceWriteShapes"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/379/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.CreateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceRejectedWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceWriteShapes"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceCreateGeneratesAndKeepsID"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_remote_log_collection_device/teams_remote_log_collection_device_test.go",
+              "name": "TestAccRemoteLogCollectionDeviceRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.CreateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.CreateByID"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25442,8 +25708,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route through rejected or missing-target probes (400 invalid DeviceId, 404 missing device); a successful write remains unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -30720,22 +30988,56 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/486/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceWriteShapes"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/486/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceRejectedWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_remote_log_collection_device/teams_remote_log_collection_device_test.go",
+              "name": "TestAccRemoteLogCollectionDeviceRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.DeleteByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30743,8 +31045,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route through rejected or missing-target probes (400 invalid DeviceId, 404 missing device); a successful write remains unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -37814,22 +38118,72 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/620/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceWriteShapes"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/620/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+              "name": "Service.PatchByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service_test.go",
+              "name": "TestUnitDeviceRejectedWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_remote_log_collection_device/teams_remote_log_collection_device_test.go",
+              "name": "TestAccRemoteLogCollectionDeviceRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.PatchByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.UpdateByID"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_remote_log_collection_device/service.go",
+            "name": "Service.PatchByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -37837,8 +38191,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route through rejected or missing-target probes (400 invalid DeviceId, 404 missing device); a successful write remains unqualified.",
+        "evidence": [
+          "docs/implementation/ext/devices-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
