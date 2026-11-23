@@ -4,6 +4,7 @@ package teamsadminapi
 import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	acsfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/acs_federation_configuration"
+	aiagents "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/ai_agents"
 	applicationaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_access_policy"
 	applicationmeetingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/application_meeting_configuration"
 	assignmentmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
@@ -152,6 +153,7 @@ type Services struct {
 	ComplianceRecording                        *compliancerecording.Service
 	ShiftsConnections                          *shiftsconnections.Service
 	MainlineAttendants                         *mainlineattendants.Service
+	AIAgents                                   *aiagents.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -175,6 +177,10 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	regionScope, err := client.NewScope(client.Regions, session)
+	if err != nil {
+		return nil, err
+	}
+	knowledgeScope, err := client.NewScope(client.AIGeneratedKnowledge, session)
 	if err != nil {
 		return nil, err
 	}
@@ -249,6 +255,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		ComplianceRecording:                        compliancerecording.NewService(scope),
 		ShiftsConnections:                          shiftsconnections.NewService(backend),
 		MainlineAttendants:                         mainlineattendants.NewService(backend),
+		AIAgents:                                   aiagents.NewService(backend, knowledgeScope),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),

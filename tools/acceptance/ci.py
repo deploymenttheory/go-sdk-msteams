@@ -85,6 +85,13 @@ MAINLINE_ATTENDANT_MARKERS = [
     'question answer flow delete/absence: passed',
 ]
 MAINLINE_ATTENDANT_ORACLE = 'PowerShell 8.1.0 / Go mainline attendant parity: passed'
+AI_AGENT_MARKERS = [
+    'AI agent create: passed',
+    'AI agent get/list: passed',
+    'AI agent update/read-back: passed',
+    'AI agent delete/absence: passed',
+]
+AI_AGENT_ORACLE = 'PowerShell 8.1.0 / Go AI agent parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
@@ -101,6 +108,7 @@ PROOFS = {
     'call-template-lifecycle': (CALL_TEMPLATE_MARKERS, CALL_TEMPLATE_ORACLE, 1),
     'auto-recording-denial': (['auto recording create denial: verified', 'auto recording missing-template writes: passed'], None, 0),
     'mainline-attendant-lifecycle': (MAINLINE_ATTENDANT_MARKERS, MAINLINE_ATTENDANT_ORACLE, 1),
+    'ai-agent-lifecycle': (AI_AGENT_MARKERS, AI_AGENT_ORACLE, 1),
     'populated-template-access': (['native populated-list create denial: verified', 'populated-list comparison cleanup: passed'], 'PowerShell 8.1.0 / Go populated-list authorization parity: passed', 1),
     'configuration-update': (['configuration update/read-back and omission: passed', 'configuration restoration/read-back: passed'], 'PowerShell 8.1.0 / Go configuration read parity: passed', 3),
 }

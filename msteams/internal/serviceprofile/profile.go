@@ -11,6 +11,7 @@ const (
 	Hierarchy
 	PrivateChannelMigration
 	Regions
+	AIGeneratedKnowledge
 )
 
 // Endpoint separates the request origin, fixed namespace and token audience.
@@ -55,6 +56,13 @@ func Resolve(service Service, cloud string) (Endpoint, bool) {
 	case Regions:
 		if cloud == "commercial" || cloud == "gcc" {
 			return Endpoint{Origin: "https://teams.cloud.microsoft", Audience: "https://migrationsvc.teams.microsoft.com", PathPrefix: "/api/tms/prod", DelegatedScope: "https://migrationsvc.teams.microsoft.com/Region.Read.All"}, true
+		}
+	case AIGeneratedKnowledge:
+		// The module's TeamsCmdlet fixes this origin and the MCPS application ID
+		// for every session; only the commercial pair is mapped until another
+		// cloud's resource is evidenced.
+		if cloud == "commercial" {
+			return Endpoint{Origin: "https://teams.microsoft.com", Audience: "6bc3b958-689b-49f5-9006-36d165f30e00", PathPrefix: "/api/mcps/df"}, true
 		}
 	}
 	return Endpoint{}, false

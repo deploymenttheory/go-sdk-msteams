@@ -254,6 +254,7 @@ const (
 	Hierarchy               Backend = "hierarchy"
 	PrivateChannelMigration Backend = "private-channel-migration"
 	Regions                 Backend = "regions"
+	AIGeneratedKnowledge    Backend = "ai-generated-knowledge"
 )
 
 // Scope binds a backend service collection to its owning session.
@@ -271,7 +272,7 @@ func NewScope(backend Backend, session *Session) (*Scope, error) {
 }
 
 func knownBackend(backend Backend) bool {
-	return backend == Graph || backend == TeamsAdmin || backend == Targeting || backend == Hierarchy || backend == PrivateChannelMigration || backend == Regions
+	return backend == Graph || backend == TeamsAdmin || backend == Targeting || backend == Hierarchy || backend == PrivateChannelMigration || backend == Regions || backend == AIGeneratedKnowledge
 }
 
 // Backend returns the immutable service family.

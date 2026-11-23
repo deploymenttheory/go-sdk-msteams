@@ -137,6 +137,7 @@ session's canonical tenant GUID; callers do not pass another tenant per request.
 | Hierarchy v2 | hierarchy.teams.microsoft.com | https://chatsvcagg.teams.microsoft.com | commercial |
 | Multi-Geo region | teams.cloud.microsoft | https://migrationsvc.teams.microsoft.com | commercial, GCC |
 | Private-channel migration | teams.microsoft.com; gov.teams.microsoft.us; dod.teams.microsoft.us; teams.microsoftonline.cn | templates.teams.microsoft.com; templates.teams.microsoft.us; templates.teams.microsoftonline.cn (HTTPS resources) | commercial, GCC, GCCH, DoD, China |
+| AI-generated knowledge (MCPS) | teams.microsoft.com under /api/mcps/df | 6bc3b958-689b-49f5-9006-36d165f30e00 (application ID resource) | commercial |
 
 Native providers request the exact resource's `/.default` scope, except Multi-Geo
 region reads, which require delegated mode and exactly
