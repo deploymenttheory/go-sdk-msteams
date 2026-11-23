@@ -1282,14 +1282,16 @@
         {
           "id": "reads",
           "tests": [
-            "TestAccShiftsConnectionsAuthorizationDenied"
+            "TestAccShiftsConnectionsAuthorizationDenied",
+            "TestAccShiftsSyncAuthorizationDenied"
           ]
         },
         {
           "id": "rejected-writes",
           "serial": true,
           "tests": [
-            "TestAccShiftsConnectionsRejectedWrites"
+            "TestAccShiftsConnectionsRejectedWrites",
+            "TestAccShiftsSyncRejectedWrites"
           ]
         }
       ]

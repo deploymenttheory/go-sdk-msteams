@@ -72,4 +72,5 @@ unqualified and need credentials the Shifts connector accepts plus a WFM test
 system.
 
 EXT-28 (sync, team mappings, WFM teams and users, error reports) shares this
-service root and can add methods and models to this package.
+service root and adds its methods and models to this package; see
+[shifts-sync-contract-notes.md](shifts-sync-contract-notes.md).

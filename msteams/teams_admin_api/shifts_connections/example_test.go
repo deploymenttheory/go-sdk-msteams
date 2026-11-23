@@ -52,3 +52,41 @@ func ExampleService_UpdateInstanceByID() {
 	}
 	_ = slowDown
 }
+
+// Team mapping runs asynchronously: MapTeams returns the accepted operation,
+// which GetOperationByID reports on.
+func ExampleService_MapTeams() {
+	mapTeam := func(ctx context.Context, sdk *msteams.Client, instanceID, teamID, wfmTeamID string) (string, error) {
+		zone := "America/Los_Angeles"
+		accepted, _, err := sdk.TeamsAdminAPI.ShiftsConnections.MapTeams(ctx, instanceID, []sc.TeamMapping{
+			{TeamID: teamID, WfmTeamID: wfmTeamID, TimeZone: &zone},
+		})
+		if err != nil {
+			return "", err
+		}
+		if accepted.OperationID == nil {
+			return "", errors.New("mapping has no operation ID")
+		}
+		operation, _, err := sdk.TeamsAdminAPI.ShiftsConnections.GetOperationByID(ctx, *accepted.OperationID)
+		if err != nil {
+			return "", err
+		}
+		if operation.Status == nil {
+			return "", errors.New("operation has no status")
+		}
+		return *operation.Status, nil
+	}
+	_ = mapTeam
+}
+
+// Active synchronization errors for one connector instance.
+func ExampleService_ListErrorReports() {
+	activeErrors := func(ctx context.Context, sdk *msteams.Client, instanceID string) ([]*sc.ErrorReport, error) {
+		active := "Active"
+		reports, _, err := sdk.TeamsAdminAPI.ShiftsConnections.ListErrorReports(ctx, &sc.ErrorReportListOptions{
+			Activeness: &active, ConnectorInstanceID: &instanceID,
+		})
+		return reports, err
+	}
+	_ = activeErrors
+}

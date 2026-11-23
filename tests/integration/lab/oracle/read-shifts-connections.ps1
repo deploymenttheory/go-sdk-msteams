@@ -1,5 +1,5 @@
-# Opt-in, read-only oracle for Shifts connector reads. It reports only the
-# output type of each list read, never connection data.
+# Opt-in, read-only oracle for Shifts connector and sync reads. It reports
+# only the output type of each read, never connection data.
 $ErrorActionPreference='Stop'
 $ProgressPreference='SilentlyContinue'
 $InformationPreference='SilentlyContinue'
@@ -34,14 +34,21 @@ try{
     $stdout=[Console]::Out
     [Console]::SetOut([IO.TextWriter]::Null)
     try{
-        foreach($pair in @(@('connectors',{Get-CsTeamsShiftsConnectionConnector -ErrorAction Stop}),@('connections',{Get-CsTeamsShiftsConnection -ErrorAction Stop}),@('instances',{Get-CsTeamsShiftsConnectionInstance -ErrorAction Stop}))){
+        # Sync reads by ID use reserved IDs that name no tenant object.
+        $probe='00000000-0000-4000-8000-000000000001'
+        $team='00000000-0000-4000-8000-000000000002'
+        foreach($pair in @(@('connectors',{Get-CsTeamsShiftsConnectionConnector -ErrorAction Stop}),@('connections',{Get-CsTeamsShiftsConnection -ErrorAction Stop}),@('instances',{Get-CsTeamsShiftsConnectionInstance -ErrorAction Stop}),
+            @('errorReports',{Get-CsTeamsShiftsConnectionErrorReport -ErrorAction Stop}),@('operation',{Get-CsTeamsShiftsConnectionOperation -OperationId $probe -ErrorAction Stop}),
+            @('syncResult',{Get-CsTeamsShiftsConnectionSyncResult -ConnectorInstanceId $probe -TeamId $team -ErrorAction Stop}),@('teamMaps',{Get-CsTeamsShiftsConnectionTeamMap -ConnectorInstanceId $probe -ErrorAction Stop}),
+            @('wfmTeams',{Get-CsTeamsShiftsConnectionWfmTeam -ConnectorInstanceId $probe -ErrorAction Stop}),@('wfmUsers',{Get-CsTeamsShiftsConnectionWfmUser -ConnectorInstanceId $probe -WfmTeamId 'msteams-sdk-probe' -ErrorAction Stop}))){
             $values=@(& $pair[1] 6>$null)
             $types[$pair[0]]=if($values.Count -eq 1){$values[0].GetType().Name}else{'count-' + $values.Count}
         }
     }finally{
         [Console]::SetOut($stdout)
     }
-    $report=@{success=$true;connectors=$types['connectors'];connections=$types['connections'];instances=$types['instances']}
+    $report=@{success=$true}
+    foreach($key in $types.Keys){$report[$key]=$types[$key]}
 }catch{
     $report=@{success=$false}
 }finally{
