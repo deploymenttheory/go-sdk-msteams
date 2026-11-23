@@ -106,5 +106,9 @@
   "TestAccCallTemplateRecover": {
     "file": "tests/integration/lab/call_templates/call_templates_test.go",
     "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccMainlineAttendantRecover": {
+    "file": "tests/integration/lab/mainline_attendants/mainline_attendants_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
   }
 }

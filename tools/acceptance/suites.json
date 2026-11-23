@@ -178,6 +178,26 @@
         }
       ]
     },
+    "mainline_attendants": {
+      "package": "./tests/integration/lab/mainline_attendants",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMainlineAttendantReads"
+          ]
+        },
+        {
+          "id": "lifecycle",
+          "mutation": true,
+          "proof": "mainline-attendant-lifecycle",
+          "journal_entries_per_test": 3,
+          "tests": [
+            "TestAccMainlineAttendantLifecycle"
+          ]
+        }
+      ]
+    },
     "meeting_branding": {
       "package": "./tests/integration/lab/meeting_branding",
       "steps": [

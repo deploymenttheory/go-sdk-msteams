@@ -1,0 +1,17 @@
+{
+  "MainlineAttendantFlowResponses": [
+    {
+      "Name": "Fixture name",
+      "Identity": "00000000-0000-4000-8000-0000000000b3",
+      "Type": "QuestionAnswer",
+      "ConfigurationId": null,
+      "RelatedConfigurationIds": [],
+      "Description": "Fixture description",
+      "CallerAuthenticationMethod": null,
+      "ApiAuthenticationType": 0,
+      "ApiDefinitions": null,
+      "KnowledgeBase": "[{\"document_name\":\"https://www.example.com/msteams-sdk-faq\",\"description\":\"FAQ page\",\"status\":\"Failed\",\"error\":{\"code\":1523,\"message\":\"The Browse API could not locate the URL.\"}}]"
+    }
+  ],
+  "Diagnostics": []
+}

@@ -1,0 +1,17 @@
+{
+  "MainlineAttendantFlowResponse": {
+    "Name": "Fixture name",
+    "Identity": "00000000-0000-4000-8000-0000000000b2",
+    "Type": "AppointmentBooking",
+    "ConfigurationId": null,
+    "RelatedConfigurationIds": [],
+    "Description": "Fixture description",
+    "CallerAuthenticationMethod": null,
+    "ApiAuthenticationType": null,
+    "ApiDefinitions": "{}",
+    "KnowledgeBase": null,
+    "AppointmentBookingPlatform": "MicrosoftBookings",
+    "BookingLink": "https:user-f7acc1e8@example.invalid/"
+  },
+  "Diagnostics": []
+}

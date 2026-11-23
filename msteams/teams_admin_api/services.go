@@ -16,6 +16,7 @@ import (
 	compliancerecording "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/compliance_recording"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
+	mainlineattendants "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/mainline_attendants"
 	meetingbranding "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
 	onlinevoicemailpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
 	voicemailvalidation "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_validation_configuration"
@@ -150,6 +151,7 @@ type Services struct {
 	CallTemplates                              *calltemplates.Service
 	ComplianceRecording                        *compliancerecording.Service
 	ShiftsConnections                          *shiftsconnections.Service
+	MainlineAttendants                         *mainlineattendants.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -246,6 +248,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		CallTemplates:                              calltemplates.NewService(backend),
 		ComplianceRecording:                        compliancerecording.NewService(scope),
 		ShiftsConnections:                          shiftsconnections.NewService(backend),
+		MainlineAttendants:                         mainlineattendants.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),
