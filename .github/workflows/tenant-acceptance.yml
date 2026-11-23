@@ -148,6 +148,10 @@ jobs:
     if: needs.plan.outputs.services_locked != '[]'
     strategy:
       fail-fast: false
+      # One locked job per run waits on the lock at a time. Without this a
+      # run with many locked partitions overflows the group's pending queue
+      # and the excess jobs fail with zero steps.
+      max-parallel: 1
       matrix:
         service: ${{ fromJSON(needs.plan.outputs.services_locked) }}
     concurrency:

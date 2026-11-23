@@ -565,7 +565,6 @@ def selected_services(registry):
 # they are shared by all clients, lab tests or tenant setup.
 SHARED_PATTERNS = [re.compile(pattern) for pattern in [
     r'^go\.(mod|sum)$',
-    r'^\.github/workflows/tenant-acceptance\.yml$',
     r'^tools/baseline/',
     r'^internal/',
     r'^tests/integration/(auth|lab/internal)/',
