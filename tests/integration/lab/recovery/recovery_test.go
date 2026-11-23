@@ -18,6 +18,7 @@ import (
 	callqueuesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_queues"
 	calltemplatesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_templates"
 	compliancerecordingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/compliance_recording"
+	configurationdiagnosticsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/configuration_diagnostics"
 	externalaccesspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 	mainlineattendantsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/mainline_attendants"
@@ -72,6 +73,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		callqueuesacc.RecoveryHandlers(sdk),
 		calltemplatesacc.RecoveryHandlers(sdk),
 		compliancerecordingacc.RecoveryHandlers(sdk),
+		configurationdiagnosticsacc.RecoveryHandlers(sdk),
 		externalaccesspolicyacc.RecoveryHandlers(sdk),
 		mainlineattendantsacc.RecoveryHandlers(sdk),
 		meetingbrandingacc.RecoveryHandlers(sdk),
@@ -166,6 +168,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"mainline-booking-flow",
 		"mainline-qa-flow",
 		"mainline-spam-template",
+		"generic-configuration",
 		"meeting-policy",
 		"meeting-template-policy",
 		"messaging-configuration",
