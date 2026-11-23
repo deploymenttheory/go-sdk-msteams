@@ -703,7 +703,7 @@ func TestAccRead(t *testing.T) {
         changed = lambda *files, base=base, references=None: ci.changed_services(fixture, list(files), base, references)
         self.assertEqual(changed('docs/x.md', 'tools/acceptance/ci.py', 'contracts/coverage/8.1.0.json',
                                  'msteams/teams_admin_api/services.go', 'tests/integration/lab/recovery/recovery_test.go',
-                                 'msteams/auth/scoped_test.go'), [])
+                                 'msteams/auth/scoped_test.go', '.github/workflows/tenant-acceptance.yml'), [])
         self.assertEqual(changed('tests/integration/lab/schedules/schedules_test.go'), ['schedules'])
         self.assertEqual(changed('msteams/teams_admin_api/region/service.go'), ['region'])
         self.assertEqual(changed('msteams/teams_admin_api/region_extra/service.go'), [])
@@ -715,7 +715,7 @@ func TestAccRead(t *testing.T) {
         for shared in ['go.mod', 'internal/policyrp/resource.go', 'tests/integration/lab/internal/labkit/fixtures.go',
                        'msteams/client.go', 'msteams/client/request.go', 'msteams/teams_admin_api/batch.go',
                        'msteams/teams_admin_api/internal/configapi/client.go', 'msteams/teams_admin_api/policy/service.go',
-                       '.github/workflows/tenant-acceptance.yml', 'tests/integration/auth/helpers.go']:
+                       'tests/integration/auth/helpers.go']:
             self.assertEqual(changed(shared), ['platform', 'schedules', 'region'], shared)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
