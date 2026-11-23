@@ -1131,6 +1131,17 @@
           ]
         }
       ]
+    },
+    "tenant_identity": {
+      "package": "./tests/integration/lab/tenant_identity",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccTenantIdentityReads"
+          ]
+        }
+      ]
     }
   }
 }

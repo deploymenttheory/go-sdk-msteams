@@ -110,3 +110,24 @@ func TestUnitResponseFixtureKeepsOwnedTemplateSelectorsConsistent(t *testing.T) 
 		t.Fatal("template selector consistency or private-name redaction changed")
 	}
 }
+
+func TestUnitResponseFixtureRedactsDirectoryAddressAndContact(t *testing.T) {
+	t.Parallel()
+	raw := []byte(`{"objectId":"11111111-1111-4111-8111-111111111111","displayName":"private-name","city":"private-city","street":"private-street","postalCode":"private-postcode","state":"private-state","telephoneNumber":"+15555550123","mailNickname":"private-alias","userPrincipalName":"private-upn","verifiedDomains":[{"name":"private.example","status":"Verified"}],"sipDomains":["private.example"],"countryLetterCode":"GB"}`)
+	got, err := fixtureJSON(raw, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, private := range []string{"11111111-1111-4111-8111-111111111111", "private-name", "private-city", "private-street", "private-postcode", "private-state", "+15555550123", "private-alias", "private-upn", "private.example"} {
+		if bytes.Contains(got, []byte(private)) {
+			t.Fatalf("private directory value retained: %s", private)
+		}
+	}
+	if !bytes.Contains(got, []byte(`"status": "Verified"`)) || !bytes.Contains(got, []byte(`"countryLetterCode": "GB"`)) {
+		t.Fatal("public directory state changed")
+	}
+	again, err := fixtureJSON(got, nil)
+	if err != nil || !bytes.Equal(again, got) {
+		t.Fatal("sanitized fixture is not stable")
+	}
+}

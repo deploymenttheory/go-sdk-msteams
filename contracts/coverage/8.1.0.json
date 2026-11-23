@@ -723,15 +723,51 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/12/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.SearchGroups"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentitySuccessShapesPreserveFields"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityRejectsInputBeforeIO"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/example_test.go",
+              "name": "ExampleService_SearchGroups"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_identity/tenant_identity_test.go",
+              "name": "TestAccTenantIdentityReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.SearchGroups"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -739,8 +775,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run searched the owned acceptance group (exact match, unmatched and short-query rejection) with pinned PowerShell parity. Qualification across delegated callers has not run.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -947,9 +985,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/21",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.GetAadTenant"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -957,8 +1000,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Support-only (SelfHost/Torus) export. Client-secret lab run confirmed the app-only HTTP 403; a successful read is unqualified.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -971,9 +1016,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/22",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.GetAadUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -981,8 +1031,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Support-only (SelfHost/Torus) export. Client-secret lab run confirmed the app-only HTTP 403; a successful read is unqualified.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -2037,9 +2089,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/42",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.GetCloudTenant"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -2047,8 +2104,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Support-only (SelfHost/Torus) export reported retired by the service. Client-secret lab run confirmed the app-only HTTP 403; a successful read is unqualified.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -2061,9 +2120,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/43",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.GetCloudUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -2071,8 +2135,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Support-only (SelfHost/Torus) export reported retired by the service. Client-secret lab run confirmed the app-only HTTP 403; a successful read is unqualified.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -2553,9 +2619,22 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/53",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.ListHostingProviders"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.ListHostingProvidersFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.GetHostingProviderByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -2563,8 +2642,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Support-only (SelfHost/Torus) export. Client-secret lab run confirmed the app-only HTTP 403 (errorCode 40301); a successful read is unqualified.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3724,15 +3805,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/63/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.GetOnlineDirectoryTenant"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityRejectsInputBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_identity/tenant_identity_test.go",
+              "name": "TestAccTenantIdentityReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.GetOnlineDirectoryTenant"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3740,8 +3841,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "The module dispatches to Invoke-CsDeprecatedError; the lab run confirmed the deprecation in Go and pinned PowerShell. No service call exists to qualify.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -11100,15 +11203,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/184/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.GetTenant"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityRejectsInputBeforeIO"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/example_test.go",
+              "name": "ExampleService_GetTenant"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_identity/tenant_identity_test.go",
+              "name": "TestAccTenantIdentityReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.GetTenant"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -11116,8 +11247,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run read the extended tenant record with pinned PowerShell parity. The module Filter/Identity/ResultSize parameters fail binding in 8.1.0 and are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -11328,22 +11461,81 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/188/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.ListTenantLicensingConfigurations"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.ListTenantLicensingConfigurationsFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentitySuccessShapesPreserveFields"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityRejectsInputBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_identity/tenant_identity_test.go",
+              "name": "TestAccTenantIdentityReads"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/188/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.GetTenantLicensingConfigurationByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityRejectsInputBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_identity/tenant_identity_test.go",
+              "name": "TestAccTenantIdentityReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.ListTenantLicensingConfigurations"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.ListTenantLicensingConfigurationsFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.GetTenantLicensingConfigurationByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -11351,8 +11543,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run confirmed the app-only HTTP 403 (errorCode 40301) with pinned PowerShell parity; a successful read needs separately authorized credentials.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -29568,36 +29762,97 @@
         {
           "name": "Remove",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/513/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.RemoveUserLicenseGracePeriod"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityGracePeriodRemovalWire"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityRejectsInputBeforeIO"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "RemoveExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/513/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.RemoveUserLicenseGracePeriod"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityGracePeriodRemovalWire"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityRejectsInputBeforeIO"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "RemoveViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/513/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.RemoveUserLicenseGracePeriod"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityGracePeriodRemovalWire"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityRejectsInputBeforeIO"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "RemoveViaIdentityExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/513/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service.go",
+              "name": "Service.RemoveUserLicenseGracePeriod"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityGracePeriodRemovalWire"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/service_test.go",
+              "name": "TestUnitTenantIdentityRejectsInputBeforeIO"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_identity/service.go",
+            "name": "Service.RemoveUserLicenseGracePeriod"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -29605,8 +29860,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Unqualified: ending a license grace period changes licensing state irreversibly, so the lab never calls it. The wire contract comes from the pinned module model and IL only.",
+        "evidence": [
+          "docs/implementation/ext/tenant-identity-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
