@@ -10,6 +10,7 @@ import (
 	audioconferencingprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_conferencing_prompts"
 	audioprompts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_prompts"
 	batchdeployment "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/batch_deployment"
+	cloudcalldata "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
 	meetingbranding "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
@@ -135,6 +136,7 @@ type Services struct {
 	TenantFederationConfigurations             *tenantfederationconfiguration.Service
 	TeamTemplates                              *teamtemplate.Service
 	AudioFiles                                 *audioprompts.Service
+	CloudCallData                              *cloudcalldata.Service
 	ResourceAccounts                           *resourceaccounts.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
@@ -224,6 +226,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TenantFederationConfigurations:             tenantfederationconfiguration.NewService(backend),
 		TeamTemplates:                              teamtemplate.NewService(backend),
 		AudioFiles:                                 audioprompts.NewService(backend),
+		CloudCallData:                              cloudcalldata.NewService(backend),
 		ResourceAccounts:                           resourceaccounts.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
