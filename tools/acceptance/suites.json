@@ -206,6 +206,24 @@
         }
       ]
     },
+    "resource_accounts": {
+      "package": "./tests/integration/lab/resource_accounts",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccResourceAccountReads"
+          ]
+        },
+        {
+          "id": "rejected-writes",
+          "serial": true,
+          "tests": [
+            "TestAccResourceAccountRejectedWrites"
+          ]
+        }
+      ]
+    },
     "team_template": {
       "package": "./tests/integration/lab/team_template",
       "steps": [

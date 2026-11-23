@@ -733,15 +733,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/13/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.Search"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.Search"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -749,8 +773,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the read with pinned PowerShell parity against a tenant without resource accounts; populated reads and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -2984,15 +3010,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/50/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3000,8 +3058,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the read with pinned PowerShell parity against a tenant without resource accounts; populated reads and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3016,15 +3076,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/51/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.GetAssociationByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.GetAssociationByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3032,8 +3116,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the read with pinned PowerShell parity against a tenant without resource accounts; populated reads and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3048,15 +3134,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/52/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.GetAssociationStatusByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountReadsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.GetAssociationStatusByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3064,8 +3170,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the read with pinned PowerShell parity against a tenant without resource accounts; populated reads and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -20060,15 +20168,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/311/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountRejectedWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20076,8 +20208,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the wire contract through service rejections and unknown-target outcomes only; app-only credentials cannot create or change resource accounts, so successful writes are unqualified.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -20092,15 +20226,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/312/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.CreateAssociations"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountAssociationWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.CreateAssociations"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20108,8 +20262,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the wire contract through service rejections and unknown-target outcomes only; app-only credentials cannot create or change resource accounts, so successful writes are unqualified.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -25463,15 +25619,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/428/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.DeleteAssociationByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountAssociationWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.DeleteAssociationByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25479,8 +25655,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the wire contract through service rejections and unknown-target outcomes only; app-only credentials cannot create or change resource accounts, so successful writes are unqualified.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -30405,15 +30583,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/537/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountRejectedWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30421,8 +30623,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the wire contract through service rejections and unknown-target outcomes only; app-only credentials cannot create or change resource accounts, so successful writes are unqualified.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -30955,15 +31159,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/553/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.UpdateTelephoneNumberByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountRejectedWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.UpdateTelephoneNumberByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30971,8 +31195,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the wire contract through service rejections and unknown-target outcomes only; app-only credentials cannot create or change resource accounts, so successful writes are unqualified.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -36603,15 +36829,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/663/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service.go",
+              "name": "Service.SyncByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountRejectedWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
+              "name": "TestUnitResourceAccountAssociationWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/resource_accounts/resource_accounts_test.go",
+              "name": "TestAccResourceAccountRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/resource_accounts/service.go",
+            "name": "Service.SyncByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -36619,8 +36869,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the wire contract through service rejections and unknown-target outcomes only; app-only credentials cannot create or change resource accounts, so successful writes are unqualified.",
+        "evidence": [
+          "docs/implementation/calls/resource-accounts-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

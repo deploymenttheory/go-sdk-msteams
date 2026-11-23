@@ -1,0 +1,16 @@
+{
+  "AssociationOperationResults": [
+    {
+      "ApplicationInstanceAssociation": null,
+      "StatusRecord": {
+        "Id": "00000000-0000-4000-8000-000000000001",
+        "Status": 0,
+        "ErrorCode": "RemoveApplicationInstanceAssociation_AssociationNotFound",
+        "Message": "Fixture message",
+        "StatusTimestamp": "2026-11-23T04:25:24.040005+00:00",
+        "AuxiliaryData": null
+      }
+    }
+  ],
+  "Diagnostics": []
+}

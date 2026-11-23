@@ -21,6 +21,7 @@ import (
 	privatechannelmigration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/private_channel_migration"
 	recordingmessages "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/recording_messages"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
+	resourceaccounts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/resource_accounts"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
@@ -134,6 +135,7 @@ type Services struct {
 	TenantFederationConfigurations             *tenantfederationconfiguration.Service
 	TeamTemplates                              *teamtemplate.Service
 	AudioFiles                                 *audioprompts.Service
+	ResourceAccounts                           *resourceaccounts.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -222,6 +224,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TenantFederationConfigurations:             tenantfederationconfiguration.NewService(backend),
 		TeamTemplates:                              teamtemplate.NewService(backend),
 		AudioFiles:                                 audioprompts.NewService(backend),
+		ResourceAccounts:                           resourceaccounts.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),
