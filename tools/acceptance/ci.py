@@ -68,6 +68,15 @@ CALL_QUEUE_MARKERS = [
     'call queue delete: passed',
 ]
 CALL_QUEUE_ORACLE = 'PowerShell 8.1.0 / Go call queue parity: passed'
+AUTO_ATTENDANT_MARKERS = [
+    'auto attendant create: passed',
+    'auto attendant get/status: passed',
+    'auto attendant list: passed',
+    'auto attendant update/read-back: passed',
+    'auto attendant refresh: passed',
+    'auto attendant delete: passed',
+]
+AUTO_ATTENDANT_ORACLE = 'PowerShell 8.1.0 / Go auto attendant parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
@@ -80,6 +89,7 @@ PROOFS = {
     'audio-file-lifecycle': (AUDIO_FILE_MARKERS, AUDIO_FILE_ORACLE, 1),
     'schedule-lifecycle': (SCHEDULE_MARKERS, SCHEDULE_ORACLE, 3),
     'call-queue-lifecycle': (CALL_QUEUE_MARKERS, CALL_QUEUE_ORACLE, 1),
+    'auto-attendant-lifecycle': (AUTO_ATTENDANT_MARKERS, AUTO_ATTENDANT_ORACLE, 1),
     'populated-template-access': (['native populated-list create denial: verified', 'populated-list comparison cleanup: passed'], 'PowerShell 8.1.0 / Go populated-list authorization parity: passed', 1),
     'configuration-update': (['configuration update/read-back and omission: passed', 'configuration restoration/read-back: passed'], 'PowerShell 8.1.0 / Go configuration read parity: passed', 3),
 }
