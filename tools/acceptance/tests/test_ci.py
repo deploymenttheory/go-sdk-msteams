@@ -715,7 +715,7 @@ func TestAccRead(t *testing.T) {
         for shared in ['go.mod', 'internal/policyrp/resource.go', 'tests/integration/lab/internal/labkit/fixtures.go',
                        'msteams/client.go', 'msteams/client/request.go', 'msteams/teams_admin_api/batch.go',
                        'msteams/teams_admin_api/internal/configapi/client.go', 'msteams/teams_admin_api/policy/service.go',
-                       '.github/workflows/tenant-acceptance.yml', 'tests/integration/auth/auth_test.go']:
+                       '.github/workflows/tenant-acceptance.yml', 'tests/integration/auth/helpers.go']:
             self.assertEqual(changed(shared), ['platform', 'schedules', 'region'], shared)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
