@@ -3228,7 +3228,7 @@
     },
     {
       "name": "Get-CsLoginInfo",
-      "kind": "management",
+      "kind": "excluded",
       "resource": "provisioning_diagnostics",
       "implementation_owner": "EXT-26",
       "research_owner": "EXT-02",
@@ -3250,7 +3250,7 @@
           "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
         ]
       },
-      "exclusion": null
+      "exclusion": "Approved: returns the module's own access token and sends no service request; SDK credentials come from msteams/auth: docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
     },
     {
       "name": "Get-CsMainlineAttendantAppointmentBookingFlow",
@@ -34948,7 +34948,7 @@
     },
     {
       "name": "Set-CsNotifyCache",
-      "kind": "management",
+      "kind": "excluded",
       "resource": "configuration_diagnostics",
       "implementation_owner": "EXT-23",
       "research_owner": "EXT-01",
@@ -34970,7 +34970,7 @@
           "docs/implementation/ext/configuration-diagnostics-contract-notes.md"
         ]
       },
-      "exclusion": null
+      "exclusion": "Approved: no evidenced wire contract in 8.1.0 (manifest-only export whose request helper has no caller): docs/implementation/ext/configuration-diagnostics-contract-notes.md"
     },
     {
       "name": "Set-CsOCEContext",
