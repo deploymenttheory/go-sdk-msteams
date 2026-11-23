@@ -10562,29 +10562,91 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/157/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ListErrorReports"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         },
         {
           "name": "Get1",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/157/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.GetErrorReportByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         },
         {
           "name": "GetViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/157/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.GetErrorReportByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.ListErrorReports"
+          },
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.GetErrorReportByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10592,8 +10654,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the routes only through HTTP 403 denials: the Shifts connector service denies app-only Teams Administrator credentials before validation, so successful reads and writes are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/shifts-sync-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -10718,22 +10782,61 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/159/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.GetOperationByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         },
         {
           "name": "GetViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/159/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.GetOperationByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.GetOperationByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10741,8 +10844,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the routes only through HTTP 403 denials: the Shifts connector service denies app-only Teams Administrator credentials before validation, so successful reads and writes are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/shifts-sync-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -10757,22 +10862,61 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/160/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.GetSyncResult"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         },
         {
           "name": "GetViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/160/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.GetSyncResult"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.GetSyncResult"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10780,8 +10924,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the routes only through HTTP 403 denials: the Shifts connector service denies app-only Teams Administrator credentials before validation, so successful reads and writes are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/shifts-sync-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -10796,22 +10942,61 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/161/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ListTeamMaps"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         },
         {
           "name": "GetViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/161/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ListTeamMaps"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.ListTeamMaps"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10819,8 +11004,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the routes only through HTTP 403 denials: the Shifts connector service denies app-only Teams Administrator credentials before validation, so successful reads and writes are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/shifts-sync-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -10835,36 +11022,113 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/162/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ListInstanceWfmTeams"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         },
         {
           "name": "Get1",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/162/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ListConnectionWfmTeams"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         },
         {
           "name": "GetViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/162/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ListInstanceWfmTeams"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         },
         {
           "name": "GetViaIdentity1",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/162/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ListConnectionWfmTeams"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.ListInstanceWfmTeams"
+          },
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.ListConnectionWfmTeams"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10872,8 +11136,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the routes only through HTTP 403 denials: the Shifts connector service denies app-only Teams Administrator credentials before validation, so successful reads and writes are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/shifts-sync-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -10888,22 +11154,61 @@
         {
           "name": "Get",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/163/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ListWfmUsers"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         },
         {
           "name": "GetViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/163/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ListWfmUsers"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncAuthorizationDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.ListWfmUsers"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -10911,8 +11216,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the routes only through HTTP 403 denials: the Shifts connector service denies app-only Teams Administrator credentials before validation, so successful reads and writes are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/shifts-sync-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26039,36 +26346,105 @@
         {
           "name": "Create",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/383/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.MapTeams"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncRejectedWrites"
+            }
+          ]
         },
         {
           "name": "CreateExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/383/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.MapTeams"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncRejectedWrites"
+            }
+          ]
         },
         {
           "name": "CreateViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/383/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.MapTeams"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncRejectedWrites"
+            }
+          ]
         },
         {
           "name": "CreateViaIdentityExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/383/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.MapTeams"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.MapTeams"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26076,8 +26452,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the routes only through HTTP 403 denials: the Shifts connector service denies app-only Teams Administrator credentials before validation, so successful reads and writes are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/shifts-sync-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -31447,22 +31825,61 @@
         {
           "name": "Remove",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/491/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.DeleteTeamMap"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncRejectedWrites"
+            }
+          ]
         },
         {
           "name": "RemoveViaIdentity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/491/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.DeleteTeamMap"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.DeleteTeamMap"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -31470,8 +31887,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the routes only through HTTP 403 denials: the Shifts connector service denies app-only Teams Administrator credentials before validation, so successful reads and writes are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/shifts-sync-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -31540,22 +31959,61 @@
         {
           "name": "Remove",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/493/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ClearSchedule"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncRejectedWrites"
+            }
+          ]
         },
         {
           "name": "RemoveExpanded",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/493/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+              "name": "Service.ClearSchedule"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
+              "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/shifts_connections/shifts_connections_test.go",
+              "name": "TestAccShiftsSyncRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/shifts_connections/sync.go",
+            "name": "Service.ClearSchedule"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -31563,8 +32021,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the routes only through HTTP 403 denials: the Shifts connector service denies app-only Teams Administrator credentials before validation, so successful reads and writes are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/shifts-sync-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
