@@ -1,0 +1,23 @@
+{
+  "AllSharedCallHistoryTemplates": [
+    {
+      "Name": "fixture-template",
+      "Id": "00000000-0000-4000-8000-40455e4aa1cc",
+      "Description": "SDK lab non-default updated description",
+      "IncomingMissedCalls": 2,
+      "AnsweredAndOutboundCalls": 0,
+      "IncomingRedirectedCalls": 2
+    }
+  ],
+  "AllSharedCallQueueHistory": [
+    {
+      "Name": "fixture-template",
+      "Id": "00000000-0000-4000-8000-40455e4aa1cc",
+      "Description": "SDK lab non-default updated description",
+      "IncomingMissedCalls": 2,
+      "AnsweredAndOutboundCalls": 0,
+      "IncomingRedirectedCalls": 2
+    }
+  ],
+  "Diagnostics": []
+}

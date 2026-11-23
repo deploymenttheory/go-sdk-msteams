@@ -1538,15 +1538,51 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/27/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitMissingTemplateIsNotFound"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitAutoRecordingRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccAutoRecordingTemplateCreateDenied"
+            },
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccCallTemplateReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1554,8 +1590,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Unqualified: the service validates the SharePoint site with the caller's identity and denies the app-only lab identity (HTTP 401, code 100012, SharePointClient_Unauthorized). The client-secret lab run verified that denial, list, body validation and missing-template 404s only; successful writes need a SharePoint-capable identity.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -2153,15 +2191,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/33/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitComplianceRecordingLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccComplianceRecordingTemplateLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccCallTemplateReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -2169,8 +2239,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -5219,15 +5291,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/95/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitSharedCallHistoryLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccSharedCallHistoryTemplateLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccCallTemplateReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -5235,8 +5339,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -5251,15 +5357,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/96/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitSharedCallHistoryLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccSharedCallHistoryTemplateLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccCallTemplateReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -5267,8 +5405,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Deprecated alias of the shared call history template on the same route. Client-secret lab run passed the owned shared call history lifecycle with pinned PowerShell parity that also reads through the alias; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -5283,15 +5423,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/97/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitVoicemailTriageLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccVoicemailTriageTemplateLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccCallTemplateReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -5299,8 +5471,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -5315,15 +5489,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/98/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitTagsLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccTagsTemplateLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccCallTemplateReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -5331,8 +5537,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19499,15 +19707,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/288/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitAutoRecordingRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccAutoRecordingTemplateCreateDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19515,8 +19743,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Unqualified: the service validates the SharePoint site with the caller's identity and denies the app-only lab identity (HTTP 401, code 100012, SharePointClient_Unauthorized). The client-secret lab run verified that denial, list, body validation and missing-template 404s only; successful writes need a SharePoint-capable identity.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19835,15 +20065,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/295/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitComplianceRecordingLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccComplianceRecordingTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19851,8 +20101,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21607,15 +21859,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/333/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitSharedCallHistoryLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccSharedCallHistoryTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21623,8 +21895,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21639,15 +21913,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/334/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitSharedCallHistoryLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccSharedCallHistoryTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21655,8 +21949,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Deprecated alias of the shared call history template on the same route. Client-secret lab run passed the owned shared call history lifecycle with pinned PowerShell parity that also reads through the alias; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21671,15 +21967,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/335/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitVoicemailTriageLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccVoicemailTriageTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21687,8 +22003,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -21735,15 +22053,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/337/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitTagsLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccTagsTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -21751,8 +22089,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -25549,15 +25889,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/414/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitMissingTemplateIsNotFound"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccAutoRecordingTemplateCreateDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25565,8 +25925,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Unqualified: the service validates the SharePoint site with the caller's identity and denies the app-only lab identity (HTTP 401, code 100012, SharePointClient_Unauthorized). The client-secret lab run verified that denial, list, body validation and missing-template 404s only; successful writes need a SharePoint-capable identity.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -25671,15 +26033,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/417/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitComplianceRecordingLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccComplianceRecordingTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25687,8 +26069,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26920,15 +27304,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/449/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitSharedCallHistoryLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccSharedCallHistoryTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26936,8 +27340,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26952,15 +27358,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/450/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitSharedCallHistoryLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccSharedCallHistoryTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26968,8 +27394,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Deprecated alias of the shared call history template on the same route. Client-secret lab run passed the owned shared call history lifecycle with pinned PowerShell parity that also reads through the alias; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26984,15 +27412,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/451/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitVoicemailTriageLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccVoicemailTriageTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27000,8 +27448,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -27016,15 +27466,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/452/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitTagsLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccTagsTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27032,8 +27502,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -30687,22 +31159,57 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/526/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitAutoRecordingRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccAutoRecordingTemplateCreateDenied"
+            }
+          ]
         },
         {
           "name": "Instance",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/526/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitAutoRecordingRejectionsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccAutoRecordingTemplateCreateDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30710,8 +31217,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Unqualified: the service validates the SharePoint site with the caller's identity and denies the app-only lab identity (HTTP 401, code 100012, SharePointClient_Unauthorized). The client-secret lab run verified that denial, list, body validation and missing-template 404s only; successful writes need a SharePoint-capable identity.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -30828,15 +31337,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/529/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitComplianceRecordingLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccComplianceRecordingTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30844,8 +31373,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -32537,15 +33068,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/568/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitSharedCallHistoryLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccSharedCallHistoryTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32553,8 +33104,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -32569,15 +33122,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/569/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitSharedCallHistoryLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccSharedCallHistoryTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32585,8 +33158,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Deprecated alias of the shared call history template on the same route. Client-secret lab run passed the owned shared call history lifecycle with pinned PowerShell parity that also reads through the alias; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -32601,15 +33176,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/570/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitVoicemailTriageLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccVoicemailTriageTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32617,8 +33212,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -32633,15 +33230,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/571/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service.go",
+              "name": "Templates.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_templates/service_test.go",
+              "name": "TestUnitTagsLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_templates/call_templates_test.go",
+              "name": "TestAccTagsTemplateLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_templates/service.go",
+            "name": "Templates.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -32649,8 +33266,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/update/list/delete lifecycle with pinned PowerShell read parity and journaled cleanup; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/call-templates-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

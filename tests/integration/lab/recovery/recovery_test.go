@@ -15,6 +15,7 @@ import (
 	applicationaccesspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/application_access_policy"
 	audiopromptsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/audio_prompts"
 	callqueuesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_queues"
+	calltemplatesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_templates"
 	externalaccesspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 	meetingbrandingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/meeting_branding"
@@ -65,6 +66,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		applicationaccesspolicyacc.RecoveryHandlers(sdk),
 		audiopromptsacc.RecoveryHandlers(sdk),
 		callqueuesacc.RecoveryHandlers(sdk),
+		calltemplatesacc.RecoveryHandlers(sdk),
 		externalaccesspolicyacc.RecoveryHandlers(sdk),
 		meetingbrandingacc.RecoveryHandlers(sdk),
 		schedulesacc.RecoveryHandlers(sdk),
@@ -139,12 +141,14 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"application-access-policy",
 		"audio-file",
 		"audio-policy",
+		"auto-recording-template",
 		"branding-policy",
 		"call-hold-policy",
 		"call-park-policy",
 		"call-queue",
 		"calling-policy",
 		"channels-policy",
+		"compliance-recording-template",
 		"cortana-policy",
 		"enhanced-encryption-policy",
 		"events-policy",
@@ -164,10 +168,12 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"roaming-policy",
 		"room-video-policy",
 		"schedule",
+		"shared-call-history-template",
 		"shared-calling-policy",
 		"shifts-app-configuration",
 		"shifts-policy",
 		"sip-devices-configuration",
+		"tags-template",
 		"team-template",
 		"template-baseline-policy",
 		"template-permission-policy",
@@ -178,6 +184,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"virtual-appointments-policy",
 		"voice-applications-policy",
 		"voicemail-policy",
+		"voicemail-triage-template",
 		"work-load-policy",
 	}
 	if len(handlers) != len(want) {

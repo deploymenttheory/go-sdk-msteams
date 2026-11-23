@@ -1,0 +1,13 @@
+{
+  "code": "100001",
+  "message": "Fixture message",
+  "action": "Please input correct parameter values.",
+  "errorDetails": [
+    {
+      "ErrorCode": "AutoRecordingTemplate_BothTranscriptionAndRecordingDisabled",
+      "Message": "Fixture message",
+      "Target": null,
+      "TargetEntityId": ""
+    }
+  ]
+}

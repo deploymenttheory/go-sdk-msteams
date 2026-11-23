@@ -1,0 +1,34 @@
+{
+  "IvrTagsTemplate": {
+    "Name": "fixture-template",
+    "Id": "00000000-0000-4000-8000-6d8996baa7bd",
+    "Description": "SDK lab non-default updated description",
+    "Tags": [
+      {
+        "TagName": "Support",
+        "TagDetails": {
+          "Id": "fixture-record-cac77de3",
+          "Type": "ExternalPstn",
+          "DisplayName": null,
+          "EnableTranscription": false,
+          "EnableSharedVoicemailSystemPromptSuppression": false,
+          "ConfigurationEndpointType": null,
+          "SharedVoicemailHistoryTemplateId": null
+        }
+      },
+      {
+        "TagName": "Billing",
+        "TagDetails": {
+          "Id": "fixture-record-a8ab892a",
+          "Type": "ExternalPstn",
+          "DisplayName": null,
+          "EnableTranscription": false,
+          "EnableSharedVoicemailSystemPromptSuppression": false,
+          "ConfigurationEndpointType": null,
+          "SharedVoicemailHistoryTemplateId": null
+        }
+      }
+    ]
+  },
+  "Diagnostics": []
+}

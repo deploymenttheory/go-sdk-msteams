@@ -1,0 +1,22 @@
+{
+  "IvrTagsTemplate": {
+    "Name": "fixture-template",
+    "Id": "00000000-0000-4000-8000-6d8996baa7bd",
+    "Description": "SDK lab non-default initial description",
+    "Tags": [
+      {
+        "TagName": "Sales",
+        "TagDetails": {
+          "Id": "fixture-record-9e823e9c",
+          "Type": "ExternalPstn",
+          "DisplayName": null,
+          "EnableTranscription": false,
+          "EnableSharedVoicemailSystemPromptSuppression": false,
+          "ConfigurationEndpointType": null,
+          "SharedVoicemailHistoryTemplateId": null
+        }
+      }
+    ]
+  },
+  "Diagnostics": []
+}
