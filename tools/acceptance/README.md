@@ -308,6 +308,13 @@ acceptance; public baseline mappings still contain only Get/Set/Remove. Both
 policy kinds have bound owned-resource recovery handlers and require GET404 plus
 list absence. Their fixtures are permanent service testdata, with no capture store.
 
+IP phone policy runs Global read/list/filter as its `reads` step and owned CRUD
+as its `crud` step, using the dedicated `read-ip-phone-policy.ps1` oracle. CRUD
+creates common-area sign-in with hot desking off and a 30-minute idle timeout,
+sparsely updates description, home screen and Better Together, requires every
+other returned field unchanged and makes two pinned comparisons. Its bound
+recovery kind is `ip-phone-policy`; grants are not exercised live.
+
 Personal-attendant and recording-rollout policies each run a `crud` step. The former
 updates only recording/transcription controls and retains the observed unprefixed
 identity. The latter checks exact sparse request bytes as well as two persisted
