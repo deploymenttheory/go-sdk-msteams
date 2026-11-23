@@ -1,0 +1,10 @@
+{
+  "Identity": "Global",
+  "SchemaVersion": "0.0.1",
+  "SupportURL": "https://fixture.example.invalid/broadcast-support",
+  "AllowSdnProviderForBroadcastMeeting": false,
+  "ConfigId": "Global",
+  "ConfigMetadata": {
+    "Authority": "Tenant"
+  }
+}

@@ -299,6 +299,14 @@ after and on restoration; CI requires those three comparisons and one cleaned
 `tenant-migration-configuration` restore entry. The update only runs from an
 enabled original (enabled, then disabled, then re-enabled), and the handler
 restores only an enabled journaled Global value.
+Meeting broadcast configuration Global reads (default and
+`-ExposeSDNConfigurationJsonBlob`) and SupportURL update/restoration run as its
+service's serialized `global-reads` and `update-restore` steps. Its dedicated
+read-only oracle, `read-meeting-broadcast-configuration.ps1`, reports the SDN
+provider token only as presence. CI requires three pinned comparisons and one
+cleaned `meeting-broadcast-configuration` restore entry; the handler restores
+only the journaled Global SupportURL and AllowSdnProviderForBroadcastMeeting and
+never journals, reads for restoration or writes SDN provider values.
 
 Mobility CRUD runs as its service's `crud` step, with all five getters compared
 against the pinned module before and after a sparse description update. Its

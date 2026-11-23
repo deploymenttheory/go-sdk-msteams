@@ -60,6 +60,7 @@ import (
 	teamsguestcallingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_calling_configuration"
 	teamsguestmessagingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_messaging_configuration"
 	teamsipphonepolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ip_phone_policy"
+	teamsmeetingbroadcastconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_configuration"
 	teamsmeetingbroadcastpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_policy"
 	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
 	teamsmeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
@@ -123,6 +124,7 @@ type Services struct {
 	TeamsMigrationConfigurations               *teamsmigrationconfiguration.Service
 	TeamsGuestCallingConfigurations            *teamsguestcallingconfiguration.Service
 	TeamsMessagingConfigurations               *teamsmessagingconfiguration.Service
+	TeamsMeetingBroadcastConfigurations        *teamsmeetingbroadcastconfiguration.Service
 	TeamsMeetingTemplatePermissionPolicies     *teamsmeetingtemplatepermissionpolicy.Service
 	TeamsMeetingTemplateConfigurations         *teamsmeetingtemplateconfiguration.Service
 	TeamsMessagingPolicies                     *teamsmessagingpolicy.Service
@@ -244,6 +246,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsMigrationConfigurations:               teamsmigrationconfiguration.NewService(backend),
 		TeamsGuestCallingConfigurations:            teamsguestcallingconfiguration.NewService(backend),
 		TeamsMessagingConfigurations:               teamsmessagingconfiguration.NewService(scope),
+		TeamsMeetingBroadcastConfigurations:        teamsmeetingbroadcastconfiguration.NewService(backend),
 		TeamsMeetingTemplatePermissionPolicies:     teamsmeetingtemplatepermissionpolicy.NewService(scope),
 		TeamsMeetingTemplateConfigurations:         teamsmeetingtemplateconfiguration.NewService(scope),
 		TeamsMessagingPolicies:                     teamsmessagingpolicy.NewService(scope),
