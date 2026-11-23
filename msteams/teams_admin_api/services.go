@@ -90,6 +90,7 @@ import (
 	teamsworkloadpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_load_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 	tenantidentity "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_identity"
+	tenantmigrationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_migration_configuration"
 	unifiedapps "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/unified_apps"
 )
 
@@ -159,6 +160,7 @@ type Services struct {
 	ApplicationAccessPolicies                  *applicationaccesspolicy.Service
 	ApplicationMeetingConfigurations           *applicationmeetingconfiguration.Service
 	TenantFederationConfigurations             *tenantfederationconfiguration.Service
+	TenantMigrationConfigurations              *tenantmigrationconfiguration.Service
 	TeamTemplates                              *teamtemplate.Service
 	AudioFiles                                 *audioprompts.Service
 	CloudCallData                              *cloudcalldata.Service
@@ -278,6 +280,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		ApplicationAccessPolicies:                  applicationaccesspolicy.NewService(backend),
 		ApplicationMeetingConfigurations:           applicationmeetingconfiguration.NewService(backend),
 		TenantFederationConfigurations:             tenantfederationconfiguration.NewService(backend),
+		TenantMigrationConfigurations:              tenantmigrationconfiguration.NewService(backend),
 		TeamTemplates:                              teamtemplate.NewService(backend),
 		AudioFiles:                                 audioprompts.NewService(backend),
 		CloudCallData:                              cloudcalldata.NewService(backend),

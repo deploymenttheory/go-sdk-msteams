@@ -1346,6 +1346,27 @@
         }
       ]
     },
+    "tenant_migration_configuration": {
+      "package": "./tests/integration/lab/tenant_migration_configuration",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccTenantMigrationConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccTenantMigrationConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
     "tenant_identity": {
       "package": "./tests/integration/lab/tenant_identity",
       "steps": [

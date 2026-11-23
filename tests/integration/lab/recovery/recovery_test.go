@@ -67,6 +67,7 @@ import (
 	teamsvirtualappointmentspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_virtual_appointments_policy"
 	teamsvoiceapplicationspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_voice_applications_policy"
 	teamsworkloadpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_work_load_policy"
+	tenantmigrationconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/tenant_migration_configuration"
 )
 
 // handlerSets lists every service's recovery handlers.
@@ -120,6 +121,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		teamssipdevicesconfigurationacc.RecoveryHandlers(sdk),
 		teamstemplatepermissionpolicyacc.RecoveryHandlers(sdk),
 		teamstenantabuseconfigurationacc.RecoveryHandlers(sdk),
+		tenantmigrationconfigurationacc.RecoveryHandlers(sdk),
 		teamsupdatemanagementpolicyacc.RecoveryHandlers(sdk),
 		teamsupgradeconfigurationacc.RecoveryHandlers(sdk),
 		teamsvdipolicyacc.RecoveryHandlers(sdk),
@@ -207,6 +209,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"template-baseline-policy",
 		"template-permission-policy",
 		"tenant-abuse-configuration",
+		"tenant-migration-configuration",
 		"update-management-policy",
 		"upgrade-configuration",
 		"vdi-policy",

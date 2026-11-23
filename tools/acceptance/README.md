@@ -290,6 +290,15 @@ oracle. CRUD creates `DeviceDataCollection=Disabled` (Global is `Enabled`),
 updates it to `Enabled`, requires every other returned field unchanged and makes
 two pinned comparisons. Its recovery kind is `byod-and-desks-policy`; grants are
 not exercised live.
+Tenant (Meeting Migration Service) migration configuration Global reads and the
+MeetingMigrationEnabled update/restoration run as the
+`tenant_migration_configuration` service's serialized `global-reads` and
+`update-restore` steps. Its dedicated read-only oracle,
+`read-tenant-migration-configuration.ps1`, compares the pinned getter before,
+after and on restoration; CI requires those three comparisons and one cleaned
+`tenant-migration-configuration` restore entry. The update only runs from an
+enabled original (enabled, then disabled, then re-enabled), and the handler
+restores only an enabled journaled Global value.
 
 Mobility CRUD runs as its service's `crud` step, with all five getters compared
 against the pinned module before and after a sparse description update. Its
