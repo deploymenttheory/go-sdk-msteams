@@ -611,15 +611,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/10/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.GetHolidaysContent"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleHolidaysUseAcceptanceAndModelResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.GetHolidaysContent"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -627,8 +647,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).",
+        "evidence": [
+          "docs/implementation/calls/schedules-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -1282,15 +1304,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/22/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.ListHolidays"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleHolidaysUseAcceptanceAndModelResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.ListHolidays"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1298,8 +1340,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).",
+        "evidence": [
+          "docs/implementation/calls/schedules-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3971,15 +4015,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/73/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleListAndBodyOptions"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3987,8 +4063,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned, journaled schedule lifecycle with pinned PowerShell parity; auto attendant association and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/schedules-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -18017,15 +18095,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/272/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.ImportHolidays"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleHolidaysUseAcceptanceAndModelResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.ImportHolidays"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -18033,8 +18131,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).",
+        "evidence": [
+          "docs/implementation/calls/schedules-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -20312,15 +20412,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/314/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.NewDateTimeRange"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleRangeDraftsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.NewDateTimeRange"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20328,8 +20448,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the service draft validation, including a rejected range; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/schedules-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -20500,29 +20622,78 @@
         {
           "name": "FixedScheduleParamSet",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/319/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleListAndBodyOptions"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         },
         {
           "name": "UnresolvedParamSet",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/319/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleInvalidInputFailsBeforeIO"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "WeeklyRecurrentScheduleParamSet",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/319/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20530,8 +20701,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned, journaled schedule lifecycle with pinned PowerShell parity; auto attendant association and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/schedules-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -20631,15 +20804,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/322/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.NewTimeRange"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleRangeDraftsUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.NewTimeRange"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20647,8 +20840,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the service draft validation, including a rejected range; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/schedules-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -26019,15 +26214,35 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/439/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleLifecycleUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26035,8 +26250,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned, journaled schedule lifecycle with pinned PowerShell parity; auto attendant association and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/schedules-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -31127,15 +31344,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/552/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service.go",
+              "name": "Service.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitScheduleListAndBodyOptions"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/schedules/schedules_test.go",
+              "name": "TestAccScheduleLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/schedules/service.go",
+            "name": "Service.UpdateByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -31143,8 +31384,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned, journaled schedule lifecycle with pinned PowerShell parity; auto attendant association and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/schedules-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

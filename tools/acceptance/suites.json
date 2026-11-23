@@ -224,6 +224,20 @@
         }
       ]
     },
+    "schedules": {
+      "package": "./tests/integration/lab/schedules",
+      "steps": [
+        {
+          "id": "lifecycle",
+          "mutation": true,
+          "proof": "schedule-lifecycle",
+          "journal_entries_per_test": 2,
+          "tests": [
+            "TestAccScheduleLifecycle"
+          ]
+        }
+      ]
+    },
     "team_template": {
       "package": "./tests/integration/lab/team_template",
       "steps": [

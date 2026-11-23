@@ -1,0 +1,18 @@
+{
+  "Schedule": {
+    "Id": "00000000-0000-4000-8000-2705eaabb01b",
+    "Name": "Fixture name",
+    "Type": "Fixed",
+    "WeeklyRecurrentSchedule": null,
+    "FixedSchedule": {
+      "DateTimeRanges": [
+        {
+          "Start": "2027-01-01T10:00:00",
+          "End": "2027-01-03T00:00:00"
+        }
+      ]
+    },
+    "AssociatedConfigurationIds": []
+  },
+  "Diagnostics": []
+}

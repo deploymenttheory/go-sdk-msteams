@@ -22,6 +22,7 @@ import (
 	recordingmessages "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/recording_messages"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
 	resourceaccounts "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/resource_accounts"
+	schedules "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/schedules"
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
@@ -136,6 +137,7 @@ type Services struct {
 	TeamTemplates                              *teamtemplate.Service
 	AudioFiles                                 *audioprompts.Service
 	ResourceAccounts                           *resourceaccounts.Service
+	Schedules                                  *schedules.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -225,6 +227,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamTemplates:                              teamtemplate.NewService(backend),
 		AudioFiles:                                 audioprompts.NewService(backend),
 		ResourceAccounts:                           resourceaccounts.NewService(backend),
+		Schedules:                                  schedules.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),

@@ -94,5 +94,9 @@
   "TestAccAudioFileRecover": {
     "file": "tests/integration/lab/audio_prompts/audio_prompts_test.go",
     "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
+  },
+  "TestAccScheduleRecover": {
+    "file": "tests/integration/lab/schedules/schedules_test.go",
+    "reason": "Requires an explicit private interrupted-run journal; operator-selected recovery is not a fresh CI lifecycle scenario."
   }
 }

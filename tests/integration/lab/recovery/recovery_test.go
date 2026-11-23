@@ -18,6 +18,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 	meetingbrandingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/meeting_branding"
 	onlinevoicemailpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/online_voicemail_policy"
+	schedulesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/schedules"
 	teamtemplateacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/team_template"
 	teamsapppermissionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_permission_policy"
 	teamsappsetuppolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_setup_policy"
@@ -64,6 +65,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		audiopromptsacc.RecoveryHandlers(sdk),
 		externalaccesspolicyacc.RecoveryHandlers(sdk),
 		meetingbrandingacc.RecoveryHandlers(sdk),
+		schedulesacc.RecoveryHandlers(sdk),
 		onlinevoicemailpolicyacc.RecoveryHandlers(sdk),
 		teamtemplateacc.RecoveryHandlers(sdk),
 		teamsapppermissionpolicyacc.RecoveryHandlers(sdk),
@@ -158,6 +160,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"recording-rollout-policy",
 		"roaming-policy",
 		"room-video-policy",
+		"schedule",
 		"shared-calling-policy",
 		"shifts-app-configuration",
 		"shifts-policy",
