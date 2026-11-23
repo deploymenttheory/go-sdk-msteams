@@ -293,6 +293,15 @@ handler accepts only the documented Enabled/Disabled baseline used by the test.
 CI reports fixed parity, persistence and restoration failure reasons without
 publishing raw responses or resource names.
 
+Guest meeting configuration Global reads and the AllowMeetNow update and
+restoration run as that service's serialized `global-reads` and `update-restore`
+steps. Its dedicated read-only oracle, `read-guest-meeting-configuration.ps1`,
+compares all eight pinned getters before the update, after it and after
+restoration. CI requires those three comparisons, preservation of the seven
+omitted getters, and one cleaned `guest-meeting-configuration` restore entry. The
+handler restores only the journaled Global Boolean and refuses null originals or
+other targets.
+
 Network roaming runs its `crud` step using modern POST/PUT/DELETE.
 Notification/feeds runs its own `crud` step, whose extra explicit-null
 Description check and three pinned comparisons are mandatory. Its native create
