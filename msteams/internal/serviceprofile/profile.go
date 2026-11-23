@@ -12,7 +12,11 @@ const (
 	PrivateChannelMigration
 	Regions
 	AIGeneratedKnowledge
+	AppCatalog
 )
+
+// appCatalogResource is the AdminAppCatalog resource application identifier.
+const appCatalogResource = "08ff1ce2-4973-4b08-86a3-ebed13badc7f"
 
 // Endpoint separates the request origin, fixed namespace and token audience.
 // Empty DelegatedScope uses audience + /.default. A nonempty value requires
@@ -63,6 +67,12 @@ func Resolve(service Service, cloud string) (Endpoint, bool) {
 		// cloud's resource is evidenced.
 		if cloud == "commercial" {
 			return Endpoint{Origin: "https://teams.microsoft.com", Audience: "6bc3b958-689b-49f5-9006-36d165f30e00", PathPrefix: "/api/mcps/df"}, true
+		}
+	case AppCatalog:
+		// The pinned TeamsCmdlets assembly lists substrate.office.com only in its
+		// commercial endpoint table and requests this exact delegated scope.
+		if cloud == "commercial" {
+			return Endpoint{Origin: "https://substrate.office.com", Audience: appCatalogResource, PathPrefix: "/AdminAppCatalog", DelegatedScope: appCatalogResource + "/AdminAppCatalog.ReadWrite.All"}, true
 		}
 	}
 	return Endpoint{}, false

@@ -1259,6 +1259,17 @@
           ]
         }
       ]
+    },
+    "unified_apps": {
+      "package": "./tests/integration/lab/unified_apps",
+      "steps": [
+        {
+          "id": "application-refusal",
+          "tests": [
+            "TestAccUnifiedAppsApplicationIdentityRefused"
+          ]
+        }
+      ]
     }
   }
 }

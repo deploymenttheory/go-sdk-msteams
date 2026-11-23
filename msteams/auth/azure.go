@@ -13,8 +13,8 @@ import (
 // caller-owned; the adapter neither constructs a credential chain nor closes it.
 //
 // Requests are bound to one tenant, cloud, identity and mode. The selected Graph and
-// Teams audiences map to their own /.default scopes; the region profile instead
-// requires its exact delegated Region.Read.All scope. No scope is inferred from
+// Teams audiences map to their own /.default scopes; the region and AdminAppCatalog
+// profiles instead require their exact delegated scopes. No scope is inferred from
 // the management API host. The caller must configure the credential for the stated
 // identity, mode and cloud; opaque access tokens are not locally decoded to prove
 // those assertions. Backend services still validate destination authority separately.
