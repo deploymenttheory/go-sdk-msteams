@@ -356,6 +356,14 @@ four pinned comparisons, and independently deletes its owned policy. Recovery
 kind: `template-permission-policy`. Empty and populated workflows write distinct
 permanent fixture names.
 
+Guest messaging configuration Global reads and AllowMemes/GiphyRatingType
+update/restoration run as its service's serialized `global-reads` and
+`update-restore` steps. Its dedicated read-only oracle,
+`read-guest-messaging-configuration.ps1`, compares all ten pinned getter settings
+before, after and on restoration; CI requires those three comparisons and one
+cleaned `guest-messaging-configuration` restore entry. The handler restores only
+the journaled Global pair and refuses null, empty or foreign targets.
+
 Update-management policy runs as its service's `crud` step. CI requires
 all CRUD assertions, DateTime persistence, message-list edit/clear, five pinned
 comparisons and one cleaned owned-policy entry. Compiled CRUD and modern grant
