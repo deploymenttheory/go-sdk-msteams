@@ -284,6 +284,15 @@ Recovery selects `TestAccRecoverOwnedPolicies` with the bound private journal;
 Null or missing originals refuse mutation. This step temporarily changes Global
 in the dedicated lab; it does not qualify user/client propagation.
 
+Meeting configuration Global reads and the CustomFooterText/HelpURL update and
+restoration run as that service's serialized `global-reads` and `update-restore`
+steps. Its dedicated read-only oracle, `read-meeting-configuration.ps1`, compares
+all 21 pinned getters, including the authentication context list, before the
+update, after it and after restoration. CI requires those three comparisons,
+preservation of the 19 omitted getters, and one cleaned `meeting-configuration`
+restore entry. The handler restores only the journaled Global string pair,
+sending an explicit null for a null original, and refuses other targets.
+
 Mobility CRUD runs as its service's `crud` step, with all five getters compared
 against the pinned module before and after a sparse description update. Its
 recovery kind is `mobility-policy`. Multi-tenant Global reads/updates run as

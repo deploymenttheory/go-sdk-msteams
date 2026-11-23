@@ -1,0 +1,29 @@
+{
+  "PublishedEntraAuthenticationContexts": [],
+  "LogoURL": null,
+  "LegalURL": null,
+  "HelpURL": "https://fixture.example.invalid/msteams-sdk-help",
+  "CustomFooterText": "msteams-sdk acceptance footer",
+  "DisableAnonymousJoin": true,
+  "DisableAppInteractionForAnonymousUsers": true,
+  "EnableQoS": true,
+  "EnableAttributedTranscripts": false,
+  "EnableGraphTranscriptAccess": false,
+  "EnableWorkIQTranscriptAccess": false,
+  "ClientAudioPort": 50000,
+  "ClientAudioPortRange": 20,
+  "ClientVideoPort": 50020,
+  "ClientVideoPortRange": 20,
+  "ClientAppSharingPort": 50040,
+  "ClientAppSharingPortRange": 20,
+  "ClientMediaPortRangeEnabled": true,
+  "LimitPresenterRolePermissions": false,
+  "FeedbackSurveyForAnonymousUsers": "Enabled",
+  "ReportMeeting": "Enabled",
+  "Identity": "Global",
+  "SchemaVersion": "0.0.1",
+  "ConfigId": "Global",
+  "ConfigMetadata": {
+    "Authority": "Tenant"
+  }
+}

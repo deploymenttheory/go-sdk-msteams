@@ -56,6 +56,7 @@ import (
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	teamsfeedbackpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 	teamsfilespolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
+	teamsmeetingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_configuration"
 	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
 	teamsmeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
 	teamsmeetingtemplatepermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_permission_policy"
@@ -119,6 +120,7 @@ type Services struct {
 	TeamsMeetingTemplateConfigurations         *teamsmeetingtemplateconfiguration.Service
 	TeamsMessagingPolicies                     *teamsmessagingpolicy.Service
 	TeamsMeetingPolicies                       *teamsmeetingpolicy.Service
+	TeamsMeetingConfigurations                 *teamsmeetingconfiguration.Service
 	TeamsEventsPolicies                        *teamseventspolicy.Service
 	TeamsFilesPolicies                         *teamsfilespolicy.Service
 	TeamsEnhancedEncryptionPolicies            *teamsenhancedencryptionpolicy.Service
@@ -234,6 +236,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsMeetingTemplateConfigurations:         teamsmeetingtemplateconfiguration.NewService(scope),
 		TeamsMessagingPolicies:                     teamsmessagingpolicy.NewService(scope),
 		TeamsMeetingPolicies:                       teamsmeetingpolicy.NewService(scope),
+		TeamsMeetingConfigurations:                 teamsmeetingconfiguration.NewService(scope),
 		TeamsEventsPolicies:                        teamseventspolicy.NewService(scope),
 		TeamsFilesPolicies:                         teamsfilespolicy.NewService(scope),
 		TeamsEnhancedEncryptionPolicies:            teamsenhancedencryptionpolicy.NewService(backend),
