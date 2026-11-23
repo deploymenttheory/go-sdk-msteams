@@ -103,6 +103,9 @@ func fixtureString(key, parent, value string, replacements map[string]string) st
 			hash := sha256.Sum256([]byte(value))
 			return fmt.Sprintf("fixture-policy-%x", hash[:4])
 		}
+	case "city", "street", "postalcode", "state", "stateorprovince", "telephonenumber", "phonenumber", "mobile", "faxnumber", "mailnickname", "userprincipalname", "givenname", "surname", "companyname", "department", "jobtitle", "officelocation", "streetaddress":
+		// Directory tenant and user records carry address, contact and naming data.
+		return "Fixture " + normalized
 	case "blockedusers", "restrictedsenderlist":
 		return "fixture-user@example.invalid"
 	case "id":

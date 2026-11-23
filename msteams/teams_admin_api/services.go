@@ -72,6 +72,7 @@ import (
 	teamsvoiceapplicationspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_voice_applications_policy"
 	teamsworkloadpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_load_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
+	tenantidentity "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_identity"
 )
 
 // Services is the typed Teams administration collection. Resource fields are added
@@ -142,6 +143,7 @@ type Services struct {
 	ResourceAccounts                           *resourceaccounts.Service
 	Schedules                                  *schedules.Service
 	CallQueues                                 *callqueues.Service
+	TenantIdentity                             *tenantidentity.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -234,6 +236,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		ResourceAccounts:                           resourceaccounts.NewService(backend),
 		Schedules:                                  schedules.NewService(backend),
 		CallQueues:                                 callqueues.NewService(backend),
+		TenantIdentity:                             tenantidentity.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),
