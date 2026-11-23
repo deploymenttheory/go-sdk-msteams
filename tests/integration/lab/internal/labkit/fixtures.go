@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -20,8 +21,10 @@ import (
 )
 
 var (
-	fixtureGUIDPattern    = regexp.MustCompile(`(?i)[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}`)
-	fixtureEmailPattern   = regexp.MustCompile(`(?i)[a-z0-9.!#$%&'*+/=?^_` + "`" + `{|}~-]+@[a-z0-9.-]+\.[a-z]{2,}`)
+	fixtureGUIDPattern  = regexp.MustCompile(`(?i)[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}`)
+	fixtureEmailPattern = regexp.MustCompile(`(?i)[a-z0-9.!#$%&'*+/=?^_` + "`" + `{|}~-]+@[a-z0-9.-]+\.[a-z]{2,}`)
+	// E.164 numbers, bare or in tel: URIs. +1555… fixture numbers are kept.
+	fixturePhonePattern   = regexp.MustCompile(`\+[1-9][0-9]{6,14}\b`)
 	fixtureServicePattern = regexp.MustCompile(`^(?:[a-z][a-z0-9_]*/)*[a-z][a-z0-9_]*$`)
 	fixtureLabelPattern   = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
 	errResponseFixture    = errors.New("invalid response test fixture")
@@ -47,8 +50,18 @@ func fixtureString(key, parent, value string, replacements map[string]string) st
 		hash := sha256.Sum256([]byte(strings.ToLower(address)))
 		return fmt.Sprintf("user-%x@example.invalid", hash[:4])
 	})
+	value = fixturePhonePattern.ReplaceAllStringFunc(value, func(number string) string {
+		if strings.HasPrefix(number, "+1555") {
+			return number
+		}
+		hash := sha256.Sum256([]byte(number))
+		return fmt.Sprintf("+1555%07d", (uint32(hash[0])<<16|uint32(hash[1])<<8|uint32(hash[2]))%10000000)
+	})
 	if value == "" {
 		return value
+	}
+	if address := fixtureAddress(key, value); address != "" {
+		return address
 	}
 	if strings.EqualFold(value, "Global") {
 		return value
@@ -152,6 +165,25 @@ func fixtureString(key, parent, value string, replacements map[string]string) st
 		value = "admin.example.invalid"
 	}
 	return value
+}
+
+// fixtureAddress maps a whole-value IP address to a documentation address.
+// IPv4 is only treated as an address under an IP/address key, since version
+// strings such as 1.0.0.0 parse as IPv4 too.
+func fixtureAddress(key, value string) string {
+	ip := net.ParseIP(value)
+	if ip == nil {
+		return ""
+	}
+	hash := sha256.Sum256([]byte(value))
+	if ip.To4() == nil {
+		return fmt.Sprintf("2001:db8::%x", hash[:2])
+	}
+	normalized := strings.ToLower(key)
+	if !strings.Contains(normalized, "ip") && !strings.Contains(normalized, "address") {
+		return ""
+	}
+	return fmt.Sprintf("192.0.2.%d", hash[0]%254+1)
 }
 
 // fixtureJSON changes private values only. It preserves member and array order,

@@ -1270,6 +1270,24 @@
           ]
         }
       ]
+    },
+    "provisioning_diagnostics": {
+      "package": "./tests/integration/lab/provisioning_diagnostics",
+      "steps": [
+        {
+          "id": "reads-denied",
+          "tests": [
+            "TestAccProvisioningDiagnosticsReadsDenied"
+          ]
+        },
+        {
+          "id": "actions-denied",
+          "serial": true,
+          "tests": [
+            "TestAccProvisioningDiagnosticsActionsDenied"
+          ]
+        }
+      ]
     }
   }
 }

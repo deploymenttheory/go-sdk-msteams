@@ -2064,9 +2064,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/38",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.GetDirectoryDiagnosticData"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -2074,8 +2079,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3031,8 +3038,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Not implemented: the cmdlet returns the module's own ConfigAPI access token and sends no service request; SDK credentials come from msteams/auth.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3523,9 +3532,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/66",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.ListObjectChangelog"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3533,8 +3547,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3547,9 +3563,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/67",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.ListVersionedSchemaData"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3557,8 +3578,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -12864,9 +12887,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/223",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/oce.go",
+            "name": "Service.GetUserProvisioningHistory"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -12874,8 +12902,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -12888,9 +12918,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/224",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.GetUserSetting"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -12898,8 +12933,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19548,9 +19585,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/306",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.InvokeCustomHandlerCallback"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19558,8 +19600,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 401 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19572,9 +19616,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/307",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.InvokeCustomHandler"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19582,8 +19631,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 401 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19596,9 +19647,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/308",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.SyncDirectObjects"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19606,8 +19662,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19620,9 +19678,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/309",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/oce.go",
+            "name": "Service.SyncDirectoryObject"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19630,8 +19693,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19644,9 +19709,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/310",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/oce.go",
+            "name": "Service.InvokeNgtProvHandler"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19654,8 +19724,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19700,9 +19772,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/312",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.SyncMsodsObjects"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19710,8 +19787,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19771,9 +19850,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/314",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.RehomeUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19781,8 +19865,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19974,36 +20060,153 @@
         {
           "name": "BeginAndCompleteMove",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/277/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+              "name": "Service.BeginUserMove"
+            },
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+              "name": "Service.CompleteUserMove"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/service_test.go",
+              "name": "TestUnitProvisioningDiagnosticsDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/service_test.go",
+              "name": "TestUnitProvisioningDiagnosticsSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/provisioning_diagnostics/provisioning_diagnostics_test.go",
+              "name": "TestAccProvisioningDiagnosticsActionsDenied"
+            }
+          ]
         },
         {
           "name": "MoveResourcedata",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/277/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+              "name": "Service.SetMovedResourceData"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/service_test.go",
+              "name": "TestUnitProvisioningDiagnosticsDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/service_test.go",
+              "name": "TestUnitProvisioningDiagnosticsSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/provisioning_diagnostics/provisioning_diagnostics_test.go",
+              "name": "TestAccProvisioningDiagnosticsActionsDenied"
+            }
+          ]
         },
         {
           "name": "Rehome",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/277/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+              "name": "Service.RehomeUserMove"
+            },
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+              "name": "Service.GetUserMovePolicies"
+            },
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+              "name": "Service.RollbackUserMove"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/service_test.go",
+              "name": "TestUnitProvisioningDiagnosticsDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/service_test.go",
+              "name": "TestUnitProvisioningDiagnosticsSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/provisioning_diagnostics/provisioning_diagnostics_test.go",
+              "name": "TestAccProvisioningDiagnosticsActionsDenied"
+            }
+          ]
         },
         {
           "name": "Validate",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/277/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+              "name": "Service.ValidateUserMove"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/service_test.go",
+              "name": "TestUnitProvisioningDiagnosticsDenialsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/provisioning_diagnostics/service_test.go",
+              "name": "TestUnitProvisioningDiagnosticsSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/provisioning_diagnostics/provisioning_diagnostics_test.go",
+              "name": "TestAccProvisioningDiagnosticsReadsDenied"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+            "name": "Service.BeginUserMove"
+          },
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+            "name": "Service.CompleteUserMove"
+          },
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+            "name": "Service.SetMovedResourceData"
+          },
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+            "name": "Service.RehomeUserMove"
+          },
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+            "name": "Service.GetUserMovePolicies"
+          },
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+            "name": "Service.RollbackUserMove"
+          },
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/move.go",
+            "name": "Service.ValidateUserMove"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20011,8 +20214,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved every HostedMigration route only through HTTP 403 denials sent for an example.invalid SIP address; in a tenant session the pinned export fails before any request because its private target is not loaded, so no PowerShell parity or successful move step is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -39112,9 +39317,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/713",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.SetTenantUserBackfill"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -39122,8 +39332,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -39295,9 +39507,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/717",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/provisioning_diagnostics/service.go",
+            "name": "Service.SetUserSetting"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -39305,8 +39522,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent against reserved targets; the pinned module does not load this support command in a tenant session, so no PowerShell parity or successful call is qualified.",
+        "evidence": [
+          "docs/implementation/ext/provisioning-diagnostics-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
