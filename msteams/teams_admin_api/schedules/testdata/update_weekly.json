@@ -1,0 +1,31 @@
+{
+  "Schedule": {
+    "Id": "00000000-0000-4000-8000-14ff58a505f4",
+    "Name": "Fixture name",
+    "Type": "WeeklyRecurrence",
+    "WeeklyRecurrentSchedule": {
+      "MondayHours": [
+        {
+          "Start": "09:00:00",
+          "End": "17:30:00"
+        }
+      ],
+      "TuesdayHours": [],
+      "WednesdayHours": [],
+      "ThursdayHours": [],
+      "FridayHours": [
+        {
+          "Start": "08:00:00",
+          "End": "12:00:00"
+        }
+      ],
+      "SaturdayHours": [],
+      "SundayHours": [],
+      "IsComplemented": false,
+      "RecurrenceRange": null
+    },
+    "FixedSchedule": null,
+    "AssociatedConfigurationIds": []
+  },
+  "Diagnostics": []
+}
