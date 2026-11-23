@@ -1911,15 +1911,51 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/31/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_queues/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_queues/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueMissingIdentityIsHTTP400"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueOptionalQueriesAndNormalization"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_queues/call_queues_test.go",
+              "name": "TestAccCallQueueLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_queues/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/call_queues/service.go",
+            "name": "Service.GetByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -1927,8 +1963,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/list/full-body update/read-back/delete lifecycle with pinned PowerShell read parity and journaled cleanup; agents, resource-account (OBO) links, channel and callback settings, and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/call-queues-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -19488,15 +19526,43 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/293/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_queues/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueOptionalQueriesAndNormalization"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueInvalidInputFailsBeforeIO"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_queues/call_queues_test.go",
+              "name": "TestAccCallQueueLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_queues/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -19504,8 +19570,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/list/full-body update/read-back/delete lifecycle with pinned PowerShell read parity and journaled cleanup; agents, resource-account (OBO) links, channel and callback settings, and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/call-queues-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -25351,15 +25419,39 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/416/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_queues/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueMissingIdentityIsHTTP400"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_queues/call_queues_test.go",
+              "name": "TestAccCallQueueLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_queues/service.go",
+            "name": "Service.DeleteByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25367,8 +25459,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/list/full-body update/read-back/delete lifecycle with pinned PowerShell read parity and journaled cleanup; agents, resource-account (OBO) links, channel and callback settings, and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/call-queues-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -30407,15 +30501,51 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/528/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/call_queues/service.go",
+              "name": "Service.UpdateByID"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_queues/models.go",
+              "name": "CallQueue.Settings"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueSettingsBackfillsFromRead"
+            },
+            {
+              "file": "msteams/teams_admin_api/call_queues/service_test.go",
+              "name": "TestUnitCallQueueOptionalQueriesAndNormalization"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/call_queues/call_queues_test.go",
+              "name": "TestAccCallQueueLifecycle"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/call_queues/service.go",
+            "name": "Service.UpdateByID"
+          },
+          {
+            "file": "msteams/teams_admin_api/call_queues/models.go",
+            "name": "CallQueue.Settings"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30423,8 +30553,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed the owned create/get/list/full-body update/read-back/delete lifecycle with pinned PowerShell read parity and journaled cleanup; agents, resource-account (OBO) links, channel and callback settings, and full release qualification are separate.",
+        "evidence": [
+          "docs/implementation/calls/call-queues-contract-notes.md"
+        ]
       },
       "exclusion": null
     },

@@ -59,6 +59,15 @@ SCHEDULE_MARKERS = [
     'schedule delete: passed',
 ]
 SCHEDULE_ORACLE = 'PowerShell 8.1.0 / Go schedule parity: passed'
+CALL_QUEUE_MARKERS = [
+    'call queue missing get: passed',
+    'call queue create: passed',
+    'call queue get: passed',
+    'call queue list: passed',
+    'call queue update/read-back: passed',
+    'call queue delete: passed',
+]
+CALL_QUEUE_ORACLE = 'PowerShell 8.1.0 / Go call queue parity: passed'
 PROOFS = {
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
@@ -70,6 +79,7 @@ PROOFS = {
     'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
     'audio-file-lifecycle': (AUDIO_FILE_MARKERS, AUDIO_FILE_ORACLE, 1),
     'schedule-lifecycle': (SCHEDULE_MARKERS, SCHEDULE_ORACLE, 3),
+    'call-queue-lifecycle': (CALL_QUEUE_MARKERS, CALL_QUEUE_ORACLE, 1),
     'populated-template-access': (['native populated-list create denial: verified', 'populated-list comparison cleanup: passed'], 'PowerShell 8.1.0 / Go populated-list authorization parity: passed', 1),
     'configuration-update': (['configuration update/read-back and omission: passed', 'configuration restoration/read-back: passed'], 'PowerShell 8.1.0 / Go configuration read parity: passed', 3),
 }

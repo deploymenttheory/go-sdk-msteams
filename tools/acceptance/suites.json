@@ -112,6 +112,20 @@
         }
       ]
     },
+    "call_queues": {
+      "package": "./tests/integration/lab/call_queues",
+      "steps": [
+        {
+          "id": "lifecycle",
+          "mutation": true,
+          "proof": "call-queue-lifecycle",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccCallQueueLifecycle"
+          ]
+        }
+      ]
+    },
     "external_access_policy": {
       "package": "./tests/integration/lab/external_access_policy",
       "steps": [
