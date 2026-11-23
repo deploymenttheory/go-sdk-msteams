@@ -8473,22 +8473,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/125/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_first_party_meeting_template_configuration/first_party_template_configuration_test.go",
+              "name": "TestAccFirstPartyMeetingTemplateConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/125/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_first_party_meeting_template_configuration/first_party_template_configuration_test.go",
+              "name": "TestAccFirstPartyMeetingTemplateConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8496,8 +8543,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter with pinned getter comparison and journaled Description update/read-back/null restoration passed with client-secret application auth; template-list writes, delegated flows and other clouds remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/first-party-meeting-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -39078,15 +39127,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/598/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesAcceptancePreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service_test.go",
+              "name": "TestUnitTemplateEditsUseTheActualTemplateList"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_first_party_meeting_template_configuration/first_party_template_configuration_test.go",
+              "name": "TestAccFirstPartyMeetingTemplateConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -39094,8 +39175,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter with pinned getter comparison and journaled Description update/read-back/null restoration passed with client-secret application auth; template-list writes, delegated flows and other clouds remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/first-party-meeting-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },

@@ -1600,6 +1600,27 @@
           ]
         }
       ]
+    },
+    "teams_first_party_meeting_template_configuration": {
+      "package": "./tests/integration/lab/teams_first_party_meeting_template_configuration",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccFirstPartyMeetingTemplateConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccFirstPartyMeetingTemplateConfigurationUpdateRestore"
+          ]
+        }
+      ]
     }
   }
 }
