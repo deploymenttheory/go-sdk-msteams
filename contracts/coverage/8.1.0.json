@@ -6564,29 +6564,94 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/112/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.ListApplicationsFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/112/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.GetApplicationByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.ListApplications"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingApplicationRejections"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingPolicyCRUD"
+            },
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingReadOnly"
+            }
+          ]
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/112/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.GetApplicationByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingApplicationRejections"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.ListApplicationsFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.GetApplicationByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.ListApplications"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.GetApplicationByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -6594,8 +6659,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the application routes through service rejections and absence only: a successful application needs a resource account, which app-only credentials cannot create.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -6610,22 +6677,72 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/113/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.ListPoliciesFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingPolicyReadsAndFilters"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/113/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.GetPolicyByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.ListPolicies"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingPolicyCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingPolicyReadsAndFilters"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingPolicyCRUD"
+            },
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.ListPoliciesFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.GetPolicyByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.ListPolicies"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -6633,8 +6750,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* policy lifecycle with pinned PowerShell read parity; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -15347,29 +15466,96 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/239/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+              "name": "Service.AssignToGroup"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingModernGrant"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/239/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingModernGrant"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/239/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+              "name": "Service.AssignToUser"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingModernGrant"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -15377,8 +15563,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Not run live: a compliance recording grant changes call handling for its target, so the lab never grants it. Wire shapes are contract-tested.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -22560,22 +22748,64 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/348/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.CreateApplicationByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingApplicationRejections"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/348/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.CreateApplicationByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingApplicationRejections"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.CreateApplicationByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.CreateApplicationByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -22583,8 +22813,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the application routes through service rejections and absence only: a successful application needs a resource account, which app-only credentials cannot create.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -22599,15 +22831,34 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/349/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/models.go",
+              "name": "NewPairedApplication"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingApplicationRejections"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/models.go",
+            "name": "NewPairedApplication"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -22615,8 +22866,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Local builder with no service call; contract tests prove it sends nothing.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -22631,15 +22884,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/350/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.CreatePolicyByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingPolicyCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.CreatePolicyByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -22647,8 +22924,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* policy lifecycle with pinned PowerShell read parity; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -27957,22 +28236,56 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/463/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.DeleteApplicationByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingApplicationRejections"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/463/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.DeleteApplicationByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingApplicationRejections"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.DeleteApplicationByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.DeleteApplicationByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27980,8 +28293,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the application routes through service rejections and absence only: a successful application needs a resource account, which app-only credentials cannot create.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -27996,15 +28311,35 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/464/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.DeletePolicyByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingPolicyCRUDUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.DeletePolicyByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -28012,8 +28347,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* policy lifecycle with pinned PowerShell read parity; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -34006,22 +34343,72 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/585/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.PatchApplicationByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.UpdateApplicationByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingListEditsApplyToReadValue"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "ParentAndRelativeKey",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/585/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.UpdateApplicationByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingApplicationRejections"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingListEditsApplyToReadValue"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.PatchApplicationByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.UpdateApplicationByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.UpdateApplicationByID"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -34029,8 +34416,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run proved the application routes through service rejections and absence only: a successful application needs a resource account, which app-only credentials cannot create.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -34045,15 +34434,51 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/586/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.PatchPolicyByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service.go",
+              "name": "Service.UpdatePolicyByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingPolicyCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingListEditsApplyToReadValue"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
+              "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/compliance_recording/compliance_recording_test.go",
+              "name": "TestAccComplianceRecordingPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.PatchPolicyByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/compliance_recording/service.go",
+            "name": "Service.UpdatePolicyByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -34061,8 +34486,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run passed an owned msteams-sdk-* policy lifecycle with pinned PowerShell read parity; full release qualification is separate.",
+        "evidence": [
+          "docs/implementation/calls/compliance-recording-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
