@@ -21,6 +21,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
 	mainlineattendants "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/mainline_attendants"
 	meetingbranding "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
+	migration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/migration"
 	onlinevoicemailpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
 	voicemailvalidation "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_validation_configuration"
 	policyassignments "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
@@ -167,6 +168,7 @@ type Services struct {
 	SIPDevicesGateway                          *sipdevicesgateway.Service
 	TeamsRemoteLogCollectionConfigurations     *teamsremotelogcollectionconfiguration.Service
 	TeamsRemoteLogCollectionDevices            *teamsremotelogcollectiondevice.Service
+	Migration                                  *migration.Service
 	TargetingPolicies                          *targetingpolicy.Service
 	TargetingHierarchy                         *targetinghierarchy.Service
 	BatchDeployments                           *batchdeployment.Service
@@ -280,6 +282,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		SIPDevicesGateway:                          sipdevicesgateway.NewService(backend),
 		TeamsRemoteLogCollectionConfigurations:     teamsremotelogcollectionconfiguration.NewService(scope),
 		TeamsRemoteLogCollectionDevices:            teamsremotelogcollectiondevice.NewService(scope),
+		Migration:                                  migration.NewService(backend),
 		TargetingPolicies:                          targetingpolicy.NewService(backend),
 		TargetingHierarchy:                         hierarchy,
 		BatchDeployments:                           batchdeployment.NewService(backend),

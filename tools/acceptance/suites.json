@@ -1387,6 +1387,24 @@
           ]
         }
       ]
+    },
+    "migration": {
+      "package": "./tests/integration/lab/migration",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMigrationReads"
+          ]
+        },
+        {
+          "id": "rejected-writes",
+          "serial": true,
+          "tests": [
+            "TestAccMigrationRejectedWrites"
+          ]
+        }
+      ]
     }
   }
 }

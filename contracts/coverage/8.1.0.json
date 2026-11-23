@@ -3614,15 +3614,47 @@
         {
           "name": "__AllParameterSets",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/49/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/migration/service.go",
+              "name": "Service.ListMeetingMigrationStatuses"
+            },
+            {
+              "file": "msteams/teams_admin_api/migration/service.go",
+              "name": "Service.GetMeetingMigrationStatusSummary"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/migration/service_test.go",
+              "name": "TestUnitMigrationDeniedOperationsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/migration/service_test.go",
+              "name": "TestUnitMigrationSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/migration/migration_test.go",
+              "name": "TestAccMigrationReads"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/migration/service.go",
+            "name": "Service.ListMeetingMigrationStatuses"
+          },
+          {
+            "file": "msteams/teams_admin_api/migration/service.go",
+            "name": "Service.GetMeetingMigrationStatusSummary"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3630,8 +3662,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret lab run: records and -SummaryOnly both return HTTP 401 (empty body) to the app-only identity, matched by pinned PowerShell (Unauthorized); successful reads are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/migration-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3644,9 +3678,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/69",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/migration/service.go",
+            "name": "Service.ListMeetingMigrationTransactionHistory"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3654,8 +3693,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Torus-only export. Client-secret lab run returned HTTP 403 for a reserved nonexistent user; successful reads are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/migration-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -3668,9 +3709,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/70",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/migration/service.go",
+            "name": "Service.ListTenantMoveTaskStatuses"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -3678,8 +3724,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "SelfHost/Torus-only export. Client-secret lab run returned HTTP 403; successful reads are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/migration-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -13793,9 +13841,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/237",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_ngtprov.go",
+            "name": "Service.GetOCENgtProvFailoverStatus"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -13803,8 +13856,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "OCE declaration. Client-secret lab run of the NOAM status read returned HTTP 403; successful reads are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/migration-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -20314,9 +20369,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/318",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/migration/service.go",
+            "name": "Service.MoveAVSTenantPartition"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20324,8 +20384,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Proved only by a move between partitions of a reserved nonexistent tenant in a nonexistent container (HTTP 403); successful moves are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/migration-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -20510,9 +20572,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/320",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/migration/service.go",
+            "name": "Service.MoveTenantCrossRegion"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20520,8 +20587,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Never sent live: the request names no target the service could reject before acting, so any accepted call would irreversibly move the lab tenant to another region; covered by unit contract tests from module evidence only.",
+        "evidence": [
+          "docs/implementation/ext/migration-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -20534,9 +20603,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/321",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/migration/service.go",
+            "name": "Service.MoveTenantServiceInstance"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20544,8 +20618,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Never sent live: the request names no target the service could reject before acting, so any accepted call would irreversibly start moving the lab tenant between service instances; covered by unit contract tests from module evidence only.",
+        "evidence": [
+          "docs/implementation/ext/migration-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -20558,9 +20634,14 @@
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/322",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/policy_assignments/oce_ngtprov.go",
+            "name": "Service.MoveOCENgtProvInstance"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20568,8 +20649,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Never sent live: the request names no target the service could reject before acting, so any accepted call would irreversibly shift service-wide provisioning traffic between failover sides; covered by unit contract tests from module evidence only.",
+        "evidence": [
+          "docs/implementation/ext/migration-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
@@ -40678,15 +40761,39 @@
         {
           "name": "UserId",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/662/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/migration/service.go",
+              "name": "Service.StartMeetingMigration"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/migration/service_test.go",
+              "name": "TestUnitMigrationDeniedOperationsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/migration/service_test.go",
+              "name": "TestUnitMigrationSuccessShapesPreserveFields"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/migration/migration_test.go",
+              "name": "TestAccMigrationRejectedWrites"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/migration/service.go",
+            "name": "Service.StartMeetingMigration"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -40694,8 +40801,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Proved only by a request for a reserved nonexistent user ID (HTTP 401, empty body); no real user was migrated, so successful starts are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/migration-contract-notes.md"
+        ]
       },
       "exclusion": null
     },
