@@ -1,0 +1,125 @@
+# App catalog contracts
+
+Owner: #84 (EXT-21). Baseline: MicrosoftTeams 8.1.0.
+
+The seven commands use two backends. Get/Set-CsTeamsSettingsCustomApp are
+custom script wrappers over ConfigAPI cmdlets. The TeamsApp and
+Get-TeamsArtifacts commands are compiled cmdlets in
+`Microsoft.Teams.PowerShell.TeamsCmdlets.dll` that call Graph directly.
+
+## Custom app settings (ConfigAPI)
+
+- The generated `TeamsSettingsCustomAppGet`/`Set` methods both target
+  `/Teams.MiddletierService/tenantWideAppsSettingsGlobal`: GET for the read and
+  PUT with a JSON body for the write.
+- `GetCustomAppSettingResponse` reads `isAppsEnabled`, `isAppsPurchaseEnabled`,
+  `isExternalAppsEnabledByDefault`, `isLicenseBasedPinnedAppsEnabled`,
+  `isSideloadedAppsInteractionEnabled`, `isTenantWideAutoInstallEnabled`,
+  `LobTextColor`, `LobBackground`, `LobLogo`, `LobLogomark` and
+  `appAccessRequestConfig` (`adminInstructionMessage`, `approvalPortalUrl`).
+- `UpdateCustomAppSettingRequest` writes the same names plus `appSettingsList`.
+- The Get wrapper selects only `isSideloadedAppsInteractionEnabled` and
+  replaces null with `$false`.
+- The Set wrapper calls the internal Get, then the internal Set with
+  `isSideloadedAppsInteractionEnabled` and the other properties copied from the
+  read, plus `appSettingsList = @()`.
+- The service returns camelCase `lobTextColor`… names and an
+  `appSettingsList` of `{id,isEnabled,isAppLevelAutoInstallEnabled,context}`
+  entries, which the generated model does not declare.
+- The generated model reads only the PascalCase `Lob…` keys. AutoRest JSON
+  lookup is case-sensitive, so the module reads null and omits the branding
+  strings from its PUT. The SDK does the same. This is inferred from the
+  serializer and was not seen on the wire.
+
+## Teams apps (Graph)
+
+All three write cmdlets surface Graph errors through
+`DeserializeMSGraphApiErrorRoot`. The routes and checks, from the IL:
+
+- `Get-TeamsApp` builds `$filter` clauses `id eq '…'`, `externalId eq '…'`,
+  `displayName eq '…'` and `distributionMethod eq '…'`, in that order. It joins
+  them with ` and ` and reads every page of GET
+  `{graph}/v1.0/appCatalogs/teamsApps` through `HttpUtilities.GetAll`. Values are
+  not escaped.
+- `New-TeamsApp` throws `Operation not allowed.This call only supports
+  DistributionMethod: Organization` unless the method equals `organization`,
+  ignoring case. It then POSTs the file bytes as `application/zip` and returns
+  the deserialized body.
+- `Set-TeamsApp` PUTs the file bytes as `application/zip` to
+  `/v1.0/appCatalogs/teamsApps/{Id}`. It accepts any 2xx and writes a success
+  string.
+- `Remove-TeamsApp` sends DELETE `/v1.0/appCatalogs/teamsApps/{Id}`.
+
+## Teams artifacts (Graph)
+
+`Get-TeamsArtifacts` runs `ExportJob` with its own client-credentials token, built
+from the `EXPORT_TOOL.CLIENT_ID`, `EXPORT_TOOL.TENANT_ID` and
+`EXPORT_TOOL.CLIENT_SECRET` variables. It writes `artifacts.json` to the process
+directory.
+
+- `DoJob` scans SharePoint unless `-OneDrive` is set, then OneDrive unless
+  `-SharePoint` is set.
+- SharePoint: GET `/v1.0/sites?search=*`, then `/v1.0/sites/{id}/drives`, and
+  traverses each `/v1.0/drives/{id}`.
+- OneDrive: GET `/v1.0/users` (or `?$filter=mail eq '…'`), and traverses each
+  `/v1.0/users/{id}/drive`.
+- The traversal reads `{drive}/items/{item}/children` from `root`, following
+  `@odata.nextLink`.
+- The `ShouldRecurseFolder` and `ShouldOutputArtifact` IL was decoded
+  opcode-for-opcode. Comparisons use `OrdinalIgnoreCase`, and the SDK
+  reproduces the branches exactly (see the package docs).
+- `ArtifactType` values are RecordingTranscript=0 (`Recordings`, `.MP4`),
+  Notes=1 (`Meetings`, `.LOOP`) and Whiteboard=2 (`Whiteboards`,
+  `.WHITEBOARD`).
+- Every non-success is printed and skipped.
+
+## SDK differences
+
+- Filter and mail values are OData-escaped (`'` → `''`). The module sends
+  `displayName eq 'o'brien'` and Graph rejects it with HTTP 400, as seen in
+  the lab.
+- Get-TeamsArtifacts returns `Result{Artifacts, Failures}` instead of writing
+  `artifacts.json` and console lines, and authenticates with the client's
+  Graph session.
+
+## Lab observations
+
+All runs used client-secret, app-only Teams Administrator credentials with
+Graph `Organization.Read.All`.
+
+- The settings GET returns 200 with the full document, including about
+  4,000 `appSettingsList` entries whose count varies between reads.
+- A PUT of the module-shaped body with the current flag and
+  `appSettingsList: []` returned 204. The switches and branding were
+  unchanged, and the per-app entries kept the same set and values; only their
+  order changed. The original document was still PUT back afterwards.
+- `Set-CsTeamsSettingsCustomApp` with the current value also succeeded.
+- Graph app catalog GET/POST/PUT/DELETE all return 403 `Forbidden` ("API
+  requires one of 'AppCatalog.Read.All, AppCatalog.ReadWrite.All'"), for both
+  the SDK and pinned PowerShell.
+- The pinned `Get-TeamsApp -DisplayName "o'brien"` gets 400 `BadRequest`
+  (invalid filter).
+- `/v1.0/sites?search=*` returns 403 `accessDenied`. Get-TeamsArtifacts
+  -SharePoint writes an empty `artifacts.json` and reports one error, matching
+  the SDK's single `sites` failure.
+
+Acceptance:
+
+- `TestAccAppCatalogReads` (in `tests/integration/lab/custom_app_settings`; read-only, with oracle
+  `read-app-catalog.ps1`) checks the settings read, the catalog 403 and the
+  SharePoint scan failure, each with pinned PowerShell parity. The artifact
+  parity check needs client-secret auth.
+- `TestAccAppCatalogWrites` (serial) writes the current sideloading flag back
+  and compares the switches and branding. It also sends create, update and
+  delete probes with an empty package and the reserved ID
+  `00000000-0000-4000-8000-000000000001`, which are denied with 403.
+
+Unit fixtures come from sanitized lab responses (`list_403`, `filter_400` and
+`sites_403`), plus a reduced copy of the settings document.
+
+Unqualified, because they need permissions the lab identity lacks:
+
+- Successful app catalog list/create/update/delete (`AppCatalog.*`).
+- Artifact discovery in real drives (`Sites.Read.All`, `Files.Read.All`).
+- Changing the sideloading flag to a different value. Same-value writes only,
+  to avoid changing tenant behaviour.
