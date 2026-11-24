@@ -39,6 +39,7 @@ import (
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
+	teamsaipolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ai_policy"
 	teamsapppermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
 	teamsappsetuppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_setup_policy"
 	teamsaudioconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
@@ -151,6 +152,7 @@ type Services struct {
 	AudioConferencingCustomPrompts             *audioconferencingprompts.Service
 	TeamsAppSetupPolicies                      *teamsappsetuppolicy.Service
 	TeamsAppPermissionPolicies                 *teamsapppermissionpolicy.Service
+	TeamsAIPolicies                            *teamsaipolicy.Service
 	RecordingMessages                          *recordingmessages.Service
 	PrivacyConfigurations                      *privacyconfiguration.Service
 	PolicyPackages                             *policypackages.Service
@@ -274,6 +276,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		AudioConferencingCustomPrompts:             audioconferencingprompts.NewService(scope),
 		TeamsAppSetupPolicies:                      teamsappsetuppolicy.NewService(scope),
 		TeamsAppPermissionPolicies:                 teamsapppermissionpolicy.NewService(scope),
+		TeamsAIPolicies:                            teamsaipolicy.NewService(scope),
 		RecordingMessages:                          recordingmessages.NewService(scope),
 		PrivacyConfigurations:                      privacyconfiguration.NewService(scope),
 		PolicyPackages:                             policypackages.NewService(scope),
