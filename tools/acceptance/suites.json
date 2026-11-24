@@ -1376,6 +1376,26 @@
         }
       ]
     },
+    "teams_work_location_detection_policy": {
+      "package": "./tests/integration/lab/teams_work_location_detection_policy",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccWorkLocationDetectionPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccWorkLocationDetectionPolicyCRUD"
+          ]
+        }
+      ]
+    },
     "tenant_federation_configuration": {
       "package": "./tests/integration/lab/tenant_federation_configuration",
       "steps": [

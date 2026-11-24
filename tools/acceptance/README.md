@@ -317,6 +317,16 @@ handler accepts only the documented Enabled/Disabled baseline used by the test.
 CI reports fixed parity, persistence and restoration failure reasons without
 publishing raw responses or resource names.
 
+
+Work location detection policy runs Global read/list/filter as its `reads` step
+and owned CRUD as its `crud` step, using the dedicated
+`read-work-location-detection-policy.ps1` oracle. CRUD creates
+`EnableWorkLocationDetection=true` with `UserSettingsDefault=Enabled`, updates only
+`EnableWorkLocationDetection` to false, requires `UserSettingsDefault` and every
+other returned field unchanged and makes two pinned comparisons. Its recovery
+kind is `work-location-detection-policy`; grants are not exercised live and no
+user's work-location setting is selected or changed.
+
 AI policy runs Global read/list/filter as its `reads` step and owned CRUD as its
 `crud` step, using the dedicated `read-ai-policy.ps1` oracle for all five
 getters. CRUD creates a described policy with `EnrollFace=Disabled` (Global is
@@ -324,6 +334,7 @@ getters. CRUD creates a described policy with `EnrollFace=Disabled` (Global is
 null in one sparse update, requires every other returned field unchanged and
 makes two pinned comparisons. Its recovery kind is `ai-policy`; grants and user
 enrollment settings are not exercised live.
+
 
 Network roaming runs its `crud` step using modern POST/PUT/DELETE.
 Notification/feeds runs its own `crud` step, whose extra explicit-null

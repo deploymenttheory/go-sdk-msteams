@@ -72,6 +72,7 @@ import (
 	teamsvirtualappointmentspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_virtual_appointments_policy"
 	teamsvoiceapplicationspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_voice_applications_policy"
 	teamsworkloadpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_work_load_policy"
+	teamsworklocationdetectionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_work_location_detection_policy"
 	tenantmigrationconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/tenant_migration_configuration"
 )
 
@@ -137,6 +138,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		teamsvirtualappointmentspolicyacc.RecoveryHandlers(sdk),
 		teamsvoiceapplicationspolicyacc.RecoveryHandlers(sdk),
 		teamsworkloadpolicyacc.RecoveryHandlers(sdk),
+		teamsworklocationdetectionpolicyacc.RecoveryHandlers(sdk),
 	}
 }
 
@@ -231,6 +233,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"voicemail-policy",
 		"voicemail-triage-template",
 		"work-load-policy",
+		"work-location-detection-policy",
 	}
 	if len(handlers) != len(want) {
 		t.Fatalf("recovery registry has %d kinds, want %d", len(handlers), len(want))

@@ -93,6 +93,7 @@ import (
 	teamsvirtualappointmentspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_virtual_appointments_policy"
 	teamsvoiceapplicationspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_voice_applications_policy"
 	teamsworkloadpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_load_policy"
+	teamsworklocationdetectionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_location_detection_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 	tenantidentity "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_identity"
 	tenantmigrationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_migration_configuration"
@@ -110,6 +111,7 @@ type Services struct {
 	TeamsUpgradeConfigurations                 *teamsupgradeconfiguration.Service
 	TeamsUpgradePolicies                       *teamsupgradepolicy.Service
 	TeamsMediaLoggingPolicies                  *teamsmedialoggingpolicy.Service
+	TeamsWorkLocationDetectionPolicies         *teamsworklocationdetectionpolicy.Service
 	TeamsTenantAbuseConfigurations             *teamstenantabuseconfiguration.Service
 	TeamsUpdateManagementPolicies              *teamsupdatemanagementpolicy.Service
 	TeamsTemplatePermissionPolicies            *teamstemplatepermissionpolicy.Service
@@ -236,6 +238,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsUpgradeConfigurations:                 teamsupgradeconfiguration.NewService(scope),
 		TeamsUpgradePolicies:                       teamsupgradepolicy.NewService(backend),
 		TeamsMediaLoggingPolicies:                  teamsmedialoggingpolicy.NewService(backend),
+		TeamsWorkLocationDetectionPolicies:         teamsworklocationdetectionpolicy.NewService(scope),
 		TeamsTenantAbuseConfigurations:             teamstenantabuseconfiguration.NewService(scope),
 		TeamsUpdateManagementPolicies:              teamsupdatemanagementpolicy.NewService(scope),
 		TeamsTemplatePermissionPolicies:            teamstemplatepermissionpolicy.NewService(scope),
