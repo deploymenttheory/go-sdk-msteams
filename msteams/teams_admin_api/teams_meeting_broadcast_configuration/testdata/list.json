@@ -1,0 +1,12 @@
+[
+  {
+    "Identity": "Global",
+    "SchemaVersion": "0.0.1",
+    "SupportURL": "https://fixture.example.invalid/home/contact",
+    "AllowSdnProviderForBroadcastMeeting": false,
+    "ConfigId": "Global",
+    "ConfigMetadata": {
+      "Authority": "Host"
+    }
+  }
+]

@@ -894,6 +894,27 @@
         }
       ]
     },
+    "teams_meeting_broadcast_configuration": {
+      "package": "./tests/integration/lab/teams_meeting_broadcast_configuration",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccMeetingBroadcastConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMeetingBroadcastConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
     "teams_mobility_policy": {
       "package": "./tests/integration/lab/teams_mobility_policy",
       "steps": [

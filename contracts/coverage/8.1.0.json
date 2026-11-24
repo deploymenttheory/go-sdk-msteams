@@ -8995,22 +8995,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/133/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/filter.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitExposeSDNAppendsPinnedQueryForEveryParameterSet"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_configuration/meeting_broadcast_read_test.go",
+              "name": "TestAccMeetingBroadcastConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/133/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitExposeSDNAppendsPinnedQueryForEveryParameterSet"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_configuration/meeting_broadcast_read_test.go",
+              "name": "TestAccMeetingBroadcastConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/filter.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9018,8 +9073,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global default and ExposeSDNConfigurationJsonBlob read/list and SupportURL update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity; enabling AllowSdnProviderForBroadcastMeeting and SDN provider settings (including SdnApiToken), other identities and effective broadcast behavior remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/meeting-broadcast-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -39210,15 +39267,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/605/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesSparsePutAndActualEmptyReceipt"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/errors_test.go",
+              "name": "TestUnitServiceValidationRejectsProviderWithoutNameWithoutReplay"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_configuration/meeting_broadcast_update_test.go",
+              "name": "TestAccMeetingBroadcastConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -39226,8 +39315,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global default and ExposeSDNConfigurationJsonBlob read/list and SupportURL update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity; enabling AllowSdnProviderForBroadcastMeeting and SDN provider settings (including SdnApiToken), other identities and effective broadcast behavior remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/meeting-broadcast-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
