@@ -355,6 +355,13 @@ serialized `global-reads` and `update-restore` steps, with three pinned comparis
 `shifts-app-configuration` restore entry. Permanent response fixtures feed both
 service unit suites; additional grants and effective behavior remain separate.
 
+Guest calling configuration Global reads and AllowPrivateCalling update/restoration
+run as its service's serialized `global-reads` and `update-restore` steps. Its
+dedicated read-only oracle, `read-guest-calling-configuration.ps1`, compares the
+pinned getter before, after and on restoration; CI requires those three comparisons
+and one cleaned `guest-calling-configuration` restore entry. The handler restores
+only the journaled Global Boolean and refuses null or foreign targets.
+
 SIP devices Global reads/update-restoration share the tenant lock. Its bound
 `sip-devices-configuration` handler restores only the original Enabled/Disabled
 BulkSignIn string on Global; CI requires three pinned comparisons and a cleaned

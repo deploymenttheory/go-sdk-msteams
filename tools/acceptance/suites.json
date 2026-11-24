@@ -1529,6 +1529,27 @@
           ]
         }
       ]
+    },
+    "teams_guest_calling_configuration": {
+      "package": "./tests/integration/lab/teams_guest_calling_configuration",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccGuestCallingConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccGuestCallingConfigurationUpdateRestore"
+          ]
+        }
+      ]
     }
   }
 }
