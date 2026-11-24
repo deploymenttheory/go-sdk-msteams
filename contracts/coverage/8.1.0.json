@@ -8590,22 +8590,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/128/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/filter.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_messaging_configuration/guest_messaging_read_test.go",
+              "name": "TestAccGuestMessagingConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/128/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_messaging_configuration/guest_messaging_read_test.go",
+              "name": "TestAccGuestMessagingConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/filter.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8613,8 +8660,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list of all ten getter settings and AllowMemes Boolean plus GiphyRatingType string update/read-back/omission/restoration passed both application auth modes with pinned PowerShell getter parity; the other Set settings, other identities, effective guest messaging behavior and release qualification remain separate.",
+        "evidence": [
+          "docs/implementation/policies/guest-messaging-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -38806,15 +38855,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/601/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesSparsePutAndActualEmptyReceipt"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_messaging_configuration/guest_messaging_update_test.go",
+              "name": "TestAccGuestMessagingConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -38822,8 +38899,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list of all ten getter settings and AllowMemes Boolean plus GiphyRatingType string update/read-back/omission/restoration passed both application auth modes with pinned PowerShell getter parity; the other Set settings, other identities, effective guest messaging behavior and release qualification remain separate.",
+        "evidence": [
+          "docs/implementation/policies/guest-messaging-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
