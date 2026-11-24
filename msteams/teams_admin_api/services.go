@@ -58,6 +58,7 @@ import (
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	teamsfeedbackpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 	teamsfilespolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
+	teamsfirstpartymeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_first_party_meeting_template_configuration"
 	teamsguestcallingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_calling_configuration"
 	teamsguestmessagingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_messaging_configuration"
 	teamsipphonepolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ip_phone_policy"
@@ -195,6 +196,8 @@ type Services struct {
 	PrivateChannelMigration                    *privatechannelmigration.Service
 	Regions                                    *region.Service
 	UnifiedApps                                *unifiedapps.Service
+
+	TeamsFirstPartyMeetingTemplateConfigurations *teamsfirstpartymeetingtemplateconfiguration.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -319,6 +322,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		PrivateChannelMigration:                    privatechannelmigration.NewService(migrationScope),
 		Regions:                                    region.NewService(regionScope),
 		UnifiedApps:                                unifiedapps.NewService(appCatalogScope),
+
+		TeamsFirstPartyMeetingTemplateConfigurations: teamsfirstpartymeetingtemplateconfiguration.NewService(scope),
 	}, nil
 }
 

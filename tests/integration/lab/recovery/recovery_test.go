@@ -41,6 +41,7 @@ import (
 	teamseventspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_events_policy"
 	teamsfeedbackpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_feedback_policy"
 	teamsfilespolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_files_policy"
+	teamsfirstpartymeetingtemplateconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_first_party_meeting_template_configuration"
 	teamsguestcallingconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_guest_calling_configuration"
 	teamsguestmessagingconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_guest_messaging_configuration"
 	teamsipphonepolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_ip_phone_policy"
@@ -108,6 +109,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		teamsipphonepolicyacc.RecoveryHandlers(sdk),
 		teamsguestmessagingconfigurationacc.RecoveryHandlers(sdk),
 		teamsguestcallingconfigurationacc.RecoveryHandlers(sdk),
+		teamsfirstpartymeetingtemplateconfigurationacc.RecoveryHandlers(sdk),
 		teamsmeetingpolicyacc.RecoveryHandlers(sdk),
 		teamsmeetingbroadcastconfigurationacc.RecoveryHandlers(sdk),
 		teamsmeetingtemplatepermissionpolicyacc.RecoveryHandlers(sdk),
@@ -188,6 +190,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"feedback-policy",
 		"files-policy",
 		"ip-phone-policy",
+		"first-party-template-config",
 		"mainline-booking-flow",
 		"mainline-qa-flow",
 		"mainline-spam-template",
