@@ -43,6 +43,7 @@ import (
 	teamsguestcallingconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_guest_calling_configuration"
 	teamsguestmessagingconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_guest_messaging_configuration"
 	teamsipphonepolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_ip_phone_policy"
+	teamsmedialoggingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_media_logging_policy"
 	teamsmeetingbroadcastconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_meeting_broadcast_configuration"
 	teamsmeetingbroadcastpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_meeting_broadcast_policy"
 	teamsmeetingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_meeting_policy"
@@ -258,7 +259,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 	}()
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
-	handlers := mergeHandlers(t, append(handlerSets(sdk), applicationaccesspolicyacc.FixtureRecoveryHandlers(t, sdk, binding))...)
+	handlers := mergeHandlers(t, append(handlerSets(sdk), applicationaccesspolicyacc.FixtureRecoveryHandlers(t, sdk, binding),
+		teamsmedialoggingpolicyacc.FixtureRecoveryHandlers(t, sdk, binding))...)
 	_, err = journal.Recover(ctx, handlers)
 	if err != nil {
 		t.Fatal("owned-policy recovery incomplete; private journal retained")

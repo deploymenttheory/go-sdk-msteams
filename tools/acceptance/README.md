@@ -369,6 +369,15 @@ dedicated read-only oracle, `read-guest-calling-configuration.ps1`, compares the
 pinned getter before, after and on restoration; CI requires those three comparisons
 and one cleaned `guest-calling-configuration` restore entry. The handler restores
 only the journaled Global Boolean and refuses null or foreign targets.
+Media logging policy has no public New/Set/Remove, so its writes grant the built-in
+`Enabled` instance rather than an owned policy. Its `reads` step compares Global and
+Tag:Enabled getters with the dedicated `read-media-logging-policy.ps1` oracle. The
+`user-grant` step reuses the user-assignment proof with one journaled restore entry
+(no owned policy). The `group-grant` step uses the `media-logging-group-grant` proof:
+grant/read-back, removal/absence and cleanup with three pinned comparisons and one
+cleaned entry. Recovery kinds are `media-logging-user-assignment` and
+`media-logging-group-assignment`, bound to the private user/group fixtures.
+GrantToTenant is not run live because it changes every unassigned user.
 
 SIP devices Global reads/update-restoration share the tenant lock. Its bound
 `sip-devices-configuration` handler restores only the original Enabled/Disabled

@@ -1571,6 +1571,35 @@
           ]
         }
       ]
+    },
+    "teams_media_logging_policy": {
+      "package": "./tests/integration/lab/teams_media_logging_policy",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMediaLoggingPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "user-grant",
+          "mutation": true,
+          "proof": "user-assignment",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMediaLoggingPolicyUserGrant"
+          ]
+        },
+        {
+          "id": "group-grant",
+          "mutation": true,
+          "proof": "media-logging-group-grant",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMediaLoggingPolicyGroupGrant"
+          ]
+        }
+      ]
     }
   }
 }

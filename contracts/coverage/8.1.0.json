@@ -8870,22 +8870,85 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/131/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/response_test.go",
+              "name": "TestUnitModernFiltersUseActualCollection"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_logging_policy/media_logging_read_test.go",
+              "name": "TestAccMediaLoggingPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/131/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/models.go",
+              "name": "Policy"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/response_test.go",
+              "name": "TestUnitActualModernReadAndCollection"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/response_test.go",
+              "name": "TestUnitReadFailuresRetainResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/models_test.go",
+              "name": "TestUnitEveryTypedSettingUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_logging_policy/media_logging_read_test.go",
+              "name": "TestAccMediaLoggingPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/models.go",
+            "name": "Policy"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8893,8 +8956,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret Global and Tag:Enabled reads, list, Tag filter and HTTP404 passed with pinned PowerShell getter comparisons. Delegated modes and other clouds remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/media-logging-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -18526,29 +18591,126 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/249/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/models.go",
+              "name": "GroupAssignment"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitGroupGrantReceiptsDistinguishAcceptedFromNoContent"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitActualGrantReceiptsFromAcceptance"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_logging_policy/media_logging_group_grant_test.go",
+              "name": "TestAccMediaLoggingPolicyGroupGrant"
+            }
+          ]
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/249/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitTenantForceAndExplicitZeroPriorityAreLowLevelOnly"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/249/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitActualGrantReceiptsFromAcceptance"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/response_test.go",
+              "name": "TestUnitGrantScopeIdentityAndCancellationRejectBeforeHTTP"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_logging_policy/media_logging_user_grant_test.go",
+              "name": "TestAccMediaLoggingPolicyUserGrant"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/models.go",
+            "name": "GroupAssignment"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -18556,8 +18718,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret user grant/clear of built-in Enabled and owned-group grant/removal passed with read-back, pinned comparisons and journaled restoration. Tenant-wide GrantToTenant is contract-tested only; delegated modes and member propagation remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/media-logging-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
