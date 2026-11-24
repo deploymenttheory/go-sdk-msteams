@@ -57,6 +57,7 @@ import (
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	teamsfeedbackpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 	teamsfilespolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
+	teamsipphonepolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ip_phone_policy"
 	teamsmeetingbroadcastpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_policy"
 	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
 	teamsmeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
@@ -124,6 +125,7 @@ type Services struct {
 	TeamsMeetingPolicies                       *teamsmeetingpolicy.Service
 	TeamsEventsPolicies                        *teamseventspolicy.Service
 	TeamsFilesPolicies                         *teamsfilespolicy.Service
+	TeamsIPPhonePolicies                       *teamsipphonepolicy.Service
 	TeamsEnhancedEncryptionPolicies            *teamsenhancedencryptionpolicy.Service
 	TeamsEducationConfigurations               *teamseducationconfiguration.Service
 	TeamsEducationAssignmentsAppPolicies       *teamseducationassignmentsapppolicy.Service
@@ -241,6 +243,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsMeetingPolicies:                       teamsmeetingpolicy.NewService(scope),
 		TeamsEventsPolicies:                        teamseventspolicy.NewService(scope),
 		TeamsFilesPolicies:                         teamsfilespolicy.NewService(scope),
+		TeamsIPPhonePolicies:                       teamsipphonepolicy.NewService(backend),
 		TeamsEnhancedEncryptionPolicies:            teamsenhancedencryptionpolicy.NewService(backend),
 		TeamsEducationConfigurations:               teamseducationconfiguration.NewService(scope),
 		TeamsEducationAssignmentsAppPolicies:       teamseducationassignmentsapppolicy.NewService(scope),

@@ -731,6 +731,26 @@
         }
       ]
     },
+    "teams_ip_phone_policy": {
+      "package": "./tests/integration/lab/teams_ip_phone_policy",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccIPPhonePolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccIPPhonePolicyCRUD"
+          ]
+        }
+      ]
+    },
     "teams_meeting_policy": {
       "package": "./tests/integration/lab/teams_meeting_policy",
       "steps": [
