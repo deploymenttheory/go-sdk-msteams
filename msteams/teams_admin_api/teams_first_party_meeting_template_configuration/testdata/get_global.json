@@ -1,0 +1,670 @@
+{
+  "TeamsMeetingTemplates": [
+    {
+      "TeamsMeetingOptions": [
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "OrganizerOnly",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "OrganizerOnly",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "InMeeting",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        }
+      ],
+      "Description": "Fixture description",
+      "Name": "Fixture name",
+      "Category": null
+    },
+    {
+      "TeamsMeetingOptions": [
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "OrganizerOnly",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "OrganizerOnly",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        }
+      ],
+      "Description": "Fixture description",
+      "Name": "Fixture name",
+      "Category": null
+    },
+    {
+      "TeamsMeetingOptions": [
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "InvitedUsers",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": true,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "SpecifiedPeople",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "UnRestricted,DisableAudio,DisableVideo",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "true",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "InMeeting",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "true",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        }
+      ],
+      "Description": "Fixture description",
+      "Name": "Fixture name",
+      "Category": null
+    },
+    {
+      "TeamsMeetingOptions": [
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "InvitedUsers",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": true,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "SpecifiedPeople",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "Default,HostMode",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "UnRestricted,DisableAudio,DisableVideo",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "true",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "CommentStream",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "Disabled",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "true",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "true",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        }
+      ],
+      "Description": "Fixture description",
+      "Name": "Fixture name",
+      "Category": null
+    },
+    {
+      "TeamsMeetingOptions": [
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "OrganizerOnly",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        }
+      ],
+      "Description": "Fixture description",
+      "Name": "Fixture name",
+      "Category": null
+    },
+    {
+      "TeamsMeetingOptions": [
+        {
+          "IsLocked": false,
+          "IsHidden": true,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "EveryoneInCompanyExcludingGuests",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "OrganizerOnly",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "InMeeting",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "OrganizerAndCoOrganizersOnly",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "true",
+          "Name": "Fixture name"
+        }
+      ],
+      "Description": "Fixture description",
+      "Name": "Fixture name",
+      "Category": null
+    },
+    {
+      "TeamsMeetingOptions": [
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": "OrganizerAndCoOrganizersOnly",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "OrganizerOnly",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "Default",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "DisableVideo",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": false,
+          "IsHidden": false,
+          "Value": "Enabled",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "true",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": false,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "Disabled",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "single",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "single",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "en-us",
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": null,
+          "Name": "Fixture name"
+        },
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        }
+      ],
+      "Description": "Fixture description",
+      "Name": "Fixture name",
+      "Category": null
+    },
+    {
+      "TeamsMeetingOptions": [
+        {
+          "IsLocked": true,
+          "IsHidden": true,
+          "Value": "false",
+          "Name": "Fixture name"
+        }
+      ],
+      "Description": "Fixture description",
+      "Name": "Fixture name",
+      "Category": null
+    }
+  ],
+  "Description": null,
+  "Key": {
+    "ScopeClass": "Global",
+    "SchemaId": {
+      "XName": {
+        "name": "Fixture name"
+      }
+    },
+    "AuthorityId": {
+      "Class": "Host",
+      "InstanceId": "00000000-0000-4000-8000-12b9377cbe7e",
+      "XmlRoot": {
+        "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AuthorityId"
+      }
+    },
+    "DefaultXml": {
+      "SchemaId": {
+        "XName": {
+          "name": "Fixture name"
+        }
+      },
+      "Data": {
+        "TeamsFirstPartyMeetingTemplateConfiguration": {
+          "@xmlns": "urn:schema:Microsoft.Rtc.Management.Settings.TeamsConfiguration.2016",
+          "TeamsMeetingTemplates": null
+        }
+      },
+      "ConfigObject": null,
+      "Signature": "00000000-0000-4000-8000-12b9377cbe7e",
+      "IsModified": true
+    },
+    "XmlRoot": {
+      "name": "{urn:schema:Microsoft.Rtc.Management.ScopeFramework.2008}AnchoredXmlKey"
+    }
+  },
+  "Identity": "Global",
+  "ConfigMetadata": {
+    "Authority": "Host"
+  },
+  "ConfigId": "Global"
+}

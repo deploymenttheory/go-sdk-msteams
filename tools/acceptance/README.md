@@ -317,6 +317,7 @@ handler accepts only the documented Enabled/Disabled baseline used by the test.
 CI reports fixed parity, persistence and restoration failure reasons without
 publishing raw responses or resource names.
 
+
 Work location detection policy runs Global read/list/filter as its `reads` step
 and owned CRUD as its `crud` step, using the dedicated
 `read-work-location-detection-policy.ps1` oracle. CRUD creates
@@ -325,6 +326,15 @@ and owned CRUD as its `crud` step, using the dedicated
 other returned field unchanged and makes two pinned comparisons. Its recovery
 kind is `work-location-detection-policy`; grants are not exercised live and no
 user's work-location setting is selected or changed.
+
+AI policy runs Global read/list/filter as its `reads` step and owned CRUD as its
+`crud` step, using the dedicated `read-ai-policy.ps1` oracle for all five
+getters. CRUD creates a described policy with `EnrollFace=Disabled` (Global is
+`Enabled`), then sets `EnrollFace=Enabled` and clears `Description` with explicit
+null in one sparse update, requires every other returned field unchanged and
+makes two pinned comparisons. Its recovery kind is `ai-policy`; grants and user
+enrollment settings are not exercised live.
+
 
 Network roaming runs its `crud` step using modern POST/PUT/DELETE.
 Notification/feeds runs its own `crud` step, whose extra explicit-null
@@ -387,6 +397,12 @@ grant/read-back, removal/absence and cleanup with three pinned comparisons and o
 cleaned entry. Recovery kinds are `media-logging-user-assignment` and
 `media-logging-group-assignment`, bound to the private user/group fixtures.
 GrantToTenant is not run live because it changes every unassigned user.
+First-party meeting-template configuration has its own partition. Global reads
+run as the serialized `global-reads` step; `update-restore` sets a non-default
+Global Description, requires the template list unchanged, and restores the
+original (possibly null) Description with three pinned comparisons and one
+cleaned `first-party-template-config` restore entry. Template-list writes are
+not run live.
 
 SIP devices Global reads/update-restoration share the tenant lock. Its bound
 `sip-devices-configuration` handler restores only the original Enabled/Disabled

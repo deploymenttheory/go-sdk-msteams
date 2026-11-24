@@ -27,6 +27,7 @@ import (
 	onlinevoicemailpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/online_voicemail_policy"
 	schedulesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/schedules"
 	teamtemplateacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/team_template"
+	teamsaipolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_ai_policy"
 	teamsapppermissionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_permission_policy"
 	teamsappsetuppolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_setup_policy"
 	teamsaudioconferencingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_audio_conferencing_policy"
@@ -40,6 +41,7 @@ import (
 	teamseventspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_events_policy"
 	teamsfeedbackpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_feedback_policy"
 	teamsfilespolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_files_policy"
+	teamsfirstpartymeetingtemplateconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_first_party_meeting_template_configuration"
 	teamsguestcallingconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_guest_calling_configuration"
 	teamsguestmessagingconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_guest_messaging_configuration"
 	teamsipphonepolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_ip_phone_policy"
@@ -91,6 +93,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		schedulesacc.RecoveryHandlers(sdk),
 		onlinevoicemailpolicyacc.RecoveryHandlers(sdk),
 		teamtemplateacc.RecoveryHandlers(sdk),
+		teamsaipolicyacc.RecoveryHandlers(sdk),
 		teamsapppermissionpolicyacc.RecoveryHandlers(sdk),
 		teamsappsetuppolicyacc.RecoveryHandlers(sdk),
 		teamsaudioconferencingpolicyacc.RecoveryHandlers(sdk),
@@ -107,6 +110,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		teamsipphonepolicyacc.RecoveryHandlers(sdk),
 		teamsguestmessagingconfigurationacc.RecoveryHandlers(sdk),
 		teamsguestcallingconfigurationacc.RecoveryHandlers(sdk),
+		teamsfirstpartymeetingtemplateconfigurationacc.RecoveryHandlers(sdk),
 		teamsmeetingpolicyacc.RecoveryHandlers(sdk),
 		teamsmeetingbroadcastconfigurationacc.RecoveryHandlers(sdk),
 		teamsmeetingtemplatepermissionpolicyacc.RecoveryHandlers(sdk),
@@ -164,6 +168,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 	handlers := mergeHandlers(t, handlerSets(sdk)...)
 	want := []string{
 		"ai-agent",
+		"ai-policy",
 		"app-permission-policy",
 		"app-setup-policy",
 		"application-access-policy",
@@ -187,6 +192,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"feedback-policy",
 		"files-policy",
 		"ip-phone-policy",
+		"first-party-template-config",
 		"mainline-booking-flow",
 		"mainline-qa-flow",
 		"mainline-spam-template",

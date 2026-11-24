@@ -39,6 +39,7 @@ import (
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
+	teamsaipolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ai_policy"
 	teamsapppermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
 	teamsappsetuppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_setup_policy"
 	teamsaudioconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
@@ -57,6 +58,7 @@ import (
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	teamsfeedbackpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 	teamsfilespolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
+	teamsfirstpartymeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_first_party_meeting_template_configuration"
 	teamsguestcallingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_calling_configuration"
 	teamsguestmessagingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_messaging_configuration"
 	teamsipphonepolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ip_phone_policy"
@@ -153,6 +155,7 @@ type Services struct {
 	AudioConferencingCustomPrompts             *audioconferencingprompts.Service
 	TeamsAppSetupPolicies                      *teamsappsetuppolicy.Service
 	TeamsAppPermissionPolicies                 *teamsapppermissionpolicy.Service
+	TeamsAIPolicies                            *teamsaipolicy.Service
 	RecordingMessages                          *recordingmessages.Service
 	PrivacyConfigurations                      *privacyconfiguration.Service
 	PolicyPackages                             *policypackages.Service
@@ -195,6 +198,8 @@ type Services struct {
 	PrivateChannelMigration                    *privatechannelmigration.Service
 	Regions                                    *region.Service
 	UnifiedApps                                *unifiedapps.Service
+
+	TeamsFirstPartyMeetingTemplateConfigurations *teamsfirstpartymeetingtemplateconfiguration.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -277,6 +282,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		AudioConferencingCustomPrompts:             audioconferencingprompts.NewService(scope),
 		TeamsAppSetupPolicies:                      teamsappsetuppolicy.NewService(scope),
 		TeamsAppPermissionPolicies:                 teamsapppermissionpolicy.NewService(scope),
+		TeamsAIPolicies:                            teamsaipolicy.NewService(scope),
 		RecordingMessages:                          recordingmessages.NewService(scope),
 		PrivacyConfigurations:                      privacyconfiguration.NewService(scope),
 		PolicyPackages:                             policypackages.NewService(scope),
@@ -319,6 +325,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		PrivateChannelMigration:                    privatechannelmigration.NewService(migrationScope),
 		Regions:                                    region.NewService(regionScope),
 		UnifiedApps:                                unifiedapps.NewService(appCatalogScope),
+
+		TeamsFirstPartyMeetingTemplateConfigurations: teamsfirstpartymeetingtemplateconfiguration.NewService(scope),
 	}, nil
 }
 
