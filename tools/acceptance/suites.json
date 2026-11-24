@@ -416,6 +416,26 @@
         }
       ]
     },
+    "teams_ai_policy": {
+      "package": "./tests/integration/lab/teams_ai_policy",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccAIPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccAIPolicyCRUD"
+          ]
+        }
+      ]
+    },
     "teams_app_permission_policy": {
       "package": "./tests/integration/lab/teams_app_permission_policy",
       "steps": [

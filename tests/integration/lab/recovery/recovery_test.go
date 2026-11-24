@@ -27,6 +27,7 @@ import (
 	onlinevoicemailpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/online_voicemail_policy"
 	schedulesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/schedules"
 	teamtemplateacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/team_template"
+	teamsaipolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_ai_policy"
 	teamsapppermissionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_permission_policy"
 	teamsappsetuppolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_setup_policy"
 	teamsaudioconferencingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_audio_conferencing_policy"
@@ -90,6 +91,7 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		schedulesacc.RecoveryHandlers(sdk),
 		onlinevoicemailpolicyacc.RecoveryHandlers(sdk),
 		teamtemplateacc.RecoveryHandlers(sdk),
+		teamsaipolicyacc.RecoveryHandlers(sdk),
 		teamsapppermissionpolicyacc.RecoveryHandlers(sdk),
 		teamsappsetuppolicyacc.RecoveryHandlers(sdk),
 		teamsaudioconferencingpolicyacc.RecoveryHandlers(sdk),
@@ -162,6 +164,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 	handlers := mergeHandlers(t, handlerSets(sdk)...)
 	want := []string{
 		"ai-agent",
+		"ai-policy",
 		"app-permission-policy",
 		"app-setup-policy",
 		"application-access-policy",
