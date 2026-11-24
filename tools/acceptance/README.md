@@ -318,6 +318,13 @@ phone assignments, checks list preservation/edit/clear, and sanitizes phone valu
 Its empty-list CRUD test does not qualify the populated scenario. Recovery kinds
 are room-video-policy and shared-calling-policy.
 
+Meeting broadcast policy runs Global read/list/filter as its `reads` step and
+owned CRUD as its `crud` step, using the dedicated `read-meeting-broadcast-policy.ps1`
+oracle. CRUD creates scheduling off with `AlwaysDisabled` recording, sparsely
+updates description and attendee visibility, requires every other returned field
+unchanged and makes two pinned comparisons. Its bound recovery kind is
+`meeting-broadcast-policy`; grants are not exercised live.
+
 Shifts policy CRUD runs as its service's `crud` step and compares all six public getters
 with PowerShell before/after a grace-period update. Its bound recovery kind is
 `shifts-policy`. Shifts app Global reads and Boolean update/restoration run as

@@ -56,6 +56,7 @@ import (
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	teamsfeedbackpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 	teamsfilespolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
+	teamsmeetingbroadcastpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_policy"
 	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
 	teamsmeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
 	teamsmeetingtemplatepermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_permission_policy"
@@ -104,6 +105,7 @@ type Services struct {
 	TeamsTemplatePermissionPolicies            *teamstemplatepermissionpolicy.Service
 	TeamsSipDevicesConfigurations              *teamssipdevicesconfiguration.Service
 	TeamsRoomVideoTeleConferencingPolicies     *teamsroomvideoteleconferencingpolicy.Service
+	TeamsMeetingBroadcastPolicies              *teamsmeetingbroadcastpolicy.Service
 	TeamsSharedCallingRoutingPolicies          *teamssharedcallingroutingpolicy.Service
 	TeamsPersonalAttendantPolicies             *teamspersonalattendantpolicy.Service
 	TeamsRecordingRollOutPolicies              *teamsrecordingrolloutpolicy.Service
@@ -219,6 +221,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsTemplatePermissionPolicies:            teamstemplatepermissionpolicy.NewService(scope),
 		TeamsSipDevicesConfigurations:              teamssipdevicesconfiguration.NewService(scope),
 		TeamsRoomVideoTeleConferencingPolicies:     teamsroomvideoteleconferencingpolicy.NewService(backend),
+		TeamsMeetingBroadcastPolicies:              teamsmeetingbroadcastpolicy.NewService(backend),
 		TeamsSharedCallingRoutingPolicies:          teamssharedcallingroutingpolicy.NewService(scope),
 		TeamsPersonalAttendantPolicies:             teamspersonalattendantpolicy.NewService(scope),
 		TeamsRecordingRollOutPolicies:              teamsrecordingrolloutpolicy.NewService(scope),

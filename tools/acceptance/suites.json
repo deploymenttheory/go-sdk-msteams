@@ -974,6 +974,26 @@
         }
       ]
     },
+    "teams_meeting_broadcast_policy": {
+      "package": "./tests/integration/lab/teams_meeting_broadcast_policy",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMeetingBroadcastPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMeetingBroadcastPolicyCRUD"
+          ]
+        }
+      ]
+    },
     "teams_shared_calling_routing_policy": {
       "package": "./tests/integration/lab/teams_shared_calling_routing_policy",
       "steps": [
