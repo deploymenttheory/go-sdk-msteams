@@ -2181,7 +2181,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -2195,8 +2195,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/6"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -2849,7 +2851,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -2867,8 +2869,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/0"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -2962,7 +2966,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -2980,8 +2984,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/7"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -5850,7 +5856,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -5868,8 +5874,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/9"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -6450,7 +6458,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -6468,8 +6476,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/1"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -7905,7 +7915,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -7927,8 +7937,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/5"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -8455,7 +8467,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -8473,8 +8485,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/2"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -9360,7 +9374,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -9378,8 +9392,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/3"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -10699,7 +10715,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -10721,8 +10737,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/4"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -14400,7 +14418,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -14414,8 +14432,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/8"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -14455,7 +14475,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -14465,8 +14485,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/10"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -14506,7 +14528,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -14516,8 +14538,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-ordinary-reads.json#/commands/11"
+        ]
       },
       "live": {
         "status": "not-run",
