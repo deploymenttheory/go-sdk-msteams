@@ -25,8 +25,8 @@ const operationID = "opaque/operation+#雪"
 
 func path() string { return "/beta/teams/" + teamID + "/operations/" + url.PathEscape(operationID) }
 
-func wire(status int, body string) contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: auth.GraphAudience + path(), Audience: auth.GraphAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
+func wire(status int, body string, sources ...string) contracttest.Exchange {
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: auth.GraphAudience + path(), Audience: auth.GraphAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body), ProtocolSources: sources}}
 }
 
 func body(status string) string { return `{"id":"` + operationID + `","status":"` + status + `"}` }
@@ -50,7 +50,7 @@ func TestUnitGetOperationPreservesNativeStatesAndFutureData(t *testing.T) {
 	for _, status := range []string{"notStarted", "inProgress", "succeeded", "failed", "futureStatus"} {
 		t.Run(status, func(t *testing.T) {
 			raw := `{"id":"` + operationID + `","status":"` + status + `","operationType":"futureType","attemptsCount":0,"createdDateTime":"2026-01-01T00:00:00Z","lastActionDateTime":null,"targetResourceId":"fixture-resource","targetResourceLocation":"https://foreign.invalid/opaque","error":{"code":"FixtureFailure","message":"private-message","future":7},"future":{"enabled":false}}`
-			run(t, contracttest.Case{Name: "get-" + strings.ToLower(status), Mappings: []contracttest.Mapping{{Command: "Get-Operation", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire(200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "get-" + strings.ToLower(status), Mappings: []contracttest.Mapping{{Command: "Get-Operation", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire(200, raw, "https://learn.microsoft.com/en-us/graph/api/resources/teamsasyncoperation?view=graph-rest-beta", "https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				v, r, e := sdk.GraphAPI.TeamOperations.GetByID(ctx, teamID, operationID)
 				if e != nil && isRequestBoundary(ctx) {
 					return contracttest.Observation{Response: r, Err: e}
@@ -81,7 +81,7 @@ func TestUnitGetRejectsMalformedAndUnexpectedResponses(t *testing.T) {
 		{"forbidden", `{"error":{"code":"Denied"}}`, 403, auth.ErrForbidden}, {"unauthenticated", `{"error":{"code":"Unauthorized"}}`, 401, auth.ErrUnauthenticated},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "get-" + tc.name, Steps: []contracttest.Exchange{wire(tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "get-" + tc.name, Steps: []contracttest.Exchange{wire(tc.status, tc.body, "https://learn.microsoft.com/en-us/graph/api/resources/teamsasyncoperation?view=graph-rest-beta", "https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				v, r, e := sdk.GraphAPI.TeamOperations.GetByID(ctx, teamID, operationID)
 				if e != nil && isRequestBoundary(ctx) {
 					return contracttest.Observation{Response: r, Err: e}
@@ -94,7 +94,7 @@ func TestUnitGetRejectsMalformedAndUnexpectedResponses(t *testing.T) {
 
 func TestUnitWaitDenialRetainsResumableHandle(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "wait-denial", Steps: []contracttest.Exchange{wire(403, `{"error":{"code":"UnitRequestDenied"}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "wait-denial", Steps: []contracttest.Exchange{wire(403, `{"error":{"code":"UnitRequestDenied"}}`, "https://learn.microsoft.com/en-us/graph/api/resources/teamsasyncoperation?view=graph-rest-beta", "https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		value, err := sdk.GraphAPI.TeamOperations.WaitByID(ctx, teamID, operationID, client.WaitOptions{MaxPolls: 2, Timeout: time.Minute})
 		if value.Handle.ID != operationID || value.Handle.Location != auth.GraphAudience+path() {
 			t.Error("denied operation read lost resumable identity")
@@ -106,7 +106,7 @@ func TestUnitWaitDenialRetainsResumableHandle(t *testing.T) {
 func TestUnitTransientReadThenDenialHonorsMinimumCadence(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		start := time.Now()
-		run(t, contracttest.Case{Name: "read-retry-denial", Steps: []contracttest.Exchange{wire(503, `{"error":{"code":"UnitBusy"}}`), wire(403, `{"error":{"code":"UnitRequestDenied"}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: "read-retry-denial", Steps: []contracttest.Exchange{wire(503, `{"error":{"code":"UnitBusy"}}`, "https://learn.microsoft.com/en-us/graph/api/resources/teamsasyncoperation?view=graph-rest-beta", "https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0"), wire(403, `{"error":{"code":"UnitRequestDenied"}}`, "https://learn.microsoft.com/en-us/graph/api/resources/teamsasyncoperation?view=graph-rest-beta", "https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			_, response, err := sdk.GraphAPI.TeamOperations.GetByID(ctx, teamID, operationID)
 			return contracttest.Observation{Response: response, Err: err}
 		}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})

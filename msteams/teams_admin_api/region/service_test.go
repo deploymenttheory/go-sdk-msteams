@@ -10,6 +10,8 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	region "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/region"
+	"github.com/go-resty/resty/v2"
 )
 
 const audience = "https://migrationsvc.teams.microsoft.com"
@@ -88,5 +90,44 @@ func TestUnitRegionMalformedAndDeniedReadsRemainTypedFailures(t *testing.T) {
 			v, r, err := sdk.TeamsAdminAPI.Regions.GetForUser(ctx, id)
 			return contracttest.Observation{Value: v, Response: r, Err: err}
 		}, Want: contracttest.Expected{Error: client.ErrRequest}})
+	}
+}
+
+// The field spellings and nullable timestamp follow the pinned 8.1.0
+// GetMultiGeoRegionResponse. Future/null retention is an SDK guarantee.
+func TestUnitRegionSuccessfulUserAndGroupSnapshots(t *testing.T) {
+	t.Parallel()
+	for _, kind := range []string{"users", "groups"} {
+		for _, populated := range []bool{true, false} {
+			body := `{"Region":null,"LastMovementTimeStamp":null,"PreferredDataLocation":null}`
+			if populated {
+				body = `{"Region":"EUR","LastMovementTimeStamp":"2026-11-20T12:00:00Z","PreferredDataLocation":"GBR","future":false}`
+			}
+			step := wire(kind, "opaque/entity", 200, body)
+			step.Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0"}
+			run(t, contracttest.Case{Name: kind + "-success", Mode: auth.Delegated, Mappings: []contracttest.Mapping{{Command: "Get-MultiGeoRegion", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				var v *region.Location
+				var r *resty.Response
+				var err error
+				if kind == "users" {
+					v, r, err = sdk.TeamsAdminAPI.Regions.GetForUser(ctx, "opaque/entity")
+				} else {
+					v, r, err = sdk.TeamsAdminAPI.Regions.GetForGroup(ctx, "opaque/entity")
+				}
+				if err == nil {
+					if v == nil {
+						t.Fatal("native location missing")
+					}
+					if populated {
+						if v.Region == nil || *v.Region != "EUR" || v.LastMovementTimestamp == nil || *v.LastMovementTimestamp != "2026-11-20T12:00:00Z" || v.PreferredDataLocation == nil || *v.PreferredDataLocation != "GBR" || string(v.RawFields["future"]) != "false" {
+							t.Fatal("native fields or future data lost")
+						}
+					} else if v.Region != nil || v.LastMovementTimestamp != nil || v.PreferredDataLocation != nil || string(v.RawFields["Region"]) != "null" || string(v.RawFields["LastMovementTimeStamp"]) != "null" || string(v.RawFields["PreferredDataLocation"]) != "null" {
+						t.Fatal("nullable data fabricated or lost")
+					}
+				}
+				return contracttest.Observation{Response: r, Err: err}
+			}, Want: contracttest.Expected{Status: 200, Body: []byte(body)}})
+		}
 	}
 }

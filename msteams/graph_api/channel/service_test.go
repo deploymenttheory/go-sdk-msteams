@@ -27,7 +27,7 @@ const (
 	channelPath = base + "/channels/" + "19:fixture%2Fpart@thread.tacv2"
 )
 
-func wire(method, address, body string, status int, reply string) contracttest.Exchange {
+func wire(method, address, body string, status int, reply string, sources ...string) contracttest.Exchange {
 	headers := http.Header{"Accept": {"application/json"}}
 	var data json.RawMessage
 	if body != "" {
@@ -35,7 +35,7 @@ func wire(method, address, body string, status int, reply string) contracttest.E
 		headers.Set("Content-Type", "application/json")
 	}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: address, Audience: "https://graph.microsoft.com", Headers: headers, JSON: data},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
+		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply), ProtocolSources: sources}}
 }
 
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
@@ -61,7 +61,7 @@ func TestUnitNativeCRUDContracts(t *testing.T) {
 		invoke func(context.Context, *msteams.Client) contracttest.Observation
 		want   contracttest.Expected
 	}{
-		{name: "create-standard", step: wire("POST", base+"/channels", `{"displayName":"Fixture","membershipType":"standard"}`, 201, ""),
+		{name: "create-standard", step: wire("POST", base+"/channels", `{"displayName":"Fixture","membershipType":"standard"}`, 201, `{"id":"created"}`, "https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta"),
 			invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				v, e := sdk.GraphAPI.Channels.Create(ctx, teamID, channel.CreateRequest{DisplayName: "Fixture"})
 				if e != nil && isRequestBoundary(ctx) {
@@ -69,7 +69,7 @@ func TestUnitNativeCRUDContracts(t *testing.T) {
 				}
 				return contracttest.Observation{Value: v.Channel, Response: v.Response, Err: e}
 			}, want: contracttest.Expected{Status: 201, JSON: json.RawMessage(`{"id":"created"}`)}},
-		{name: "create-private-owner-empty-description", step: wire("POST", base+"/channels", `{"displayName":"Fixture","description":"","membershipType":"private","members":[{"@odata.type":"#microsoft.graph.aadUserConversationMember","user@odata.bind":"https://graph.microsoft.com/beta/users('`+userID+`')","roles":["owner"]}]}`, 201, ""),
+		{name: "create-private-owner-empty-description", step: wire("POST", base+"/channels", `{"displayName":"Fixture","description":"","membershipType":"private","members":[{"@odata.type":"#microsoft.graph.aadUserConversationMember","user@odata.bind":"https://graph.microsoft.com/beta/users('`+userID+`')","roles":["owner"]}]}`, 201, `{"id":"created","membershipType":"private"}`, "https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta"),
 			invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				owner := userID
 				v, e := sdk.GraphAPI.Channels.Create(ctx, teamID, channel.CreateRequest{DisplayName: "Fixture", Description: &empty, MembershipType: channel.Private, OwnerUserID: &owner})
@@ -78,7 +78,7 @@ func TestUnitNativeCRUDContracts(t *testing.T) {
 				}
 				return contracttest.Observation{Value: v.Channel, Response: v.Response, Err: e}
 			}, want: contracttest.Expected{Status: 201, JSON: json.RawMessage(`{"id":"created","membershipType":"private"}`)}},
-		{name: "read-escaped-future-fields", step: wire("GET", channelPath, "", 200, ""),
+		{name: "read-escaped-future-fields", step: wire("GET", channelPath, "", 200, `{"id":"`+channelID+`","membershipType":"futureType","isArchived":false}`, "https://learn.microsoft.com/en-us/graph/api/channel-get?view=graph-rest-beta"),
 			invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				v, r, e := sdk.GraphAPI.Channels.GetByID(ctx, teamID, channelID, channel.ReadOptions{})
 				if e != nil && isRequestBoundary(ctx) {
@@ -87,7 +87,7 @@ func TestUnitNativeCRUDContracts(t *testing.T) {
 				return contracttest.Observation{Value: v, Response: r, Err: e}
 			},
 			want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + channelID + `","membershipType":"futureType","isArchived":false}`)}},
-		{name: "update-empty-description", step: wire("PATCH", channelPath, `{"description":""}`, 204, ""),
+		{name: "update-empty-description", step: wire("PATCH", channelPath, `{"description":""}`, 204, "", "https://learn.microsoft.com/en-us/graph/api/channel-patch?view=graph-rest-beta"),
 			invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				r, e := sdk.GraphAPI.Channels.UpdateByID(ctx, teamID, channelID, channel.UpdateRequest{Description: &empty})
 				if e != nil && isRequestBoundary(ctx) {
@@ -95,7 +95,7 @@ func TestUnitNativeCRUDContracts(t *testing.T) {
 				}
 				return contracttest.Observation{Response: r, Err: e}
 			}, want: contracttest.Expected{Status: 204}},
-		{name: "update-empty-object", step: wire("PATCH", channelPath, `{}`, 204, ""),
+		{name: "update-empty-object", step: wire("PATCH", channelPath, `{}`, 204, "", "https://learn.microsoft.com/en-us/graph/api/channel-patch?view=graph-rest-beta"),
 			invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				r, e := sdk.GraphAPI.Channels.UpdateByID(ctx, teamID, channelID, channel.UpdateRequest{})
 				if e != nil && isRequestBoundary(ctx) {
@@ -103,7 +103,7 @@ func TestUnitNativeCRUDContracts(t *testing.T) {
 				}
 				return contracttest.Observation{Response: r, Err: e}
 			}, want: contracttest.Expected{Status: 204}},
-		{name: "delete-channel-only", step: wire("DELETE", channelPath, "", 204, ""),
+		{name: "delete-channel-only", step: wire("DELETE", channelPath, "", 204, "", "https://learn.microsoft.com/en-us/graph/api/channel-delete?view=graph-rest-beta"),
 			invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				r, e := sdk.GraphAPI.Channels.DeleteByID(ctx, teamID, channelID)
 				if e != nil && isRequestBoundary(ctx) {
@@ -130,7 +130,7 @@ func TestUnitCollectionsAndPaging(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			next := base + "/" + string(tc.collection) + "?$skiptoken=opaque%2Bvalue"
 			run(t, contracttest.Case{Name: "list-" + tc.name, Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "__AllParameterSets"}},
-				Steps: []contracttest.Exchange{wire("GET", base+"/"+string(tc.collection), "", 200, `{"value":[{"id":"first"}],"@odata.nextLink":"`+next+`"}`), wire("GET", next, "", 200, `{"value":[{"id":"second"}]}`)},
+				Steps: []contracttest.Exchange{wire("GET", base+"/"+string(tc.collection), "", 200, `{"value":[{"id":"first"}],"@odata.nextLink":"`+next+`"}`, "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/team-list-allchannels?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/team-list-incomingchannels?view=graph-rest-beta"), wire("GET", next, "", 200, `{"value":[{"id":"second"}]}`, "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/team-list-allchannels?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/team-list-incomingchannels?view=graph-rest-beta")},
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					v, e := sdk.GraphAPI.Channels.ListComplete(ctx, teamID, channel.ListOptions{Collection: tc.collection}, client.PagingOptions{})
 					return contracttest.Observation{Value: v.Items, Response: v.Response, Err: e}
@@ -140,7 +140,7 @@ func TestUnitCollectionsAndPaging(t *testing.T) {
 	}
 	kind := channel.Private
 	address := base + "/channels?" + url.Values{"$filter": {"membershipType eq 'private'"}, "$select": {"id,displayName"}}.Encode()
-	step := wire("GET", address, "", 200, `{"value":[],"@odata.count":0}`)
+	step := wire("GET", address, "", 200, `{"value":[],"@odata.count":0}`, "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/team-list-allchannels?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/team-list-incomingchannels?view=graph-rest-beta")
 	step.Request.Headers.Set("Prefer", "include-unknown-enum-members")
 	run(t, contracttest.Case{Name: "filter-select-prefer", Steps: []contracttest.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.GraphAPI.Channels.List(ctx, teamID, channel.ListOptions{MembershipType: &kind, ReadOptions: channel.ReadOptions{Select: []string{"id", "displayName"}, IncludeUnknownEnumMembers: true}})
@@ -158,7 +158,7 @@ func TestUnitCollectionsAndPaging(t *testing.T) {
 		{"bounded", base + "/channels?$skiptoken=next", client.PagingOptions{MaxPages: 1}, client.ErrPageLimit},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "paging-" + tc.name, Steps: []contracttest.Exchange{wire("GET", base+"/channels", "", 200, `{"value":[{"id":"partial"}],"@odata.nextLink":"`+tc.next+`"}`)},
+			run(t, contracttest.Case{Name: "paging-" + tc.name, Steps: []contracttest.Exchange{wire("GET", base+"/channels", "", 200, `{"value":[{"id":"partial"}],"@odata.nextLink":"`+tc.next+`"}`, "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/team-list-allchannels?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/team-list-incomingchannels?view=graph-rest-beta")},
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					v, e := sdk.GraphAPI.Channels.ListComplete(ctx, teamID, channel.ListOptions{}, tc.limits)
 					return contracttest.Observation{Value: v.Items, Response: v.Response, Err: e}
@@ -324,10 +324,10 @@ func TestUnitLocalValidation(t *testing.T) {
 func TestUnitSharedCreationAndOperation(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		location := "/teams('" + teamID + "')/operations('job')"
-		step := wire("POST", base+"/channels", `{"displayName":"Fixture","membershipType":"shared"}`, 202, "")
+		step := wire("POST", base+"/channels", `{"displayName":"Fixture","membershipType":"shared"}`, 202, "", "https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/resources/teamsasyncoperation?view=graph-rest-beta")
 		step.Reply.Headers.Set("Location", location)
 		started := time.Now()
-		run(t, contracttest.Case{Name: "shared-accepted-beta-operation", Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{step, wire("GET", "https://graph.microsoft.com/beta/"+url.PathEscape("teams('"+teamID+"')")+"/"+url.PathEscape("operations('job')"), "", 200, "")},
+		run(t, contracttest.Case{Name: "shared-accepted-beta-operation", Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{step, wire("GET", "https://graph.microsoft.com/beta/"+url.PathEscape("teams('"+teamID+"')")+"/"+url.PathEscape("operations('job')"), "", 200, `{"id":"job","status":"succeeded"}`, "https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/resources/teamsasyncoperation?view=graph-rest-beta")},
 			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				v, e := sdk.GraphAPI.Channels.Create(ctx, teamID, channel.CreateRequest{DisplayName: "Fixture", MembershipType: channel.Shared})
 				if e != nil && isRequestBoundary(ctx) {
@@ -342,8 +342,8 @@ func TestUnitSharedCreationAndOperation(t *testing.T) {
 				snapshot, e := v.Operation.Wait(ctx, client.WaitOptions{MaxPolls: 1})
 				return contracttest.Observation{Value: map[string]string{"state": string(snapshot.Status.State)}, Response: snapshot.Response, Err: e}
 			}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"state":"succeeded"}`)}})
-		if time.Since(started) >= 31*time.Second {
-			t.Fatal("denied channel submission unexpectedly waited to poll")
+		if time.Since(started) < 31*time.Second {
+			t.Fatal("accepted channel operation polled before the minimum interval")
 		}
 
 	})
@@ -363,8 +363,8 @@ func TestUnitOperationLocationsFailLocally(t *testing.T) {
 
 func TestUnitOwnerResolutionComposition(t *testing.T) {
 	t.Parallel()
-	step := wire("POST", base+"/channels", `{"displayName":"Fixture","membershipType":"private","members":[{"@odata.type":"#microsoft.graph.aadUserConversationMember","user@odata.bind":"https://graph.microsoft.com/beta/users('`+userID+`')","roles":["owner"]}]}`, 201, "")
-	run(t, contracttest.Case{Name: "owner-upn-resolution", Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire("GET", "https://graph.microsoft.com/v1.0/users/owner@fixture.invalid?$select=id", "", 200, ""), step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	step := wire("POST", base+"/channels", `{"displayName":"Fixture","membershipType":"private","members":[{"@odata.type":"#microsoft.graph.aadUserConversationMember","user@odata.bind":"https://graph.microsoft.com/beta/users('`+userID+`')","roles":["owner"]}]}`, 201, `{"id":"created"}`, "https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta")
+	run(t, contracttest.Case{Name: "owner-upn-resolution", Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire("GET", "https://graph.microsoft.com/v1.0/users/owner@fixture.invalid?$select=id", "", 200, `{"id":"`+userID+`"}`, "https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0"), step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, e := sdk.GraphAPI.Channels.CreateWithOwner(ctx, teamID, channel.CreateRequest{DisplayName: "Fixture", MembershipType: channel.Private}, "owner@fixture.invalid", directoryuser.ResolveOptions{})
 		if e != nil && isRequestBoundary(ctx) {
 			return contracttest.Observation{Response: v.Response, Err: e}

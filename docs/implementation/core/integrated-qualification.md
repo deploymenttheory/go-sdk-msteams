@@ -209,8 +209,7 @@ missing selector: its Global read/list needs only the existing application lab
 identity. This PR moves that exact case into a serialized `targeting_policy` CI
 partition. It requires one unambiguous Global row, matching typed fields between
 selected read and filtered list, and one pinned PowerShell comparison. No policy,
-assignment, directory permission or hierarchy is changed. The outcome is currently
-unproven; a denial fails the positive read scenario and is not counted as success.
+assignment, directory permission or hierarchy is changed. [Selective run 45874930078](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45874930078) passed at direct tested revision `563e3b3e5871dfe3a4efe4ca6b0badc412da96e5` (workflow dispatch, not a PR merge revision). Its sanitized report records the successful client-secret Global read/list marker and one pinned comparison. This is limited read-only evidence at that revision; a denial in later runs still fails the positive scenario.
 Mutation effects, additional identities, legacy flighting, cloud and delegated
 qualification remain distinct. This revalidates the old pending disposition rather
 than treating a historical note as a permanent fixture blocker.
@@ -643,3 +642,12 @@ and `live: not-run`. No ledger success state is promoted by this change.
   Contract tests: [TestUnitServiceUpdateByID](../../../msteams/teams_admin_api/team_template/service_test.go), [TestUnitDefinitionSerializationVectors](../../../msteams/teams_admin_api/team_template/definition_test.go).
   Live tests: [TestAccTeamTemplateCRUD](../../../tests/integration/lab/team_template/team_template_test.go).
 
+
+
+## Complete command/set protocol audit
+
+[The 40-command / 52-set audit](contract-completeness.md) records the original runner behavior and the reviewed repairs. Some old wrappers converted a first 2xx into 403 and removed later assertions; those responses now bypass that conversion only when individually annotated with primary protocol provenance. Other denial vectors remain unchanged. Adversarial 2xx bodies exercise real decode and partial-result errors rather than being mislabeled as authorization failures.
+
+Reviewed Graph results now exercise typed/native identities, nullable/future fields, complete paging, enrichment, role filters, mutation stages and later failures. New team compositions cover successful owned/supplied group creation, paired group/team reads, partial updates, archive/unarchive confirmation and out-of-order batch/user-list partial hydration. Pinned-source admin vectors exercise actual successful model/receipt branches, including opaque batch status and distinct hierarchy preparation/import outcomes. Existing template captures now reach response assertions for all input variants. These are offline conformance statements, not captured Graph responses or live tenant qualification.
+
+No global ledger status is promoted. Live Graph lifecycle/membership/shared topology, delegated regional consent, disposable deployment/hierarchy fixtures and the actual private-backend HTTP 401 remain qualification boundaries. Unknown existing-relationship creation/update and policy upsert/CSV semantics remain source limits, not fabricated implementations. Current-head template settings proof is tracked by the single selective run [45883473663](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45883473663) at `22f01edc43d70cdbeffdf5ea850d38b2a2337952`; it is not counted until its terminal report is inspected.

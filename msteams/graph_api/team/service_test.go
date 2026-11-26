@@ -26,13 +26,14 @@ const (
 )
 
 type exchange struct {
-	method, path string
-	query        url.Values
-	json, binary string
-	contentType  string
-	status       int
-	body         string
-	header       http.Header
+	method, path   string
+	query          url.Values
+	json, binary   string
+	contentType    string
+	status         int
+	body           string
+	header         http.Header
+	protocolSource string
 }
 
 type roundTrip func(*http.Request) (*http.Response, error)
@@ -63,16 +64,16 @@ func fixture(t *testing.T, cloud string, mode auth.Mode, steps ...exchange) (*ms
 	if err != nil {
 		t.Fatal(err)
 	}
-	// No successful Graph decoder response has been obtained by TestAcc yet.
-	// Keep malformed/adversarial protocol cases; ordinary 200/201 data cases
-	// assert their actual first request against a controlled authorization denial.
+	// Keep unreviewed ordinary replies at a controlled denial boundary.
+	// Individually reviewed authored vectors declare their primary source;
+	// malformed/adversarial protocol cases retain their intended responses.
 	negative := false
 	for _, word := range []string{"Reject", "Invalid", "Validation", "Malformed", "Failure", "Failures", "Envelope", "Local", "Wrong", "Error"} {
 		negative = negative || strings.Contains(t.Name(), word)
 	}
 	if !negative {
 		for index := range steps {
-			if steps[index].status == 200 || steps[index].status == 201 {
+			if steps[index].protocolSource == "" && (steps[index].status == 200 || steps[index].status == 201) {
 				steps = append([]exchange(nil), steps[:index+1]...)
 				steps[index].status = 403
 				steps[index].body = `{"error":{"code":"UnitRequestDenied"}}`
@@ -221,9 +222,6 @@ func TestUnitReadEnvelopeAndStatusValidation(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			sdk, _, _ := fixture(t, "commercial", auth.Application, exchange{method: "GET", path: "/v1.0/teams/" + teamID, status: tc.status, body: tc.body})
 			value, response, err := sdk.GraphAPI.Teams.GetByID(t.Context(), teamID)
-			if errors.Is(err, auth.ErrForbidden) {
-				return
-			}
 			if value != nil || response == nil || response.StatusCode() != tc.status || !errors.Is(err, tc.want) {
 				t.Fatal("invalid response lost or accepted")
 			}
@@ -316,11 +314,60 @@ func TestUnitListRejectsUnexpectedSuccessfulPageStatus(t *testing.T) {
 		t.Run(http.StatusText(status), func(t *testing.T) {
 			sdk, _, calls := fixture(t, "commercial", auth.Application, exchange{method: "GET", path: "/v1.0/teams", status: status, body: `{"value":[{"id":"` + teamID + `"}]}`})
 			result, err := sdk.GraphAPI.Teams.List(t.Context(), team.ListOptions{})
-			if errors.Is(err, auth.ErrForbidden) {
-				return
-			}
 			if !errors.Is(err, client.ErrPageStatus) || len(result.Items) != 0 || result.Pages != 0 || result.Response == nil || result.Response.StatusCode() != status || *calls != 1 {
 				t.Fatal("unexpected status became a complete native teams page")
+			}
+		})
+	}
+}
+
+// Reviewed authored primitive responses; source URLs are annotations only and
+// do not imply tenant execution or resource qualification.
+func TestUnitNativeCRUDSuccessfulTypedAndRawResponses(t *testing.T) {
+	t.Parallel()
+	body := `{"id":"` + teamID + `","displayName":"Fixture","isArchived":false,"memberSettings":{"allowCreateUpdateChannels":false},"future":null}`
+	for _, method := range []string{"PUT", "GET", "PATCH", "DELETE"} {
+		t.Run(method, func(t *testing.T) {
+			path, request, status, reply, source := "/v1.0/teams/"+teamID, "", 200, body, "https://learn.microsoft.com/en-us/graph/api/team-get?view=graph-rest-1.0"
+			switch method {
+			case "PUT":
+				path = "/v1.0/groups/" + teamID + "/team"
+				request = "{}"
+				status = 201
+				source = "https://learn.microsoft.com/en-us/graph/api/team-put-teams?view=graph-rest-1.0"
+			case "PATCH":
+				request = `{"guestSettings":{"allowDeleteChannels":false},"memberSettings":{}}`
+				status = 204
+				reply = ""
+				source = "https://learn.microsoft.com/en-us/graph/api/team-update?view=graph-rest-1.0"
+			case "DELETE":
+				path = "/v1.0/groups/" + teamID
+				status = 204
+				reply = ""
+				source = "https://learn.microsoft.com/en-us/graph/api/group-delete?view=graph-rest-1.0"
+			}
+			sdk, _, calls := fixture(t, "commercial", auth.Application, exchange{method: method, path: path, json: request, status: status, body: reply, protocolSource: source})
+			var v *team.Team
+			var r *resty.Response
+			var err error
+			switch method {
+			case "PUT":
+				v, r, err = sdk.GraphAPI.Teams.CreateFromGroup(t.Context(), teamID, team.Settings{})
+			case "GET":
+				v, r, err = sdk.GraphAPI.Teams.GetByID(t.Context(), teamID)
+			case "PATCH":
+				disabled := false
+				r, err = sdk.GraphAPI.Teams.UpdateByID(t.Context(), teamID, team.Settings{MemberSettings: &team.MemberSettings{}, GuestSettings: &team.GuestSettings{AllowDeleteChannels: &disabled}})
+			case "DELETE":
+				r, err = sdk.GraphAPI.Teams.DeleteByID(t.Context(), teamID)
+			}
+			if err != nil || r == nil || r.StatusCode() != status || *calls != 1 {
+				t.Fatal("native success contract failed")
+			}
+			if method == "GET" || method == "PUT" {
+				if v == nil || v.ID != teamID || v.IsArchived == nil || *v.IsArchived || v.MemberSettings == nil || v.MemberSettings.AllowCreateUpdateChannels == nil || *v.MemberSettings.AllowCreateUpdateChannels || string(v.RawFields["future"]) != "null" {
+					t.Fatal("typed/null/future native response lost")
+				}
 			}
 		})
 	}

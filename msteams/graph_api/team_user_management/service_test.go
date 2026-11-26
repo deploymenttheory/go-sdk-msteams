@@ -43,7 +43,7 @@ func runCase(t *testing.T, command string, c contracttest.Case) contracttest.Res
 	return result
 }
 
-func wire(method, path, body string, status int, response string) contracttest.Exchange {
+func wire(method, path, body string, status int, response string, sources ...string) contracttest.Exchange {
 	var payload json.RawMessage
 	if body != "" {
 		payload = json.RawMessage(body)
@@ -52,21 +52,21 @@ func wire(method, path, body string, status int, response string) contracttest.E
 	if body != "" {
 		headers.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: headers, JSON: payload}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: headers, JSON: payload}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response), ProtocolSources: sources}}
 }
 
 func read(kind, body string) contracttest.Exchange {
-	return wire("GET", "/v1.0/groups/"+groupID+"/"+kind+"?$select=id", "", 200, body)
+	return wire("GET", "/v1.0/groups/"+groupID+"/"+kind+"?$select=id", "", 200, body, "https://learn.microsoft.com/en-us/graph/api/group-list-members?view=graph-rest-1.0", "https://learn.microsoft.com/en-us/graph/api/group-list-owners?view=graph-rest-1.0")
 }
 func add(kind string, status int) contracttest.Exchange {
 	collection := "directoryObjects"
 	if kind == "owners" {
 		collection = "users"
 	}
-	return wire("POST", "/v1.0/groups/"+groupID+"/"+kind+"/$ref", `{"@odata.id":"`+auth.GraphAudience+`/v1.0/`+collection+`/`+userID+`"}`, status, "")
+	return wire("POST", "/v1.0/groups/"+groupID+"/"+kind+"/$ref", `{"@odata.id":"`+auth.GraphAudience+`/v1.0/`+collection+`/`+userID+`"}`, status, "", "https://learn.microsoft.com/en-us/graph/api/group-post-members?view=graph-rest-1.0", "https://learn.microsoft.com/en-us/graph/api/group-post-owners?view=graph-rest-1.0")
 }
 func remove(kind string, status int) contracttest.Exchange {
-	return wire("DELETE", "/v1.0/groups/"+groupID+"/"+kind+"/"+userID+"/$ref", "", status, "")
+	return wire("DELETE", "/v1.0/groups/"+groupID+"/"+kind+"/"+userID+"/$ref", "", status, "", "https://learn.microsoft.com/en-us/graph/api/group-delete-members?view=graph-rest-1.0", "https://learn.microsoft.com/en-us/graph/api/group-delete-owners?view=graph-rest-1.0")
 }
 
 func changed(result management.ChangeResult, err error) contracttest.Observation {
@@ -119,14 +119,14 @@ func TestUnitAddCompletePreflightAndResolvedIdentity(t *testing.T) {
 	} {
 		steps := []contracttest.Exchange{read("members", `{"value":[],"@odata.nextLink":"`+next+`"}`)}
 		if tc.second {
-			steps = append(steps, wire("GET", "/v1.0/groups/"+groupID+"/members?$skiptoken=next", "", 200, ""))
+			steps = append(steps, wire("GET", "/v1.0/groups/"+groupID+"/members?$skiptoken=next", "", 200, `{"value":[{"id":"`+userID+`"}]}`, "https://learn.microsoft.com/en-us/graph/api/group-list-members?view=graph-rest-1.0"))
 		}
 		runCase(t, "Add-TeamUser", contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return changed(sdk.GraphAPI.TeamUserManagement.Add(ctx, groupID, userID, management.ChangeOptions{Traversal: client.PagingOptions{MaxPages: tc.limit}}))
 		},
 			Want: contracttest.Expected{Status: 200, Error: tc.want, JSON: json.RawMessage(`{"id":"` + userID + `","resolution":"identifier","stages":` + tc.stages + `}`)}})
 	}
-	runCase(t, "Add-TeamUser", contracttest.Case{Name: "resolved-upn", Steps: []contracttest.Exchange{wire("GET", "/v1.0/users/fixture@example.invalid?$select=id", "", 200, ""), read("members", `{"value":[{"id":"`+userID+`"}]}`)},
+	runCase(t, "Add-TeamUser", contracttest.Case{Name: "resolved-upn", Steps: []contracttest.Exchange{wire("GET", "/v1.0/users/fixture@example.invalid?$select=id", "", 200, `{"id":"`+userID+`"}`, "https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0"), read("members", `{"value":[{"id":"`+userID+`"}]}`)},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return changed(sdk.GraphAPI.TeamUserManagement.Add(ctx, groupID, "fixture@example.invalid", management.ChangeOptions{}))
 		},
@@ -166,7 +166,7 @@ func TestUnitRemoveReadsAllOwnersBeforeLastOwnerGuard(t *testing.T) {
 	next := auth.GraphAudience + "/v1.0/groups/" + groupID + "/owners?$skiptoken=next"
 	runCase(t, "Remove-TeamUser", contracttest.Case{Name: "last-owner-after-all-pages", Steps: []contracttest.Exchange{
 		read("owners", `{"value":[{"id":"`+userID+`"}],"@odata.nextLink":"`+next+`"}`),
-		wire("GET", "/v1.0/groups/"+groupID+"/owners?$skiptoken=next", "", 200, ""), remove("owners", 204)},
+		wire("GET", "/v1.0/groups/"+groupID+"/owners?$skiptoken=next", "", 200, `{"value":[{"id":"`+otherID+`"}]}`, "https://learn.microsoft.com/en-us/graph/api/group-list-owners?view=graph-rest-1.0"), remove("owners", 204)},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return changed(sdk.GraphAPI.TeamUserManagement.Remove(ctx, groupID, userID, management.ChangeOptions{Role: management.Owner}))
 		},

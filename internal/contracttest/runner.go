@@ -76,6 +76,11 @@ type Reply struct {
 	Status  int
 	Headers http.Header
 	Body    []byte
+	// ProtocolSources identifies primary or pinned sources for an authored
+	// response vector. It is annotation only: never fetched, used for routing,
+	// or retained as live/captured evidence. Resource tests can admit reviewed
+	// vectors explicitly while preserving their unreviewed request boundaries.
+	ProtocolSources []string
 }
 
 // Exchange describes one ordered HTTP attempt, including discovery or read-back.
@@ -255,6 +260,14 @@ func validCase(c Case) bool {
 		}
 	}
 	for _, step := range c.Steps {
+		for _, source := range step.Reply.ProtocolSources {
+			u, err := url.Parse(source)
+			if err != nil || u.Scheme != "https" || u.User != nil || u.Port() != "" ||
+				(u.Host != "learn.microsoft.com" && u.Host != "www.powershellgallery.com" &&
+					!(u.Host == "github.com" && (strings.HasPrefix(u.Path, "/microsoftgraph/") || strings.HasPrefix(u.Path, "/MicrosoftDocs/")))) {
+				return false
+			}
+		}
 		kinds := 0
 		if step.Request.JSON != nil {
 			kinds++

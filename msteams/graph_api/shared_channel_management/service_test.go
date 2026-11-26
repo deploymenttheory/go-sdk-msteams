@@ -31,8 +31,8 @@ func base() string {
 	return "/beta/teams/" + hostID + "/channels/" + url.PathEscape(channelID) + "/sharedWithTeams"
 }
 func allowed() string { return base() + "/" + targetID + "/allowedMembers" }
-func wire(method, path string, status int, body string) contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
+func wire(method, path string, status int, body string, sources ...string) contracttest.Exchange {
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body), ProtocolSources: sources}}
 }
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
@@ -75,7 +75,11 @@ func TestUnitSharedTeamOptionalSelectorAndUnshare(t *testing.T) {
 			name, path = "single", base()+"/"+targetID
 			options.SharedTeamID = targetID
 		}
-		run(t, contracttest.Case{Name: name, Mappings: mapping("Get-SharedWithTeam"), Steps: []contracttest.Exchange{wire("GET", path, 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		body := `{"value":[{"id":"` + targetID + `","isHostTeam":false}]}`
+		if single {
+			body = `{"id":"` + targetID + `","isHostTeam":false}`
+		}
+		run(t, contracttest.Case{Name: name, Mappings: mapping("Get-SharedWithTeam"), Steps: []contracttest.Exchange{wire("GET", path, 200, body, "https://learn.microsoft.com/en-us/graph/api/sharedwithchannelteaminfo-get?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/sharedwithchannelteaminfo-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			v, err := sdk.GraphAPI.SharedChannelManagement.ListSharedWithTeams(ctx, hostID, channelID, options)
 			if err != nil && isRequestBoundary(ctx) {
 				return contracttest.Observation{Response: v.Response, Err: err}
@@ -83,7 +87,7 @@ func TestUnitSharedTeamOptionalSelectorAndUnshare(t *testing.T) {
 			return contracttest.Observation{Value: map[string]any{"items": len(v.Items), "pages": v.Pages, "target": v.Items[0].ID, "host": v.Items[0].IsHostTeam}, Response: v.Response, Err: err}
 		}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"items":1,"pages":1,"target":"` + targetID + `","host":false}`)}})
 	}
-	run(t, contracttest.Case{Name: "unshare-once", Mappings: mapping("Remove-SharedWithTeam"), Steps: []contracttest.Exchange{wire("DELETE", base()+"/"+targetID, 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "unshare-once", Mappings: mapping("Remove-SharedWithTeam"), Steps: []contracttest.Exchange{wire("DELETE", base()+"/"+targetID, 204, "", "https://learn.microsoft.com/en-us/graph/api/sharedwithchannelteaminfo-delete?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		r, err := sdk.GraphAPI.SharedChannelManagement.UnshareWithTeam(ctx, hostID, channelID, targetID)
 		if err != nil && isRequestBoundary(ctx) {
 			return contracttest.Observation{Response: r, Err: err}
@@ -104,19 +108,19 @@ func TestUnitAssociatedTeamsSelectionAndResolution(t *testing.T) {
 		reads                    []contracttest.Exchange
 	}{
 		{"explicit-id", userID, userRoute, "identifier", auth.Application, nil},
-		{"explicit-upn", "fixture@invalid", userRoute, "direct", auth.Application, []contracttest.Exchange{wire("GET", direct, 200, "")}},
-		{"canonical-mail-fallback", "fixture@invalid", userRoute, "mail", auth.Application, []contracttest.Exchange{wire("GET", direct, 404, `{"error":{"code":"NotFound"}}`), wire("GET", fallback, 200, "")}},
+		{"explicit-upn", "fixture@invalid", userRoute, "direct", auth.Application, []contracttest.Exchange{wire("GET", direct, 200, `{"id":"`+userID+`"}`, "https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-beta")}},
+		{"canonical-mail-fallback", "fixture@invalid", userRoute, "mail", auth.Application, []contracttest.Exchange{wire("GET", direct, 404, `{"error":{"code":"NotFound"}}`, "https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-beta"), wire("GET", fallback, 200, `{"value":[{"id":"`+userID+`"}]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}},
 		{"delegated-me", "", "/beta/me/teamwork/associatedTeams", "", auth.Delegated, nil},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := append(tc.reads, wire("GET", tc.path, 200, ""))
+			steps := append(tc.reads, wire("GET", tc.path, 200, `{"value":[{"id":"`+hostID+`","tenantId":"`+targetID+`","displayName":"Associated fixture","future":false}]}`, "https://learn.microsoft.com/en-us/graph/api/associatedteaminfo-list?view=graph-rest-beta"))
 			run(t, contracttest.Case{Name: tc.name, Mode: tc.mode, Mappings: mapping("Get-AssociatedTeam"), Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				v, err := sdk.GraphAPI.SharedChannelManagement.ListAssociatedTeams(ctx, tc.user, management.AssociatedOptions{})
 				if err != nil && isRequestBoundary(ctx) {
 					return contracttest.Observation{Response: v.Response, Err: err}
 				}
-				return contracttest.Observation{Value: map[string]any{"items": len(v.Items), "complete": v.Complete, "source": v.ResolutionSource}, Response: v.Response, Err: err}
-			}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(fmt.Sprintf(`{"items":1,"complete":true,"source":%q}`, tc.source))}})
+				return contracttest.Observation{Value: map[string]any{"items": len(v.Items), "complete": v.Complete, "source": v.ResolutionSource, "id": v.Items[0].ID, "tenant": v.Items[0].TenantID, "future": v.Items[0].RawFields["future"]}, Response: v.Response, Err: err}
+			}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(fmt.Sprintf(`{"items":1,"complete":true,"source":%q,"id":"`+hostID+`","tenant":"`+targetID+`","future":false}`, tc.source))}})
 		})
 	}
 	run(t, contracttest.Case{Name: "application-me-local", Scope: "local", Mappings: mapping("Get-AssociatedTeam"), Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -130,11 +134,12 @@ func TestUnitAssociatedTeamsSelectionAndResolution(t *testing.T) {
 
 func TestUnitAllowedUsersProjectionFilterAndNullableEnrichment(t *testing.T) {
 	t.Parallel()
+	members := `{"value":[{"id":"owner","userId":"` + hostID + `","email":"old-owner@invalid","roles":["owner"]},{"id":"member","userId":"` + userID + `","email":"old-member@invalid","roles":[]},{"id":"future","userId":null,"email":"future@invalid","roles":["future"],"tenantId":"external"}]}`
 
-	run(t, contracttest.Case{Name: "allowed-users-projection", Mappings: mapping("Get-SharedWithTeamUser"), Steps: []contracttest.Exchange{wire("GET", allowed(), 200, ""), wire("GET", usersPath(hostID, userID), 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "allowed-users-projection", Mappings: mapping("Get-SharedWithTeamUser"), Steps: []contracttest.Exchange{wire("GET", allowed(), 200, members, "https://learn.microsoft.com/en-us/graph/api/sharedwithchannelteaminfo-list-allowedmembers?view=graph-rest-beta"), wire("GET", usersPath(hostID, userID), 200, `{"value":[{"id":"`+hostID+`","userPrincipalName":"owner@invalid"},{"id":"`+userID+`","userPrincipalName":null}]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		return observed(sdk.GraphAPI.SharedChannelManagement.ListAllowedUsers(ctx, hostID, channelID, targetID, management.AllowedUsersOptions{}))
 	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"complete":true,"members":3,"items":[{"id":"owner","uid":"` + hostID + `","user":"owner@invalid","role":"owner","tenant":null},{"id":"member","uid":"` + userID + `","user":null,"role":"member","tenant":null},{"id":"future","uid":null,"user":"future@invalid","role":"member","tenant":"external"}]}`)}})
-	run(t, contracttest.Case{Name: "filter-before-enrichment", Mappings: mapping("Get-SharedWithTeamUser"), Steps: []contracttest.Exchange{wire("GET", allowed(), 200, ""), wire("GET", usersPath(hostID), 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "filter-before-enrichment", Mappings: mapping("Get-SharedWithTeamUser"), Steps: []contracttest.Exchange{wire("GET", allowed(), 200, members, "https://learn.microsoft.com/en-us/graph/api/sharedwithchannelteaminfo-list-allowedmembers?view=graph-rest-beta"), wire("GET", usersPath(hostID), 200, `{"value":[{"id":"`+hostID+`","userPrincipalName":"owner@invalid"}]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, err := sdk.GraphAPI.SharedChannelManagement.ListAllowedUsers(ctx, hostID, channelID, targetID, management.AllowedUsersOptions{Role: "OwNeR"})
 		if err != nil && isRequestBoundary(ctx) {
 			return contracttest.Observation{Response: v.Response, Err: err}
@@ -157,7 +162,7 @@ func TestUnitAllowedUserFailuresRetainNativeState(t *testing.T) {
 		{"malformed", `{"value":null}`, 200, client.ErrDecode},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "enrich-" + tc.name, Mappings: mapping("Get-SharedWithTeamUser"), Steps: []contracttest.Exchange{wire("GET", allowed(), 200, `{"value":[{"id":"opaque","userId":"`+userID+`","email":"fallback@invalid"}]}`), wire("GET", usersPath(userID), tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "enrich-" + tc.name, Mappings: mapping("Get-SharedWithTeamUser"), Steps: []contracttest.Exchange{wire("GET", allowed(), 200, `{"value":[{"id":"opaque","userId":"`+userID+`","email":"fallback@invalid"}]}`, "https://learn.microsoft.com/en-us/graph/api/sharedwithchannelteaminfo-list-allowedmembers?view=graph-rest-beta"), wire("GET", usersPath(userID), tc.status, tc.body, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				return observed(sdk.GraphAPI.SharedChannelManagement.ListAllowedUsers(ctx, hostID, channelID, targetID, management.AllowedUsersOptions{}))
 			}, Want: contracttest.Expected{Status: tc.status, Error: tc.err, JSON: json.RawMessage(`{"complete":false,"members":1,"items":[{"id":"opaque","uid":"` + userID + `","user":"fallback@invalid","role":"member","tenant":null}]}`)}})
 		})

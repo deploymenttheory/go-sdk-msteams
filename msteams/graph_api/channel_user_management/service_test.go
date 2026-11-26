@@ -31,7 +31,7 @@ const (
 func membersPath() string { return channelsPath + "/" + url.PathEscape(channelID) + "/members" }
 func memberPath() string  { return membersPath() + "/" + url.PathEscape(memberID) }
 
-func wire(method, path, body string, status int, response string) contracttest.Exchange {
+func wire(method, path, body string, status int, response string, sources ...string) contracttest.Exchange {
 	headers := http.Header{"Accept": {"application/json"}}
 	var data json.RawMessage
 	if body != "" {
@@ -39,11 +39,11 @@ func wire(method, path, body string, status int, response string) contracttest.E
 		headers.Set("Content-Type", "application/json")
 	}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: headers, JSON: data},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
+		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response), ProtocolSources: sources}}
 }
 
 func channelRead(kind string) contracttest.Exchange {
-	return wire("GET", channelsPath, "", 200, `{"value":[{"id":"`+channelID+`","displayName":"FIXTURE","membershipType":"`+kind+`"}]}`)
+	return wire("GET", channelsPath, "", 200, `{"value":[{"id":"`+channelID+`","displayName":"FIXTURE","membershipType":"`+kind+`"}]}`, "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta")
 }
 
 func nativeMember(roles string) string {
@@ -51,7 +51,7 @@ func nativeMember(roles string) string {
 }
 
 func roster() contracttest.Exchange {
-	return wire("GET", membersPath(), "", 200, `{"value":[`+nativeMember(`[]`)+`]}`)
+	return wire("GET", membersPath(), "", 200, `{"value":[`+nativeMember(`[]`)+`]}`, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta")
 }
 
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
@@ -99,7 +99,7 @@ func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
 			actions := []string{"resolve-channel"}
 			if tc.method == "POST" || tc.kind == "private" {
 				if tc.lookup {
-					steps = append(steps, wire("GET", "/v1.0/users/member@fixture.invalid?$select=id", "", 200, ""))
+					steps = append(steps, wire("GET", "/v1.0/users/member@fixture.invalid?$select=id", "", 200, `{"id":"`+userID+`"}`, "https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0"))
 				}
 				actions = append(actions, "resolve-user")
 			}
@@ -126,7 +126,7 @@ func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
 					actions = append(actions, "delete-member")
 				}
 			}
-			steps = append(steps, wire(tc.method, path, body, status, response))
+			steps = append(steps, wire(tc.method, path, body, status, response, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-post-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-update-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete-members?view=graph-rest-beta"))
 			states := make([]string, len(actions))
 			for i := range states {
 				states[i] = "succeeded"
@@ -170,13 +170,32 @@ func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 						method, body, role = "DELETE", "", ""
 					}
 				}
-				steps = append(steps, wire(method, path, body, status, `{"error":{"code":"FixtureDenied","message":"private"}}`))
+				steps = append(steps, wire(method, path, body, status, `{"error":{"code":"FixtureDenied","message":"private"}}`, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-post-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-update-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete-members?view=graph-rest-beta"))
 				run(t, contracttest.Case{Name: action + "-" + strconv.Itoa(status), Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					options := management.ChangeOptions{Role: role}
+					var value management.ChangeResult
+					var err error
 					if action == "create" || action == "promote" {
-						return changed(sdk.GraphAPI.ChannelUserManagement.Add(ctx, teamID, "fixture", userID, options))
+						value, err = sdk.GraphAPI.ChannelUserManagement.Add(ctx, teamID, "fixture", userID, options)
+					} else {
+						value, err = sdk.GraphAPI.ChannelUserManagement.Remove(ctx, teamID, "fixture", userID, options)
 					}
-					return changed(sdk.GraphAPI.ChannelUserManagement.Remove(ctx, teamID, "fixture", userID, options))
+					membership := memberID
+					if action == "create" {
+						membership = ""
+					}
+					if len(value.Stages) < 3 {
+						t.Fatal("failed mutation omitted prerequisite stages")
+					}
+					if value.ChannelID != channelID || string(value.UserID) != userID || string(value.MembershipID) != membership || value.Stages[len(value.Stages)-1].State != management.Unconfirmed {
+						t.Error("failed mutation lost resolved identity or unconfirmed final stage")
+					}
+					for _, stage := range value.Stages[:len(value.Stages)-1] {
+						if stage.State != management.Succeeded {
+							t.Error("failed mutation rewrote a successful prerequisite")
+						}
+					}
+					return changed(value, err)
 				}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureDenied"}}}})
 			})
 		}
@@ -196,7 +215,7 @@ func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 					limits.MaxPages = 1
 					expected = client.ErrPageLimit
 				}
-				run(t, contracttest.Case{Name: kind + "-" + problem, Steps: []contracttest.Exchange{channelRead(kind), wire("GET", membersPath(), "", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, contracttest.Case{Name: kind + "-" + problem, Steps: []contracttest.Exchange{channelRead(kind), wire("GET", membersPath(), "", 200, body, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-post-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-update-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete-members?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					return changed(sdk.GraphAPI.ChannelUserManagement.Remove(ctx, teamID, "fixture", userID, management.ChangeOptions{Traversal: limits}))
 				}, Want: contracttest.Expected{Status: 200, Error: expected}})
 			})

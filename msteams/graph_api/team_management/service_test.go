@@ -68,9 +68,9 @@ func denied(method, path, body string) contracttest.Exchange {
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: headers, JSON: request}, Reply: contracttest.Reply{Status: http.StatusForbidden, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(`{"error":{"code":"UnitRequestDenied"}}`)}}
 }
 
-// These cases prove the outgoing first request and denial propagation. Successful
-// paired reads, hydration, provisioning, compensation and archive workflows need
-// real Graph TestAcc responses; none are inferred from a fabricated 2xx body.
+// These cases prove the outgoing first request and denial propagation.
+// Reviewed authored success and partial-result paths are in protocol_test.go;
+// live Graph qualification still requires independent tenant evidence.
 func TestUnitManagementFirstRequestDenials(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {

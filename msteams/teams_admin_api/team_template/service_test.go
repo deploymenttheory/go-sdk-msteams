@@ -53,7 +53,7 @@ func serviceDiscoveryFixture(t *testing.T) []byte {
 	return body
 }
 
-func serviceCase(t *testing.T, name, fixtureName, command, set string) contracttest.Case {
+func serviceCase(t *testing.T, name, fixtureName, command, set string, captured ...string) contracttest.Case {
 	t.Helper()
 	fixture := requestFixture(t, fixtureName)
 	requestHeaders := http.Header{}
@@ -65,7 +65,7 @@ func serviceCase(t *testing.T, name, fixtureName, command, set string) contractt
 		body = fixture.Body
 		requestHeaders.Set("Content-Type", "application/json")
 	}
-	return contracttest.Case{Name: name, Family: "team_templates", Scope: "service", Source: "msteams/teams_admin_api/team_template/service_test.go",
+	c := contracttest.Case{Name: name, Family: "team_templates", Scope: "service", Source: "msteams/teams_admin_api/team_template/service_test.go",
 		Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}},
 		Steps: []contracttest.Exchange{
 			{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
@@ -74,6 +74,40 @@ func serviceCase(t *testing.T, name, fixtureName, command, set string) contractt
 			{Request: contracttest.WireRequest{Method: fixture.Method, URL: fixture.URL, Audience: auth.TeamsAdminAudience, Headers: requestHeaders, JSON: body},
 				Reply: contracttest.Reply{Status: http.StatusForbidden, Headers: http.Header{"Content-Type": {"application/json"}}, Body: nil}},
 		}, Want: contracttest.Expected{Status: http.StatusForbidden, Error: auth.ErrForbidden}}
+	if len(captured) == 0 {
+		return c
+	}
+	// Permanent primitive fixtures were captured by the owned template lab.
+	// Their replay proves decoding/result behavior, not a new tenant execution.
+	response, err := os.ReadFile("testdata/" + captured[0])
+	if err != nil {
+		t.Fatal(err)
+	}
+	status := http.StatusOK
+	if fixture.Method == http.MethodPost {
+		status = http.StatusCreated
+	} else if fixture.Method == http.MethodDelete {
+		status = http.StatusNoContent
+	}
+	c.Steps[1].Reply.Status, c.Steps[1].Reply.Body = status, response
+	c.Want = contracttest.Expected{Status: status}
+	if strings.HasSuffix(captured[0], ".json") {
+		c.Source = "msteams/teams_admin_api/team_template/testdata/" + captured[0]
+		expected := json.RawMessage(response)
+		if fixtureName == "template-read-opaque-id" {
+			var envelope struct {
+				Value json.RawMessage `json:"value"`
+			}
+			if json.Unmarshal(response, &envelope) != nil || len(envelope.Value) == 0 {
+				t.Fatal("captured detail envelope unavailable")
+			}
+			expected = envelope.Value
+		}
+		c.Want.JSON = expected
+	} else {
+		c.Want.Body = response
+	}
+	return c
 }
 
 func passCase(t *testing.T, c contracttest.Case) contracttest.Result {
@@ -141,7 +175,7 @@ func TestUnitServiceGetByID(t *testing.T) {
 	for _, set := range []string{"Get", "GetViaIdentity"} {
 		t.Run(set, func(t *testing.T) {
 			t.Parallel()
-			c := serviceCase(t, "get-"+strings.ToLower(set), "template-read-opaque-id", "Get-CsTeamTemplate", set)
+			c := serviceCase(t, "get-"+strings.ToLower(set), "template-read-opaque-id", "Get-CsTeamTemplate", set, "expanded_create_readback.json")
 
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				id := opaqueID
@@ -150,6 +184,9 @@ func TestUnitServiceGetByID(t *testing.T) {
 					id = identity.ODataID
 				}
 				value, response, err := sdk.TeamsAdminAPI.TeamTemplates.GetByID(ctx, id)
+				if err == nil && (value.DisplayName == nil || *value.DisplayName != "fixture-template" || value.Description == nil || *value.Description != "SDK lab non-default initial description" || value.ShortDescription == nil || *value.ShortDescription != "SDK lab non-default initial summary" || len(value.Channels) != 1 || value.Channels[0].DisplayName == nil || *value.Channels[0].DisplayName != "General") {
+					t.Error("captured template detail lost typed flattened fields")
+				}
 				if err == nil && (value.DiscoverySettings == nil || value.DiscoverySettings.ShowInTeamsSearchAndSuggestions) {
 					t.Error("detail projection lost the generated default settings")
 				}
@@ -174,7 +211,7 @@ func TestUnitServiceList(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			c := serviceCase(t, strings.ReplaceAll(tc.name, " ", "-"), "template-list", "Get-CsTeamTemplateList", "DefaultLocaleOverride")
+			c := serviceCase(t, strings.ReplaceAll(tc.name, " ", "-"), "template-list", "Get-CsTeamTemplateList", "DefaultLocaleOverride", "expanded_owned_list.json")
 
 			var options *template.ListOptions
 			if tc.locale != "" {
@@ -186,6 +223,9 @@ func TestUnitServiceList(t *testing.T) {
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				value, response, err := sdk.TeamsAdminAPI.TeamTemplates.List(ctx, options)
+				if err == nil && (len(value.Items) != 16 || value.Items[0].Name == nil || *value.Items[0].Name != "fixture-template" || value.Items[0].ChannelCount == nil || *value.Items[0].ChannelCount != 1) {
+					t.Error("captured template list lost typed summary fields")
+				}
 				if err == nil && (value.IsIncomplete != tc.incomplete || (tc.incomplete && len(value.Diagnostics) != 1)) {
 					t.Error("partial collection diagnostic was lost")
 				}
@@ -205,7 +245,11 @@ func TestUnitServiceCreate(t *testing.T) {
 			t.Parallel()
 			body := set == "New" || set == "NewViaIdentity"
 			definition, expected := inputDefinition(t, body)
-			c := serviceCase(t, "create-"+strings.ToLower(set), "template-create", "New-CsTeamTemplate", set)
+			prefix := "expanded_"
+			if body {
+				prefix = "json_body_"
+			}
+			c := serviceCase(t, "create-"+strings.ToLower(set), "template-create", "New-CsTeamTemplate", set, prefix+"create_201.json")
 			c.Steps[1].Request.JSON = expectedCreateBody(t, expected)
 
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -229,10 +273,22 @@ func TestUnitServiceUpdateByID(t *testing.T) {
 	for _, set := range []string{"Update", "UpdateExpanded", "UpdateViaIdentity", "UpdateViaIdentityExpanded"} {
 		t.Run(set, func(t *testing.T) {
 			t.Parallel()
-			for _, status := range []int{403} {
+			for _, status := range []int{200, 201, 403} {
 				t.Run(strconv.Itoa(status), func(t *testing.T) {
 					definition, expected := inputDefinition(t, set == "Update" || set == "UpdateViaIdentity")
 					c := serviceCase(t, "update-"+strings.ToLower(set)+"-"+strconv.Itoa(status), "template-update", "Update-CsTeamTemplate", set)
+					if status != 403 {
+						prefix := "expanded_"
+						if set == "Update" || set == "UpdateViaIdentity" {
+							prefix = "json_body_"
+						}
+						c = serviceCase(t, c.Name, "template-update", "Update-CsTeamTemplate", set, prefix+"update.json")
+						if status == 201 {
+							// Pinned TeamTemplateUpdate_Call handles200/201 with the same
+							// ICreateTemplateResponse; only200 is a live capture here.
+							c.Steps[1].Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0"}
+						}
+					}
 					c.Steps[1].Request.JSON = expected
 					c.Steps[1].Reply.Status, c.Want.Status = status, status
 
@@ -259,12 +315,17 @@ func TestUnitServiceDeleteByID(t *testing.T) {
 	for _, set := range []string{"Delete", "DeleteViaIdentity"} {
 		t.Run(set, func(t *testing.T) {
 			t.Parallel()
-			for _, status := range []int{403} {
+			for _, status := range []int{200, 204, 403} {
 				t.Run(strconv.Itoa(status), func(t *testing.T) {
 					c := serviceCase(t, "delete-"+strings.ToLower(set)+"-"+strconv.Itoa(status), "template-delete-empty", "Remove-CsTeamTemplate", set)
+					if status == 204 {
+						c = serviceCase(t, c.Name, "template-delete-empty", "Remove-CsTeamTemplate", set, "expanded_delete_204.body")
+					}
 					c.Steps[1].Reply.Status, c.Want.Status = status, status
 					if status == 200 {
-						c.Steps[1].Reply.Body = []byte(`{"futureReceipt":false}`)
+						c.Steps[1].Reply.Body = []byte(`{}`)
+						c.Steps[1].Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0"}
+						c.Want.Error = nil
 					}
 					c.Want.Body = c.Steps[1].Reply.Body
 					c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
