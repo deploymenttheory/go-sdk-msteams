@@ -20,6 +20,7 @@ import (
 	cd "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/configuration_diagnostics"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	feedback "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
+	templatesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/call_templates"
 	diagnosticsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/configuration_diagnostics"
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 )
@@ -161,6 +162,38 @@ func TestUnitAgentRetainsCreatedTagTemplateIdentity(t *testing.T) {
 			t.Fatal("agent lost the created target template identity")
 		}
 		return contracttest.Observation{Err: err}
+	})
+}
+
+// A later service's authorization failure must not prevent independent cleanup
+// of the already created template, or replace the original operation error.
+func TestUnitAgentDenialRetainsErrorAndIndependentlyCleansTemplate(t *testing.T) {
+	t.Parallel()
+	const templateID = "00000000-0000-4000-8000-000000000001"
+	const providerID = "00000000-0000-4000-8000-000000000003"
+	const name = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-tags"
+	template := `{"IvrTagsTemplate":{"Id":"` + templateID + `","Name":"` + name + `","Description":"owned targets","Tags":[{"TagName":"support","TagDetails":{"Id":"tel:+15550001111","Type":"ExternalPstn"}}]}}`
+	path := "/Teams.VoiceApps/ivr-tags-template/" + templateID
+	run(t, "agent-denial-template-recovery", []contracttest.Exchange{
+		exchange(false, "POST", "/Teams.VoiceApps/ivr-tags-template", "New-CsTagsTemplate", `{"Name":"`+name+`","Description":"owned targets","Tags":[{"TagName":"support","TagDetails":{"Id":"tel:+15550001111","Type":"ExternalPstn"}}]}`, 201, template),
+		exchange(false, "POST", "/Teams.VoiceApps/aiagents", "New-CsAgent", `{"Name":"owned-agent","AgentId":"`+providerID+`","AgentType":"MicrosoftCopilotStudio","AgentTargetTagTemplateId":"`+templateID+`"}`, 403, `{"code":"Forbidden"}`),
+		exchange(false, "GET", path, "Get-CsTagsTemplate", "", 200, template),
+		exchange(false, "DELETE", path, "Remove-CsTagsTemplate", "", 204, ""),
+		exchange(false, "GET", path, "Get-CsTagsTemplate", "", 404, `{"code":"100004"}`),
+	}, auth.ErrForbidden, func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		value, _, err := sdk.TeamsAdminAPI.CallTemplates.Tags.Create(ctx, &templates.TagsTemplate{Name: ptr(name), Description: ptr("owned targets"), Tags: []templates.Tag{{TagName: ptr("support"), TagDetails: &templates.TagTarget{ID: ptr("tel:+15550001111"), Type: ptr("ExternalPstn")}}}})
+		if err != nil {
+			return contracttest.Observation{Err: err}
+		}
+		_, response, operationErr := sdk.TeamsAdminAPI.AIAgents.Create(ctx, agents.AgentRequest{Name: "owned-agent", AgentID: providerID, AgentType: agents.AgentTypeMicrosoftCopilotStudio, AgentTargetTagTemplateID: value.ID})
+		if !errors.Is(operationErr, auth.ErrForbidden) || response == nil || response.StatusCode() != 403 {
+			t.Fatal("agent authorization failure lost its operation outcome")
+		}
+		handler := templatesacc.RecoveryHandlers(sdk)["tags-template"]
+		if err := handler.Delete(context.WithoutCancel(ctx), lab.Entry{Fixture: name, ResourceID: *value.ID}); err != nil {
+			t.Fatal("independent target template cleanup did not prove absence")
+		}
+		return contracttest.Observation{Err: operationErr}
 	})
 }
 

@@ -126,23 +126,32 @@
     {
       "name": "Add-TeamsAppInstallation",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "app_installation",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/1",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.Install",
+            "file": "msteams/graph_api/app_installation/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-installation-contract-notes.md",
+          "docs/implementation/ext/evidence/nested-command-types.json",
+          "msteams/graph_api/app_installation/service_test.go"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.",
         "evidence": []
       },
       "exclusion": null
@@ -15649,23 +15658,36 @@
     {
       "name": "Get-TeamsAppInstallation",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "app_installation",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/247",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.List",
+            "file": "msteams/graph_api/app_installation/service.go"
+          },
+          {
+            "name": "Service.GetByID",
+            "file": "msteams/graph_api/app_installation/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-installation-contract-notes.md",
+          "docs/implementation/ext/evidence/nested-command-types.json",
+          "msteams/graph_api/app_installation/service_test.go"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.",
         "evidence": []
       },
       "exclusion": null
@@ -35159,23 +35181,36 @@
     {
       "name": "Remove-TeamsAppInstallation",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "app_installation",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/571",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.DeleteByID",
+            "file": "msteams/graph_api/app_installation/service.go"
+          },
+          {
+            "name": "Service.DeleteByAppID",
+            "file": "msteams/graph_api/app_installation/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-installation-contract-notes.md",
+          "docs/implementation/ext/evidence/nested-command-types.json",
+          "msteams/graph_api/app_installation/service_test.go"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.",
         "evidence": []
       },
       "exclusion": null
@@ -44572,23 +44607,36 @@
     {
       "name": "Update-TeamsAppInstallation",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "app_installation",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/744",
       "parameter_sets": [],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.UpgradeByID",
+            "file": "msteams/graph_api/app_installation/service.go"
+          },
+          {
+            "name": "Service.UpgradeByAppID",
+            "file": "msteams/graph_api/app_installation/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-installation-contract-notes.md",
+          "docs/implementation/ext/evidence/nested-command-types.json",
+          "msteams/graph_api/app_installation/service_test.go"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.",
         "evidence": []
       },
       "exclusion": null

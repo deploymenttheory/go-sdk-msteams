@@ -4,6 +4,7 @@ package graphapi
 import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	appcatalog "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/app_catalog"
+	appinstallation "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/app_installation"
 	associatedteam "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/associated_team"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
 	channelmember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_member"
@@ -41,6 +42,7 @@ type Services struct {
 	TeamUserManagement      *teamusermanagement.Service
 	TeamManagement          *teammanagement.Service
 	AppCatalog              *appcatalog.Service
+	AppInstallations        *appinstallation.Service
 	TeamsArtifacts          *teamsartifact.Service
 }
 
@@ -62,6 +64,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamUserManagement: teamusermanagement.NewService(scope),
 		TeamManagement:     teammanagement.NewService(scope),
 		AppCatalog:         appcatalog.NewService(scope),
+		AppInstallations:   appinstallation.NewService(scope),
 		TeamsArtifacts:     teamsartifact.NewService(scope),
 	}, nil
 }
