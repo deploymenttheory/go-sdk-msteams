@@ -279,7 +279,14 @@ func fixtureJSON(raw []byte, replacements map[string]string) ([]byte, error) {
 
 func WriteResponseFixture(t *testing.T, service, name string, response *resty.Response, replacements map[string]string) {
 	t.Helper()
-	if os.Getenv("MSTEAMS_UPDATE_TESTDATA") != "1" {
+	WriteResponseFixtureWhen(t, os.Getenv("MSTEAMS_UPDATE_TESTDATA") == "1", service, name, response, replacements)
+}
+
+// WriteResponseFixtureWhen applies the existing sanitizer to an explicitly
+// selected capture. It does not alter process-wide fixture writer opt-in.
+func WriteResponseFixtureWhen(t *testing.T, enabled bool, service, name string, response *resty.Response, replacements map[string]string) {
+	t.Helper()
+	if !enabled {
 		return
 	}
 	if response == nil {

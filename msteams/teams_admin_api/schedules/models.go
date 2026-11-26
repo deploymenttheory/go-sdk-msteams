@@ -26,8 +26,9 @@ func decodeFields(raw []byte, value any, fields *map[string]json.RawMessage) err
 	return nil
 }
 
-// DateTimeRange is a fixed-schedule interval. The service reads and returns
-// yyyy-MM-ddTHH:mm:ss without an offset, in the auto attendant's time zone.
+// DateTimeRange is a fixed-schedule interval in the attendant's time zone.
+// Requests use yyyy-MM-ddTHH:mm:ss; pinned module reply projections parse
+// dd/MM/yyyy HH:mm. The SDK retains the raw strings without changing formats.
 type DateTimeRange struct {
 	Start string `json:"Start"`
 	End   string `json:"End"`

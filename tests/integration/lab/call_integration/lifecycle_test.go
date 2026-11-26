@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"testing"
 	"time"
@@ -214,14 +215,20 @@ func TestAccScheduleAutoAttendantComposition(t *testing.T) {
 		return value
 	}
 	holidays, response, err := sdk.TeamsAdminAPI.Schedules.ListHolidays(ctx, *attendant.ID, &sched.HolidayOptions{Years: []string{"2027"}})
-	if err != nil || len(holidays) != 1 || len(holidays[0].DateTimeRanges) != 1 || holidays[0].DateTimeRanges[0].Start != "2027-01-01T00:00:00" || holidays[0].DateTimeRanges[0].End != "2027-01-02T00:00:00" {
+	invalid := err != nil || len(holidays) != 1 || holidays[0] == nil || len(holidays[0].DateTimeRanges) != 1 || !holidayRangeMatches(holidays[0].DateTimeRanges[0])
+	if invalid {
+		logHolidayFailure(t, response, holidays, err)
+	}
+	if response != nil && response.StatusCode() == http.StatusOK {
+		labkit.WriteResponseFixtureWhen(t, os.Getenv("MSTEAMS_LAB_CAPTURE_HOLIDAY_FIXTURE") == "1", "schedules", "integration_holidays", response, replacements)
+	}
+	if invalid {
 		t.Fatal("owned holiday schedule visualization failed")
 	}
 	var holidayFlow aa.CallFlow
 	if json.Unmarshal(holidays[0].CallFlow, &holidayFlow) != nil || holidayFlow.ID == nil || *holidayFlow.ID != holidayID {
 		t.Fatal("holiday visualization lost the attendant call-flow identity")
 	}
-	labkit.WriteResponseFixture(t, "schedules", "integration_holidays", response, replacements)
 	exported, _, err := sdk.TeamsAdminAPI.Schedules.GetHolidaysContent(ctx, *attendant.ID)
 	if err != nil || len(exported) == 0 {
 		t.Fatal("owned holiday schedule export failed")
@@ -229,7 +236,7 @@ func TestAccScheduleAutoAttendantComposition(t *testing.T) {
 	// Serialized holiday bytes may contain private identifiers. Keep them only
 	// in memory; do not pass opaque base64 through the JSON fixture writer.
 	defer func() { clear(exported) }()
-	t.Log("integrated CALL populated holiday read/export: passed")
+	t.Log("integrated CALL populated holiday read and nonempty export receipt: passed")
 	value := check("SDK integration greeting")
 	t.Log("integrated CALL identity read-back: passed")
 	update := value.Settings()

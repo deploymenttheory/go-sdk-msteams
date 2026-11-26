@@ -163,3 +163,27 @@ func TestUnitResponseFixtureRedactsDirectoryAddressAndContact(t *testing.T) {
 		t.Fatal("sanitized fixture is not stable")
 	}
 }
+
+func TestUnitHolidayResponseFixtureScrubsOwnedIdentitiesAndPreservesDateStrings(t *testing.T) {
+	t.Parallel()
+	raw := []byte(`{"HolidayVisualizationRecords":[{"Name":"msteams-sdk-private-fixed","Identity":"Tag:msteams-sdk-private-attendant","ScheduleId":"11111111-1111-4111-8111-111111111111","CallFlow":{"Id":"22222222-2222-4222-8222-222222222222"},"DateTimeRanges":[{"Start":"01/01/2027 00:00","End":"02/01/2027 00:00"}]}]}`)
+	replacements := map[string]string{
+		"msteams-sdk-private-fixed":            "msteams-sdk-fixture-fixed",
+		"msteams-sdk-private-attendant":        "msteams-sdk-fixture-attendant",
+		"11111111-1111-4111-8111-111111111111": "00000000-0000-4000-8000-000000000005",
+		"22222222-2222-4222-8222-222222222222": "00000000-0000-4000-8000-000000000006",
+	}
+	got, err := fixtureJSON(raw, replacements)
+	if err != nil {
+		t.Fatal("holiday fixture sanitization failed")
+	}
+	for original := range replacements {
+		if bytes.Contains(got, []byte(original)) {
+			t.Fatal("holiday fixture retained an owned identity")
+		}
+	}
+	if !bytes.Contains(got, []byte(`"Start": "01/01/2027 00:00"`)) || !bytes.Contains(got, []byte(`"End": "02/01/2027 00:00"`)) {
+		t.Fatal("holiday fixture changed date-format diagnostic evidence")
+	}
+	WriteResponseFixtureWhen(t, false, "../not-allowed", "invalid", nil, nil)
+}
