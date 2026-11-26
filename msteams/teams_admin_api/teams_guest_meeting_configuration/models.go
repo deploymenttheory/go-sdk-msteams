@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policyrp"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
@@ -27,13 +28,37 @@ type Configuration struct {
 }
 
 func (p *Configuration) UnmarshalJSON(raw []byte) error {
-	type snapshot Configuration
-	var next snapshot
-	if json.Unmarshal(raw, &next) != nil || json.Unmarshal(raw, &next.RawFields) != nil || next.RawFields == nil {
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(raw, &fields) != nil || fields == nil {
 		return client.ErrDecode
 	}
-	next.RawJSON = append(json.RawMessage(nil), raw...)
-	*p = Configuration(next)
+	var wire struct {
+		Identity                                   policyrp.ReadString `json:"Identity"`
+		AllowIPVideo                               policyrp.ReadBool   `json:"AllowIPVideo"`
+		ScreenSharingMode                          policyrp.ReadString `json:"ScreenSharingMode"`
+		AllowMultipleScreenshare                   policyrp.ReadBool   `json:"AllowMultipleScreenshare"`
+		AllowMeetNow                               policyrp.ReadBool   `json:"AllowMeetNow"`
+		LiveCaptionsEnabledType                    policyrp.ReadString `json:"LiveCaptionsEnabledType"`
+		AllowTranscription                         policyrp.ReadBool   `json:"AllowTranscription"`
+		AllowParticipantGiveRequestControl         policyrp.ReadBool   `json:"AllowParticipantGiveRequestControl"`
+		AllowExternalParticipantGiveRequestControl policyrp.ReadBool   `json:"AllowExternalParticipantGiveRequestControl"`
+	}
+	if json.Unmarshal(raw, &wire) != nil {
+		return client.ErrDecode
+	}
+	*p = Configuration{
+		Identity:                           wire.Identity.Value,
+		AllowIPVideo:                       wire.AllowIPVideo.Value,
+		ScreenSharingMode:                  wire.ScreenSharingMode.Value,
+		AllowMultipleScreenshare:           wire.AllowMultipleScreenshare.Value,
+		AllowMeetNow:                       wire.AllowMeetNow.Value,
+		LiveCaptionsEnabledType:            wire.LiveCaptionsEnabledType.Value,
+		AllowTranscription:                 wire.AllowTranscription.Value,
+		AllowParticipantGiveRequestControl: wire.AllowParticipantGiveRequestControl.Value,
+		AllowExternalParticipantGiveRequestControl: wire.AllowExternalParticipantGiveRequestControl.Value,
+		RawFields: fields,
+		RawJSON:   append(json.RawMessage(nil), raw...),
+	}
 	return nil
 }
 func (p Configuration) MarshalJSON() ([]byte, error) {

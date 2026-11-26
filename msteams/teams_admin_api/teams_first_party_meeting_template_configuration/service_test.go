@@ -166,7 +166,7 @@ func TestUnitNullableSettingsAndControlsStayBound(t *testing.T) {
 
 func TestUnitMalformedReadDoesNotSendAnUpdate(t *testing.T) {
 	t.Parallel()
-	for _, invalid := range []string{`null`, `[]`, `{"Description":false}`, `{"TeamsMeetingTemplates":{}}`, `{"TeamsMeetingTemplates":[{"Name":null}]}`, `{"TeamsMeetingTemplates":[{"Name":"a","TeamsMeetingOptions":[{"Name":null}]}]}`} {
+	for _, invalid := range []string{`null`, `[]`, `{"Description":{}}`, `{"TeamsMeetingTemplates":{}}`, `{"TeamsMeetingTemplates":[{"Name":null}]}`, `{"TeamsMeetingTemplates":[{"Name":"a","TeamsMeetingOptions":[{"Name":null}]}]}`} {
 		t.Run(fmt.Sprintf("shape-%x", invalid), func(t *testing.T) {
 			run(t, contracttest.Case{Name: "bad-read", Steps: []contracttest.Exchange{compiledWire("GET", selected, set, nil, 200, invalid)}, Want: contracttest.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{Description: policy.Set("x")}})

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "outcome": "passed",
+  "revision": "5ded64044441850b8b9cdf9788e7b42a652558db",
+  "scope": "Selected-Modern request-header correction only. Full affected SDK offline tests plus matching lab package compile; no TestAcc, tenant request or cloud qualification promotion.",
+  "argv": [
+    "go",
+    "test",
+    "-json",
+    "-p",
+    "1",
+    "-count=1",
+    "./msteams/teams_admin_api/cloud_call_data",
+    "./tests/integration/lab/cloud_call_data",
+    "-run",
+    "TestUnit|Example"
+  ],
+  "execution": {
+    "exit_code": 0,
+    "packages": {
+      "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data": "pass",
+      "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/cloud_call_data": "pass"
+    },
+    "passed_tests": [
+      "TestUnitCloudCallDataNilContextAndServiceAreRejected",
+      "TestUnitCloudCallDataGetDenialUsesAcceptanceResponse",
+      "TestUnitCloudCallDataCreateResultSeparatesHTTPReceiptFromSourceSuccess",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser/empty-array",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser/empty-text",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser/object-no-token",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser/null-token",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser/empty-token",
+      "TestUnitCloudCallDataCardinalityRetainsReadAndAcceptedActionOutcomes",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser/numeric-token",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser/wrong-case-token",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser/nonobject-entries",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser/multiple",
+      "TestUnitCloudCallDataListFollowsObservedModernArrayParser",
+      "TestUnitCloudCallDataReturnsTokenWithoutPrintingIt",
+      "TestUnitCloudCallDataCreateDenialUsesAcceptanceResponse",
+      "TestUnitCloudCallDataFailuresStayTyped"
+    ],
+    "fail_or_skip_events": 0,
+    "started_at": "2026-11-27T02:44:56.747245Z",
+    "completed_at": "2026-11-27T02:45:00.204652Z",
+    "lab": "Compiled, no matching tests. No tenant lifecycle was executed."
+  },
+  "raw_go_json": {
+    "path": "/private/tmp/ext90-cloud-5ded640-tests.json",
+    "sha256": "fe0d971e03c659ba8a61a6d369ef28ce9382c980cb911519acf78e48f4945621"
+  },
+  "file_sha256": {
+    "msteams/teams_admin_api/cloud_call_data/service.go": "9ba525c21ffabe40e401888531add4095daa99296c9780e39882c2a48c7d9e37",
+    "msteams/teams_admin_api/cloud_call_data/service_test.go": "ed62ae6287f800fc0198ae172ca28149f1b40a292e0331af3d3c8daa151f985d",
+    "msteams/teams_admin_api/cloud_call_data/models.go": "21c2458cef9783ccba999f369d095d862c3a0162cabac8c22c11c9dfd4e8ef7e",
+    "tests/integration/lab/cloud_call_data/cloud_call_data_test.go": "434e2683c2354f7898758529d18e9b02da74976f59d0fdb08a6f8136a767b4de",
+    "docs/implementation/ext/evidence/cloud-call-data-header-handoff.json": "0095845aacabdad18a01a7dd9fa041cf542abe4f25665402348641e7a50d29ed",
+    "docs/implementation/ext/evidence/cloud-call-data-header-provenance.json": "3eeb0286a409f779c903a3c8018fe8e220abc424b2886eb24881d3b59615ba36",
+    "scripts/discovery/inspect-cloud-invocation-setters.ps1": "4efee8ca844bc557e2c00cc5e28a40db26495259020465de144530831bac2315"
+  },
+  "limits": [
+    "Authored private-header requests replay source-constrained successes and historical response-only denials; no actual corrected tenant request is claimed.",
+    "Public flighting/legacy/overrides remain unresolved, all cloud contract/live states unchanged.",
+    "Historical irreversible-create authorization and serialized lab selection are preserved; no new manual create."
+  ]
+}

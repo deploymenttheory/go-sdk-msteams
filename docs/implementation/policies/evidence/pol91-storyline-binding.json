@@ -1,0 +1,58 @@
+{
+  "hashes": {
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+  },
+  "reproducer_sha256": "3ca91e64abdc37081ea5d713ec169c0f425f72a82298672891a3a940e5e1a9e5",
+  "source_parameter": "System.Nullable`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.Storyline, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+  "enum_members": [
+    {
+      "name": "Disabled",
+      "value": 0
+    },
+    {
+      "name": "Enabled",
+      "value": 1
+    }
+  ],
+  "observations": [
+    {
+      "name": "null",
+      "accepted": true,
+      "serialized": "{\"Storyline\":null}",
+      "error": null
+    },
+    {
+      "name": "disabled-name",
+      "accepted": true,
+      "serialized": "{\"Storyline\":0}",
+      "error": null
+    },
+    {
+      "name": "enabled-name",
+      "accepted": true,
+      "serialized": "{\"Storyline\":1}",
+      "error": null
+    },
+    {
+      "name": "untyped-unknown-number",
+      "accepted": false,
+      "serialized": null,
+      "error": "CannotConvertArgumentNoMessage,Pol91StorylineBinding.Probe`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.Storyline, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]"
+    },
+    {
+      "name": "untyped-unknown-numeric-string",
+      "accepted": false,
+      "serialized": null,
+      "error": "CannotConvertArgumentNoMessage,Pol91StorylineBinding.Probe`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.Storyline, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]"
+    },
+    {
+      "name": "typed-unknown-enum",
+      "accepted": true,
+      "serialized": "{\"Storyline\":37}",
+      "error": null
+    }
+  ],
+  "management_lifecycle_invoked": false,
+  "authentication_or_http": false
+}

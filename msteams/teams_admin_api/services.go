@@ -17,6 +17,8 @@ import (
 	cloudcalldata "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data"
 	compliancerecording "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/compliance_recording"
 	configurationdiagnostics "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/configuration_diagnostics"
+	conversationrole "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/conversation_role"
+	conversationrolessetting "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/conversation_roles_setting"
 	customappsettings "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/custom_app_settings"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
@@ -41,6 +43,7 @@ import (
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
 	teamsaipolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ai_policy"
 	teamsapppermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
+	teamsapppolicyconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_policy_configuration"
 	teamsappsetuppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_setup_policy"
 	teamsaudioconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
 	teamsbyodanddeskspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_byod_and_desks_policy"
@@ -67,6 +70,7 @@ import (
 	teamsmedialoggingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_media_logging_policy"
 	teamsmeetingbroadcastconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_configuration"
 	teamsmeetingbroadcastpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_policy"
+	teamsmeetingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_configuration"
 	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
 	teamsmeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
 	teamsmeetingtemplatepermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_permission_policy"
@@ -96,6 +100,7 @@ import (
 	teamsvoiceapplicationspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_voice_applications_policy"
 	teamsworkloadpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_load_policy"
 	teamsworklocationdetectionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_location_detection_policy"
+	tenantconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_configuration"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 	tenantidentity "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_identity"
 	tenantmigrationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_migration_configuration"
@@ -105,6 +110,10 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	ConversationRoles                *conversationrole.Service
+	ConversationRoleSettings         *conversationrolessetting.Service
+	TenantConfigurations             *tenantconfiguration.Service
+	TeamsAppPolicyConfigurations     *teamsapppolicyconfiguration.Service
 	TeamsVoiceApplicationsPolicies   *teamsvoiceapplicationspolicy.Service
 	TeamsWorkLoadPolicies            *teamsworkloadpolicy.Service
 	TeamsVDIPolicies                 *teamsvdipolicy.Service
@@ -139,6 +148,7 @@ type Services struct {
 	TeamsMessagingPolicies                     *teamsmessagingpolicy.Service
 	TeamsGuestMeetingConfigurations            *teamsguestmeetingconfiguration.Service
 	TeamsMeetingPolicies                       *teamsmeetingpolicy.Service
+	TeamsMeetingConfigurations                 *teamsmeetingconfiguration.Service
 	TeamsEventsPolicies                        *teamseventspolicy.Service
 	TeamsFilesPolicies                         *teamsfilespolicy.Service
 	TeamsIPPhonePolicies                       *teamsipphonepolicy.Service
@@ -234,6 +244,10 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		ConversationRoles:                conversationrole.NewService(scope),
+		ConversationRoleSettings:         conversationrolessetting.NewService(scope),
+		TenantConfigurations:             tenantconfiguration.NewService(scope),
+		TeamsAppPolicyConfigurations:     teamsapppolicyconfiguration.NewService(scope),
 		TeamsVoiceApplicationsPolicies:   teamsvoiceapplicationspolicy.NewService(scope),
 		TeamsWorkLoadPolicies:            teamsworkloadpolicy.NewService(backend),
 		TeamsVDIPolicies:                 teamsvdipolicy.NewService(scope),
@@ -268,6 +282,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsMessagingPolicies:                     teamsmessagingpolicy.NewService(scope),
 		TeamsGuestMeetingConfigurations:            teamsguestmeetingconfiguration.NewService(scope),
 		TeamsMeetingPolicies:                       teamsmeetingpolicy.NewService(scope),
+		TeamsMeetingConfigurations:                 teamsmeetingconfiguration.NewService(scope),
 		TeamsEventsPolicies:                        teamseventspolicy.NewService(scope),
 		TeamsFilesPolicies:                         teamsfilespolicy.NewService(scope),
 		TeamsIPPhonePolicies:                       teamsipphonepolicy.NewService(backend),

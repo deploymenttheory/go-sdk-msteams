@@ -43,6 +43,9 @@ func (h agentCleanup) Resolve(ctx context.Context, entry lab.Entry) (string, err
 	if err != nil {
 		return "", err
 	}
+	if listed == nil {
+		return "", lab.ErrUnresolved
+	}
 	id := ""
 	for _, value := range listed.Agents {
 		if !ownedAgent(value, entry.Fixture) {

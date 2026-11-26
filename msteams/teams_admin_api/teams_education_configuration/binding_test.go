@@ -32,7 +32,9 @@ type bindingRequest struct {
 	}
 }
 
-func TestUnitEducationConfigurationRequestdBindingValues(t *testing.T) {
+// HTTP branches preserve controlled 400 request probes; local binding failures
+// remain zero-request checks. No HTTP success or model decoding is asserted here.
+func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T) {
 	t.Parallel()
 
 	fixture := struct{ Cases []bindingRequest }{
@@ -567,7 +569,6 @@ func TestUnitEducationConfigurationRequestdBindingValues(t *testing.T) {
 				reply = `{"Identity":"Global"}`
 			}
 			c.Steps = []contracttest.Exchange{compiledWire("GET", path, getCommand, nil, 400, reply)}
-			c.Want.JSON = json.RawMessage(reply)
 		}
 		if len(c.Steps) != 0 {
 			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}

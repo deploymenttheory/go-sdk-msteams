@@ -39,3 +39,12 @@ context/cancellation, backend isolation, injected authorization failures and
 malformed replies. The example compiles without connecting to a tenant.
 
 See [qualification details](../../../docs/implementation/policies/meeting-template-policies-lab-acceptance.md).
+
+Received JSON uses the own pinned DTO scalar profile: numeric/Boolean string
+values and nullable Boolean conversions are accepted where the model does,
+while explicit null required names and invalid objects still fail. Numeric
+string projections preserve their original numeric token text. Getter-only
+list arrays accumulate duplicate/case aliases, null aliases retain previous
+items, and whole primitive assignments are ignored. These read rules do not
+relax typed write construction or the strict canonical PowerShell lab oracle.
+Raw snapshots retain the received tokens independently of typed projection.

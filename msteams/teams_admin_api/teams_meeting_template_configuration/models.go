@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policyrp"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
@@ -26,11 +27,13 @@ func (v *Configuration) UnmarshalJSON(raw []byte) error {
 	fields, err := object(raw, func(key string, body json.RawMessage) error {
 		switch strings.ToLower(key) {
 		case "identity":
-			return json.Unmarshal(body, &value.Identity)
+			return readString(body, &value.Identity)
 		case "description":
-			return json.Unmarshal(body, &value.Description)
+			return readString(body, &value.Description)
 		case "teamsmeetingtemplates":
-			if !bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
+			if token := bytes.TrimSpace(body); len(token) > 0 && token[0] == '{' {
+				return client.ErrDecode
+			} else if len(token) > 0 && token[0] == '[' {
 				var items []*Template
 				if json.Unmarshal(body, &items) != nil {
 					return client.ErrDecode
@@ -75,18 +78,20 @@ func (v *Template) UnmarshalJSON(raw []byte) error {
 	fields, err := object(raw, func(key string, body json.RawMessage) error {
 		switch strings.ToLower(key) {
 		case "identity":
-			return json.Unmarshal(body, &value.Identity)
+			return readString(body, &value.Identity)
 		case "description":
-			return json.Unmarshal(body, &value.Description)
+			return readString(body, &value.Description)
 		case "name":
-			if json.Unmarshal(body, &value.Name) != nil || value.Name == nil {
+			if readString(body, &value.Name) != nil || value.Name == nil {
 				return client.ErrDecode
 			}
 			return nil
 		case "category":
-			return json.Unmarshal(body, &value.Category)
+			return readString(body, &value.Category)
 		case "teamsmeetingoptions":
-			if !bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
+			if token := bytes.TrimSpace(body); len(token) > 0 && token[0] == '{' {
+				return client.ErrDecode
+			} else if len(token) > 0 && token[0] == '[' {
 				var items []*Option
 				if json.Unmarshal(body, &items) != nil {
 					return client.ErrDecode
@@ -131,15 +136,15 @@ func (v *Option) UnmarshalJSON(raw []byte) error {
 	fields, err := object(raw, func(key string, body json.RawMessage) error {
 		switch strings.ToLower(key) {
 		case "identity":
-			return json.Unmarshal(body, &value.Identity)
+			return readString(body, &value.Identity)
 		case "islocked":
-			return json.Unmarshal(body, &value.IsLocked)
+			return readBool(body, &value.IsLocked)
 		case "ishidden":
-			return json.Unmarshal(body, &value.IsHidden)
+			return readBool(body, &value.IsHidden)
 		case "value":
-			return json.Unmarshal(body, &value.Value)
+			return readString(body, &value.Value)
 		case "name":
-			if json.Unmarshal(body, &value.Name) != nil || value.Name == nil {
+			if readString(body, &value.Name) != nil || value.Name == nil {
 				return client.ErrDecode
 			}
 			return nil
@@ -187,4 +192,23 @@ func object(raw []byte, visit func(string, json.RawMessage) error) (map[string]j
 		}
 	}
 	return fields, nil
+}
+
+// These explicit read adapters mirror the own pinned DTO setters. Typed write
+// construction remains separate from received JSON coercion.
+func readString(raw []byte, dst **string) error {
+	var value policyrp.ReadString
+	if err := json.Unmarshal(raw, &value); err != nil {
+		return err
+	}
+	*dst = value.Value
+	return nil
+}
+func readBool(raw []byte, dst **bool) error {
+	var value policyrp.ReadBool
+	if err := json.Unmarshal(raw, &value); err != nil {
+		return err
+	}
+	*dst = value.Value
+	return nil
 }

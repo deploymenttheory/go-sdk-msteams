@@ -1,0 +1,6 @@
+{
+  "body": "{\n  \"Identity\": \"Global\",\n  \"ConversationRoles\": [\n    {\n      \"Identity\": \"Global/00000000-0000-4000-8000-000000000001\",\n      \"Permissions\": {\n        \"Identity\": null\n      },\n      \"Id\": \"00000000-0000-4000-8000-000000000001\",\n      \"Name\": \"Controlled role\",\n      \"IsAssignable\": null,\n      \"CreatedAt\": \"2027-01-01T00:00:00\",\n      \"UpdatedAt\": \"2027-01-02T00:00:00Z\"\n    }\n  ]\n}",
+  "body_sha256": "8aaebfa88ab46ea06236c3403fb8c250eb7a8ce786c896130930788f9c32792b",
+  "binding_ref": "docs/implementation/ext/evidence/conversation-actual-binding.json#/scenarios/13",
+  "observation": "Actual compiled list binding/request construction; returned HTTP data is synthetic, not tenant evidence."
+}

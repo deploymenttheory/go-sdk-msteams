@@ -37,8 +37,9 @@ Identity to Global and exposes no Force; Filter is applied locally to Identity a
 `Tag:`Identity with wildcard matching. The compiled PolicyRP PATCH provider is
 not used.
 
-SdnApiToken is treated as a write-only credential. `UpdateRequest` and
-`Configuration` never format it, the transport does not log bodies, the oracle
+SdnApiToken is a provider credential that may also appear in exposed sensitive
+reads. `UpdateRequest` and `Configuration` never format it, the transport does
+not log bodies, the oracle
 reports only whether the exposed token is non-empty, the recovery journal never
 stores SDN values, and fixtures redact token-named fields. The lab has no SDN
 provider configured; the exposed token was empty in every read.

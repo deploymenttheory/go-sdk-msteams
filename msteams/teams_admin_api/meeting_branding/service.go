@@ -47,9 +47,13 @@ func (s *Service) List(ctx context.Context) ([]*Policy, *resty.Response, error) 
 }
 
 // ListFiltered applies the pinned local Identity/Tag wildcard selection.
+// An explicit empty Filter is invalid; use List to omit the filter.
 func (s *Service) ListFiltered(ctx context.Context, pattern string) ([]*Policy, *resty.Response, error) {
 	if err := s.ready(ctx); err != nil {
 		return nil, nil, err
+	}
+	if pattern == "" {
+		return nil, nil, ErrInput
 	}
 	return s.resource.ListFiltered(ctx, pattern, "Get-CsTeamsMeetingBrandingPolicy")
 }

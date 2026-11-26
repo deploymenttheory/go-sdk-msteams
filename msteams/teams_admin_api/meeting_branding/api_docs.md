@@ -69,3 +69,5 @@ public MicrosoftTeams 8.1.0. Actual replies supply the CRUD unit workflow,
 including empty mutation replies, complete snapshots and typed deleted404 errors.
 CI requires both pinned comparisons, every CRUD assertion and a cleaned journal.
 Assets, Premium user effects and assignments are separate acceptance scenarios.
+
+An explicitly empty `ListFiltered` pattern is rejected before credentials or HTTP, matching the effective pinned Filter binder. Use `List` for an omitted filter; a whitespace pattern remains a bound wildcard expression.

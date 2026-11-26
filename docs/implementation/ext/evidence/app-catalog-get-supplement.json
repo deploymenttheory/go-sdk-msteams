@@ -1,0 +1,668 @@
+{
+  "scope": "Bounded supplemental app-catalog source and pure-data observations. No management lifecycle/auth/network/Go. Filter URI operations are explicitly source-region framework replay.",
+  "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+  "source_type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities",
+  "methods": [
+    {
+      "exceptions": [],
+      "il_sha256": "550a2b7a83e4a5974f935dd388cdeb8245d146aba5fe8362544413e8c38c8d49",
+      "locals": [
+        "System.Net.Http.HttpResponseMessage (0)",
+        "System.String (1)",
+        "T (2)",
+        "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiErrorRoot (3)",
+        "System.String (4)",
+        "System.String (5)"
+      ],
+      "method": "T Get[T](System.Net.Http.HttpClient, System.Uri, System.Collections.Generic.Dictionary`2[System.String,System.String])",
+      "instructions": [
+        {
+          "operand": null,
+          "offset": 0,
+          "op": "ldarg.0"
+        },
+        {
+          "operand": "System.Net.Http.HttpMethod.System.Net.Http.HttpMethod get_Get()",
+          "offset": 1,
+          "op": "call"
+        },
+        {
+          "operand": null,
+          "offset": 6,
+          "op": "ldarg.1"
+        },
+        {
+          "operand": null,
+          "offset": 7,
+          "op": "ldarg.2"
+        },
+        {
+          "operand": null,
+          "offset": 8,
+          "op": "ldnull"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.System.Net.Http.HttpResponseMessage SendRequest(System.Net.Http.HttpClient, System.Net.Http.HttpMethod, System.Uri, System.Collections.Generic.Dictionary`2[System.String,System.String], System.Net.Http.HttpContent)",
+          "offset": 9,
+          "op": "call"
+        },
+        {
+          "operand": null,
+          "offset": 14,
+          "op": "stloc.0"
+        },
+        {
+          "operand": null,
+          "offset": 15,
+          "op": "ldloc.0"
+        },
+        {
+          "operand": "System.Net.Http.HttpResponseMessage.Boolean get_IsSuccessStatusCode()",
+          "offset": 16,
+          "op": "callvirt"
+        },
+        {
+          "operand": 65,
+          "offset": 21,
+          "op": "brfalse.s"
+        },
+        {
+          "operand": null,
+          "offset": 23,
+          "op": "ldloc.0"
+        },
+        {
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.Http.HttpContent get_Content()",
+          "offset": 24,
+          "op": "callvirt"
+        },
+        {
+          "operand": "System.Net.Http.HttpContent.System.Threading.Tasks.Task`1[System.String] ReadAsStringAsync()",
+          "offset": 29,
+          "op": "callvirt"
+        },
+        {
+          "operand": "System.Threading.Tasks.Task[string].System.String get_Result()",
+          "offset": 34,
+          "op": "callvirt"
+        },
+        {
+          "operand": null,
+          "offset": 39,
+          "op": "stloc.1"
+        },
+        {
+          "operand": null,
+          "offset": 40,
+          "op": "ldloc.1"
+        },
+        {
+          "operand": "string.Boolean IsNullOrWhiteSpace(System.String)",
+          "offset": 41,
+          "op": "call"
+        },
+        {
+          "operand": 55,
+          "offset": 46,
+          "op": "brtrue.s"
+        },
+        {
+          "operand": null,
+          "offset": 48,
+          "op": "ldloc.1"
+        },
+        {
+          "operand": "Newtonsoft.Json.JsonConvert.T DeserializeObject[T](System.String)",
+          "offset": 49,
+          "op": "call"
+        },
+        {
+          "operand": null,
+          "offset": 54,
+          "op": "ret"
+        },
+        {
+          "operand": 2,
+          "offset": 55,
+          "op": "ldloca.s"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.T",
+          "offset": 57,
+          "op": "initobj"
+        },
+        {
+          "operand": null,
+          "offset": 63,
+          "op": "ldloc.2"
+        },
+        {
+          "operand": null,
+          "offset": 64,
+          "op": "ret"
+        },
+        {
+          "operand": null,
+          "offset": 65,
+          "op": "ldloc.0"
+        },
+        {
+          "operand": 3,
+          "offset": 66,
+          "op": "ldloca.s"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.DeserializeMSGraphApiErrorRoot.Boolean TryDeserializeMSGraphApiErrorRoot(System.Net.Http.HttpResponseMessage, Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiErrorRoot ByRef)",
+          "offset": 68,
+          "op": "call"
+        },
+        {
+          "operand": 118,
+          "offset": 73,
+          "op": "brfalse.s"
+        },
+        {
+          "operand": null,
+          "offset": 75,
+          "op": "ldloc.3"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.DeserializeMSGraphApiErrorRoot.System.String GetResponseDisplayString(Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiErrorRoot)",
+          "offset": 76,
+          "op": "call"
+        },
+        {
+          "operand": 4,
+          "offset": 81,
+          "op": "stloc.s"
+        },
+        {
+          "operand": null,
+          "offset": 83,
+          "op": "ldloc.0"
+        },
+        {
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.HttpStatusCode get_StatusCode()",
+          "offset": 84,
+          "op": "callvirt"
+        },
+        {
+          "operand": "Error occurred while executing ",
+          "offset": 89,
+          "op": "ldstr"
+        },
+        {
+          "operand": 4,
+          "offset": 94,
+          "op": "ldloc.s"
+        },
+        {
+          "operand": "string.System.String Concat(System.String, System.String)",
+          "offset": 96,
+          "op": "call"
+        },
+        {
+          "operand": null,
+          "offset": 101,
+          "op": "ldloc.3"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiErrorRoot.Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiError get_Error()",
+          "offset": 102,
+          "op": "callvirt"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiError.System.String get_Code()",
+          "offset": 107,
+          "op": "callvirt"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.ApiException.Void .ctor(Int32, System.String, System.String)",
+          "offset": 112,
+          "op": "newobj"
+        },
+        {
+          "operand": null,
+          "offset": 117,
+          "op": "throw"
+        },
+        {
+          "operand": null,
+          "offset": 118,
+          "op": "ldloc.0"
+        },
+        {
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.Http.HttpContent get_Content()",
+          "offset": 119,
+          "op": "callvirt"
+        },
+        {
+          "operand": "System.Net.Http.HttpContent.System.Threading.Tasks.Task`1[System.String] ReadAsStringAsync()",
+          "offset": 124,
+          "op": "callvirt"
+        },
+        {
+          "operand": "System.Threading.Tasks.Task[string].System.String get_Result()",
+          "offset": 129,
+          "op": "callvirt"
+        },
+        {
+          "operand": 5,
+          "offset": 134,
+          "op": "stloc.s"
+        },
+        {
+          "operand": null,
+          "offset": 136,
+          "op": "ldloc.0"
+        },
+        {
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.HttpStatusCode get_StatusCode()",
+          "offset": 137,
+          "op": "callvirt"
+        },
+        {
+          "operand": 5,
+          "offset": 142,
+          "op": "ldloc.s"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.ApiException.Void .ctor(Int32, System.String)",
+          "offset": 144,
+          "op": "newobj"
+        },
+        {
+          "operand": null,
+          "offset": 149,
+          "op": "throw"
+        }
+      ]
+    },
+    {
+      "exceptions": [],
+      "il_sha256": "98739ec9ebb6945c921b84ea15bb16ca89ddcd20014850f093addc2a243a7b6a",
+      "locals": [
+        "System.Collections.Generic.List`1[T] (0)",
+        "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse`1[T] (1)"
+      ],
+      "method": "System.Collections.Generic.List`1[T] GetAll[T](System.Net.Http.HttpClient, System.Uri)",
+      "instructions": [
+        {
+          "operand": "System.Collections.Generic.List[T].Void .ctor()",
+          "offset": 0,
+          "op": "newobj"
+        },
+        {
+          "operand": null,
+          "offset": 5,
+          "op": "stloc.0"
+        },
+        {
+          "operand": null,
+          "offset": 6,
+          "op": "ldarg.0"
+        },
+        {
+          "operand": null,
+          "offset": 7,
+          "op": "ldarg.1"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse`1[T] Get[PageResponse`1](System.Net.Http.HttpClient, System.Uri)",
+          "offset": 8,
+          "op": "call"
+        },
+        {
+          "operand": null,
+          "offset": 13,
+          "op": "stloc.1"
+        },
+        {
+          "operand": null,
+          "offset": 14,
+          "op": "ldloc.0"
+        },
+        {
+          "operand": null,
+          "offset": 15,
+          "op": "ldloc.1"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse[T].System.Collections.Generic.IList`1[T] get_Objects()",
+          "offset": 16,
+          "op": "callvirt"
+        },
+        {
+          "operand": "System.Collections.Generic.List[T].Void AddRange(System.Collections.Generic.IEnumerable`1[T])",
+          "offset": 21,
+          "op": "callvirt"
+        },
+        {
+          "operand": null,
+          "offset": 26,
+          "op": "ldloc.1"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse[T].System.String get_NextLink()",
+          "offset": 27,
+          "op": "callvirt"
+        },
+        {
+          "operand": "string.Boolean IsNullOrWhiteSpace(System.String)",
+          "offset": 32,
+          "op": "call"
+        },
+        {
+          "operand": 54,
+          "offset": 37,
+          "op": "brtrue.s"
+        },
+        {
+          "operand": null,
+          "offset": 39,
+          "op": "ldloc.1"
+        },
+        {
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse[T].System.String get_NextLink()",
+          "offset": 40,
+          "op": "callvirt"
+        },
+        {
+          "operand": "uri.Void .ctor(System.String)",
+          "offset": 45,
+          "op": "newobj"
+        },
+        {
+          "operand": 1,
+          "offset": 50,
+          "op": "starg.s"
+        },
+        {
+          "operand": 6,
+          "offset": 52,
+          "op": "br.s"
+        },
+        {
+          "operand": null,
+          "offset": 54,
+          "op": "ldloc.0"
+        },
+        {
+          "operand": null,
+          "offset": 55,
+          "op": "ret"
+        }
+      ]
+    }
+  ],
+  "numeric_uri": {
+    "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+    "empty_get_flow": {
+      "Get_3arg_method_sha256": "550a2b7a83e4a5974f935dd388cdeb8245d146aba5fe8362544413e8c38c8d49",
+      "GetAll_method_sha256": "98739ec9ebb6945c921b84ea15bb16ca89ddcd20014850f093addc2a243a7b6a",
+      "body_empty_or_whitespace": "Get<T> IsNullOrWhiteSpace at IL41 branches to initobj T/default return at IL55-64; no DeserializeObject call",
+      "literal_null": "Get<T> nonblank body deserializes null PageResponse and reaches same null page dereference",
+      "empty_object": "Non-null PageResponse with null Objects reaches AddRange(null), ArgumentNullException",
+      "exception": "NullReferenceException",
+      "not_empty_collection": true,
+      "next": "GetAll stores null page at IL13 then calls get_Objects on null at IL16, failing before AddRange IL21 and before command WriteObject"
+    },
+    "reproducer_sha256": "b52edd91df3dd495098f304f00cbb1b2871b3579a88cf5d2c4afffb9a1af15fd",
+    "scope": "Only actual pinned JsonConvert DTO parser plus source-region replay of framework String/Uri operations. No management lifecycle/auth/HTTP/Go.",
+    "filter_uri_cases": [
+      {
+        "query": "",
+        "input_display_name": "",
+        "original_string": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "filter": "",
+        "absolute_uri": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "omitted": true
+      },
+      {
+        "query": "",
+        "input_display_name": "\t",
+        "original_string": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "filter": "",
+        "absolute_uri": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "omitted": true
+      },
+      {
+        "query": "",
+        "input_display_name": "\n",
+        "original_string": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "filter": "",
+        "absolute_uri": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "omitted": true
+      },
+      {
+        "query": "",
+        "input_display_name": "\r\n",
+        "original_string": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "filter": "",
+        "absolute_uri": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "omitted": true
+      },
+      {
+        "query": "",
+        "input_display_name": "   ",
+        "original_string": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "filter": "",
+        "absolute_uri": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+        "omitted": true
+      },
+      {
+        "query": "?$filter=displayName%20eq%20'%09%20name%20%09'",
+        "input_display_name": "\t name \t",
+        "original_string": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps?$filter=displayName eq '\t name \t'",
+        "filter": "displayName eq '\t name \t'",
+        "absolute_uri": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps?$filter=displayName%20eq%20'%09%20name%20%09'",
+        "omitted": false
+      },
+      {
+        "query": "?$filter=displayName%20eq%20'name%0Avalue'",
+        "input_display_name": "name\nvalue",
+        "original_string": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps?$filter=displayName eq 'name\nvalue'",
+        "filter": "displayName eq 'name\nvalue'",
+        "absolute_uri": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps?$filter=displayName%20eq%20'name%0Avalue'",
+        "omitted": false
+      },
+      {
+        "query": "?$filter=displayName%20eq%20'O'Hara'",
+        "input_display_name": "O'Hara",
+        "original_string": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps?$filter=displayName eq 'O'Hara'",
+        "filter": "displayName eq 'O'Hara'",
+        "absolute_uri": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps?$filter=displayName%20eq%20'O'Hara'",
+        "omitted": false
+      },
+      {
+        "query": "?$filter=displayName%20eq%20'%20name%20'",
+        "input_display_name": " name ",
+        "original_string": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps?$filter=displayName eq ' name '",
+        "filter": "displayName eq ' name '",
+        "absolute_uri": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps?$filter=displayName%20eq%20'%20name%20'",
+        "omitted": false
+      }
+    ],
+    "numeric_cases": [
+      {
+        "source_literal": "9007199254740993",
+        "distributionMethod": "9007199254740993",
+        "displayName": "9007199254740993",
+        "externalId": "9007199254740993",
+        "input_json": "{\"id\":9007199254740993,\"externalId\":9007199254740993,\"displayName\":9007199254740993,\"distributionMethod\":9007199254740993}",
+        "id": "9007199254740993"
+      },
+      {
+        "source_literal": "-9007199254740993",
+        "distributionMethod": "-9007199254740993",
+        "displayName": "-9007199254740993",
+        "externalId": "-9007199254740993",
+        "input_json": "{\"id\":-9007199254740993,\"externalId\":-9007199254740993,\"displayName\":-9007199254740993,\"distributionMethod\":-9007199254740993}",
+        "id": "-9007199254740993"
+      },
+      {
+        "source_literal": "1.20",
+        "distributionMethod": "1.20",
+        "displayName": "1.20",
+        "externalId": "1.20",
+        "input_json": "{\"id\":1.20,\"externalId\":1.20,\"displayName\":1.20,\"distributionMethod\":1.20}",
+        "id": "1.20"
+      },
+      {
+        "source_literal": "-1.20",
+        "distributionMethod": "-1.20",
+        "displayName": "-1.20",
+        "externalId": "-1.20",
+        "input_json": "{\"id\":-1.20,\"externalId\":-1.20,\"displayName\":-1.20,\"distributionMethod\":-1.20}",
+        "id": "-1.20"
+      },
+      {
+        "source_literal": "1e3",
+        "distributionMethod": "1e3",
+        "displayName": "1e3",
+        "externalId": "1e3",
+        "input_json": "{\"id\":1e3,\"externalId\":1e3,\"displayName\":1e3,\"distributionMethod\":1e3}",
+        "id": "1e3"
+      },
+      {
+        "source_literal": "1E+03",
+        "distributionMethod": "1E+03",
+        "displayName": "1E+03",
+        "externalId": "1E+03",
+        "input_json": "{\"id\":1E+03,\"externalId\":1E+03,\"displayName\":1E+03,\"distributionMethod\":1E+03}",
+        "id": "1E+03"
+      },
+      {
+        "source_literal": "-0",
+        "distributionMethod": "-0",
+        "displayName": "-0",
+        "externalId": "-0",
+        "input_json": "{\"id\":-0,\"externalId\":-0,\"displayName\":-0,\"distributionMethod\":-0}",
+        "id": "-0"
+      },
+      {
+        "source_literal": "0.0001",
+        "distributionMethod": "0.0001",
+        "displayName": "0.0001",
+        "externalId": "0.0001",
+        "input_json": "{\"id\":0.0001,\"externalId\":0.0001,\"displayName\":0.0001,\"distributionMethod\":0.0001}",
+        "id": "0.0001"
+      },
+      {
+        "source_literal": "true",
+        "distributionMethod": "true",
+        "displayName": "true",
+        "externalId": "true",
+        "input_json": "{\"id\":true,\"externalId\":true,\"displayName\":true,\"distributionMethod\":true}",
+        "id": "true"
+      },
+      {
+        "source_literal": "false",
+        "distributionMethod": "false",
+        "displayName": "false",
+        "externalId": "false",
+        "input_json": "{\"id\":false,\"externalId\":false,\"displayName\":false,\"distributionMethod\":false}",
+        "id": "false"
+      }
+    ]
+  },
+  "continuation": {
+    "source": {
+      "termination": "IL27 get_NextLink, IL32 String.IsNullOrWhiteSpace, IL37 brtrue.s 54 return; otherwise IL40 get_NextLink and IL45 new Uri(string)",
+      "getall_method_sha256": "98739ec9ebb6945c921b84ea15bb16ca89ddcd20014850f093addc2a243a7b6a"
+    },
+    "scope": "Actual pinned JsonConvert PageResponse<TeamsTenantApp> data deserialization and framework IsNullOrWhiteSpace only. No management/auth/HTTP.",
+    "reproducer_sha256": "7f91bcb3b075657edf349c5e63686e3bbce7dcb0b04a0e75df0d7affa7ea1cd6",
+    "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+    "rows": [
+      {
+        "next_link": null,
+        "terminates": true,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":null}",
+        "source_literal": "null"
+      },
+      {
+        "next_link": "",
+        "terminates": true,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":\"\"}",
+        "source_literal": "\"\""
+      },
+      {
+        "next_link": "   ",
+        "terminates": true,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":\"   \"}",
+        "source_literal": "\"   \""
+      },
+      {
+        "next_link": "\t\n",
+        "terminates": true,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":\"\\t\\n\"}",
+        "source_literal": "\"\\t\\n\""
+      },
+      {
+        "next_link": "https://offline.example.invalid/next",
+        "terminates": false,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":\"https://offline.example.invalid/next\"}",
+        "source_literal": "\"https://offline.example.invalid/next\""
+      },
+      {
+        "next_link": "9007199254740993",
+        "terminates": false,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":9007199254740993}",
+        "source_literal": "9007199254740993"
+      },
+      {
+        "next_link": "1.20",
+        "terminates": false,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":1.20}",
+        "source_literal": "1.20"
+      },
+      {
+        "next_link": "1E+03",
+        "terminates": false,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":1E+03}",
+        "source_literal": "1E+03"
+      },
+      {
+        "next_link": "true",
+        "terminates": false,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":true}",
+        "source_literal": "true"
+      },
+      {
+        "next_link": "false",
+        "terminates": false,
+        "input_json": "{\"value\":[],\"@odata.nextLink\":false}",
+        "source_literal": "false"
+      },
+      {
+        "exception": "System.Management.Automation.MethodInvocationException: Exception calling \"DeserializeObject\" with \"2\" argument(s): \"Unexpected character encountered while parsing value: {. Path '['@odata.nextLink']', line 1, position 31.\"\n ---> Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: {. Path '['@odata.nextLink']', line 1, position 31.\n   at Newtonsoft.Json.JsonTextReader.ReadStringValue(ReadType readType)\n   at Newtonsoft.Json.JsonTextReader.ReadAsString()\n   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)\n   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.PopulateObject(Object newObject, JsonReader reader, JsonObjectContract contract, JsonProperty member, String id)\n   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)\n   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)\n   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)\n   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)\n   at Newtonsoft.Json.JsonSerializer.Deserialize(JsonReader reader, Type objectType)\n   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)\n   at CallSite.Target(Closure, CallSite, Type, Object, Object)\n   --- End of inner exception stack trace ---\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/runtime/Operations/MiscOps.cs:line 1755\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/CallInstruction.Generated.cs:line 504\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 389\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 355",
+        "input_json": "{\"value\":[],\"@odata.nextLink\":{}}",
+        "source_literal": "{}"
+      },
+      {
+        "exception": "System.Management.Automation.MethodInvocationException: Exception calling \"DeserializeObject\" with \"2\" argument(s): \"Unexpected character encountered while parsing value: [. Path '['@odata.nextLink']', line 1, position 31.\"\n ---> Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: [. Path '['@odata.nextLink']', line 1, position 31.\n   at Newtonsoft.Json.JsonTextReader.ReadStringValue(ReadType readType)\n   at Newtonsoft.Json.JsonTextReader.ReadAsString()\n   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)\n   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.PopulateObject(Object newObject, JsonReader reader, JsonObjectContract contract, JsonProperty member, String id)\n   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)\n   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)\n   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)\n   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)\n   at Newtonsoft.Json.JsonSerializer.Deserialize(JsonReader reader, Type objectType)\n   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)\n   at CallSite.Target(Closure, CallSite, Type, Object, Object)\n   --- End of inner exception stack trace ---\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/runtime/Operations/MiscOps.cs:line 1755\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/CallInstruction.Generated.cs:line 504\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 389\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 355",
+        "input_json": "{\"value\":[],\"@odata.nextLink\":[]}",
+        "source_literal": "[]"
+      }
+    ]
+  },
+  "reproducers": [
+    {
+      "path": "ext90-appcatalog-numeric-and-uri.ps1",
+      "sha256": "b52edd91df3dd495098f304f00cbb1b2871b3579a88cf5d2c4afffb9a1af15fd",
+      "source": "# Pure pinned DTO JsonConvert numbers and source-region string/Uri replay only.\n$ErrorActionPreference='Stop'\nImport-Module '/private/tmp/msteams-core90-pinned/module/MicrosoftTeams.psd1' -Force -WarningAction SilentlyContinue\nforeach($a in [AppDomain]::CurrentDomain.GetAssemblies()){try{$null=$a.GetTypes()}catch{}}\n$model=[AppDomain]::CurrentDomain.GetAssemblies()|ForEach-Object{$_.GetType('Microsoft.Teams.PowerShell.TeamsCmdlets.Model.TeamsTenantApp',$false)}|Where-Object{$null -ne $_}|Select-Object -First 1\nif((Get-FileHash $model.Assembly.Location).Hash.ToLowerInvariant() -ne '3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24'){throw 'Wrong pinned model'}\n$rows=@();foreach($literal in @('9007199254740993','-9007199254740993','1.20','-1.20','1e3','1E+03','-0','0.0001','true','false')){\n $json='{\"id\":LITERAL,\"externalId\":LITERAL,\"displayName\":LITERAL,\"distributionMethod\":LITERAL}'.Replace('LITERAL',$literal)\n $data=[Newtonsoft.Json.JsonConvert]::DeserializeObject($json,$model)\n $rows+=@{source_literal=$literal;input_json=$json;id=$data.Id;externalId=$data.ExternalId;displayName=$data.DisplayName;distributionMethod=$data.DistributionMethod}\n}\n$uris=@();foreach($value in @('',\"`t\",\"`n\",\"`r`n\",'   ',\"`t name `t\",\"name`nvalue\",\"O'Hara\",' name ')){\n # Exact pure operations in GetTeamsApp ProcessRecord filter region (IL458-913), no cmdlet invocation.\n $filter=''\n if(![string]::IsNullOrWhiteSpace($value)){$filter=[string]::Concat(\"displayName eq '\",$value,\"'\")}\n $query=if($filter -ne ''){[string]::Concat('?$filter=',$filter)}else{''}\n $uri=[Uri]::new([string]::Concat('https://graph.microsoft.com','/v1.0/appCatalogs/teamsApps',$query))\n $uris+=@{input_display_name=$value;filter=$filter;omitted=($filter -eq '');original_string=$uri.OriginalString;absolute_uri=$uri.AbsoluteUri;query=$uri.Query}\n}\n@{scope='Only actual pinned JsonConvert DTO parser plus source-region replay of framework String/Uri operations. No management lifecycle/auth/HTTP/Go.';assembly_sha256=(Get-FileHash $model.Assembly.Location).Hash.ToLowerInvariant();reproducer_sha256=(Get-FileHash $PSCommandPath).Hash.ToLowerInvariant();numeric_cases=$rows;filter_uri_cases=$uris;empty_get_flow=@{Get_3arg_method_sha256='550a2b7a83e4a5974f935dd388cdeb8245d146aba5fe8362544413e8c38c8d49';GetAll_method_sha256='98739ec9ebb6945c921b84ea15bb16ca89ddcd20014850f093addc2a243a7b6a';body_empty_or_whitespace='Get<T> IsNullOrWhiteSpace at IL41 branches to initobj T/default return at IL55-64; no DeserializeObject call';next='GetAll stores null page at IL13 then calls get_Objects on null at IL16, failing before AddRange IL21 and before command WriteObject';exception='NullReferenceException';not_empty_collection=$true;literal_null='Get<T> nonblank body deserializes null PageResponse and reaches same null page dereference';empty_object='Non-null PageResponse with null Objects reaches AddRange(null), ArgumentNullException'}}|ConvertTo-Json -Depth 8 -Compress\n"
+    },
+    {
+      "path": "ext90-appcatalog-continuation-pure.ps1",
+      "sha256": "7f91bcb3b075657edf349c5e63686e3bbce7dcb0b04a0e75df0d7affa7ea1cd6",
+      "source": "# Pure pinned DTO JsonConvert numbers and source-region string/Uri replay only.\n$ErrorActionPreference='Stop'\nImport-Module '/private/tmp/msteams-core90-pinned/module/MicrosoftTeams.psd1' -Force -WarningAction SilentlyContinue\nforeach($a in [AppDomain]::CurrentDomain.GetAssemblies()){try{$null=$a.GetTypes()}catch{}}\n$model=[AppDomain]::CurrentDomain.GetAssemblies()|ForEach-Object{$_.GetType('Microsoft.Teams.PowerShell.TeamsCmdlets.Model.TeamsTenantApp',$false)}|Where-Object{$null -ne $_}|Select-Object -First 1\nif((Get-FileHash $model.Assembly.Location).Hash.ToLowerInvariant() -ne '3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24'){throw 'Wrong pinned model'}\n\n$page=$model.Assembly.GetType('Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse`1').MakeGenericType($model)\n$nextProperty=$page.GetProperty('NextLink',[Reflection.BindingFlags]'Instance,Public,NonPublic')\n$rows=@()\nforeach($literal in @('null','\"\"','\"   \"','\"\\t\\n\"','\"https://offline.example.invalid/next\"','9007199254740993','1.20','1E+03','true','false','{}','[]')) {\n $json='{\"value\":[],\"@odata.nextLink\":LITERAL}'.Replace('LITERAL',$literal)\n try {$data=[Newtonsoft.Json.JsonConvert]::DeserializeObject($json,$page); $rows+=@{input_json=$json;source_literal=$literal;next_link=$nextProperty.GetValue($data);terminates=[string]::IsNullOrWhiteSpace($nextProperty.GetValue($data))}}catch{$rows+=@{input_json=$json;source_literal=$literal;exception=$_.Exception.ToString()}}\n}\n@{assembly_sha256=(Get-FileHash $model.Assembly.Location).Hash.ToLowerInvariant();reproducer_sha256=(Get-FileHash $PSCommandPath).Hash.ToLowerInvariant();scope='Actual pinned JsonConvert PageResponse<TeamsTenantApp> data deserialization and framework IsNullOrWhiteSpace only. No management/auth/HTTP.';rows=$rows;source=@{getall_method_sha256='98739ec9ebb6945c921b84ea15bb16ca89ddcd20014850f093addc2a243a7b6a';termination='IL27 get_NextLink, IL32 String.IsNullOrWhiteSpace, IL37 brtrue.s 54 return; otherwise IL40 get_NextLink and IL45 new Uri(string)'}}|ConvertTo-Json -Depth 6 -Compress\n"
+    }
+  ],
+  "artifact_hashes": {
+    "ext90-appcatalog-numeric-and-uri.ps1": "b52edd91df3dd495098f304f00cbb1b2871b3579a88cf5d2c4afffb9a1af15fd",
+    "ext90-appcatalog-numeric-and-uri.json": "eb1169d41db7a9d96b0841e3b2c567f9515eea84c18a2f1fb59a67b64eb07963",
+    "ext90-appcatalog-continuation-pure.ps1": "7f91bcb3b075657edf349c5e63686e3bbce7dcb0b04a0e75df0d7affa7ea1cd6",
+    "ext90-appcatalog-continuation-pure.json": "20ef5512a85d80ff710b402efa32b206d49f3dc11f432bfa92d873417e0f03bf"
+  }
+}

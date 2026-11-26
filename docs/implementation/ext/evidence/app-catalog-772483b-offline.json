@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "outcome": "passed",
+  "revision": "772483bf41ff9097e73109e38cb4106c5f25c68b",
+  "scope": "Implementation checkpoint: complete affected AppCatalog SDK TestUnit/Example and audited custom-app lab consumer compile. No TestAcc/tenant operations; no AppCatalog qualification promotion.",
+  "argv": [
+    "go",
+    "test",
+    "-json",
+    "-p",
+    "1",
+    "-count=1",
+    "./msteams/graph_api/app_catalog",
+    "./tests/integration/lab/custom_app_settings",
+    "-run",
+    "TestUnit|Example"
+  ],
+  "execution": {
+    "exit_code": 0,
+    "packages": {
+      "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/app_catalog": "pass",
+      "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/custom_app_settings": "pass"
+    },
+    "passed_tests": [
+      "TestUnitAppCatalogPinnedNullableModels",
+      "TestUnitAppCatalogPinnedStringLexemesAndAliases",
+      "TestUnitAppCatalogPinnedEnvelopeReuse",
+      "TestUnitAppCatalogPinnedContinuationProjection",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls/200",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls/201",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls/202",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls/206",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls/299",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls/control-\"\\t\"",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls/control-\"\\n\"",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls/control-\"\\r\\n\"",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls/control-\"a\\nb\"",
+      "TestUnitAppCatalogSourceReadStatusPresenceAndControls",
+      "TestUnitAppCatalogSourcePageAliasesAndPartialFailure",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/empty",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/whitespace",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/null",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/missing-id",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/empty-id",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/empty-package-POST",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/empty-package-PUT",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/delete-200",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/delete-202",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/delete-206",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads/delete-299",
+      "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads",
+      "TestUnitAppCatalogListBuildsTheModuleFilterAndFollowsPages",
+      "TestUnitAppCatalogFailuresStayTyped",
+      "TestUnitAppCatalogNilContextAndServiceAreRejected",
+      "TestUnitAppCatalogListDenialUsesLabResponse",
+      "TestUnitAppCatalogPackageWrites"
+    ],
+    "fail_or_skip_events": 0,
+    "started_at": "2026-11-27T03:43:41.030168Z",
+    "completed_at": "2026-11-27T03:43:42.594186Z",
+    "lab": "Compile/offline selection only, no matching tests; no TestAcc.",
+    "examples": "Compiled only; no credential/network workflow executes."
+  },
+  "raw_go_json": {
+    "path": "/private/tmp/ext90-app-catalog-772483b-tests.json",
+    "sha256": "2baf021100db9f1c51e5a10e243320aaed1cfe580f84eef1d4c1ede0888255ad"
+  },
+  "prior_failure": {
+    "revision": "8678086",
+    "raw_path": "/private/tmp/ext90-app-catalog-8678086-tests.json",
+    "sha256": "77cef8f931047eb94b306061320ea4d4b48314f0a54583540d5b41afb3affc50",
+    "cause": "Only two uppercase POST/PUT case labels were rejected as ErrFixture before execution. Source/production/harness unchanged; lowercase-label-only descendant772483b passed complete affected rerun. Prior artifact preserved unchanged."
+  },
+  "file_sha256": {
+    "msteams/graph_api/app_catalog/decoder_test.go": "4b17ed38cc4ca82e86521f37bfcbd87e0b46d5fa0b9fd32b6125689d0cdbff68",
+    "msteams/graph_api/app_catalog/models.go": "5968f962b75504cdb3f80e8a25473d871dbf06d93780a64ab0ef0dae3ded921a",
+    "msteams/graph_api/app_catalog/example_test.go": "3579d5831189a37deb290f3d707b271b10a9c33eb52ece2cd976ad01761b2f60",
+    "msteams/graph_api/app_catalog/service.go": "e4886729c15aa28ae98e055e1dca9d05cbb783ba75e0eddac186dadc6dfca451",
+    "msteams/graph_api/app_catalog/service_test.go": "6ed79b9e82978dc6575415166d0fc80be56bbb75aefa7e34b59d1291235cb68e",
+    "msteams/graph_api/app_catalog/presence_test.go": "117ea64f04539f4bd728b64593d292198593f3f8be4ce1eb5e1fca6661b32169",
+    "msteams/graph_api/app_catalog/testdata/pinned-continuations.json": "20ef5512a85d80ff710b402efa32b206d49f3dc11f432bfa92d873417e0f03bf",
+    "msteams/graph_api/app_catalog/testdata/pinned-duplicates.json": "e75925488df585827a227a1cdd5f2d01c809bc3a6b6a9a14c5c3d08ccf56df06",
+    "msteams/graph_api/app_catalog/testdata/pinned-output.json": "f179bd2e4cc39f435c6b6c532b258bbd66b84ddeba1453433f65e695188fa5fe",
+    "msteams/graph_api/app_catalog/testdata/pinned-models.json": "d3c2aad1924f2721175ccbdc6aa47e40f4faea54153661a98921da142f1c8684",
+    "msteams/graph_api/app_catalog/testdata/pinned-numbers.json": "eb1169d41db7a9d96b0841e3b2c567f9515eea84c18a2f1fb59a67b64eb07963",
+    "tests/integration/lab/custom_app_settings/app_catalog_test.go": "622eb4ada8255a89e203accd2e8d1be53c06f18e04f1a2d4d5e0ec8504cfdf26",
+    "docs/implementation/ext/evidence/app-catalog-primary.json": "8a3e309158798cdde52b6fd4ab0f2446c26ed6e3f3b0d5152669e8a37610d9cb",
+    "docs/implementation/ext/evidence/app-catalog-get-supplement.json": "bc884fc122ec78ce56aff428976a49dbd772065a63ae25f485e4034472049454",
+    "docs/implementation/ext/evidence/app-catalog-new-input-binding.json": "bdd991e6a6eeeed9688a30afbf506814844a06b6ed3722c13447a914b0ed729e"
+  },
+  "limits": [
+    "Source/actual parser and inert output captures are distinct from mock HTTP acceptance and historical tenant403 bodies.",
+    "No app published/installed, role granted or new fixture mutation.",
+    "Native pointer response/API correction is explicit; safe mutation IDs and trusted bounded pagination remain.",
+    "All AppCatalog implementation/contract/live ledger states remain unchanged pending per-command closure review."
+  ]
+}

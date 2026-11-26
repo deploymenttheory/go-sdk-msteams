@@ -1,0 +1,38 @@
+{
+  "scope": "FirstParty SDK, corresponding offline lab and full root policy contract package; new prepared-later-failure and explicit recovery composition.",
+  "revision": "c3408096e986c3c4bcb5dd6f367d2e3b6047820c",
+  "session": "66609",
+  "result": "passed",
+  "toolchain": "go1.27.4",
+  "GOMAXPROCS": 2,
+  "parallel_packages": 1,
+  "count": 1,
+  "selection": "TestUnit|Example",
+  "runtime_disk_floor_gib": 14,
+  "admission_free_gib": 37.31,
+  "packages": [
+    "msteams/teams_admin_api/teams_first_party_meeting_template_configuration",
+    "tests/integration/lab/teams_first_party_meeting_template_configuration",
+    "tests/contract/policies"
+  ],
+  "test_pass_events": 204,
+  "fail_events": 0,
+  "skip_events": 0,
+  "package_pass_events": 3,
+  "raw_result": "/private/tmp/msteams-pol91-firstparty-c340-tests.json",
+  "raw_sha256": "0b45e0c22cbcaf316555965fc494048eabd72ea071de3daadb078eec7452278b",
+  "new_test": "tests/contract/policies/firstparty_template_recovery_test.go::TestUnitFirstPartyTemplatePreparedFailureRetainsReceiptsAndCallerRecovery",
+  "branches": [
+    "denied:403 retains typed preparation, read/failed raw responses, PatchInvoked true, HTTPAccepted false and no After",
+    "accepted-malformed:200 source-rejected Description object retains ErrDecode/raw response, prepared state, PatchInvoked true, HTTPAccepted true and no fabricated After",
+    "both:earlier prepared204 receipt/snapshot remains independent; another same-Global family read succeeds; caller explicitly restores original null Description and independently reads the retained restoration response"
+  ],
+  "post_run_scoped_diff": "zero for affected SDK/lab/root contracts, other template SDK/labkit, shared client/auth/policyrp and module inputs",
+  "owned_scratch_removed": true,
+  "limits": [
+    "Reads reuse retained primitive acceptance bodies; the compound sequence, later failures and restoration are authored offline.",
+    "No live persistence, transaction, minimum role, tenant authorization, live template-list mutation or automatic recovery claim.",
+    "No TestAcc, race or full-module test run.",
+    "No qualification or live status changes are performed by this execution record."
+  ]
+}

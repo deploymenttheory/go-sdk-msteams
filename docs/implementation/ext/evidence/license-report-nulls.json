@@ -1,0 +1,422 @@
+{
+  "predicate_methods": [
+    "Boolean <GenerateDlpUserLicenseReports>b__14_1(Microsoft.Teams.PowerShell.TeamsCmdlets.Model.LicenseDetails)",
+    "Boolean <GenerateDlpUserLicenseReports>b__14_2(Microsoft.Teams.PowerShell.TeamsCmdlets.Model.ServicePlanInfo)"
+  ],
+  "reproducer_sha256": "1c3518823b9795a7df5ee8e75ced0ba0c0ef5bc789fdf70336324e32fd60b1bb",
+  "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+  "outer_any_observations": [
+    {
+      "any_result": null,
+      "collection_is_null": true,
+      "json": "null",
+      "exception_parameter": "source",
+      "projector_null_bypass": true,
+      "json_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "exception_type": "System.ArgumentNullException",
+      "case": "licenses-null"
+    },
+    {
+      "any_result": false,
+      "collection_is_null": false,
+      "json": "[]",
+      "exception_parameter": null,
+      "projector_null_bypass": false,
+      "json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "exception_type": null,
+      "case": "licenses-empty"
+    },
+    {
+      "any_result": null,
+      "collection_is_null": false,
+      "json": "[{}]",
+      "exception_parameter": "source",
+      "projector_null_bypass": false,
+      "json_sha256": "e10808d43975dc400731053386849f864f297e6c4f7519c380f3dbaf7067a840",
+      "exception_type": "System.ArgumentNullException",
+      "case": "licenses-missing-plans"
+    },
+    {
+      "any_result": null,
+      "collection_is_null": false,
+      "json": "[null]",
+      "exception_parameter": null,
+      "projector_null_bypass": false,
+      "json_sha256": "1d8fc6ceb1f94c6326d6d5483d258fcb2e179e9869325b245d105c2219bf69fd",
+      "exception_type": "System.NullReferenceException",
+      "case": "licenses-null-item"
+    },
+    {
+      "any_result": false,
+      "collection_is_null": false,
+      "json": "[{\"servicePlans\":[]}]",
+      "exception_parameter": null,
+      "projector_null_bypass": false,
+      "json_sha256": "0eb27a78d2c110f3c2072f24f117e8bb93e232d24b49e2318ddb687863df3e23",
+      "exception_type": null,
+      "case": "licenses-empty-plans"
+    },
+    {
+      "any_result": true,
+      "collection_is_null": false,
+      "json": "[{\"servicePlans\":[{\"servicePlanId\":\"6dc145d6-95dd-4191-b9c3-185575ee6f6b\"}]}]",
+      "exception_parameter": null,
+      "projector_null_bypass": false,
+      "json_sha256": "a5e834fcb1ba88ce3987c16bc8784c53ae280938ba2fe3a06762757a14e437bc",
+      "exception_type": null,
+      "case": "licenses-match"
+    },
+    {
+      "any_result": true,
+      "collection_is_null": false,
+      "json": "[{\"servicePlans\":[{\"servicePlanId\":\"6dc145d6-95dd-4191-b9c3-185575ee6f6b\"}]},null]",
+      "exception_parameter": null,
+      "projector_null_bypass": false,
+      "json_sha256": "2b37e22fdcebd7ddc926aaaddf725f9d0a0a12d2a636d12f2876e3c7f3b2fcbf",
+      "exception_type": null,
+      "case": "licenses-match-before-null"
+    },
+    {
+      "any_result": null,
+      "collection_is_null": false,
+      "json": "[null,{\"servicePlans\":[{\"servicePlanId\":\"6dc145d6-95dd-4191-b9c3-185575ee6f6b\"}]}]",
+      "exception_parameter": null,
+      "projector_null_bypass": false,
+      "json_sha256": "3b9c456b2a4570bab846e54c7712c19d387a495abaa447ead2ce87b4f0062d59",
+      "exception_type": "System.NullReferenceException",
+      "case": "licenses-null-before-match"
+    }
+  ],
+  "defaults": [
+    {
+      "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.LicenseDetails",
+      "properties": [
+        {
+          "default": null,
+          "attributes": [
+            "[Newtonsoft.Json.JsonPropertyAttribute(PropertyName = \"id\")]"
+          ],
+          "type": "System.String",
+          "name": "Id"
+        },
+        {
+          "default": null,
+          "attributes": [
+            "[Newtonsoft.Json.JsonPropertyAttribute(PropertyName = \"servicePlans\")]"
+          ],
+          "type": "System.Collections.Generic.IEnumerable`1[[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.ServicePlanInfo, Microsoft.Teams.PowerShell.TeamsCmdlets, Version=1.6.8.0, Culture=neutral, PublicKeyToken=null]]",
+          "name": "ServicePlans"
+        },
+        {
+          "default": null,
+          "attributes": [
+            "[Newtonsoft.Json.JsonPropertyAttribute(PropertyName = \"skuId\")]"
+          ],
+          "type": "System.String",
+          "name": "SkuId"
+        },
+        {
+          "default": null,
+          "attributes": [
+            "[Newtonsoft.Json.JsonPropertyAttribute(PropertyName = \"skuPartNumber\")]"
+          ],
+          "type": "System.String",
+          "name": "SkuPartNumber"
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.ServicePlanInfo",
+      "properties": [
+        {
+          "default": null,
+          "attributes": [
+            "[Newtonsoft.Json.JsonPropertyAttribute(PropertyName = \"servicePlanId\")]"
+          ],
+          "type": "System.String",
+          "name": "ServicePlanId"
+        },
+        {
+          "default": null,
+          "attributes": [
+            "[Newtonsoft.Json.JsonPropertyAttribute(PropertyName = \"servicePlanName\")]"
+          ],
+          "type": "System.String",
+          "name": "ServicePlanName"
+        },
+        {
+          "default": 0,
+          "attributes": [
+            "[Newtonsoft.Json.JsonPropertyAttribute(PropertyName = \"provisioningStatus\")]"
+          ],
+          "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.ServicePlanProvisioningStatus",
+          "name": "ProvisioningStatus"
+        }
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "exception_type": "System.NullReferenceException",
+      "property": "ServicePlans",
+      "json": "null",
+      "exception_parameter": null,
+      "case": "license-null",
+      "json_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "property_is_null": true,
+      "predicate_result": null,
+      "property_value": null,
+      "object_is_null": true
+    },
+    {
+      "exception_type": "System.ArgumentNullException",
+      "property": "ServicePlans",
+      "json": "{}",
+      "exception_parameter": "source",
+      "case": "plans-missing",
+      "json_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "property_is_null": true,
+      "predicate_result": null,
+      "property_value": null,
+      "object_is_null": false
+    },
+    {
+      "exception_type": "System.ArgumentNullException",
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":null}",
+      "exception_parameter": "source",
+      "case": "plans-null",
+      "json_sha256": "7940a22e8d2e831fc4edf1cd61b63af8ef405d2b790d218bffd80b3df2fe646a",
+      "property_is_null": true,
+      "predicate_result": null,
+      "property_value": null,
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[]}",
+      "exception_parameter": null,
+      "case": "plans-empty",
+      "json_sha256": "bfd69c631c9ad931e195ecd8166efde5f8f3cecac5ad44751bdb863e76aa38d7",
+      "property_is_null": false,
+      "predicate_result": false,
+      "property_value": [],
+      "object_is_null": false
+    },
+    {
+      "exception_type": "System.NullReferenceException",
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[null]}",
+      "exception_parameter": null,
+      "case": "plan-null-item",
+      "json_sha256": "ffefa9edfb90afaa479c088947a39f05444a4b4be6be22d2686d53329351003b",
+      "property_is_null": false,
+      "predicate_result": null,
+      "property_value": [
+        null
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[{}]}",
+      "exception_parameter": null,
+      "case": "plan-id-missing",
+      "json_sha256": "0f86880fc8f2706dd7d5f20a504fc359f38a4180fd315de1479d64680af42261",
+      "property_is_null": false,
+      "predicate_result": false,
+      "property_value": [
+        {
+          "ServicePlanId": null,
+          "ServicePlanName": null,
+          "ProvisioningStatus": 0
+        }
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[{\"servicePlanId\":null}]}",
+      "exception_parameter": null,
+      "case": "plan-id-null",
+      "json_sha256": "977759066613e03e97c5bb3b004dffa8b4a6a9f1899cfd266ed67b9d18b0476e",
+      "property_is_null": false,
+      "predicate_result": false,
+      "property_value": [
+        {
+          "ServicePlanId": null,
+          "ServicePlanName": null,
+          "ProvisioningStatus": 0
+        }
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[{\"servicePlanId\":\"\"}]}",
+      "exception_parameter": null,
+      "case": "plan-id-empty",
+      "json_sha256": "a66a45be8f5fda0512fea421f437dffd56ef0eb32e3fb1dd888b931bd8680f99",
+      "property_is_null": false,
+      "predicate_result": false,
+      "property_value": [
+        {
+          "ServicePlanId": "",
+          "ServicePlanName": null,
+          "ProvisioningStatus": 0
+        }
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[{\"servicePlanId\":\"00000000-0000-0000-0000-000000000000\"}]}",
+      "exception_parameter": null,
+      "case": "plan-id-empty-guid",
+      "json_sha256": "1cedc7f1b43d1e6bbdaefa118fce12f8060c81eb3ec9906ba22c06297f52cec8",
+      "property_is_null": false,
+      "predicate_result": false,
+      "property_value": [
+        {
+          "ServicePlanId": "00000000-0000-0000-0000-000000000000",
+          "ServicePlanName": null,
+          "ProvisioningStatus": 0
+        }
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[{\"servicePlanId\":\"other\"}]}",
+      "exception_parameter": null,
+      "case": "plan-id-other",
+      "json_sha256": "ec4c596a3ef7df41fe607a9319c407d65810ab56dac9f5e5bbcd9a6c012b633e",
+      "property_is_null": false,
+      "predicate_result": false,
+      "property_value": [
+        {
+          "ServicePlanId": "other",
+          "ServicePlanName": null,
+          "ProvisioningStatus": 0
+        }
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[{\"servicePlanId\":\"6dc145d6-95dd-4191-b9c3-185575ee6f6b\"}]}",
+      "exception_parameter": null,
+      "case": "plan-id-match",
+      "json_sha256": "975e9ab5a35015c09ec39777b0db64598ae57fce22d47e50a1367883b9fe8e41",
+      "property_is_null": false,
+      "predicate_result": true,
+      "property_value": [
+        {
+          "ServicePlanId": "6dc145d6-95dd-4191-b9c3-185575ee6f6b",
+          "ServicePlanName": null,
+          "ProvisioningStatus": 0
+        }
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[{\"servicePlanId\":\"6DC145D6-95DD-4191-B9C3-185575EE6F6B\"}]}",
+      "exception_parameter": null,
+      "case": "plan-id-uppercase",
+      "json_sha256": "f701ec4176b20d47edcd6fdab90d1382bcf706423184115a9e5b92e03760ac40",
+      "property_is_null": false,
+      "predicate_result": false,
+      "property_value": [
+        {
+          "ServicePlanId": "6DC145D6-95DD-4191-B9C3-185575EE6F6B",
+          "ServicePlanName": null,
+          "ProvisioningStatus": 0
+        }
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[{\"servicePlanId\":\"6dc145d6-95dd-4191-b9c3-185575ee6f6b\"},null]}",
+      "exception_parameter": null,
+      "case": "plan-match-before-null",
+      "json_sha256": "2ab4475aefbcfb19059b7c4079ec0245c4ba73007ef16ef981abbf8aacea66ab",
+      "property_is_null": false,
+      "predicate_result": true,
+      "property_value": [
+        {
+          "ServicePlanId": "6dc145d6-95dd-4191-b9c3-185575ee6f6b",
+          "ServicePlanName": null,
+          "ProvisioningStatus": 0
+        },
+        null
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": "System.NullReferenceException",
+      "property": "ServicePlans",
+      "json": "{\"servicePlans\":[null,{\"servicePlanId\":\"6dc145d6-95dd-4191-b9c3-185575ee6f6b\"}]}",
+      "exception_parameter": null,
+      "case": "plan-null-before-match",
+      "json_sha256": "0099ef145737fc1a3bf56ea2e0414fdc5bfa8342608b7080f1142c19438ebae5",
+      "property_is_null": false,
+      "predicate_result": null,
+      "property_value": [
+        null,
+        {
+          "ServicePlanId": "6dc145d6-95dd-4191-b9c3-185575ee6f6b",
+          "ServicePlanName": null,
+          "ProvisioningStatus": 0
+        }
+      ],
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlanId",
+      "json": "{}",
+      "exception_parameter": null,
+      "case": "plan-object-missing",
+      "json_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "property_is_null": true,
+      "predicate_result": false,
+      "property_value": null,
+      "object_is_null": false
+    },
+    {
+      "exception_type": null,
+      "property": "ServicePlanId",
+      "json": "{\"servicePlanId\":null}",
+      "exception_parameter": null,
+      "case": "plan-object-null-id",
+      "json_sha256": "07a06994dde90ef5d462706c24ff48c69e3599e851a73d216fce6618bd002c65",
+      "property_is_null": true,
+      "predicate_result": false,
+      "property_value": null,
+      "object_is_null": false
+    },
+    {
+      "exception_type": "System.NullReferenceException",
+      "property": "ServicePlanId",
+      "json": "null",
+      "exception_parameter": null,
+      "case": "plan-object-null",
+      "json_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "property_is_null": true,
+      "predicate_result": null,
+      "property_value": null,
+      "object_is_null": true
+    }
+  ]
+}

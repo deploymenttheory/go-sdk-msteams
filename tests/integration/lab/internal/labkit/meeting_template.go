@@ -70,6 +70,21 @@ type MeetingTemplatePolicyObservation struct {
 	Settings map[string]json.RawMessage `json:"settings"`
 }
 
+// Oracle output is canonical PowerShell JSON. These strict producer types are
+// intentionally separate from the source-compatible SDK received-JSON coercion.
+type meetingTemplateOracleOption struct {
+	Identity, Name, Value *string
+	IsLocked, IsHidden    *bool
+}
+type meetingTemplateOracleTemplate struct {
+	Identity, Name, Description, Category *string
+	TeamsMeetingOptions                   []*meetingTemplateOracleOption
+}
+type meetingTemplateOracleConfiguration struct {
+	Description           *string
+	TeamsMeetingTemplates []*meetingTemplateOracleTemplate
+}
+
 var MeetingTemplatePolicyOwnedIdentity = regexp.MustCompile(`(?i)^(?:tag:)?msteams-sdk-[a-z2-7]{26,64}-meeting-template-policy$`)
 
 func DecodeMeetingTemplatePolicyOracle(raw []byte, kind, tenant string) (MeetingTemplatePolicyObservation, error) {
@@ -117,6 +132,10 @@ func DecodeMeetingTemplatePolicyOracleForIdentity(raw []byte, kind, tenant, iden
 		return MeetingTemplatePolicyObservation{}, ErrOracle
 	}
 	if kind != "permission" {
+		var canonical meetingTemplateOracleConfiguration
+		if json.Unmarshal(settings, &canonical) != nil {
+			return MeetingTemplatePolicyObservation{}, ErrOracle
+		}
 		var model configuration.Configuration
 		err = json.Unmarshal(settings, &model)
 	} else {

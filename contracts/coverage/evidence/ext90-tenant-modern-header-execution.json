@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "code_revision": "66d96a302c579177feef9890336e63770f647b6b",
+  "scope": "Source-default Modern GetTenant private header only; no live or whole-command qualification",
+  "test_result": {
+    "exit_code": 0,
+    "events": {
+      "pass": 132
+    },
+    "packages_passed": 4,
+    "no_test_files": 1,
+    "log_sha256": "a986db3935b375976fb14d02409d85eb76689fdc1f3c67037deab90fa2fe950e"
+  },
+  "lint": {
+    "exit_code": 0,
+    "issues": 0,
+    "log_sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47"
+  },
+  "packages": [
+    "msteams/teams_admin_api/tenant_identity",
+    "msteams/teams_admin_api",
+    "msteams",
+    "tests/integration/lab/ext_integration",
+    "tests/integration/lab/tenant_identity"
+  ],
+  "toolchain": "Go1.27.4 darwin/arm64; p1; TestUnit|Example; configuredlint5m",
+  "source_packet_sha256": "073db747a863f8c738d075ac39427bdda96b26ce7f4bb3d6def0f107683f03af",
+  "receipt_controls": [
+    "Captured200response retains typedwiremodel and rawsnapshot",
+    "Sourceauthored acceptedmalformed200 retainsresponse and returns decodeerror",
+    "Sourceauthored401 retains actualbody/status and normalizedAPIError with no model"
+  ],
+  "fixture_corrections": "Initialnewdenialfixture used docs Source root and pointer Error expectation; harness correctly rejected these. Corrected to own_test.go provenance and APIError structural expectation without changing harness/production error handling. Fullfinalpackage run passed.",
+  "limits": [
+    "No tenant operation ran.",
+    "Full publicprojection/legacyflight dispatch remains incomplete.",
+    "No ledger qualification or live state changed."
+  ]
+}

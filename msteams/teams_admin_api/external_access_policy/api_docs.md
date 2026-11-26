@@ -58,3 +58,5 @@ omitted-field preservation, PowerShell comparisons and independent cleanup.
 [Fixture-backed CRUD unit tests](service_crud_response_test.go) use those actual
 responses. Assignment, effective-policy, delegated and other-cloud behavior
 remain unqualified; issue #96 stays open.
+
+An explicitly empty `ListFiltered` pattern is rejected before credentials or HTTP, matching the effective pinned Filter binder. Use `List` for an omitted filter; a whitespace pattern remains a bound wildcard expression.

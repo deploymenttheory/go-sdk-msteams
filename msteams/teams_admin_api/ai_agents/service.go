@@ -66,10 +66,6 @@ func validPart(value string) bool {
 	return validText(value) && value != "." && value != ".." && !strings.ContainsAny(value, `/\`)
 }
 
-func validOptional(value *string) bool {
-	return value == nil || validText(*value)
-}
-
 // dotnetBool is the .NET Boolean.ToString spelling the module sends.
 func dotnetBool(value bool) string {
 	if value {
@@ -99,42 +95,44 @@ func (s *Service) do(ctx context.Context, request client.Request, statuses ...in
 	return accept(response, err, statuses...)
 }
 
-// decodeAgent decodes the required AIAgent envelope property.
+// decodeAgent follows the wrapper projection: an absent/null AIAgent in an
+// object becomes an empty domain model; a null generated root returns nil.
 func decodeAgent(raw []byte) (*Agent, error) {
-	var fields map[string]json.RawMessage
-	if json.Unmarshal(raw, &fields) != nil || fields == nil {
-		return nil, client.ErrDecode
+	fields, err := generatedNode(raw)
+	if err != nil || fields == nil {
+		return nil, err
 	}
-	var value *Agent
-	if json.Unmarshal(fields["AIAgent"], &value) != nil || value == nil {
-		return nil, client.ErrDecode
+	value := &Agent{RawFields: map[string]json.RawMessage{}}
+	if firstGeneratedByte(fields["AIAgent"]) == '{' {
+		if json.Unmarshal(fields["AIAgent"], value) != nil {
+			return nil, client.ErrDecode
+		}
 	}
 	return value, nil
 }
 
-func agentBody(request AgentRequest) (map[string]string, bool) {
-	if !validText(request.Name) || !validText(request.AgentID) || !validText(request.AgentType) || !validOptional(request.AgentTargetTagTemplateID) {
+func agentBody(request AgentRequest, replacement bool) (map[string]string, bool) {
+	if !replacement && (request.Name == "" || request.AgentID == "" || request.AgentType == "") {
 		return nil, false
 	}
 	body := map[string]string{"Name": request.Name, "AgentId": request.AgentID, "AgentType": request.AgentType}
 	if request.AgentTargetTagTemplateID != nil {
 		body["AgentTargetTagTemplateId"] = *request.AgentTargetTagTemplateID
+	} else if replacement {
+		body["AgentTargetTagTemplateId"] = ""
 	}
 	return body, true
 }
 
 // List reads AI agent configurations (Get-CsAgent without Id). Nil options
-// send no query, as the module does. No configuration is a non-nil empty list.
+// send no query, as the module does. An object response without configurations
+// has a non-nil empty list; a null generated response has a nil model.
 func (s *Service) List(ctx context.Context, options *ListOptions) (*AgentList, *resty.Response, error) {
 	if err := s.check(ctx); err != nil {
 		return nil, nil, err
 	}
 	query := url.Values{}
 	if options != nil {
-		if (options.First != nil && *options.First < 0) || (options.Skip != nil && *options.Skip < 0) ||
-			!validOptional(options.NameFilter) || !validOptional(options.TypeFilter) || !validOptional(options.SortBy) {
-			return nil, nil, ErrInput
-		}
 		for name, value := range map[string]*int32{"First": options.First, "Skip": options.Skip} {
 			if value != nil {
 				query.Set(name, strconv.FormatInt(int64(*value), 10))
@@ -146,15 +144,22 @@ func (s *Service) List(ctx context.Context, options *ListOptions) (*AgentList, *
 			}
 		}
 		for name, value := range map[string]*string{"NameFilter": options.NameFilter, "TypeFilter": options.TypeFilter, "SortBy": options.SortBy} {
-			if value != nil {
+			if value != nil && *value != "" {
 				query.Set(name, *value)
 			}
 		}
 	}
 	response, err := s.do(ctx, client.Request{Method: http.MethodGet, Path: []string{voiceApps, agents}, Query: query,
-		Header: headers("Get-CsAgent"), Replay: client.ReplaySafe}, http.StatusOK)
+		Header: headers("Get-CsAgent_Get"), Replay: client.ReplaySafe}, http.StatusOK)
 	if err != nil {
 		return nil, response, err
+	}
+	fields, err := generatedNode(response.Body())
+	if err != nil {
+		return nil, response, err
+	}
+	if fields == nil {
+		return nil, response, nil
 	}
 	var value AgentList
 	if json.Unmarshal(response.Body(), &value) != nil {
@@ -173,7 +178,7 @@ func (s *Service) GetByID(ctx context.Context, id string) (*Agent, *resty.Respon
 		return nil, nil, ErrInput
 	}
 	response, err := s.do(ctx, client.Request{Method: http.MethodGet, Path: []string{voiceApps, agents, id},
-		Header: headers("Get-CsAgent"), Replay: client.ReplaySafe}, http.StatusOK)
+		Header: headers("Get-CsAgent_Get1"), Replay: client.ReplaySafe}, http.StatusOK)
 	if err != nil {
 		return nil, response, err
 	}
@@ -191,12 +196,12 @@ func (s *Service) Create(ctx context.Context, request AgentRequest) (*Agent, *re
 	if err := s.check(ctx); err != nil {
 		return nil, nil, err
 	}
-	body, ok := agentBody(request)
+	body, ok := agentBody(request, false)
 	if !ok {
 		return nil, nil, ErrInput
 	}
 	response, err := s.do(ctx, client.Request{Method: http.MethodPost, Path: []string{voiceApps, agents},
-		Header: headers("New-CsAgent"), Body: body}, http.StatusOK, http.StatusCreated)
+		Header: headers("New-CsAgent_New"), Body: body}, http.StatusCreated)
 	if err != nil {
 		return nil, response, err
 	}
@@ -213,12 +218,12 @@ func (s *Service) UpdateByID(ctx context.Context, id string, request AgentReques
 	if err := s.check(ctx); err != nil {
 		return nil, nil, err
 	}
-	body, ok := agentBody(request)
+	body, ok := agentBody(request, true)
 	if !ok || !validPart(id) {
 		return nil, nil, ErrInput
 	}
 	response, err := s.do(ctx, client.Request{Method: http.MethodPut, Path: []string{voiceApps, agents, id},
-		Header: headers("Set-CsAgent"), Body: body}, http.StatusOK)
+		Header: headers("Set-CsAgent_SetExpanded"), Body: body}, http.StatusOK)
 	if err != nil {
 		return nil, response, err
 	}
@@ -238,8 +243,14 @@ func (s *Service) DeleteByID(ctx context.Context, id string) (*resty.Response, e
 	if !validPart(id) {
 		return nil, ErrInput
 	}
-	return s.do(ctx, client.Request{Method: http.MethodDelete, Path: []string{voiceApps, agents, id},
-		Header: headers("Remove-CsAgent")}, http.StatusOK, http.StatusNoContent)
+	response, err := s.do(ctx, client.Request{Method: http.MethodDelete, Path: []string{voiceApps, agents, id}, Header: headers("Remove-CsAgent_Remove")}, http.StatusOK)
+	if err != nil {
+		return response, err
+	}
+	if _, err = generatedNode(response.Body()); err != nil {
+		return response, err
+	}
+	return response, nil
 }
 
 // QueryPlatformAgents reads the platform AI agent catalog for one provider
@@ -248,16 +259,13 @@ func (s *Service) QueryPlatformAgents(ctx context.Context, request QueryRequest)
 	if err := s.check(ctx); err != nil {
 		return nil, nil, err
 	}
-	if !validText(request.ProviderID) || (request.MaxResults != nil && *request.MaxResults < 0) {
+	if request.ProviderID == "" {
 		return nil, nil, ErrInput
 	}
 	query := url.Values{"providerId": {request.ProviderID}}
 	for name, value := range map[string]*string{"agentId": request.AgentID, "agentIds": request.AgentIDs, "channel": request.Channel,
 		"continuationToken": request.ContinuationToken, "displayNameContains": request.DisplayNameContains, "displayNamePrefix": request.DisplayNamePrefix} {
-		if !validOptional(value) {
-			return nil, nil, ErrInput
-		}
-		if value != nil {
+		if value != nil && *value != "" {
 			query.Set(name, *value)
 		}
 	}
@@ -270,9 +278,16 @@ func (s *Service) QueryPlatformAgents(ctx context.Context, request QueryRequest)
 		query.Set("maxResults", strconv.FormatInt(int64(*request.MaxResults), 10))
 	}
 	response, err := s.do(ctx, client.Request{Method: http.MethodGet, Path: []string{platform, catalog}, Query: query,
-		Header: headers("Get-CsAiAgents"), Replay: client.ReplaySafe}, http.StatusOK)
+		Header: headers("Get-CsAiAgents_Get"), Replay: client.ReplaySafe}, http.StatusOK)
 	if err != nil {
 		return nil, response, err
+	}
+	fields, err := generatedNode(response.Body())
+	if err != nil {
+		return nil, response, err
+	}
+	if fields == nil {
+		return nil, response, nil
 	}
 	var value QueryResult
 	if json.Unmarshal(response.Body(), &value) != nil {
@@ -292,7 +307,7 @@ func (s *Service) knowledgeRequest(ctx context.Context, request KnowledgeRequest
 	if s.knowledge.Backend() != client.AIGeneratedKnowledge {
 		return client.Request{}, client.ErrDestination
 	}
-	if !validText(request.ThreadID) || !validOptional(request.CallID) {
+	if request.ThreadID == "" {
 		return client.Request{}, ErrInput
 	}
 	environment, err := s.knowledge.Session().Environment()
@@ -304,31 +319,32 @@ func (s *Service) knowledgeRequest(ctx context.Context, request KnowledgeRequest
 		return client.Request{}, client.ErrDestination
 	}
 	query := url.Values{"threadId": {request.ThreadID}}
-	if request.CallID != nil {
+	if request.CallID != nil && *request.CallID != "" {
 		query.Set("callId", *request.CallID)
 	}
 	path := append(strings.Split(strings.TrimPrefix(profile.PathPrefix, "/"), "/"), parts...)
-	return client.Request{Method: method, Path: path, Query: query, Header: http.Header{"Accept": {"application/json"}}}, nil
+	command := "Get-AIGeneratedKnowledgeContainer"
+	if method == http.MethodDelete {
+		command = "Remove-AIGeneratedKnowledge"
+	}
+	return client.Request{Method: method, Path: path, Query: query, Header: headers(command)}, nil
 }
 
 // ListKnowledgeContainers reads the storage container URLs that hold a
 // meeting's or call's AI-generated knowledge (Get-AIGeneratedKnowledgeContainer).
 // The module prints them in batches for Purview import; this returns them all.
-func (s *Service) ListKnowledgeContainers(ctx context.Context, request KnowledgeRequest) ([]string, *resty.Response, error) {
+func (s *Service) ListKnowledgeContainers(ctx context.Context, request KnowledgeRequest) ([]*string, *resty.Response, error) {
 	req, err := s.knowledgeRequest(ctx, request, http.MethodGet, "mkb", "crux", "container-urls")
 	if err != nil {
 		return nil, nil, err
 	}
 	req.Replay = client.ReplaySafe
 	response, err := s.knowledge.Do(ctx, req, nil)
-	if response, err = accept(response, err, http.StatusOK); err != nil {
+	if err != nil {
 		return nil, response, err
 	}
-	var values []string
-	if json.Unmarshal(response.Body(), &values) != nil || values == nil {
-		return nil, response, client.ErrDecode
-	}
-	return values, response, nil
+	values, err := knowledgeStrings(response.Body())
+	return values, response, err
 }
 
 // DeleteKnowledge permanently removes a meeting's or call's AI-generated
@@ -340,5 +356,5 @@ func (s *Service) DeleteKnowledge(ctx context.Context, request KnowledgeRequest)
 		return nil, err
 	}
 	response, err := s.knowledge.Do(ctx, req, nil)
-	return accept(response, err, http.StatusOK, http.StatusAccepted, http.StatusNoContent)
+	return response, err
 }

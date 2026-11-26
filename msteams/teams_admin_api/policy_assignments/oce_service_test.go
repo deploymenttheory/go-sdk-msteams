@@ -3,6 +3,7 @@ package policyassignments_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 	"testing"
@@ -89,9 +90,10 @@ func invokeOCE(name string, ctx context.Context, sdk *msteams.Client) contractte
 	return o
 }
 
-func TestUnitOCEDirectRequestVectors(t *testing.T) {
-	t.Parallel()
-	cases := []struct{ name, method, url string }{
+type oceRequestVector struct{ name, method, url string }
+
+func oceRequestVectors() []oceRequestVector {
+	return []oceRequestVector{
 		{name: "batch-status", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/status/00000000-0000-4000-8000-000000000004?region=NOAM"},
 		{name: "batch-list", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/status?region=NOAM"},
 		{name: "batch-definition", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/assignments/operations/definition/00000000-0000-4000-8000-000000000004?region=NOAM"},
@@ -106,8 +108,11 @@ func TestUnitOCEDirectRequestVectors(t *testing.T) {
 		{name: "group-refresh", method: "POST", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/00000000-0000-4000-8000-000000000005/refresh/users?tenantRegion=NOAM&userId=00000000-0000-0000-0000-000000000000&policyType=Fixture"},
 		{name: "group-reprocess", method: "POST", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/00000000-0000-4000-8000-000000000005/policyTypes/Fixture/reprocess?tenantRegion=NOAM"},
 	}
+}
 
-	for _, tc := range cases {
+func TestUnitOCEDirectRequestVectors(t *testing.T) {
+	t.Parallel()
+	for _, tc := range oceRequestVectors() {
 		t.Run(tc.name, func(t *testing.T) {
 			for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
 				run(t, contracttest.Case{Name: "oce-" + tc.name + "-" + string(mode), Mode: mode, Source: oceSource, Mappings: oceMapping(tc.name), Steps: []contracttest.Exchange{oceWire(tc.method, tc.url, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -149,8 +154,23 @@ func TestUnitOCEOptionalQueryAndScopedEscaping(t *testing.T) {
 		}},
 	}
 	for _, row := range cases {
-		run(t, contracttest.Case{Want: contracttest.Expected{Error: auth.ErrForbidden}, Name: "oce-" + row.name, Source: oceSource, Steps: []contracttest.Exchange{oceWire(row.method, origin+row.path, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			return row.invoke(ctx, sdk.TeamsAdminAPI.PolicyAssignments)
-		}})
+		t.Run(row.name, func(t *testing.T) {
+			// Keep the rejected-wire proof separate from authored successful
+			// response grammar. OCE GPATorusCmdletBase::SubmitHTTPRequest<T>
+			// checks IsSuccessStatusCode at IL111 and DeserializeObject<T> at
+			// IL131; refresh calls it with String (ProcessRecord IL142).
+			// Pinned OCE.dll de6da2b13b4b675d7956a0c57af53fccc6cf457a3de2e8464273f95103e3dfc5.
+			for _, status := range []int{403, 200} {
+				reply := ""
+				want := contracttest.Expected{Error: auth.ErrForbidden}
+				if status == 200 {
+					reply = row.reply
+					want = contracttest.Expected{Body: []byte(reply)}
+				}
+				run(t, contracttest.Case{Want: want, Name: fmt.Sprintf("oce-%s-%d", row.name, status), Source: oceSource, Steps: []contracttest.Exchange{oceWire(row.method, origin+row.path, status, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					return row.invoke(ctx, sdk.TeamsAdminAPI.PolicyAssignments)
+				}})
+			}
+		})
 	}
 }

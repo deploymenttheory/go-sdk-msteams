@@ -5,7 +5,9 @@ Get-CsTeamsMeetingBroadcastConfiguration and
 Set-CsTeamsMeetingBroadcastConfiguration functions. Both are `Remoting` proxies
 whose pinned `CmdletConfig.json` selects
 `Get-CsConfigurationModern`/`Set-CsConfigurationModern` with
-`ConfigType=TeamsMeetingBroadcastConfiguration`, i.e. modern ConfigAPI remoting.
+`ConfigType=TeamsMeetingBroadcastConfiguration` as their modern candidate.
+Default dispatch still depends on session flights; the native service implements
+the evidenced modern path. The separate legacy branch remains unqualified.
 
 | Native operation | PowerShell behavior |
 |---|---|
@@ -37,8 +39,17 @@ is permitted by the pinned wrapper; there is no implicit preparation read or For
 setting. PUT never replays. The service rejects enabling
 AllowSdnProviderForBroadcastMeeting without `SdnProviderName` (HTTP 400, errorCode
 40013, `SkypecastSdnMissingParameter`); the SDK returns that `client.APIError`
-unchanged rather than duplicating the rule. `Configuration` preserves nullable
-read values, unknown `RawFields` and an owned `RawJSON` snapshot. There are no
+unchanged rather than duplicating the rule. `Configuration` preserves dynamic
+read values, unknown `RawFields` and an owned `RawJSON` snapshot. Its typed
+fields are convenience views: a matching string, Boolean or Int64 JSON value
+populates the corresponding pointer; null, omission and other kinds leave that
+pointer nil. Consult raw data to distinguish those cases. No scalar coercion is
+performed: for example a Boolean SupportURL or string-valued attendee count is
+retained in raw data without failing the read. Exact duplicate keys and
+case-colliding keys are rejected recursively, including in unknown objects,
+matching the generated parser and later modern JSON conversion stages.
+The raw snapshot retains all received fields even when the PowerShell exposure
+format would select only ten fields. There are no
 public create/delete commands for this singleton.
 
 `SdnAPIToken` is a provider credential. `UpdateRequest` and `Configuration` never

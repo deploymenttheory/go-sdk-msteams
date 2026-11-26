@@ -49,3 +49,11 @@ client propagation, delegated authentication and other clouds remain separately
 unqualified; source-backed request tests cover their binding contracts.
 
 See [qualification](../../../docs/implementation/policies/messaging-migration-configuration-lab-acceptance.md).
+
+FileTypeBlockList now uses `[]*string` in the response model, preserving null
+entries separately from empty strings. This corrects its former lossy `[]string`
+public field type. NullableStrings/ReplaceNullableStrings/ChangeNullableStrings
+and prepared ApplyNullable own their pointed-to values; existing nonnull builder
+signatures and JSON behavior remain available. Omission, explicit clear and
+null list members are distinct. This source-supported capability does not claim
+that a tenant accepts a particular extension or null-member mutation.

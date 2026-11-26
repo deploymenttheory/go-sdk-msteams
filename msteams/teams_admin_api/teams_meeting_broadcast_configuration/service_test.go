@@ -103,7 +103,7 @@ func TestUnitMalformedAndUnexpectedSuccessKeepMetadata(t *testing.T) {
 		name, body string
 		status     int
 		err        error
-	}{{"null", "null", 200, client.ErrDecode}, {"array", "[]", 200, client.ErrDecode}, {"bad-boolean", `{"AllowSdnProviderForBroadcastMeeting":"false"}`, 200, client.ErrDecode}, {"bad-count", `{"SdnAttendeeFallbackCount":"0"}`, 200, client.ErrDecode}, {"unexpected-status", "", 204, resource.ErrResponse}} {
+	}{{"null", "null", 200, client.ErrDecode}, {"array", "[]", 200, client.ErrDecode}, {"duplicate", `{"Identity":"Global","Identity":"other"}`, 200, client.ErrDecode}, {"nested-case-collision", `{"Future":[{"X":1,"x":2}]}`, 200, client.ErrDecode}, {"unexpected-status", "", 204, resource.ErrResponse}} {
 		t.Run(tc.name, func(t *testing.T) {
 			run(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{compiledWire("GET", selected, get, nil, tc.status, tc.body)}, Want: contracttest.Expected{Error: tc.err}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsMeetingBroadcastConfigurations.GetByIdentity(ctx, "Global", resource.ReadOptions{})

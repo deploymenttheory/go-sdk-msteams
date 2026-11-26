@@ -1,0 +1,692 @@
+{
+  "scope": "Actual own pinned DTO numeric boundaries, nullable string-list population and URI setter behavior. Pure data-model/JsonConvert execution only; no management lifecycle, authentication or HTTP.",
+  "hashes": {
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+  },
+  "reproducer_sha256": "993b5966fa851af06ad6465fc4a8d7692e7139c7569c26da50dd8abc48480f66",
+  "observations": [
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":0.5}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":2.5}",
+      "projected_json": "2",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":3.5}",
+      "projected_json": "4",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":-0.5}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":-0.1}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":-0.5001}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":1e-400}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":1e400}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":18446744073709551615}",
+      "projected_json": "18446744073709551615",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":18446744073709551616}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":9007199254740993}",
+      "projected_json": "9007199254740993",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":18446744073709551615.0}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":false}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\" 1 \"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"+1\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"-0\"}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"0.0\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"1e3\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\" \"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"++1\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"+-0\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"1\\u0000\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"\\u00001\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"\\u00a01\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":1.0}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":1e3}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":-2147483649}",
+      "projected_json": "2147483647",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":4294967296}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":9223372036854775807}",
+      "projected_json": "-1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":18446744073709551615}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":18446744073709551616}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\"2147483648\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\"-2147483649\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":false}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\" \"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\" enabled \"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\"1,0\"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\"Enabled,Disabled\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":null}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[]}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[null,7,false,9007199254740993,1.20,1E+03,-0]}",
+      "projected_json": "[null,\"7\",\"false\",\"9007199254740993\",\"1.20\",\"1E+03\",\"-0\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[{}]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[[]]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":true}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":\"entry\"}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[\"a\"],\"blockedtenants\":null}",
+      "projected_json": "[\"a\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsTenantAbuseConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[\"a\"],\"blockedtenants\":[null,7,false]}",
+      "projected_json": "[\"a\",null,\"7\",\"false\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":null}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[]}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[null,7,false,9007199254740993,1.20,1E+03,-0]}",
+      "projected_json": "[null,\"7\",\"false\",\"9007199254740993\",\"1.20\",\"1E+03\",\"-0\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[{}]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[[]]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":true}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":\"entry\"}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[\"a\"],\"filetypeblocklist\":null}",
+      "projected_json": "[\"a\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsMessagingConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[\"a\"],\"filetypeblocklist\":[null,7,false]}",
+      "projected_json": "[\"a\",null,\"7\",\"false\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://n.invalid/\"}",
+      "projected_json": "\"https://n.invalid/\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\"}",
+      "projected_json": "\"https://abc/\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\n\"}",
+      "projected_json": "\"https://abc/\\n\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\r\\n\"}",
+      "projected_json": "\"https://abc/\\r\\n\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\\\\"}",
+      "projected_json": "\"https://abc/\\\\\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\\\n\"}",
+      "projected_json": "\"https://abc/\\\\n\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\nrest\"}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"HTTPS://n.invalid/\"}",
+      "projected_json": "\"HTTPS://n.invalid/\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"\"}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "public_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetOnlineVoicemailValidationConfigurationCmdlet",
+      "dto": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.OnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"http://n.invalid/\"}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    }
+  ],
+  "management_lifecycle_invoked": false,
+  "authentication_or_http": false
+}

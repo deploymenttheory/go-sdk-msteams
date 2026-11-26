@@ -1,0 +1,2489 @@
+{
+  "schema_version": 1,
+  "baseline": "MicrosoftTeams 8.1.0",
+  "foundation_revision": "2cc064c",
+  "scope": "Only data constructors/getters and reflection IL inspection. No management cmdlet lifecycle, auth, tenant read/write or Go execution. Source conversion observations are separate from the native lossless wire foundation.",
+  "status": "source observations; proposed API only, Get-CsTenant not qualified",
+  "records": [
+    {
+      "name": "assoc-il",
+      "producer_source": "$ErrorActionPreference='Stop'\nImport-Module '/private/tmp/msteams-core90-pinned/module/MicrosoftTeams.psd1' -Force -WarningAction SilentlyContinue\nforeach($assembly in [AppDomain]::CurrentDomain.GetAssemblies()){try{$null=$assembly.GetTypes()}catch{}}\nfunction Inspect-Selected {param([string]$TypeName,[string]$MethodPattern)\n$type=[AppDomain]::CurrentDomain.GetAssemblies()|% {$_.GetType($TypeName,$false)}|? {$null -ne $_}|select -First 1\n$ops=@{};foreach($f in [Reflection.Emit.OpCodes].GetFields([Reflection.BindingFlags]'Public,Static')){$op=$f.GetValue($null);$ops[[int]$op.Value -band 65535]=$op}\n$methods=@()\nforeach($m in @($type.GetMethods([Reflection.BindingFlags]'Instance,Static,Public,NonPublic,DeclaredOnly'))+@($type.GetConstructors([Reflection.BindingFlags]'Instance,Static,Public,NonPublic,DeclaredOnly'))){\n if($m.Name -notmatch $MethodPattern){continue};$b=$m.GetMethodBody();if(!$b){continue};$bytes=$b.GetILAsByteArray();$pos=0;$ins=@()\n while($pos -lt $bytes.Length){$start=$pos;$code=[int]$bytes[$pos++];if($code -eq 254){$code=65024+[int]$bytes[$pos++]};$op=$ops[$code];$k=[string]$op.OperandType;$v=$null;$n=0\n switch($k){\n 'InlineNone'{} 'ShortInlineI'{$n=1;$v=[int][sbyte]::Parse($bytes[$pos].ToString('X2'),[Globalization.NumberStyles]::HexNumber)}\n 'ShortInlineVar'{$n=1;$v=[int]$bytes[$pos]} 'InlineVar'{$n=2;$v=[BitConverter]::ToUInt16($bytes,$pos)}\n 'ShortInlineBrTarget'{$n=1;$v=$pos+1+[int][sbyte]::Parse($bytes[$pos].ToString('X2'),[Globalization.NumberStyles]::HexNumber)}\n 'InlineBrTarget'{$n=4;$v=$pos+4+[BitConverter]::ToInt32($bytes,$pos)}\n 'InlineI'{$n=4;$v=[BitConverter]::ToInt32($bytes,$pos)} 'InlineI8'{$n=8;$v=[BitConverter]::ToInt64($bytes,$pos)}\n 'ShortInlineR'{$n=4;$v=[BitConverter]::ToSingle($bytes,$pos)} 'InlineR'{$n=8;$v=[BitConverter]::ToDouble($bytes,$pos)}\n 'InlineSwitch'{$count=[BitConverter]::ToInt32($bytes,$pos);$n=4+4*$count;$v=@();for($j=0;$j -lt $count;$j++){$v+=($pos+$n+[BitConverter]::ToInt32($bytes,$pos+4+4*$j))}}\n default{$n=4;$tok=[BitConverter]::ToInt32($bytes,$pos);try{if($k -eq 'InlineString'){$v=$m.Module.ResolveString($tok)}else{$mem=$m.Module.ResolveMember($tok,$m.DeclaringType.GetGenericArguments(),$(if($m -is [Reflection.MethodInfo]){$m.GetGenericArguments()}else{@()}));$v=[string]$mem.DeclaringType+'.'+[string]$mem}}catch{$v=\"token:$tok\"}}\n };$pos+=$n;$ins+=@{offset=$start;op=$op.Name;operand=$v}}\n $eh=@();foreach($e in $b.ExceptionHandlingClauses){$eh+=@{flags=[string]$e.Flags;tryOffset=$e.TryOffset;tryLength=$e.TryLength;handlerOffset=$e.HandlerOffset;handlerLength=$e.HandlerLength;catch=$(if($e.Flags -eq 'Clause'){[string]$e.CatchType}else{$null})}}\n $methods+=@{method=[string]$m;il_sha256=[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant();locals=@($b.LocalVariables|%{[string]$_});exceptions=$eh;instructions=$ins}\n}\n$fields=@();foreach($f in $type.GetFields([Reflection.BindingFlags]'Public,NonPublic,Static,Instance,DeclaredOnly')){$fields+=@{name=$f.Name;type=[string]$f.FieldType;literal=$f.IsLiteral;constant=$(if($f.IsLiteral){$f.GetRawConstantValue()}else{$null})}}\n@{type=$type.FullName;assembly_sha256=(Get-FileHash $type.Assembly.Location -Algorithm SHA256).Hash.ToLowerInvariant();fields=$fields;methods=$methods}|ConvertTo-Json -Depth 12 -Compress\n\n}\n\n$rows=@()\n$rows+=(Inspect-Selected 'Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode' '^ToValue$|^ToArrayOf$|DictionaryProperty'|ConvertFrom-Json -Depth 30)\n$rows+=(Inspect-Selected 'Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject' '^ToValue$|^ToArrayOf$|DictionaryProperty'|ConvertFrom-Json -Depth 30)\n$rows+=(Inspect-Selected 'Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray' '^ToValue$|^ToArrayOf$|DictionaryProperty'|ConvertFrom-Json -Depth 30)\n$rows+=(Inspect-Selected 'Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber' '^ToValue$|^ToArrayOf$|DictionaryProperty'|ConvertFrom-Json -Depth 30)\n$rows|ConvertTo-Json -Depth 30 -Compress\n",
+      "producer_sha256": "0ead08b260ea98c0f8eeaa18afc40ac3300aeda9bae667fd794679b689b02f40",
+      "output": [
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode",
+          "fields": [],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+          "methods": [
+            {
+              "locals": [
+                "System.Object (0)"
+              ],
+              "il_sha256": "acc7ab1fe26b1c7a97fa2b3d5fb4fc94a2a9409852ade79f332733f0844ef619",
+              "method": "System.Object ToValue()",
+              "instructions": [
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 0
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 1
+                },
+                {
+                  "operand": "System.Object.System.String ToString()",
+                  "op": "callvirt",
+                  "offset": 2
+                },
+                {
+                  "operand": null,
+                  "op": "stloc.0",
+                  "offset": 7
+                },
+                {
+                  "operand": 10,
+                  "op": "br.s",
+                  "offset": 8
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.0",
+                  "offset": 10
+                },
+                {
+                  "operand": null,
+                  "op": "ret",
+                  "offset": 11
+                }
+              ],
+              "exceptions": []
+            },
+            {
+              "locals": [
+                "T[] (0)"
+              ],
+              "il_sha256": "5ed8e44cc0381aed4311a143d54cc32c1524c6cfc339837891ad475c262c494d",
+              "method": "T[] ToArrayOf[T]()",
+              "instructions": [
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 0
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonSerializer, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.Void .ctor()",
+                  "op": "newobj",
+                  "offset": 1
+                },
+                {
+                  "operand": ".T[]",
+                  "op": "ldtoken",
+                  "offset": 6
+                },
+                {
+                  "operand": "type.System.Type GetTypeFromHandle(System.RuntimeTypeHandle)",
+                  "op": "call",
+                  "offset": 11
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 16
+                },
+                {
+                  "operand": ".Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray",
+                  "op": "castclass",
+                  "offset": 17
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonSerializer, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.System.Array DeserializeArray(System.Type, Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray)",
+                  "op": "call",
+                  "offset": 22
+                },
+                {
+                  "operand": ".T[]",
+                  "op": "castclass",
+                  "offset": 27
+                },
+                {
+                  "operand": null,
+                  "op": "stloc.0",
+                  "offset": 32
+                },
+                {
+                  "operand": 35,
+                  "op": "br.s",
+                  "offset": 33
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.0",
+                  "offset": 35
+                },
+                {
+                  "operand": null,
+                  "op": "ret",
+                  "offset": 36
+                }
+              ],
+              "exceptions": []
+            }
+          ]
+        },
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject",
+          "fields": [
+            {
+              "type": "System.Collections.Generic.Dictionary[string,Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode]",
+              "name": "items",
+              "constant": null,
+              "literal": false
+            }
+          ],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+          "methods": [
+            {
+              "locals": [],
+              "il_sha256": "0579299f9326db7755a07fe3de625292af9d256486f48e99af91c2a3aeaf8d9c",
+              "method": "System.Object ToValue()",
+              "instructions": [
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 0
+                },
+                {
+                  "operand": "System.Collections.Generic.Dictionary[string,System.Object].Void .ctor()",
+                  "op": "newobj",
+                  "offset": 1
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject,System.Object] <>9__0_0",
+                  "op": "ldsfld",
+                  "offset": 6
+                },
+                {
+                  "operand": null,
+                  "op": "dup",
+                  "offset": 11
+                },
+                {
+                  "operand": 37,
+                  "op": "brtrue.s",
+                  "offset": 12
+                },
+                {
+                  "operand": null,
+                  "op": "pop",
+                  "offset": 14
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.<>c <>9",
+                  "op": "ldsfld",
+                  "offset": 15
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.System.Object <ToValue>b__0_0(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject)",
+                  "op": "ldftn",
+                  "offset": 20
+                },
+                {
+                  "operand": "System.Func[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject,System.Object].Void .ctor(System.Object, IntPtr)",
+                  "op": "newobj",
+                  "offset": 26
+                },
+                {
+                  "operand": null,
+                  "op": "dup",
+                  "offset": 31
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject,System.Object] <>9__0_0",
+                  "op": "stsfld",
+                  "offset": 32
+                },
+                {
+                  "operand": null,
+                  "op": "ldnull",
+                  "offset": 37
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.JsonSerializable, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.System.Collections.Generic.IDictionary`2[System.String,System.Object] FromJson[Object](Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject, System.Collections.Generic.Dictionary`2[System.String,System.Object], System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject,System.Object], System.Collections.Generic.HashSet`1[System.String])",
+                  "op": "call",
+                  "offset": 38
+                },
+                {
+                  "operand": null,
+                  "op": "ret",
+                  "offset": 43
+                }
+              ],
+              "exceptions": []
+            },
+            {
+              "locals": [
+                "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject (0)",
+                "System.Boolean (1)",
+                "System.Boolean (2)",
+                "System.Collections.Generic.IEnumerator`1[System.String] (3)",
+                "System.String (4)",
+                "System.Collections.Generic.Dictionary`2[System.String,T] (5)"
+              ],
+              "il_sha256": "b0d354c9e62c89f4bd663b5ead53d88ed7f59ca86d698cca32774294ba15e2d2",
+              "method": "System.Collections.Generic.Dictionary`2[System.String,T] DictionaryProperty[T](System.String, System.Collections.Generic.Dictionary`2[System.String,T] ByRef, System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode,T])",
+              "instructions": [
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 0
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 1
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.1",
+                  "offset": 2
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject.Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject PropertyT[JsonObject](System.String)",
+                  "op": "call",
+                  "offset": 3
+                },
+                {
+                  "operand": null,
+                  "op": "stloc.0",
+                  "offset": 8
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.2",
+                  "offset": 9
+                },
+                {
+                  "operand": null,
+                  "op": "ldind.ref",
+                  "offset": 10
+                },
+                {
+                  "operand": null,
+                  "op": "ldnull",
+                  "offset": 11
+                },
+                {
+                  "operand": null,
+                  "op": "ceq",
+                  "offset": 12
+                },
+                {
+                  "operand": null,
+                  "op": "stloc.1",
+                  "offset": 14
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.1",
+                  "offset": 15
+                },
+                {
+                  "operand": 29,
+                  "op": "brfalse.s",
+                  "offset": 16
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 18
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.2",
+                  "offset": 19
+                },
+                {
+                  "operand": "System.Collections.Generic.Dictionary[string,T].Void .ctor()",
+                  "op": "newobj",
+                  "offset": 20
+                },
+                {
+                  "operand": null,
+                  "op": "stind.ref",
+                  "offset": 25
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 26
+                },
+                {
+                  "operand": 39,
+                  "op": "br.s",
+                  "offset": 27
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 29
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.2",
+                  "offset": 30
+                },
+                {
+                  "operand": null,
+                  "op": "ldind.ref",
+                  "offset": 31
+                },
+                {
+                  "operand": "System.Collections.Generic.Dictionary[string,T].Void Clear()",
+                  "op": "callvirt",
+                  "offset": 32
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 37
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 38
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.0",
+                  "offset": 39
+                },
+                {
+                  "operand": null,
+                  "op": "ldnull",
+                  "offset": 40
+                },
+                {
+                  "operand": null,
+                  "op": "cgt.un",
+                  "offset": 41
+                },
+                {
+                  "operand": null,
+                  "op": "stloc.2",
+                  "offset": 43
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.2",
+                  "offset": 44
+                },
+                {
+                  "operand": 119,
+                  "op": "brfalse.s",
+                  "offset": 45
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 47
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 48
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.0",
+                  "offset": 49
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject.System.Collections.Generic.ICollection`1[System.String] get_Keys()",
+                  "op": "callvirt",
+                  "offset": 50
+                },
+                {
+                  "operand": "System.Collections.Generic.IEnumerable[string].System.Collections.Generic.IEnumerator`1[System.String] GetEnumerator()",
+                  "op": "callvirt",
+                  "offset": 55
+                },
+                {
+                  "operand": null,
+                  "op": "stloc.3",
+                  "offset": 60
+                },
+                {
+                  "operand": 97,
+                  "op": "br.s",
+                  "offset": 61
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.3",
+                  "offset": 63
+                },
+                {
+                  "operand": "System.Collections.Generic.IEnumerator[string].System.String get_Current()",
+                  "op": "callvirt",
+                  "offset": 64
+                },
+                {
+                  "operand": 4,
+                  "op": "stloc.s",
+                  "offset": 69
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 71
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.2",
+                  "offset": 72
+                },
+                {
+                  "operand": null,
+                  "op": "ldind.ref",
+                  "offset": 73
+                },
+                {
+                  "operand": 4,
+                  "op": "ldloc.s",
+                  "offset": 74
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.3",
+                  "offset": 76
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.0",
+                  "offset": 77
+                },
+                {
+                  "operand": 4,
+                  "op": "ldloc.s",
+                  "offset": 78
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode.Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode get_Item(System.String)",
+                  "op": "callvirt",
+                  "offset": 80
+                },
+                {
+                  "operand": "System.Func[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode,T].T Invoke(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode)",
+                  "op": "callvirt",
+                  "offset": 85
+                },
+                {
+                  "operand": "System.Collections.Generic.Dictionary[string,T].Void set_Item(System.String, T)",
+                  "op": "callvirt",
+                  "offset": 90
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 95
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 96
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.3",
+                  "offset": 97
+                },
+                {
+                  "operand": "System.Collections.IEnumerator.Boolean MoveNext()",
+                  "op": "callvirt",
+                  "offset": 98
+                },
+                {
+                  "operand": 63,
+                  "op": "brtrue.s",
+                  "offset": 103
+                },
+                {
+                  "operand": 118,
+                  "op": "leave.s",
+                  "offset": 105
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.3",
+                  "offset": 107
+                },
+                {
+                  "operand": 117,
+                  "op": "brfalse.s",
+                  "offset": 108
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.3",
+                  "offset": 110
+                },
+                {
+                  "operand": "System.IDisposable.Void Dispose()",
+                  "op": "callvirt",
+                  "offset": 111
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 116
+                },
+                {
+                  "operand": null,
+                  "op": "endfinally",
+                  "offset": 117
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 118
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.2",
+                  "offset": 119
+                },
+                {
+                  "operand": null,
+                  "op": "ldind.ref",
+                  "offset": 120
+                },
+                {
+                  "operand": 5,
+                  "op": "stloc.s",
+                  "offset": 121
+                },
+                {
+                  "operand": 125,
+                  "op": "br.s",
+                  "offset": 123
+                },
+                {
+                  "operand": 5,
+                  "op": "ldloc.s",
+                  "offset": 125
+                },
+                {
+                  "operand": null,
+                  "op": "ret",
+                  "offset": 127
+                }
+              ],
+              "exceptions": [
+                {
+                  "tryLength": 46,
+                  "tryOffset": 61,
+                  "catch": null,
+                  "handlerOffset": 107,
+                  "handlerLength": 11,
+                  "flags": "Finally"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray",
+          "fields": [],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+          "methods": [
+            {
+              "locals": [],
+              "il_sha256": "203838197e302a54c2da1b752e8658fde9bcc895fd9481653507d699885c3450",
+              "method": "System.Object ToValue()",
+              "instructions": [
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 0
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray.Int32 get_Count()",
+                  "op": "callvirt",
+                  "offset": 1
+                },
+                {
+                  "operand": 52,
+                  "op": "brfalse.s",
+                  "offset": 6
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 8
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode,System.Object] <>9__0_0",
+                  "op": "ldsfld",
+                  "offset": 9
+                },
+                {
+                  "operand": null,
+                  "op": "dup",
+                  "offset": 14
+                },
+                {
+                  "operand": 40,
+                  "op": "brtrue.s",
+                  "offset": 15
+                },
+                {
+                  "operand": null,
+                  "op": "pop",
+                  "offset": 17
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.<>c <>9",
+                  "op": "ldsfld",
+                  "offset": 18
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.System.Object <ToValue>b__0_0(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode)",
+                  "op": "ldftn",
+                  "offset": 23
+                },
+                {
+                  "operand": "System.Func[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode,System.Object].Void .ctor(System.Object, IntPtr)",
+                  "op": "newobj",
+                  "offset": 29
+                },
+                {
+                  "operand": null,
+                  "op": "dup",
+                  "offset": 34
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode,System.Object] <>9__0_0",
+                  "op": "stsfld",
+                  "offset": 35
+                },
+                {
+                  "operand": "System.Linq.Enumerable.System.Collections.Generic.IEnumerable`1[System.Object] Select[JsonNode,Object](System.Collections.Generic.IEnumerable`1[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode], System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode,System.Object])",
+                  "op": "call",
+                  "offset": 40
+                },
+                {
+                  "operand": "System.Linq.Enumerable.System.Object[] ToArray[Object](System.Collections.Generic.IEnumerable`1[System.Object])",
+                  "op": "call",
+                  "offset": 45
+                },
+                {
+                  "operand": 58,
+                  "op": "br.s",
+                  "offset": 50
+                },
+                {
+                  "operand": null,
+                  "op": "ldc.i4.0",
+                  "offset": 52
+                },
+                {
+                  "operand": ".System.Object",
+                  "op": "newarr",
+                  "offset": 53
+                },
+                {
+                  "operand": null,
+                  "op": "ret",
+                  "offset": 58
+                }
+              ],
+              "exceptions": []
+            }
+          ]
+        },
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber",
+          "fields": [
+            {
+              "type": "string",
+              "name": "value",
+              "constant": null,
+              "literal": false
+            },
+            {
+              "type": "bool",
+              "name": "overflows",
+              "constant": null,
+              "literal": false
+            },
+            {
+              "type": "datetime",
+              "name": "EpochDate",
+              "constant": null,
+              "literal": false
+            }
+          ],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+          "methods": [
+            {
+              "locals": [
+                "System.Boolean (0)",
+                "System.Int32 (1)",
+                "System.Int64 (2)",
+                "System.Boolean (3)",
+                "System.Object (4)",
+                "System.Boolean (5)",
+                "System.Single (6)",
+                "System.Double (7)",
+                "System.Decimal (8)",
+                "System.Boolean (9)",
+                "System.Boolean (10)",
+                "System.Boolean (11)"
+              ],
+              "il_sha256": "b73d6fc300ba8ff860d45d1a5ceaf189ba3ec92b16b16e4b64f63dc936f9eb18",
+              "method": "System.Object ToValue()",
+              "instructions": [
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 0
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 1
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber.Boolean get_IsInteger()",
+                  "op": "call",
+                  "offset": 2
+                },
+                {
+                  "operand": null,
+                  "op": "stloc.0",
+                  "offset": 7
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.0",
+                  "offset": 8
+                },
+                {
+                  "operand": 76,
+                  "op": "brfalse.s",
+                  "offset": 9
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 11
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 12
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber.System.String value",
+                  "op": "ldfld",
+                  "offset": 13
+                },
+                {
+                  "operand": 1,
+                  "op": "ldloca.s",
+                  "offset": 18
+                },
+                {
+                  "operand": "int.Boolean TryParse(System.String, Int32 ByRef)",
+                  "op": "call",
+                  "offset": 20
+                },
+                {
+                  "operand": null,
+                  "op": "stloc.3",
+                  "offset": 25
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.3",
+                  "offset": 26
+                },
+                {
+                  "operand": 43,
+                  "op": "brfalse.s",
+                  "offset": 27
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 29
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.1",
+                  "offset": 30
+                },
+                {
+                  "operand": ".int",
+                  "op": "box",
+                  "offset": 31
+                },
+                {
+                  "operand": 4,
+                  "op": "stloc.s",
+                  "offset": 36
+                },
+                {
+                  "operand": 176,
+                  "op": "br",
+                  "offset": 38
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 43
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber.System.String value",
+                  "op": "ldfld",
+                  "offset": 44
+                },
+                {
+                  "operand": 2,
+                  "op": "ldloca.s",
+                  "offset": 49
+                },
+                {
+                  "operand": "long.Boolean TryParse(System.String, Int64 ByRef)",
+                  "op": "call",
+                  "offset": 51
+                },
+                {
+                  "operand": 5,
+                  "op": "stloc.s",
+                  "offset": 56
+                },
+                {
+                  "operand": 5,
+                  "op": "ldloc.s",
+                  "offset": 58
+                },
+                {
+                  "operand": 73,
+                  "op": "brfalse.s",
+                  "offset": 60
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 62
+                },
+                {
+                  "operand": null,
+                  "op": "ldloc.2",
+                  "offset": 63
+                },
+                {
+                  "operand": ".long",
+                  "op": "box",
+                  "offset": 64
+                },
+                {
+                  "operand": 4,
+                  "op": "stloc.s",
+                  "offset": 69
+                },
+                {
+                  "operand": 176,
+                  "op": "br.s",
+                  "offset": 71
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 73
+                },
+                {
+                  "operand": 171,
+                  "op": "br.s",
+                  "offset": 74
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 76
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 77
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber.System.String value",
+                  "op": "ldfld",
+                  "offset": 78
+                },
+                {
+                  "operand": 6,
+                  "op": "ldloca.s",
+                  "offset": 83
+                },
+                {
+                  "operand": "float.Boolean TryParse(System.String, Single ByRef)",
+                  "op": "call",
+                  "offset": 85
+                },
+                {
+                  "operand": 9,
+                  "op": "stloc.s",
+                  "offset": 90
+                },
+                {
+                  "operand": 9,
+                  "op": "ldloc.s",
+                  "offset": 92
+                },
+                {
+                  "operand": 108,
+                  "op": "brfalse.s",
+                  "offset": 94
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 96
+                },
+                {
+                  "operand": 6,
+                  "op": "ldloc.s",
+                  "offset": 97
+                },
+                {
+                  "operand": ".float",
+                  "op": "box",
+                  "offset": 99
+                },
+                {
+                  "operand": 4,
+                  "op": "stloc.s",
+                  "offset": 104
+                },
+                {
+                  "operand": 176,
+                  "op": "br.s",
+                  "offset": 106
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 108
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber.System.String value",
+                  "op": "ldfld",
+                  "offset": 109
+                },
+                {
+                  "operand": 7,
+                  "op": "ldloca.s",
+                  "offset": 114
+                },
+                {
+                  "operand": "double.Boolean TryParse(System.String, Double ByRef)",
+                  "op": "call",
+                  "offset": 116
+                },
+                {
+                  "operand": 10,
+                  "op": "stloc.s",
+                  "offset": 121
+                },
+                {
+                  "operand": 10,
+                  "op": "ldloc.s",
+                  "offset": 123
+                },
+                {
+                  "operand": 139,
+                  "op": "brfalse.s",
+                  "offset": 125
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 127
+                },
+                {
+                  "operand": 7,
+                  "op": "ldloc.s",
+                  "offset": 128
+                },
+                {
+                  "operand": ".double",
+                  "op": "box",
+                  "offset": 130
+                },
+                {
+                  "operand": 4,
+                  "op": "stloc.s",
+                  "offset": 135
+                },
+                {
+                  "operand": 176,
+                  "op": "br.s",
+                  "offset": 137
+                },
+                {
+                  "operand": null,
+                  "op": "ldarg.0",
+                  "offset": 139
+                },
+                {
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber.System.String value",
+                  "op": "ldfld",
+                  "offset": 140
+                },
+                {
+                  "operand": 8,
+                  "op": "ldloca.s",
+                  "offset": 145
+                },
+                {
+                  "operand": "decimal.Boolean TryParse(System.String, System.Decimal ByRef)",
+                  "op": "call",
+                  "offset": 147
+                },
+                {
+                  "operand": 11,
+                  "op": "stloc.s",
+                  "offset": 152
+                },
+                {
+                  "operand": 11,
+                  "op": "ldloc.s",
+                  "offset": 154
+                },
+                {
+                  "operand": 170,
+                  "op": "brfalse.s",
+                  "offset": 156
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 158
+                },
+                {
+                  "operand": 8,
+                  "op": "ldloc.s",
+                  "offset": 159
+                },
+                {
+                  "operand": ".decimal",
+                  "op": "box",
+                  "offset": 161
+                },
+                {
+                  "operand": 4,
+                  "op": "stloc.s",
+                  "offset": 166
+                },
+                {
+                  "operand": 176,
+                  "op": "br.s",
+                  "offset": 168
+                },
+                {
+                  "operand": null,
+                  "op": "nop",
+                  "offset": 170
+                },
+                {
+                  "operand": null,
+                  "op": "ldnull",
+                  "offset": 171
+                },
+                {
+                  "operand": 4,
+                  "op": "stloc.s",
+                  "offset": 172
+                },
+                {
+                  "operand": 176,
+                  "op": "br.s",
+                  "offset": 174
+                },
+                {
+                  "operand": 4,
+                  "op": "ldloc.s",
+                  "offset": 176
+                },
+                {
+                  "operand": null,
+                  "op": "ret",
+                  "offset": 178
+                }
+              ],
+              "exceptions": []
+            }
+          ]
+        }
+      ],
+      "output_sha256": "1d16d2636c4e525f619dc48d31c0a237b65e3baf25bdbb2157665d8f4cd3b462"
+    },
+    {
+      "name": "assoc-closure-il",
+      "producer_source": "$ErrorActionPreference='Stop'\nImport-Module '/private/tmp/msteams-core90-pinned/module/MicrosoftTeams.psd1' -Force -WarningAction SilentlyContinue\nforeach($assembly in [AppDomain]::CurrentDomain.GetAssemblies()){try{$null=$assembly.GetTypes()}catch{}}\nfunction Inspect-Selected {param([string]$TypeName,[string]$MethodPattern)\n$type=[AppDomain]::CurrentDomain.GetAssemblies()|% {$_.GetType($TypeName,$false)}|? {$null -ne $_}|select -First 1\nif($null -eq $type){return (@{type=$TypeName;missing=$true}|ConvertTo-Json -Compress)}\n$ops=@{};foreach($f in [Reflection.Emit.OpCodes].GetFields([Reflection.BindingFlags]'Public,Static')){$op=$f.GetValue($null);$ops[[int]$op.Value -band 65535]=$op}\n$methods=@()\nforeach($m in @($type.GetMethods([Reflection.BindingFlags]'Instance,Static,Public,NonPublic,DeclaredOnly'))+@($type.GetConstructors([Reflection.BindingFlags]'Instance,Static,Public,NonPublic,DeclaredOnly'))){\n if($m.Name -notmatch $MethodPattern){continue};$b=$m.GetMethodBody();if(!$b){continue};$bytes=$b.GetILAsByteArray();$pos=0;$ins=@()\n while($pos -lt $bytes.Length){$start=$pos;$code=[int]$bytes[$pos++];if($code -eq 254){$code=65024+[int]$bytes[$pos++]};$op=$ops[$code];$k=[string]$op.OperandType;$v=$null;$n=0\n switch($k){\n 'InlineNone'{} 'ShortInlineI'{$n=1;$v=[int][sbyte]::Parse($bytes[$pos].ToString('X2'),[Globalization.NumberStyles]::HexNumber)}\n 'ShortInlineVar'{$n=1;$v=[int]$bytes[$pos]} 'InlineVar'{$n=2;$v=[BitConverter]::ToUInt16($bytes,$pos)}\n 'ShortInlineBrTarget'{$n=1;$v=$pos+1+[int][sbyte]::Parse($bytes[$pos].ToString('X2'),[Globalization.NumberStyles]::HexNumber)}\n 'InlineBrTarget'{$n=4;$v=$pos+4+[BitConverter]::ToInt32($bytes,$pos)}\n 'InlineI'{$n=4;$v=[BitConverter]::ToInt32($bytes,$pos)} 'InlineI8'{$n=8;$v=[BitConverter]::ToInt64($bytes,$pos)}\n 'ShortInlineR'{$n=4;$v=[BitConverter]::ToSingle($bytes,$pos)} 'InlineR'{$n=8;$v=[BitConverter]::ToDouble($bytes,$pos)}\n 'InlineSwitch'{$count=[BitConverter]::ToInt32($bytes,$pos);$n=4+4*$count;$v=@();for($j=0;$j -lt $count;$j++){$v+=($pos+$n+[BitConverter]::ToInt32($bytes,$pos+4+4*$j))}}\n default{$n=4;$tok=[BitConverter]::ToInt32($bytes,$pos);try{if($k -eq 'InlineString'){$v=$m.Module.ResolveString($tok)}else{$mem=$m.Module.ResolveMember($tok,$m.DeclaringType.GetGenericArguments(),$(if($m -is [Reflection.MethodInfo]){$m.GetGenericArguments()}else{@()}));$v=[string]$mem.DeclaringType+'.'+[string]$mem}}catch{$v=\"token:$tok\"}}\n };$pos+=$n;$ins+=@{offset=$start;op=$op.Name;operand=$v}}\n $eh=@();foreach($e in $b.ExceptionHandlingClauses){$eh+=@{flags=[string]$e.Flags;tryOffset=$e.TryOffset;tryLength=$e.TryLength;handlerOffset=$e.HandlerOffset;handlerLength=$e.HandlerLength;catch=$(if($e.Flags -eq 'Clause'){[string]$e.CatchType}else{$null})}}\n $methods+=@{method=[string]$m;il_sha256=[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant();locals=@($b.LocalVariables|%{[string]$_});exceptions=$eh;instructions=$ins}\n}\n$fields=@();foreach($f in $type.GetFields([Reflection.BindingFlags]'Public,NonPublic,Static,Instance,DeclaredOnly')){$fields+=@{name=$f.Name;type=[string]$f.FieldType;literal=$f.IsLiteral;constant=$(if($f.IsLiteral){$f.GetRawConstantValue()}else{$null})}}\n@{type=$type.FullName;assembly_sha256=(Get-FileHash $type.Assembly.Location -Algorithm SHA256).Hash.ToLowerInvariant();fields=$fields;methods=$methods}|ConvertTo-Json -Depth 12 -Compress\n\n}\n\n$rows=@()\nforeach($pair in @(\n @('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.JsonSerializable','FromJson'),\n @('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject+<>c','ToValue'),\n @('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray+<>c','ToValue'),\n @('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber','get_IsInteger'),\n @('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonString','ToString'),\n @('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode','ToString'),\n @('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonBoolean','ToValue')\n)){$rows+=(Inspect-Selected $pair[0] $pair[1]|ConvertFrom-Json -Depth 30)}\n$rows|ConvertTo-Json -Depth 30 -Compress\n",
+      "producer_sha256": "23b65c65ecf0e2f6fc15220fbf2f8ca401782509ef7ef59ce1149be53e9a38c6",
+      "output": [
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.JsonSerializable",
+          "methods": [
+            {
+              "instructions": [
+                {
+                  "op": "ldarg.0",
+                  "offset": 0,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.1",
+                  "offset": 1,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.2",
+                  "offset": 2,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.3",
+                  "offset": 3,
+                  "operand": null
+                },
+                {
+                  "op": "call",
+                  "offset": 4,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.JsonSerializable, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.System.Collections.Generic.IDictionary`2[System.String,V] FromJson[V](Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject, System.Collections.Generic.IDictionary`2[System.String,V], System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject,V], System.Collections.Generic.HashSet`1[System.String])"
+                },
+                {
+                  "op": "ret",
+                  "offset": 9,
+                  "operand": null
+                }
+              ],
+              "il_sha256": "8dac7e67652d474c883a6991b0ca0f3d8c56c1a7eea5c1f1c30588e5d6ad2890",
+              "locals": [],
+              "exceptions": [],
+              "method": "System.Collections.Generic.IDictionary`2[System.String,V] FromJson[V](Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject, System.Collections.Generic.Dictionary`2[System.String,V], System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject,V], System.Collections.Generic.HashSet`1[System.String])"
+            },
+            {
+              "instructions": [
+                {
+                  "op": "nop",
+                  "offset": 0,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.0",
+                  "offset": 1,
+                  "operand": null
+                },
+                {
+                  "op": "ldnull",
+                  "offset": 2,
+                  "operand": null
+                },
+                {
+                  "op": "ceq",
+                  "offset": 3,
+                  "operand": null
+                },
+                {
+                  "op": "stloc.0",
+                  "offset": 5,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.0",
+                  "offset": 6,
+                  "operand": null
+                },
+                {
+                  "op": "brfalse.s",
+                  "offset": 7,
+                  "operand": 17
+                },
+                {
+                  "op": "nop",
+                  "offset": 9,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.1",
+                  "offset": 10,
+                  "operand": null
+                },
+                {
+                  "op": "stloc.1",
+                  "offset": 11,
+                  "operand": null
+                },
+                {
+                  "op": "br",
+                  "offset": 12,
+                  "operand": 273
+                },
+                {
+                  "op": "nop",
+                  "offset": 17,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.0",
+                  "offset": 18,
+                  "operand": null
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 19,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject.System.Collections.Generic.ICollection`1[System.String] get_Keys()"
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 24,
+                  "operand": "System.Collections.Generic.IEnumerable[string].System.Collections.Generic.IEnumerator`1[System.String] GetEnumerator()"
+                },
+                {
+                  "op": "stloc.2",
+                  "offset": 29,
+                  "operand": null
+                },
+                {
+                  "op": "br",
+                  "offset": 30,
+                  "operand": 245
+                },
+                {
+                  "op": "ldloc.2",
+                  "offset": 35,
+                  "operand": null
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 36,
+                  "operand": "System.Collections.Generic.IEnumerator[string].System.String get_Current()"
+                },
+                {
+                  "op": "stloc.3",
+                  "offset": 41,
+                  "operand": null
+                },
+                {
+                  "op": "nop",
+                  "offset": 42,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.3",
+                  "offset": 43,
+                  "operand": null
+                },
+                {
+                  "op": "brtrue.s",
+                  "offset": 44,
+                  "operand": 58
+                },
+                {
+                  "op": "ldloca.s",
+                  "offset": 46,
+                  "operand": 6
+                },
+                {
+                  "op": "initobj",
+                  "offset": 48,
+                  "operand": ".System.Nullable[bool]"
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 54,
+                  "operand": 6
+                },
+                {
+                  "op": "br.s",
+                  "offset": 56,
+                  "operand": 70
+                },
+                {
+                  "op": "ldarg.3",
+                  "offset": 58,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.3",
+                  "offset": 59,
+                  "operand": null
+                },
+                {
+                  "op": "call",
+                  "offset": 60,
+                  "operand": "System.Collections.Generic.HashSet[string].Boolean Contains(System.String)"
+                },
+                {
+                  "op": "newobj",
+                  "offset": 65,
+                  "operand": "System.Nullable[bool].Void .ctor(Boolean)"
+                },
+                {
+                  "op": "stloc.s",
+                  "offset": 70,
+                  "operand": 6
+                },
+                {
+                  "op": "ldloca.s",
+                  "offset": 72,
+                  "operand": 6
+                },
+                {
+                  "op": "call",
+                  "offset": 74,
+                  "operand": "System.Nullable[bool].Boolean GetValueOrDefault()"
+                },
+                {
+                  "op": "stloc.s",
+                  "offset": 79,
+                  "operand": 5
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 81,
+                  "operand": 5
+                },
+                {
+                  "op": "brfalse.s",
+                  "offset": 83,
+                  "operand": 91
+                },
+                {
+                  "op": "nop",
+                  "offset": 85,
+                  "operand": null
+                },
+                {
+                  "op": "br",
+                  "offset": 86,
+                  "operand": 245
+                },
+                {
+                  "op": "ldarg.0",
+                  "offset": 91,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.3",
+                  "offset": 92,
+                  "operand": null
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 93,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode.Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode get_Item(System.String)"
+                },
+                {
+                  "op": "stloc.s",
+                  "offset": 98,
+                  "operand": 4
+                },
+                {
+                  "op": "nop",
+                  "offset": 100,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 101,
+                  "operand": 4
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 103,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode.Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonType get_Type()"
+                },
+                {
+                  "op": "stloc.s",
+                  "offset": 108,
+                  "operand": 8
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 110,
+                  "operand": 8
+                },
+                {
+                  "op": "stloc.s",
+                  "offset": 112,
+                  "operand": 7
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 114,
+                  "operand": 7
+                },
+                {
+                  "op": "switch",
+                  "offset": 116,
+                  "operand": [
+                    155,
+                    179,
+                    157,
+                    157,
+                    157,
+                    157,
+                    157,
+                    157
+                  ]
+                },
+                {
+                  "op": "br.s",
+                  "offset": 153,
+                  "operand": 236
+                },
+                {
+                  "op": "leave.s",
+                  "offset": 155,
+                  "operand": 245
+                },
+                {
+                  "op": "ldarg.1",
+                  "offset": 157,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.3",
+                  "offset": 158,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 159,
+                  "operand": 4
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 161,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode.System.Object ToValue()"
+                },
+                {
+                  "op": "unbox.any",
+                  "offset": 166,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.JsonSerializable, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.V"
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 171,
+                  "operand": "System.Collections.Generic.IDictionary[string,V].Void Add(System.String, V)"
+                },
+                {
+                  "op": "nop",
+                  "offset": 176,
+                  "operand": null
+                },
+                {
+                  "op": "br.s",
+                  "offset": 177,
+                  "operand": 236
+                },
+                {
+                  "op": "ldarg.2",
+                  "offset": 179,
+                  "operand": null
+                },
+                {
+                  "op": "ldnull",
+                  "offset": 180,
+                  "operand": null
+                },
+                {
+                  "op": "cgt.un",
+                  "offset": 181,
+                  "operand": null
+                },
+                {
+                  "op": "stloc.s",
+                  "offset": 183,
+                  "operand": 9
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 185,
+                  "operand": 9
+                },
+                {
+                  "op": "brfalse.s",
+                  "offset": 187,
+                  "operand": 234
+                },
+                {
+                  "op": "nop",
+                  "offset": 189,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.2",
+                  "offset": 190,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 191,
+                  "operand": 4
+                },
+                {
+                  "op": "isinst",
+                  "offset": 193,
+                  "operand": ".Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject"
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 198,
+                  "operand": "System.Func[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject,V].V Invoke(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject)"
+                },
+                {
+                  "op": "stloc.s",
+                  "offset": 203,
+                  "operand": 10
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 205,
+                  "operand": 10
+                },
+                {
+                  "op": "box",
+                  "offset": 207,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.JsonSerializable, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.V"
+                },
+                {
+                  "op": "ldnull",
+                  "offset": 212,
+                  "operand": null
+                },
+                {
+                  "op": "cgt.un",
+                  "offset": 213,
+                  "operand": null
+                },
+                {
+                  "op": "stloc.s",
+                  "offset": 215,
+                  "operand": 11
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 217,
+                  "operand": 11
+                },
+                {
+                  "op": "brfalse.s",
+                  "offset": 219,
+                  "operand": 233
+                },
+                {
+                  "op": "nop",
+                  "offset": 221,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.1",
+                  "offset": 222,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.3",
+                  "offset": 223,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.s",
+                  "offset": 224,
+                  "operand": 10
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 226,
+                  "operand": "System.Collections.Generic.IDictionary[string,V].Void Add(System.String, V)"
+                },
+                {
+                  "op": "nop",
+                  "offset": 231,
+                  "operand": null
+                },
+                {
+                  "op": "nop",
+                  "offset": 232,
+                  "operand": null
+                },
+                {
+                  "op": "nop",
+                  "offset": 233,
+                  "operand": null
+                },
+                {
+                  "op": "br.s",
+                  "offset": 234,
+                  "operand": 236
+                },
+                {
+                  "op": "nop",
+                  "offset": 236,
+                  "operand": null
+                },
+                {
+                  "op": "leave.s",
+                  "offset": 237,
+                  "operand": 244
+                },
+                {
+                  "op": "pop",
+                  "offset": 239,
+                  "operand": null
+                },
+                {
+                  "op": "nop",
+                  "offset": 240,
+                  "operand": null
+                },
+                {
+                  "op": "nop",
+                  "offset": 241,
+                  "operand": null
+                },
+                {
+                  "op": "leave.s",
+                  "offset": 242,
+                  "operand": 244
+                },
+                {
+                  "op": "nop",
+                  "offset": 244,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.2",
+                  "offset": 245,
+                  "operand": null
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 246,
+                  "operand": "System.Collections.IEnumerator.Boolean MoveNext()"
+                },
+                {
+                  "op": "brtrue",
+                  "offset": 251,
+                  "operand": 35
+                },
+                {
+                  "op": "leave.s",
+                  "offset": 256,
+                  "operand": 269
+                },
+                {
+                  "op": "ldloc.2",
+                  "offset": 258,
+                  "operand": null
+                },
+                {
+                  "op": "brfalse.s",
+                  "offset": 259,
+                  "operand": 268
+                },
+                {
+                  "op": "ldloc.2",
+                  "offset": 261,
+                  "operand": null
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 262,
+                  "operand": "System.IDisposable.Void Dispose()"
+                },
+                {
+                  "op": "nop",
+                  "offset": 267,
+                  "operand": null
+                },
+                {
+                  "op": "endfinally",
+                  "offset": 268,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.1",
+                  "offset": 269,
+                  "operand": null
+                },
+                {
+                  "op": "stloc.1",
+                  "offset": 270,
+                  "operand": null
+                },
+                {
+                  "op": "br.s",
+                  "offset": 271,
+                  "operand": 273
+                },
+                {
+                  "op": "ldloc.1",
+                  "offset": 273,
+                  "operand": null
+                },
+                {
+                  "op": "ret",
+                  "offset": 274,
+                  "operand": null
+                }
+              ],
+              "il_sha256": "6307a0aab7c5b4e9e2323a7b2462f1faf7988fe3cd5c908e8ad396b1e7eea3bb",
+              "locals": [
+                "System.Boolean (0)",
+                "System.Collections.Generic.IDictionary`2[System.String,V] (1)",
+                "System.Collections.Generic.IEnumerator`1[System.String] (2)",
+                "System.String (3)",
+                "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode (4)",
+                "System.Boolean (5)",
+                "System.Nullable`1[System.Boolean] (6)",
+                "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonType (7)",
+                "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonType (8)",
+                "System.Boolean (9)",
+                "V (10)",
+                "System.Boolean (11)"
+              ],
+              "exceptions": [
+                {
+                  "tryLength": 139,
+                  "catch": "System.Object",
+                  "tryOffset": 100,
+                  "flags": "Clause",
+                  "handlerLength": 5,
+                  "handlerOffset": 239
+                },
+                {
+                  "tryLength": 228,
+                  "catch": null,
+                  "tryOffset": 30,
+                  "flags": "Finally",
+                  "handlerLength": 11,
+                  "handlerOffset": 258
+                }
+              ],
+              "method": "System.Collections.Generic.IDictionary`2[System.String,V] FromJson[V](Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject, System.Collections.Generic.IDictionary`2[System.String,V], System.Func`2[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject,V], System.Collections.Generic.HashSet`1[System.String])"
+            }
+          ],
+          "fields": [],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+        },
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject+<>c",
+          "methods": [
+            {
+              "instructions": [
+                {
+                  "op": "ldarg.1",
+                  "offset": 0,
+                  "operand": null
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 1,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode.System.Object ToValue()"
+                },
+                {
+                  "op": "ret",
+                  "offset": 6,
+                  "operand": null
+                }
+              ],
+              "il_sha256": "3e30e055ecf64f54058e4284d4f976c9277e1bea52a7bb49f61c124ac314bef6",
+              "locals": [],
+              "exceptions": [],
+              "method": "System.Object <ToValue>b__0_0(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject)"
+            }
+          ],
+          "fields": [
+            {
+              "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null",
+              "name": "<>9",
+              "literal": false,
+              "constant": null
+            },
+            {
+              "type": "System.Func[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject,System.Object]",
+              "name": "<>9__0_0",
+              "literal": false,
+              "constant": null
+            }
+          ],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+        },
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray+<>c",
+          "methods": [
+            {
+              "instructions": [
+                {
+                  "op": "ldarg.1",
+                  "offset": 0,
+                  "operand": null
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 1,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode.System.Object ToValue()"
+                },
+                {
+                  "op": "ret",
+                  "offset": 6,
+                  "operand": null
+                }
+              ],
+              "il_sha256": "3e30e055ecf64f54058e4284d4f976c9277e1bea52a7bb49f61c124ac314bef6",
+              "locals": [],
+              "exceptions": [],
+              "method": "System.Object <ToValue>b__0_0(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode)"
+            }
+          ],
+          "fields": [
+            {
+              "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonArray+<>c, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null",
+              "name": "<>9",
+              "literal": false,
+              "constant": null
+            },
+            {
+              "type": "System.Func[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode,System.Object]",
+              "name": "<>9__0_0",
+              "literal": false,
+              "constant": null
+            }
+          ],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+        },
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber",
+          "methods": [
+            {
+              "instructions": [
+                {
+                  "op": "ldarg.0",
+                  "offset": 0,
+                  "operand": null
+                },
+                {
+                  "op": "ldfld",
+                  "offset": 1,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNumber.System.String value"
+                },
+                {
+                  "op": "ldstr",
+                  "offset": 6,
+                  "operand": "."
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 11,
+                  "operand": "string.Boolean Contains(System.String)"
+                },
+                {
+                  "op": "ldc.i4.0",
+                  "offset": 16,
+                  "operand": null
+                },
+                {
+                  "op": "ceq",
+                  "offset": 17,
+                  "operand": null
+                },
+                {
+                  "op": "ret",
+                  "offset": 19,
+                  "operand": null
+                }
+              ],
+              "il_sha256": "379a7cd652760e0f857ae12520b67e2b80e18bf46f2827228004f4452e64b464",
+              "locals": [],
+              "exceptions": [],
+              "method": "Boolean get_IsInteger()"
+            }
+          ],
+          "fields": [
+            {
+              "type": "string",
+              "name": "value",
+              "literal": false,
+              "constant": null
+            },
+            {
+              "type": "bool",
+              "name": "overflows",
+              "literal": false,
+              "constant": null
+            },
+            {
+              "type": "datetime",
+              "name": "EpochDate",
+              "literal": false,
+              "constant": null
+            }
+          ],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+        },
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonString",
+          "methods": [
+            {
+              "instructions": [
+                {
+                  "op": "ldarg.0",
+                  "offset": 0,
+                  "operand": null
+                },
+                {
+                  "op": "ldfld",
+                  "offset": 1,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonString.System.String value"
+                },
+                {
+                  "op": "ret",
+                  "offset": 6,
+                  "operand": null
+                }
+              ],
+              "il_sha256": "5a2b94f2c10d1cfa3dcf329da28cd6bf799d205444bba2f1fbe502302f66e25f",
+              "locals": [],
+              "exceptions": [],
+              "method": "System.String ToString()"
+            }
+          ],
+          "fields": [
+            {
+              "type": "string",
+              "name": "value",
+              "literal": false,
+              "constant": null
+            },
+            {
+              "type": "string",
+              "name": "DateFormat",
+              "literal": false,
+              "constant": null
+            },
+            {
+              "type": "string",
+              "name": "DateTimeFormat",
+              "literal": false,
+              "constant": null
+            },
+            {
+              "type": "string",
+              "name": "DateTimeRfc1123Format",
+              "literal": false,
+              "constant": null
+            }
+          ],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+        },
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode",
+          "methods": [
+            {
+              "instructions": [
+                {
+                  "op": "ldarg.0",
+                  "offset": 0,
+                  "operand": null
+                },
+                {
+                  "op": "ldc.i4.1",
+                  "offset": 1,
+                  "operand": null
+                },
+                {
+                  "op": "call",
+                  "offset": 2,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode.System.String ToString(Boolean)"
+                },
+                {
+                  "op": "ret",
+                  "offset": 7,
+                  "operand": null
+                }
+              ],
+              "il_sha256": "fb859a79643b30a9ca4cf9d3dfb81d3e5ed8a5c8af07afbe47418f8e6920ca45",
+              "locals": [],
+              "exceptions": [],
+              "method": "System.String ToString()"
+            },
+            {
+              "instructions": [
+                {
+                  "op": "nop",
+                  "offset": 0,
+                  "operand": null
+                },
+                {
+                  "op": "newobj",
+                  "offset": 1,
+                  "operand": "System.Text.StringBuilder.Void .ctor()"
+                },
+                {
+                  "op": "stloc.0",
+                  "offset": 6,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.0",
+                  "offset": 7,
+                  "operand": null
+                },
+                {
+                  "op": "newobj",
+                  "offset": 8,
+                  "operand": "System.IO.StringWriter.Void .ctor(System.Text.StringBuilder)"
+                },
+                {
+                  "op": "stloc.1",
+                  "offset": 13,
+                  "operand": null
+                },
+                {
+                  "op": "nop",
+                  "offset": 14,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.0",
+                  "offset": 15,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.1",
+                  "offset": 16,
+                  "operand": null
+                },
+                {
+                  "op": "ldarg.1",
+                  "offset": 17,
+                  "operand": null
+                },
+                {
+                  "op": "call",
+                  "offset": 18,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode.Void WriteTo(System.IO.TextWriter, Boolean)"
+                },
+                {
+                  "op": "nop",
+                  "offset": 23,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.0",
+                  "offset": 24,
+                  "operand": null
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 25,
+                  "operand": "System.Object.System.String ToString()"
+                },
+                {
+                  "op": "stloc.2",
+                  "offset": 30,
+                  "operand": null
+                },
+                {
+                  "op": "leave.s",
+                  "offset": 31,
+                  "operand": 44
+                },
+                {
+                  "op": "ldloc.1",
+                  "offset": 33,
+                  "operand": null
+                },
+                {
+                  "op": "brfalse.s",
+                  "offset": 34,
+                  "operand": 43
+                },
+                {
+                  "op": "ldloc.1",
+                  "offset": 36,
+                  "operand": null
+                },
+                {
+                  "op": "callvirt",
+                  "offset": 37,
+                  "operand": "System.IDisposable.Void Dispose()"
+                },
+                {
+                  "op": "nop",
+                  "offset": 42,
+                  "operand": null
+                },
+                {
+                  "op": "endfinally",
+                  "offset": 43,
+                  "operand": null
+                },
+                {
+                  "op": "ldloc.2",
+                  "offset": 44,
+                  "operand": null
+                },
+                {
+                  "op": "ret",
+                  "offset": 45,
+                  "operand": null
+                }
+              ],
+              "il_sha256": "9d68faf79b4cc80d99d52fbd3631f1ebfd119bcfd8badf240a756d0db31a372e",
+              "locals": [
+                "System.Text.StringBuilder (0)",
+                "System.IO.StringWriter (1)",
+                "System.String (2)"
+              ],
+              "exceptions": [
+                {
+                  "tryLength": 19,
+                  "catch": null,
+                  "tryOffset": 14,
+                  "flags": "Finally",
+                  "handlerLength": 11,
+                  "handlerOffset": 33
+                }
+              ],
+              "method": "System.String ToString(Boolean)"
+            }
+          ],
+          "fields": [],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+        },
+        {
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonBoolean",
+          "methods": [
+            {
+              "instructions": [
+                {
+                  "op": "ldarg.0",
+                  "offset": 0,
+                  "operand": null
+                },
+                {
+                  "op": "call",
+                  "offset": 1,
+                  "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonBoolean, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.Boolean get_Value()"
+                },
+                {
+                  "op": "box",
+                  "offset": 6,
+                  "operand": ".bool"
+                },
+                {
+                  "op": "ret",
+                  "offset": 11,
+                  "operand": null
+                }
+              ],
+              "il_sha256": "85653ffeee9bb1b3e4efc63fa3f368795ce52dc19977003ae35ec87f3db62ef0",
+              "locals": [],
+              "exceptions": [],
+              "method": "System.Object ToValue()"
+            }
+          ],
+          "fields": [
+            {
+              "type": "bool",
+              "name": "<Value>k__BackingField",
+              "literal": false,
+              "constant": null
+            },
+            {
+              "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonBoolean, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null",
+              "name": "True",
+              "literal": false,
+              "constant": null
+            },
+            {
+              "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonBoolean, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null",
+              "name": "False",
+              "literal": false,
+              "constant": null
+            }
+          ],
+          "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+        }
+      ],
+      "output_sha256": "5d661ad4b5ae267de4bd2798e0d59e6cdc9b9f774b3871a60c1e95672cbf7b32"
+    },
+    {
+      "name": "conversion-pure",
+      "producer_source": "$ErrorActionPreference='Stop'\nImport-Module '/private/tmp/msteams-core90-pinned/module/MicrosoftTeams.psd1' -Force -WarningAction SilentlyContinue\nforeach($a in [AppDomain]::CurrentDomain.GetAssemblies()){try{$null=$a.GetTypes()}catch{}}\n$t=[AppDomain]::CurrentDomain.GetAssemblies()|ForEach-Object{$_.GetType('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.Tenant',$false)}|Where-Object{$null -ne $_}|Select-Object -First 1\n$rows=@()\n$values=@('2026-11-27T03:04:05.1234567+02:00','2026-11-27T03:04:05.12345678Z','11/27/2026 3:04 PM','27 November 2026 03:04:05','2026-11-27','03:04:05','11/27','0001-01-01T00:00:00+02:00','9999-12-31T23:59:59-02:00','2026-02-30','', 'not-a-date')\nforeach($v in $values){\n $j=ConvertTo-Json @{whenCreated=$v} -Compress\n $dto=$t.GetMethod('FromJsonString').Invoke($null,@([string]$j));$d=$dto.WhenCreated\n $rows+=@{input=$v;result=$(if($null -eq $d){$null}else{@{roundtrip=$d.ToString('O');kind=[string]$d.Kind;ticks=[string]$d.Ticks}})}\n}\n$mapjson='{\"lastProvisionTimeStamps\":{\"zero\":0,\"int32Edge\":2147483647,\"int64\":2147483648,\"int64Edge\":9223372036854775807,\"integerOverflow\":9223372036854775808,\"decimal\":1.20,\"exponent\":1e2,\"hugeExponent\":1e100,\"overflowFloat\":1e1000,\"negativeZero\":-0.0,\"text\":\"literal\",\"nil\":null,\"array\":[null,{},[],true,1.2],\"object\":{\"n\":null,\"a\":[null],\"v\":1.2}}}'\n$dto=$t.GetMethod('FromJsonString').Invoke($null,@($mapjson))\nfunction Snapshot($v){\n if($null -eq $v){return @{kind='null'}}\n $kind=$v.GetType().FullName\n if($v -is [System.Collections.IDictionary]){$items=@{};foreach($key in $v.Keys){$items[$key]=Snapshot $v[$key]};return @{kind=$kind;items=$items}}\n if($v -is [System.Array]){$items=@();foreach($x in $v){$items+=,(Snapshot $x)};return @{kind=$kind;items=$items}}\n return @{kind=$kind;text=$v.ToString();invariant=$(if($v -is [IFormattable]){$v.ToString($null,[Globalization.CultureInfo]::InvariantCulture)}else{$v.ToString()})}\n}\n@{scope='Audited data constructor/getters only; no management/auth/HTTP/TRPS. DateTime uses host clock for incomplete text; observations are not a complete TryParse grammar.';assembly_sha256=(Get-FileHash $t.Assembly.Location).Hash.ToLowerInvariant();reproducer_sha256=(Get-FileHash $PSCommandPath).Hash.ToLowerInvariant();host_utc=[DateTime]::UtcNow.ToString('O');host_culture=[Globalization.CultureInfo]::CurrentCulture.Name;dates=$rows;map_input=$mapjson;map_result=(Snapshot $dto.LastProvisionTimeStamps.AdditionalProperties)}|ConvertTo-Json -Depth 30 -Compress\n",
+      "producer_sha256": "ae9a06c515ff3ad2b7dacb94252660229a51a46be1847b3774d9e9694b6df6aa",
+      "output": {
+        "map_input": "{\"lastProvisionTimeStamps\":{\"zero\":0,\"int32Edge\":2147483647,\"int64\":2147483648,\"int64Edge\":9223372036854775807,\"integerOverflow\":9223372036854775808,\"decimal\":1.20,\"exponent\":1e2,\"hugeExponent\":1e100,\"overflowFloat\":1e1000,\"negativeZero\":-0.0,\"text\":\"literal\",\"nil\":null,\"array\":[null,{},[],true,1.2],\"object\":{\"n\":null,\"a\":[null],\"v\":1.2}}}",
+        "host_culture": "en-GB",
+        "dates": [
+          {
+            "input": "2026-11-27T03:04:05.1234567+02:00",
+            "result": {
+              "roundtrip": "2026-11-27T01:04:05.1234567Z",
+              "kind": "Utc",
+              "ticks": "639313382451234567"
+            }
+          },
+          {
+            "input": "2026-11-27T03:04:05.12345678Z",
+            "result": {
+              "roundtrip": "2026-11-27T03:04:05.1234568Z",
+              "kind": "Utc",
+              "ticks": "639313454451234568"
+            }
+          },
+          {
+            "input": "11/27/2026 3:04 PM",
+            "result": {
+              "roundtrip": "2026-11-27T15:04:00.0000000",
+              "kind": "Unspecified",
+              "ticks": "639313886400000000"
+            }
+          },
+          {
+            "input": "27 November 2026 03:04:05",
+            "result": {
+              "roundtrip": "2026-11-27T03:04:05.0000000",
+              "kind": "Unspecified",
+              "ticks": "639313454450000000"
+            }
+          },
+          {
+            "input": "2026-11-27",
+            "result": {
+              "roundtrip": "2026-11-27T00:00:00.0000000",
+              "kind": "Unspecified",
+              "ticks": "639313344000000000"
+            }
+          },
+          {
+            "input": "03:04:05",
+            "result": {
+              "roundtrip": "2026-11-27T03:04:05.0000000",
+              "kind": "Unspecified",
+              "ticks": "639313454450000000"
+            }
+          },
+          {
+            "input": "11/27",
+            "result": {
+              "roundtrip": "2026-11-27T00:00:00.0000000",
+              "kind": "Unspecified",
+              "ticks": "639313344000000000"
+            }
+          },
+          {
+            "input": "0001-01-01T00:00:00+02:00",
+            "result": {
+              "roundtrip": "0001-01-01T22:00:00.0000000Z",
+              "kind": "Utc",
+              "ticks": "792000000000"
+            }
+          },
+          {
+            "input": "9999-12-31T23:59:59-02:00",
+            "result": null
+          },
+          {
+            "input": "2026-02-30",
+            "result": null
+          },
+          {
+            "input": "",
+            "result": null
+          },
+          {
+            "input": "not-a-date",
+            "result": null
+          }
+        ],
+        "scope": "Audited data constructor/getters only; no management/auth/HTTP/TRPS. DateTime uses host clock for incomplete text; observations are not a complete TryParse grammar.",
+        "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+        "reproducer_sha256": "ae9a06c515ff3ad2b7dacb94252660229a51a46be1847b3774d9e9694b6df6aa",
+        "host_utc": "2026-11-27T07:24:35.0236100Z",
+        "map_result": {
+          "kind": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "items": {
+            "exponent": {
+              "kind": "null"
+            },
+            "object": {
+              "kind": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+              "items": {
+                "v": {
+                  "kind": "System.Single",
+                  "invariant": "1.2",
+                  "text": "1.2"
+                },
+                "a": {
+                  "kind": "System.Object[]",
+                  "items": [
+                    {
+                      "kind": "System.String",
+                      "invariant": "null",
+                      "text": "null"
+                    }
+                  ]
+                }
+              }
+            },
+            "int64": {
+              "kind": "System.Int64",
+              "invariant": "2147483648",
+              "text": "2147483648"
+            },
+            "text": {
+              "kind": "System.String",
+              "invariant": "literal",
+              "text": "literal"
+            },
+            "negativeZero": {
+              "kind": "System.Single",
+              "invariant": "-0",
+              "text": "-0"
+            },
+            "integerOverflow": {
+              "kind": "null"
+            },
+            "int64Edge": {
+              "kind": "System.Int64",
+              "invariant": "9223372036854775807",
+              "text": "9223372036854775807"
+            },
+            "array": {
+              "kind": "System.Object[]",
+              "items": [
+                {
+                  "kind": "System.String",
+                  "invariant": "null",
+                  "text": "null"
+                },
+                {
+                  "kind": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+                  "items": {}
+                },
+                {
+                  "kind": "System.Object[]",
+                  "items": []
+                },
+                {
+                  "kind": "System.Boolean",
+                  "invariant": "True",
+                  "text": "True"
+                },
+                {
+                  "kind": "System.Single",
+                  "invariant": "1.2",
+                  "text": "1.2"
+                }
+              ]
+            },
+            "overflowFloat": {
+              "kind": "null"
+            },
+            "int32Edge": {
+              "kind": "System.Int32",
+              "invariant": "2147483647",
+              "text": "2147483647"
+            },
+            "hugeExponent": {
+              "kind": "null"
+            },
+            "zero": {
+              "kind": "System.Int32",
+              "invariant": "0",
+              "text": "0"
+            },
+            "decimal": {
+              "kind": "System.Single",
+              "invariant": "1.2",
+              "text": "1.2"
+            }
+          }
+        }
+      },
+      "output_sha256": "932f5642e47a9bbc5675e514d9e4f1dbf3008571b5f991f8f06d8e99023a1419"
+    },
+    {
+      "name": "culture-pure",
+      "producer_source": "$ErrorActionPreference='Stop'\nImport-Module '/private/tmp/msteams-core90-pinned/module/MicrosoftTeams.psd1' -Force -WarningAction SilentlyContinue\nforeach($a in [AppDomain]::CurrentDomain.GetAssemblies()){try{$null=$a.GetTypes()}catch{}}\n$t=[AppDomain]::CurrentDomain.GetAssemblies()|ForEach-Object{$_.GetType('Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.Tenant',$false)}|Where-Object{$null -ne $_}|Select-Object -First 1\n$rows=@();$original=[Globalization.CultureInfo]::CurrentCulture\ntry{foreach($name in @('en-GB','de-DE')){\n [Globalization.CultureInfo]::CurrentCulture=[Globalization.CultureInfo]::GetCultureInfo($name)\n $dto=$t.GetMethod('FromJsonString').Invoke($null,@('{\"lastProvisionTimeStamps\":{\"decimal\":1.20,\"floatOverflow\":1.0e1000,\"floatHuge\":1.0e100,\"integerExponent\":1e2}}'))\n $values=@{};foreach($key in $dto.LastProvisionTimeStamps.AdditionalProperties.Keys){$v=$dto.LastProvisionTimeStamps.AdditionalProperties[$key];$values[$key]=$(if($null -eq $v){$null}else{@{type=$v.GetType().FullName;value=$v.ToString($null,[Globalization.CultureInfo]::InvariantCulture)}})}\n $rows+=@{culture=$name;values=$values}\n}}finally{[Globalization.CultureInfo]::CurrentCulture=$original}\n@{scope='Audited data construction/getter only; process culture restored; no management/auth/HTTP.';assembly_sha256=(Get-FileHash $t.Assembly.Location).Hash.ToLowerInvariant();reproducer_sha256=(Get-FileHash $PSCommandPath).Hash.ToLowerInvariant();cases=$rows}|ConvertTo-Json -Depth 12 -Compress\n",
+      "producer_sha256": "6f9896c68270d6b3342f38518d87048db1fc1b6c5eac718540df3e15992b7f50",
+      "output": {
+        "cases": [
+          {
+            "values": {
+              "floatOverflow": {
+                "type": "System.Single",
+                "value": "Infinity"
+              },
+              "decimal": {
+                "type": "System.Single",
+                "value": "1.2"
+              },
+              "floatHuge": {
+                "type": "System.Single",
+                "value": "Infinity"
+              },
+              "integerExponent": null
+            },
+            "culture": "en-GB"
+          },
+          {
+            "values": {
+              "floatOverflow": {
+                "type": "System.Single",
+                "value": "Infinity"
+              },
+              "decimal": {
+                "type": "System.Single",
+                "value": "120"
+              },
+              "floatHuge": {
+                "type": "System.Single",
+                "value": "Infinity"
+              },
+              "integerExponent": null
+            },
+            "culture": "de-DE"
+          }
+        ],
+        "reproducer_sha256": "6f9896c68270d6b3342f38518d87048db1fc1b6c5eac718540df3e15992b7f50",
+        "scope": "Audited data construction/getter only; process culture restored; no management/auth/HTTP.",
+        "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+      },
+      "output_sha256": "ba50342c046fa9d0c3b45b6993a5d928d7ec12c4b39df7bbf8b04ce038f2e001"
+    }
+  ],
+  "findings": [
+    "JsonNumber.IsInteger checks only absence of dot; no-dot exponent and Int64 overflow become null, not numeric results.",
+    "Dot-containing numbers use culture-sensitive Single.TryParse then Double then Decimal; Single Infinity is accepted by this host.",
+    "Associative object null entries are skipped. Array null calls JsonNode.ToValue and becomes string null.",
+    "Date constructor uses InvariantCulture DateTime.TryParse AdjustToUniversal, including host-date/year defaults for incomplete input, >7-fraction rounding and lower-bound offset wrap.",
+    "No existing ISO-only DateTime helper represents the complete source date contract. Native timestamp RawMessages preserve values rather than claim CLR conversion."
+  ],
+  "known_limits": [
+    "Data-only observations are not management success or universal TRPS branch proof.",
+    "Full invariant date grammar and all culture-dependent scalar conversion profiles remain separate implementation work.",
+    "Foundation code has not been compiled locally or published; fourteen qualifications and all live states remain unchanged."
+  ]
+}

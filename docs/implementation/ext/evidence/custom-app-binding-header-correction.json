@@ -1,0 +1,96 @@
+{
+  "scope": "Real script-function binder -> inert compiled cmdlet binder with source parameter declarations -> reflection-call actual pinned SetExpanded constructor/property setters -> actual private _body.ToJsonString. Only inert cmdlet ProcessRecord executes; no management Begin/Process/End/auth/HTTP/Go.",
+  "fixture": "/private/tmp/ext90-customapp-real-setters-binding.json",
+  "fixture_count": 14,
+  "fixtures": "Same12 input_json cases from preserved DTO-only artifact plus canonical malformed-bools and wrong-case-bools.",
+  "supersedes_scope": "Earlier ext90-customapp-set-pure.json observes direct DTO assignment only; it does NOT model wrapper binder effects. Preserved unchanged.",
+  "corrected_effective_body": {
+    "five_copied_bools": "Every key always bound. Missing/null/wrong-type/wrong-case read values become boxed null -> SwitchParameter(false) -> actual setter creates present Nullable<bool>(false); false emitted. Valid true remains true.",
+    "four_copied_Lob_strings": "Every key always bound. Missing/null/camel-only read values become null -> script/compiled String empty -> actual setter emits empty string; all four PascalCase keys emitted. Recognized PascalCase string values survive.",
+    "target_sideload": "Public supplied Boolean binds to SwitchParameter; requested target overrides read. Fixtures use true.",
+    "nested_config": "Typed interface object survives binder; absent/null getter lazily creates empty typed config; unknown fields already removed by parser. Empty config suppressed by actual ToJson AddIf; known empty strings retained.",
+    "list": "Real inert binder converts empty array into typed IApplicationObject[0]; actual setter/serializer emits appSettingsList:[ ]."
+  },
+  "header_conclusions": {
+    "source_Set_preliminary_GET": "Get-CsTeamsSettingsCustomApp_Get",
+    "source_Set_PUT": "Set-CsTeamsSettingsCustomApp_SetExpanded",
+    "source_public_Get_with_default_ProcessArgs": "Get-CsTeamsSettingsCustomApp_Get",
+    "without_default_ProcessArgs": "Same child name; only execution linkage differs.",
+    "ordering": "Generated ProcessRecordAsync gets Module pipeline capturing child InvocationInformation; prepends ProcessArgs ExecutionIdContainer step; optional appends afterward. ExecutionIdContainer signals SetExecutionId at IL26-88 then calls next.SendAsync(original request,original callback) at183-201 without accessing headers. Module.SendAsync then inserts child name through AddSessionInfoToHttpRequest -> AddUseragentAndCmdletNameHeaders -> AddRequestHeader remove/add.",
+    "scope": "Default built-in wrapper hooks only. Arbitrary caller-supplied pipeline/event customizations can alter behavior and are outside these default conclusions. Source-traced metadata, not live request capture.",
+    "header_routine_hash": "9a6e093f83180e1bd42dcac75b64aa1308098cff613ae452a0bd97382574d645",
+    "execution_id_step_MoveNext_hash": "c4abe6825ba6355b1f1f7b78b196a14c58ab00ee93bec495ff48022f7fbd671c"
+  },
+  "constructor_method_sha256": "54f826b6a354f1a99a3e90fcd1128b49d1aefb7ef84043182b20e2931e34c581",
+  "artifact_hashes": {
+    "/private/tmp/ext90-customapp-real-setters-binding.ps1": "57afcf6b2aa73feb2ea20ef5078e2dba51125150ebe142220c4d001438a39d65",
+    "/private/tmp/ext90-customapp-real-setters-binding.cs": "9f0eb566621593d9d3ee6fcbaa4cf73e00ef1a506703e71f5b5da647c68057b9",
+    "/private/tmp/ext90-customapp-real-setters-binding.json": "e698192d57b222ae00b3406e4506f5fa2f5b4811af8b47a5c52e13fa310f22de",
+    "/private/tmp/ext90-customapp-real-setters-selected-il.json": "fe5fcd521610dba8bc632ff8e16b8e9ac7654048ed64bbb2bcea617a63b344ca",
+    "/private/tmp/ext90-customapp-inert-binding.ps1": "099c5522e4931edd3eef6f7e6ed14567082bc5a9c110a3db6b299a7da5f2f3ce",
+    "/private/tmp/ext90-customapp-inert-binding.cs": "793f415ec8bc612f94321193af3b6e0d69a3e41f861b8317e86969f72969b740",
+    "/private/tmp/ext90-customapp-inert-binding.json": "b54ba54a0a4853d9c1e674b63042a2fc10228815eb972332ca9f95986e43f597",
+    "/private/tmp/ext90-customapp-set-pure.ps1": "8ca22af4043f428df7a3efcedbe7b3030917682c2e385512cf5df436e2bd3088",
+    "/private/tmp/ext90-customapp-set-pure.json": "c4eac705cda4121bb95bdd8349b46b478ada9b1ecb4f5a7d7b41730058e3928d",
+    "/private/tmp/ext90-customapp-header-ancillary.json": "9cfad673715d5ede91538173e1ed001caf83778ffd71832a109eb2620f8f9556",
+    "/private/tmp/ext90-customapp-header-customutils-il.json": "7bb00e6edbe84e233574a8fa6e5b31b96c5328b6e358cd955165a7f848adf29e",
+    "/private/tmp/ext90-customapp-header-set-metadata.json": "459a58b9d80703a3d6ab3d7cb2ccb3001918c7e81fc00e5827fb2544f47e805d",
+    "/private/tmp/ext90-customapp-header-sendcallback-il.json": "596c4f0e9686e889a433b3033f1ebbdc18359a9a0fdcb82f64697b886e90c660",
+    "/private/tmp/ext90-customapp-header-invocation-il.json": "6e9c8360a75cf93ba689cf98aa35c6ec654d28612a4da0e54149927ef2041288",
+    "/private/tmp/ext90-customapp-header-generated-selection.json": "c0be54878e99f4ff12fff653f3163d9ff47a36342b2e222fe0354d2ed06df36d"
+  },
+  "superseded_claims": {
+    "get": "custom-app-get-4338e4b-contract.json assumed public Get metadata. Historical artifact unchanged; current qualification withdrawn pending exact-header code/replay and reviewed replacement decision.",
+    "set": "custom-app-set-4e7df9d-offline.json replayed DTO-only copied assignments; it omitted actual top-level PowerShell binder conversions. Historical artifacts remain unchanged and do not prove full public Set parity."
+  },
+  "historical_14_portable_reproduction": {
+    "script": "scripts/discovery/observe-custom-app-bindings.ps1",
+    "support": "scripts/discovery/custom-app-binding-fakes.cs",
+    "argv": "pwsh -NoLogo -NoProfile -NonInteractive -File scripts/discovery/observe-custom-app-bindings.ps1 -ModulePath <verified-8.1.0-MicrosoftTeams.psd1>",
+    "executed_result": "/private/tmp/ext90-customapp-repro-binding.json",
+    "all_14_real_body_matches_preserved_capture": true,
+    "scope": "Inert binder executes; real management constructor/property setters/serializer only, never management lifecycle/auth/HTTP.",
+    "sha256": {
+      "scripts/discovery/observe-custom-app-bindings.ps1": "5f0858f6016146f54974232c2c7987e8501f7fb79e0ef893f92b2829226d4fc7",
+      "scripts/discovery/custom-app-binding-fakes.cs": "9f0eb566621593d9d3ee6fcbaa4cf73e00ef1a506703e71f5b5da647c68057b9",
+      "msteams/teams_admin_api/custom_app_settings/testdata/pinned-set-binding-projection.json": "e698192d57b222ae00b3406e4506f5fa2f5b4811af8b47a5c52e13fa310f22de",
+      "docs/implementation/ext/evidence/custom-app-binding-setters-source.json": "fe5fcd521610dba8bc632ff8e16b8e9ac7654048ed64bbb2bcea617a63b344ca",
+      "/private/tmp/ext90-customapp-repro-binding.json": "bc6203f14744a6f1b92831b1c0036c31201724dd21ac10f8d62ace9558a310cb"
+    }
+  },
+  "portable_binding_reproduction": {
+    "script": "scripts/discovery/observe-custom-app-bindings.ps1",
+    "support": "scripts/discovery/custom-app-binding-fakes.cs",
+    "argv": "pwsh -NoLogo -NoProfile -NonInteractive -File scripts/discovery/observe-custom-app-bindings.ps1 -ModulePath <verified-8.1.0-MicrosoftTeams.psd1>",
+    "executed_result": "/private/tmp/ext90-customapp-repro-binding-15.json",
+    "cases": 15,
+    "requested_false_retained": true,
+    "scope": "Inert binder executes; actual management constructor/property setters/serializer only, never management lifecycle/auth/HTTP. First14 bodies match original preserved14 capture; added readtrue\u2192requestedfalse body preservesfalse.",
+    "sha256": {
+      "scripts/discovery/observe-custom-app-bindings.ps1": "a3fd7e769b28da99b9feedd28cdd8711497c7cc1fdb616e62759bb5564e2ef7d",
+      "scripts/discovery/custom-app-binding-fakes.cs": "9f0eb566621593d9d3ee6fcbaa4cf73e00ef1a506703e71f5b5da647c68057b9",
+      "msteams/teams_admin_api/custom_app_settings/testdata/pinned-set-binding-projection.json": "c9a812c79933d42857de551eeb03a51700039243db8c84fdac4b82df70eb78ed",
+      "msteams/teams_admin_api/custom_app_settings/testdata/pinned-set-binding-projection-14.json": "e698192d57b222ae00b3406e4506f5fa2f5b4811af8b47a5c52e13fa310f22de",
+      "/private/tmp/ext90-customapp-repro-binding-15.json": "c9a812c79933d42857de551eeb03a51700039243db8c84fdac4b82df70eb78ed"
+    }
+  },
+  "header_closure": {
+    "evidence": "docs/implementation/ext/evidence/custom-app-header-closure.json",
+    "reproducer": "scripts/discovery/inspect-custom-app-header-closure.ps1",
+    "qualification": "Full relevant resolved source/IL plus inert private-name/alias/steppable probe, not actual management request capture.",
+    "selected_method_bodies": 44,
+    "selected_types": 20,
+    "resolved_metadata_operands_unresolved": 0,
+    "whole_private_scan": {
+      "types": 10301,
+      "method_bodies": 70462,
+      "resolved_string_operands": 57736,
+      "unresolved_string_operands": 0,
+      "command_header_literal_writer_methods": 1
+    },
+    "sha256": {
+      "docs/implementation/ext/evidence/custom-app-header-closure.json": "5f91dc517f7ae991bd1b963647252bfe80bf9abe1d06663d679580945ef8d668",
+      "scripts/discovery/inspect-custom-app-header-closure.ps1": "9796bcf495b22403a47e33c571ebb42f42655bb43df877cd0c29a26519c224b3"
+    }
+  }
+}
