@@ -22,7 +22,8 @@ const (
 	retailOrigin      = "https://retailservices.teams.microsoft.com"
 	hierarchyOrigin   = "https://hierarchy.teams.microsoft.com"
 	hierarchyAudience = "https://chatsvcagg.teams.microsoft.com"
-	csvBytes          = "name,parent\r\nFixture,Root\r\n"
+	// Published Set-TeamTargetingHierarchy column layout; rows are authored offline.
+	csvBytes = "TargetName,ParentName,TeamId,Location:Clothing,Location:Jewelry,#Bucket1,#Bucket2\r\nOffline root,,11111111-1111-4111-8111-111111111111,0,0,,\r\n"
 )
 
 func hierarchyPath() string { return "/api/v1/hierarchies/" + tenant }

@@ -366,8 +366,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Add-TeamChannelUser (CORE-20)
 
 - **__AllParameterSets** — SDK: [Service.Add](../../../msteams/graph_api/channel_user_management/service.go), [Service.ResolveByDisplayName](../../../msteams/graph_api/channel/names.go), [Service.ListAll](../../../msteams/graph_api/channel_member/service.go), [Service.Create](../../../msteams/graph_api/channel_member/service.go), [Service.PromoteOwner](../../../msteams/graph_api/channel_member/service.go), [Service.ResolveByUser](../../../msteams/graph_api/channel_member/resolution.go), [Resolver.Resolve](../../../msteams/graph_api/directory_user/resolver.go).
-  Contract tests: [TestUnitAddRemoveAndOwnerCompositions](../../../msteams/graph_api/channel_user_management/service_test.go), [TestUnitFailuresStopBeforeFurtherChanges](../../../msteams/graph_api/channel_user_management/service_test.go).
-  Additional integrated primitive tests: [TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery](../../../tests/contract/core/integration_test.go).
+  Contract tests: [TestUnitAddRemoveAndOwnerCompositions](../../../msteams/graph_api/channel_user_management/service_test.go), [TestUnitFailuresStopBeforeFurtherChanges](../../../msteams/graph_api/channel_user_management/service_test.go), [TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery](../../../tests/contract/core/integration_test.go), [TestUnitPrivateUPNFailurePreventsMembershipReadsAndWrites](../../../msteams/graph_api/channel_user_management/service_resolution_test.go), [TestUnitSharedNullEmailAndTenantSelectionUseReturnedMembership](../../../msteams/graph_api/channel_user_management/service_resolution_test.go).
   Live tests: [TestAccChannelMembershipCRUD](../../../tests/integration/lab/graph/channel_membership_test.go).
 
 ### Add-TeamUser (CORE-26)
@@ -385,19 +384,19 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Get-CsBatchTeamsDeploymentStatus (CORE-22)
 
 - **Get** — SDK: [Service.GetByID](../../../msteams/teams_admin_api/batch_deployment/service.go).
-  Contract tests: [TestUnitBatchStatusIsOpaqueAndIdentityInputIsNotAURI](../../../msteams/teams_admin_api/batch_deployment/service_test.go), [TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed](../../../msteams/teams_admin_api/batch_deployment/service_test.go).
+  Contract tests: [TestUnitBatchStatusIsOpaqueAndIdentityInputIsNotAURI](../../../msteams/teams_admin_api/batch_deployment/service_test.go), [TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed](../../../msteams/teams_admin_api/batch_deployment/service_test.go), [TestUnitBatchAcceptedSubmissionAndOpaqueStatus](../../../msteams/teams_admin_api/batch_deployment/service_test.go).
   Live tests: [TestAccBatchDeploymentStatusReadOnly](../../../tests/integration/lab/batch_deployment/deployment_migration_test.go).
 - **GetViaIdentity** — SDK: [Service.GetByIdentity](../../../msteams/teams_admin_api/batch_deployment/service.go).
-  Contract tests: [TestUnitBatchStatusIsOpaqueAndIdentityInputIsNotAURI](../../../msteams/teams_admin_api/batch_deployment/service_test.go), [TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed](../../../msteams/teams_admin_api/batch_deployment/service_test.go).
+  Contract tests: [TestUnitBatchStatusIsOpaqueAndIdentityInputIsNotAURI](../../../msteams/teams_admin_api/batch_deployment/service_test.go), [TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed](../../../msteams/teams_admin_api/batch_deployment/service_test.go), [TestUnitBatchAcceptedSubmissionAndOpaqueStatus](../../../msteams/teams_admin_api/batch_deployment/service_test.go).
   Live tests: [TestAccBatchDeploymentStatusReadOnly](../../../tests/integration/lab/batch_deployment/deployment_migration_test.go).
 
 ### Get-CsTeamsTargetingPolicy (CORE-25)
 
 - **Filter** — SDK: [Service.ListFiltered](../../../msteams/teams_admin_api/targeting_policy/filter.go).
-  Contract tests: [TestUnitTargetingRequestVectors](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingFilterRequestAndLocalValidation](../../../msteams/teams_admin_api/targeting_policy/service_test.go).
+  Contract tests: [TestUnitTargetingRequestVectors](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingFilterRequestAndLocalValidation](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingSuccessfulReadFilterAndSparseMutation](../../../msteams/teams_admin_api/targeting_policy/service_test.go).
   Live tests: [TestAccTargetingPolicyReadOnly](../../../tests/integration/lab/targeting_policy/targeting_test.go).
 - **Identity** — SDK: [Service.GetByIdentity](../../../msteams/teams_admin_api/targeting_policy/service.go), [Service.List](../../../msteams/teams_admin_api/targeting_policy/service.go).
-  Contract tests: [TestUnitTargetingRequestVectors](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingFilterRequestAndLocalValidation](../../../msteams/teams_admin_api/targeting_policy/service_test.go).
+  Contract tests: [TestUnitTargetingRequestVectors](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingFilterRequestAndLocalValidation](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingSuccessfulReadFilterAndSparseMutation](../../../msteams/teams_admin_api/targeting_policy/service_test.go).
   Live tests: [TestAccTargetingPolicyReadOnly](../../../tests/integration/lab/targeting_policy/targeting_test.go).
 
 ### Get-CsTeamTemplate (CORE-27)
@@ -418,13 +417,13 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Get-MultiGeoRegion (CORE-22)
 
 - **Identity** — SDK: [Service.GetForUser](../../../msteams/teams_admin_api/region/service.go), [Service.GetForGroup](../../../msteams/teams_admin_api/region/service.go).
-  Contract tests: [TestUnitRegionUsesExactDelegatedScopeAndDirectEntityRoutes](../../../msteams/teams_admin_api/region/service_test.go), [TestUnitApplicationRegionAndUnqualifiedCloudsRejectBeforeTokens](../../../msteams/teams_admin_api/region/service_test.go).
+  Contract tests: [TestUnitRegionUsesExactDelegatedScopeAndDirectEntityRoutes](../../../msteams/teams_admin_api/region/service_test.go), [TestUnitApplicationRegionAndUnqualifiedCloudsRejectBeforeTokens](../../../msteams/teams_admin_api/region/service_test.go), [TestUnitRegionSuccessfulUserAndGroupSnapshots](../../../msteams/teams_admin_api/region/service_test.go).
   Live tests: [TestAccMultiGeoRegionReadOnly](../../../tests/integration/lab/region/deployment_migration_test.go).
 
 ### Get-Operation (CORE-23)
 
 - **__AllParameterSets** — SDK: [Service.GetByID](../../../msteams/graph_api/team_operation/service.go), [Service.ResumeByID](../../../msteams/graph_api/team_operation/service.go), [Service.WaitByID](../../../msteams/graph_api/team_operation/service.go).
-  Contract tests: [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitGetOperationPreservesNativeStatesAndFutureData](../../../msteams/graph_api/team_operation/service_test.go), [TestUnitGetRejectsMalformedAndUnexpectedResponses](../../../msteams/graph_api/team_operation/service_test.go), [TestUnitWaitDenialRetainsResumableHandle](../../../msteams/graph_api/team_operation/service_test.go).
+  Contract tests: [TestUnitGetOperationPreservesNativeStatesAndFutureData](../../../msteams/graph_api/team_operation/service_test.go), [TestUnitGetRejectsMalformedAndUnexpectedResponses](../../../msteams/graph_api/team_operation/service_test.go), [TestUnitWaitDenialRetainsResumableHandle](../../../msteams/graph_api/team_operation/service_test.go), [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go).
   Live tests: [TestAccTeamOperationReadOnly](../../../tests/integration/lab/graph/team_operation_test.go).
 
 ### Get-SharedWithTeam (CORE-24)
@@ -442,10 +441,10 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Get-Team (CORE-28)
 
 - **Filters** — SDK: [Service.List](../../../msteams/graph_api/team_management/list.go), [Service.NewPager](../../../msteams/graph_api/group/pagination.go), [Service.ListJoined](../../../msteams/graph_api/team/joined.go), [Resolver.Resolve](../../../msteams/graph_api/directory_user/resolver.go), [Service.GetByID](../../../msteams/graph_api/team_management/service.go), [Service.GetByID](../../../msteams/graph_api/group/service.go), [Service.GetByID](../../../msteams/graph_api/team/service.go).
-  Contract tests: [TestUnitManagementListDiscoveryDenial](../../../msteams/graph_api/team_management/service_test.go), [TestUnitListingLocalValidationAndCurrentUserMode](../../../msteams/graph_api/team_management/validation_test.go).
+  Contract tests: [TestUnitManagementListDiscoveryDenial](../../../msteams/graph_api/team_management/service_test.go), [TestUnitListingLocalValidationAndCurrentUserMode](../../../msteams/graph_api/team_management/validation_test.go), [TestUnitManagementTenantHydrationCorrelatesAndRetainsPartialFailure](../../../msteams/graph_api/team_management/protocol_test.go), [TestUnitManagementUserDiscoveryAndFailedLaterReadRetainPrefix](../../../msteams/graph_api/team_management/protocol_test.go).
   Live tests: [TestAccTeamLifecycle](../../../tests/integration/lab/graph/team_lifecycle_test.go).
 - **Identity** — SDK: [Service.GetByID](../../../msteams/graph_api/team_management/service.go), [Service.GetByID](../../../msteams/graph_api/group/service.go), [Service.GetByID](../../../msteams/graph_api/team/service.go).
-  Contract tests: [TestUnitManagementFirstRequestDenials](../../../msteams/graph_api/team_management/service_test.go), [TestUnitInvalidInputAndCancellationPerformNoIO](../../../msteams/graph_api/team_management/validation_test.go).
+  Contract tests: [TestUnitManagementFirstRequestDenials](../../../msteams/graph_api/team_management/service_test.go), [TestUnitInvalidInputAndCancellationPerformNoIO](../../../msteams/graph_api/team_management/validation_test.go), [TestUnitManagementSuccessfulPairedReadAndPartialUpdate](../../../msteams/graph_api/team_management/protocol_test.go).
   Live tests: [TestAccTeamLifecycle](../../../tests/integration/lab/graph/team_lifecycle_test.go).
 
 ### Get-TeamAllChannel (CORE-21)
@@ -457,14 +456,13 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Get-TeamChannel (CORE-21)
 
 - **__AllParameterSets** — SDK: [Service.ListComplete](../../../msteams/graph_api/channel/service.go), [Service.List](../../../msteams/graph_api/channel/service.go).
-  Contract tests: [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitCollectionsAndPaging](../../../msteams/graph_api/channel/service_test.go).
+  Contract tests: [TestUnitCollectionsAndPaging](../../../msteams/graph_api/channel/service_test.go), [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go).
   Live tests: [TestAccChannelCRUD](../../../tests/integration/lab/graph/channel_test.go).
 
 ### Get-TeamChannelUser (CORE-20)
 
 - **__AllParameterSets** — SDK: [Service.List](../../../msteams/graph_api/channel_user_management/list.go), [Service.ResolveByDisplayName](../../../msteams/graph_api/channel/names.go), [Service.ListAll](../../../msteams/graph_api/channel_member/service.go).
-  Contract tests: [TestUnitListRoleOrderPresenceAndPagedEnrichment](../../../msteams/graph_api/channel_user_management/list_test.go), [TestUnitEnrichmentFailureNeverProducesACompleteList](../../../msteams/graph_api/channel_user_management/list_test.go).
-  Additional integrated primitive tests: [TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery](../../../tests/contract/core/integration_test.go).
+  Contract tests: [TestUnitListRoleOrderPresenceAndPagedEnrichment](../../../msteams/graph_api/channel_user_management/list_test.go), [TestUnitEnrichmentFailureNeverProducesACompleteList](../../../msteams/graph_api/channel_user_management/list_test.go), [TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery](../../../tests/contract/core/integration_test.go).
   Live tests: [TestAccChannelMembershipCRUD](../../../tests/integration/lab/graph/channel_membership_test.go).
 
 ### Get-TeamIncomingChannel (CORE-21)
@@ -476,7 +474,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Get-TeamTargetingHierarchyStatus (CORE-25)
 
 - **__AllParameterSets** — SDK: [Service.GetStatus](../../../msteams/teams_admin_api/targeting_hierarchy/service.go), [V1Service.GetOperation](../../../msteams/teams_admin_api/targeting_hierarchy/native.go), [V2Service.GetOperation](../../../msteams/teams_admin_api/targeting_hierarchy/native.go).
-  Contract tests: [TestUnitNativeStatusRoutesAndIndependentHierarchyPrimitives](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go), [TestUnitStatusProjectionFromLocalOperationValues](../../../msteams/teams_admin_api/targeting_hierarchy/projection_test.go), [TestUnitStatusErrorProjectionFromLocalOperationValues](../../../msteams/teams_admin_api/targeting_hierarchy/projection_test.go).
+  Contract tests: [TestUnitNativeStatusRoutesAndIndependentHierarchyPrimitives](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go), [TestUnitStatusProjectionFromLocalOperationValues](../../../msteams/teams_admin_api/targeting_hierarchy/projection_test.go), [TestUnitStatusErrorProjectionFromLocalOperationValues](../../../msteams/teams_admin_api/targeting_hierarchy/projection_test.go), [TestUnitHierarchySuccessfulPreparationImportStatusAndDelete](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go).
   Live tests: [TestAccTargetingHierarchyStatusReadOnly](../../../tests/integration/lab/targeting_hierarchy/targeting_test.go).
 
 ### Get-TeamUser (CORE-26)
@@ -488,26 +486,26 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Get-TenantPrivateChannelMigrationStatus (CORE-22)
 
 - **__AllParameterSets** — SDK: [Service.Get](../../../msteams/teams_admin_api/private_channel_migration/service.go).
-  Contract tests: [TestUnitMigrationCloudRequestPrefixesAndAudiences](../../../msteams/teams_admin_api/private_channel_migration/service_test.go), [TestUnitMigrationProfilesDoNotFallbackAndWrongBackendIsLocal](../../../msteams/teams_admin_api/private_channel_migration/service_test.go).
-  Live tests: [TestAccPrivateChannelMigrationReadOnly and TestAccPrivateChannelMigrationAuthentication](../../../tests/integration/lab/private_channel_migration/deployment_migration_test.go).
+  Contract tests: [TestUnitMigrationCloudRequestPrefixesAndAudiences](../../../msteams/teams_admin_api/private_channel_migration/service_test.go), [TestUnitMigrationProfilesDoNotFallbackAndWrongBackendIsLocal](../../../msteams/teams_admin_api/private_channel_migration/service_test.go), [TestUnitMigrationSuccessfulNativeSnapshotAndExplicitDetailDecode](../../../msteams/teams_admin_api/private_channel_migration/service_test.go).
+  Live tests: [TestAccPrivateChannelMigrationReadOnly](../../../tests/integration/lab/private_channel_migration/deployment_migration_test.go), [TestAccPrivateChannelMigrationAuthentication](../../../tests/integration/lab/private_channel_migration/deployment_migration_test.go).
 
 ### New-CsBatchTeamsDeployment (CORE-22)
 
 - **__AllParameterSets** — SDK: [BuildArchive](../../../msteams/teams_admin_api/batch_deployment/archive.go), [Service.Create](../../../msteams/teams_admin_api/batch_deployment/service.go).
-  Contract tests: [TestUnitArchivePreservesOriginalBytesFixedNamesAndReaderOwnership](../../../msteams/teams_admin_api/batch_deployment/archive_test.go), [TestUnitBatchSubmissionRequestAndDenial](../../../msteams/teams_admin_api/batch_deployment/service_test.go), [TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed](../../../msteams/teams_admin_api/batch_deployment/service_test.go).
-  Live tests: none declared.
+  Contract tests: [TestUnitArchivePreservesOriginalBytesFixedNamesAndReaderOwnership](../../../msteams/teams_admin_api/batch_deployment/archive_test.go), [TestUnitBatchSubmissionRequestAndDenial](../../../msteams/teams_admin_api/batch_deployment/service_test.go), [TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed](../../../msteams/teams_admin_api/batch_deployment/service_test.go), [TestUnitBatchAcceptedSubmissionAndOpaqueStatus](../../../msteams/teams_admin_api/batch_deployment/service_test.go).
+  Live tests: None declared..
 
 ### New-CsTeamsHiddenMeetingTemplate (CORE-27)
 
 - **Identity** — SDK: [NewHiddenMeetingTemplate](../../../msteams/teams_admin_api/team_template/local.go).
   Contract tests: [TestUnitHiddenBuildersHaveNoManagementOrAuthIO](../../../msteams/teams_admin_api/team_template/local_test.go).
-  Live tests: none declared.
+  Live tests: None declared..
 
 ### New-CsTeamsHiddenTemplate (CORE-27)
 
 - **Identity** — SDK: [NewHiddenTemplate](../../../msteams/teams_admin_api/team_template/local.go).
   Contract tests: [TestUnitHiddenBuildersHaveNoManagementOrAuthIO](../../../msteams/teams_admin_api/team_template/local_test.go).
-  Live tests: none declared.
+  Live tests: None declared..
 
 ### New-CsTeamTemplate (CORE-27)
 
@@ -527,23 +525,23 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### New-Team (CORE-28)
 
 - **CreateTeam** — SDK: [Service.Create](../../../msteams/graph_api/team_management/creation.go), [Resolver.Resolve](../../../msteams/graph_api/directory_user/resolver.go), [Service.Create](../../../msteams/graph_api/group/service.go), [Service.GetByID](../../../msteams/graph_api/group/service.go), [Service.DeleteByID](../../../msteams/graph_api/group/service.go), [Service.CreateFromGroup](../../../msteams/graph_api/team/service.go), [Service.GetByID](../../../msteams/graph_api/team_management/service.go), [Service.GetByID](../../../msteams/graph_api/group/service.go), [Service.GetByID](../../../msteams/graph_api/team/service.go).
-  Contract tests: [TestUnitManagementCreateRequestVariantsDenied](../../../msteams/graph_api/team_management/service_test.go), [TestUnitSettingsInputsCoverBothPinnedApplicationParameterSets](../../../msteams/graph_api/team_management/creation_settings_test.go), [TestUnitSettingsSerializeEveryInputField](../../../msteams/graph_api/team_management/creation_settings_test.go), [TestUnitIntegratedCoreCreationOwnershipControlsCompensation](../../../tests/contract/core/integration_test.go).
+  Contract tests: [TestUnitManagementCreateRequestVariantsDenied](../../../msteams/graph_api/team_management/service_test.go), [TestUnitSettingsInputsCoverBothPinnedApplicationParameterSets](../../../msteams/graph_api/team_management/creation_settings_test.go), [TestUnitSettingsSerializeEveryInputField](../../../msteams/graph_api/team_management/creation_settings_test.go), [TestUnitIntegratedCoreCreationOwnershipControlsCompensation](../../../tests/contract/core/integration_test.go), [TestUnitManagementSuccessfulOwnedAndSuppliedGroupCreation](../../../msteams/graph_api/team_management/protocol_test.go).
   Live tests: [TestAccTeamLifecycle](../../../tests/integration/lab/graph/team_lifecycle_test.go).
 - **MigrateGroup** — SDK: [Service.MigrateGroup](../../../msteams/graph_api/team_management/creation.go), [Service.CreateFromGroup](../../../msteams/graph_api/team/service.go), [Service.GetByID](../../../msteams/graph_api/team_management/service.go), [Service.GetByID](../../../msteams/graph_api/group/service.go), [Service.GetByID](../../../msteams/graph_api/team/service.go).
-  Contract tests: [TestUnitManagementCreateRequestVariantsDenied](../../../msteams/graph_api/team_management/service_test.go), [TestUnitCreationValidationPrecedesCredentialsAndWrites](../../../msteams/graph_api/team_management/validation_test.go), [TestUnitIntegratedCoreCreationOwnershipControlsCompensation](../../../tests/contract/core/integration_test.go).
+  Contract tests: [TestUnitManagementFirstRequestDenials](../../../msteams/graph_api/team_management/service_test.go), [TestUnitIntegratedCoreCreationOwnershipControlsCompensation](../../../tests/contract/core/integration_test.go), [TestUnitManagementSuccessfulOwnedAndSuppliedGroupCreation](../../../msteams/graph_api/team_management/protocol_test.go).
   Live tests: [TestAccTeamLifecycle](../../../tests/integration/lab/graph/team_lifecycle_test.go).
 
 ### New-TeamChannel (CORE-21)
 
-- **__AllParameterSets** — SDK: [InitialSharedTeam](../../../msteams/graph_api/channel/models.go), [Service.Create](../../../msteams/graph_api/channel/creation.go), [Service.CreateWithOwner](../../../msteams/graph_api/channel/creation.go).
-  Contract tests: [TestUnitIntegratedCoreInitialShareShapesRemainServerValidated](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitNativeCRUDContracts](../../../msteams/graph_api/channel/service_test.go), [TestUnitSharedCreationAndOperation](../../../msteams/graph_api/channel/service_test.go), [TestUnitOwnerResolutionComposition](../../../msteams/graph_api/channel/service_test.go).
+- **__AllParameterSets** — SDK: [Service.Create](../../../msteams/graph_api/channel/creation.go), [Service.CreateWithOwner](../../../msteams/graph_api/channel/creation.go), [InitialSharedTeam](../../../msteams/graph_api/channel/models.go).
+  Contract tests: [TestUnitNativeCRUDContracts](../../../msteams/graph_api/channel/service_test.go), [TestUnitSharedCreationAndOperation](../../../msteams/graph_api/channel/service_test.go), [TestUnitOwnerResolutionComposition](../../../msteams/graph_api/channel/service_test.go), [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreInitialShareShapesRemainServerValidated](../../../tests/contract/core/integration_test.go).
   Live tests: [TestAccChannelCRUD](../../../tests/integration/lab/graph/channel_test.go).
 
 ### Remove-CsTeamsTargetingPolicy (CORE-25)
 
 - **Identity** — SDK: [Service.DeleteByIdentity](../../../msteams/teams_admin_api/targeting_policy/service.go).
-  Contract tests: [TestUnitTargetingRequestVectors](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingFailuresDoNotInventSuccessOrReplayWrites](../../../msteams/teams_admin_api/targeting_policy/service_test.go).
-  Live tests: none declared.
+  Contract tests: [TestUnitTargetingRequestVectors](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingFailuresDoNotInventSuccessOrReplayWrites](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingSuccessfulReadFilterAndSparseMutation](../../../msteams/teams_admin_api/targeting_policy/service_test.go).
+  Live tests: None declared..
 
 ### Remove-CsTeamTemplate (CORE-27)
 
@@ -558,12 +556,12 @@ and `live: not-run`. No ledger success state is promoted by this change.
 
 - **__AllParameterSets** — SDK: [Service.UnshareWithTeam](../../../msteams/graph_api/shared_channel_management/service.go), [Service.DeleteByID](../../../msteams/graph_api/shared_channel/service.go).
   Contract tests: [TestUnitSharedTeamOptionalSelectorAndUnshare](../../../msteams/graph_api/shared_channel_management/service_test.go), [TestUnitUnshareFailureIsNotReplayed](../../../msteams/graph_api/shared_channel/service_test.go).
-  Live tests: none declared.
+  Live tests: None declared..
 
 ### Remove-Team (CORE-28)
 
 - **__AllParameterSets** — SDK: [Service.DeleteByID](../../../msteams/graph_api/team/service.go).
-  Contract tests: [TestUnitNativeCRUDRequestDenials](../../../msteams/graph_api/team/service_test.go), [TestUnitMutationFailuresAreNotReplayed](../../../msteams/graph_api/team/service_test.go), [TestUnitLocalValidationAndCancellationPerformNoIO](../../../msteams/graph_api/team/service_test.go), [TestUnitUploadPictureUsesGroupPhotoRouteAndOriginalBytes](../../../msteams/graph_api/team/picture_test.go).
+  Contract tests: [TestUnitNativeCRUDRequestDenials](../../../msteams/graph_api/team/service_test.go), [TestUnitMutationFailuresAreNotReplayed](../../../msteams/graph_api/team/service_test.go), [TestUnitLocalValidationAndCancellationPerformNoIO](../../../msteams/graph_api/team/service_test.go), [TestUnitNativeCRUDSuccessfulTypedAndRawResponses](../../../msteams/graph_api/team/service_test.go).
   Live tests: [TestAccTeamLifecycle](../../../tests/integration/lab/graph/team_lifecycle_test.go).
 
 ### Remove-TeamChannel (CORE-21)
@@ -575,15 +573,14 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Remove-TeamChannelUser (CORE-20)
 
 - **__AllParameterSets** — SDK: [Service.Remove](../../../msteams/graph_api/channel_user_management/service.go), [Service.ResolveByDisplayName](../../../msteams/graph_api/channel/names.go), [Service.ListAll](../../../msteams/graph_api/channel_member/service.go), [Service.DemoteOwner](../../../msteams/graph_api/channel_member/service.go), [Service.DeleteByID](../../../msteams/graph_api/channel_member/service.go), [Service.ResolveByUser](../../../msteams/graph_api/channel_member/resolution.go), [Resolver.Resolve](../../../msteams/graph_api/directory_user/resolver.go).
-  Contract tests: [TestUnitAddRemoveAndOwnerCompositions](../../../msteams/graph_api/channel_user_management/service_test.go), [TestUnitFailuresStopBeforeFurtherChanges](../../../msteams/graph_api/channel_user_management/service_test.go).
-  Additional integrated primitive tests: [TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery](../../../tests/contract/core/integration_test.go).
+  Contract tests: [TestUnitAddRemoveAndOwnerCompositions](../../../msteams/graph_api/channel_user_management/service_test.go), [TestUnitFailuresStopBeforeFurtherChanges](../../../msteams/graph_api/channel_user_management/service_test.go), [TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery](../../../tests/contract/core/integration_test.go).
   Live tests: [TestAccChannelMembershipCRUD](../../../tests/integration/lab/graph/channel_membership_test.go).
 
 ### Remove-TeamTargetingHierarchy (CORE-25)
 
 - **__AllParameterSets** — SDK: [Service.Delete](../../../msteams/teams_admin_api/targeting_hierarchy/service.go), [V1Service.Delete](../../../msteams/teams_admin_api/targeting_hierarchy/native.go), [V2Service.Delete](../../../msteams/teams_admin_api/targeting_hierarchy/native.go).
-  Contract tests: [TestUnitNativeStatusRoutesAndIndependentHierarchyPrimitives](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go), [TestUnitHierarchyDeletionFailuresAreNotReplayed](../../../msteams/teams_admin_api/targeting_hierarchy/failure_test.go).
-  Live tests: none declared.
+  Contract tests: [TestUnitNativeStatusRoutesAndIndependentHierarchyPrimitives](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go), [TestUnitHierarchyDeletionFailuresAreNotReplayed](../../../msteams/teams_admin_api/targeting_hierarchy/failure_test.go), [TestUnitHierarchySuccessfulPreparationImportStatusAndDelete](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go).
+  Live tests: None declared..
 
 ### Remove-TeamUser (CORE-26)
 
@@ -594,19 +591,19 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Set-CsTeamsTargetingPolicy (CORE-25)
 
 - **Identity** — SDK: [Service.UpdateByIdentity](../../../msteams/teams_admin_api/targeting_policy/service.go), [Service.UpdateGlobal](../../../msteams/teams_admin_api/targeting_policy/service.go).
-  Contract tests: [TestUnitTargetingRequestVectors](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitSparseIdentityUpdateAndOpenValues](../../../msteams/teams_admin_api/targeting_policy/service_test.go).
-  Live tests: none declared.
+  Contract tests: [TestUnitTargetingRequestVectors](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitSparseIdentityUpdateAndOpenValues](../../../msteams/teams_admin_api/targeting_policy/service_test.go), [TestUnitTargetingSuccessfulReadFilterAndSparseMutation](../../../msteams/teams_admin_api/targeting_policy/service_test.go).
+  Live tests: None declared..
 
 ### Set-Team (CORE-28)
 
 - **__AllParameterSets** — SDK: [Service.UpdateByID](../../../msteams/graph_api/team_management/service.go), [Service.UpdateByID](../../../msteams/graph_api/group/service.go), [Service.UpdateByID](../../../msteams/graph_api/team/service.go), [Service.GetByID](../../../msteams/graph_api/team_management/service.go), [Service.GetByID](../../../msteams/graph_api/group/service.go), [Service.GetByID](../../../msteams/graph_api/team/service.go).
-  Contract tests: [TestUnitManagementSparsePropertyAndSettingsInput](../../../msteams/graph_api/team_management/service_test.go), [TestUnitManagementFirstRequestDenials](../../../msteams/graph_api/team_management/service_test.go), [TestUnitSettingsInputsCoverBothPinnedApplicationParameterSets](../../../msteams/graph_api/team_management/creation_settings_test.go), [TestUnitSettingsSerializeEveryInputField](../../../msteams/graph_api/team_management/creation_settings_test.go).
+  Contract tests: [TestUnitManagementSparsePropertyAndSettingsInput](../../../msteams/graph_api/team_management/service_test.go), [TestUnitManagementFirstRequestDenials](../../../msteams/graph_api/team_management/service_test.go), [TestUnitSettingsInputsCoverBothPinnedApplicationParameterSets](../../../msteams/graph_api/team_management/creation_settings_test.go), [TestUnitSettingsSerializeEveryInputField](../../../msteams/graph_api/team_management/creation_settings_test.go), [TestUnitManagementSuccessfulPairedReadAndPartialUpdate](../../../msteams/graph_api/team_management/protocol_test.go).
   Live tests: [TestAccTeamLifecycle](../../../tests/integration/lab/graph/team_lifecycle_test.go).
 
 ### Set-TeamArchivedState (CORE-28)
 
 - **__AllParameterSets** — SDK: [Service.SetArchivedState](../../../msteams/graph_api/team_management/archive.go), [Service.Archive](../../../msteams/graph_api/team/operations.go), [Service.Unarchive](../../../msteams/graph_api/team/operations.go), [Service.GetByID](../../../msteams/graph_api/team_management/service.go), [Service.GetByID](../../../msteams/graph_api/group/service.go), [Service.GetByID](../../../msteams/graph_api/team/service.go).
-  Contract tests: [TestUnitManagementFirstRequestDenials](../../../msteams/graph_api/team_management/service_test.go), [TestUnitArchiveValidationStopsBeforeAnyReadOrWrite](../../../msteams/graph_api/team_management/validation_test.go).
+  Contract tests: [TestUnitManagementFirstRequestDenials](../../../msteams/graph_api/team_management/service_test.go), [TestUnitArchiveValidationStopsBeforeAnyReadOrWrite](../../../msteams/graph_api/team_management/validation_test.go), [TestUnitManagementArchiveRequiresIndependentReadback](../../../msteams/graph_api/team_management/protocol_test.go).
   Live tests: [TestAccTeamLifecycle](../../../tests/integration/lab/graph/team_lifecycle_test.go).
 
 ### Set-TeamChannel (CORE-21)
@@ -624,8 +621,8 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Set-TeamTargetingHierarchy (CORE-25)
 
 - **__AllParameterSets** — SDK: [Service.UploadCSV](../../../msteams/teams_admin_api/targeting_hierarchy/service.go), [V1Service.ImportCSV](../../../msteams/teams_admin_api/targeting_hierarchy/native.go), [V2Service.GetHierarchy](../../../msteams/teams_admin_api/targeting_hierarchy/native.go), [V2Service.CreateHierarchy](../../../msteams/teams_admin_api/targeting_hierarchy/native.go), [V2Service.ImportCSV](../../../msteams/teams_admin_api/targeting_hierarchy/native.go).
-  Contract tests: [TestUnitNativeImportsStreamOriginalCSVWithoutPreparation](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go), [TestUnitUploadCompositionDenialsRetainPreparationState](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go), [TestUnitHierarchyOptionsProfilesAndSourceValidationAreLocal](../../../msteams/teams_admin_api/targeting_hierarchy/failure_test.go).
-  Live tests: none declared.
+  Contract tests: [TestUnitNativeImportsStreamOriginalCSVWithoutPreparation](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go), [TestUnitUploadCompositionDenialsRetainPreparationState](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go), [TestUnitHierarchyOptionsProfilesAndSourceValidationAreLocal](../../../msteams/teams_admin_api/targeting_hierarchy/failure_test.go), [TestUnitHierarchySuccessfulPreparationImportStatusAndDelete](../../../msteams/teams_admin_api/targeting_hierarchy/service_test.go).
+  Live tests: None declared..
 
 ### Update-CsTeamTemplate (CORE-27)
 
@@ -642,12 +639,10 @@ and `live: not-run`. No ledger success state is promoted by this change.
   Contract tests: [TestUnitServiceUpdateByID](../../../msteams/teams_admin_api/team_template/service_test.go), [TestUnitDefinitionSerializationVectors](../../../msteams/teams_admin_api/team_template/definition_test.go).
   Live tests: [TestAccTeamTemplateCRUD](../../../tests/integration/lab/team_template/team_template_test.go).
 
-
-
 ## Complete command/set protocol audit
 
 [The 40-command / 52-set audit](contract-completeness.md) records the original runner behavior and the reviewed repairs. Some old wrappers converted a first 2xx into 403 and removed later assertions; those responses now bypass that conversion only when individually annotated with primary protocol provenance. Other denial vectors remain unchanged. Adversarial 2xx bodies exercise real decode and partial-result errors rather than being mislabeled as authorization failures.
 
 Reviewed Graph results now exercise typed/native identities, nullable/future fields, complete paging, enrichment, role filters, mutation stages and later failures. New team compositions cover successful owned/supplied group creation, paired group/team reads, partial updates, archive/unarchive confirmation and out-of-order batch/user-list partial hydration. Pinned-source admin vectors exercise actual successful model/receipt branches, including opaque batch status and distinct hierarchy preparation/import outcomes. Existing template captures now reach response assertions for all input variants. These are offline conformance statements, not captured Graph responses or live tenant qualification.
 
-No global ledger status is promoted. Live Graph lifecycle/membership/shared topology, delegated regional consent, disposable deployment/hierarchy fixtures and the actual private-backend HTTP 401 remain qualification boundaries. Unknown existing-relationship creation/update and policy upsert/CSV semantics remain source limits, not fabricated implementations. Current-head template settings proof is tracked by the single selective run [45883473663](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45883473663) at `22f01edc43d70cdbeffdf5ea850d38b2a2337952`; it is not counted until its terminal report is inspected.
+No global ledger status is promoted. Live Graph lifecycle/membership/shared topology, delegated regional consent, disposable deployment/hierarchy fixtures and the actual private-backend HTTP 401 remain qualification boundaries. Existing-relationship creation/update and policy upsert are not established by the public command contracts. Published CSV layouts are available and represented in authored inputs; actual semantic acceptance and completed processing still need owned live fixtures. Current-head template settings proof is tracked by the single selective run [45883473663](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45883473663) at `22f01edc43d70cdbeffdf5ea850d38b2a2337952`; it is not counted until its terminal report is inspected.

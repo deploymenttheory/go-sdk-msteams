@@ -150,9 +150,16 @@ func TestUnitBatchSubmissionLocalModelKeepsOptionalIdentities(t *testing.T) {
 // Get preserves arbitrary status text without deciding workflow completion.
 func TestUnitBatchAcceptedSubmissionAndOpaqueStatus(t *testing.T) {
 	t.Parallel()
-	archive := testArchive(t)
+	// Exact ordered columns follow the linked frontline deployment guide.
+	// Identity/name values are authored, and no deployment is submitted live.
+	teams := "Team Name,Existing Team ID,Visibility,Team Template ID\r\nOffline team,,Private,\r\n"
+	users := "User Full Name,User UPN or ID,Team Name,ActionType,Owner or Member\r\nOffline owner,offline-owner@example.invalid,Offline team,AddMember,Owner\r\n"
+	archive, buildErr := deployment.BuildArchive(t.Context(), strings.NewReader(teams), strings.NewReader(users), budget)
+	if buildErr != nil {
+		t.Fatal(buildErr)
+	}
 	accepted := batchWire("POST", "/batchflwdeployment", createBody(t, archive), 202, `{"instanceId":"offline/instance","executionId":"offline-execution","future":false}`)
-	accepted.Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0"}
+	accepted.Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0", "https://learn.microsoft.com/en-us/microsoft-365/frontline/deploy-teams-at-scale"}
 	for _, identity := range []bool{false, true} {
 		set := "Get"
 		if identity {

@@ -142,3 +142,10 @@ All values are authored. Use this with201 for a reviewed variant; assert ID/name
 ## How to attach provenance to authored replies
 
 For each vector, cite this note plus package version, DLL hash label, exact class/method and offsets above. Use a label such as “authored from pinned8.1.0 serializer/dispatcher” and retain the primary package/doc URL. Give each materially distinct reply its own provenance: discovery source does not prove the subsequent resource reply; a status selector does not prove an invented body; a model serializer does not prove a terminal workflow. Unknown fields should be named and asserted as forward-compatibility probes, never described as documented service fields. No live status or ledger qualification is promoted by this note.
+
+
+## Published CSV inputs and update-only policy scope
+
+Rechecked the current first-party [frontline deployment guide](https://learn.microsoft.com/en-us/microsoft-365/frontline/deploy-teams-at-scale) and [hierarchy upload reference](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/set-teamtargetinghierarchy?view=teams-ps) on 2026-11-26. Both publish caller column layouts. The positive protocol vectors use those layouts with explicitly authored identity/name rows. Batch archive construction and hierarchy multipart streaming continue to preserve bytes; they do not locally validate tenant resources, licensing or service ingestion. The batch guide requires licensed team owners, and hierarchy import replaces the singleton: these are concrete live prerequisites, not missing column documentation.
+
+The current [targeting policy setter](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/set-csteamstargetingpolicy?view=teams-ps) describes updating an existing instance, including its example. Its public command contract does not establish creation/upsert. The pinned PUT/204 evidence supports the SDK update operation; manufacturing a create result from the HTTP verb would add an unsupported claim.
