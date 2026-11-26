@@ -48,3 +48,5 @@ pinned model; the SDK returns a decode error and preserves raw response data.
 
 Exact RBAC/consent, cloud feature deployment and successful app/delegated service
 behavior remain unqualified. [unit tests](service_test.go).
+
+An explicitly empty `ListFiltered` pattern is rejected before credentials or HTTP, matching the effective pinned Filter binder. Use `List` for an omitted filter; a whitespace pattern remains a bound wildcard expression.

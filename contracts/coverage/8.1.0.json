@@ -2796,6 +2796,10 @@
             {
               "file": "msteams/teams_admin_api/external_access_policy/filter_test.go",
               "name": "TestUnitProviderFilteringIsLocalAndGlobalOrderIsExactFromRealResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/filter_binding_test.go",
+              "name": "TestUnitExplicitEmptyFilterRejectsBeforeCredentials"
             }
           ],
           "live_tests": [
@@ -6381,6 +6385,10 @@
             {
               "file": "msteams/teams_admin_api/acs_federation_configuration/filter_test.go",
               "name": "TestUnitProviderFilteringIsLocalAndGlobalOrderIsExactFromRealResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/acs_federation_configuration/filter_binding_test.go",
+              "name": "TestUnitExplicitEmptyFilterRejectsBeforeCredentials"
             }
           ],
           "live_tests": [
@@ -8386,6 +8394,10 @@
             {
               "file": "msteams/teams_admin_api/teams_external_access_configuration/filter_test.go",
               "name": "TestUnitProviderFilteringIsLocalAndGlobalOrderIsExactFromRealResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/filter_binding_test.go",
+              "name": "TestUnitExplicitEmptyFilterRejectsBeforeCredentials"
             }
           ],
           "live_tests": [
@@ -9275,6 +9287,10 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
               "name": "TestUnitBrandingListFilteringPreservesExactGlobalOrderingFromRealResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/filter_binding_test.go",
+              "name": "TestUnitExplicitEmptyFilterRejectsBeforeCredentials"
             }
           ],
           "live_tests": [
