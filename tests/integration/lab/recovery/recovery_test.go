@@ -27,9 +27,11 @@ import (
 	onlinevoicemailpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/online_voicemail_policy"
 	schedulesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/schedules"
 	teamtemplateacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/team_template"
+	teamsaipolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_ai_policy"
 	teamsapppermissionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_permission_policy"
 	teamsappsetuppolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_app_setup_policy"
 	teamsaudioconferencingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_audio_conferencing_policy"
+	teamsbyodanddeskspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_byod_and_desks_policy"
 	teamscallholdpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_call_hold_policy"
 	teamscallparkpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_call_park_policy"
 	teamscallingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_calling_policy"
@@ -39,7 +41,14 @@ import (
 	teamseventspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_events_policy"
 	teamsfeedbackpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_feedback_policy"
 	teamsfilespolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_files_policy"
+	teamsfirstpartymeetingtemplateconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_first_party_meeting_template_configuration"
+	teamsguestcallingconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_guest_calling_configuration"
+	teamsguestmessagingconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_guest_messaging_configuration"
+	teamsipphonepolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_ip_phone_policy"
 	teamsmediaconnectivitypolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_media_connectivity_policy"
+	teamsmedialoggingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_media_logging_policy"
+	teamsmeetingbroadcastconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_meeting_broadcast_configuration"
+	teamsmeetingbroadcastpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_meeting_broadcast_policy"
 	teamsmeetingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_meeting_policy"
 	teamsmeetingtemplatepermissionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_meeting_template_permission_policy"
 	teamsmessagingconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_messaging_configuration"
@@ -64,6 +73,8 @@ import (
 	teamsvirtualappointmentspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_virtual_appointments_policy"
 	teamsvoiceapplicationspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_voice_applications_policy"
 	teamsworkloadpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_work_load_policy"
+	teamsworklocationdetectionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_work_location_detection_policy"
+	tenantmigrationconfigurationacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/tenant_migration_configuration"
 )
 
 // handlerSets lists every service's recovery handlers.
@@ -83,9 +94,11 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		schedulesacc.RecoveryHandlers(sdk),
 		onlinevoicemailpolicyacc.RecoveryHandlers(sdk),
 		teamtemplateacc.RecoveryHandlers(sdk),
+		teamsaipolicyacc.RecoveryHandlers(sdk),
 		teamsapppermissionpolicyacc.RecoveryHandlers(sdk),
 		teamsappsetuppolicyacc.RecoveryHandlers(sdk),
 		teamsaudioconferencingpolicyacc.RecoveryHandlers(sdk),
+		teamsbyodanddeskspolicyacc.RecoveryHandlers(sdk),
 		teamscallholdpolicyacc.RecoveryHandlers(sdk),
 		teamscallparkpolicyacc.RecoveryHandlers(sdk),
 		teamscallingpolicyacc.RecoveryHandlers(sdk),
@@ -95,8 +108,13 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		teamseventspolicyacc.RecoveryHandlers(sdk),
 		teamsfeedbackpolicyacc.RecoveryHandlers(sdk),
 		teamsfilespolicyacc.RecoveryHandlers(sdk),
+		teamsipphonepolicyacc.RecoveryHandlers(sdk),
+		teamsguestmessagingconfigurationacc.RecoveryHandlers(sdk),
+		teamsguestcallingconfigurationacc.RecoveryHandlers(sdk),
+		teamsfirstpartymeetingtemplateconfigurationacc.RecoveryHandlers(sdk),
 		teamsmediaconnectivitypolicyacc.RecoveryHandlers(sdk),
 		teamsmeetingpolicyacc.RecoveryHandlers(sdk),
+		teamsmeetingbroadcastconfigurationacc.RecoveryHandlers(sdk),
 		teamsmeetingtemplatepermissionpolicyacc.RecoveryHandlers(sdk),
 		teamsmessagingconfigurationacc.RecoveryHandlers(sdk),
 		teamsmessagingpolicyacc.RecoveryHandlers(sdk),
@@ -108,18 +126,21 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		teamspersonalattendantpolicyacc.RecoveryHandlers(sdk),
 		teamsrecordingrolloutpolicyacc.RecoveryHandlers(sdk),
 		teamsroomvideoteleconferencingpolicyacc.RecoveryHandlers(sdk),
+		teamsmeetingbroadcastpolicyacc.RecoveryHandlers(sdk),
 		teamssharedcallingroutingpolicyacc.RecoveryHandlers(sdk),
 		teamsshiftsapppolicyacc.RecoveryHandlers(sdk),
 		teamsshiftspolicyacc.RecoveryHandlers(sdk),
 		teamssipdevicesconfigurationacc.RecoveryHandlers(sdk),
 		teamstemplatepermissionpolicyacc.RecoveryHandlers(sdk),
 		teamstenantabuseconfigurationacc.RecoveryHandlers(sdk),
+		tenantmigrationconfigurationacc.RecoveryHandlers(sdk),
 		teamsupdatemanagementpolicyacc.RecoveryHandlers(sdk),
 		teamsupgradeconfigurationacc.RecoveryHandlers(sdk),
 		teamsvdipolicyacc.RecoveryHandlers(sdk),
 		teamsvirtualappointmentspolicyacc.RecoveryHandlers(sdk),
 		teamsvoiceapplicationspolicyacc.RecoveryHandlers(sdk),
 		teamsworkloadpolicyacc.RecoveryHandlers(sdk),
+		teamsworklocationdetectionpolicyacc.RecoveryHandlers(sdk),
 	}
 }
 
@@ -149,6 +170,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 	handlers := mergeHandlers(t, handlerSets(sdk)...)
 	want := []string{
 		"ai-agent",
+		"ai-policy",
 		"app-permission-policy",
 		"app-setup-policy",
 		"application-access-policy",
@@ -157,6 +179,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"auto-recording-template",
 		"auto-attendant",
 		"branding-policy",
+		"byod-and-desks-policy",
 		"call-hold-policy",
 		"call-park-policy",
 		"call-queue",
@@ -170,12 +193,17 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"external-access-policy",
 		"feedback-policy",
 		"files-policy",
+		"ip-phone-policy",
+		"first-party-template-config",
 		"mainline-booking-flow",
 		"mainline-qa-flow",
 		"mainline-spam-template",
 		"generic-configuration",
+		"guest-messaging-configuration",
+		"guest-calling-configuration",
 		"media-connectivity-policy",
 		"meeting-policy",
+		"meeting-broadcast-configuration",
 		"meeting-template-policy",
 		"messaging-configuration",
 		"messaging-policy",
@@ -187,6 +215,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"recording-rollout-policy",
 		"roaming-policy",
 		"room-video-policy",
+		"meeting-broadcast-policy",
 		"schedule",
 		"shared-call-history-template",
 		"shared-calling-policy",
@@ -198,6 +227,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"template-baseline-policy",
 		"template-permission-policy",
 		"tenant-abuse-configuration",
+		"tenant-migration-configuration",
 		"update-management-policy",
 		"upgrade-configuration",
 		"vdi-policy",
@@ -206,6 +236,7 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"voicemail-policy",
 		"voicemail-triage-template",
 		"work-load-policy",
+		"work-location-detection-policy",
 	}
 	if len(handlers) != len(want) {
 		t.Fatalf("recovery registry has %d kinds, want %d", len(handlers), len(want))
@@ -240,7 +271,8 @@ func TestAccRecoverOwnedPolicies(t *testing.T) {
 	}()
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
-	handlers := mergeHandlers(t, append(handlerSets(sdk), applicationaccesspolicyacc.FixtureRecoveryHandlers(t, sdk, binding))...)
+	handlers := mergeHandlers(t, append(handlerSets(sdk), applicationaccesspolicyacc.FixtureRecoveryHandlers(t, sdk, binding),
+		teamsmedialoggingpolicyacc.FixtureRecoveryHandlers(t, sdk, binding))...)
 	_, err = journal.Recover(ctx, handlers)
 	if err != nil {
 		t.Fatal("owned-policy recovery incomplete; private journal retained")

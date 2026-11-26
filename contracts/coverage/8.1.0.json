@@ -6361,22 +6361,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/100/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ai_policy/ai_policy_read_test.go",
+              "name": "TestAccAIPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/100/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ai_policy/ai_policy_read_test.go",
+              "name": "TestAccAIPolicyReadOnly"
+            },
+            {
+              "file": "tests/integration/lab/teams_ai_policy/ai_policy_crud_test.go",
+              "name": "TestAccAIPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -6384,8 +6439,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (Description set and EnrollFace Disabled, then EnrollFace Enabled with explicit-null Description) passed client-secret and certificate application modes with pinned PowerShell read parity of all five settings and journaled cleanup. Grant scopes are contract-tested only; grant persistence, other enrollment writes and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ai-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -6768,22 +6825,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/105/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_byod_and_desks_policy/byod_and_desks_policy_read_test.go",
+              "name": "TestAccBYODAndDesksPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/105/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_byod_and_desks_policy/byod_and_desks_policy_read_test.go",
+              "name": "TestAccBYODAndDesksPolicyReadOnly"
+            },
+            {
+              "file": "tests/integration/lab/teams_byod_and_desks_policy/byod_and_desks_policy_crud_test.go",
+              "name": "TestAccBYODAndDesksPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -6791,8 +6903,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DeviceDataCollection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/byod-and-desks-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -8416,22 +8530,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/125/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_first_party_meeting_template_configuration/first_party_template_configuration_test.go",
+              "name": "TestAccFirstPartyMeetingTemplateConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/125/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_first_party_meeting_template_configuration/first_party_template_configuration_test.go",
+              "name": "TestAccFirstPartyMeetingTemplateConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8439,8 +8600,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter with pinned getter comparison and journaled Description update/read-back/null restoration passed with client-secret application auth; template-list writes, delegated flows and other clouds remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/first-party-meeting-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -8455,22 +8618,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/126/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_calling_configuration/filter.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_calling_configuration/guest_calling_read_test.go",
+              "name": "TestAccGuestCallingConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/126/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_calling_configuration/guest_calling_read_test.go",
+              "name": "TestAccGuestCallingConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_guest_calling_configuration/filter.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8478,8 +8688,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list and AllowPrivateCalling Boolean update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity; other identities, effective guest calling behavior and release qualification remain separate.",
+        "evidence": [
+          "docs/implementation/policies/guest-calling-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -8533,22 +8745,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/128/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/filter.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_messaging_configuration/guest_messaging_read_test.go",
+              "name": "TestAccGuestMessagingConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/128/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_messaging_configuration/guest_messaging_read_test.go",
+              "name": "TestAccGuestMessagingConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/filter.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8556,8 +8815,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list of all ten getter settings and AllowMemes Boolean plus GiphyRatingType string update/read-back/omission/restoration passed both application auth modes with pinned PowerShell getter parity; the other Set settings, other identities, effective guest messaging behavior and release qualification remain separate.",
+        "evidence": [
+          "docs/implementation/policies/guest-messaging-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -8572,22 +8833,85 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/129/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ip_phone_policy/ip_phone_policy_read_test.go",
+              "name": "TestAccIPPhonePolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/129/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/failure_test.go",
+              "name": "TestUnitIPPhonePolicyMalformedReadsAndPartialCreate"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ip_phone_policy/ip_phone_policy_read_test.go",
+              "name": "TestAccIPPhonePolicyReadOnly"
+            },
+            {
+              "file": "tests/integration/lab/teams_ip_phone_policy/ip_phone_policy_crud_test.go",
+              "name": "TestAccIPPhonePolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8595,8 +8919,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (CommonAreaPhoneSignIn sign-in, hot desking off and a 30-minute idle timeout, then a sparse description/home-screen/Better Together update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective device/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ip-phone-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -8707,22 +9033,85 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/131/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/response_test.go",
+              "name": "TestUnitModernFiltersUseActualCollection"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_logging_policy/media_logging_read_test.go",
+              "name": "TestAccMediaLoggingPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/131/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/models.go",
+              "name": "Policy"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/response_test.go",
+              "name": "TestUnitActualModernReadAndCollection"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/response_test.go",
+              "name": "TestUnitReadFailuresRetainResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/models_test.go",
+              "name": "TestUnitEveryTypedSettingUsesAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_logging_policy/media_logging_read_test.go",
+              "name": "TestAccMediaLoggingPolicyReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/service.go",
+            "name": "Service.List"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/models.go",
+            "name": "Policy"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8730,8 +9119,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret Global and Tag:Enabled reads, list, Tag filter and HTTP404 passed with pinned PowerShell getter comparisons. Delegated modes and other clouds remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/media-logging-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -8832,22 +9223,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/133/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/filter.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitExposeSDNAppendsPinnedQueryForEveryParameterSet"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_configuration/meeting_broadcast_read_test.go",
+              "name": "TestAccMeetingBroadcastConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/133/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitExposeSDNAppendsPinnedQueryForEveryParameterSet"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_configuration/meeting_broadcast_read_test.go",
+              "name": "TestAccMeetingBroadcastConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/filter.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8855,8 +9301,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global default and ExposeSDNConfigurationJsonBlob read/list and SupportURL update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity; enabling AllowSdnProviderForBroadcastMeeting and SDN provider settings (including SdnApiToken), other identities and effective broadcast behavior remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/meeting-broadcast-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -8871,22 +9319,85 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/134/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_policy/meeting_broadcast_policy_read_test.go",
+              "name": "TestAccMeetingBroadcastPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/134/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/failure_test.go",
+              "name": "TestUnitMeetingBroadcastPolicyMalformedReadsAndPartialCreate"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_policy/meeting_broadcast_policy_read_test.go",
+              "name": "TestAccMeetingBroadcastPolicyReadOnly"
+            },
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_policy/meeting_broadcast_policy_crud_test.go",
+              "name": "TestAccMeetingBroadcastPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8894,8 +9405,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (scheduling off with AlwaysDisabled recording, then a sparse description/attendee-visibility update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/meeting-broadcast-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -12737,22 +13250,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/181/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_work_location_detection_policy/work_location_detection_policy_read_test.go",
+              "name": "TestAccWorkLocationDetectionPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/181/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_work_location_detection_policy/work_location_detection_policy_read_test.go",
+              "name": "TestAccWorkLocationDetectionPolicyReadOnly"
+            },
+            {
+              "file": "tests/integration/lab/teams_work_location_detection_policy/work_location_detection_policy_crud_test.go",
+              "name": "TestAccWorkLocationDetectionPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -12760,8 +13328,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (EnableWorkLocationDetection true to false with UserSettingsDefault Enabled preserved) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/work-location-detection-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -13260,22 +13830,69 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/189/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_migration_configuration/filter.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_migration_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_migration_configuration/tenant_migration_read_test.go",
+              "name": "TestAccTenantMigrationConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/189/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_migration_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_migration_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_migration_configuration/service_test.go",
+              "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_migration_configuration/tenant_migration_read_test.go",
+              "name": "TestAccTenantMigrationConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_migration_configuration/filter.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_migration_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_migration_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -13283,8 +13900,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list of MeetingMigrationEnabled and its enabled-to-disabled update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity; enabling the Meeting Migration Service from a disabled original is not a safe lab write and remains contract-tested only, as do other identities, effective meeting migration behavior and release qualification.",
+        "evidence": [
+          "docs/implementation/policies/tenant-migration-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -16024,36 +16643,105 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/229/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/failure_test.go",
+              "name": "TestUnitAIPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/229/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/failure_test.go",
+              "name": "TestUnitAIPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/229/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/failure_test.go",
+              "name": "TestUnitAIPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/229/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/failure_test.go",
+              "name": "TestUnitAIPolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/assignment.go",
+            "name": "Service.AssignUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -16061,8 +16749,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (Description set and EnrollFace Disabled, then EnrollFace Enabled with explicit-null Description) passed client-secret and certificate application modes with pinned PowerShell read parity of all five settings and journaled cleanup. Grant scopes are contract-tested only; grant persistence, other enrollment writes and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ai-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -16450,36 +17140,105 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/233/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/failure_test.go",
+              "name": "TestUnitBYODAndDesksPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/233/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/failure_test.go",
+              "name": "TestUnitBYODAndDesksPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/233/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/failure_test.go",
+              "name": "TestUnitBYODAndDesksPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/233/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/failure_test.go",
+              "name": "TestUnitBYODAndDesksPolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/assignment.go",
+            "name": "Service.AssignUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -16487,8 +17246,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DeviceDataCollection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/byod-and-desks-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -17941,29 +18702,108 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/247/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/failure_test.go",
+              "name": "TestUnitIPPhonePolicyMutationsKeepStatusAndNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service_test.go",
+              "name": "TestUnitModernGrantScopeBodiesAndRankOmission"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/failure_test.go",
+              "name": "TestUnitIPPhonePolicyGroupGrantReceipts"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/247/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/failure_test.go",
+              "name": "TestUnitIPPhonePolicyMutationsKeepStatusAndNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service_test.go",
+              "name": "TestUnitModernGrantScopeBodiesAndRankOmission"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/247/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/failure_test.go",
+              "name": "TestUnitIPPhonePolicyMutationsKeepStatusAndNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service_test.go",
+              "name": "TestUnitModernGrantScopeBodiesAndRankOmission"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/failure_test.go",
+              "name": "TestUnitIPPhonePolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -17971,8 +18811,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (CommonAreaPhoneSignIn sign-in, hot desking off and a 30-minute idle timeout, then a sparse description/home-screen/Better Together update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective device/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ip-phone-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -18111,29 +18953,126 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/249/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/models.go",
+              "name": "GroupAssignment"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitGroupGrantReceiptsDistinguishAcceptedFromNoContent"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitActualGrantReceiptsFromAcceptance"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_logging_policy/media_logging_group_grant_test.go",
+              "name": "TestAccMediaLoggingPolicyGroupGrant"
+            }
+          ]
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/249/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitTenantForceAndExplicitZeroPriorityAreLowLevelOnly"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/249/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment_test.go",
+              "name": "TestUnitActualGrantReceiptsFromAcceptance"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_logging_policy/response_test.go",
+              "name": "TestUnitGrantScopeIdentityAndCancellationRejectBeforeHTTP"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_logging_policy/media_logging_user_grant_test.go",
+              "name": "TestAccMediaLoggingPolicyUserGrant"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/models.go",
+            "name": "GroupAssignment"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_logging_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -18141,8 +19080,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Client-secret user grant/clear of built-in Enabled and owned-group grant/removal passed with read-back, pinned comparisons and journaled restoration. Tenant-wide GrantToTenant is contract-tested only; delegated modes and member propagation remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/media-logging-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -18279,29 +19220,108 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/251/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+              "name": "Service.AssignToGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/failure_test.go",
+              "name": "TestUnitMeetingBroadcastPolicyMutationsKeepStatusAndNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service_test.go",
+              "name": "TestUnitModernGrantScopeBodiesAndRankOmission"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/failure_test.go",
+              "name": "TestUnitMeetingBroadcastPolicyGroupGrantReceipts"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/251/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/failure_test.go",
+              "name": "TestUnitMeetingBroadcastPolicyMutationsKeepStatusAndNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service_test.go",
+              "name": "TestUnitModernGrantScopeBodiesAndRankOmission"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/251/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+              "name": "Service.AssignToUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/failure_test.go",
+              "name": "TestUnitMeetingBroadcastPolicyMutationsKeepStatusAndNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service_test.go",
+              "name": "TestUnitModernGrantScopeBodiesAndRankOmission"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/failure_test.go",
+              "name": "TestUnitMeetingBroadcastPolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+            "name": "Service.AssignToGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/assignment.go",
+            "name": "Service.AssignToUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -18309,8 +19329,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (scheduling off with AlwaysDisabled recording, then a sparse description/attendee-visibility update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/meeting-broadcast-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -20233,36 +21255,105 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/269/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/failure_test.go",
+              "name": "TestUnitWorkLocationDetectionPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/269/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/failure_test.go",
+              "name": "TestUnitWorkLocationDetectionPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/269/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/failure_test.go",
+              "name": "TestUnitWorkLocationDetectionPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/269/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/failure_test.go",
+              "name": "TestUnitWorkLocationDetectionPolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/assignment.go",
+            "name": "Service.AssignUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20270,8 +21361,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (EnableWorkLocationDetection true to false with UserSettingsDefault Enabled preserved) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/work-location-detection-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -24547,15 +25640,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/338/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/settings_test.go",
+              "name": "TestUnitAllPinnedSettingsBindValuesAndNull"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ai_policy/ai_policy_crud_test.go",
+              "name": "TestAccAIPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -24563,8 +25680,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (Description set and EnrollFace Disabled, then EnrollFace Enabled with explicit-null Description) passed client-secret and certificate application modes with pinned PowerShell read parity of all five settings and journaled cleanup. Grant scopes are contract-tested only; grant persistence, other enrollment writes and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ai-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -24732,15 +25851,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/342/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/settings_test.go",
+              "name": "TestUnitAllPinnedSettingsBindValuesAndNull"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_byod_and_desks_policy/byod_and_desks_policy_crud_test.go",
+              "name": "TestAccBYODAndDesksPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -24748,8 +25891,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DeviceDataCollection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/byod-and-desks-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -25789,15 +26934,51 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/363/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/failure_test.go",
+              "name": "TestUnitIPPhonePolicyMalformedReadsAndPartialCreate"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/metadata_test.go",
+              "name": "TestUnitSettingsMatchPinnedCommandParameters"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ip_phone_policy/ip_phone_policy_crud_test.go",
+              "name": "TestAccIPPhonePolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -25805,8 +26986,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (CommonAreaPhoneSignIn sign-in, hot desking off and a 30-minute idle timeout, then a sparse description/home-screen/Better Together update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective device/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ip-phone-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -26036,15 +27219,51 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/368/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/failure_test.go",
+              "name": "TestUnitMeetingBroadcastPolicyMalformedReadsAndPartialCreate"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/metadata_test.go",
+              "name": "TestUnitSettingsMatchPinnedCommandParameters"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_policy/meeting_broadcast_policy_crud_test.go",
+              "name": "TestAccMeetingBroadcastPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+            "name": "Service.Create"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -26052,8 +27271,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (scheduling off with AlwaysDisabled recording, then a sparse description/attendee-visibility update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/meeting-broadcast-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -27662,15 +28883,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/396/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/settings_test.go",
+              "name": "TestUnitAllPinnedSettingsBindValuesAndNull"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_work_location_detection_policy/work_location_detection_policy_crud_test.go",
+              "name": "TestAccWorkLocationDetectionPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -27678,8 +28923,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (EnableWorkLocationDetection true to false with UserSettingsDefault Enabled preserved) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/work-location-detection-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -30483,15 +31730,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/453/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/failure_test.go",
+              "name": "TestUnitAIPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ai_policy/ai_policy_crud_test.go",
+              "name": "TestAccAIPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30499,8 +31770,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (Description set and EnrollFace Disabled, then EnrollFace Enabled with explicit-null Description) passed client-secret and certificate application modes with pinned PowerShell read parity of all five settings and journaled cleanup. Grant scopes are contract-tested only; grant persistence, other enrollment writes and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ai-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -30660,15 +31933,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/457/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/failure_test.go",
+              "name": "TestUnitBYODAndDesksPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_byod_and_desks_policy/byod_and_desks_policy_crud_test.go",
+              "name": "TestAccBYODAndDesksPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -30676,8 +31973,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DeviceDataCollection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/byod-and-desks-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -31446,15 +32745,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/473/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/failure_test.go",
+              "name": "TestUnitIPPhonePolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ip_phone_policy/ip_phone_policy_crud_test.go",
+              "name": "TestAccIPPhonePolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -31462,8 +32785,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (CommonAreaPhoneSignIn sign-in, hot desking off and a 30-minute idle timeout, then a sparse description/home-screen/Better Together update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective device/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ip-phone-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -31583,15 +32908,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/476/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/failure_test.go",
+              "name": "TestUnitMeetingBroadcastPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_policy/meeting_broadcast_policy_crud_test.go",
+              "name": "TestAccMeetingBroadcastPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -31599,8 +32948,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (scheduling off with AlwaysDisabled recording, then a sparse description/attendee-visibility update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/meeting-broadcast-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -33175,15 +34526,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/505/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/failure_test.go",
+              "name": "TestUnitWorkLocationDetectionPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_work_location_detection_policy/work_location_detection_policy_crud_test.go",
+              "name": "TestAccWorkLocationDetectionPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -33191,8 +34566,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (EnableWorkLocationDetection true to false with UserSettingsDefault Enabled preserved) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/work-location-detection-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -36766,15 +38143,51 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/573/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/settings_test.go",
+              "name": "TestUnitAllPinnedSettingsBindValuesAndNull"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ai_policy/description_test.go",
+              "name": "TestUnitDescriptionLengthIsNotLocallyValidated"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ai_policy/ai_policy_crud_test.go",
+              "name": "TestAccAIPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ai_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -36782,8 +38195,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (Description set and EnrollFace Disabled, then EnrollFace Enabled with explicit-null Description) passed client-secret and certificate application modes with pinned PowerShell read parity of all five settings and journaled cleanup. Grant scopes are contract-tested only; grant persistence, other enrollment writes and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ai-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -37074,15 +38489,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/578/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/settings_test.go",
+              "name": "TestUnitAllPinnedSettingsBindValuesAndNull"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_byod_and_desks_policy/byod_and_desks_policy_crud_test.go",
+              "name": "TestAccBYODAndDesksPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_byod_and_desks_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -37090,8 +38537,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DeviceDataCollection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/byod-and-desks-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -38256,15 +39705,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/598/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesAcceptancePreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service_test.go",
+              "name": "TestUnitTemplateEditsUseTheActualTemplateList"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_first_party_meeting_template_configuration/first_party_template_configuration_test.go",
+              "name": "TestAccFirstPartyMeetingTemplateConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -38272,8 +39753,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter with pinned getter comparison and journaled Description update/read-back/null restoration passed with client-secret application auth; template-list writes, delegated flows and other clouds remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/first-party-meeting-template-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -38288,15 +39771,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/599/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesSparsePutAndActualEmptyReceipt"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_calling_configuration/guest_calling_update_test.go",
+              "name": "TestAccGuestCallingConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_calling_configuration/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -38304,8 +39815,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list and AllowPrivateCalling Boolean update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity; other identities, effective guest calling behavior and release qualification remain separate.",
+        "evidence": [
+          "docs/implementation/policies/guest-calling-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -38352,15 +39865,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/601/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesSparsePutAndActualEmptyReceipt"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_messaging_configuration/guest_messaging_update_test.go",
+              "name": "TestAccGuestMessagingConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_messaging_configuration/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -38368,8 +39909,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list of all ten getter settings and AllowMemes Boolean plus GiphyRatingType string update/read-back/omission/restoration passed both application auth modes with pinned PowerShell getter parity; the other Set settings, other identities, effective guest messaging behavior and release qualification remain separate.",
+        "evidence": [
+          "docs/implementation/policies/guest-messaging-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -38384,15 +39927,51 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/602/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/service_test.go",
+              "name": "TestUnitSparseModernSetKeepsFalseZeroAndEmptyBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_ip_phone_policy/metadata_test.go",
+              "name": "TestUnitSettingsMatchPinnedCommandParameters"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_ip_phone_policy/ip_phone_policy_crud_test.go",
+              "name": "TestAccIPPhonePolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_ip_phone_policy/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -38400,8 +39979,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (CommonAreaPhoneSignIn sign-in, hot desking off and a 30-minute idle timeout, then a sparse description/home-screen/Better Together update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective device/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/ip-phone-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -38545,15 +40126,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/605/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesSparsePutAndActualEmptyReceipt"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/errors_test.go",
+              "name": "TestUnitServiceValidationRejectsProviderWithoutNameWithoutReplay"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_configuration/meeting_broadcast_update_test.go",
+              "name": "TestAccMeetingBroadcastConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_configuration/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -38561,8 +40174,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global default and ExposeSDNConfigurationJsonBlob read/list and SupportURL update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity; enabling AllowSdnProviderForBroadcastMeeting and SDN provider settings (including SdnApiToken), other identities and effective broadcast behavior remain unqualified.",
+        "evidence": [
+          "docs/implementation/policies/meeting-broadcast-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -38577,15 +40192,51 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/606/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service_test.go",
+              "name": "TestUnitSparseModernSetKeepsFalseAndEmptyBindings"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/metadata_test.go",
+              "name": "TestUnitSettingsMatchPinnedCommandParameters"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_meeting_broadcast_policy/meeting_broadcast_policy_crud_test.go",
+              "name": "TestAccMeetingBroadcastPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_meeting_broadcast_policy/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -38593,8 +40244,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (scheduling off with AlwaysDisabled recording, then a sparse description/attendee-visibility update preserving every other field) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/meeting-broadcast-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -40821,15 +42474,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/642/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_work_location_detection_policy/settings_test.go",
+              "name": "TestUnitAllPinnedSettingsBindValuesAndNull"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_work_location_detection_policy/work_location_detection_policy_crud_test.go",
+              "name": "TestAccWorkLocationDetectionPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_work_location_detection_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -40837,8 +42522,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (EnableWorkLocationDetection true to false with UserSettingsDefault Enabled preserved) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/work-location-detection-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -41000,15 +42687,43 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/646/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/tenant_migration_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_migration_configuration/service.go",
+              "name": "Service.UpdateGlobal"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/tenant_migration_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesSparsePutAndActualEmptyReceipt"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/tenant_migration_configuration/tenant_migration_update_test.go",
+              "name": "TestAccTenantMigrationConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/tenant_migration_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/tenant_migration_configuration/service.go",
+            "name": "Service.UpdateGlobal"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -41016,8 +42731,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list of MeetingMigrationEnabled and its enabled-to-disabled update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity; enabling the Meeting Migration Service from a disabled original is not a safe lab write and remains contract-tested only, as do other identities, effective meeting migration behavior and release qualification.",
+        "evidence": [
+          "docs/implementation/policies/tenant-migration-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },

@@ -1,0 +1,15 @@
+{
+  "SupportURL": "https://fixture.example.invalid/home/contact",
+  "Identity": "Global",
+  "AllowSdnProviderForBroadcastMeeting": false,
+  "SdnName": "",
+  "SdnLicenseId": "",
+  "SdnAzureSubscriptionId": "",
+  "SdnApiTemplateUrl": "",
+  "SdnApiToken": "",
+  "SdnRuntimeconfiguration": "",
+  "SdnAttendeeFallbackCount": 0,
+  "ConfigMetadata": {
+    "Authority": "Host"
+  }
+}
