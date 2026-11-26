@@ -262,9 +262,12 @@ func validCase(c Case) bool {
 	for _, step := range c.Steps {
 		for _, source := range step.Reply.ProtocolSources {
 			u, err := url.Parse(source)
-			if err != nil || u.Scheme != "https" || u.User != nil || u.Port() != "" ||
-				(u.Host != "learn.microsoft.com" && u.Host != "www.powershellgallery.com" &&
-					!(u.Host == "github.com" && (strings.HasPrefix(u.Path, "/microsoftgraph/") || strings.HasPrefix(u.Path, "/MicrosoftDocs/")))) {
+			if err != nil || u.Scheme != "https" || u.User != nil || u.Port() != "" {
+				return false
+			}
+			allowed := u.Host == "learn.microsoft.com" || u.Host == "www.powershellgallery.com" ||
+				u.Host == "github.com" && (strings.HasPrefix(u.Path, "/microsoftgraph/") || strings.HasPrefix(u.Path, "/MicrosoftDocs/"))
+			if !allowed {
 				return false
 			}
 		}

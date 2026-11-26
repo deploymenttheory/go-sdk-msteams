@@ -84,9 +84,10 @@ func serviceCase(t *testing.T, name, fixtureName, command, set string, captured 
 		t.Fatal(err)
 	}
 	status := http.StatusOK
-	if fixture.Method == http.MethodPost {
+	switch fixture.Method {
+	case http.MethodPost:
 		status = http.StatusCreated
-	} else if fixture.Method == http.MethodDelete {
+	case http.MethodDelete:
 		status = http.StatusNoContent
 	}
 	c.Steps[1].Reply.Status, c.Steps[1].Reply.Body = status, response

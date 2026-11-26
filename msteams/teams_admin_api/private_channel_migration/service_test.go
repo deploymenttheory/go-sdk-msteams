@@ -3,6 +3,7 @@ package privatechannelmigration_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"testing"
 
@@ -114,7 +115,7 @@ func TestUnitMigrationSuccessfulNativeSnapshotAndExplicitDetailDecode(t *testing
 				}
 				decoded, decodeErr := v.DecodeDetails()
 				if details == "not-json" {
-					if decodeErr != client.ErrDecode || *v.Details != details {
+					if !errors.Is(decodeErr, client.ErrDecode) || *v.Details != details {
 						t.Fatal("caller decode changed successful native result")
 					}
 				} else if decodeErr != nil || string(decoded["pending"]) != "2" {
