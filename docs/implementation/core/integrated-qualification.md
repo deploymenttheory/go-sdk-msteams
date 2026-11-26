@@ -324,8 +324,11 @@ This PR extends the existing registered template lifecycle with an explicit-empt
 Description update after the non-default description round trip. Expanded and JSON
 Body paths each require the third pinned comparison, preserved updated summary and
 General channel, and the existing independent deletion/absence checks. The CI guard
-rejects the previous two-comparison-per-variant report. New response fixtures are
-written by the live acceptance test; no tenant reply is manufactured for this case.
+rejects the previous two-comparison-per-variant report. The live test contains
+opt-in response-fixture writes, but the CI driver strips `MSTEAMS_UPDATE_TESTDATA`
+and does not enable those writes. These runs therefore supply sanitized execution
+reports, not newly captured response fixtures for the added fields. Existing
+permanent captures remain separate evidence; no tenant reply is manufactured.
 The extended scenario passed in [CI run 45874560542](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45874560542)
 for PR head `b7be0b0` at tested merge revision
 `88315ea07b557a6d1f79c14cc1e4b81c2c3460d3` under client-secret authentication.
