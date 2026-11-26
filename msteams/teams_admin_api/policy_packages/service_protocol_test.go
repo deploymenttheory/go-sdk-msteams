@@ -168,3 +168,41 @@ func TestUnitPackageAuthoredDomainFailureAndMalformedReceipt(t *testing.T) {
 		})
 	}
 }
+
+// Source GetViaIdentity/RemoveViaIdentity read IConfigApiBasedCmdletsIdentity
+// InputObject.PackageName at IL793/798, guard null at819, re-read at880 and use
+// the same scalar-name operation at975. Getter onOk200 returns FormattedPackage;
+// removal onNoContent204 has no response body task. These replies are authored.
+func TestUnitPackageInputObjectAuthoredSuccessfulGetAndRemove(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		name   string
+		remove bool
+	}{{"get", false}, {"remove", true}} {
+		t.Run(tc.name, func(t *testing.T) {
+			vector := requestCase{Name: "input-object-" + tc.name, Method: "GET", URL: origin + "/Teams.VerticalPackaging/package/Fixture%2FPackage%3A%40", Status: 200, Reply: authoredPackage}
+			command, set := "Get-CsPolicyPackage", "GetViaIdentity"
+			want := contracttest.Expected{JSON: json.RawMessage(authoredPackage), Body: []byte(authoredPackage)}
+			if tc.remove {
+				vector.Method, vector.URL, vector.Status, vector.Reply = "DELETE", origin+"/Teams.VerticalPackaging/package/custompackage/Fixture%2FPackage%3A%40", 204, ""
+				command, set = "Remove-CsCustomPolicyPackage", "RemoveViaIdentity"
+				want = contracttest.Expected{Body: []byte{}}
+			}
+			run(t, contracttest.Case{Name: vector.Name, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), wire(vector, command)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				input := resource.Identity{PackageName: "Fixture/Package:@"}
+				if tc.remove {
+					value, response, err := sdk.TeamsAdminAPI.PolicyPackages.DeleteByIdentity(ctx, input)
+					if err == nil && (value == nil || !value.HTTPAccepted || value.ResponseMessage != nil || value.RawFields != nil) {
+						t.Fatal("InputObject removal lost its empty receipt or fabricated business data")
+					}
+					return contracttest.Observation{Response: response, Err: err}
+				}
+				value, response, err := sdk.TeamsAdminAPI.PolicyPackages.GetByIdentity(ctx, input)
+				if err == nil {
+					verifyAuthoredPackage(t, value)
+				}
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			}})
+		})
+	}
+}

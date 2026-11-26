@@ -96,3 +96,27 @@ func TestUnitBatchAuthoredAcceptedHandlePresence(t *testing.T) {
 		})
 	}
 }
+
+// Pinned GetCsGroupPolicyAssignment_Get2 onOk is Task<IGroupAssignment[]>;
+// ProcessRecordAsync d__50 IL891 calls GroupGetPolicyAssignment2(policyType).
+// Generated GroupAssignment::ToJson keys: groupId67,priority123,policyType186,
+// policyName249,createdBy312,createdTime398. Priority and CreatedTime are nullable
+// here, unlike the separate compiled OCE GUID/nonnullable projection.
+func TestUnitGroupByPolicyAuthoredArrayAndNullableFields(t *testing.T) {
+	t.Parallel()
+	const reply = `[{"groupId":"00000000-0000-4000-8000-000000000020","priority":0,"policyType":"TeamsMeetingPolicy","policyName":"","createdBy":"fixture-creator","createdTime":null,"Future":false}]`
+	for _, tc := range []struct{ name, filter, suffix string }{
+		{"by-type", "TeamsMeetingPolicy", "?policyType=TeamsMeetingPolicy"},
+		{"all", "", ""},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			run(t, contracttest.Case{Name: "group-get2-" + tc.name, Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsGroupPolicyAssignment", ParameterSet: "Get2"}}, Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+"/Skype.Policy/groupPolicyAssignments"+tc.suffix, "Get-CsGroupPolicyAssignment", nil, 200, reply)}, Want: contracttest.Expected{JSON: json.RawMessage(reply), Body: []byte(reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListGroupsByPolicy(ctx, tc.filter)
+				if err == nil && (len(values) != 1 || values[0] == nil || values[0].GroupID == nil || *values[0].GroupID != responseGroupID || values[0].Priority == nil || *values[0].Priority != 0 || values[0].PolicyType == nil || *values[0].PolicyType != "TeamsMeetingPolicy" || values[0].PolicyName == nil || *values[0].PolicyName != "" || values[0].CreatedTime != nil || string(values[0].RawFields["createdTime"]) != "null" || string(values[0].RawFields["Future"]) != "false") {
+					t.Fatal("Get2 lost the typed group array, identity, zero, empty or nullable fields")
+				}
+				return contracttest.Observation{Value: values, Response: response, Err: err}
+			}})
+		})
+	}
+}

@@ -1942,6 +1942,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_batch_test.go",
               "name": "TestUnitOCERegionalLookupRetainsFailedAttemptsAndOrder"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch_protocol_test.go",
+              "name": "TestUnitOCEAuthoredDefaultLookupKeepsEarlierFailureAndWinningRegion"
             }
           ],
           "live_tests": []
@@ -2010,6 +2014,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_batch_test.go",
               "name": "TestUnitOCERegionalListRetainsEveryFailedAttempt"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch_protocol_test.go",
+              "name": "TestUnitOCEAuthoredRegionalListPreservesPartialSuccessAndFailure"
             }
           ],
           "live_tests": [
@@ -2053,6 +2061,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_batch_test.go",
               "name": "TestUnitOCERegionalLookupRetainsFailedAttemptsAndOrder"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch_protocol_test.go",
+              "name": "TestUnitOCEAuthoredDefaultLookupKeepsEarlierFailureAndWinningRegion"
             }
           ],
           "live_tests": []
@@ -2920,6 +2932,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_test.go",
               "name": "TestUnitAssignmentRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/service_protocol_test.go",
+              "name": "TestUnitGroupByPolicyAuthoredArrayAndNullableFields"
             }
           ],
           "live_tests": []
@@ -5796,6 +5812,10 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageInputObjectVariantsUsePackageName"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageInputObjectAuthoredSuccessfulGetAndRemove"
             }
           ],
           "live_tests": []
@@ -7762,6 +7782,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/service_test.go",
               "name": "TestUnitBannerFiltersUseRealResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredNonemptyFilterPreservesTypedItem"
             }
           ],
           "live_tests": [
@@ -7792,6 +7816,10 @@
             {
               "file": "tests/contract/policies/composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredSelectorResponses"
             }
           ],
           "live_tests": [
@@ -7818,6 +7846,14 @@
             {
               "file": "tests/contract/policies/composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredSelectorResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredMalformed200RetainsResponse"
             }
           ],
           "live_tests": [
@@ -10532,6 +10568,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/service_test.go",
               "name": "TestUnitRecordingListFiltersUseRealResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredNonemptyFilterPreservesTypedItem"
             }
           ],
           "live_tests": [
@@ -10562,6 +10602,10 @@
             {
               "file": "tests/contract/policies/composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredSelectorResponses"
             }
           ],
           "live_tests": [
@@ -10584,6 +10628,14 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/service_test.go",
               "name": "TestUnitRecordingTypedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredSelectorResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredMalformed200RetainsResponse"
             }
           ],
           "live_tests": [
@@ -26609,6 +26661,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/service_test.go",
               "name": "TestUnitBannerTypedProviderAndSelectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -26634,6 +26690,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/auto_create_test.go",
               "name": "TestUnitBannerAutoCreateRetainsFreshIDWithoutReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -27877,6 +27937,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/service_test.go",
               "name": "TestUnitRecordingTypedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -27906,6 +27970,10 @@
             {
               "file": "tests/contract/policies/composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -30497,6 +30565,10 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageInputObjectVariantsUsePackageName"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageInputObjectAuthoredSuccessfulGetAndRemove"
             }
           ],
           "live_tests": []
@@ -32624,6 +32696,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/service_test.go",
               "name": "TestUnitBannerTypedProviderAndSelectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -32641,6 +32717,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/service_test.go",
               "name": "TestUnitBannerTypedProviderAndSelectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -33555,6 +33635,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/service_test.go",
               "name": "TestUnitRecordingTypedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -33580,6 +33664,10 @@
             {
               "file": "tests/contract/policies/composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -39329,6 +39417,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/composition_test.go",
               "name": "TestUnitBannerTextStopsOnPreparationDenial"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -39358,6 +39450,10 @@
             {
               "file": "tests/contract/policies/composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -41161,6 +41257,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/composition_test.go",
               "name": "TestUnitRecordingListEditsStopOnPreparationDenial"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
@@ -41190,6 +41290,10 @@
             {
               "file": "tests/contract/policies/composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredSelectorResponses"
             }
           ],
           "live_tests": []
