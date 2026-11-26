@@ -226,7 +226,7 @@ func TestUnitConversationSettingsDenialAcceptedMalformedAndRetargetRetainStages(
 	for _, scenario := range []string{"denied", "malformed", "retarget"} {
 		t.Run(scenario, func(t *testing.T) {
 			steps := []contracttest.Exchange{wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 200, before)}
-			var want error = settings.ErrInput
+			want := settings.ErrInput
 			if scenario == "denied" {
 				steps = []contracttest.Exchange{wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 403, `{"code":"Forbidden"}`)}
 				want = auth.ErrForbidden

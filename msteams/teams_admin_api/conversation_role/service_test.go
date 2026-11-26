@@ -263,7 +263,7 @@ func TestUnitConversationPreparationDenialAndAcceptedDecodeFailureRetainStages(t
 	t.Parallel()
 	for _, denied := range []bool{true, false} {
 		name := "denied-preparation"
-		var want error = auth.ErrForbidden
+		want := auth.ErrForbidden
 		steps := []contracttest.Exchange{wire("GET", "/configuration/"+identity, "Set-CsConversationRole", "", 403, `{"code":"Forbidden"}`)}
 		if !denied {
 			name = "accepted-malformed"
