@@ -8706,22 +8706,73 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/127/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service_test.go",
+              "name": "TestUnitFilterUsesActualCollection"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_meeting_configuration/guest_meeting_read_test.go",
+              "name": "TestAccGuestMeetingConfigurationReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/127/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_meeting_configuration/guest_meeting_read_test.go",
+              "name": "TestAccGuestMeetingConfigurationReadOnly"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -8729,8 +8780,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list and AllowMeetNow Boolean update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity for all eight settings; other identities, remaining setting writes, effective guest meeting behavior and release qualification remain separate.",
+        "evidence": [
+          "docs/implementation/policies/guest-meeting-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -39833,15 +39886,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/600/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service_test.go",
+              "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service_test.go",
+              "name": "TestUnitEverySettingNullFalseEmptyAndForceRemainExplicit"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_guest_meeting_configuration/guest_meeting_update_test.go",
+              "name": "TestAccGuestMeetingConfigurationUpdateRestore"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_guest_meeting_configuration/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -39849,8 +39934,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Selected Global read/list and AllowMeetNow Boolean update/read-back/restoration passed both application auth modes with pinned PowerShell getter parity for all eight settings; other identities, remaining setting writes, effective guest meeting behavior and release qualification remain separate.",
+        "evidence": [
+          "docs/implementation/policies/guest-meeting-configuration-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
