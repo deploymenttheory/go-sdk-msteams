@@ -15023,6 +15023,10 @@
             {
               "file": "msteams/graph_api/team_operation/service_test.go",
               "name": "TestUnitWaitDenialRetainsResumableHandle"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelOperationAndRead"
             }
           ],
           "live_tests": [
@@ -15425,6 +15429,10 @@
             {
               "file": "msteams/graph_api/channel/service_test.go",
               "name": "TestUnitCollectionsAndPaging"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelOperationAndRead"
             }
           ],
           "live_tests": [
@@ -29483,6 +29491,18 @@
             {
               "file": "msteams/graph_api/channel/service_test.go",
               "name": "TestUnitOwnerResolutionComposition"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelOperationAndRead"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation"
             }
           ],
           "live_tests": [

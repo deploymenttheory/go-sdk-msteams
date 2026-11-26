@@ -28,6 +28,20 @@ existing per-resource request-boundary wrappers.
   the same denial for a supplied group retains it. Resource ID, primary error,
   create receipt and separate cleanup result remain available.
 
+The shared-channel scenarios additionally exercise accepted creation through
+both Location and documented Content-Location, terminal polling, a typed operation
+read and the resulting channel read through the same root. They reject foreign
+Content-Location and refuse to replace a malformed primary Location with a fallback.
+Cancelling a local wait retains the accepted remote operation identity and sends no
+poll or repeated creation request. These authored scenarios are pending CI validation
+for this revision; no local Go build is started below the disk reserve.
+
+The [beta channel creation contract](https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta)
+returns Content-Location in its shared-channel 202 example. Source inspection found
+that Channels.Create read only Location; it now uses Content-Location only when
+Location is absent, passing both through the existing origin/team validation.
+This corrects a missing accepted-operation path, not a new endpoint or live claim.
+
 ## Fixture provenance and permission boundaries
 
 These are **authored offline protocol vectors**, not captured tenant replies.
@@ -227,7 +241,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Get-Operation (CORE-23)
 
 - **__AllParameterSets** — SDK: [Service.GetByID](../../../msteams/graph_api/team_operation/service.go), [Service.ResumeByID](../../../msteams/graph_api/team_operation/service.go), [Service.WaitByID](../../../msteams/graph_api/team_operation/service.go).
-  Contract tests: [TestUnitGetOperationPreservesNativeStatesAndFutureData](../../../msteams/graph_api/team_operation/service_test.go), [TestUnitGetRejectsMalformedAndUnexpectedResponses](../../../msteams/graph_api/team_operation/service_test.go), [TestUnitWaitDenialRetainsResumableHandle](../../../msteams/graph_api/team_operation/service_test.go).
+  Contract tests: [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitGetOperationPreservesNativeStatesAndFutureData](../../../msteams/graph_api/team_operation/service_test.go), [TestUnitGetRejectsMalformedAndUnexpectedResponses](../../../msteams/graph_api/team_operation/service_test.go), [TestUnitWaitDenialRetainsResumableHandle](../../../msteams/graph_api/team_operation/service_test.go).
   Live tests: [TestAccTeamOperationReadOnly](../../../tests/integration/lab/graph/team_operation_test.go).
 
 ### Get-SharedWithTeam (CORE-24)
@@ -260,7 +274,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### Get-TeamChannel (CORE-21)
 
 - **__AllParameterSets** — SDK: [Service.ListComplete](../../../msteams/graph_api/channel/service.go), [Service.List](../../../msteams/graph_api/channel/service.go).
-  Contract tests: [TestUnitCollectionsAndPaging](../../../msteams/graph_api/channel/service_test.go).
+  Contract tests: [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitCollectionsAndPaging](../../../msteams/graph_api/channel/service_test.go).
   Live tests: [TestAccChannelCRUD](../../../tests/integration/lab/graph/channel_test.go).
 
 ### Get-TeamChannelUser (CORE-20)
@@ -338,7 +352,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### New-TeamChannel (CORE-21)
 
 - **__AllParameterSets** — SDK: [Service.Create](../../../msteams/graph_api/channel/creation.go), [Service.CreateWithOwner](../../../msteams/graph_api/channel/creation.go).
-  Contract tests: [TestUnitNativeCRUDContracts](../../../msteams/graph_api/channel/service_test.go), [TestUnitSharedCreationAndOperation](../../../msteams/graph_api/channel/service_test.go), [TestUnitOwnerResolutionComposition](../../../msteams/graph_api/channel/service_test.go).
+  Contract tests: [TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitNativeCRUDContracts](../../../msteams/graph_api/channel/service_test.go), [TestUnitSharedCreationAndOperation](../../../msteams/graph_api/channel/service_test.go), [TestUnitOwnerResolutionComposition](../../../msteams/graph_api/channel/service_test.go).
   Live tests: [TestAccChannelCRUD](../../../tests/integration/lab/graph/channel_test.go).
 
 ### Remove-CsTeamsTargetingPolicy (CORE-25)

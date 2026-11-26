@@ -53,3 +53,10 @@ claims. The historical myorganization user fallback is not used.
 See [unit tests](service_test.go)
 and [unit tests](service_test.go).
 Live tenant CRUD and PowerShell conformance remain unqualified.
+
+Shared-channel 202 receipts accept Location and, when it is absent, the
+[documented Content-Location](https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta).
+Both pass the same Graph origin and addressed-team operation-route validation.
+A present malformed Location remains an error; the fallback does not hide it.
+Acceptance retains an operation handle rather than a completed channel, and local
+wait cancellation does not cancel or resubmit the remote create.

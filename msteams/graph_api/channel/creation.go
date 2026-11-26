@@ -90,7 +90,13 @@ func (s *Service) Create(ctx context.Context, teamID string, value CreateRequest
 		return result, err
 	}
 	if value.MembershipType == Shared {
-		result.Operation, err = s.operation(teamID, response.Header().Get("Location"), response)
+		location := response.Header().Get("Location")
+		if location == "" {
+			// The documented shared-channel 202 response uses Content-Location.
+			// Both headers still pass the same team/origin operation validation.
+			location = response.Header().Get("Content-Location")
+		}
+		result.Operation, err = s.operation(teamID, location, response)
 		return result, err
 	}
 	var created Channel

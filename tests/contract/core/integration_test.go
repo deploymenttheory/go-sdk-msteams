@@ -10,6 +10,8 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
 	relationship "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group_relationship"
 	teammanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_management"
 	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
@@ -182,4 +184,106 @@ func TestUnitIntegratedCoreCreationOwnershipControlsCompensation(t *testing.T) {
 			})
 		})
 	}
+}
+
+func TestUnitIntegratedCoreSharedChannelOperationAndRead(t *testing.T) {
+	t.Parallel()
+	for _, header := range []string{"Location", "Content-Location"} {
+		t.Run(header, func(t *testing.T) {
+			operationPath := "/beta/teams/" + integratedGroup + "/operations/offline-operation"
+			createBody := `{"displayName":"Offline shared","membershipType":"shared","members":[{"@odata.type":"#microsoft.graph.aadUserConversationMember","user@odata.bind":"` + auth.GraphAudience + `/beta/users('` + integratedUser + `')","roles":["owner"]}]}`
+			accepted := coreExchange("POST", "/beta/teams/"+integratedGroup+"/channels", createBody, 202, "")
+			accepted.Reply.Headers.Set(header, "/teams/"+integratedGroup+"/operations/offline-operation")
+			status := `{"id":"offline-operation","status":"succeeded","targetResourceId":"offline-channel"}`
+			steps := []contracttest.Exchange{
+				accepted,
+				coreExchange("GET", operationPath, "", 200, status),
+				coreExchange("GET", operationPath, "", 200, status),
+				coreExchange("GET", "/beta/teams/"+integratedGroup+"/channels/offline-channel", "", 200, `{"id":"offline-channel","displayName":"Offline shared","membershipType":"shared"}`),
+			}
+			runIntegratedCore(t, contracttest.Case{Name: "shared-channel-" + map[string]string{"Location": "location", "Content-Location": "content-location"}[header],
+				Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}, {Command: "Get-Operation", ParameterSet: "__AllParameterSets"}, {Command: "Get-TeamChannel", ParameterSet: "__AllParameterSets"}},
+				Steps:    steps, Want: contracttest.Expected{Status: 200},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					owner := integratedUser
+					accepted, err := sdk.GraphAPI.Channels.Create(ctx, integratedGroup, channel.CreateRequest{DisplayName: "Offline shared", MembershipType: channel.Shared, OwnerUserID: &owner})
+					if err != nil {
+						return contracttest.Observation{Response: accepted.Response, Err: err}
+					}
+					if accepted.Channel != nil || accepted.Operation == nil || accepted.Operation.Snapshot().Status.State != client.OperationAccepted {
+						t.Error("shared-channel acceptance was reported as completed channel creation")
+						return contracttest.Observation{Response: accepted.Response, Err: client.ErrOperation}
+					}
+					completed, err := accepted.Operation.Wait(ctx, client.WaitOptions{MaxPolls: 1})
+					if err != nil {
+						return contracttest.Observation{Response: completed.Response, Err: err}
+					}
+					if completed.Status.State != client.OperationSucceeded || completed.Handle.ID != "offline-operation" {
+						t.Error("shared-channel operation lost its state or operation identity")
+					}
+					operation, response, err := sdk.GraphAPI.TeamOperations.GetByID(ctx, integratedGroup, completed.Handle.ID)
+					if err != nil {
+						return contracttest.Observation{Response: response, Err: err}
+					}
+					if operation.TargetResourceID == nil || *operation.TargetResourceID != "offline-channel" {
+						t.Error("operation target identity was replaced with the operation identity")
+						return contracttest.Observation{Response: response, Err: client.ErrOperation}
+					}
+					value, response, err := sdk.GraphAPI.Channels.GetByID(ctx, integratedGroup, *operation.TargetResourceID, channel.ReadOptions{})
+					if err == nil && (value.ID != "offline-channel" || value.MembershipType == nil || *value.MembershipType != channel.Shared) {
+						t.Error("completed shared-channel identity or resource type was lost")
+					}
+					return contracttest.Observation{Response: response, Err: err}
+				},
+			})
+		})
+	}
+}
+
+func TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct{ name, location, contentLocation string }{
+		{name: "foreign-content-location", contentLocation: "https://foreign.example/beta/teams/" + integratedGroup + "/operations/offline-operation"},
+		{name: "malformed-primary-is-not-replaced", location: "malformed", contentLocation: "/teams/" + integratedGroup + "/operations/offline-operation"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			accepted := coreExchange("POST", "/beta/teams/"+integratedGroup+"/channels", `{"displayName":"Offline shared","membershipType":"shared"}`, 202, "")
+			if tc.location != "" {
+				accepted.Reply.Headers.Set("Location", tc.location)
+			}
+			accepted.Reply.Headers.Set("Content-Location", tc.contentLocation)
+			runIntegratedCore(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}},
+				Steps: []contracttest.Exchange{accepted}, Want: contracttest.Expected{Status: 202, Error: client.ErrOperation},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					value, err := sdk.GraphAPI.Channels.Create(ctx, integratedGroup, channel.CreateRequest{DisplayName: "Offline shared", MembershipType: channel.Shared})
+					if value.Operation != nil || value.Channel != nil {
+						t.Error("invalid operation location produced a usable handle")
+					}
+					return contracttest.Observation{Response: value.Response, Err: err}
+				},
+			})
+		})
+	}
+}
+
+func TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation(t *testing.T) {
+	t.Parallel()
+	accepted := coreExchange("POST", "/beta/teams/"+integratedGroup+"/channels", `{"displayName":"Offline shared","membershipType":"shared"}`, 202, "")
+	accepted.Reply.Headers.Set("Content-Location", "/teams/"+integratedGroup+"/operations/offline-operation")
+	runIntegratedCore(t, contracttest.Case{Name: "cancelled-channel-wait", Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}},
+		Steps: []contracttest.Exchange{accepted}, Want: contracttest.Expected{Status: 202, Error: context.Canceled},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			value, err := sdk.GraphAPI.Channels.Create(ctx, integratedGroup, channel.CreateRequest{DisplayName: "Offline shared", MembershipType: channel.Shared})
+			if err != nil {
+				return contracttest.Observation{Response: value.Response, Err: err}
+			}
+			waiting, cancel := context.WithCancel(ctx)
+			cancel()
+			snapshot, err := value.Operation.Wait(waiting, client.WaitOptions{MaxPolls: 1})
+			if snapshot.Handle.ID != "offline-operation" || snapshot.Status.State != client.OperationAccepted {
+				t.Error("cancelled local wait discarded accepted remote identity")
+			}
+			return contracttest.Observation{Response: snapshot.Response, Err: err}
+		},
+	})
 }
