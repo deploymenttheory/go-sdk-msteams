@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "outcome": "passed",
+  "source_head": "00c34b26d49c3c3ea5675cc184db4645716f84a0",
+  "revision": "a26cfcec34c5c4ad529ceb3e20c206db7456858c",
+  "run_url": "https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45893578133",
+  "job_id": 140185572779,
+  "artifact": "tenant-acceptance-service-call_integration",
+  "test": "TestAccScheduleAutoAttendantComposition",
+  "auth_method": "client-secret",
+  "cloud": "commercial",
+  "baseline_version": "8.1.0",
+  "assertions": {
+    "integrated CALL create: passed": true,
+    "integrated CALL identity read-back: passed": true,
+    "integrated CALL update/read-back: passed": true,
+    "integrated CALL populated holiday read and nonempty export receipt: passed": true,
+    "integrated CALL cleanup: passed": true
+  },
+  "pinned_powershell_comparisons": 2,
+  "cleanup": {
+    "journal_entries": 3,
+    "cleaned_entries": 3,
+    "unresolved_entries": 0
+  },
+  "response_fixtures": {
+    "schema_version": 1,
+    "revision": "a26cfcec34c5c4ad529ceb3e20c206db7456858c",
+    "sanitizer": "labkit.WriteResponseFixture",
+    "files": [
+      {
+        "source": "msteams/teams_admin_api/schedules/testdata/integration_holidays.json",
+        "artifact": "response-fixtures/schedules/integration_holidays.json",
+        "sha256": "b86d91f26be28417e14ba3f8668443bffc37df979c30952d7bc78f4f6409ee2a",
+        "bytes": 1594
+      }
+    ]
+  },
+  "limitations": [
+    "This scoped pass does not qualify all CALL commands or parameter sets.",
+    "Holiday export is a nonempty receipt; serialized content conformance and holiday import remain unqualified.",
+    "The earlier planned-attendant receipt ambiguity remains unchanged; later successful cleanup does not resolve the older journal.",
+    "The overall acceptance workflow still has other partitions pending; this evidence describes only the completed composition job."
+  ]
+}

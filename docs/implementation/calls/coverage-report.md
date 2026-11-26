@@ -49,7 +49,16 @@ The [distinct-flow run](evidence/schedule-attendant-542da26-failed.json) then
 created the attendant successfully but failed the holiday visualization assertion;
 all three entries independently cleaned. The [pinned projection](evidence/holiday-date-projection-8.1.0.json)
 requires day-first invariant reply dates, distinct from ISO request strings.
-The next run retains exact calendar boundaries and captures only sanitized holiday JSON.
+
+[Run 45893578133](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45893578133)
+passed the populated-holiday composition at source head `00c34b26d49c3c3ea5675cc184db4645716f84a0`,
+tested merge `a26cfcec34c5c4ad529ceb3e20c206db7456858c`. The
+[sanitized evidence](evidence/schedule-attendant-00c34b.json) records all five asserted phases,
+two pinned comparisons and three cleaned entries with zero unresolved for this run.
+Its unchanged sanitized holiday response is replayed by
+`TestUnitSchedulePopulatedHolidaysUseCapturedResponse`, including day-first dates,
+exact calendar boundaries and nested call-flow identity/explicit false values.
+Serialized export-content conformance and holiday import remain unqualified.
 
 
 ## Qualification boundaries
@@ -985,7 +994,7 @@ Owner: `CALL-28`. Implementation: `in-progress`; contract: `metadata-only`; live
 | --- | --- | --- | --- |
 | `__AllParameterSets` | [`Service.GetHolidaysContent`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleHolidaysUseAcceptanceAndModelResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
-Live limitation: The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).
+Live limitation: Run 45893578133 proves a nonempty export receipt on an owned populated-holiday attendant. Exact serialized CSV content, date rendering and full command qualification remain incomplete; no export bytes are retained.
 
 ### Get-CsAutoAttendantHolidays
 
@@ -993,9 +1002,9 @@ Owner: `CALL-28`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.ListHolidays`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleHolidaysUseAcceptanceAndModelResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
+| `__AllParameterSets` | [`Service.ListHolidays`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleHolidaysUseAcceptanceAndModelResponses`](../../../msteams/teams_admin_api/schedules/service_test.go)<br>[`TestUnitSchedulePopulatedHolidaysUseCapturedResponse`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
-Live limitation: The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).
+Live limitation: Run 45893578133 proves a scoped populated holiday visualization with exact day-first calendar boundaries on an owned attendant; its unchanged sanitized reply has a unit replay. Full command/parameter-set, delegated and cloud qualification remains incomplete.
 
 ### Get-CsOnlineSchedule
 
@@ -1015,7 +1024,7 @@ Owner: `CALL-28`. Implementation: `in-progress`; contract: `metadata-only`; live
 | --- | --- | --- | --- |
 | `__AllParameterSets` | [`Service.ImportHolidays`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleHolidaysUseAcceptanceAndModelResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go) |
 
-Live limitation: The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).
+Live limitation: The reserved-ID denial is observed; successful holiday import, persistence, replacement and complete per-holiday outcomes on an owned attendant remain unqualified. The separate successful read/export-receipt composition does not prove import.
 
 ### New-CsOnlineDateTimeRange
 

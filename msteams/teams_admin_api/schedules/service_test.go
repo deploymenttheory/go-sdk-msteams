@@ -233,6 +233,35 @@ func TestUnitScheduleHolidaysUseAcceptanceAndModelResponses(t *testing.T) {
 		}})
 }
 
+// Response provenance: docs/implementation/calls/evidence/schedule-attendant-00c34b.json.
+// The request uses a controlled selector; the sanitized response bytes are unchanged.
+func TestUnitSchedulePopulatedHolidaysUseCapturedResponse(t *testing.T) {
+	t.Parallel()
+	raw := readFile(t, "testdata/integration_holidays.json")
+	run(t, contracttest.Case{Name: "captured-populated-holidays", Source: "msteams/teams_admin_api/schedules/testdata/integration_holidays.json", Mappings: mapping("Get-CsAutoAttendantHolidays"),
+		Steps: []contracttest.Exchange{discovery(t), wire("GET", holidays+"?ResponseType=0&Years=2027", "Get-CsAutoAttendantHolidays", nil, 200, raw)},
+		Want:  contracttest.Expected{Status: 200, Body: raw},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			values, response, err := sdk.TeamsAdminAPI.Schedules.ListHolidays(ctx, probe, &sched.HolidayOptions{Years: []string{"2027"}})
+			if err != nil || len(values) != 1 || values[0] == nil {
+				t.Fatal("captured populated holiday was not decoded")
+			}
+			value := values[0]
+			if value.Year == nil || *value.Year != 2027 || len(value.DateTimeRanges) != 1 || value.DateTimeRanges[0].Start != "01/01/2027 00:00" || value.DateTimeRanges[0].End != "02/01/2027 00:00" {
+				t.Fatal("captured holiday lost its invariant dates or calendar boundaries")
+			}
+			var flow struct {
+				ID                     string `json:"Id"`
+				ForceListenMenuEnabled *bool  `json:"ForceListenMenuEnabled"`
+				RingResourceDelegates  *bool  `json:"RingResourceAccountDelegates"`
+			}
+			if json.Unmarshal(value.CallFlow, &flow) != nil || flow.ID != "00000000-0000-4000-8000-000000000006" || flow.ForceListenMenuEnabled == nil || *flow.ForceListenMenuEnabled || flow.RingResourceDelegates == nil || *flow.RingResourceDelegates {
+				t.Fatal("captured holiday lost its nested call-flow identity or explicit false values")
+			}
+			return contracttest.Observation{Response: response, Err: err}
+		}})
+}
+
 func TestUnitScheduleListAndBodyOptions(t *testing.T) {
 	t.Parallel()
 	list := []byte(`{"Schedules":[{"Id":"a","Name":"n","Type":"Future","Unknown":true}],"Diagnostics":[]}`)

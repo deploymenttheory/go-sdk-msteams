@@ -58,16 +58,17 @@ Lab observations (client-secret, app-only Teams Administrator):
 - The date-time draft parses day-first (`3/1/2027` is 3 January) and, without
   End, ends at the start of the next day; its reply uses `dd/MM/yyyy HH:mm`.
   An invalid range or time is 400 with a provider error code.
-- The tenant has no auto attendants, so holiday routes were proven only as 404
-  for a reserved ID. Holiday visualisation, export and import bodies are
-  modelled from the serializers and covered by synthetic contract cases.
+- The original isolated schedule suite proved holiday routes only as 404
+  for a reserved ID. The later owned-attendant composition described below
+  adds populated visualization and a nonempty export receipt; import remains
+  covered by source-based synthetic cases without successful tenant proof.
 
 Acceptance: `TestAccScheduleLifecycle` runs the drafts, creates one owned
 weekly and one owned fixed schedule (journaled, with a recovery handler), reads,
 lists, updates and deletes them with pinned PowerShell parity, and probes the
 holiday routes with a reserved auto attendant ID. Associating schedules with an
-auto attendant and successful holiday import/export remain unqualified until an
-owned auto attendant exists (CALL-22).
+auto attendant is now exercised by the separate integrated composition. Successful
+holiday import and serialized export-content conformance remain unqualified.
 
 
 ## Holiday reply date projection
@@ -90,10 +91,15 @@ The SDK retains raw DTO strings. Integrated holiday assertions parse the pinned
 invariant reply format and require exactly the original January 1 to January 2,
 2027 calendar boundaries; they do not introduce offset or timezone conversion.
 Wrong dates, reversed/equal boundaries, invalid dates and ISO reply strings fail.
-The source observation does not itself prove a live holiday response: the
+The source observation alone did not prove a live holiday response: the
 [failed distinct-flow run](evidence/schedule-attendant-542da26-failed.json) lacked
-its response body. Bounded diagnostics and narrowly sanitized holiday capture
-preserve evidence for the next existing owned-fixture run.
+its response body. The later [successful run 45893578133](evidence/schedule-attendant-00c34b.json)
+records the exact tested merge revision, five asserted phases, two pinned comparisons
+and three independently cleaned entries with zero unresolved for that run. Its
+unchanged sanitized populated reply is retained in
+`msteams/teams_admin_api/schedules/testdata/integration_holidays.json` and replayed
+by `TestUnitSchedulePopulatedHolidaysUseCapturedResponse`. The earlier lost-receipt
+journal remains unresolved; this later success does not rewrite it.
 
 
 The export assertion proves a nonempty byte receipt only. It does not establish
