@@ -38,6 +38,7 @@ GROUP_ASSIGNMENT_ORACLE = 'PowerShell 8.1.0 / Go group assignment parity: passed
 TEMPLATE_MARKERS = [
     'template create/read-back and General channel: passed',
     'template update/read-back: passed',
+    'template empty description/read-back: passed',
     'template list: passed',
     'template delete/absence: passed',
 ]
@@ -113,7 +114,7 @@ PROOFS = {
     # Grant of a service built-in instance (no public New/Remove): no owned policy.
     'media-logging-group-grant': (['group policy grant/read-back: passed', 'group policy delete/absence: passed', 'group assignment cleanup: passed'],
                                   'PowerShell 8.1.0 / Go media logging group grant parity: passed', 3),
-    'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
+    'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 6),
     'audio-file-lifecycle': (AUDIO_FILE_MARKERS, AUDIO_FILE_ORACLE, 1),
     'schedule-lifecycle': (SCHEDULE_MARKERS, SCHEDULE_ORACLE, 3),
     'call-queue-lifecycle': (CALL_QUEUE_MARKERS, CALL_QUEUE_ORACLE, 1),

@@ -66,8 +66,8 @@ is an independently supplied response, not an assertion of immediate propagation
 | Channels | Authorized owner fixtures, standard/private/shared lifecycles, list membership, pinned comparisons and verified deletion |
 | Team and channel members | Live CRUD, role convergence, exact identities, pinned comparison and complete-list absence/recovery |
 | Operations | Real accepted operation through running and terminal transitions; exact permission contract and pinned comparison |
-| Shared channels | Settled sharing relationship create/update constraints, unshare/action acceptance and explicit shared fixtures |
-| Deployment/migration | Settled deployment grammar/outcomes, consent/RBAC/cloud rules and disposable submission/outcome fixtures |
+| Shared channels | Documented resource methods are read/list/unshare/allowed-members; generated POST/PATCH is not an accepted mutation contract. Live unshare and shared host/recipient fixtures remain unqualified |
+| Deployment/migration | Published CSV column grammar is available; accepted orchestration outcomes, exact privileges and licensed owned-team/recipient fixtures remain unqualified |
 | Targeting | Policy create/upsert and hierarchy full-resource/list contracts, conditional modern/TRPS behavior, import/delete persistence and recovery |
 | Templates | Existing expanded/body CRUD/list, pinned comparisons and independent cleanup passed in CI; remaining field/parameter-set qualification and broader composition evidence still required |
 
@@ -87,6 +87,64 @@ limitations, not passes. Existing [acceptance notes](../../../tests/integration/
 and family notes in this directory describe scoped evidence. Child issue closure
 and symbol existence are not substitutes for these missing outcomes. CORE-90
 must remain open until all required integrated and available live evidence passes.
+
+## Rechecked contract questions
+
+These findings were checked against primary sources on 2026-11-26, rather than
+carried forward from the historical issue text:
+
+- **Sharing relationships:** the [beta resource method table](https://learn.microsoft.com/en-us/graph/api/resources/sharedwithchannelteaminfo?view=graph-rest-beta)
+  lists reads, listing, unsharing and allowed members. It supplies no accepted
+  relationship POST/PATCH request or success contract. The SDK implements those
+  documented operations; generated navigation builders alone cannot establish
+  additional mutations. [Channel creation](https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-1.0)
+  separately documents `sharedWithTeams` on a shared-channel create request; this
+  is not evidence for mutating an existing sharing relationship. An owned shared
+  channel, explicit recipient and suitable Graph consent remain live prerequisites.
+- **Operation authorization:** the [current operation-get reference](https://learn.microsoft.com/en-us/graph/api/teamsasyncoperation-get?view=graph-rest-beta)
+  explicitly scopes its permission table and route to chats. The [resource page](https://learn.microsoft.com/en-us/graph/api/resources/teamsasyncoperation?view=graph-rest-1.0)
+  establishes asynchronous status and polling semantics, but does not establish
+  team-route grants. These sources confirm the discrepancy; assigning chat grants
+  to the pinned team route would be an unsupported inference. A real accepted
+  team operation and authorization evidence are still required for live completion.
+- **Targeting policy:** [Set-CsTeamsTargetingPolicy](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/set-csteamstargetingpolicy?view=teams-ps)
+  describes modification of existing tag settings. It does not establish an upsert
+  or creation response. Current SDK GET/list/PUT/delete and omitted-identity Global
+  handling follow the pinned mapping. No documented new standalone create contract
+  was found. [Hierarchy upload](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/set-teamtargetinghierarchy?view=teams-ps)
+  replaces the single tenant hierarchy and documents versions 1 and 2; it does not
+  document a full hierarchy export/list needed to restore arbitrary existing data.
+  The SDK retains opaque v2 preparation responses without inventing their schema.
+  A disposable singleton or verified export/restore contract remains necessary for
+  import/delete acceptance. Valid tokens alone do not establish its privileges.
+- **Deployment grammar:** the [published deployment guide](https://learn.microsoft.com/en-us/microsoft-365/frontline/deploy-teams-at-scale)
+  specifies ordered columns. Teams.csv uses `Team Name`, `Existing Team ID`,
+  `Visibility`, `Team Template ID`. Users.csv uses `User Full Name`, `User UPN or ID`,
+  `Team Name`, `ActionType`, `Owner or Member`. This resolves the caller's CSV input
+  layout; `BuildArchive` deliberately preserves the bytes, as the pinned cmdlet
+  does, instead of introducing a stricter parser. The [submission reference](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/new-csbatchteamsdeployment?view=teams-ps)
+  describes orchestration identity and notifications, not a per-team typed status
+  response contract. The guide requires licensed owners. No owned licensed owner,
+  deployment recipients or known accepted orchestration selector is configured in
+  the CI inputs; submission would therefore lack both prerequisites and verified
+  resource recovery. No notification email or bulk deployment is initiated here.
+
+The configured CI secret names provide application authentication and dedicated
+user/group fixtures. The workflow does not load a team-owner fixture, a delegated
+region token or a known batch/hierarchy operation selector. A read of secret names
+cannot establish the app's effective Graph consent; current notes record denied
+Graph reads, and no new successful Graph live access is claimed by this PR.
+
+## Additional available template conformance
+
+This PR extends the existing registered template lifecycle with an explicit-empty
+Description update after the non-default description round trip. Expanded and JSON
+Body paths each require the third pinned comparison, preserved updated summary and
+General channel, and the existing independent deletion/absence checks. The CI guard
+rejects the previous two-comparison-per-variant report. New response fixtures are
+written by the live acceptance test; no tenant reply is manufactured for this case.
+This scenario is prepared, not yet a live pass for this PR revision. Prior successful
+template CI evidence above retains its original scope.
 
 ## Command and parameter-set inventory
 

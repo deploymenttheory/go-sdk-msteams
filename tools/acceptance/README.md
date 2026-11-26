@@ -468,3 +468,11 @@ mutation opt-in and fixture files described above:
 MSTEAMS_LAB_RECOVERY_FILE=/private/lab/journal.jsonl \
   go test -count=1 -run '^TestAccRecoverOwnedPolicies$' ./tests/integration/lab/recovery
 ```
+
+CORE-90 extends each owned team-template CRUD variant (expanded and JSON Body)
+with an explicit empty Description update. Both variants must retain the updated
+short description and General channel, persist the empty description, and compare
+it with pinned PowerShell. The `template-crud` proof requires the empty-description
+milestone and three comparisons per variant (six total), alongside independent
+post-delete absence and two cleaned journal entries. Prior four-comparison runs
+remain evidence for their original scope only.

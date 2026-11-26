@@ -31,9 +31,12 @@ See [unit tests](service_test.go)
 for exact sources and restrictions. Construction or token acquisition proves
 neither permissions nor cloud/service availability.
 
-Relationship Create/Update service contracts remain open. First-party generated
-POST/PATCH builders exist, but accepted fields, exact success responses and
-authorization/workflow have not been established. No guessed mutation or generic
-unsupported stub is exposed. See the [unit tests](service_test.go).
+The [documented beta resource methods](https://learn.microsoft.com/en-us/graph/api/resources/sharedwithchannelteaminfo?view=graph-rest-beta),
+reviewed on 2026-11-26, are read/list/unshare/allowed-members. First-party generated
+POST/PATCH navigation builders supply no accepted create/update wire contract.
+The documented `sharedWithTeams` input on [channel creation](https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-1.0)
+is a separate operation and does not establish updates to an existing sharing
+relationship. Additional relationship mutations require evidence before exposure.
+See the [unit tests](service_test.go).
 The four pinned commands compose these native services through
 `GraphAPI.SharedChannelManagement`. Live qualification has not run.

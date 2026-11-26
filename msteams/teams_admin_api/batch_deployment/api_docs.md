@@ -30,3 +30,14 @@ and [unit tests](service_test.go).
 Documentation-only service limits, exact grants/cloud deployment, live behavior
 and consequential acceptance remain separately qualified. This candidate has
 made no tenant request or notification email and claims no complete issue parity.
+
+## Published input layout
+
+The [deployment guide](https://learn.microsoft.com/en-us/microsoft-365/frontline/deploy-teams-at-scale),
+reviewed on 2026-11-26, specifies ordered columns for Teams.csv and Users.csv.
+The [CORE qualification report](../../../docs/implementation/core/integrated-qualification.md)
+records those columns and current acceptance prerequisites. Owners need a Teams
+license. This documents caller inputs; BuildArchive still preserves original bytes
+and does not claim local validation of the service's CSV grammar or a typed
+per-team status schema. Accepted deployment and recovery need an explicit owned
+licensed-owner/recipient fixture; no orchestration is submitted for discovery.

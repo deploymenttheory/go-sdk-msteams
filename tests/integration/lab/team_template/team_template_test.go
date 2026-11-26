@@ -196,6 +196,25 @@ func runTemplateCRUD(t *testing.T, cfg lab.Config, body bool) {
 	}
 	templateReadBack(t, ctx, service, reference, name, updatedShort, updatedDescription, prefix+"update_readback", replacements)
 	t.Log("template update/read-back: passed")
+
+	// Explicit empty must remain distinct from an omitted pointer in both
+	// expanded input and the pinned JSON Body conversion.
+	empty := ""
+	clearDescription, err := template.NewDefinition(name, updatedShort)
+	if err != nil {
+		t.Fatal("template empty-description input construction failed")
+	}
+	clearDescription.Description, clearDescription.Channels = &empty, initial.Channels
+	if body {
+		clearDescription = labBodyDefinition(t, clearDescription)
+	}
+	_, response, err = service.UpdateByID(ctx, identity.ODataID, clearDescription)
+	labkit.WriteResponseFixture(t, "team_template", prefix+"empty_description_update", response, replacements)
+	if err != nil {
+		t.Fatal("live template empty-description update failed")
+	}
+	templateReadBack(t, ctx, service, reference, name, updatedShort, empty, prefix+"empty_description_readback", replacements)
+	t.Log("template empty description/read-back: passed")
 	listed, response, err := service.List(ctx, nil)
 	if err != nil || listed.IsIncomplete {
 		t.Fatal("complete live template listing unavailable")
