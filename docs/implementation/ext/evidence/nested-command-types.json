@@ -1,0 +1,551 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "package_sha256": "78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7",
+  "observation": "Read-only reflection after a normal macOS root-module import; no tenant connection or credentials. Assemblies match the pinned package. Root-export absence does not establish an exclusion.",
+  "records": [
+    {
+      "root_exported": false,
+      "name": "Add-TeamsAppInstallation",
+      "types": [
+        {
+          "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "AppId"
+            },
+            {
+              "type": "System.String",
+              "name": "TeamId"
+            },
+            {
+              "type": "System.String",
+              "name": "UserId"
+            },
+            {
+              "type": "System.String",
+              "name": "Permissions"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.PowerShell.TeamsCmdlets.dll",
+          "base": "Microsoft.Teams.PowerShell.TeamsCmdlets.TeamsCmdlet",
+          "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.AddTeamsAppInstallation",
+          "assembly": "Microsoft.Teams.PowerShell.TeamsCmdlets, Version=1.6.8.0, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.PowerShell.TeamsCmdlets.psd1"
+      ],
+      "commented_root_lines": [
+        817
+      ],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Get-CsConversationRole",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "Id"
+            },
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.String",
+              "name": "Filter"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmGetCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ConversationRole, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetConversationRoleCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1",
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.preview.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Get-CsConversationRolesSetting",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.String",
+              "name": "Filter"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmGetCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ConversationRolesSetting, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetConversationRolesSettingCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Get-CsTeamsAppPolicyConfiguration",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.String",
+              "name": "Filter"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmGetCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppPolicyConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTeamsAppPolicyConfigurationCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Get-CsTenantConfiguration",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.String",
+              "name": "Filter"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmGetCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TenantConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.GetTenantConfigurationCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Get-LicenseReportForChangeNotificationSubscription",
+      "types": [
+        {
+          "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+          "parameters": [
+            {
+              "type": "System.Int32",
+              "name": "Period"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.PowerShell.TeamsCmdlets.dll",
+          "base": "Microsoft.Teams.PowerShell.TeamsCmdlets.TeamsCmdlet",
+          "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.GetLicenseReportForChangeNotificationSubscription",
+          "assembly": "Microsoft.Teams.PowerShell.TeamsCmdlets, Version=1.6.8.0, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.PowerShell.TeamsCmdlets.psd1"
+      ],
+      "commented_root_lines": [
+        824
+      ],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Get-TeamsAppInstallation",
+      "types": [
+        {
+          "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "TeamId"
+            },
+            {
+              "type": "System.String",
+              "name": "UserId"
+            },
+            {
+              "type": "System.String",
+              "name": "AppInstallationId"
+            },
+            {
+              "type": "System.String",
+              "name": "AppId"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.PowerShell.TeamsCmdlets.dll",
+          "base": "Microsoft.Teams.PowerShell.TeamsCmdlets.TeamsCmdlet",
+          "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.GetTeamsAppInstallation",
+          "assembly": "Microsoft.Teams.PowerShell.TeamsCmdlets, Version=1.6.8.0, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.PowerShell.TeamsCmdlets.psd1"
+      ],
+      "commented_root_lines": [
+        818
+      ],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "New-CsConversationRole",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ConversationRolePermissions",
+              "name": "Permissions"
+            },
+            {
+              "type": "System.String",
+              "name": "Name"
+            },
+            {
+              "type": "System.Nullable`1[[System.Boolean, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+              "name": "IsAssignable"
+            },
+            {
+              "type": "System.DateTime",
+              "name": "CreatedAt"
+            },
+            {
+              "type": "System.DateTime",
+              "name": "UpdatedAt"
+            },
+            {
+              "type": "System.String",
+              "name": "Id"
+            },
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.Management.Automation.SwitchParameter",
+              "name": "Force"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmNewCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ConversationRole, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.NewConversationRoleCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1",
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.preview.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Remove-CsConversationRole",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "Id"
+            },
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.Management.Automation.SwitchParameter",
+              "name": "Force"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmRemoveCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ConversationRole, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.RemoveConversationRoleCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1",
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.preview.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Remove-TeamsAppInstallation",
+      "types": [
+        {
+          "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "AppInstallationId"
+            },
+            {
+              "type": "System.String",
+              "name": "AppId"
+            },
+            {
+              "type": "System.String",
+              "name": "TeamId"
+            },
+            {
+              "type": "System.String",
+              "name": "UserId"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.PowerShell.TeamsCmdlets.dll",
+          "base": "Microsoft.Teams.PowerShell.TeamsCmdlets.TeamsCmdlet",
+          "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.RemoveTeamsAppInstallation",
+          "assembly": "Microsoft.Teams.PowerShell.TeamsCmdlets, Version=1.6.8.0, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.PowerShell.TeamsCmdlets.psd1"
+      ],
+      "commented_root_lines": [
+        820
+      ],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Set-CsConversationRole",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.ConversationRolePermissions",
+              "name": "Permissions"
+            },
+            {
+              "type": "System.String",
+              "name": "Name"
+            },
+            {
+              "type": "System.Nullable`1[[System.Boolean, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+              "name": "IsAssignable"
+            },
+            {
+              "type": "System.DateTime",
+              "name": "CreatedAt"
+            },
+            {
+              "type": "System.DateTime",
+              "name": "UpdatedAt"
+            },
+            {
+              "type": "System.String",
+              "name": "Id"
+            },
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.Management.Automation.SwitchParameter",
+              "name": "Force"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmSetCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ConversationRole, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetConversationRoleCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1",
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.preview.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Set-CsConversationRolesSetting",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "System.Management.Automation.PSListModifier`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ConversationRole, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+              "name": "ConversationRoles"
+            },
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.Management.Automation.SwitchParameter",
+              "name": "Force"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmSetCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ConversationRolesSetting, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetConversationRolesSettingCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Set-CsTeamsAppPolicyConfiguration",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "AppCatalogUri"
+            },
+            {
+              "type": "System.String",
+              "name": "ResourceUri"
+            },
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.Management.Automation.SwitchParameter",
+              "name": "Force"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmSetCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppPolicyConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTeamsAppPolicyConfigurationCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Set-CsTenantConfiguration",
+      "types": [
+        {
+          "assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+          "parameters": [
+            {
+              "type": "System.Nullable`1[[System.UInt32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+              "name": "MaxAllowedDomains"
+            },
+            {
+              "type": "System.Nullable`1[[System.UInt32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+              "name": "MaxBlockedDomains"
+            },
+            {
+              "type": "System.String",
+              "name": "Identity"
+            },
+            {
+              "type": "System.Management.Automation.SwitchParameter",
+              "name": "Force"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll",
+          "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmSetCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TenantConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]",
+          "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTenantConfigurationCmdlet",
+          "assembly": "Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.Policy.Administration.Cmdlets.Core.oce.psd1"
+      ],
+      "commented_root_lines": [],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    },
+    {
+      "root_exported": false,
+      "name": "Update-TeamsAppInstallation",
+      "types": [
+        {
+          "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+          "parameters": [
+            {
+              "type": "System.String",
+              "name": "AppInstallationId"
+            },
+            {
+              "type": "System.String",
+              "name": "AppId"
+            },
+            {
+              "type": "System.String",
+              "name": "TeamId"
+            },
+            {
+              "type": "System.String",
+              "name": "UserId"
+            },
+            {
+              "type": "System.String",
+              "name": "Permissions"
+            }
+          ],
+          "assembly_file": "Microsoft.Teams.PowerShell.TeamsCmdlets.dll",
+          "base": "Microsoft.Teams.PowerShell.TeamsCmdlets.TeamsCmdlet",
+          "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.UpdateTeamsAppInstallation",
+          "assembly": "Microsoft.Teams.PowerShell.TeamsCmdlets, Version=1.6.8.0, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "manifest_evidence": [
+        "Microsoft.Teams.PowerShell.TeamsCmdlets.psd1"
+      ],
+      "commented_root_lines": [
+        823
+      ],
+      "disposition": "conditional-management-candidate; scope/wire qualification remains incomplete"
+    }
+  ],
+  "reproduce": "pwsh -NoLogo -NoProfile -File scripts/discovery/inspect-nested-ext-types.ps1 -ModulePath /path/to/verified/MicrosoftTeams/8.1.0"
+}

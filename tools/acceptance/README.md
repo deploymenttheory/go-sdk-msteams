@@ -468,3 +468,23 @@ mutation opt-in and fixture files described above:
 MSTEAMS_LAB_RECOVERY_FILE=/private/lab/journal.jsonl \
   go test -count=1 -run '^TestAccRecoverOwnedPolicies$' ./tests/integration/lab/recovery
 ```
+
+## Integrated EXT acceptance
+
+The `ext_integration` partition creates one SDK-owned, unassigned feedback policy
+through the generic configuration API, reads and sparsely updates it through the
+typed feedback service, then replaces it through the generic API and verifies the
+typed result. It requires three pinned PowerShell comparisons and one independently
+cleaned journal entry. No Global configuration, user/group assignment, licensing
+state or service-wide cache is changed. Changes to either participating adapter
+select this partition.
+
+The [EXT inventory](../../docs/implementation/ext/coverage-report.md) records all
+owned command/parameter-set mappings, current live limitations and the fifteen
+unowned nested research candidates. Mappings and expected denials do not establish
+full qualification or successful tenant operations.
+
+The same partition's `agent-target-template` step creates an owned IVR tag
+template and an owned agent configuration referencing it, verifies the linkage
+after rename with two pinned comparisons, and requires two independently cleaned
+entries. No resource account or call flow is attached to the agent.

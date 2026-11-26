@@ -27,6 +27,32 @@ def service_run(root, **kwargs):
 
 
 class AcceptanceGuardTests(unittest.TestCase):
+    def test_ext_compositions_require_each_phase_and_pinned_comparison(self):
+        for proof, test in [('ext-integration', 'TestAccGenericTypedConfigurationComposition'),
+                            ('ext-agent-template', 'TestAccAgentTargetTemplateComposition')]:
+            markers, oracle, count = ci.PROOFS[proof]
+            events = [{'Test': test, 'Action': 'output', 'Output': marker}
+                      for marker in markers + [oracle] * count]
+            events.append({'Test': test, 'Action': 'pass'})
+            self.assertEqual(ci.evaluate(events, [test], 0, proof=proof)['outcome'], 'passed')
+            for omitted in markers + [oracle]:
+                incomplete = events.copy()
+                incomplete.remove(next(event for event in incomplete if event.get('Output') == omitted))
+                with self.subTest(proof=proof, omitted=omitted):
+                    self.assertEqual(ci.evaluate(incomplete, [test], 0, proof=proof)['outcome'], 'failed')
+
+    def test_ext_composition_tracks_both_configuration_adapters(self):
+        fixture = registry({'id': 'reads', 'tests': ['TestAccRead']},
+                           service='ext_integration', package='./tests/integration/lab/ext_integration')
+        for path in ['msteams/teams_admin_api/configuration_diagnostics/service.go',
+                     'msteams/teams_admin_api/teams_feedback_policy/models.go',
+                     'tests/integration/lab/configuration_diagnostics/recovery.go',
+                     'msteams/teams_admin_api/ai_agents/models.go',
+                     'msteams/teams_admin_api/call_templates/service.go']:
+            with self.subTest(path=path):
+                self.assertEqual(ci.changed_services(fixture, [path], fixture), ['ext_integration'])
+        self.assertEqual(ci.changed_services(fixture, ['README.md'], fixture), [])
+
     def test_skip_selection_requires_exact_registered_names_and_public_reasons(self):
         suites = registry({'id': 'crud', 'tests': ['TestAccRead', 'TestAccPhone']})
         with tempfile.TemporaryDirectory() as directory:
