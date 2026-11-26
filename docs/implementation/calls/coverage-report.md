@@ -51,7 +51,7 @@ Owner: `CALL-20`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DraftCallableEntity`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `__AllParameterSets` | [`Service.DraftCallableEntity`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 
 Live limitation: New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.
 
@@ -61,7 +61,7 @@ Owner: `CALL-20`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DraftCallFlow`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `__AllParameterSets` | [`Service.DraftCallFlow`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 
 Live limitation: New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.
 
@@ -71,7 +71,7 @@ Owner: `CALL-20`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DraftCallHandlingAssociation`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `__AllParameterSets` | [`Service.DraftCallHandlingAssociation`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 
 Live limitation: New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.
 
@@ -91,7 +91,7 @@ Owner: `CALL-20`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DraftMenu`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `__AllParameterSets` | [`Service.DraftMenu`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 
 Live limitation: New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.
 
@@ -101,7 +101,7 @@ Owner: `CALL-20`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DraftMenuOption`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `__AllParameterSets` | [`Service.DraftMenuOption`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 
 Live limitation: New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.
 
@@ -111,8 +111,8 @@ Owner: `CALL-20`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `AudioFileParamSet` | [`Service.DraftPrompt`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
-| `DualParamSet` | [`Service.DraftPrompt`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `AudioFileParamSet` | [`Service.DraftPrompt`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `DualParamSet` | [`Service.DraftPrompt`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 | `TextToSpeechParamSet` | [`Service.DraftPrompt`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 
 Live limitation: New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.

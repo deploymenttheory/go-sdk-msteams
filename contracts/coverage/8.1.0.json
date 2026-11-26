@@ -24138,6 +24138,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24192,6 +24196,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24250,6 +24258,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24358,6 +24370,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24412,6 +24428,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24470,6 +24490,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24496,6 +24520,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
