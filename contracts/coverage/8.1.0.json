@@ -2171,6 +2171,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_protocol_test.go",
               "name": "TestUnitBatchAuthoredTypedResponses"
+            },
+            {
+              "file": "tests/contract/policies/batch_composition_test.go",
+              "name": "TestUnitPolicyCompositionConflictUsersFeedBatchWithPartialOutcome"
             }
           ],
           "live_tests": []
@@ -6407,6 +6411,10 @@
             {
               "file": "msteams/teams_admin_api/acs_federation_configuration/response_test.go",
               "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "tests/contract/policies/federation_composition_test.go",
+              "name": "TestUnitPolicyCompositionFederationProfilesPreserveIndependentPreparation"
             }
           ],
           "live_tests": [
@@ -14628,6 +14636,10 @@
             {
               "file": "tests/contract/policies/assignment_composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
+            },
+            {
+              "file": "tests/contract/policies/migration_failure_composition_test.go",
+              "name": "TestUnitPolicyCompositionMigrationDecodeFailureKeepsIndependentReadUsable"
             }
           ],
           "live_tests": [
@@ -14802,6 +14814,10 @@
             {
               "file": "tests/contract/policies/assignment_composition_test.go",
               "name": "TestUnitPolicyCompositionBuildsPackageFromRecommendationAndRetainsPartialFailure"
+            },
+            {
+              "file": "tests/contract/policies/migration_failure_composition_test.go",
+              "name": "TestUnitPolicyCompositionMigrationDecodeFailureKeepsIndependentReadUsable"
             }
           ],
           "live_tests": []
@@ -14916,6 +14932,10 @@
             {
               "file": "tests/contract/policies/assignment_composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
+            },
+            {
+              "file": "tests/contract/policies/batch_composition_test.go",
+              "name": "TestUnitPolicyCompositionConflictUsersFeedBatchWithPartialOutcome"
             }
           ],
           "live_tests": []
@@ -21815,6 +21835,10 @@
             {
               "file": "tests/contract/policies/assignment_composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
+            },
+            {
+              "file": "tests/contract/policies/migration_failure_composition_test.go",
+              "name": "TestUnitPolicyCompositionMigrationDecodeFailureKeepsIndependentReadUsable"
             }
           ],
           "live_tests": []
@@ -22284,6 +22308,10 @@
             {
               "file": "tests/contract/policies/assignment_composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
+            },
+            {
+              "file": "tests/contract/policies/migration_failure_composition_test.go",
+              "name": "TestUnitPolicyCompositionMigrationDecodeFailureKeepsIndependentReadUsable"
             }
           ],
           "live_tests": []
@@ -23375,6 +23403,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_protocol_test.go",
               "name": "TestUnitBatchAuthoredAcceptedHandlePresence"
+            },
+            {
+              "file": "tests/contract/policies/batch_composition_test.go",
+              "name": "TestUnitPolicyCompositionConflictUsersFeedBatchWithPartialOutcome"
             }
           ],
           "live_tests": []
@@ -38431,6 +38463,10 @@
             {
               "file": "msteams/teams_admin_api/acs_federation_configuration/service_test.go",
               "name": "TestUnitComposedUpdatePreservesReadIdentityAndSparseFields"
+            },
+            {
+              "file": "tests/contract/policies/federation_composition_test.go",
+              "name": "TestUnitPolicyCompositionFederationProfilesPreserveIndependentPreparation"
             }
           ],
           "live_tests": []
@@ -39875,6 +39911,10 @@
             {
               "file": "msteams/teams_admin_api/teams_external_access_configuration/service_test.go",
               "name": "TestUnitComposedUpdatePreservesReadIdentityAndSparseFields"
+            },
+            {
+              "file": "tests/contract/policies/federation_composition_test.go",
+              "name": "TestUnitPolicyCompositionFederationProfilesPreserveIndependentPreparation"
             }
           ],
           "live_tests": []
@@ -43043,6 +43083,10 @@
             {
               "file": "msteams/teams_admin_api/tenant_federation_configuration/service_protocol_test.go",
               "name": "TestUnitTenantFederationAuthoredDomainBuilderAndPUTAcceptance"
+            },
+            {
+              "file": "tests/contract/policies/federation_composition_test.go",
+              "name": "TestUnitPolicyCompositionFederationProfilesPreserveIndependentPreparation"
             }
           ],
           "live_tests": []
