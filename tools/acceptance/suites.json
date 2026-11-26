@@ -7,6 +7,15 @@
         "tests": [
           "TestAccApplicationAccess"
         ]
+      },
+      {
+        "id": "private-migration-backend",
+        "package": "./tests/integration/lab/private_channel_migration",
+        "proof": "private-migration-auth",
+        "tests": [
+          "TestAccPrivateChannelMigrationAuthentication"
+        ],
+        "when_service": "private_channel_migration"
       }
     ]
   },

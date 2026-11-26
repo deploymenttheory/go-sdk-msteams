@@ -489,3 +489,19 @@ status read in `private_channel_migration/reads`. It requires matching tenant
 identity and one pinned PowerShell status/details comparison. It starts no
 migration or deployment and needs no existing orchestration selector. A denied
 read fails this positive scenario; it does not become a successful migration.
+
+The auth partition can register read-only backend conformance separately from its
+base provider authentication step. A backend step's `when_service` names its
+required service selection; its optional package must resolve inside
+`tests/integration`. Private migration uses this scope to compare certificate-connected
+PowerShell with both native credential methods, because pinned 8.1.0's supplied-token
+mode supports only the Graph/Skype pair. Certificate files remain auth-job inputs.
+For an explicit prepared auth-only run, select the exact step:
+
+```sh
+MSTEAMS_LAB_AUTH_METHOD=all python3 tools/acceptance/ci.py run --auth --step private-migration-backend --report-directory /private/tmp/acceptance-results
+```
+
+The ordinary private migration service step still requires a successful bound-tenant
+native read; HTTP 401 is a failure. Backend parity is reported in the separate
+selected auth step and never inferred from token acquisition.

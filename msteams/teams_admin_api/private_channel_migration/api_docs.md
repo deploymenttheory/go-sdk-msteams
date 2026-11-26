@@ -23,4 +23,13 @@ Native providers use the selected audience's /.default contract. Exact app
 eligibility, tenant administrator enforcement and least-privilege grants remain
 unqualified. A valid token or configured route proves neither. Source:
 [unit tests](service_test.go).
-No tenant request or migration mutation was performed for this candidate.
+Requests include the pinned `X-MS-CmdletName` value
+`Get-TenantPrivateChannelMigrationStatus` and retain the SDK User-Agent.
+Read-only tenant qualification currently observed HTTP 401 before this header
+repair; this does not establish application-mode eligibility or ineligibility.
+Certificate-connected pinned comparison runs in the credential-owning auth scope;
+the published module accepts exactly two Graph/Skype supplied tokens and cannot
+use that mode to acquire the separate Templates resource. See the
+[integrated qualification report](../../../docs/implementation/core/integrated-qualification.md)
+for exact assembly provenance, live evidence and remaining qualification gaps.
+No migration mutation is performed.

@@ -103,7 +103,8 @@ AUTO_ATTENDANT_MARKERS = [
 ]
 AUTO_ATTENDANT_ORACLE = 'PowerShell 8.1.0 / Go auto attendant parity: passed'
 PROOFS = {
-    'private-migration-read': (['private migration bound-tenant status read: passed'], 'PowerShell 8.1.0 / Go private migration read parity: passed', 1),
+    'private-migration-read': (['private migration bound-tenant status read: passed'], None, 0),
+    'private-migration-auth': (['private migration client-secret backend read: passed', 'private migration certificate backend read: passed'], 'PowerShell 8.1.0 / Go private migration read parity: passed', 2),
     'targeting-policy-read': (['targeting Global read/list: passed'], 'PowerShell 8.1.0 / Go targeting policy read parity: passed', 1),
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
@@ -254,7 +255,7 @@ def registry_steps(registry, service=None, auth=False):
     if not service:
         section = registry.get('auth', {})
         for step in section.get('steps', []):
-            units.append(dict(step, partition='auth', package=section['package'], suite='auth/' + step['id']))
+            units.append(dict(step, partition='auth', package=step.get('package', section['package']), suite='auth/' + step['id']))
     if not auth:
         for name, entry in registry.get('services', {}).items():
             if service and name != service:
@@ -279,7 +280,15 @@ def validate_registry(registry, root=ROOT):
         raise AcceptanceFailure('the auth partition needs a package and steps with tests')
     if any(is_write(step) for step in auth['steps']):
         raise AcceptanceFailure('the auth partition must not mutate the tenant')
+    for step in auth['steps']:
+        package = step.get('package', auth['package'])
+        path = Path(package)
+        if 'package' in step and (path.is_absolute() or '..' in path.parts or not path.is_relative_to('tests/integration') or not (root / path).is_dir() or not (root / path).resolve().is_relative_to((root / 'tests/integration').resolve())):
+            raise AcceptanceFailure('auth step package must remain under tests/integration')
     services = registry.get('services') or {}
+    for step in auth['steps']:
+        if step.get('when_service') and step['when_service'] not in services:
+            raise AcceptanceFailure('auth backend step must name a registered service')
     if not services:
         raise AcceptanceFailure('no acceptance service partitions are registered')
     for name, entry in services.items():
@@ -712,6 +721,9 @@ def run(args):
     if wanted - {unit['id'] for unit in units}:
         raise ValueError('unknown acceptance step')
     units = [unit for unit in units if not wanted or unit['id'] in wanted]
+    if auth and not wanted:
+        services = set(selected_services(registry))
+        units = [unit for unit in units if not unit.get('when_service') or unit['when_service'] in services]
     skipped = selected_skips(registry, args)
     revision = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
     mode = auth_method()
@@ -899,7 +911,7 @@ def summarize(args):
     services = set(selected_services(registry))
     # The auth partition proves every credential kind once; service steps run
     # once each, with the client secret.
-    units = {unit['suite']: unit for unit in registry_steps(registry) if unit['partition'] == 'auth' or unit['partition'] in services}
+    units = {unit['suite']: unit for unit in registry_steps(registry) if (unit['partition'] == 'auth' and (not unit.get('when_service') or unit['when_service'] in services)) or unit['partition'] in services}
     expected = {(AUTH_PARTITION_METHOD if unit['partition'] == 'auth' else SERVICE_AUTH_METHOD, suite) for suite, unit in units.items()}
     actual = [(report.get('auth_method'), report.get('suite')) for report in reports]
     complete = set(actual) == expected and len(actual) == len(expected)

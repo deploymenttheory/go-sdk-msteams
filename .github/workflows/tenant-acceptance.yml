@@ -75,6 +75,7 @@ jobs:
     timeout-minutes: 30
     env:
       MSTEAMS_LAB_AUTH_METHOD: all
+      MSTEAMS_ACC_PLANNED_SERVICES: ${{ needs.plan.outputs.services }}
       ACCEPTANCE_TARGET: --auth
       ACCEPTANCE_LABEL: auth
     steps: &partition-steps

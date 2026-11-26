@@ -189,8 +189,8 @@ than treating a historical note as a permanent fixture blocker.
 The bound-tenant `TestAccPrivateChannelMigrationReadOnly` likewise needs no
 additional operation selector or licensed owner: it reads only the configured
 tenant's singleton status. It now has a read-only `private_channel_migration`
-partition requiring matching tenant identity and one pinned status/details
-comparison. No migration, deployment or tenant setting is changed.
+partition requiring matching tenant identity. Pinned status/details comparison
+runs separately in the credential-owning auth scope for this selected backend. No migration, deployment or tenant setting is changed.
 [Run 45876333317](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45876333317)
 at tested merge `d73e9778687a983fc62e3ebec09c6b423e64a4ed` (head `ee94535`)
 failed the SDK read with HTTP 401 before any PowerShell comparison. Exact
@@ -214,11 +214,28 @@ commercial `https://templates.teams.microsoft.com`, China
 `https://templates.teams.microsoftonline.cn`, and US Government
 `https://templates.teams.microsoft.us`. The cloud-specific Templates origins and
 path prefixes also match the SDK. No audience or sovereign endpoint is inferred
-from the denial. On SDK failure the read-only acceptance now attempts the same
+from the denial. The auth-scoped comparison uses the same
 bound pinned command and reports only a whitelisted oracle failure stage; the
-native failure remains a failure even if PowerShell succeeds. The client-secret
-oracle currently supplies Graph and Skype tokens, so its ability to authorize
-endpoint 13 is being checked independently before interpreting that comparison.
+native failure remains a failure even if PowerShell succeeds.
+
+The same pinned connection assembly proves that its supplied-token mode cannot
+compare this third audience: `RMProfileClient.ProcessProvidedAccessTokens` checks
+array length at offsets 41–44 against exactly two tokens. Its static constructor
+builds the required Graph/Skype pair at offsets 7, 19 and 30, and
+`ValidateTokensAudiencies` enforces that pair. Adding a third token or substituting
+the Templates token is unsupported. This is an oracle authentication limitation,
+not evidence that the native backend rejects application credentials.
+
+`TestAccPrivateChannelMigrationAuthentication` therefore runs a certificate-connected
+pinned getter and independently compares the same bound fields with native
+client-secret and certificate reads. It runs in the existing certificate-owning
+auth job only when private migration is selected, or through an explicit exact auth
+step selection. The ordinary Graph/Teams authentication report remains separate.
+No certificate material is delivered to service jobs. Native 401 remains a failed
+success-required scenario. The service read still requires successful bound-tenant
+status; its pinned parity obligation is fulfilled only by the separate auth-scope
+scenario, which requires both credential comparisons. This new scope awaits CI;
+no successful backend result is claimed yet.
 
 Denial,
 missing tenant identity or mismatch fails the positive scenario; no live success
@@ -373,7 +390,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 
 - **__AllParameterSets** — SDK: [Service.Get](../../../msteams/teams_admin_api/private_channel_migration/service.go).
   Contract tests: [TestUnitMigrationCloudRequestPrefixesAndAudiences](../../../msteams/teams_admin_api/private_channel_migration/service_test.go), [TestUnitMigrationProfilesDoNotFallbackAndWrongBackendIsLocal](../../../msteams/teams_admin_api/private_channel_migration/service_test.go).
-  Live tests: [TestAccPrivateChannelMigrationReadOnly](../../../tests/integration/lab/private_channel_migration/deployment_migration_test.go).
+  Live tests: [TestAccPrivateChannelMigrationReadOnly and TestAccPrivateChannelMigrationAuthentication](../../../tests/integration/lab/private_channel_migration/deployment_migration_test.go).
 
 ### New-CsBatchTeamsDeployment (CORE-22)
 

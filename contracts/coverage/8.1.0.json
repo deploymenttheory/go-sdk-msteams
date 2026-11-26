@@ -15935,6 +15935,10 @@
             {
               "file": "tests/integration/lab/private_channel_migration/deployment_migration_test.go",
               "name": "TestAccPrivateChannelMigrationReadOnly"
+            },
+            {
+              "file": "tests/integration/lab/private_channel_migration/deployment_migration_test.go",
+              "name": "TestAccPrivateChannelMigrationAuthentication"
             }
           ]
         }

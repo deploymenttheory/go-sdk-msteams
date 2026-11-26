@@ -548,15 +548,34 @@ func TestAccRead(t *testing.T) {
         events.append({'Test': name, 'Action': 'output', 'Output': oracle})
         self.assertEqual(ci.evaluate(events, [name], 0, proof='targeting-policy-read')['outcome'], 'passed')
 
-    def test_private_migration_read_requires_bound_tenant_and_pinned_comparison(self):
+    def test_private_migration_requires_native_read_and_both_auth_parity_checks(self):
         name = 'TestAccPrivateChannelMigrationReadOnly'
-        markers, oracle, _ = ci.PROOFS['private-migration-read']
         events = [{'Test': name, 'Action': 'pass'}]
         self.assertEqual(ci.evaluate(events, [name], 0, proof='private-migration-read')['outcome'], 'failed')
-        events += [{'Test': name, 'Action': 'output', 'Output': marker} for marker in markers]
-        self.assertEqual(ci.evaluate(events, [name], 0, proof='private-migration-read')['outcome'], 'failed')
-        events.append({'Test': name, 'Action': 'output', 'Output': oracle})
+        events.append({'Test': name, 'Action': 'output', 'Output': 'private migration bound-tenant status read: passed'})
         self.assertEqual(ci.evaluate(events, [name], 0, proof='private-migration-read')['outcome'], 'passed')
+        name = 'TestAccPrivateChannelMigrationAuthentication'
+        markers, oracle, _ = ci.PROOFS['private-migration-auth']
+        events = [{'Test': name, 'Action': 'pass'}] + [
+            {'Test': name, 'Action': 'output', 'Output': marker} for marker in markers]
+        for count in range(3):
+            report = ci.evaluate(events, [name], 0, proof='private-migration-auth')
+            self.assertEqual(report['outcome'], 'passed' if count == 2 else 'failed')
+            events.append({'Test': name, 'Action': 'output', 'Output': oracle})
+
+    def test_auth_step_package_override_stays_inside_integration_scope(self):
+        value = ci.load_registry()
+        units = ci.registry_steps(value, auth=True)
+        migration = next(unit for unit in units if unit['id'] == 'private-migration-backend')
+        self.assertEqual(migration['package'], './tests/integration/lab/private_channel_migration')
+        self.assertFalse(ci.is_write(migration))
+        self.assertEqual(migration['partition'], 'auth')
+        ci.validate_registry(value)
+        for package in ['/tmp', '../tests/integration/auth', './msteams/auth', './tests/integration/missing']:
+            migration_step = value['auth']['steps'][-1]
+            migration_step['package'] = package
+            with self.subTest(package=package), self.assertRaises(ci.AcceptanceFailure):
+                ci.validate_registry(value)
 
     def test_group_fixture_secret_is_bound_to_the_dedicated_empty_security_group(self):
         tenant = '00000000-0000-4000-8000-000000000001'
@@ -610,6 +629,29 @@ func TestAccRead(t *testing.T) {
                 write('svc--crud', 'svc/crud', 'client-secret', 'TestAccWrite')
                 (reports / 'duplicate.json').write_text((reports / 'svc--reads.json').read_text())
                 self.assertEqual(ci.summarize(argparse.Namespace(report_directory=reports)), 1)
+
+    def test_summary_requires_backend_auth_only_for_its_selected_resource(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            value = registry({'id': 'reads', 'tests': ['TestAccRead']})
+            value['auth']['steps'].append({'id': 'backend', 'when_service': 'svc', 'tests': ['TestAccBackend']})
+            (root / 'suites.json').write_text(json.dumps(value))
+            reports = root / 'reports'
+            reports.mkdir()
+            def write(file, suite, mode, name):
+                (reports / file).write_text(json.dumps({'suite': suite, 'auth_method': mode,
+                    'outcome': 'passed', 'tests': [{'name': name, 'outcome': 'pass'}]}))
+            write('auth.json', 'auth/authentication', 'all', 'TestAccAuth')
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, {'MSTEAMS_ACC_PLANNED_SERVICES': '[]'}, clear=True), contextlib.redirect_stdout(io.StringIO()):
+                args = argparse.Namespace(report_directory=reports)
+                self.assertEqual(ci.summarize(args), 0)
+                write('backend.json', 'auth/backend', 'all', 'TestAccBackend')
+                self.assertEqual(ci.summarize(args), 1)
+                os.environ['MSTEAMS_ACC_PLANNED_SERVICES'] = '["svc"]'
+                write('service.json', 'svc/reads', 'client-secret', 'TestAccRead')
+                self.assertEqual(ci.summarize(args), 0)
+                (reports / 'backend.json').unlink()
+                self.assertEqual(ci.summarize(args), 1)
 
     def test_service_steps_run_in_order_and_only_mutating_steps_enable_mutations(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -673,6 +715,45 @@ func TestAccRead(t *testing.T) {
                 with self.assertRaises(ci.AcceptanceFailure):
                     ci.run(service_run(root))
             self.assertEqual([call.args[0][0] for call in process.call_args_list], ['git'])
+
+    def test_auth_backend_selection_preserves_base_auth_and_exact_explicit_steps(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            value = registry({'id': 'reads', 'tests': ['TestAccRead']})
+            value['auth']['steps'].append({'id': 'backend', 'package': './tests/integration/lab/backend',
+                'when_service': 'svc', 'tests': ['TestAccBackend']})
+            (root / 'suites.json').write_text(json.dumps(value))
+            invoked = []
+
+            def process(command, **kwargs):
+                if command[0] == 'git':
+                    return subprocess.CompletedProcess(command, 0, stdout='a' * 40 + '\n')
+                name = command[command.index('-run') + 1][2:-2]
+                invoked.append((name, command[-1], kwargs['env']['MSTEAMS_LAB_MUTATIONS']))
+                kwargs['stdout'].write(json.dumps({'Test': name, 'Action': 'pass'}) + '\n')
+                return subprocess.CompletedProcess(command, 0)
+
+            environment = {'MSTEAMS_LAB_PRIVATE_DIRECTORY': str(root), 'MSTEAMS_LAB_AUTH_METHOD': 'all'}
+            with patch.object(ci, 'HERE', root), patch.dict(os.environ, environment, clear=True), patch.object(ci.subprocess, 'run', side_effect=process), contextlib.redirect_stdout(io.StringIO()):
+                for planned, expected in [('[]', ['TestAccAuth']), ('["svc"]', ['TestAccAuth', 'TestAccBackend'])]:
+                    os.environ['MSTEAMS_ACC_PLANNED_SERVICES'] = planned
+                    invoked.clear()
+                    args = argparse.Namespace(auth=True, service=None, step=None, report_directory=root / 'reports')
+                    self.assertEqual(ci.run(args), 0)
+                    self.assertEqual([name for name, _, _ in invoked], expected)
+                    self.assertTrue(all(mutation == '0' for _, _, mutation in invoked))
+                os.environ['MSTEAMS_ACC_PLANNED_SERVICES'] = '[]'
+                args.step = ['backend']
+                invoked.clear()
+                self.assertEqual(ci.run(args), 0)
+                self.assertEqual(invoked, [('TestAccBackend', './tests/integration/lab/backend', '0')])
+                args.step = ['backend --unsafe']
+                with self.assertRaises(ValueError):
+                    ci.run(args)
+                os.environ['MSTEAMS_ACC_PLANNED_SERVICES'] = '["unknown"]'
+                args.step = None
+                with self.assertRaises(ci.AcceptanceFailure):
+                    ci.run(args)
 
     def test_auth_partition_loads_every_credential_kind(self):
         with tempfile.TemporaryDirectory() as directory:
