@@ -3,6 +3,7 @@ package recordingmessages_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 
@@ -139,4 +140,56 @@ func TestUnitRecordingAuthoredMalformed200RetainsResponse(t *testing.T) {
 			}})
 		})
 	}
+}
+
+func TestUnitRecordingAuthoredComposedDeltaPreservesPreparationAndReadback(t *testing.T) {
+	t.Parallel()
+	const nextLocalization = `{"Identity":null,"Language":"fr-FR","InitiatorImplicit":null,"ParticipantImplicit":"new message","InitiatorExplicit":null,"ParticipantExplicitRequested":null,"ParticipantExplicitProvided":null,"AgreementDialogue":null}`
+	const updated = `{"Identity":"` + authoredRecordingIdentity + `","Id":"` + relative + `","Description":"","RecordingAndTranscriptionLocalizationCustomMessage":[` + nextLocalization + `],"Future":false}`
+	// Source comparator removes the first seven-field ordinal match, then adds
+	// in order. These are authored protocol values/readback, not persistence
+	// evidence from a tenant or proof of the unreleased meeting-client feature.
+	steps := []contracttest.Exchange{
+		wire("GET", item, "Set-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, authoredRecordingMessage),
+		wire("PATCH", item, "Set-CsTeamsRecordingAndTranscriptionCustomMessage", json.RawMessage(`{"Identity":"`+authoredRecordingIdentity+`","RecordingAndTranscriptionLocalizationCustomMessage":[`+nextLocalization+`]}`), 204, ""),
+		wire("GET", item, "Get-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, updated),
+	}
+	run(t, contracttest.Case{Name: "composed-recording-delta", Source: "msteams/teams_admin_api/recording_messages/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsRecordingAndTranscriptionCustomMessage", ParameterSet: "Identity"}, {Command: "Get-CsTeamsRecordingAndTranscriptionCustomMessage", ParameterSet: "Identity"}, {Command: "New-CsTeamsRecordingAndTranscriptionLocalizationCustomMessage", ParameterSet: "Identity"}}, Steps: steps, Want: contracttest.Expected{JSON: json.RawMessage(updated), Body: []byte(updated)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		add, err := resource.NewLocalization(resource.LocalizationInput{Language: "fr-FR", ParticipantImplicit: new("new message")})
+		if err != nil {
+			t.Fatal(err)
+		}
+		s := sdk.TeamsAdminAPI.RecordingMessages
+		result, response, err := s.UpdateByIdentity(ctx, authoredRecordingIdentity, resource.UpdateRequest{Localizations: resource.ChangeLocalizations([]*resource.Localization{add}, []*resource.Localization{fixtureLocalization()})})
+		if err != nil || response == nil || response.StatusCode() != 204 || result == nil || !result.PatchInvoked || !result.HTTPAccepted || result.After != nil || result.ReadResponse == nil || result.ReadResponse.StatusCode() != 200 {
+			t.Fatal("composed recording edit lost preparation or confused receipt with readback")
+		}
+		verifyAuthoredRecordingMessage(t, result.Before)
+		value, response, err := s.GetByIdentity(ctx, authoredRecordingIdentity)
+		if err == nil && (value == nil || value.Description == nil || *value.Description != "" || len(value.Localizations) != 1 || value.Localizations[0] == nil || value.Localizations[0].Language == nil || *value.Localizations[0].Language != "fr-FR" || value.Localizations[0].ParticipantImplicit == nil || *value.Localizations[0].ParticipantImplicit != "new message") {
+			t.Fatal("authored recording readback lost the delta or an omitted scalar")
+		}
+		verifyAuthoredRecordingMessage(t, result.Before)
+		return contracttest.Observation{Value: value, Response: response, Err: err}
+	}})
+}
+
+func TestUnitRecordingBodyCloseCancellationStopsPreparationBeforePatch(t *testing.T) {
+	t.Parallel()
+	var stop context.CancelFunc
+	step := wire("GET", item, "Set-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, authoredRecordingMessage)
+	step.Reply.OnBodyClose = func() { stop() }
+	run(t, contracttest.Case{Name: "recording-body-close-cancel", Source: "msteams/teams_admin_api/recording_messages/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsRecordingAndTranscriptionCustomMessage", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{step}, Want: contracttest.Expected{Body: []byte(authoredRecordingMessage), Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		operation, cancel := context.WithCancel(ctx)
+		defer cancel()
+		stop = cancel
+		value, response, err := sdk.TeamsAdminAPI.RecordingMessages.UpdateByIdentity(operation, authoredRecordingIdentity, resource.UpdateRequest{Description: policy.Set("changed")})
+		// The real shared client gives cancellation priority after body close,
+		// before the resource decoder. Preserve its received response, not an
+		// invented typed Before or a claim that PATCH was prepared/completed.
+		if !errors.Is(err, context.Canceled) || !errors.Is(operation.Err(), context.Canceled) || value == nil || value.Before != nil || value.After != nil || value.PatchInvoked || value.HTTPAccepted || value.ReadResponse == nil || value.ReadResponse.StatusCode() != 200 || response != value.ReadResponse {
+			t.Fatal("body-close cancellation lost the actual recording preparation stage")
+		}
+		return contracttest.Observation{Response: response, Err: err}
+	}})
 }

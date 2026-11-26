@@ -2018,6 +2018,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_batch_protocol_test.go",
               "name": "TestUnitOCEAuthoredRegionalListPreservesPartialSuccessAndFailure"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_batch_protocol_test.go",
+              "name": "TestUnitOCEBodyCloseCancellationPreservesEarlierDecodedRegionOnly"
             }
           ],
           "live_tests": [
@@ -7854,6 +7858,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
               "name": "TestUnitBannerAuthoredMalformed200RetainsResponse"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredComposedUpdatePreservesBeforeAndExplicitReadback"
             }
           ],
           "live_tests": [
@@ -10606,6 +10614,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
               "name": "TestUnitRecordingAuthoredSelectorResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredComposedDeltaPreservesPreparationAndReadback"
             }
           ],
           "live_tests": [
@@ -23418,6 +23430,10 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
               "name": "TestUnitPackageAuthoredDomainFailureAndMalformedReceipt"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageBatchUnusableHandlesDoNotInventOperationID"
             }
           ],
           "live_tests": []
@@ -27319,6 +27335,10 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
               "name": "TestUnitBrandingAssetInputsUsePreparedSuccessfulPatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
+              "name": "TestUnitBrandingComposedReplacementCoversAllAssetBranches"
             }
           ],
           "live_tests": []
@@ -27437,6 +27457,10 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/service_protocol_test.go",
               "name": "TestUnitBrandingNestedBuildersReachSuccessfulPatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
+              "name": "TestUnitBrandingComposedReplacementCoversAllAssetBranches"
             }
           ],
           "live_tests": []
@@ -27774,6 +27798,10 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/service_protocol_test.go",
               "name": "TestUnitBrandingNestedBuildersReachSuccessfulPatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
+              "name": "TestUnitBrandingComposedReplacementCoversAllAssetBranches"
             }
           ],
           "live_tests": []
@@ -28033,6 +28061,10 @@
             {
               "file": "tests/contract/policies/composition_test.go",
               "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredComposedDeltaPreservesPreparationAndReadback"
             }
           ],
           "live_tests": []
@@ -39421,6 +39453,14 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
               "name": "TestUnitBannerAuthoredSelectorResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerAuthoredComposedUpdatePreservesBeforeAndExplicitReadback"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go",
+              "name": "TestUnitBannerBodyCloseCancellationStopsPreparationBeforePatch"
             }
           ],
           "live_tests": []
@@ -40410,6 +40450,14 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/service_crud_response_test.go",
               "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
+              "name": "TestUnitBrandingBodyCloseCancellationRetainsOnlyReceivedPreparation"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
+              "name": "TestUnitBrandingComposedReplacementCoversAllAssetBranches"
             }
           ],
           "live_tests": []
@@ -41261,6 +41309,14 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
               "name": "TestUnitRecordingAuthoredSelectorResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingAuthoredComposedDeltaPreservesPreparationAndReadback"
+            },
+            {
+              "file": "msteams/teams_admin_api/recording_messages/service_protocol_test.go",
+              "name": "TestUnitRecordingBodyCloseCancellationStopsPreparationBeforePatch"
             }
           ],
           "live_tests": []

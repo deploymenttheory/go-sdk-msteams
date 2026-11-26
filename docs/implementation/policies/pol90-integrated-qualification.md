@@ -90,3 +90,8 @@ The report and ledger are not a signed-off QUAL-01 completion claim. The affecte
 
 
 Nine sets retain their prior function references: the five federation/branding Filter sets already replay nonempty retained lists, two domain constructors already execute their local contracts, and the ACS/Teams external Set functions were extended in place to include successful prepared receipts. Unchanged references are not classified as missing coverage. This remains a scope/branch audit rather than a claim that every field, tenant state or conditional backend is fully qualified.
+
+
+## Local follow-up checkpoint (not yet validated or published)
+
+A later local batch adds an optional test-only body-close event (JSON-excluded, once-only, nil preserves transport), a real-SDK closure regression, received-body cancellation stages for branding/recording/banner/regional collection, recording delta/banner update readback composition, all-asset Set replacement and unusable package-batch handles. This batch has **not** run Go validation and is not included in the published passing checkpoint claims above. Work paused at a clean local commit for an existing policy PR conflict repair; resume with narrow harness/affected-package checks before publishing it. SDK production behavior remains unchanged.

@@ -206,3 +206,37 @@ func TestUnitPackageInputObjectAuthoredSuccessfulGetAndRemove(t *testing.T) {
 		})
 	}
 }
+
+// Deliberately missing/null/empty operation IDs exercise the SDK's documented
+// optional-handle behavior, not a claim of a valid completed upstream job.
+// The pinned batch callback is202 and its OperationId projection is a string;
+// no polling route or guaranteed populated handle is inferred from that shape.
+func TestUnitPackageBatchUnusableHandlesDoNotInventOperationID(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		name, reply string
+		id          *string
+		present     bool
+	}{
+		{"missing", `{}`, nil, false},
+		{"null", `{"OperationId":null}`, nil, true},
+		{"empty", `{"OperationId":""}`, new(""), true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			vector := requestCase{Method: "POST", URL: origin + "/Teams.VerticalPackaging/package/operation/batchpackage", Body: json.RawMessage(`{"PackageType":"FixturePackage","UserIds":["fixture/a","fixture/a","fixture/b"]}`), Status: 202, Reply: tc.reply}
+			run(t, contracttest.Case{Name: "unusable-handle-" + tc.name, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mapping("batch-grant"), Steps: []contracttest.Exchange{discovery(t), wire(vector, "New-CsBatchPolicyPackageAssignmentOperation")}, Want: contracttest.Expected{JSON: json.RawMessage(tc.reply), Body: []byte(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				value, response, err := sdk.TeamsAdminAPI.PolicyPackages.SubmitBatch(ctx, userInput())
+				if err == nil {
+					if value == nil || !value.HTTPAccepted || (tc.id == nil && value.OperationID != nil) || (tc.id != nil && (value.OperationID == nil || *value.OperationID != *tc.id)) {
+						t.Fatal("unusable batch handle was invented or conflated with HTTP acceptance")
+					}
+					_, present := value.RawFields["OperationId"]
+					if present != tc.present || (tc.name == "null" && string(value.RawFields["OperationId"]) != "null") {
+						t.Fatal("optional-handle raw presence was lost")
+					}
+				}
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			}})
+		})
+	}
+}

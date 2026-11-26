@@ -65,3 +65,25 @@ func TestUnitOCEAuthoredRegionalListPreservesPartialSuccessAndFailure(t *testing
 		return contracttest.Observation{Response: response, Err: err}
 	}})
 }
+
+func TestUnitOCEBodyCloseCancellationPreservesEarlierDecodedRegionOnly(t *testing.T) {
+	t.Parallel()
+	const other = "00000000-0000-4000-8000-000000000006"
+	first := "[" + authoredOCESimpleStatus + "]"
+	second := "[" + strings.ReplaceAll(authoredOCESimpleStatus, oceOperation, other) + "]"
+	var stop context.CancelFunc
+	step := batchWire("status-list", resource.RegionEMEA, 200, second)
+	step.Reply.OnBodyClose = func() { stop() }
+	run(t, contracttest.Case{Name: "regional-body-close-cancel", Source: "msteams/teams_admin_api/policy_assignments/oce_batch_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsBatchOperationStatus", ParameterSet: "GetAllBatchOperationStatus"}}, Steps: []contracttest.Exchange{batchWire("status-list", resource.RegionNOAM, 200, first), step}, Want: contracttest.Expected{Body: []byte(second), Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		operation, cancel := context.WithCancel(ctx)
+		defer cancel()
+		stop = cancel
+		value, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListOCEBatchStatuses(operation, resource.OCEContext{TenantID: oceTenant}, nil)
+		// NOAM decoded before cancellation. EMEA's body was received/closed
+		// but cancellation won before its model decoder; APAC must not run.
+		if !errors.Is(err, context.Canceled) || value == nil || len(value.Values) != 1 || value.Values[0] == nil || value.Values[0].Region != resource.RegionNOAM || value.Values[0].OperationID == nil || *value.Values[0].OperationID != oceOperation || len(value.Attempts) != 2 || value.Attempts[0].Err != nil || value.Attempts[1].Region != resource.RegionEMEA || !errors.Is(value.Attempts[1].Err, context.Canceled) || value.Attempts[1].Response != response || response == nil || response.StatusCode() != 200 {
+			t.Fatal("regional cancellation lost prior results or published an undecoded later job")
+		}
+		return contracttest.Observation{Response: response, Err: err}
+	}})
+}

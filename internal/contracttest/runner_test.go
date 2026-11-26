@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
@@ -81,6 +82,38 @@ func TestUnitSuiteRegisterAndRun(t *testing.T) {
 	var zero Result
 	if zero.Passed() {
 		t.Fatal("unexecuted result reported success")
+	}
+}
+
+func TestUnitReplyBodyCloseEventRunsOnceThroughRealSDK(t *testing.T) {
+	t.Parallel()
+	var closes atomic.Int32
+	c := graphCase()
+	c.Name = "body-close-event"
+	c.Steps[0].Reply.OnBodyClose = func() { closes.Add(1) }
+	invoke := c.Invoke
+	c.Invoke = func(ctx context.Context, sdk *msteams.Client) Observation {
+		observed := invoke(ctx, sdk)
+		if observed.Err != nil {
+			return observed
+		}
+		if closes.Load() != 1 || observed.Response == nil || observed.Response.RawResponse == nil || observed.Response.RawResponse.Body == nil || !bytes.Equal(observed.Response.Body(), c.Steps[0].Reply.Body) {
+			t.Fatal("real SDK did not drain/close the reply body exactly once")
+		}
+		for range 2 {
+			if err := observed.Response.RawResponse.Body.Close(); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if closes.Load() != 1 {
+			t.Fatal("repeated body close replayed the callback")
+		}
+		return observed
+	}
+	requirePass(t, c)
+	raw, err := json.Marshal(c.Steps[0].Reply)
+	if err != nil || bytes.Contains(raw, []byte("OnBodyClose")) {
+		t.Fatal("body-close callback leaked into serializable fixture metadata")
 	}
 }
 

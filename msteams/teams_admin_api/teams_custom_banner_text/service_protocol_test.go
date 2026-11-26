@@ -3,6 +3,7 @@ package teamscustombannertext_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 
@@ -134,4 +135,47 @@ func TestUnitBannerAuthoredMalformed200RetainsResponse(t *testing.T) {
 			}})
 		})
 	}
+}
+
+func TestUnitBannerAuthoredComposedUpdatePreservesBeforeAndExplicitReadback(t *testing.T) {
+	t.Parallel()
+	const updated = `{"Identity":"` + authoredBannerIdentity + `","Id":"` + relative + `","Text":"updated text","Description":null,"Future":false}`
+	steps := []contracttest.Exchange{
+		wire("GET", item, setCommand, nil, 200, authoredBanner),
+		wire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"`+authoredBannerIdentity+`","Text":"updated text","Description":null}`), 204, ""),
+		wire("GET", item, "Get-CsTeamsCustomBannerText", nil, 200, updated),
+	}
+	// Authored receipt/readback checks SDK composition and owned snapshots;
+	// these replies do not establish actual server persistence or bot display.
+	run(t, contracttest.Case{Name: "composed-banner-update", Source: "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}, {Command: "Get-CsTeamsCustomBannerText", ParameterSet: "ParentAndRelativeKey"}}, Steps: steps, Want: contracttest.Expected{JSON: json.RawMessage(updated), Body: []byte(updated)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		s := sdk.TeamsAdminAPI.TeamsCustomBannerTexts
+		result, response, err := s.UpdateByIdentity(ctx, authoredBannerIdentity, resource.UpdateRequest{Settings: resource.Settings{Text: policy.Set("updated text"), Description: policy.Null[string]()}})
+		if err != nil || response == nil || response.StatusCode() != 204 || result == nil || !result.PatchInvoked || !result.HTTPAccepted || result.After != nil || result.ReadResponse == nil || result.ReadResponse.StatusCode() != 200 {
+			t.Fatal("composed banner edit lost preparation or invented an immediate readback")
+		}
+		verifyAuthoredBanner(t, result.Before)
+		value, response, err := s.GetByID(ctx, relative)
+		if err == nil && (value == nil || value.ID == nil || *value.ID != relative || value.Text == nil || *value.Text != "updated text" || value.Description != nil || string(value.RawFields["Description"]) != "null") {
+			t.Fatal("authored banner readback lost identity, updated text or explicit null")
+		}
+		verifyAuthoredBanner(t, result.Before)
+		return contracttest.Observation{Value: value, Response: response, Err: err}
+	}})
+}
+
+func TestUnitBannerBodyCloseCancellationStopsPreparationBeforePatch(t *testing.T) {
+	t.Parallel()
+	var stop context.CancelFunc
+	step := wire("GET", item, setCommand, nil, 200, authoredBanner)
+	step.Reply.OnBodyClose = func() { stop() }
+	run(t, contracttest.Case{Name: "banner-body-close-cancel", Source: "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{step}, Want: contracttest.Expected{Body: []byte(authoredBanner), Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		operation, cancel := context.WithCancel(ctx)
+		defer cancel()
+		stop = cancel
+		value, response, err := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.UpdateByIdentity(operation, authoredBannerIdentity, resource.UpdateRequest{Settings: resource.Settings{Text: policy.Set("changed")}})
+		if !errors.Is(err, context.Canceled) || !errors.Is(operation.Err(), context.Canceled) || value == nil || value.Before != nil || value.After != nil || value.PatchInvoked || value.HTTPAccepted || value.ReadResponse == nil || value.ReadResponse.StatusCode() != 200 || response != value.ReadResponse {
+			t.Fatal("body-close cancellation fabricated banner preparation or lost its read receipt")
+		}
+		return contracttest.Observation{Response: response, Err: err}
+	}})
 }
