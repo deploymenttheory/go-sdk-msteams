@@ -64,7 +64,7 @@ func TestUnitComposedUpdatePreservesReadIdentityAndSparseFields(t *testing.T) {
 	path := "/Skype.Policy/configurations/TeamsAcsFederationConfiguration/configuration/Global"
 	// Retained GET bytes plus authored empty 204 PATCH acceptance. The
 	// compiled PolicyRP Set path and these sparse/list bindings are traced in
-	// the published POL04 primary-source audit (dc2bb9a); no persistence or
+	// the compiled-model/provider addenda in pol90-current-test-audit.md; no persistence or
 	// nonempty PATCH response is inferred. Keep the original 400 proof too.
 	for _, tc := range []struct {
 		name   string

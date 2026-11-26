@@ -19,7 +19,7 @@ import (
 
 // Retained primitive ACS/Teams-external reads plus primary-authored Set204 and
 // denial responses. Pinned PolicyRP prepared PATCH and generated tenant PUT
-// contracts are traced in the POL04 source audit. This composed sequence is
+// contracts are traced in the compiled-model/provider addenda of the POL90 audit. This composed sequence is
 // authored offline, not a captured transaction or evidence of effective access.
 func TestUnitPolicyCompositionFederationProfilesPreserveIndependentPreparation(t *testing.T) {
 	t.Parallel()

@@ -13,7 +13,7 @@ import (
 // Authored success against the pinned generated Set/PUT/204 contract and
 // explicit request-list normalizer, not a captured tenant mutation. Source
 // owners and null/operator/route distinctions are documented in the published
-// POL04 primary audit at dc2bb9a. AllowedDomains response choice is deliberately
+// POL90 audit's generated helper and domain-constructor source notes. AllowedDomains response choice is deliberately
 // not converted back into this request's flattened string list.
 func TestUnitTenantFederationAuthoredDomainBuilderAndPUTAcceptance(t *testing.T) {
 	t.Parallel()

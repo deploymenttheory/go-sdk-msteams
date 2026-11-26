@@ -41,8 +41,8 @@ func policyCompositionFixture(t *testing.T, family, name string) []byte {
 // Primary-authored offline values from the pinned recording/banner DTOs and
 // local builder/setter contracts, not captured nonempty tenant responses.
 // Core.dll 68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49:
-// source types/builders/relative-ID binding are traced in the published POL04
-// primary audit at dc2bb9a. Unknown RawFields below test SDK compatibility only.
+// models/builders and runtime binding are traced in the direct compiled-model
+// addendum of pol90-current-test-audit.md. Unknown RawFields below test SDK compatibility only.
 func TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate(t *testing.T) {
 	t.Parallel()
 	const id = "00000000-0000-4000-8000-000000000031"
