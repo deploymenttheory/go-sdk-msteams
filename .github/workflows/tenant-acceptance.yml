@@ -65,9 +65,8 @@ jobs:
           MSTEAMS_ACC_DIFF_BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || '' }}
         run: python3 tools/acceptance/ci.py plan
 
-  # The one auth partition loads every credential kind and proves each
-  # (client secret and certificate). Service partitions below use the
-  # client secret only.
+  # Base authentication proves both credential kinds independently of backend
+  # eligibility. Service partitions receive the client secret only.
   auth:
     name: TestAcc auth
     needs: plan
@@ -76,7 +75,7 @@ jobs:
     env:
       MSTEAMS_LAB_AUTH_METHOD: all
       MSTEAMS_ACC_PLANNED_SERVICES: ${{ needs.plan.outputs.services }}
-      ACCEPTANCE_TARGET: --auth
+      ACCEPTANCE_TARGET: --auth --step authentication
       ACCEPTANCE_LABEL: auth
     steps: &partition-steps
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -95,7 +94,7 @@ jobs:
           MSTEAMS_LAB_TENANT_ID: ${{ secrets.MSTEAMS_LAB_TENANT_ID }}
           MSTEAMS_LAB_CLIENT_ID: ${{ secrets.MSTEAMS_LAB_CLIENT_ID }}
           MSTEAMS_LAB_CLIENT_SECRET: ${{ secrets.MSTEAMS_LAB_CLIENT_SECRET }}
-          # Certificate key material reaches the auth partition only.
+          # Certificate key material reaches credential-owning auth jobs only.
           MSTEAMS_LAB_CERTIFICATE_PEM: ${{ env.MSTEAMS_LAB_AUTH_METHOD == 'all' && secrets.MSTEAMS_LAB_CERTIFICATE_PEM || '' }}
           MSTEAMS_LAB_PRIVATE_KEY_PEM: ${{ env.MSTEAMS_LAB_AUTH_METHOD == 'all' && secrets.MSTEAMS_LAB_PRIVATE_KEY_PEM || '' }}
           MSTEAMS_LAB_USER_FIXTURE_JSON: ${{ secrets.MSTEAMS_LAB_USER_FIXTURE_JSON }}
@@ -105,7 +104,7 @@ jobs:
           MSTEAMS_LAB_SHARED_CALLING_FIXTURE_JSON: ${{ secrets.MSTEAMS_LAB_SHARED_CALLING_FIXTURE_JSON }}
         run: python3 tools/acceptance/ci.py prepare --cache-directory "$RUNNER_TEMP/microsoftteams-8.1.0"
       - name: Run TestAcc tests
-        # ACCEPTANCE_TARGET is a fixed flag pair set by this workflow.
+        # ACCEPTANCE_TARGET contains fixed flags and validated registry selectors.
         run: python3 tools/acceptance/ci.py run $ACCEPTANCE_TARGET --report-directory "$RUNNER_TEMP/acceptance-report"
       - name: Save recovery journals and remove credentials
         if: always() && env.MSTEAMS_LAB_PRIVATE_DIRECTORY != ''
@@ -120,6 +119,21 @@ jobs:
             ${{ runner.temp }}/acceptance-report/recovery.cms
           if-no-files-found: error
           retention-days: 14
+
+  # Backend conformance can fail without blocking unrelated service evidence.
+  # This remains an auth job: no certificate material enters service partitions.
+  auth-backends:
+    name: TestAcc backend auth
+    needs: plan
+    if: contains(fromJSON(needs.plan.outputs.services), 'private_channel_migration')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MSTEAMS_LAB_AUTH_METHOD: all
+      MSTEAMS_ACC_PLANNED_SERVICES: ${{ needs.plan.outputs.services }}
+      ACCEPTANCE_TARGET: --auth --step private-migration-backend
+      ACCEPTANCE_LABEL: auth-backends
+    steps: *partition-steps
 
   # Read-only services: no tenant changes, so they run in parallel.
   services:
@@ -170,7 +184,7 @@ jobs:
   result:
     name: TestAcc result
     if: always()
-    needs: [plan, auth, services, services-locked]
+    needs: [plan, auth, auth-backends, services, services-locked]
     permissions:
       contents: read
       actions: read
@@ -191,7 +205,7 @@ jobs:
         env:
           PLAN_RESULT: ${{ needs.plan.result }}
           MSTEAMS_ACC_PLANNED_SERVICES: ${{ needs.plan.outputs.services }}
-          JOB_RESULTS: ${{ needs.auth.result }} ${{ needs.services.result }} ${{ needs.services-locked.result }}
+          JOB_RESULTS: ${{ needs.auth.result }} ${{ needs.auth-backends.result }} ${{ needs.services.result }} ${{ needs.services-locked.result }}
         run: |
           if [ "$PLAN_RESULT" = skipped ]; then
             echo "::error::TestAcc did not run for this PR source. Run from a trusted repository branch."

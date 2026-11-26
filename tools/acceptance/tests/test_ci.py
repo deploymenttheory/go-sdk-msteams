@@ -4,6 +4,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import tarfile
@@ -715,6 +716,24 @@ func TestAccRead(t *testing.T) {
                 with self.assertRaises(ci.AcceptanceFailure):
                     ci.run(service_run(root))
             self.assertEqual([call.args[0][0] for call in process.call_args_list], ['git'])
+
+    def test_backend_workflow_is_conditional_and_does_not_gate_service_jobs(self):
+        workflow = (ci.ROOT / '.github/workflows/tenant-acceptance.yml').read_text()
+        jobs = dict(re.findall(r'^  ([a-z-]+):\n(.*?)(?=^  [a-z-]+:|\Z)', workflow, re.M | re.S))
+        registry = ci.load_registry()
+        backend = next(step for step in registry['auth']['steps'] if step.get('when_service'))
+        self.assertIn('ACCEPTANCE_TARGET: --auth --step authentication', jobs['auth'])
+        self.assertIn('ACCEPTANCE_TARGET: --auth --step ' + backend['id'], jobs['auth-backends'])
+        self.assertIn("if: contains(fromJSON(needs.plan.outputs.services), '" + backend['when_service'] + "')", jobs['auth-backends'])
+        self.assertIn('MSTEAMS_LAB_AUTH_METHOD: all', jobs['auth-backends'])
+        self.assertIn('steps: *partition-steps', jobs['auth-backends'])
+        for service in ['services', 'services-locked']:
+            dependencies = re.search(r'^    needs: \[(.*?)\]$', jobs[service], re.M).group(1).split(', ')
+            self.assertIn('auth', dependencies)
+            self.assertNotIn('auth-backends', dependencies)
+            self.assertIn('MSTEAMS_LAB_AUTH_METHOD: client-secret', jobs[service])
+        self.assertIn('needs: [plan, auth, auth-backends, services, services-locked]', jobs['result'])
+        self.assertIn('${{ needs.auth-backends.result }}', jobs['result'])
 
     def test_auth_backend_selection_preserves_base_auth_and_exact_explicit_steps(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -495,7 +495,9 @@ base provider authentication step. A backend step's `when_service` names its
 required service selection; its optional package must resolve inside
 `tests/integration`. Private migration uses this scope to compare certificate-connected
 PowerShell with both native credential methods, because pinned 8.1.0's supplied-token
-mode supports only the Graph/Skype pair. Certificate files remain auth-job inputs.
+mode supports only the Graph/Skype pair. Certificate files remain auth-job inputs. CI runs base authentication and the
+selected backend step in separate auth jobs: a failed backend check fails the
+aggregate but does not prevent unrelated service jobs from running.
 For an explicit prepared auth-only run, select the exact step:
 
 ```sh

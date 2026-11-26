@@ -249,7 +249,21 @@ stage label. The script also used `stage` on failure while the shared extractor
 expects `failure_stage`; it now follows that contract. The helper emits the
 existing whitelisted stage separately, and the script distinguishes backend read
 from projection failure. A credential-free script run verifies its module-failure
-report shape. Backend eligibility
+report shape. The latest run at head `6d48a1c`
+([45880253610](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45880253610))
+confirms that pinned certificate connection succeeds and its getter fails at the
+backend **read** stage, while both native credential methods still return 401.
+The workflow now executes conditional backend conformance in a separate
+credential-owning auth job. Service jobs depend only on base auth, so available
+service evidence can run; aggregate qualification still requires and fails on
+selected backend conformance. No denial is treated as a successful read.
+
+The [current app-auth guide](https://learn.microsoft.com/microsoftteams/teams-powershell-application-authentication)
+lists excluded cmdlets and does not name this getter; the
+[getter reference](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/get-tenantprivatechannelmigrationstatus)
+requires tenant administrator access without publishing an exact Templates
+application grant. Neither source justifies relabeling this 401 as unsupported
+app-only mode. Backend eligibility
 remains unqualified; a 401 is not rewritten as an expected positive outcome.
 
 Denial,
