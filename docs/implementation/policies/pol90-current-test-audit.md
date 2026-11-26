@@ -221,7 +221,7 @@ This addendum is offline primary-source evidence for **authored** positives, not
 | `netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll` | `68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49` | GPA implementing cmdlets and response models; assembly version40.2610.19888.1 |
 | `bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll` | `8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6` | Package generated models/command callback signatures; assembly version9.1116.2.0 |
 
-Reflection procedure: import only the pinned MicrosoftTeams.psd1; resolve each Get-Command ImplementingType (GPA) or proxy mapping; enumerate declared properties and JsonProperty/JsonConverter attributes; resolve IL operand members with declaring/method generic arguments. IL offsets below are decimal byte offsets inside the named method, not file offsets. Existing read-only `/private/tmp/ext90-inspect-generic.ps1` supplied the opcode/member decoder; no generated script or JSON evidence file was added. The hashes plus full owner/method identify reproducible primary evidence even when the temporary inspection utility is absent later.
+Reflection procedure: import only the pinned MicrosoftTeams.psd1; resolve each Get-Command ImplementingType (GPA) or proxy mapping; enumerate declared properties and JsonProperty/JsonConverter attributes; resolve IL operand members with declaring/method generic arguments. IL offsets below are decimal byte offsets inside the named method, not file offsets. Existing read-only `/private/tmp/ext90-inspect-generic.ps1` supplied the opcode/member decoder; no generated script or JSON evidence file was added. For a fresh checkout, use the [portable hash-checked IL reader](https://github.com/deploymenttheory/go-sdk-msteams/blob/dc2bb9a88f22476e61c505ad660bdeb484f212af/docs/implementation/policies/pol04-primary-source-audit.md#portable-reproduction), passing the verified 8.1.0 module directory. The reader resolves operands with owning generic context. To inspect the response schema as well, call the named type’s `GetProperties()` and each property’s `GetCustomAttributesData()` after module import; read `JsonProperty` constructor arguments and `JsonConverter` attributes. The hashes plus full owner/method identify the exact primary evidence independently of temporary host paths.
 
 ### GPA response grammar and owners
 
@@ -275,3 +275,72 @@ This establishes which upstream statuses carry typed data, not that the source t
 Additional exact source hashes: `custom/Merged_custom_PsExt.ps1` SHA256 `03dbc3a85e12c98dd1807d604782c6a90d0656569541cd9540738825a7fcb255`; `exports/ProxyCmdletDefinitionsWithHelp.ps1` SHA256 `5a8a5a50081b1c6986b93d5b15723e966a2d22b64459a9c300cb2a1bf69bb3b5`.
 
 GPA status handling qualification: `CommonHttpHelperRequest+<SendGPARequests>d__5::MoveNext` in PolicyRp.dll delegates at IL409 to HttpClientHelper.SendAsync; it contains no IsSuccessStatusCode/EnsureSuccessStatusCode call. `HttpClientHelper+<SendAsync>d__8::MoveNext` delegates at IL27 to SendRequestAsync and returns the response; `HttpClientHelper+<SendRequestAsync>d__6::MoveNext` calls System.Net.Http.HttpClient.SendAsync at65 and gets its response at155, with no success-status guard. PolicyRp.dll SHA256 is `a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51`. Thus Start explicitly gates job decoding on broad HTTP success; the inspected Get/list/recommendation/conflict/Clear callers decode content without an equivalent per-call success check. This is source behavior, not proof that an error-envelope body is a successful job. The SDK's normalized non-2xx APIError behavior is intentionally distinguishable from upstream parse/string diagnostic behavior. A specific successful server status for GPA reads/Clear remains uncaptured; use200 as a clearly authored transport scenario, not observed upstream service status.
+
+## Bounded conditional OCE and ordinary batch schema inspection (2026-11-26)
+
+This extends the offline reflection/IL procedure above. Root module import does not expose/load all conditional OCE types, so the already pinned `netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.OCE.dll` was loaded with Assembly.LoadFrom **for metadata only**. No OCE profile, command, authentication, eligibility or service call executed. Its SHA256 is `de6da2b13b4b675d7956a0c57af53fccc6cf457a3de2e8464273f95103e3dfc5`, assembly version1.0.0.0; this matches the [conditional metadata inventory](../../../contracts/powershell/8.1.0/conditional-policy-assignment-netcoreapp3.1.json). Do not use the SDK models or the optional-query403 test's unused reply strings as primary response evidence.
+
+### Conditional GPA getters and actions
+
+OCE owners below carry prefix `Microsoft.Teams.Policy.Administration.Cmdlets.OCE.`. `Common.GPATorusCmdletBase::SubmitHTTPRequest<T>` sends the request at IL73, reads body at100, checks **IsSuccessStatusCode** at111, deserializes JsonConvert<T> at131 and WriteObject at141. Non2xx creates an HttpRequestException at150 and writes UnexpectedResponse at167; exceptions are mapped through RestClient.CreateErrorRecordForRestException at177 and ThrowTerminatingError at182. Its settings lambda `GPATorusCmdletBase+<>c__1<T>::<SubmitHTTPRequest>b__1_0` sets only MaxDepth128 (IL16). Thus source-backed authored200 cases below are justified, while a specific live successful status remains uncaptured.
+
+| Command caller / ProcessRecord callsite | Source response shape |
+|---|---|
+| `Policies.GPA.Operations.GPAOperations+GetGroupPolicyAssignmentsCmdlet`, IL110 vs123 | Selected group+policy calls SubmitHTTPRequest<GroupPolicyAssignment>; the group/by-policy/all-list sets call SubmitHTTPRequest<List<GroupPolicyAssignment>>. Bare object vs bare array, no value envelope. |
+| `Policies.GetGPAGroupMembers+GPAGroupMembers`, IL96 | SubmitHTTPRequest<IList<GroupMembersResponse>>; bare array for both All switch values. |
+| `Policies.GetGPAUserMembership+GPAUserMembership`, IL66 | SubmitHTTPRequest<IList<UserMembershipResponse>>; bare array. |
+| `Policies.GPARefreshGroupUsers+RefreshGroupUsers`, IL142 | SubmitHTTPRequest<string>; source-backed JSON scalar string or JSON null, not object or array. |
+| `Policies.GPAReprocessOperations+UpdateGPAOperationsCmdlet`, IL112 | SubmitHTTPRequest<string>; same scalar/null distinction. |
+
+Exact model owners have prefix `Policies.GPA.Models.`:
+
+- `GroupPolicyAssignment`: `[JsonProperty("groupId")] GroupId:Guid`, `priority:Int32`, `policyType:string`, `policyName:string`, `createdBy:string`, `createdTime:string`. The latter two explicitly set JsonProperty NullValueHandling=Include (enum0). These are actual JSON key spellings, not the Pascal CLR property names.
+- `GroupMembersResponse`: `[JsonProperty("@odata.type")] DataType:string`, `[JsonProperty("id")] Id:Guid`.
+- `UserMembershipResponse`: keys `id:Guid`, `groupTypes:string[]`, `mailEnabled:bool`, `securityEnabled:bool`, `visibility:string`, `createdDateTime:Nullable<DateTimeOffset>`, `deletedDateTime:Nullable<DateTimeOffset>`, each explicitly JsonProperty named as shown.
+
+None of those CLR types establishes a source promise that all keys are always present, that null Guid/nonnullable Boolean values are meaningful, or that future field preservation exists. SDK pointer/string/raw-map behavior and strict invalid-body rejection are separately authored compatibility guarantees. Source string binding does not imply a polling handle or effective completion; JSON null and `""` are distinct authored response cases. Numeric/boolean-to-string coercions, blank204 behavior, object/array mismatches and null array elements should be tested as explicit SDK choices rather than asserted as observed successful service bodies.
+
+### OCE LROS batch getters, region lookup and reprocess
+
+`Policies.LROS.Operations.LROSOperations::AddRegionAndWriteBatchQueryResponse` is the owner of actual response binding:
+
+| IL offset | Source model / transport shape |
+|---|---|
+|79|DeserializeObject<Policies.LROS.Models.ExtendedBatchOperationStatus>, selected status object|
+|117|DeserializeObject<Policies.LROS.Models.BatchOperationDefinition>, definition object|
+|155|DeserializeObject<Policies.LROS.Models.BatchOperationStatus[]>, status list bare array|
+|103 /141|Assigns model's public Region:string field from the actual request region for status/definition before WriteObject110/148. Region is source presentation metadata, not a trusted response field.|
+
+OCE LROS properties have no JsonProperty rename attributes; use exact canonical CLR/Pascal keys for source-backed authored payloads:
+
+| Model | Properties |
+|---|---|
+|BatchOperationStatus|OperationName:string, OverallStatus:string, NotStartedCount/InProgressCount/CompletedCount/ErrorCount:Int32, CreatedBy:Guid, CreatedTime:string, CompletedTime:string, OperationId:Guid; public Region:string field is assigned from request.|
+|ExtendedBatchOperationStatus|All status fields plus UserState:Userstate[].|
+|Userstate|Id:string, AlternateId:Nullable<Guid>, State:string, Result:string.|
+|BatchOperationDefinition|OperationId:Guid, OperationName:string, OperationType:string, Commands:BatchCommand[], Ids:string[], AcceptTime:Int64; public Region:string field assigned from request.|
+|BatchCommand|Name:string, RetryCount:Int32, Properties:Dictionary<string,object>, Description:string.|
+
+The explicit-region `LROSOperations::ProcessGetBatchOperationInfo(IC3DirectoryTorusCmdletBase,LROSCmdletType,Guid,Region)` reads status at138, compares200 at147 and404 at156;200 calls AddRegionAndWriteBatchQueryResponse at199 and returns at IL204;404 writes ResourceNotFound at247, other statuses write UnexpectedResponse at272. Thus LROS success is specifically200 here, unlike generic GPA's broad2xx gate.
+
+The no-region overload loops `LROSConstants.EnvironmentToLrosRegionMapping`. Each response status is checked at194/199 against200. First200 calls AddRegion at219, then IL224 leaves to return461. Failures are accumulated in a region-keyed status/exception dictionary (HTTP failures at277; transport exceptions at155); if **all regions fail**, the later loop emits warning/error records, distinguishing404 at373 from other exceptions. A later successful lookup returns before that error-emission loop, so the SDK's retained Attempts (including failed attempts before success) are an intentional stronger diagnostic representation. Malformed200 parsing is outside the send catch and is not equivalent to “region not found”; do not invent a decode-triggered fallback.
+
+`ProcessGetAllBatchOperationInfo` loops every configured region; status200 at193 goes to AddRegion205, failures accumulate at221/149, later warnings/errors are emitted at296/314. This supports authored mixed success/failure list scenarios, not just all403. Its settings lambda `LROSOperations+<>c::<AddRegionAndWriteBatchQueryResponse>b__6_0` sets MaxDepth128 only (IL16).
+
+The pinned mapping field values are MultiTenant=[NOAM,EMEA,APAC], INT=[INT], Itar=[gcch], GCCH=[gcch], DOD=[dod], Ag08=[usnat], Ag09=[ussec], Gallatin=[Gallatin]. These were read from the static constant dictionary; no service/environment initialization ran. The SDK's public Region choices/cancellation/error aggregation remain its own API behavior to test, not implicit PowerShell output parity.
+
+`LROSOperations+ReprocessBatchOperationCmdlet::ProcessRecord` is separate from nullable GPA string actions. It reads raw response text, checks StatusCode at155 against202 at160, trims the quotation mark character34 at182, constructs Guid at187 and an anonymous operation-ID output at192/WriteObject197. A source-backed authored response is therefore202 with a quoted GUID string (the implementation also trims quotes from raw text, not JsonConvert<job>). Non202 writes UnexpectedResponse222. A JSON object, JSON null, arbitrary non-GUID handle or{} is not justified as its upstream success grammar.
+
+### Ordinary generated assignments are a separate response route
+
+Primary source is the previously hashed `bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll`; generated cmdlet/model owner prefixes are as in the package addendum. Do not substitute OCE models for these:
+
+| Generated owner | Declared callback and shape |
+|---|---|
+|GetCsBatchPolicyAssignmentOperation_Get|onOk200 Task<ISimpleBatchJobStatus[]>; onDefault Task<IErrorResponse>.|
+|GetCsBatchPolicyAssignmentOperation_Get1|onOk200 Task<IBatchJobStatus>; onDefault Task<IErrorResponse>.|
+|NewCsBatchPolicyAssignmentOperation_NewExpanded|onAccepted202 Task<IBatchOperationId>; onDefault Task<IErrorResponse>.|
+
+`BatchOperationId` property OperationId:string serializes key **OperationId** at ToJson IL64. SDK OperationResult is its own name; the generic unrelated generated model named OperationResult has Message:string and must not be used as source provenance for this route.
+
+`SimpleBatchJobStatus` uses lower-camel wire keys (ToJson offsets): operationName:string67, overallStatus:string130, notStartedCount:Nullable<Int32>186, inProgressCount:Nullable<Int32>242, completedCount:Nullable<Int32>298, errorCount:Nullable<Int32>354, createdBy:string417, createdTime:Nullable<DateTime>503, completedTime:Nullable<DateTime>589, operationId:string652. `BatchJobStatus` adds userState:IGrantActionStatus[] (ToJson123) and uses the same lower-camel scalar grammar; its operationId literal occurs763. `GrantActionStatus` serializes id:string67, state:string130, result:string193. These ordinary handles/creator fields are **strings**, whereas OCE status/definition uses Guid typed fields; ordinary timestamp fields are nullable DateTime whereas OCE status times are strings. Missing handle, unknown state/result/raw future fields and malformed accepted result should remain separately authored tests, with no successful batch capture claimed.

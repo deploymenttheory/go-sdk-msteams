@@ -133,10 +133,9 @@ func TestUnitAssignmentInputObjectSharesOpaqueUserRoute(t *testing.T) {
 	t.Parallel()
 	c := contracttest.Case{Want: contracttest.Expected{Error: auth.ErrForbidden}, Name: "user-input-object", Mappings: []contracttest.Mapping{{Command: "Get-CsUserPolicyAssignment", ParameterSet: "GetViaIdentity"}}, Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+"/Skype.User/users/fixture%2Fuser%3A%40/policies", "Get-CsUserPolicyAssignment", nil, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.PolicyAssignments.GetUserByIdentity(ctx, resource.UserIdentity{Identity: "fixture/user:@"}, "")
-		if e == nil && (len(v) != 1 || len(v[0].PolicySource) != 2 || v[0].PolicySource[1].Reference == nil || *v[0].PolicySource[1].Reference != "fixture-group") {
-			e = errors.New("effective policy source provenance lost")
-		}
-		return contracttest.Observation{Response: r, Err: e}
+		// This case proves the opaque InputObject route and denial only.
+		// Actual source provenance is asserted by TestUnitUserReadsUseAcceptanceResponses.
+		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}}
 	run(t, c)
 }
