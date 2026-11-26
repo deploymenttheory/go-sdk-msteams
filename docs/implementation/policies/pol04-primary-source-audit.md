@@ -15,7 +15,7 @@ Paths in this table are relative to the retained module root. A binary citation 
 | Mapping | `custom/CmdletConfig.json` | `754d149c1a5904158e9f01eb55ba44d15c17b7e66f7556385ea894f4ff84d906` |
 | Proxies | `exports/ProxyCmdletDefinitionsWithHelp.ps1` | `5a8a5a50081b1c6986b93d5b15723e966a2d22b64459a9c300cb2a1bf69bb3b5` |
 
-The existing offline decoder `/private/tmp/msteams-core90-inspect.ps1` imports the retained manifest, reads `GetMethodBody().GetILAsByteArray()`, and resolves metadata tokens. For generic provider/state-machine methods this audit used the same decoder in memory with `ResolveMember(token, type.GetGenericArguments(), method.GetGenericArguments())`, so generic member references were resolved with their owning context. Reflection of `Get-Command` established actual public resolution; reflection of DTO attributes and local `JsonConvert.SerializeObject` established the grant JSON names without sending requests. The immutable [runtime metadata](../../../contracts/powershell/8.1.0/runtime.json) is the public binding inventory, not proof of server permissions.
+The local investigation used an offline decoder; the portable snippet below reproduces the relevant metadata reads from a fresh checkout and caller-selected module directory. It imports the retained manifest, reads `GetMethodBody().GetILAsByteArray()`, and resolves metadata tokens. For generic provider/state-machine methods this audit used the same decoder in memory with `ResolveMember(token, type.GetGenericArguments(), method.GetGenericArguments())`, so generic member references were resolved with their owning context. Reflection of `Get-Command` established actual public resolution; reflection of DTO attributes and local `JsonConvert.SerializeObject` established the grant JSON names without sending requests. The immutable [runtime metadata](../../../contracts/powershell/8.1.0/runtime.json) is the public binding inventory, not proof of server permissions.
 
 ## Four independent contract axes
 
@@ -94,3 +94,91 @@ The remaining POL-04 contract work is bounded as follows:
 - **Public versus internal:** the assigned 36 public commands and 61 sets remain the scope. The presence of internal classes or candidate mappings is not a new public command; conversely, a conditional branch of an assigned public command is not excluded merely because the SDK implements its modern branch.
 
 No endpoint contract directory was present at the reviewed baseline. This note and the inventory are source evidence, not newly captured endpoint fixtures, full parity approval, or a closure of issue #35 or its tenant qualification children.
+
+
+## Portable reproduction
+
+Use PowerShell 7 and the exact verified Gallery 8.1.0 package identified in [baseline provenance](../../../contracts/powershell/8.1.0/provenance.json). Obtain/verify the archive following the [baseline acquisition instructions](../../../tools/baseline/README.md), and extract it into a caller-selected directory containing `MicrosoftTeams.psd1`. Check the six source-file hashes above before inspecting a different assembly. Do not substitute a globally installed or auto-updated module. This procedure does not update the accepted metadata or connect to a tenant.
+
+Save the following reader as `inspect-pinned-il.ps1` in any local directory. `ModuleRoot` is the extracted module directory, not a fixed host path. The default example additionally checks the exact private-assembly hash before import. `ResolveMember` receives the **owning declaring type** and method generic arguments; omitting those contexts can fail or misread generic provider/state-machine references. It invokes metadata/reflection methods only, not the target methods.
+
+```powershell
+param(
+    [Parameter(Mandatory)][string]$ModuleRoot,
+    [string]$TypeName = 'Microsoft.Teams.ConfigApi.Cmdlets.TrpsPSCmdlet',
+    [string]$MethodName = 'BeginProcessing'
+)
+$ErrorActionPreference = 'Stop'
+$private = Join-Path $ModuleRoot 'bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll'
+$expected = '8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6'
+if ((Get-FileHash $private -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) {
+    throw 'Pinned private assembly differs; stop before module import.'
+}
+Import-Module (Join-Path $ModuleRoot 'MicrosoftTeams.psd1') -Force -WarningAction SilentlyContinue
+$type = [AppDomain]::CurrentDomain.GetAssemblies() |
+    ForEach-Object { $_.GetType($TypeName, $false) } |
+    Where-Object { $null -ne $_ } | Select-Object -First 1
+if ($null -eq $type) { throw 'Type not loaded; check exact source name/assembly.' }
+$flags = [Reflection.BindingFlags]'Public,NonPublic,Instance,Static,DeclaredOnly'
+$methods = @($type.GetMethods($flags)) + @($type.GetConstructors($flags))
+if ($null -ne $type.TypeInitializer) { $methods += $type.TypeInitializer }
+$ops = @{}
+[Reflection.Emit.OpCodes].GetFields([Reflection.BindingFlags]'Public,Static') |
+    ForEach-Object { $op = $_.GetValue($null); $ops[[int]$op.Value -band 65535] = $op }
+foreach ($method in $methods | Where-Object Name -eq $MethodName) {
+    $body = $method.GetMethodBody()
+    if ($null -eq $body) { continue }
+    $bytes = $body.GetILAsByteArray()
+    $typeArgs = $method.DeclaringType.GetGenericArguments()
+    $methodArgs = [Type[]]@()
+    if ($method -is [Reflection.MethodInfo]) { $methodArgs = $method.GetGenericArguments() }
+    for ($pos = 0; $pos -lt $bytes.Length;) {
+        $offset = $pos
+        $code = [int]$bytes[$pos++]
+        if ($code -eq 254) { $code = 65024 + [int]$bytes[$pos++] }
+        $op = $ops[$code]
+        if ($null -eq $op) { throw "Unknown opcode at $offset" }
+        $kind = [string]$op.OperandType
+        $size = switch ($kind) {
+            InlineNone { 0 }
+            { $_ -in 'ShortInlineBrTarget','ShortInlineI','ShortInlineVar' } { 1 }
+            InlineVar { 2 }
+            { $_ -in 'InlineI8','InlineR' } { 8 }
+            InlineSwitch { 4 + 4 * [BitConverter]::ToInt32($bytes, $pos) }
+            default { 4 }
+        }
+        $value = $null
+        if ($kind -eq 'InlineString') {
+            $value = $method.Module.ResolveString([BitConverter]::ToInt32($bytes, $pos))
+        } elseif ($kind -in 'InlineMethod','InlineField','InlineType','InlineTok') {
+            $token = [BitConverter]::ToInt32($bytes, $pos)
+            $member = $method.Module.ResolveMember($token, $typeArgs, $methodArgs)
+            $value = "$($member.DeclaringType).$member"
+        } elseif ($size -eq 4 -and $kind -ne 'InlineSwitch') {
+            $value = [BitConverter]::ToInt32($bytes, $pos)
+        } elseif ($size -eq 1) { $value = $bytes[$pos] }
+        [pscustomobject]@{ Method=$method.Name; Offset=$offset; Opcode=$op.Name; Operand=$value }
+        $pos += $size
+    }
+}
+```
+
+For the private dispatch offsets:
+
+```powershell
+./inspect-pinned-il.ps1 -ModuleRoot /path/to/verified/MicrosoftTeams-8.1.0 `
+    -TypeName 'Microsoft.Teams.ConfigApi.Cmdlets.TrpsPSCmdlet' `
+    -MethodName BeginProcessing |
+    Where-Object { $_.Offset -in 55,60,91,99,107,155,160 }
+```
+
+For a generic compiled grant state machine (verify its PolicyRp assembly hash from the table too):
+
+```powershell
+./inspect-pinned-il.ps1 -ModuleRoot /path/to/verified/MicrosoftTeams-8.1.0 `
+    -TypeName 'Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GrantToUserAsync>d__7' `
+    -MethodName MoveNext |
+    Where-Object { $_.Offset -in 55,69,77,186 }
+```
+
+The exact snippet was smoke-tested offline against the verified package. The first selection reproduced `MsftInternalProcessingMode` at 55/155, its dictionary checks/removal at 60/160, and the three mode strings at 91/99/107. The generic selection reproduced the user route fragment at 55, `EscapeDataString` at 69, policy fragment at 77 and PATCH at 186, exercising the owning-generic token resolution. No Go build, authentication or tenant command was run.
