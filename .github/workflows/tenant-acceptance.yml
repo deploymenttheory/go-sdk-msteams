@@ -117,6 +117,13 @@ jobs:
           path: |
             ${{ runner.temp }}/acceptance-report/*.json
             ${{ runner.temp }}/acceptance-report/recovery.cms
+            ${{ runner.temp }}/acceptance-report/response-fixtures/schedules/integration_holidays.json
+            ${{ runner.temp }}/acceptance-report/response-fixtures/schedules/integration_holidays.body
+            ${{ runner.temp }}/acceptance-report/response-fixtures/configuration_diagnostics/integration_*.json
+            ${{ runner.temp }}/acceptance-report/response-fixtures/configuration_diagnostics/integration_create_201.body
+            ${{ runner.temp }}/acceptance-report/response-fixtures/teams_feedback_policy/integration_*.json
+            ${{ runner.temp }}/acceptance-report/response-fixtures/call_templates/ext_integration_*.json
+            ${{ runner.temp }}/acceptance-report/response-fixtures/ai_agents/ext_integration_*.json
           if-no-files-found: error
           retention-days: 14
 
