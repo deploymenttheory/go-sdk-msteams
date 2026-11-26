@@ -137,6 +137,18 @@
         }
       ]
     },
+    "call_integration": {
+      "package": "./tests/integration/lab/call_integration",
+      "steps": [
+        {
+          "id": "schedule-attendant",
+          "mutation": true,
+          "proof": "call-integration",
+          "journal_entries_per_test": 2,
+          "tests": ["TestAccScheduleAutoAttendantComposition"]
+        }
+      ]
+    },
     "call_templates": {
       "package": "./tests/integration/lab/call_templates",
       "steps": [

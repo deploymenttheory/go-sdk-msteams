@@ -115,6 +115,9 @@ PROOFS = {
     'ext-integration': (['integrated EXT generic-to-typed read: passed', 'integrated EXT typed-to-generic update: passed',
                          'integrated EXT generic replacement/read-back: passed', 'integrated EXT independent cleanup: passed'],
                         'PowerShell 8.1.0 / Go integrated EXT parity: passed', 3),
+    'call-integration': (['integrated CALL create: passed', 'integrated CALL identity read-back: passed',
+                          'integrated CALL update/read-back: passed', 'integrated CALL cleanup: passed'],
+                         'PowerShell 8.1.0 / Go integrated CALL parity: passed', 2),
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
     'owned-template-permission-populated-crud': (PROOF_MARKERS + ['policy hidden-list edit/read-back: passed','policy hidden-list clear/read-back: passed'], ORACLE_MARKER, 4),
@@ -241,7 +244,7 @@ def write_private(path, value):
 SERVICE_ROOT = 'msteams/teams_admin_api'
 # Partitions that are not teams_admin_api services: tenant/platform checks and
 # Microsoft Graph team resources.
-EXTRA_SERVICES = {'platform', 'graph', 'ext_integration'}
+EXTRA_SERVICES = {'platform', 'graph', 'ext_integration', 'call_integration'}
 SERVICE_AUTH_METHOD = 'client-secret'
 # Each service partition's tests live in their own Go package here.
 LAB_ROOT = Path('tests/integration/lab')
@@ -665,6 +668,10 @@ def changed_services(registry, files, base_registry, references=None):
                     path.startswith(prefix + dependency + '/')
                     for path in files for prefix in ('msteams/teams_admin_api/', 'tests/integration/lab/')
                     for dependency in ('configuration_diagnostics', 'teams_feedback_policy', 'ai_agents', 'call_templates')))
+                or (name == 'call_integration' and any(
+                    path.startswith(prefix + dependency + '/')
+                    for path in files for prefix in ('msteams/teams_admin_api/', 'tests/integration/lab/')
+                    for dependency in ('auto_attendants', 'schedules')))
                 or oracles & set(references.get(name, ()))):
             selected.append(name)
     return selected

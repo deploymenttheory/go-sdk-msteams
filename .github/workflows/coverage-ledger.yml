@@ -25,3 +25,5 @@ jobs:
         run: python tools/coverage/ledger.py
       - name: Verify EXT command, parameter-set and nested candidate inventory
         run: python tools/coverage/ext_report.py --check
+      - name: Verify CALL command and parameter-set inventory
+        run: python tools/coverage/call_report.py --check

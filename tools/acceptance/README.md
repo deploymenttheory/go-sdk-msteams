@@ -563,3 +563,16 @@ The same partition's `agent-target-template` step creates an owned IVR tag
 template and an owned agent configuration referencing it, verifies the linkage
 after rename with two pinned comparisons, and requires two independently cleaned
 entries. No resource account or call flow is attached to the agent.
+## Integrated CALL acceptance
+
+The `call_integration` partition composes owned schedules and auto attendants.
+`TestAccScheduleAutoAttendantComposition` creates a weekly schedule, drafts an
+after-hours association, creates an unassigned attendant, verifies cross-service
+identities, replaces its greeting and verifies the preserved association. It
+runs two pinned PowerShell comparisons and requires both journal entries cleaned
+in reverse creation order. It assigns no account, telephone number, user, group
+or policy. Changes to either service select this integration partition as well.
+
+The CALL [coverage inventory](../../docs/implementation/calls/coverage-report.md)
+names every command/parameter-set mapping and separates those mappings from
+actual passing evidence and remaining live prerequisites.
