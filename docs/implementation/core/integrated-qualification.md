@@ -33,9 +33,11 @@ both Location and documented Content-Location, terminal polling, a typed operati
 read and the resulting channel read through the same root. They reject foreign
 Content-Location and refuse to replace a malformed primary Location with a fallback.
 Cancelling a local wait retains the accepted remote operation identity and sends no
-poll or repeated creation request. The header-handling cases passed a guarded local test run. The initial-share
-models/examples compile; integration execution awaits CI after correcting a
-synthetic-clock test nesting error. No local Go build starts below the disk reserve.
+poll or repeated creation request. The header-handling and expanded initial-share integrated cases pass a guarded
+local `-p 1` run. The same narrow run passes Graph cleanup recovery and migration
+header tests and compiles the new backend-auth scenario with live access disabled.
+The guard started with 19.57 GiB free and enforced a 14 GiB runtime floor; no
+full SDK sweep or race build was run. Live backend comparison still awaits CI.
 
 The [beta channel creation contract](https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta)
 returns Content-Location in its shared-channel 202 example. Source inspection found

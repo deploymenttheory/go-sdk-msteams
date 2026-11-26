@@ -185,7 +185,7 @@ func TestUnitLifecycleDeletionObservationRequiresBoth404sAndRejectsDenial(t *tes
 func TestUnitCoreCleanupJournalRetainsUnverifiedDeletion(t *testing.T) {
 	for _, kind := range []string{"lifecycle", "membership"} {
 		t.Run(kind, func(t *testing.T) {
-			journal, err := lab.NewJournal(t.TempDir(), "fixture-tenant|commercial|fixture-client")
+			journal, err := lab.NewJournal(filepath.Join(t.TempDir(), "private"), "fixture-tenant|commercial|fixture-client")
 			if err != nil {
 				t.Fatal("offline recovery journal unavailable")
 			}
