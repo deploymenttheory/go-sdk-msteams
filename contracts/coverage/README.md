@@ -12,8 +12,9 @@ ownership because their public support and configuration/app contracts remain un
 they have no implementation owner or implementation claim. They block release readiness.
 The exact original export gap `Set-CsNotifyCache` keeps its EXT-23 implementation owner.
 
-Only `Invoke-CsInternalPSTelemetry` is excluded, as approved in INDEX. A missing feature
-in the lab is never an exclusion. Session and common-parameter mappings describe their
+Recorded exclusions include module telemetry, the module-local token helper and
+NotifyCache without an evidenced wire contract; each ledger row links its rationale.
+A missing feature in the lab is never an exclusion. Session and common-parameter mappings describe their
 native equivalents; these mappings alone do not count as implemented behaviour.
 
 ## Fields and states
@@ -74,8 +75,9 @@ Output is machine-readable JSON; failures exit nonzero. Normal CI checks integri
 allowing incomplete work. The release mode rejects unresolved scope and any non-excluded
 entry without complete implementation and contract evidence. `complete` includes the
 single approved exclusion; `implemented`, `contract_tested` and `excluded` are reported
-separately. The initial result has zero implementations, zero contract passes and zero
-live passes. The publication preview remains historical; it is not regenerated for each
+separately. Implementation, contract and live counts are reported from the current ledger.
+Existing service code and passing individual scenarios do not by themselves prove
+complete command/parameter-set qualification. The publication preview remains historical; it is not regenerated for each
 implementation change.
 
 The checker runs on every PR, including Go-only changes, so deleting a mapped symbol or

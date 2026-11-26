@@ -284,6 +284,30 @@ Recovery selects `TestAccRecoverOwnedPolicies` with the bound private journal;
 Null or missing originals refuse mutation. This step temporarily changes Global
 in the dedicated lab; it does not qualify user/client propagation.
 
+BYOD and desks policy runs Global read/list/filter as its `reads` step and owned
+CRUD as its `crud` step, using the dedicated `read-byod-and-desks-policy.ps1`
+oracle. CRUD creates `DeviceDataCollection=Disabled` (Global is `Enabled`),
+updates it to `Enabled`, requires every other returned field unchanged and makes
+two pinned comparisons. Its recovery kind is `byod-and-desks-policy`; grants are
+not exercised live.
+Tenant (Meeting Migration Service) migration configuration Global reads and the
+MeetingMigrationEnabled update/restoration run as the
+`tenant_migration_configuration` service's serialized `global-reads` and
+`update-restore` steps. Its dedicated read-only oracle,
+`read-tenant-migration-configuration.ps1`, compares the pinned getter before,
+after and on restoration; CI requires those three comparisons and one cleaned
+`tenant-migration-configuration` restore entry. The update only runs from an
+enabled original (enabled, then disabled, then re-enabled), and the handler
+restores only an enabled journaled Global value.
+Meeting broadcast configuration Global reads (default and
+`-ExposeSDNConfigurationJsonBlob`) and SupportURL update/restoration run as its
+service's serialized `global-reads` and `update-restore` steps. Its dedicated
+read-only oracle, `read-meeting-broadcast-configuration.ps1`, reports the SDN
+provider token only as presence. CI requires three pinned comparisons and one
+cleaned `meeting-broadcast-configuration` restore entry; the handler restores
+only the journaled Global SupportURL and AllowSdnProviderForBroadcastMeeting and
+never journals, reads for restoration or writes SDN provider values.
+
 Mobility CRUD runs as its service's `crud` step, with all five getters compared
 against the pinned module before and after a sparse description update. Its
 recovery kind is `mobility-policy`. Multi-tenant Global reads/updates run as
@@ -302,6 +326,25 @@ omitted getters, and one cleaned `guest-meeting-configuration` restore entry. Th
 handler restores only the journaled Global Boolean and refuses null originals or
 other targets.
 
+
+Work location detection policy runs Global read/list/filter as its `reads` step
+and owned CRUD as its `crud` step, using the dedicated
+`read-work-location-detection-policy.ps1` oracle. CRUD creates
+`EnableWorkLocationDetection=true` with `UserSettingsDefault=Enabled`, updates only
+`EnableWorkLocationDetection` to false, requires `UserSettingsDefault` and every
+other returned field unchanged and makes two pinned comparisons. Its recovery
+kind is `work-location-detection-policy`; grants are not exercised live and no
+user's work-location setting is selected or changed.
+
+AI policy runs Global read/list/filter as its `reads` step and owned CRUD as its
+`crud` step, using the dedicated `read-ai-policy.ps1` oracle for all five
+getters. CRUD creates a described policy with `EnrollFace=Disabled` (Global is
+`Enabled`), then sets `EnrollFace=Enabled` and clears `Description` with explicit
+null in one sparse update, requires every other returned field unchanged and
+makes two pinned comparisons. Its recovery kind is `ai-policy`; grants and user
+enrollment settings are not exercised live.
+
+
 Network roaming runs its `crud` step using modern POST/PUT/DELETE.
 Notification/feeds runs its own `crud` step, whose extra explicit-null
 Description check and three pinned comparisons are mandatory. Its native create
@@ -309,6 +352,13 @@ is evidenced by the pinned unexported compiled New implementation and live tenan
 acceptance; public baseline mappings still contain only Get/Set/Remove. Both
 policy kinds have bound owned-resource recovery handlers and require GET404 plus
 list absence. Their fixtures are permanent service testdata, with no capture store.
+
+IP phone policy runs Global read/list/filter as its `reads` step and owned CRUD
+as its `crud` step, using the dedicated `read-ip-phone-policy.ps1` oracle. CRUD
+creates common-area sign-in with hot desking off and a 30-minute idle timeout,
+sparsely updates description, home screen and Better Together, requires every
+other returned field unchanged and makes two pinned comparisons. Its bound
+recovery kind is `ip-phone-policy`; grants are not exercised live.
 
 Personal-attendant and recording-rollout policies each run a `crud` step. The former
 updates only recording/transcription controls and retains the observed unprefixed
@@ -327,12 +377,41 @@ phone assignments, checks list preservation/edit/clear, and sanitizes phone valu
 Its empty-list CRUD test does not qualify the populated scenario. Recovery kinds
 are room-video-policy and shared-calling-policy.
 
+Meeting broadcast policy runs Global read/list/filter as its `reads` step and
+owned CRUD as its `crud` step, using the dedicated `read-meeting-broadcast-policy.ps1`
+oracle. CRUD creates scheduling off with `AlwaysDisabled` recording, sparsely
+updates description and attendee visibility, requires every other returned field
+unchanged and makes two pinned comparisons. Its bound recovery kind is
+`meeting-broadcast-policy`; grants are not exercised live.
+
 Shifts policy CRUD runs as its service's `crud` step and compares all six public getters
 with PowerShell before/after a grace-period update. Its bound recovery kind is
 `shifts-policy`. Shifts app Global reads and Boolean update/restoration run as
 serialized `global-reads` and `update-restore` steps, with three pinned comparisons and one cleaned
 `shifts-app-configuration` restore entry. Permanent response fixtures feed both
 service unit suites; additional grants and effective behavior remain separate.
+
+Guest calling configuration Global reads and AllowPrivateCalling update/restoration
+run as its service's serialized `global-reads` and `update-restore` steps. Its
+dedicated read-only oracle, `read-guest-calling-configuration.ps1`, compares the
+pinned getter before, after and on restoration; CI requires those three comparisons
+and one cleaned `guest-calling-configuration` restore entry. The handler restores
+only the journaled Global Boolean and refuses null or foreign targets.
+Media logging policy has no public New/Set/Remove, so its writes grant the built-in
+`Enabled` instance rather than an owned policy. Its `reads` step compares Global and
+Tag:Enabled getters with the dedicated `read-media-logging-policy.ps1` oracle. The
+`user-grant` step reuses the user-assignment proof with one journaled restore entry
+(no owned policy). The `group-grant` step uses the `media-logging-group-grant` proof:
+grant/read-back, removal/absence and cleanup with three pinned comparisons and one
+cleaned entry. Recovery kinds are `media-logging-user-assignment` and
+`media-logging-group-assignment`, bound to the private user/group fixtures.
+GrantToTenant is not run live because it changes every unassigned user.
+First-party meeting-template configuration has its own partition. Global reads
+run as the serialized `global-reads` step; `update-restore` sets a non-default
+Global Description, requires the template list unchanged, and restores the
+original (possibly null) Description with three pinned comparisons and one
+cleaned `first-party-template-config` restore entry. Template-list writes are
+not run live.
 
 SIP devices Global reads/update-restoration share the tenant lock. Its bound
 `sip-devices-configuration` handler restores only the original Enabled/Disabled
@@ -343,6 +422,14 @@ existing team-template IDs, verifies sparse omission, Add/Remove and clear with
 four pinned comparisons, and independently deletes its owned policy. Recovery
 kind: `template-permission-policy`. Empty and populated workflows write distinct
 permanent fixture names.
+
+Guest messaging configuration Global reads and AllowMemes/GiphyRatingType
+update/restoration run as its service's serialized `global-reads` and
+`update-restore` steps. Its dedicated read-only oracle,
+`read-guest-messaging-configuration.ps1`, compares all ten pinned getter settings
+before, after and on restoration; CI requires those three comparisons and one
+cleaned `guest-messaging-configuration` restore entry. The handler restores only
+the journaled Global pair and refuses null, empty or foreign targets.
 
 Update-management policy runs as its service's `crud` step. CI requires
 all CRUD assertions, DateTime persistence, message-list edit/clear, five pinned
