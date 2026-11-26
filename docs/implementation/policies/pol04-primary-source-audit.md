@@ -1,0 +1,184 @@
+# POL-04 pinned primary-source audit
+
+Reviewed 2026-11-26, repository baseline `bb56e7b`, MicrosoftTeams **8.1.0**. Scope is the 36 commands / 61 public parameter sets enumerated in [the contract inventory](pol04-contract-inventory.md). This audit inspected the retained module at `/private/tmp/msteams-core90-pinned/module` offline with PowerShell reflection and IL. It did not authenticate, execute a tenant command, run Go, or change the pinned module. Existing repository records are evidence of their stated scenarios, not captures produced by this audit.
+
+## Pinned evidence and reproduction boundary
+
+Paths in this table are relative to the retained module root. A binary citation below names its type, method and **decimal IL byte offset**, rather than a decompiler-generated line number.
+
+| Key | Primary source | SHA-256 |
+|---|---|---|
+| Core | `netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll` | `68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49` |
+| PolicyRp | `netcoreapp3.1/Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll` | `a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51` |
+| Private | `bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll` | `8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6` |
+| Helpers | `custom/Merged_custom_PsExt.ps1` | `03dbc3a85e12c98dd1807d604782c6a90d0656569541cd9540738825a7fcb255` |
+| Mapping | `custom/CmdletConfig.json` | `754d149c1a5904158e9f01eb55ba44d15c17b7e66f7556385ea894f4ff84d906` |
+| Proxies | `exports/ProxyCmdletDefinitionsWithHelp.ps1` | `5a8a5a50081b1c6986b93d5b15723e966a2d22b64459a9c300cb2a1bf69bb3b5` |
+
+The local investigation used an offline decoder; the portable snippet below reproduces the relevant metadata reads from a fresh checkout and caller-selected module directory. It imports the retained manifest, reads `GetMethodBody().GetILAsByteArray()`, and resolves metadata tokens. For generic provider/state-machine methods this audit used the same decoder in memory with `ResolveMember(token, type.GetGenericArguments(), method.GetGenericArguments())`, so generic member references were resolved with their owning context. Reflection of `Get-Command` established actual public resolution; reflection of DTO attributes and local `JsonConvert.SerializeObject` established the grant JSON names without sending requests. The immutable [runtime metadata](../../../contracts/powershell/8.1.0/runtime.json) is the public binding inventory, not proof of server permissions.
+
+## Four independent contract axes
+
+The public-command column was independently checked by importing the pinned manifest and resolving each assigned name with `Get-Command`. `C` means a public Core cmdlet whose `ProcessRecord` calls its compiled `BaseTpm*` provider; `P` means a public exported function mapping to a private `TrpsPSCmdlet`. A configured modern mapping alone does not establish public command precedence. SDK citations are the current implementation/API records linked in the inventory; live columns are bounded to existing records.
+
+| Family / commands in scope | Public export | PowerShell execution branch | Current SDK branch | Existing tenant evidence boundary |
+|---|---|---|---|---|
+| CustomBannerText Get/New/Set/Remove | C | Compiled PolicyRp | Compiled direct transport | [Banner record](banner-text-lab-acceptance.md) retains historical 403s; [current read evidence](pol04-contract-inventory.md#narrow-current-read-evidence) passes. Neither is banner CRUD proof. |
+| EducationAssignmentsAppPolicy Get/Set | C | Compiled PolicyRp | Compiled direct transport | [Education assignments record](education-assignments-lab-acceptance.md) and [current read evidence](pol04-contract-inventory.md#narrow-current-read-evidence); no write/restoration promotion. |
+| EducationConfiguration Get/Set | C | Compiled PolicyRp | Compiled direct transport | [Education configuration record](education-configuration-lab-acceptance.md) and [current read evidence](pol04-contract-inventory.md#narrow-current-read-evidence); full field/auth/cloud combinations remain separate. |
+| EnhancedEncryptionPolicy Get/New/Set/Remove/Grant | P | Conditional modern ConfigAPI **or remote TRPS** | Modern ConfigAPI | [API owned CRUD record](../../../msteams/teams_admin_api/teams_enhanced_encryption_policy/api_docs.md) reports certificate/client-secret CRUD and cleanup; [earlier lab note](enhanced-encryption-lab-acceptance.md) records 403 before later evidence. Neither proves legacy or assignments. |
+| EventsPolicy Get/New/Set/Remove/Grant | C | Compiled PolicyRp, including Grant | Compiled direct transport | [API owned CRUD record](../../../msteams/teams_admin_api/teams_events_policy/api_docs.md) reports CRUD; assignments/clear/effects remain unqualified. |
+| FeedbackPolicy Get/New/Set/Remove | C | Compiled PolicyRp | Compiled direct transport | [API record](../../../msteams/teams_admin_api/teams_feedback_policy/api_docs.md); CRUD evidence does not settle grant effects. |
+| FeedbackPolicy Grant | P | Conditional modern ConfigAPI **or remote TRPS** | Modern ConfigAPI | Same family record; assignment and legacy qualification remain separate. |
+| FilesPolicy Get/New/Set/Remove/Grant | C | Compiled PolicyRp, including Grant | Compiled direct transport | [API owned CRUD record](../../../msteams/teams_admin_api/teams_files_policy/api_docs.md) reports CRUD; grants and server constraints remain separate. |
+| FirstPartyMeetingTemplateConfiguration Get/Set | C | Compiled PolicyRp | Compiled direct transport | [First-party record](first-party-meeting-template-lab-acceptance.md); a scalar/read scenario does not prove nested-list write semantics. |
+| GuestCallingConfiguration Get/Set | P | Conditional modern ConfigAPI **or remote TRPS** | Modern ConfigAPI | [Guest calling record](guest-calling-configuration-lab-acceptance.md); modern evidence does not settle remote TRPS. |
+| GuestMeetingConfiguration Get/Set | C | Compiled PolicyRp | Compiled direct transport | [Guest meeting record](guest-meeting-configuration-lab-acceptance.md); field/null/Force combinations retain their own evidence boundary. |
+| GuestMessagingConfiguration Get/Set | P | Conditional modern ConfigAPI **or remote TRPS** | Modern ConfigAPI | [Guest messaging record](guest-messaging-configuration-lab-acceptance.md); modern evidence does not settle remote TRPS. |
+
+This split agrees with the current SDK branch choices; this audit found no branch-selection mismatch requiring code mutation. The shared compiled provider methods are in PolicyRp; a `compiledWire` test-helper name is not evidence that a modern family uses that provider. In particular, GuestCalling and GuestMessaging stay modern, GuestMeeting and FirstParty stay compiled, and Feedback's grants differ from its CRUD. [Source: resolved public `ImplementingType`, Core `*Cmdlet.ProcessRecord` IL1, Proxies mappings, Mapping modern helper entries, and the corresponding SDK service/assignment files linked by the inventory.]
+
+## Conditional dispatch and the precise legacy boundary
+
+EnhancedEncryption's public Get proxy maps both Identity and Filter to private `Get-CsTeamsEnhancedEncryptionPolicy` (Proxies 8703–8765); Grant maps Identity/GrantToTenant/GrantToGroup to its private counterpart (15429–15512). Mapping 4907–4961 maps its CRUD to `Get/Set/New/Remove-CsConfigurationModern`, and 2248–2261 maps Grant to `Grant-CsTeamsPolicy`, injecting the family type. These mappings describe the modern candidate, not an unconditional selected backend.
+
+In Private `Microsoft.Teams.ConfigApi.Cmdlets.TrpsPSCmdlet.BeginProcessing`, IL55/60 checks whether `MsftInternalProcessingMode` was bound; IL91/99/107 supplies exact accepted strings `Legacy`, `TryModern`, `ForceModern`; IL119 tests membership; IL155/160 removes that hidden control from forwarded parameters. `TryGetFlightedApi` IL46/64/91 compares those modes and IL128 calls `FlightingUtils.GetFlightingCommandInfo` with the override. `FlightingUtils.GetFlightingCommandInfo` IL59 consults `SessionConfiguration.RemotingCmdletsFlightedForAutoRest`, IL98 resolves the modern candidate, and IL214/308/335/346 selects enabled/disabled-flight output. `TrpsPSCmdlet.isConfigApiExecution` additionally checks mocked/modern command availability (IL11/29/37). Therefore omission of the hidden mode still leaves an actual session-flight-dependent branch. The hidden **control parameter** can have an internal disposition; the externally observable default branch cannot be excluded as internal.
+
+The legacy handoff is concrete rather than an unknown alternative REST endpoint:
+
+1. Private `TrpsPSCmdlet.getProcessor` IL52/72 constructs modern `CustomRunspacePool`/`SyncProcessor` when applicable; IL82 calls `CreateTrpsPipelineProcessor` for the remote branch.
+2. `CreateTrpsPipelineProcessor` obtains the public command name (IL21–31), remote `TrpsSessionPsCmds.GetSession().Runspace` (IL36/41), and cleaned bound parameters (IL53). For nonpipeline execution it constructs `RemoteSyncProcessor` (IL58). Its alternate path uses `PowerShell.AddCommand(publicName)` (IL87), `AddParameters` (IL104), the remote runspace (IL121), and `RemoteCommandPipelineProcessor` (IL139).
+3. `RemoteSyncProcessor.ReceiveOutput` adds that command (IL16), attaches the supplied runspace (IL42), and calls `PowerShell.Invoke()` (IL49). The pipeline processor calls `BeginInvoke` in `Begin` IL47 and `EndInvoke` in `WaitForAndCollectRemainingOutput` IL25. These are remote command/result channels, not calls to the local Core cmdlets of the same family.
+4. `TrpsSessionBuilder.CreatePSSessionAndUpdateSessionStore` constructs an `/OcsPowershellOAuth/` endpoint (IL66), adds `?AdminDomain=` (IL82), and calls `IPSCommands.NewPSSession` (IL448). `PSCommands`' explicit `IPSCommands.NewPSSession` implementation adds `New-PSSession` (IL15), `Authentication`/`Basic` (IL27/32), connection URI and credential (IL44–63), then invokes it (IL105). The builder uses the OAuth credential label (IL233); this does not establish username/password authentication support.
+
+The pinned source thus settles local mode handling, session construction, public command forwarding and result collection. It stops at the remote server's implementation of the forwarded command: server-side binding/validation, storage side effects, result schema and effective authorization are not contained in this local handoff. The dependency for settling that branch is first-party server contract/source or a separately authorized, pinned legacy execution/comparison with recorded parameters/results. Reusing modern REST routes or local Core DTOs would be an unsupported inference. Legacy remains **unknown/unqualified**, not excluded, and no SDK fallback or tenant operation was added.
+
+## Compiled route and grant proof
+
+In PolicyRp, `HttpRequestHelper<TPolicy>` async `MoveNext` bodies establish the route fragments and verbs. `GetAsync>d__2` IL30/60/77 is GET `/Skype.Policy/configurations/{type}/configuration/{identity}`; `CreateAsync>d__4` IL55/298 is POST collection; `SetAsync>d__6` IL55/72/284 is PATCH selected configuration. These compiled setters are not the modern PUT helper. [Current SDK: compiled services and `internal/policyrp`/`internal/policytransport`, linked by the inventory.]
+
+The actual public Events and Files Grant cmdlets are Core `GrantTeamsEventsPolicyCmdlet` and `GrantTeamsFilesPolicyCmdlet`, each `ProcessRecord` IL1 calling `BaseTpmGrantCmdlet<TPolicy>`. Mapping contains a modern Events grant candidate (2332–2345), but it does not supersede those public compiled resolutions. The shared PolicyRp helper proves:
+
+| Scope | Method / route fragments | Exact primary-source locations |
+|---|---|---|
+| User | PATCH `/Skype.Policy/users/{escapedIdentity}/policies/{normalizedType}` | `HttpRequestHelper<T>+<GrantToUserAsync>d__7.MoveNext`: IL55/69/77/186; DTO `SingleGrantPayload` populated at IL108–120. |
+| Tenant | PATCH `/Skype.Policy/tenants/policies/{normalizedType}` | `...+<GrantToTenantAsync>d__8.MoveNext`: IL41/159; `GrantToTenantPayload` populated at IL68–93. |
+| Group | POST `/Skype.Policy/groupPolicyAssignments/{escapedGroup}/policyTypes/{normalizedType}` | `...+<GrantToGroupAsync>d__9.MoveNext`: IL66/80/88/210; `GroupGrantPayload.PolicyName` and nullable Priority populated at IL131/144. |
+
+Reflection confirms `SingleGrantPayload` and `GroupGrantPayload` carry `JsonObject(NamingStrategyType=CamelCaseNamingStrategy)`, whereas `GrantToTenantPayload` does not. Local serialization of their default instances gives respectively `{"policyName":null,"additionalParameters":null}`, `{"policyName":null,"priority":null}`, and `{"PolicyName":null,"additionalParameters":null,"forceSwitchPresent":null}`. The explicit `additionalParameters` and `forceSwitchPresent` property attributes preserve their casing. These are local source-derived examples, not captured tenant requests. [PolicyRp DTO attributes and constructors; current SDK Events/Files `assignment.go` matches the scope/casing distinction.]
+
+Modern `Grant-CsTeamsPolicy` differs: Helpers 832–835 explicitly rejects an **unbound** PolicyName; 839–848 forwards group assignment and adds Rank only when `$Rank` is truthy; 850–863 requires Global when Identity is whitespace/omitted and otherwise selects user assignment. It exposes no PassThru parameter. Thus modern zero-rank omission must not be copied into compiled Events/Files, and the public proxy's presence of PassThru does not prove support in its selected modern helper. Negative/zero/native-null priorities and successful clear effects are distinct questions; no server range or effective clear behavior follows from DTO shape.
+
+Compiled result handling is not a universal fixed 200 guarantee. PolicyRp `HttpClientHelper+<SendAsync>d__7<T>.MoveNext` stores `HttpResponseMessage.IsSuccessStatusCode` (IL212/217), reads content (IL297), and deserializes a policy projection (IL452). HTTP acceptance, nonempty deserialization, assignment convergence and effective client policy remain separate. [SDK response/assignment tests and family API records linked in the inventory preserve raw receipts, including group acceptance cases; they do not prove effective assignment.]
+
+## Banner selectors, nulls and modern defaults
+
+Core `GetTeamsCustomBannerTextCmdlet.PrepareForScopeCheck` constructs `Global/{Id}` when the selector needs it (IL78/83/94/99), records required Identity metadata (IL116–127), and, for slash-containing Identity, splits on `/` and takes the second component as Id metadata (IL147/169/174/176). New and Set have corresponding `PrepareForScopeCheck` offsets. This is a resource-specific selector/metadata contract, not a reason to impose the model's GUID restriction on every opaque route selector. The SDK documents full/relative/generated selectors and read-derived update body IDs in [banner API notes](../../../msteams/teams_admin_api/teams_custom_banner_text/api_docs.md).
+
+Core `CustomBannerText.set_Id` checks a nonnull model value with its GUID regex (IL3/14; exception IL61), while `set_Text` throws `ArgumentNullException` for null (IL3/8). Its text and description methods contain length constants (1000 at IL35; 1040 at IL21) but have no corresponding length-error construction before backing-field assignment; declaration constants alone do not prove enforced length limits. `set_Description` has no null exception. These findings support distinct omission/null/empty behavior and caution against invented source constraints. [Core setters and `.cctor`; SDK banner `models.go`, `binding_test.go` and API notes.]
+
+Helpers `Get-CsConfigurationModern` 342–345 forwards ConfigName only for a non-whitespace Identity; 372–375 applies PowerShell `-Like` to Identity and `Tag:$Filter`. It uses wildcard matching, irrespective of later documentation calling the filter a regex. `Set-CsConfigurationModern` 1041–1046 supplies `Identity="Global"` only when the PropertyBag lacks the key. `New-CsConfigurationModern` 923–928 explicitly invokes New then selected Get; the separate read-back can fail after a successful create. These are modern helper semantics, not compiled-banner defaults. [Current Enhanced/GuestCalling/GuestMessaging SDK services and Enhanced composition tests linked in the inventory.]
+
+## Auth, provenance and unresolved dispositions
+
+Compiled `BaseTpmGetCmdlet<T>.ProcessRecord` obtains the environment-selected ConfigAPI token (PolicyRp IL21–89, including `/user_impersonation` at IL79). Grant similarly obtains its token (IL228–295, suffix IL285); the HTTP sender applies a Bearer header (`HttpClientHelper+<SendRequestAsync>d__6.MoveNext` IL32–48). These facts establish an audience/scope construction and transport mechanism; they do **not** prove delegated-only support, an exact minimum role, tenant entitlement, or success for application credentials. Modern discovery and forest targeting likewise cannot establish resource authorization. No guessed permission or role is added by this report.
+
+Existing authored/controlled HTTP scenarios, source-intercepted requests, and actual tenant response files must remain separately labelled. The inventory records representative fixture hashes. In particular, a test name containing `RealResponses` does not independently establish capture provenance, and successful owned CRUD records do not expand to Grants, legacy remoting, delegated auth, sovereign clouds or client effects. The older Enhanced/Banner lab notes record historical 403s and approval state; the newer owned-CRUD sections must be read at their own revision and scenario. This audit did not repeat either result or change privileges.
+
+The remaining POL-04 contract work is bounded as follows:
+
+- **Conditional remote branch:** actual server command contracts/results for Enhanced CRUD/Grant, Feedback Grant, GuestCalling Get/Set and GuestMessaging Get/Set remain unknown/unqualified at the explicit remote invocation boundary above. Hidden mode-control handling is source-settled; that does not settle the default session-dependent branch.
+- **Compiled/modern assignments:** pinned local routes, DTO casing and helper rank/parameter handling are source-settled as described. Server policy-name normalization/clear behavior, group priority constraints, asynchronous completion and effective user/tenant/group effects require their own evidence.
+- **Banner:** local selectors/model setters and compiled transport are source-settled. Successful authorized CRUD, generated/default-ID persistence, server feature/length constraints, cleanup and displayed-banner behavior remain outside the historical failed-read evidence.
+- **Other family fields:** inventory mappings and existing family tests cover native implementation contracts. Server constraints, untested null/default/bound combinations, nested template writes and auth/cloud availability cannot be promoted from declarations or sibling CRUD captures.
+- **Public versus internal:** the assigned 36 public commands and 61 sets remain the scope. The presence of internal classes or candidate mappings is not a new public command; conversely, a conditional branch of an assigned public command is not excluded merely because the SDK implements its modern branch.
+
+No endpoint contract directory was present at the reviewed baseline. This note and the inventory are source evidence, not newly captured endpoint fixtures, full parity approval, or a closure of issue #35 or its tenant qualification children.
+
+
+## Portable reproduction
+
+Use PowerShell 7 and the exact verified Gallery 8.1.0 package identified in [baseline provenance](../../../contracts/powershell/8.1.0/provenance.json). Obtain/verify the archive following the [baseline acquisition instructions](../../../tools/baseline/README.md), and extract it into a caller-selected directory containing `MicrosoftTeams.psd1`. Check the six source-file hashes above before inspecting a different assembly. Do not substitute a globally installed or auto-updated module. This procedure does not update the accepted metadata or connect to a tenant.
+
+Save the following reader as `inspect-pinned-il.ps1` in any local directory. `ModuleRoot` is the extracted module directory, not a fixed host path. The default example additionally checks the exact private-assembly hash before import. `ResolveMember` receives the **owning declaring type** and method generic arguments; omitting those contexts can fail or misread generic provider/state-machine references. It invokes metadata/reflection methods only, not the target methods.
+
+```powershell
+param(
+    [Parameter(Mandatory)][string]$ModuleRoot,
+    [string]$TypeName = 'Microsoft.Teams.ConfigApi.Cmdlets.TrpsPSCmdlet',
+    [string]$MethodName = 'BeginProcessing'
+)
+$ErrorActionPreference = 'Stop'
+$private = Join-Path $ModuleRoot 'bin/Microsoft.Teams.ConfigAPI.Cmdlets.private.dll'
+$expected = '8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6'
+if ((Get-FileHash $private -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) {
+    throw 'Pinned private assembly differs; stop before module import.'
+}
+Import-Module (Join-Path $ModuleRoot 'MicrosoftTeams.psd1') -Force -WarningAction SilentlyContinue
+$type = [AppDomain]::CurrentDomain.GetAssemblies() |
+    ForEach-Object { $_.GetType($TypeName, $false) } |
+    Where-Object { $null -ne $_ } | Select-Object -First 1
+if ($null -eq $type) { throw 'Type not loaded; check exact source name/assembly.' }
+$flags = [Reflection.BindingFlags]'Public,NonPublic,Instance,Static,DeclaredOnly'
+$methods = @($type.GetMethods($flags)) + @($type.GetConstructors($flags))
+if ($null -ne $type.TypeInitializer) { $methods += $type.TypeInitializer }
+$ops = @{}
+[Reflection.Emit.OpCodes].GetFields([Reflection.BindingFlags]'Public,Static') |
+    ForEach-Object { $op = $_.GetValue($null); $ops[[int]$op.Value -band 65535] = $op }
+foreach ($method in $methods | Where-Object Name -eq $MethodName) {
+    $body = $method.GetMethodBody()
+    if ($null -eq $body) { continue }
+    $bytes = $body.GetILAsByteArray()
+    $typeArgs = $method.DeclaringType.GetGenericArguments()
+    $methodArgs = [Type[]]@()
+    if ($method -is [Reflection.MethodInfo]) { $methodArgs = $method.GetGenericArguments() }
+    for ($pos = 0; $pos -lt $bytes.Length;) {
+        $offset = $pos
+        $code = [int]$bytes[$pos++]
+        if ($code -eq 254) { $code = 65024 + [int]$bytes[$pos++] }
+        $op = $ops[$code]
+        if ($null -eq $op) { throw "Unknown opcode at $offset" }
+        $kind = [string]$op.OperandType
+        $size = switch ($kind) {
+            InlineNone { 0 }
+            { $_ -in 'ShortInlineBrTarget','ShortInlineI','ShortInlineVar' } { 1 }
+            InlineVar { 2 }
+            { $_ -in 'InlineI8','InlineR' } { 8 }
+            InlineSwitch { 4 + 4 * [BitConverter]::ToInt32($bytes, $pos) }
+            default { 4 }
+        }
+        $value = $null
+        if ($kind -eq 'InlineString') {
+            $value = $method.Module.ResolveString([BitConverter]::ToInt32($bytes, $pos))
+        } elseif ($kind -in 'InlineMethod','InlineField','InlineType','InlineTok') {
+            $token = [BitConverter]::ToInt32($bytes, $pos)
+            $member = $method.Module.ResolveMember($token, $typeArgs, $methodArgs)
+            $value = "$($member.DeclaringType).$member"
+        } elseif ($size -eq 4 -and $kind -ne 'InlineSwitch') {
+            $value = [BitConverter]::ToInt32($bytes, $pos)
+        } elseif ($size -eq 1) { $value = $bytes[$pos] }
+        [pscustomobject]@{ Method=$method.Name; Offset=$offset; Opcode=$op.Name; Operand=$value }
+        $pos += $size
+    }
+}
+```
+
+For the private dispatch offsets:
+
+```powershell
+./inspect-pinned-il.ps1 -ModuleRoot /path/to/verified/MicrosoftTeams-8.1.0 `
+    -TypeName 'Microsoft.Teams.ConfigApi.Cmdlets.TrpsPSCmdlet' `
+    -MethodName BeginProcessing |
+    Where-Object { $_.Offset -in 55,60,91,99,107,155,160 }
+```
+
+For a generic compiled grant state machine (verify its PolicyRp assembly hash from the table too):
+
+```powershell
+./inspect-pinned-il.ps1 -ModuleRoot /path/to/verified/MicrosoftTeams-8.1.0 `
+    -TypeName 'Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GrantToUserAsync>d__7' `
+    -MethodName MoveNext |
+    Where-Object { $_.Offset -in 55,69,77,186 }
+```
+
+The exact snippet was smoke-tested offline against the verified package. The first selection reproduced `MsftInternalProcessingMode` at 55/155, its dictionary checks/removal at 60/160, and the three mode strings at 91/99/107. The generic selection reproduced the user route fragment at 55, `EscapeDataString` at 69, policy fragment at 77 and PATCH at 186, exercising the owning-generic token resolution. No Go build, authentication or tenant command was run.

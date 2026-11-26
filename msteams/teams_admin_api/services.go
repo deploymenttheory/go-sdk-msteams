@@ -67,6 +67,7 @@ import (
 	teamsmedialoggingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_media_logging_policy"
 	teamsmeetingbroadcastconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_configuration"
 	teamsmeetingbroadcastpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_policy"
+	teamsmeetingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_configuration"
 	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
 	teamsmeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
 	teamsmeetingtemplatepermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_permission_policy"
@@ -141,6 +142,7 @@ type Services struct {
 	TeamsMessagingPolicies                     *teamsmessagingpolicy.Service
 	TeamsGuestMeetingConfigurations            *teamsguestmeetingconfiguration.Service
 	TeamsMeetingPolicies                       *teamsmeetingpolicy.Service
+	TeamsMeetingConfigurations                 *teamsmeetingconfiguration.Service
 	TeamsEventsPolicies                        *teamseventspolicy.Service
 	TeamsFilesPolicies                         *teamsfilespolicy.Service
 	TeamsIPPhonePolicies                       *teamsipphonepolicy.Service
@@ -271,6 +273,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsMessagingPolicies:                     teamsmessagingpolicy.NewService(scope),
 		TeamsGuestMeetingConfigurations:            teamsguestmeetingconfiguration.NewService(scope),
 		TeamsMeetingPolicies:                       teamsmeetingpolicy.NewService(scope),
+		TeamsMeetingConfigurations:                 teamsmeetingconfiguration.NewService(scope),
 		TeamsEventsPolicies:                        teamseventspolicy.NewService(scope),
 		TeamsFilesPolicies:                         teamsfilespolicy.NewService(scope),
 		TeamsIPPhonePolicies:                       teamsipphonepolicy.NewService(backend),

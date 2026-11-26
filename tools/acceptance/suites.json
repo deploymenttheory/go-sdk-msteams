@@ -831,6 +831,27 @@
         }
       ]
     },
+    "teams_meeting_configuration": {
+      "package": "./tests/integration/lab/teams_meeting_configuration",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccMeetingConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMeetingConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
     "teams_meeting_template_configuration": {
       "package": "./tests/integration/lab/teams_meeting_template_configuration",
       "steps": [
