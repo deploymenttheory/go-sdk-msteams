@@ -38,9 +38,11 @@ try{
     $attendant=Get-CsAutoAttendant -Identity $attendantId -ErrorAction Stop
     if($schedule.Name -ne $scheduleFixture -or $attendant.Name -ne $attendantFixture){throw 'Not the owned resources'}
     $associations=@($attendant.CallHandlingAssociations)
-    if($associations.Count -ne 1){throw 'Expected the owned association'}
-    $association=$associations[0]
-    $report=@{success=$true;schedule_name=[string]$schedule.Name;attendant_name=[string]$attendant.Name;schedule_id=[string]$schedule.Id;association_schedule_id=[string]$association.ScheduleId;association_flow_id=[string]$association.CallFlowId;association_type=[string]$association.Type;enabled=[bool]$association.Enabled;greeting=[string]$attendant.DefaultCallFlow.Greetings[0].TextToSpeechPrompt}
+    if($associations.Count -ne 2){throw 'Expected the owned association'}
+    $association=@($associations | Where-Object { [string]$_.Type -eq 'AfterHours' })[0]
+    $holidays=@(Get-CsAutoAttendantHolidays -Identity $attendantId -Years '2027' -ErrorAction Stop)
+    if($holidays.Count -ne 1){throw 'Expected the owned holiday'}
+    $report=@{success=$true;schedule_name=[string]$schedule.Name;attendant_name=[string]$attendant.Name;schedule_id=[string]$schedule.Id;association_schedule_id=[string]$association.ScheduleId;association_flow_id=[string]$association.CallFlowId;association_type=[string]$association.Type;enabled=[bool]$association.Enabled;greeting=[string]$attendant.DefaultCallFlow.Greetings[0].TextToSpeechPrompt;holiday_count=$holidays.Count;holiday_flow_id=[string]$holidays[0].CallFlow.Id}
 }catch{
     $report=@{success=$false}
 }finally{

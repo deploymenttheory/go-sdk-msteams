@@ -116,7 +116,7 @@ PROOFS = {
                          'integrated EXT generic replacement/read-back: passed', 'integrated EXT independent cleanup: passed'],
                         'PowerShell 8.1.0 / Go integrated EXT parity: passed', 3),
     'call-integration': (['integrated CALL create: passed', 'integrated CALL identity read-back: passed',
-                          'integrated CALL update/read-back: passed', 'integrated CALL cleanup: passed'],
+                          'integrated CALL update/read-back: passed', 'integrated CALL populated holiday read/export: passed', 'integrated CALL cleanup: passed'],
                          'PowerShell 8.1.0 / Go integrated CALL parity: passed', 2),
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),

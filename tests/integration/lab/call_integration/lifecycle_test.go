@@ -40,6 +40,8 @@ type integrationObservation struct {
 	AssociationType       string `json:"association_type"`
 	Enabled               bool   `json:"enabled"`
 	Greeting              string `json:"greeting"`
+	HolidayCount          int    `json:"holiday_count"`
+	HolidayFlowID         string `json:"holiday_flow_id"`
 }
 
 func compareIntegration(t *testing.T, ctx context.Context, scheduleName, scheduleID, attendantName, attendantID, flowID, greeting string) {
@@ -63,13 +65,13 @@ func compareIntegration(t *testing.T, ctx context.Context, scheduleName, schedul
 		t.Fatal("pinned integrated CALL read failed; no output retained")
 	}
 	var observed integrationObservation
-	if json.Unmarshal(output.Data, &observed) != nil || !observed.Success || observed.ScheduleName != scheduleName || observed.AttendantName != attendantName || observed.ScheduleID != scheduleID || observed.AssociationScheduleID != scheduleID || observed.AssociationFlowID != flowID || observed.AssociationType != aa.AssociationAfterHours || !observed.Enabled || observed.Greeting != greeting {
+	if json.Unmarshal(output.Data, &observed) != nil || !observed.Success || observed.ScheduleName != scheduleName || observed.AttendantName != attendantName || observed.ScheduleID != scheduleID || observed.AssociationScheduleID != scheduleID || observed.AssociationFlowID != flowID || observed.AssociationType != aa.AssociationAfterHours || !observed.Enabled || observed.Greeting != greeting || observed.HolidayCount != 1 || observed.HolidayFlowID != flowID {
 		t.Fatal("PowerShell and Go integrated CALL observations differ")
 	}
 	t.Log("PowerShell 8.1.0 / Go integrated CALL parity: passed")
 }
 
-// TestAccScheduleAutoAttendantComposition links only a newly owned schedule and
+// TestAccScheduleAutoAttendantComposition links only newly owned schedules and
 // attendant. It assigns no account, number, user, group or policy and needs no
 // calling licence. Reverse-order journal recovery deletes the dependent first.
 func TestAccScheduleAutoAttendantComposition(t *testing.T) {
@@ -136,6 +138,24 @@ func TestAccScheduleAutoAttendantComposition(t *testing.T) {
 	}
 	replacements := map[string]string{scheduleName: "msteams-sdk-fixture-weekly", attendantName: "msteams-sdk-fixture-attendant", *schedule.ID: scheduleID}
 	labkit.WriteResponseFixture(t, "schedules", "integration_create", response, replacements)
+	fixedName, err := journal.FixtureName("fixed")
+	if err != nil {
+		t.Fatal("owned fixed schedule name unavailable")
+	}
+	fixedEntry, err := journal.PlanCreate("schedule", fixedName)
+	if err != nil {
+		t.Fatal("fixed schedule create was not journaled")
+	}
+	fixed, response, err := sdk.TeamsAdminAPI.Schedules.Create(ctx, sched.CreateRequest{Name: fixedName, FixedSchedule: &sched.FixedSchedule{DateTimeRanges: []sched.DateTimeRange{{Start: "2027-01-01T00:00:00", End: "2027-01-02T00:00:00"}}}})
+	if err == nil && fixed != nil && fixed.ID != nil {
+		err = journal.Applied(fixedEntry, *fixed.ID)
+	}
+	if err != nil || fixed == nil || fixed.ID == nil {
+		t.Fatal("integrated fixed schedule create failed; journal retained")
+	}
+	replacements[fixedName] = "msteams-sdk-fixture-fixed"
+	replacements[*fixed.ID] = "00000000-0000-4000-8000-000000000005"
+	labkit.WriteResponseFixture(t, "schedules", "integration_fixed_create", response, replacements)
 	defaultID, afterHoursID := guid(t), guid(t)
 	replacements[defaultID], replacements[afterHoursID] = flowID, attendantID
 	association, _, err := sdk.TeamsAdminAPI.AutoAttendants.DraftCallHandlingAssociation(ctx, aa.CallHandlingAssociation{Type: ptr(aa.AssociationAfterHours), ScheduleID: schedule.ID, CallFlowID: &afterHoursID})
@@ -152,7 +172,7 @@ func TestAccScheduleAutoAttendantComposition(t *testing.T) {
 	if err != nil {
 		t.Fatal("attendant create was not journaled")
 	}
-	attendant, response, err := sdk.TeamsAdminAPI.AutoAttendants.Create(ctx, aa.Settings{Name: &attendantName, LanguageID: ptr("en-US"), TimeZoneID: ptr("UTC"), DefaultCallFlow: &defaultFlow, CallFlows: &[]aa.CallFlow{afterHours}, CallHandlingAssociations: &[]aa.CallHandlingAssociation{*association}})
+	attendant, response, err := sdk.TeamsAdminAPI.AutoAttendants.Create(ctx, aa.Settings{Name: &attendantName, LanguageID: ptr("en-US"), TimeZoneID: ptr("UTC"), DefaultCallFlow: &defaultFlow, CallFlows: &[]aa.CallFlow{afterHours}, CallHandlingAssociations: &[]aa.CallHandlingAssociation{*association, {Type: ptr(aa.AssociationHoliday), ScheduleID: fixed.ID, CallFlowID: &afterHoursID, Enabled: ptr(true)}}})
 	if err == nil && attendant != nil && attendant.ID != nil {
 		err = journal.Applied(attendantEntry, *attendant.ID)
 	}
@@ -164,13 +184,47 @@ func TestAccScheduleAutoAttendantComposition(t *testing.T) {
 	t.Log("integrated CALL create: passed")
 	check := func(expectedGreeting string) *aa.AutoAttendant {
 		value, response, err := sdk.TeamsAdminAPI.AutoAttendants.GetByID(ctx, *attendant.ID)
-		if err != nil || value == nil || value.Name == nil || *value.Name != attendantName || len(value.CallHandlingAssociations) != 1 || value.CallHandlingAssociations[0].ScheduleID == nil || *value.CallHandlingAssociations[0].ScheduleID != *schedule.ID || value.CallHandlingAssociations[0].CallFlowID == nil || *value.CallHandlingAssociations[0].CallFlowID != afterHoursID || value.DefaultCallFlow == nil || len(value.DefaultCallFlow.Greetings) != 1 || value.DefaultCallFlow.Greetings[0].TextToSpeechPrompt == nil || *value.DefaultCallFlow.Greetings[0].TextToSpeechPrompt != expectedGreeting {
+		if err != nil || value == nil || value.Name == nil || *value.Name != attendantName || len(value.CallHandlingAssociations) != 2 || value.DefaultCallFlow == nil || len(value.DefaultCallFlow.Greetings) != 1 || value.DefaultCallFlow.Greetings[0].TextToSpeechPrompt == nil || *value.DefaultCallFlow.Greetings[0].TextToSpeechPrompt != expectedGreeting {
 			t.Fatal("integrated identity/read-back mismatch")
+		}
+		for _, link := range value.CallHandlingAssociations {
+			if link.Type == nil || link.ScheduleID == nil || link.CallFlowID == nil || *link.CallFlowID != afterHoursID {
+				t.Fatal("integrated schedule association incomplete")
+			}
+			switch *link.Type {
+			case aa.AssociationAfterHours:
+				if *link.ScheduleID != *schedule.ID {
+					t.Fatal("after-hours schedule identity changed")
+				}
+			case aa.AssociationHoliday:
+				if *link.ScheduleID != *fixed.ID {
+					t.Fatal("holiday schedule identity changed")
+				}
+			default:
+				t.Fatal("unexpected integrated schedule association")
+			}
 		}
 		labkit.WriteResponseFixture(t, "auto_attendants", "integration_read", response, replacements)
 		compareIntegration(t, ctx, scheduleName, *schedule.ID, attendantName, *attendant.ID, afterHoursID, expectedGreeting)
 		return value
 	}
+	holidays, response, err := sdk.TeamsAdminAPI.Schedules.ListHolidays(ctx, *attendant.ID, &sched.HolidayOptions{Years: []string{"2027"}})
+	if err != nil || len(holidays) != 1 || len(holidays[0].DateTimeRanges) != 1 || holidays[0].DateTimeRanges[0].Start != "2027-01-01T00:00:00" || holidays[0].DateTimeRanges[0].End != "2027-01-02T00:00:00" {
+		t.Fatal("owned holiday schedule visualization failed")
+	}
+	var holidayFlow aa.CallFlow
+	if json.Unmarshal(holidays[0].CallFlow, &holidayFlow) != nil || holidayFlow.ID == nil || *holidayFlow.ID != afterHoursID {
+		t.Fatal("holiday visualization lost the attendant call-flow identity")
+	}
+	labkit.WriteResponseFixture(t, "schedules", "integration_holidays", response, replacements)
+	exported, _, err := sdk.TeamsAdminAPI.Schedules.GetHolidaysContent(ctx, *attendant.ID)
+	if err != nil || len(exported) == 0 {
+		t.Fatal("owned holiday schedule export failed")
+	}
+	// Serialized holiday bytes may contain private identifiers. Keep them only
+	// in memory; do not pass opaque base64 through the JSON fixture writer.
+	defer func() { clear(exported) }()
+	t.Log("integrated CALL populated holiday read/export: passed")
 	value := check("SDK integration greeting")
 	t.Log("integrated CALL identity read-back: passed")
 	update := value.Settings()

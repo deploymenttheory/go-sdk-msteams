@@ -144,7 +144,7 @@
           "id": "schedule-attendant",
           "mutation": true,
           "proof": "call-integration",
-          "journal_entries_per_test": 2,
+          "journal_entries_per_test": 3,
           "tests": ["TestAccScheduleAutoAttendantComposition"]
         }
       ]

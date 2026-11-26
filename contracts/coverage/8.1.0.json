@@ -707,6 +707,10 @@
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -1699,6 +1703,10 @@
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -1757,6 +1765,10 @@
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -2589,6 +2601,10 @@
             {
               "file": "msteams/teams_admin_api/call_queues/service_test.go",
               "name": "TestUnitCallQueueOptionalQueriesAndNormalization"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitQueueAccountAssociationRetainsPerEndpointFailure"
             }
           ],
           "live_tests": [
@@ -4415,6 +4431,10 @@
             {
               "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
               "name": "TestUnitResourceAccountSuccessShapesPreserveFields"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitQueueAccountAssociationRetainsPerEndpointFailure"
             }
           ],
           "live_tests": [
@@ -4636,6 +4656,10 @@
             {
               "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
               "name": "TestUnitAudioFileGetSendsDurationOnlyWhenSet"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitAudioIdentityFeedsAttendantAndQueue"
             }
           ],
           "live_tests": [
@@ -5398,12 +5422,20 @@
             {
               "file": "msteams/teams_admin_api/schedules/service_test.go",
               "name": "TestUnitScheduleListAndBodyOptions"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitScheduleIdentitySurvivesAttendantComposition"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -8081,6 +8113,10 @@
             {
               "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
               "name": "TestUnitComplianceRecordingApplicationRejections"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/schema_boundaries_test.go",
+              "name": "TestUnitApplicationSchemaPreservesScopedIdentityAndPresence"
             }
           ],
           "live_tests": [
@@ -24084,12 +24120,20 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitScheduleIdentitySurvivesAttendantComposition"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -24262,12 +24306,20 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
               "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitScheduleIdentitySurvivesAttendantComposition"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -24494,6 +24546,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
               "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitAudioIdentityFeedsAttendantAndQueue"
             }
           ],
           "live_tests": [
@@ -24883,6 +24939,10 @@
             {
               "file": "msteams/teams_admin_api/call_queues/service_test.go",
               "name": "TestUnitCallQueueInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitAudioIdentityFeedsAttendantAndQueue"
             }
           ],
           "live_tests": [
@@ -26091,6 +26151,10 @@
             {
               "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
               "name": "TestUnitResourceAccountAssociationWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitQueueAccountAssociationRetainsPerEndpointFailure"
             }
           ],
           "live_tests": [
@@ -26397,6 +26461,10 @@
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         },
@@ -26436,6 +26504,10 @@
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -31878,6 +31950,10 @@
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -32832,6 +32908,10 @@
             {
               "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
               "name": "TestUnitAudioFileServiceFailuresStayTyped"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitQueueDenialDoesNotPreventIndependentAudioCleanup"
             }
           ],
           "live_tests": [
@@ -33148,6 +33228,10 @@
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -37962,12 +38046,20 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantOptionalQueriesAndNormalization"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitScheduleIdentitySurvivesAttendantComposition"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -38140,6 +38232,10 @@
             {
               "file": "msteams/teams_admin_api/call_queues/service_test.go",
               "name": "TestUnitCallQueueOptionalQueriesAndNormalization"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitAudioIdentityFeedsAttendantAndQueue"
             }
           ],
           "live_tests": [
@@ -41320,6 +41416,10 @@
             {
               "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
               "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/schema_boundaries_test.go",
+              "name": "TestUnitApplicationSchemaPreservesScopedIdentityAndPresence"
             }
           ],
           "live_tests": []

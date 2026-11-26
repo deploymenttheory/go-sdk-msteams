@@ -18,11 +18,23 @@ The integrated offline suite is
 It exercises schedule/association identities, audio IDs across prompt/queue
 models, and independent recovery after a different service denies access.
 The four offline composed scenarios are synthetic. The separate opt-in
-`TestAccScheduleAutoAttendantComposition` journals an owned weekly schedule and
-attendant, verifies the association before/after replacement against pinned
-PowerShell, and independently removes both. Registration is not a live pass.
+`TestAccScheduleAutoAttendantComposition` journals owned weekly/fixed schedules and an
+attendant, verifies populated holiday read/export and the associations before/after
+replacement against pinned PowerShell, and independently removes all three.
+Registration is not a live pass; holiday import remains unqualified.
 Existing child fixtures retain their provenance. Executed results and the tested
 revision belong in the implementation PR/CI, separate from this inventory.
+
+## Recorded scoped tenant result
+
+[Run 45874462217](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45874462217)
+passed the original owned weekly-schedule/attendant composition using client-secret
+authentication. The [sanitized evidence](evidence/schedule-attendant-f1931de.json)
+records CI merge revision `866e6e23d28c7d8794a26342f3c5e5825c7e0af3`,
+source head `f1931de0309afbf45353647922212d56b2419c0d`, four asserted phases,
+two pinned comparisons and two cleaned journal entries with zero unresolved.
+This pass predates the fixed-holiday/read/export extension and does not
+establish a live pass for that extension or full command/parameter-set coverage.
 
 ## Qualification boundaries
 
@@ -71,7 +83,7 @@ Owner: `CALL-20`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DraftCallHandlingAssociation`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `__AllParameterSets` | [`Service.DraftCallHandlingAssociation`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go)<br>[`TestUnitScheduleIdentitySurvivesAttendantComposition`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: New-CsAutoAttendant* builders are server draft validations, not local constructors; a client-secret lab run passed the draft route for this builder (or its service rejection) and the owned lifecycle built from equivalent Go values. Full release qualification is separate.
 
@@ -111,7 +123,7 @@ Owner: `CALL-20`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `AudioFileParamSet` | [`Service.DraftPrompt`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `AudioFileParamSet` | [`Service.DraftPrompt`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go)<br>[`TestUnitAudioIdentityFeedsAttendantAndQueue`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 | `DualParamSet` | [`Service.DraftPrompt`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitDraftBuildersPreserveNonDefaultMembers`](../../../msteams/teams_admin_api/auto_attendants/draft_variants_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 | `TextToSpeechParamSet` | [`Service.DraftPrompt`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantDraftsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
 
@@ -137,7 +149,7 @@ Owner: `CALL-21`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/audio_prompts/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/audio_prompts/service.go) | [`TestUnitAudioFileLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/audio_prompts/service_test.go)<br>[`TestUnitAudioFileListNormalizesApplicationAndPreservesNulls`](../../../msteams/teams_admin_api/audio_prompts/service_test.go)<br>[`TestUnitAudioFileGetSendsDurationOnlyWhenSet`](../../../msteams/teams_admin_api/audio_prompts/service_test.go) | [`TestAccAudioFileLifecycle`](../../../tests/integration/lab/audio_prompts/audio_prompts_test.go) |
+| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/audio_prompts/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/audio_prompts/service.go) | [`TestUnitAudioFileLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/audio_prompts/service_test.go)<br>[`TestUnitAudioFileListNormalizesApplicationAndPreservesNulls`](../../../msteams/teams_admin_api/audio_prompts/service_test.go)<br>[`TestUnitAudioFileGetSendsDurationOnlyWhenSet`](../../../msteams/teams_admin_api/audio_prompts/service_test.go)<br>[`TestUnitAudioIdentityFeedsAttendantAndQueue`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccAudioFileLifecycle`](../../../tests/integration/lab/audio_prompts/audio_prompts_test.go) |
 
 Live limitation: Client-secret lab run passed the owned TenantGlobal import/get/list/export/soft-delete lifecycle with pinned PowerShell export parity and journaled cleanup; full release qualification is separate.
 
@@ -177,7 +189,7 @@ Owner: `CALL-21`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/teams_admin_api/audio_prompts/service.go) | [`TestUnitAudioFileLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/audio_prompts/service_test.go)<br>[`TestUnitAudioFileServiceFailuresStayTyped`](../../../msteams/teams_admin_api/audio_prompts/service_test.go) | [`TestAccAudioFileLifecycle`](../../../tests/integration/lab/audio_prompts/audio_prompts_test.go) |
+| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/teams_admin_api/audio_prompts/service.go) | [`TestUnitAudioFileLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/audio_prompts/service_test.go)<br>[`TestUnitAudioFileServiceFailuresStayTyped`](../../../msteams/teams_admin_api/audio_prompts/service_test.go)<br>[`TestUnitQueueDenialDoesNotPreventIndependentAudioCleanup`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccAudioFileLifecycle`](../../../tests/integration/lab/audio_prompts/audio_prompts_test.go) |
 
 Live limitation: Client-secret lab run passed the owned TenantGlobal import/get/list/export/soft-delete lifecycle with pinned PowerShell export parity and journaled cleanup; full release qualification is separate.
 
@@ -192,7 +204,7 @@ Owner: `CALL-22`. Implementation: `in-progress`; contract: `metadata-only`; live
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
 | `GetAllParamSet` | [`Service.List`](../../../msteams/teams_admin_api/auto_attendants/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantLifecycle`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
-| `GetSpecificParamSet` | [`Service.List`](../../../msteams/teams_admin_api/auto_attendants/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantLifecycle`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `GetSpecificParamSet` | [`Service.List`](../../../msteams/teams_admin_api/auto_attendants/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantLifecycle`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.
 
@@ -242,7 +254,7 @@ Owner: `CALL-22`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.Create`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantLifecycle`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `__AllParameterSets` | [`Service.Create`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitScheduleIdentitySurvivesAttendantComposition`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccAutoAttendantLifecycle`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.
 
@@ -252,7 +264,7 @@ Owner: `CALL-22`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantLifecycle`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/teams_admin_api/auto_attendants/service.go) | [`TestUnitAutoAttendantLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantLifecycle`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccAutoAttendantReads`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.
 
@@ -262,7 +274,7 @@ Owner: `CALL-22`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.UpdateByID`](../../../msteams/teams_admin_api/auto_attendants/service.go)<br>[`AutoAttendant.Settings`](../../../msteams/teams_admin_api/auto_attendants/models.go) | [`TestUnitAutoAttendantLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/auto_attendants/service_test.go) | [`TestAccAutoAttendantLifecycle`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go) |
+| `__AllParameterSets` | [`Service.UpdateByID`](../../../msteams/teams_admin_api/auto_attendants/service.go)<br>[`AutoAttendant.Settings`](../../../msteams/teams_admin_api/auto_attendants/models.go) | [`TestUnitAutoAttendantLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitAutoAttendantOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/auto_attendants/service_test.go)<br>[`TestUnitScheduleIdentitySurvivesAttendantComposition`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccAutoAttendantLifecycle`](../../../tests/integration/lab/auto_attendants/auto_attendants_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: Client-secret lab run passed the owned create/get/status/list/full-body update/read-back/refresh/delete lifecycle and the tenant information, supported language and time zone reads with pinned PowerShell read parity and journaled cleanup; operators, real schedule associations, dial-by-name scopes, audio prompts, voice response, mainline attendant and full release qualification are separate.
 
@@ -286,7 +298,7 @@ Owner: `CALL-23`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/call_queues/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/call_queues/service.go) | [`TestUnitCallQueueLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueMissingIdentityIsHTTP400`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/call_queues/service_test.go) | [`TestAccCallQueueLifecycle`](../../../tests/integration/lab/call_queues/call_queues_test.go) |
+| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/call_queues/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/call_queues/service.go) | [`TestUnitCallQueueLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueMissingIdentityIsHTTP400`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitQueueAccountAssociationRetainsPerEndpointFailure`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccCallQueueLifecycle`](../../../tests/integration/lab/call_queues/call_queues_test.go) |
 
 Live limitation: Client-secret lab run passed the owned create/get/list/full-body update/read-back/delete lifecycle with pinned PowerShell read parity and journaled cleanup; agents, resource-account (OBO) links, channel and callback settings, and full release qualification are separate.
 
@@ -296,7 +308,7 @@ Owner: `CALL-23`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.Create`](../../../msteams/teams_admin_api/call_queues/service.go) | [`TestUnitCallQueueLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/call_queues/service_test.go) | [`TestAccCallQueueLifecycle`](../../../tests/integration/lab/call_queues/call_queues_test.go) |
+| `__AllParameterSets` | [`Service.Create`](../../../msteams/teams_admin_api/call_queues/service.go) | [`TestUnitCallQueueLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitAudioIdentityFeedsAttendantAndQueue`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccCallQueueLifecycle`](../../../tests/integration/lab/call_queues/call_queues_test.go) |
 
 Live limitation: Client-secret lab run passed the owned create/get/list/full-body update/read-back/delete lifecycle with pinned PowerShell read parity and journaled cleanup; agents, resource-account (OBO) links, channel and callback settings, and full release qualification are separate.
 
@@ -316,7 +328,7 @@ Owner: `CALL-23`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.UpdateByID`](../../../msteams/teams_admin_api/call_queues/service.go)<br>[`CallQueue.Settings`](../../../msteams/teams_admin_api/call_queues/models.go) | [`TestUnitCallQueueLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueSettingsBackfillsFromRead`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/call_queues/service_test.go) | [`TestAccCallQueueLifecycle`](../../../tests/integration/lab/call_queues/call_queues_test.go) |
+| `__AllParameterSets` | [`Service.UpdateByID`](../../../msteams/teams_admin_api/call_queues/service.go)<br>[`CallQueue.Settings`](../../../msteams/teams_admin_api/call_queues/models.go) | [`TestUnitCallQueueLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueSettingsBackfillsFromRead`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitCallQueueOptionalQueriesAndNormalization`](../../../msteams/teams_admin_api/call_queues/service_test.go)<br>[`TestUnitAudioIdentityFeedsAttendantAndQueue`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccCallQueueLifecycle`](../../../tests/integration/lab/call_queues/call_queues_test.go) |
 
 Live limitation: Client-secret lab run passed the owned create/get/list/full-body update/read-back/delete lifecycle with pinned PowerShell read parity and journaled cleanup; agents, resource-account (OBO) links, channel and callback settings, and full release qualification are separate.
 
@@ -577,7 +589,7 @@ Owner: `CALL-25`. Implementation: `in-progress`; contract: `metadata-only`; live
 | --- | --- | --- | --- |
 | `Filter` | [`Service.ListApplicationsFiltered`](../../../msteams/teams_admin_api/compliance_recording/service.go) | [`TestUnitComplianceRecordingInvalidInputHasNoHTTP`](../../../msteams/teams_admin_api/compliance_recording/service_test.go) | None recorded |
 | `Identity` | [`Service.GetApplicationByIdentity`](../../../msteams/teams_admin_api/compliance_recording/service.go)<br>[`Service.ListApplications`](../../../msteams/teams_admin_api/compliance_recording/service.go) | [`TestUnitComplianceRecordingApplicationRejections`](../../../msteams/teams_admin_api/compliance_recording/service_test.go) | [`TestAccComplianceRecordingPolicyCRUD`](../../../tests/integration/lab/compliance_recording/compliance_recording_test.go)<br>[`TestAccComplianceRecordingReadOnly`](../../../tests/integration/lab/compliance_recording/compliance_recording_test.go) |
-| `ParentAndRelativeKey` | [`Service.GetApplicationByID`](../../../msteams/teams_admin_api/compliance_recording/service.go) | [`TestUnitComplianceRecordingApplicationRejections`](../../../msteams/teams_admin_api/compliance_recording/service_test.go) | [`TestAccComplianceRecordingPolicyCRUD`](../../../tests/integration/lab/compliance_recording/compliance_recording_test.go) |
+| `ParentAndRelativeKey` | [`Service.GetApplicationByID`](../../../msteams/teams_admin_api/compliance_recording/service.go) | [`TestUnitComplianceRecordingApplicationRejections`](../../../msteams/teams_admin_api/compliance_recording/service_test.go)<br>[`TestUnitApplicationSchemaPreservesScopedIdentityAndPresence`](../../../msteams/teams_admin_api/compliance_recording/schema_boundaries_test.go) | [`TestAccComplianceRecordingPolicyCRUD`](../../../tests/integration/lab/compliance_recording/compliance_recording_test.go) |
 
 Live limitation: Client-secret lab run proved the application routes through service rejections and absence only: a successful application needs a resource account, which app-only credentials cannot create.
 
@@ -662,7 +674,7 @@ Owner: `CALL-25`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `Identity` | [`Service.PatchApplicationByIdentity`](../../../msteams/teams_admin_api/compliance_recording/service.go)<br>[`Service.UpdateApplicationByIdentity`](../../../msteams/teams_admin_api/compliance_recording/service.go) | [`TestUnitComplianceRecordingListEditsApplyToReadValue`](../../../msteams/teams_admin_api/compliance_recording/service_test.go)<br>[`TestUnitComplianceRecordingInvalidInputHasNoHTTP`](../../../msteams/teams_admin_api/compliance_recording/service_test.go) | None recorded |
+| `Identity` | [`Service.PatchApplicationByIdentity`](../../../msteams/teams_admin_api/compliance_recording/service.go)<br>[`Service.UpdateApplicationByIdentity`](../../../msteams/teams_admin_api/compliance_recording/service.go) | [`TestUnitComplianceRecordingListEditsApplyToReadValue`](../../../msteams/teams_admin_api/compliance_recording/service_test.go)<br>[`TestUnitComplianceRecordingInvalidInputHasNoHTTP`](../../../msteams/teams_admin_api/compliance_recording/service_test.go)<br>[`TestUnitApplicationSchemaPreservesScopedIdentityAndPresence`](../../../msteams/teams_admin_api/compliance_recording/schema_boundaries_test.go) | None recorded |
 | `ParentAndRelativeKey` | [`Service.UpdateApplicationByID`](../../../msteams/teams_admin_api/compliance_recording/service.go) | [`TestUnitComplianceRecordingApplicationRejections`](../../../msteams/teams_admin_api/compliance_recording/service_test.go)<br>[`TestUnitComplianceRecordingListEditsApplyToReadValue`](../../../msteams/teams_admin_api/compliance_recording/service_test.go) | [`TestAccComplianceRecordingPolicyCRUD`](../../../tests/integration/lab/compliance_recording/compliance_recording_test.go) |
 
 Live limitation: Client-secret lab run proved the application routes through service rejections and absence only: a successful application needs a resource account, which app-only credentials cannot create.
@@ -861,7 +873,7 @@ Owner: `CALL-27`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/resource_accounts/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/resource_accounts/service.go) | [`TestUnitResourceAccountReadsUseAcceptanceResponses`](../../../msteams/teams_admin_api/resource_accounts/service_test.go)<br>[`TestUnitResourceAccountSuccessShapesPreserveFields`](../../../msteams/teams_admin_api/resource_accounts/service_test.go) | [`TestAccResourceAccountReads`](../../../tests/integration/lab/resource_accounts/resource_accounts_test.go) |
+| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/resource_accounts/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/resource_accounts/service.go) | [`TestUnitResourceAccountReadsUseAcceptanceResponses`](../../../msteams/teams_admin_api/resource_accounts/service_test.go)<br>[`TestUnitResourceAccountSuccessShapesPreserveFields`](../../../msteams/teams_admin_api/resource_accounts/service_test.go)<br>[`TestUnitQueueAccountAssociationRetainsPerEndpointFailure`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccResourceAccountReads`](../../../tests/integration/lab/resource_accounts/resource_accounts_test.go) |
 
 Live limitation: Client-secret lab run passed the read with pinned PowerShell parity against a tenant without resource accounts; populated reads and full release qualification are separate.
 
@@ -901,7 +913,7 @@ Owner: `CALL-27`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.CreateAssociations`](../../../msteams/teams_admin_api/resource_accounts/service.go) | [`TestUnitResourceAccountAssociationWritesUseAcceptanceResponses`](../../../msteams/teams_admin_api/resource_accounts/service_test.go) | [`TestAccResourceAccountRejectedWrites`](../../../tests/integration/lab/resource_accounts/resource_accounts_test.go) |
+| `__AllParameterSets` | [`Service.CreateAssociations`](../../../msteams/teams_admin_api/resource_accounts/service.go) | [`TestUnitResourceAccountAssociationWritesUseAcceptanceResponses`](../../../msteams/teams_admin_api/resource_accounts/service_test.go)<br>[`TestUnitQueueAccountAssociationRetainsPerEndpointFailure`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccResourceAccountRejectedWrites`](../../../tests/integration/lab/resource_accounts/resource_accounts_test.go) |
 
 Live limitation: Client-secret lab run proved the wire contract through service rejections and unknown-target outcomes only; app-only credentials cannot create or change resource accounts, so successful writes are unqualified.
 
@@ -955,7 +967,7 @@ Owner: `CALL-28`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.GetHolidaysContent`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleHolidaysUseAcceptanceAndModelResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go) |
+| `__AllParameterSets` | [`Service.GetHolidaysContent`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleHolidaysUseAcceptanceAndModelResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).
 
@@ -965,7 +977,7 @@ Owner: `CALL-28`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.ListHolidays`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleHolidaysUseAcceptanceAndModelResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go) |
+| `__AllParameterSets` | [`Service.ListHolidays`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleHolidaysUseAcceptanceAndModelResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).
 
@@ -975,7 +987,7 @@ Owner: `CALL-28`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/schedules/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/schedules/service_test.go)<br>[`TestUnitScheduleListAndBodyOptions`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go) |
+| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/schedules/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/schedules/service_test.go)<br>[`TestUnitScheduleListAndBodyOptions`](../../../msteams/teams_admin_api/schedules/service_test.go)<br>[`TestUnitScheduleIdentitySurvivesAttendantComposition`](../../../tests/integration/lab/call_integration/contracts_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: Client-secret lab run passed the owned, journaled schedule lifecycle with pinned PowerShell parity; auto attendant association and full release qualification are separate.
 
@@ -1005,9 +1017,9 @@ Owner: `CALL-28`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `FixedScheduleParamSet` | [`Service.Create`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/schedules/service_test.go)<br>[`TestUnitScheduleListAndBodyOptions`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go) |
+| `FixedScheduleParamSet` | [`Service.Create`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/schedules/service_test.go)<br>[`TestUnitScheduleListAndBodyOptions`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 | `UnresolvedParamSet` | [`Service.Create`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/schedules/service_test.go) | None recorded |
-| `WeeklyRecurrentScheduleParamSet` | [`Service.Create`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go) |
+| `WeeklyRecurrentScheduleParamSet` | [`Service.Create`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: Client-secret lab run passed the owned, journaled schedule lifecycle with pinned PowerShell parity; auto attendant association and full release qualification are separate.
 
@@ -1027,7 +1039,7 @@ Owner: `CALL-28`. Implementation: `in-progress`; contract: `metadata-only`; live
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go) |
+| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/teams_admin_api/schedules/service.go) | [`TestUnitScheduleLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/schedules/service_test.go) | [`TestAccScheduleLifecycle`](../../../tests/integration/lab/schedules/schedules_test.go)<br>[`TestAccScheduleAutoAttendantComposition`](../../../tests/integration/lab/call_integration/lifecycle_test.go) |
 
 Live limitation: Client-secret lab run passed the owned, journaled schedule lifecycle with pinned PowerShell parity; auto attendant association and full release qualification are separate.
 

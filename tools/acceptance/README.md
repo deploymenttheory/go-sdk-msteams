@@ -566,10 +566,11 @@ entries. No resource account or call flow is attached to the agent.
 ## Integrated CALL acceptance
 
 The `call_integration` partition composes owned schedules and auto attendants.
-`TestAccScheduleAutoAttendantComposition` creates a weekly schedule, drafts an
+`TestAccScheduleAutoAttendantComposition` creates weekly and fixed holiday schedules, drafts an
 after-hours association, creates an unassigned attendant, verifies cross-service
 identities, replaces its greeting and verifies the preserved association. It
-runs two pinned PowerShell comparisons and requires both journal entries cleaned
+checks populated holiday visualization/export, runs two pinned PowerShell comparisons
+and requires all three journal entries cleaned
 in reverse creation order. It assigns no account, telephone number, user, group
 or policy. Changes to either service select this integration partition as well.
 
