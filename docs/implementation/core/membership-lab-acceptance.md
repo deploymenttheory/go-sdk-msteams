@@ -99,3 +99,9 @@ PowerShell performs reads only. This resulting-state check does not execute
 Add-TeamUser/Remove-TeamUser mutations or claim identical mutation traffic. Guest,
 service-principal, delegated and Teams-client convergence scenarios remain
 separate. The collection comparison was tested offline; no live oracle has run.
+
+CORE-90 moves paired backing-group/team absence verification into the parent
+fixture cleanup handler, before its recovery journal can mark completion. A
+failed absence read stays unresolved; a later run can reconcile a previously
+completed delete through both independent 404s without repeating the mutation.
+This repair does not supply the missing live Graph user/permission fixtures.

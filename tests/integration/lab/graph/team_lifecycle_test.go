@@ -85,6 +85,11 @@ func (h lifecycleCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 		return lab.ErrUnresolved
 	}
 	paired, err := h.sdk.GraphAPI.TeamManagement.GetByID(ctx, entry.ResourceID)
+	if labkit.IsHTTP(err, http.StatusNotFound) {
+		// A prior delete may have completed before the journal was persisted.
+		// Confirm both resources independently; a single missing read is not enough.
+		return lifecycleObserveAbsent(ctx, h.sdk, entry.ResourceID)
+	}
 	if err != nil {
 		return err
 	}
@@ -101,7 +106,11 @@ func (h lifecycleCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 		return lab.ErrUnresolved
 	}
 	_, err = h.sdk.GraphAPI.Teams.DeleteByID(ctx, entry.ResourceID)
-	return err
+	if err != nil && !labkit.IsHTTP(err, http.StatusNotFound) {
+		return err
+	}
+	// Journal.Recover must not mark this entry cleaned on the receipt alone.
+	return lifecycleObserveAbsent(ctx, h.sdk, entry.ResourceID)
 }
 
 func (lifecycleCleanup) Restore(context.Context, lab.Entry) error { return lab.ErrUnresolved }
@@ -198,7 +207,7 @@ func TestAccTeamLifecycle(t *testing.T) {
 			deleteCtx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 			defer stop()
 			// The same ownership-checked journal handler performs the explicit
-			// delete and persists its result before the post-delete observation.
+			// delete, verifies both resource absences and only then persists completion.
 			if _, err := journal.Recover(deleteCtx, map[string]lab.Handler{lifecycleFixtureKind: lifecycleCleanup{sdk: sdk}}); err != nil {
 				t.Fatal("explicit owned-team deletion remains unresolved")
 			}

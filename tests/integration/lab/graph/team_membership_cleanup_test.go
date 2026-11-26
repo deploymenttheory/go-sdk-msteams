@@ -114,10 +114,10 @@ func TestUnitMembershipCleanupDeleteRequiresBothOwnedSnapshots(t *testing.T) {
 			}
 			steps = append(steps, cleanupExchange("DELETE", "/v1.0/groups/"+cleanupTeamID, deleteStatus, body))
 		}
-		expected := contracttest.Expected{Error: want}
-		if phase == "team-missing" {
-			expected.APIError = &client.APIError{Backend: client.Graph, StatusCode: 404, Codes: []string{"Missing"}}
+		if phase == "owned" || phase == "team-missing" {
+			steps = append(steps, cleanupExchange("GET", "/v1.0/groups/"+cleanupTeamID, 404, ""), cleanupExchange("GET", "/v1.0/teams/"+cleanupTeamID, 404, ""))
 		}
+		expected := contracttest.Expected{Error: want}
 		runCleanupCase(t, contracttest.Case{Name: phase, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			err := (membershipCleanup{sdk: sdk}).Delete(ctx, lab.Entry{ResourceID: cleanupTeamID, Fixture: cleanupFixture})
 			return contracttest.Observation{Err: err}

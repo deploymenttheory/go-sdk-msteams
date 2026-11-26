@@ -124,3 +124,13 @@ The script was syntax-checked, its disabled guard was executed, and its selected
 projection was checked against the pinned CLR model offline. These checks do not
 establish successful tenant reads. A denied or mismatched oracle fails the live
 scenario; it never becomes a skipped/pass result or a reason to repeat a write.
+
+## CORE-90 cleanup completion ordering
+
+The cleanup handler now verifies both backing-group and team 404s before returning
+success to Journal.Recover. A delete receipt alone cannot mark the journal entry
+cleaned. A later read denial or cancellation retains recovery work; an interrupted
+run whose delete already completed can independently reconcile both absences
+without another deletion. Existing positive ownership checks still precede any
+new delete. The CORE journal regression covers denial followed by recovery; live
+Graph execution still requires the explicitly configured owner and permissions.

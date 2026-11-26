@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/http"
 	"os"
 	"regexp"
 	"strings"
@@ -91,6 +92,9 @@ func (h membershipCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 		return lab.ErrUnresolved
 	}
 	teamData, _, err := h.sdk.GraphAPI.Teams.GetByID(ctx, entry.ResourceID)
+	if labkit.IsHTTP(err, http.StatusNotFound) {
+		return lifecycleObserveAbsent(ctx, h.sdk, entry.ResourceID)
+	}
 	if err != nil {
 		return err
 	}
@@ -98,6 +102,9 @@ func (h membershipCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 		return lab.ErrUnresolved
 	}
 	groupData, _, err := h.sdk.GraphAPI.Groups.GetByID(ctx, entry.ResourceID, group.ReadOptions{Select: []string{"id", "displayName", "groupTypes"}})
+	if labkit.IsHTTP(err, http.StatusNotFound) {
+		return lifecycleObserveAbsent(ctx, h.sdk, entry.ResourceID)
+	}
 	if err != nil {
 		return err
 	}
@@ -111,7 +118,10 @@ func (h membershipCleanup) Delete(ctx context.Context, entry lab.Entry) error {
 		return lab.ErrUnresolved
 	}
 	_, err = h.sdk.GraphAPI.Teams.DeleteByID(ctx, entry.ResourceID)
-	return err
+	if err != nil && !labkit.IsHTTP(err, http.StatusNotFound) {
+		return err
+	}
+	return lifecycleObserveAbsent(ctx, h.sdk, entry.ResourceID)
 }
 
 func (membershipCleanup) Restore(context.Context, lab.Entry) error { return lab.ErrUnresolved }

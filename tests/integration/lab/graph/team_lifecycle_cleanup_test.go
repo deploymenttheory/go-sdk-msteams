@@ -3,6 +3,7 @@ package graphacc
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/url"
 	"os"
@@ -96,6 +97,9 @@ func TestUnitLifecycleDeletionRequiresOwnedPairAndNeverReplays(t *testing.T) {
 			if tc.deleteStatus != 0 {
 				steps = append(steps, lifecycleWire("DELETE", "/v1.0/groups/"+lifecycleTestID, tc.deleteStatus, ""))
 			}
+			if tc.deleteStatus == 204 {
+				steps = append(steps, lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 404, ""), lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 404, ""))
+			}
 			lifecycleOffline(t, contracttest.Case{Name: tc.name, Steps: steps,
 				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 					return contracttest.Observation{Err: (lifecycleCleanup{sdk: sdk}).Delete(ctx, lab.Entry{ResourceID: lifecycleTestID, Fixture: lifecycleTestName})}
@@ -171,6 +175,89 @@ func TestUnitLifecycleDeletionObservationRequiresBoth404sAndRejectsDenial(t *tes
 				if time.Since(started) != 2*time.Second {
 					t.Fatal("observation did not use bounded read-only cadence")
 				}
+			})
+		})
+	}
+}
+
+// A 204 receipt is not enough to seal recovery. If independent absence cannot
+// be read, the persisted entry must remain actionable on the next recovery run.
+func TestUnitCoreCleanupJournalRetainsUnverifiedDeletion(t *testing.T) {
+	for _, kind := range []string{"lifecycle", "membership"} {
+		t.Run(kind, func(t *testing.T) {
+			journal, err := lab.NewJournal(t.TempDir(), "fixture-tenant|commercial|fixture-client")
+			if err != nil {
+				t.Fatal("offline recovery journal unavailable")
+			}
+			t.Cleanup(func() {
+				if err := journal.Close(); err != nil {
+					t.Error("offline recovery journal close failed")
+				}
+			})
+			suffix, fixtureKind := "team", lifecycleFixtureKind
+			if kind == "membership" {
+				suffix, fixtureKind = "membership", membershipFixtureKind
+			}
+			fixture, err := journal.FixtureName(suffix)
+			if err != nil {
+				t.Fatal("offline recovery fixture unavailable")
+			}
+			intent, err := journal.PlanCreate(fixtureKind, fixture)
+			if err != nil || journal.Applied(intent, lifecycleTestID) != nil {
+				t.Fatal("offline owned identity was not journaled")
+			}
+			groupBody := `{"id":"` + lifecycleTestID + `","displayName":"` + fixture + `","mailNickname":"` + fixture + `","groupTypes":["Unified"]}`
+			teamBody := `{"id":"` + lifecycleTestID + `","displayName":"` + fixture + `"}`
+			steps := []contracttest.Exchange{}
+			if kind == "lifecycle" {
+				steps = append(steps,
+					lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 200, groupBody),
+					lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 200, teamBody),
+				)
+			} else {
+				query := url.Values{"$select": {"id,displayName,groupTypes"}}.Encode()
+				steps = append(steps,
+					lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 200, teamBody),
+					lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID+"?"+query, 200, groupBody),
+				)
+			}
+			steps = append(steps,
+				lifecycleWire("DELETE", "/v1.0/groups/"+lifecycleTestID, 204, ""),
+				lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 404, ""),
+				lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 403, ""),
+			)
+			// The next run must still execute the handler. Its initial missing
+			// read is followed by independent paired absence, without re-deletion.
+			initial := "/v1.0/groups/" + lifecycleTestID
+			if kind == "membership" {
+				initial = "/v1.0/teams/" + lifecycleTestID
+			}
+			steps = append(steps,
+				lifecycleWire("GET", initial, 404, ""),
+				lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 404, ""),
+				lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 404, ""),
+			)
+			lifecycleOffline(t, contracttest.Case{Name: "journal-" + kind + "-absence", Steps: steps,
+				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					var handler lab.Handler = lifecycleCleanup{sdk: sdk}
+					if kind == "membership" {
+						handler = membershipCleanup{sdk: sdk}
+					}
+					handlers := map[string]lab.Handler{fixtureKind: handler}
+					first, err := journal.Recover(ctx, handlers)
+					if !errors.Is(err, lab.ErrCleanup) || len(first) != 1 || first[0].Outcome != "unresolved" {
+						t.Error("delete receipt sealed an entry before independent absence")
+					}
+					second, err := journal.Recover(ctx, handlers)
+					if err != nil || len(second) != 1 || second[0].Outcome != "cleaned" {
+						t.Error("verified interrupted deletion could not be reconciled")
+					}
+					third, err := journal.Recover(ctx, handlers)
+					if len(third) != 0 {
+						t.Error("verified cleanup was not persisted")
+					}
+					return contracttest.Observation{Err: err}
+				},
 			})
 		})
 	}

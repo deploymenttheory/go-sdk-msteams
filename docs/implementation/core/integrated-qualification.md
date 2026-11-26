@@ -158,6 +158,21 @@ region token or a known batch/hierarchy operation selector. A read of secret nam
 cannot establish the app's effective Graph consent; current notes record denied
 Graph reads, and no new successful Graph live access is claimed by this PR.
 
+## Journal completion and interrupted deletion
+
+Source audit found the Graph lifecycle and membership cleanup handlers returned
+on the delete receipt. Their journal could therefore mark an entry cleaned before
+the later test-level absence observation. Both handlers now confirm independent
+group and team 404 responses within the cleanup context before returning success.
+A denial or cancellation leaves recovery unresolved. An already-deleted journaled
+resource is reconciled through paired absence without repeating the delete.
+
+`TestUnitCoreCleanupJournalRetainsUnverifiedDeletion` drives the real journal and
+both handlers: confirmed deletion followed by denied absence remains unresolved;
+a second run independently confirms both absences and persists cleaned state;
+a third run performs no HTTP. Existing ownership checks remain before deletion.
+These handler changes await CI verification and do not establish live Graph access.
+
 ## Available targeting read conformance
 
 The former pending reason for `TestAccTargetingPolicyReadOnly` did not identify a
@@ -175,7 +190,12 @@ The bound-tenant `TestAccPrivateChannelMigrationReadOnly` likewise needs no
 additional operation selector or licensed owner: it reads only the configured
 tenant's singleton status. It now has a read-only `private_channel_migration`
 partition requiring matching tenant identity and one pinned status/details
-comparison. No migration, deployment or tenant setting is changed. Denial,
+comparison. No migration, deployment or tenant setting is changed.
+[Run 45876333317](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45876333317)
+at tested merge `d73e9778687a983fc62e3ebec09c6b423e64a4ed` (head `ee94535`)
+failed the SDK read with HTTP 401 before any PowerShell comparison. Exact
+service-authentication diagnosis remains in progress; no positive pass is claimed.
+Denial,
 missing tenant identity or mismatch fails the positive scenario; no live success
 is claimed before the new CI result. Known orchestration, hierarchy and region
 selectors remain genuine separate fixture prerequisites.
@@ -188,8 +208,13 @@ Body paths each require the third pinned comparison, preserved updated summary a
 General channel, and the existing independent deletion/absence checks. The CI guard
 rejects the previous two-comparison-per-variant report. New response fixtures are
 written by the live acceptance test; no tenant reply is manufactured for this case.
-This scenario is prepared, not yet a live pass for this PR revision. Prior successful
-template CI evidence above retains its original scope.
+The extended scenario passed in [CI run 45874560542](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45874560542)
+for PR head `b7be0b0` at tested merge revision
+`88315ea07b557a6d1f79c14cc1e4b81c2c3460d3` under client-secret authentication.
+The sanitized report records both required children passing, all five milestones
+(including empty Description persistence), six pinned comparisons, two cleaned
+journal entries and zero unresolved entries. This qualifies that field scenario
+at that revision; later Graph changes and other template fields remain separate.
 
 ## Command and parameter-set inventory
 
