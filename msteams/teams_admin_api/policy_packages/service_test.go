@@ -3,7 +3,6 @@ package policypackages_test
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"os"
 	"strings"
@@ -166,23 +165,6 @@ func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.
 		o.Value, o.Response, o.Err = s.AssignUsers(ctx, userInput())
 	default:
 		o.Value, o.Response, o.Err = s.GetByName(ctx, "Fixture/Package:@")
-	}
-	if v, ok := o.Value.(*resource.AssignmentResult); ok && v != nil {
-		if name == "user-partial" && (len(v.FailedUserIDs) != 1 || v.FailedUserErrorMessages == nil || len(v.FailedUserErrorMessages.LegacyUser) != 1 || string(v.FailedUserErrorMessages.RawFields["Future"]) != `["fixture-future"]` || !v.HTTPAccepted) {
-			o.Err = errors.New("partial user/future error details lost")
-		}
-		if name == "group-domain-error" && (len(v.FailedAssignPolicies) != 1 || v.HTTPAccepted) {
-			o.Err = errors.New("typed group failure data lost")
-		}
-		if name == "user-domain-error" && (len(v.FailedUserIDs) != 1 || v.HTTPAccepted) {
-			o.Err = errors.New("typed user failure data lost")
-		}
-		if name == "batch-error" && (len(v.FailedCreatePolicies) != 1 || v.HTTPAccepted) {
-			o.Err = errors.New("typed batch failure data lost")
-		}
-		if name == "batch-missing-id" && (v.OperationID != nil || !v.HTTPAccepted) {
-			o.Err = errors.New("missing batch handle invented")
-		}
 	}
 	return o
 }

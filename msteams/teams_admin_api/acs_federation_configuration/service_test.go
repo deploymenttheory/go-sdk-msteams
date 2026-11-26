@@ -29,12 +29,11 @@ func TestUnitTypedProviderDispatch(t *testing.T) {
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
 			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{exchange(f)}}
-			if f.Request.FailureType != nil {
-				c.Want.Error = client.ErrDecode
+			// These retained vectors prove rejected request bytes, not decoding.
+			if f.Status != 400 || f.Response != "" {
+				t.Fatal("rejected-wire vector unexpectedly contains a response contract")
 			}
-			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			}
+			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.ACSFederationConfigurations
 				if strings.HasSuffix(f.Name, "-list") && f.Name != "acs-null-list" {

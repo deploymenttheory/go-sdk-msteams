@@ -37,17 +37,11 @@ func TestUnitRecordingTypedProviderRequests(t *testing.T) {
 				set = "Identity"
 			}
 			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: x.CmdletName, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
-			if x.FailureType != nil {
-				c.Want.Error = client.ErrDecode
-				if f.Status == 403 {
-					c.Want.Error = auth.ErrForbidden
-				}
-			} else if f.Response != "" {
-				c.Want.JSON = json.RawMessage(f.Response)
+			// These retained vectors prove rejected request bytes, not decoding.
+			if f.Status != 400 || f.Response != "" {
+				t.Fatal("rejected-wire vector unexpectedly contains a response contract")
 			}
-			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			}
+			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.RecordingMessages
 				controls := policy.Controls{}

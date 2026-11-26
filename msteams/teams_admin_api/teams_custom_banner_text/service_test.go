@@ -43,22 +43,13 @@ func TestUnitBannerTypedProviderAndSelectors(t *testing.T) {
 				}
 				c.Steps = []contracttest.Exchange{wire(x.Method, strings.TrimPrefix(x.Url, origin), command, body, f.Status, f.Response)}
 			}
-			if x.FailureType != nil {
-				c.Want.Error = client.ErrDecode
-				if x.Method == "" {
-					c.Want.Error = resource.ErrInput
+			if len(c.Steps) == 0 {
+				c.Want.Error = resource.ErrInput
+			} else {
+				// These retained vectors prove rejected request bytes, not decoding.
+				if f.Status != 400 || f.Response != "" {
+					t.Fatal("rejected-wire vector unexpectedly contains a response contract")
 				}
-				if f.Status == 403 {
-					c.Want.Error = auth.ErrForbidden
-				}
-			} else if f.Operation == "read" || f.Operation == "list" {
-				if f.Response == "" {
-					c.Want.JSON = json.RawMessage("null")
-				} else {
-					c.Want.JSON = json.RawMessage(f.Response)
-				}
-			}
-			if len(c.Steps) != 0 {
 				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
