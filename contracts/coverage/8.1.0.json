@@ -2668,23 +2668,103 @@
     {
       "name": "Get-CsConversationRole",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "conversation_role",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/46",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/1/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.GetByIdentity",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            },
+            {
+              "name": "Service.List",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationRoleAllGetSetsAndRawSnapshot",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "ParentAndRelativeKey",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/1/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.GetByID",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationRoleAllGetSetsAndRawSnapshot",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "Filter",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/1/parameter_sets/2",
+          "symbols": [
+            {
+              "name": "Service.ListFiltered",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationRoleAllGetSetsAndRawSnapshot",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.GetByIdentity",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          },
+          {
+            "name": "Service.List",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          },
+          {
+            "name": "Service.GetByID",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          },
+          {
+            "name": "Service.ListFiltered",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conversation-role-contract-notes.md",
+          "docs/implementation/ext/evidence/conversation-role-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
+          "docs/implementation/ext/evidence/conversation-role-presence.json",
+          "docs/implementation/ext/evidence/conversation-role-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.",
         "evidence": []
       },
       "exclusion": null
@@ -2692,23 +2772,82 @@
     {
       "name": "Get-CsConversationRolesSetting",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "conversation_roles_setting",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/47",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/2/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.GetByIdentity",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+            },
+            {
+              "name": "Service.List",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationSettingsGetSetsPreservePresenceAndLocalFilter",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "Filter",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/2/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.ListFiltered",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationSettingsGetSetsPreservePresenceAndLocalFilter",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.GetByIdentity",
+            "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+          },
+          {
+            "name": "Service.List",
+            "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+          },
+          {
+            "name": "Service.ListFiltered",
+            "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conversation-role-contract-notes.md",
+          "docs/implementation/ext/evidence/conversation-role-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
+          "docs/implementation/ext/evidence/conversation-role-presence.json",
+          "docs/implementation/ext/evidence/conversation-role-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.",
         "evidence": []
       },
       "exclusion": null
@@ -23750,23 +23889,86 @@
     {
       "name": "New-CsConversationRole",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "conversation_role",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/342",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "ParentAndRelativeKey",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/7/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "ProjectCreateByID",
+              "file": "msteams/teams_admin_api/conversation_role/projection.go"
+            },
+            {
+              "name": "Service.Create",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationCreateSetsUseInspectableFrozenObservedProjection",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/7/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "ProjectCreateByIdentity",
+              "file": "msteams/teams_admin_api/conversation_role/projection.go"
+            },
+            {
+              "name": "Service.Create",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationCreateSetsUseInspectableFrozenObservedProjection",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "ProjectCreateByIdentity",
+            "file": "msteams/teams_admin_api/conversation_role/projection.go"
+          },
+          {
+            "name": "Service.Create",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          },
+          {
+            "name": "ProjectCreateByID",
+            "file": "msteams/teams_admin_api/conversation_role/projection.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conversation-role-contract-notes.md",
+          "docs/implementation/ext/evidence/conversation-role-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
+          "docs/implementation/ext/evidence/conversation-role-presence.json",
+          "docs/implementation/ext/evidence/conversation-role-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.",
         "evidence": []
       },
       "exclusion": null
@@ -30437,23 +30639,74 @@
     {
       "name": "Remove-CsConversationRole",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "conversation_role",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/468",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/8/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.DeleteByIdentity",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationDeleteBothSetsUseOriginalBoundParameters",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "ParentAndRelativeKey",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/8/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.DeleteByID",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationDeleteBothSetsUseOriginalBoundParameters",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.DeleteByIdentity",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          },
+          {
+            "name": "Service.DeleteByID",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conversation-role-contract-notes.md",
+          "docs/implementation/ext/evidence/conversation-role-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
+          "docs/implementation/ext/evidence/conversation-role-presence.json",
+          "docs/implementation/ext/evidence/conversation-role-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.",
         "evidence": []
       },
       "exclusion": null
@@ -36365,23 +36618,110 @@
     {
       "name": "Set-CsConversationRole",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "conversation_role",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/583",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/10/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.PrepareUpdateByIdentity",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            },
+            {
+              "name": "Service.UpdateByIdentity",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationSetBothSelectorsPrepareThenApplyFrozenBody",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationSelectedPermissionSetReportsLossWithoutRejectingInput",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationPreparationDenialAndAcceptedDecodeFailureRetainStages",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationPreparedSelectorCannotRetargetOrChangeSet",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "ParentAndRelativeKey",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/10/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.PrepareUpdateByID",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            },
+            {
+              "name": "Service.UpdateByID",
+              "file": "msteams/teams_admin_api/conversation_role/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationSetBothSelectorsPrepareThenApplyFrozenBody",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationRelativeSetKeepsMissingModelIDNull",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationUnboundSetIsNoOpAndEmptyFilterIsLocalError",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.PrepareUpdateByIdentity",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          },
+          {
+            "name": "Service.UpdateByIdentity",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          },
+          {
+            "name": "Service.PrepareUpdateByID",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          },
+          {
+            "name": "Service.UpdateByID",
+            "file": "msteams/teams_admin_api/conversation_role/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conversation-role-contract-notes.md",
+          "docs/implementation/ext/evidence/conversation-role-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
+          "docs/implementation/ext/evidence/conversation-role-presence.json",
+          "docs/implementation/ext/evidence/conversation-role-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.",
         "evidence": []
       },
       "exclusion": null
@@ -36389,23 +36729,81 @@
     {
       "name": "Set-CsConversationRolesSetting",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "conversation_roles_setting",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/584",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/11/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.PrepareUpdateByIdentity",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+            },
+            {
+              "name": "Service.UpdateByIdentity",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+            },
+            {
+              "name": "ProjectListValue",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/projection.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConversationSettingsFullTransitionPipelineMatchesPinnedBodies",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationSettingsNullOmittedAndEmptyResponseCollections",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationSettingsDenialAcceptedMalformedAndRetargetRetainStages",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationSettingsUnboundIsNoOpAndEmptyFilterIsLocal",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.PrepareUpdateByIdentity",
+            "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+          },
+          {
+            "name": "Service.UpdateByIdentity",
+            "file": "msteams/teams_admin_api/conversation_roles_setting/service.go"
+          },
+          {
+            "name": "ProjectListValue",
+            "file": "msteams/teams_admin_api/conversation_roles_setting/projection.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conversation-role-contract-notes.md",
+          "docs/implementation/ext/evidence/conversation-role-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
+          "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
+          "docs/implementation/ext/evidence/conversation-role-presence.json",
+          "docs/implementation/ext/evidence/conversation-role-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.",
         "evidence": []
       },
       "exclusion": null

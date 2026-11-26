@@ -2,8 +2,8 @@
 
 Owner: EXT-90 (#191). Baseline: MicrosoftTeams 8.1.0.
 
-The ledger assigns 104 commands, 108 default-session observed sets and 14 separately declared conditional sets to 14 EXT families.
-An additional 7 unowned nested candidates retain EXT research ownership.
+The ledger assigns 110 commands, 108 default-session observed sets and 26 separately declared conditional sets to 16 EXT families.
+An additional 1 unowned nested candidates retain EXT research ownership.
 Regenerate with `python3 tools/coverage/ext_report.py`; `--check` rejects stale output.
 
 ## Evidence boundaries
@@ -55,22 +55,24 @@ are source observations only; they do not settle public/support entitlement or w
 The hashed manifest declarations make the conditional boundary explicit: five installation/license
 commands are commented `#preview` in the root manifest; four conversation-role commands
 are exported by preview/OCE manifests, and six remaining settings commands by OCE only.
-Eight commands now have in-progress implementation ownership across app_installation,
-tenant_configuration and teams_app_policy_configuration. Separate [compiled declaration metadata](evidence/conditional-command-metadata.json)
+Fourteen commands now have in-progress implementation ownership across app_installation,
+tenant/app configuration and conversation roles/settings. Separate [compiled declaration metadata](evidence/conditional-command-metadata.json)
 now captures all fifteen types and twenty-seven declared sets without invoking them; eight
-TeamScope/UserScope sets map to the installer implementation and six sets to conditional settings. This does not establish
+TeamScope/UserScope sets map to the installer, six sets to tenant/app settings, and twelve to
+conversation reads and explicit inspectable compatibility projections. Full permission writes
+remain unresolved: actual local builders retain flags, while the observed management projection
+drops them. No guessed positive flag-persistence contract is added. This does not establish
 root-export availability or a live pass, and does not authorize
 excluding the remaining candidates or assuming the ordinary lab identity can exercise them.
+Three additional [compiled local permission-builder declarations](evidence/conversation-builder-metadata.json)
+each have one supplemental Identity set; they are absent from root/OCE/preview cmdlet export
+lists and root discovery. They remain separately classified scope candidates, not silently
+counted as accepted exports, owned commands, supported public cmdlets or approved exclusions.
+The remaining license-report source composition is documented in [research notes](license-report-contract-notes.md).
 
 | Candidate | Research owner | Current disposition |
 | --- | --- | --- |
-| `Get-CsConversationRole` | `EXT-01` | Unowned; not implemented or qualified |
-| `Get-CsConversationRolesSetting` | `EXT-01` | Unowned; not implemented or qualified |
 | `Get-LicenseReportForChangeNotificationSubscription` | `EXT-01` | Unowned; not implemented or qualified |
-| `New-CsConversationRole` | `EXT-01` | Unowned; not implemented or qualified |
-| `Remove-CsConversationRole` | `EXT-01` | Unowned; not implemented or qualified |
-| `Set-CsConversationRole` | `EXT-01` | Unowned; not implemented or qualified |
-| `Set-CsConversationRolesSetting` | `EXT-01` | Unowned; not implemented or qualified |
 
 ## ai_agents
 
@@ -367,6 +369,80 @@ Owner: `EXT-23`. Implementation: `in-progress`; contract: `metadata-only`; live:
 | No observed set; conditional scope requires evidence | [`Service.PublishPolicySchemaDefaults`](../../../msteams/teams_admin_api/configuration_diagnostics/service.go) | No set mapping | No set mapping |
 
 Recorded live limitation: Client-secret lab run proved the route only through the app-only Teams Administrator HTTP 403 denial, sent with inert inputs (an undefined policy type); a successful call needs support credentials and acts service-wide, so it remains unqualified. The compiled cmdlet needs an OCE login context, so it has no PowerShell parity run.
+
+## conversation_role
+
+Contract and live limitations: [conversation-role-contract-notes.md](conversation-role-contract-notes.md).
+
+### Get-CsConversationRole
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `Identity` (compiled declaration) | [`Service.GetByIdentity`](../../../msteams/teams_admin_api/conversation_role/service.go)<br>[`Service.List`](../../../msteams/teams_admin_api/conversation_role/service.go) | [`TestUnitConversationRoleAllGetSetsAndRawSnapshot`](../../../msteams/teams_admin_api/conversation_role/service_test.go) | None recorded |
+| `ParentAndRelativeKey` (compiled declaration) | [`Service.GetByID`](../../../msteams/teams_admin_api/conversation_role/service.go) | [`TestUnitConversationRoleAllGetSetsAndRawSnapshot`](../../../msteams/teams_admin_api/conversation_role/service_test.go) | None recorded |
+| `Filter` (compiled declaration) | [`Service.ListFiltered`](../../../msteams/teams_admin_api/conversation_role/service.go) | [`TestUnitConversationRoleAllGetSetsAndRawSnapshot`](../../../msteams/teams_admin_api/conversation_role/service_test.go) | None recorded |
+
+Recorded live limitation: Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.
+
+### New-CsConversationRole
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `ParentAndRelativeKey` (compiled declaration) | [`ProjectCreateByID`](../../../msteams/teams_admin_api/conversation_role/projection.go)<br>[`Service.Create`](../../../msteams/teams_admin_api/conversation_role/service.go) | [`TestUnitConversationCreateSetsUseInspectableFrozenObservedProjection`](../../../msteams/teams_admin_api/conversation_role/service_test.go) | None recorded |
+| `Identity` (compiled declaration) | [`ProjectCreateByIdentity`](../../../msteams/teams_admin_api/conversation_role/projection.go)<br>[`Service.Create`](../../../msteams/teams_admin_api/conversation_role/service.go) | [`TestUnitConversationCreateSetsUseInspectableFrozenObservedProjection`](../../../msteams/teams_admin_api/conversation_role/service_test.go) | None recorded |
+
+Recorded live limitation: Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.
+
+### Remove-CsConversationRole
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `Identity` (compiled declaration) | [`Service.DeleteByIdentity`](../../../msteams/teams_admin_api/conversation_role/service.go) | [`TestUnitConversationDeleteBothSetsUseOriginalBoundParameters`](../../../msteams/teams_admin_api/conversation_role/service_test.go) | None recorded |
+| `ParentAndRelativeKey` (compiled declaration) | [`Service.DeleteByID`](../../../msteams/teams_admin_api/conversation_role/service.go) | [`TestUnitConversationDeleteBothSetsUseOriginalBoundParameters`](../../../msteams/teams_admin_api/conversation_role/service_test.go) | None recorded |
+
+Recorded live limitation: Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.
+
+### Set-CsConversationRole
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `Identity` (compiled declaration) | [`Service.PrepareUpdateByIdentity`](../../../msteams/teams_admin_api/conversation_role/service.go)<br>[`Service.UpdateByIdentity`](../../../msteams/teams_admin_api/conversation_role/service.go) | [`TestUnitConversationSetBothSelectorsPrepareThenApplyFrozenBody`](../../../msteams/teams_admin_api/conversation_role/service_test.go)<br>[`TestUnitConversationSelectedPermissionSetReportsLossWithoutRejectingInput`](../../../msteams/teams_admin_api/conversation_role/service_test.go)<br>[`TestUnitConversationPreparationDenialAndAcceptedDecodeFailureRetainStages`](../../../msteams/teams_admin_api/conversation_role/service_test.go)<br>[`TestUnitConversationPreparedSelectorCannotRetargetOrChangeSet`](../../../msteams/teams_admin_api/conversation_role/service_test.go) | None recorded |
+| `ParentAndRelativeKey` (compiled declaration) | [`Service.PrepareUpdateByID`](../../../msteams/teams_admin_api/conversation_role/service.go)<br>[`Service.UpdateByID`](../../../msteams/teams_admin_api/conversation_role/service.go) | [`TestUnitConversationSetBothSelectorsPrepareThenApplyFrozenBody`](../../../msteams/teams_admin_api/conversation_role/service_test.go)<br>[`TestUnitConversationRelativeSetKeepsMissingModelIDNull`](../../../msteams/teams_admin_api/conversation_role/service_test.go)<br>[`TestUnitConversationUnboundSetIsNoOpAndEmptyFilterIsLocalError`](../../../msteams/teams_admin_api/conversation_role/service_test.go) | None recorded |
+
+Recorded live limitation: Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.
+
+## conversation_roles_setting
+
+Contract and live limitations: [conversation-role-contract-notes.md](conversation-role-contract-notes.md).
+
+### Get-CsConversationRolesSetting
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `Identity` (compiled declaration) | [`Service.GetByIdentity`](../../../msteams/teams_admin_api/conversation_roles_setting/service.go)<br>[`Service.List`](../../../msteams/teams_admin_api/conversation_roles_setting/service.go) | [`TestUnitConversationSettingsGetSetsPreservePresenceAndLocalFilter`](../../../msteams/teams_admin_api/conversation_roles_setting/service_test.go) | None recorded |
+| `Filter` (compiled declaration) | [`Service.ListFiltered`](../../../msteams/teams_admin_api/conversation_roles_setting/service.go) | [`TestUnitConversationSettingsGetSetsPreservePresenceAndLocalFilter`](../../../msteams/teams_admin_api/conversation_roles_setting/service_test.go) | None recorded |
+
+Recorded live limitation: Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.
+
+### Set-CsConversationRolesSetting
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `Identity` (compiled declaration) | [`Service.PrepareUpdateByIdentity`](../../../msteams/teams_admin_api/conversation_roles_setting/service.go)<br>[`Service.UpdateByIdentity`](../../../msteams/teams_admin_api/conversation_roles_setting/service.go)<br>[`ProjectListValue`](../../../msteams/teams_admin_api/conversation_roles_setting/projection.go) | [`TestUnitConversationSettingsFullTransitionPipelineMatchesPinnedBodies`](../../../msteams/teams_admin_api/conversation_roles_setting/service_test.go)<br>[`TestUnitConversationSettingsNullOmittedAndEmptyResponseCollections`](../../../msteams/teams_admin_api/conversation_roles_setting/service_test.go)<br>[`TestUnitConversationSettingsDenialAcceptedMalformedAndRetargetRetainStages`](../../../msteams/teams_admin_api/conversation_roles_setting/service_test.go)<br>[`TestUnitConversationSettingsUnboundIsNoOpAndEmptyFilterIsLocal`](../../../msteams/teams_admin_api/conversation_roles_setting/service_test.go) | None recorded |
+
+Recorded live limitation: Conditional preview/OCE declaration; source-exact projection and authored reply vectors are not successful server or effective-permission proof. Nested Chat/Calling write semantics, root availability and authorization remain unqualified; no live role/Global mutation is configured.
 
 ## devices
 

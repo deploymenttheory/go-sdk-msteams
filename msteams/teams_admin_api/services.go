@@ -17,6 +17,8 @@ import (
 	cloudcalldata "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data"
 	compliancerecording "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/compliance_recording"
 	configurationdiagnostics "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/configuration_diagnostics"
+	conversationrole "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/conversation_role"
+	conversationrolessetting "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/conversation_roles_setting"
 	customappsettings "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/custom_app_settings"
 	externalaccesspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
@@ -107,6 +109,8 @@ import (
 // Services is the typed Teams administration collection. Resource fields are added
 // with their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
+	ConversationRoles                *conversationrole.Service
+	ConversationRoleSettings         *conversationrolessetting.Service
 	TenantConfigurations             *tenantconfiguration.Service
 	TeamsAppPolicyConfigurations     *teamsapppolicyconfiguration.Service
 	TeamsVoiceApplicationsPolicies   *teamsvoiceapplicationspolicy.Service
@@ -238,6 +242,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		return nil, err
 	}
 	return &Services{
+		ConversationRoles:                conversationrole.NewService(scope),
+		ConversationRoleSettings:         conversationrolessetting.NewService(scope),
 		TenantConfigurations:             tenantconfiguration.NewService(scope),
 		TeamsAppPolicyConfigurations:     teamsapppolicyconfiguration.NewService(scope),
 		TeamsVoiceApplicationsPolicies:   teamsvoiceapplicationspolicy.NewService(scope),
