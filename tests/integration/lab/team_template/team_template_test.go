@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -15,7 +16,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 )
 
-func comparePowerShellTemplate(t *testing.T, ctx context.Context, reference, name, short, description string, channels []string) {
+func comparePowerShellTemplate(t *testing.T, ctx context.Context, reference, name, short, description string, channels []string, definition template.Definition) {
 	t.Helper()
 	if os.Getenv("MSTEAMS_LAB_POWERSHELL_ORACLE") != "1" {
 		return
@@ -42,11 +43,12 @@ func comparePowerShellTemplate(t *testing.T, ctx context.Context, reference, nam
 		t.Fatal("pinned PowerShell template read failed; no output retained")
 	}
 	var observed struct {
-		Success      bool     `json:"success"`
-		DisplayName  string   `json:"display_name"`
-		Short        string   `json:"short_description"`
-		Description  string   `json:"description"`
-		ChannelNames []string `json:"channel_names"`
+		Success      bool            `json:"success"`
+		DisplayName  string          `json:"display_name"`
+		Short        string          `json:"short_description"`
+		Description  string          `json:"description"`
+		ChannelNames []string        `json:"channel_names"`
+		Settings     map[string]bool `json:"settings"`
 	}
 	if json.Unmarshal(output.Data, &observed) != nil || !observed.Success {
 		t.Fatal("pinned PowerShell could not read the owned template")
@@ -58,6 +60,9 @@ func comparePowerShellTemplate(t *testing.T, ctx context.Context, reference, nam
 		if observed.ChannelNames[index] != channel {
 			t.Fatal("PowerShell and Go template channel ordering differs")
 		}
+	}
+	if !reflect.DeepEqual(observed.Settings, templateSettings(definition)) {
+		t.Fatal("PowerShell and Go template boolean settings differ")
 	}
 	t.Log("PowerShell 8.1.0 / Go template read parity: passed")
 }
@@ -81,8 +86,60 @@ func templateReadBack(t *testing.T, ctx context.Context, service *template.Servi
 		t.Fatal("template General channel normalization was not observed")
 	}
 	labkit.WriteResponseFixture(t, "team_template", fixtureLabel, response, replacements)
-	comparePowerShellTemplate(t, ctx, reference, name, short, description, names)
+	comparePowerShellTemplate(t, ctx, reference, name, short, description, names, value.Definition)
 	return value
+}
+
+// templateSettings follows the pinned ITeam*Settings properties. Missing settings
+// objects normalize to the generated boolean defaults; the true phase proves
+// every selected field can carry a non-default value before false is checked.
+func templateSettings(d template.Definition) map[string]bool {
+	if d.MemberSettings == nil {
+		d.MemberSettings = &template.MemberSettings{}
+	}
+	if d.GuestSettings == nil {
+		d.GuestSettings = &template.GuestSettings{}
+	}
+	if d.FunSettings == nil {
+		d.FunSettings = &template.FunSettings{}
+	}
+	if d.MessagingSettings == nil {
+		d.MessagingSettings = &template.MessagingSettings{}
+	}
+	if d.DiscoverySettings == nil {
+		d.DiscoverySettings = &template.DiscoverySettings{}
+	}
+	return map[string]bool{
+		"member_add_remove_apps":        d.MemberSettings.AllowAddRemoveApps,
+		"member_private_channels":       d.MemberSettings.AllowCreatePrivateChannels,
+		"member_create_update_channels": d.MemberSettings.AllowCreateUpdateChannels,
+		"member_connectors":             d.MemberSettings.AllowCreateUpdateRemoveConnectors,
+		"member_tabs":                   d.MemberSettings.AllowCreateUpdateRemoveTabs,
+		"member_delete_channels":        d.MemberSettings.AllowDeleteChannels,
+		"member_upload_custom_app":      d.MemberSettings.UploadCustomApp,
+		"guest_create_update_channels":  d.GuestSettings.AllowCreateUpdateChannels,
+		"guest_delete_channels":         d.GuestSettings.AllowDeleteChannels,
+		"fun_custom_memes":              d.FunSettings.AllowCustomMemes,
+		"fun_giphy":                     d.FunSettings.AllowGiphy,
+		"fun_stickers_memes":            d.FunSettings.AllowStickersAndMemes,
+		"messaging_channel_mentions":    d.MessagingSettings.AllowChannelMentions,
+		"messaging_owner_delete":        d.MessagingSettings.AllowOwnerDeleteMessages,
+		"messaging_team_mentions":       d.MessagingSettings.AllowTeamMentions,
+		"messaging_user_delete":         d.MessagingSettings.AllowUserDeleteMessages,
+		"messaging_user_edit":           d.MessagingSettings.AllowUserEditMessages,
+		"discovery_search":              d.DiscoverySettings.ShowInTeamsSearchAndSuggestions,
+	}
+}
+
+func setTemplateSettings(d *template.Definition, enabled bool) {
+	d.MemberSettings = &template.MemberSettings{AllowAddRemoveApps: enabled, AllowCreatePrivateChannels: enabled,
+		AllowCreateUpdateChannels: enabled, AllowCreateUpdateRemoveConnectors: enabled, AllowCreateUpdateRemoveTabs: enabled,
+		AllowDeleteChannels: enabled, UploadCustomApp: enabled}
+	d.GuestSettings = &template.GuestSettings{AllowCreateUpdateChannels: enabled, AllowDeleteChannels: enabled}
+	d.FunSettings = &template.FunSettings{AllowCustomMemes: enabled, AllowGiphy: enabled, AllowStickersAndMemes: enabled}
+	d.MessagingSettings = &template.MessagingSettings{AllowChannelMentions: enabled, AllowOwnerDeleteMessages: enabled,
+		AllowTeamMentions: enabled, AllowUserDeleteMessages: enabled, AllowUserEditMessages: enabled}
+	d.DiscoverySettings = &template.DiscoverySettings{ShowInTeamsSearchAndSuggestions: enabled}
 }
 
 // TestAccTeamTemplateCRUD creates one uniquely named tenant template. It creates
@@ -215,6 +272,37 @@ func runTemplateCRUD(t *testing.T, cfg lab.Config, body bool) {
 	}
 	templateReadBack(t, ctx, service, reference, name, updatedShort, empty, prefix+"empty_description_readback", replacements)
 	t.Log("template empty description/read-back: passed")
+	for _, enabled := range []bool{true, false} {
+		label := "settings_false"
+		if enabled {
+			label = "settings_true"
+		}
+		settings, err := template.NewDefinition(name, updatedShort)
+		if err != nil {
+			t.Fatal("template settings input construction failed")
+		}
+		settings.Description, settings.Channels = &empty, initial.Channels
+		setTemplateSettings(&settings, enabled)
+		if body {
+			settings = labBodyDefinition(t, settings)
+		}
+		_, response, err = service.UpdateByID(ctx, identity.ODataID, settings)
+		labkit.WriteResponseFixture(t, "team_template", prefix+label+"_update", response, replacements)
+		if err != nil {
+			t.Fatal("live template boolean settings update failed")
+		}
+		observed := templateReadBack(t, ctx, service, reference, name, updatedShort, empty, prefix+label+"_readback", replacements)
+		for _, value := range templateSettings(observed.Definition) {
+			if value != enabled {
+				t.Fatal("template boolean settings read-back lost explicit input")
+			}
+		}
+		if enabled {
+			t.Log("template non-default boolean settings/read-back: passed")
+		} else {
+			t.Log("template explicit false settings/read-back: passed")
+		}
+	}
 	listed, response, err := service.List(ctx, nil)
 	if err != nil || listed.IsIncomplete {
 		t.Fatal("complete live template listing unavailable")

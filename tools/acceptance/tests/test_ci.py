@@ -510,18 +510,20 @@ func TestAccRead(t *testing.T) {
                 incomplete = [event for event in events if event.get('Output') != marker]
                 self.assertEqual(ci.evaluate(incomplete, [name], 0, proof='group-assignment')['outcome'], 'failed')
 
-    def test_template_variants_each_require_crud_and_three_comparisons(self):
+    def test_template_variants_each_require_crud_settings_and_five_comparisons(self):
         name = 'TestAccTeamTemplateCRUD'
         children = {name: ['expanded', 'json-body']}
         events = [{'Test': name, 'Action': 'pass'}]
         for child in children[name]:
             events.append({'Test': name + '/' + child, 'Action': 'pass'})
             events += [{'Test': name + '/' + child, 'Action': 'output', 'Output': marker}
-                       for marker in ci.TEMPLATE_MARKERS + [ci.TEMPLATE_ORACLE] * 3]
+                       for marker in ci.TEMPLATE_MARKERS + [ci.TEMPLATE_ORACLE] * 5]
         self.assertEqual(ci.evaluate(events, [name], 0, proof='template-crud', expected_children=children)['outcome'], 'passed')
         for removed in [
             lambda event: event['Test'].endswith('/json-body') and event['Action'] == 'pass',
             lambda event: event['Test'].endswith('/json-body') and event.get('Output') == ci.TEMPLATE_MARKERS[2],
+            lambda event: event['Test'].endswith('/expanded') and event.get('Output') == 'template non-default boolean settings/read-back: passed',
+            lambda event: event['Test'].endswith('/json-body') and event.get('Output') == 'template explicit false settings/read-back: passed',
             lambda event: event['Test'].endswith('/json-body') and event.get('Output') == ci.TEMPLATE_ORACLE,
         ]:
             incomplete = [event for event in events if not removed(event)]
@@ -537,6 +539,16 @@ func TestAccRead(t *testing.T) {
             events.append({'Test': name + '/' + child, 'Action': 'pass'})
             events += [{'Test': name + '/' + child, 'Action': 'output', 'Output': marker}
                        for marker in ci.TEMPLATE_MARKERS + [ci.TEMPLATE_ORACLE] * 2]
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='template-crud', expected_children=children)['outcome'], 'failed')
+
+    def test_template_previous_three_comparisons_cannot_qualify_boolean_settings(self):
+        name = 'TestAccTeamTemplateCRUD'
+        children = {name: ['expanded', 'json-body']}
+        events = [{'Test': name, 'Action': 'pass'}]
+        for child in children[name]:
+            events.append({'Test': name + '/' + child, 'Action': 'pass'})
+            events += [{'Test': name + '/' + child, 'Action': 'output', 'Output': marker}
+                       for marker in ci.TEMPLATE_MARKERS + [ci.TEMPLATE_ORACLE] * 3]
         self.assertEqual(ci.evaluate(events, [name], 0, proof='template-crud', expected_children=children)['outcome'], 'failed')
 
     def test_targeting_read_requires_nonempty_global_and_pinned_comparison(self):

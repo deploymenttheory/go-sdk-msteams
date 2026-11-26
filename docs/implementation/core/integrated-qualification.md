@@ -250,8 +250,8 @@ expects `failure_stage`; it now follows that contract. The helper emits the
 existing whitelisted stage separately, and the script distinguishes backend read
 from projection failure. A credential-free script run verifies its module-failure
 report shape. The latest run at head `6d48a1c`
-([45880253610](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45880253610))
-confirms that pinned certificate connection succeeds and its getter fails at the
+([45880253610](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45880253610),
+tested merge `cea1788734d2a1acb389fc4a07608d66b7ee1faf`) confirms that pinned certificate connection succeeds and its getter fails at the
 backend **read** stage, while both native credential methods still return 401.
 The workflow now executes conditional backend conformance in a separate
 credential-owning auth job. Service jobs depend only on base auth, so available
@@ -271,6 +271,27 @@ missing tenant identity or mismatch fails the positive scenario; no live success
 is claimed before the new CI result. Known orchestration, hierarchy and region
 selectors remain genuine separate fixture prerequisites.
 
+## Current dedicated-app prerequisite evidence
+
+A read-only check on 2026-11-26 at 19:11:49 UTC used only the existing dedicated
+client-secret principal. Token acquisition succeeded, its informational decoded
+Graph `roles` claim contained only `Organization.Read.All`, no delegated scope
+was present, and its application/tenant claims matched the selected identity.
+The Teams Administrator directory-role claim was present. These decoded claims
+were not independently signature-verified and are not authorization proof.
+An actual Graph organization read returned HTTP 200 and the expected tenant
+binding. No credential, token, tenant/application/user identifier or server body
+is included in this report; no permissions or role assignments were changed.
+
+This agrees with the local 2026-11-20 permission inventory and the 2026-11-21
+Teams Administrator assignment record. Provisioning/bootstrap identity permissions
+are separate and are not counted as dedicated SDK permissions. The recorded SDK
+user fixture has no assigned license. Therefore neither existing org/user reads
+nor Teams Administrator status establishes the explicit Graph resource-write
+permissions and licensed-owner prerequisites required by the remaining lifecycle
+scenarios. The private backend's native 401 and pinned read failure remain direct
+evidence of its separate current access limitation.
+
 ## Additional available template conformance
 
 This PR extends the existing registered template lifecycle with an explicit-empty
@@ -286,6 +307,27 @@ The sanitized report records both required children passing, all five milestones
 (including empty Description persistence), six pinned comparisons, two cleaned
 journal entries and zero unresolved entries. This qualifies that field scenario
 at that revision; later Graph changes and other template fields remain separate.
+
+
+The next available extension qualifies all 18 boolean fields across Member,
+Guest, Fun, Messaging and Discovery settings on those same two owned templates.
+Each variant updates all fields to true, compares native read-back against the
+pinned getter, then explicitly writes false and compares again. Omitted settings
+normalize to generated boolean defaults; the true phase first proves each field
+can carry a non-default value. No actual team is created or assigned the template.
+
+Property provenance is the published 8.1.0
+`Microsoft.Teams.ConfigAPI.Cmdlets.private.dll` SHA-256
+`8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6`:
+`ITeamTemplate` exposes singular `MemberSetting`, `GuestSetting`, `FunSetting`,
+`MessagingSetting`, `DiscoverySetting`; the five `ITeam*Settings` interfaces expose
+7, 2, 3, 5 and 1 boolean properties respectively. The oracle projects these exact
+singular properties onto the SDK's plural wire fields. The optional Giphy rating
+string and other untested template fields remain separate qualification gaps.
+The CI proof now requires both settings milestones and ten total comparisons
+(five per variant), preserving two owned journal entries and independent cleanup.
+This stronger extension is authored and awaits its own live result; the earlier
+six-comparison pass does not prove the new fields.
 
 ## Command and parameter-set inventory
 

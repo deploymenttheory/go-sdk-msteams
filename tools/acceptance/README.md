@@ -472,10 +472,13 @@ MSTEAMS_LAB_RECOVERY_FILE=/private/lab/journal.jsonl \
 CORE-90 extends each owned team-template CRUD variant (expanded and JSON Body)
 with an explicit empty Description update. Both variants must retain the updated
 short description and General channel, persist the empty description, and compare
-it with pinned PowerShell. The `template-crud` proof requires the empty-description
-milestone and three comparisons per variant (six total), alongside independent
-post-delete absence and two cleaned journal entries. Prior four-comparison runs
-remain evidence for their original scope only.
+it with pinned PowerShell. The same fixtures now set all 18 boolean fields in
+Member, Guest, Fun, Messaging and Discovery settings to non-default true, then
+explicit false, with native and pinned comparison after each update. The
+`template-crud` proof requires all three additional milestones and five comparisons
+per variant (ten total), alongside independent post-delete absence and two cleaned
+journal entries. Prior four- and six-comparison runs remain evidence for their
+original scopes only; they do not qualify the new settings checks.
 
 CORE targeting-policy conformance runs as the `targeting_policy` partition's
 serialized `global-reads` step. It requires exactly one Global policy in the
