@@ -476,3 +476,10 @@ it with pinned PowerShell. The `template-crud` proof requires the empty-descript
 milestone and three comparisons per variant (six total), alongside independent
 post-delete absence and two cleaned journal entries. Prior four-comparison runs
 remain evidence for their original scope only.
+
+CORE targeting-policy conformance runs as the `targeting_policy` partition's
+serialized `global-reads` step. It requires exactly one Global policy in the
+filtered list, matching selected/listed typed fields and one pinned PowerShell
+comparison. A configured app denial, empty list or disabled oracle fails this
+positive read scenario. The test makes no policy, hierarchy or assignment change;
+legacy-flight eligibility and mutation effects remain separate qualification.

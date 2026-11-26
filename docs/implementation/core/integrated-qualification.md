@@ -135,6 +135,19 @@ region token or a known batch/hierarchy operation selector. A read of secret nam
 cannot establish the app's effective Graph consent; current notes record denied
 Graph reads, and no new successful Graph live access is claimed by this PR.
 
+## Available targeting read conformance
+
+The former pending reason for `TestAccTargetingPolicyReadOnly` did not identify a
+missing selector: its Global read/list needs only the existing application lab
+identity. This PR moves that exact case into a serialized `targeting_policy` CI
+partition. It requires one unambiguous Global row, matching typed fields between
+selected read and filtered list, and one pinned PowerShell comparison. No policy,
+assignment, directory permission or hierarchy is changed. The outcome is currently
+unproven; a denial fails the positive read scenario and is not counted as success.
+Mutation effects, additional identities, legacy flighting, cloud and delegated
+qualification remain distinct. This revalidates the old pending disposition rather
+than treating a historical note as a permanent fixture blocker.
+
 ## Additional available template conformance
 
 This PR extends the existing registered template lifecycle with an explicit-empty

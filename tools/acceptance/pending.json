@@ -43,10 +43,6 @@
     "file": "tests/integration/lab/graph/shared_channel_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
-  "TestAccTargetingPolicyReadOnly": {
-    "file": "tests/integration/lab/targeting_policy/targeting_test.go",
-    "reason": "Additional assignment/OCE/targeting tenant scenarios have not been qualified; empty discovery responses do not establish action acceptance."
-  },
   "TestAccTargetingHierarchyStatusReadOnly": {
     "file": "tests/integration/lab/targeting_hierarchy/targeting_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."

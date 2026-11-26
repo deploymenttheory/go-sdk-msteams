@@ -1661,6 +1661,19 @@
           ]
         }
       ]
+    },
+    "targeting_policy": {
+      "package": "./tests/integration/lab/targeting_policy",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "proof": "targeting-policy-read",
+          "tests": [
+            "TestAccTargetingPolicyReadOnly"
+          ]
+        }
+      ]
     }
   }
 }
