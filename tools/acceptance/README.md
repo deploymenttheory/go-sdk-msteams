@@ -483,3 +483,9 @@ filtered list, matching selected/listed typed fields and one pinned PowerShell
 comparison. A configured app denial, empty list or disabled oracle fails this
 positive read scenario. The test makes no policy, hierarchy or assignment change;
 legacy-flight eligibility and mutation effects remain separate qualification.
+
+CORE private-channel migration conformance runs the existing bound-tenant singleton
+status read in `private_channel_migration/reads`. It requires matching tenant
+identity and one pinned PowerShell status/details comparison. It starts no
+migration or deployment and needs no existing orchestration selector. A denied
+read fails this positive scenario; it does not become a successful migration.

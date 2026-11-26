@@ -45,7 +45,8 @@ This corrects a missing accepted-operation path, not a new endpoint or live clai
 The same beta Example8 supplies the typed initial `sharedWithTeams` write input:
 `InitialSharedTeam` references are available on CreateRequest, independently from
 read-only relationship snapshots. Tests distinguish omission, explicit empty and
-host-team references, and reject invalid IDs or non-shared/null inputs locally.
+host-team references, reject invalid team IDs locally, and preserve explicit-null
+or nonshared inputs for server validation without a success claim.
 The native route remains a channel create; no existing-relationship mutation is
 invented. Polling tests use a synthetic clock to preserve the 31-second interval
 without adding real wait time.
@@ -169,6 +170,15 @@ unproven; a denial fails the positive read scenario and is not counted as succes
 Mutation effects, additional identities, legacy flighting, cloud and delegated
 qualification remain distinct. This revalidates the old pending disposition rather
 than treating a historical note as a permanent fixture blocker.
+
+The bound-tenant `TestAccPrivateChannelMigrationReadOnly` likewise needs no
+additional operation selector or licensed owner: it reads only the configured
+tenant's singleton status. It now has a read-only `private_channel_migration`
+partition requiring matching tenant identity and one pinned status/details
+comparison. No migration, deployment or tenant setting is changed. Denial,
+missing tenant identity or mismatch fails the positive scenario; no live success
+is claimed before the new CI result. Known orchestration, hierarchy and region
+selectors remain genuine separate fixture prerequisites.
 
 ## Additional available template conformance
 
@@ -360,7 +370,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 ### New-TeamChannel (CORE-21)
 
 - **__AllParameterSets** — SDK: [InitialSharedTeam](../../../msteams/graph_api/channel/models.go), [Service.Create](../../../msteams/graph_api/channel/creation.go), [Service.CreateWithOwner](../../../msteams/graph_api/channel/creation.go).
-  Contract tests: [TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitNativeCRUDContracts](../../../msteams/graph_api/channel/service_test.go), [TestUnitSharedCreationAndOperation](../../../msteams/graph_api/channel/service_test.go), [TestUnitOwnerResolutionComposition](../../../msteams/graph_api/channel/service_test.go).
+  Contract tests: [TestUnitIntegratedCoreInitialShareShapesRemainServerValidated](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitNativeCRUDContracts](../../../msteams/graph_api/channel/service_test.go), [TestUnitSharedCreationAndOperation](../../../msteams/graph_api/channel/service_test.go), [TestUnitOwnerResolutionComposition](../../../msteams/graph_api/channel/service_test.go).
   Live tests: [TestAccChannelCRUD](../../../tests/integration/lab/graph/channel_test.go).
 
 ### Remove-CsTeamsTargetingPolicy (CORE-25)

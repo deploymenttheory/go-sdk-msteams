@@ -1674,6 +1674,18 @@
           ]
         }
       ]
+    },
+    "private_channel_migration": {
+      "package": "./tests/integration/lab/private_channel_migration",
+      "steps": [
+        {
+          "id": "reads",
+          "proof": "private-migration-read",
+          "tests": [
+            "TestAccPrivateChannelMigrationReadOnly"
+          ]
+        }
+      ]
     }
   }
 }

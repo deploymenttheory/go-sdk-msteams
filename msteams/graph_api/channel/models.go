@@ -86,9 +86,10 @@ type CreateRequest struct {
 	Description    *string
 	MembershipType MembershipType
 	OwnerUserID    *string
-	// SharedWithTeams is an optional initial-share collection for a shared
-	// channel. Nil omits the field; an explicitly empty slice sends []. A
-	// pointer to a nil slice is rejected rather than sending undocumented null.
+	// SharedWithTeams is the documented initial-share input for shared creation.
+	// Nil omits the field, an empty collection sends [], and a pointer to a nil
+	// slice sends null. The service validates unsupported shapes/combinations;
+	// serialization alone does not establish their acceptance.
 	SharedWithTeams *[]InitialSharedTeam
 }
 

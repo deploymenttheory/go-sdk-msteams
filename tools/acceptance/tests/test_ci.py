@@ -548,6 +548,16 @@ func TestAccRead(t *testing.T) {
         events.append({'Test': name, 'Action': 'output', 'Output': oracle})
         self.assertEqual(ci.evaluate(events, [name], 0, proof='targeting-policy-read')['outcome'], 'passed')
 
+    def test_private_migration_read_requires_bound_tenant_and_pinned_comparison(self):
+        name = 'TestAccPrivateChannelMigrationReadOnly'
+        markers, oracle, _ = ci.PROOFS['private-migration-read']
+        events = [{'Test': name, 'Action': 'pass'}]
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='private-migration-read')['outcome'], 'failed')
+        events += [{'Test': name, 'Action': 'output', 'Output': marker} for marker in markers]
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='private-migration-read')['outcome'], 'failed')
+        events.append({'Test': name, 'Action': 'output', 'Output': oracle})
+        self.assertEqual(ci.evaluate(events, [name], 0, proof='private-migration-read')['outcome'], 'passed')
+
     def test_group_fixture_secret_is_bound_to_the_dedicated_empty_security_group(self):
         tenant = '00000000-0000-4000-8000-000000000001'
         fixture = {'tenant_id': tenant, 'group_id': '00000000-0000-4000-8000-000000000020',

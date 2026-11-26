@@ -307,8 +307,6 @@ func TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP(t *testing.T) {
 		shares *[]channel.InitialSharedTeam
 	}{
 		{name: "invalid-team-id", kind: channel.Shared, shares: new([]channel.InitialSharedTeam{{ID: "not-a-team-id"}})},
-		{name: "undocumented-null", kind: channel.Shared, shares: new([]channel.InitialSharedTeam(nil))},
-		{name: "standard-channel", kind: channel.Standard, shares: new([]channel.InitialSharedTeam{{ID: integratedGroup}})},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			c := contracttest.Case{Name: tc.name, Family: "integrated_core", Scope: "local", Source: "tests/contract/core/integration_test.go", Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}},
@@ -322,6 +320,31 @@ func TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP(t *testing.T) {
 			if err != nil || !result.Passed() {
 				t.Fatalf("invalid initial sharing reached HTTP: %v %+v", err, result.Differences())
 			}
+		})
+	}
+}
+
+// The documented successful shape is an array on shared creation. Other caller
+// shapes remain server-validated; these denial vectors claim no acceptance.
+func TestUnitIntegratedCoreInitialShareShapesRemainServerValidated(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		name   string
+		kind   channel.MembershipType
+		shares *[]channel.InitialSharedTeam
+		wire   string
+	}{
+		{name: "explicit-null", kind: channel.Shared, shares: new([]channel.InitialSharedTeam(nil)), wire: `{"displayName":"Offline shared","membershipType":"shared","sharedWithTeams":null}`},
+		{name: "standard-with-share-input", kind: channel.Standard, shares: new([]channel.InitialSharedTeam{{ID: integratedGroup}}), wire: `{"displayName":"Offline shared","membershipType":"standard","sharedWithTeams":[{"id":"` + integratedGroup + `"}]}`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			runIntegratedCore(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: "New-TeamChannel", ParameterSet: "__AllParameterSets"}},
+				Steps: []contracttest.Exchange{coreExchange("POST", "/beta/teams/"+integratedGroup+"/channels", tc.wire, 403, "")}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					value, err := sdk.GraphAPI.Channels.Create(ctx, integratedGroup, channel.CreateRequest{DisplayName: "Offline shared", MembershipType: tc.kind, SharedWithTeams: tc.shares})
+					return contracttest.Observation{Response: value.Response, Err: err}
+				},
+			})
 		})
 	}
 }

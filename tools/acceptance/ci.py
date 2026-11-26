@@ -103,6 +103,7 @@ AUTO_ATTENDANT_MARKERS = [
 ]
 AUTO_ATTENDANT_ORACLE = 'PowerShell 8.1.0 / Go auto attendant parity: passed'
 PROOFS = {
+    'private-migration-read': (['private migration bound-tenant status read: passed'], 'PowerShell 8.1.0 / Go private migration read parity: passed', 1),
     'targeting-policy-read': (['targeting Global read/list: passed'], 'PowerShell 8.1.0 / Go targeting policy read parity: passed', 1),
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),

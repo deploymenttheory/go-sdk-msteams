@@ -15,10 +15,6 @@
     "file": "tests/integration/lab/batch_deployment/deployment_migration_test.go",
     "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
   },
-  "TestAccPrivateChannelMigrationReadOnly": {
-    "file": "tests/integration/lab/private_channel_migration/deployment_migration_test.go",
-    "reason": "Requires explicit same-tenant resource/user fixtures and, for Graph mutations, separately qualified Graph permissions and verified cleanup."
-  },
   "TestAccMultiGeoRegionReadOnly": {
     "file": "tests/integration/lab/region/deployment_migration_test.go",
     "reason": "Requires an explicit delegated identity/scoped token fixture; application credentials must not substitute for the required mode."

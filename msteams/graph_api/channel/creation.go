@@ -52,9 +52,6 @@ func validateCreate(value CreateRequest) error {
 		return client.ErrRequest
 	}
 	if value.SharedWithTeams != nil {
-		if typeName != Shared || *value.SharedWithTeams == nil {
-			return client.ErrRequest
-		}
 		for _, target := range *value.SharedWithTeams {
 			if !directoryID.MatchString(target.ID) {
 				return client.ErrRequest

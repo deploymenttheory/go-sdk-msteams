@@ -29511,6 +29511,10 @@
             {
               "file": "tests/contract/core/integration_test.go",
               "name": "TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreInitialShareShapesRemainServerValidated"
             }
           ],
           "live_tests": [
