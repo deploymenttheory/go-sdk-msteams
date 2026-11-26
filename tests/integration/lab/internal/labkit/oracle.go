@@ -212,7 +212,9 @@ func RunTeamOracle(t *testing.T, ctx context.Context, request TeamOracleRequest)
 	}
 	observed, err := DecodeTeamOracle(output.Data, request.Kind)
 	if err != nil {
-		t.Fatalf("pinned PowerShell did not produce a complete read observation (stage: %s)", ReadOracleFailureStage(output.Data))
+		stage := ReadOracleFailureStage(output.Data)
+		t.Logf("oracle failure stage: %s", stage)
+		t.Fatal("pinned PowerShell did not produce a complete read observation")
 	}
 	return observed
 }

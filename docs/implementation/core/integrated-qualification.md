@@ -236,8 +236,21 @@ step selection. The ordinary Graph/Teams authentication report remains separate.
 No certificate material is delivered to service jobs. Native 401 remains a failed
 success-required scenario. The service read still requires successful bound-tenant
 status; its pinned parity obligation is fulfilled only by the separate auth-scope
-scenario, which requires both credential comparisons. This new scope awaits CI;
-no successful backend result is claimed yet.
+scenario, which requires both credential comparisons.
+
+[Run 45879687886](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45879687886)
+at head `73ded1c` passed the base authentication step but failed the separate
+private-migration backend step: both native client-secret and certificate reads
+returned HTTP 401 after the header repair, and the certificate-connected pinned
+oracle did not produce a complete observation. No pinned comparison passed.
+Therefore the cmdlet header alone does not resolve the rejection. The sanitized
+artifact from this revision retained the oracle failure prefix without its fixed
+stage label. The script also used `stage` on failure while the shared extractor
+expects `failure_stage`; it now follows that contract. The helper emits the
+existing whitelisted stage separately, and the script distinguishes backend read
+from projection failure. A credential-free script run verifies its module-failure
+report shape. Backend eligibility
+remains unqualified; a 401 is not rewritten as an expected positive outcome.
 
 Denial,
 missing tenant identity or mismatch fails the positive scenario; no live success
