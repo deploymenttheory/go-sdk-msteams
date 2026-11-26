@@ -29477,6 +29477,10 @@
             {
               "file": "msteams/graph_api/channel/creation.go",
               "name": "Service.CreateWithOwner"
+            },
+            {
+              "file": "msteams/graph_api/channel/models.go",
+              "name": "InitialSharedTeam"
             }
           ],
           "contract_tests": [
@@ -29503,6 +29507,10 @@
             {
               "file": "tests/contract/core/integration_test.go",
               "name": "TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP"
             }
           ],
           "live_tests": [
@@ -29524,6 +29532,10 @@
           {
             "file": "msteams/graph_api/channel/creation.go",
             "name": "Service.CreateWithOwner"
+          },
+          {
+            "file": "msteams/graph_api/channel/models.go",
+            "name": "InitialSharedTeam"
           }
         ]
       },

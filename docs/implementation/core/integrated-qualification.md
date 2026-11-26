@@ -33,14 +33,22 @@ both Location and documented Content-Location, terminal polling, a typed operati
 read and the resulting channel read through the same root. They reject foreign
 Content-Location and refuse to replace a malformed primary Location with a fallback.
 Cancelling a local wait retains the accepted remote operation identity and sends no
-poll or repeated creation request. These authored scenarios are pending CI validation
-for this revision; no local Go build is started below the disk reserve.
+poll or repeated creation request. The header-handling cases passed a guarded local test run. The initial-share
+models/examples compile; integration execution awaits CI after correcting a
+synthetic-clock test nesting error. No local Go build starts below the disk reserve.
 
 The [beta channel creation contract](https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta)
 returns Content-Location in its shared-channel 202 example. Source inspection found
 that Channels.Create read only Location; it now uses Content-Location only when
 Location is absent, passing both through the existing origin/team validation.
 This corrects a missing accepted-operation path, not a new endpoint or live claim.
+The same beta Example8 supplies the typed initial `sharedWithTeams` write input:
+`InitialSharedTeam` references are available on CreateRequest, independently from
+read-only relationship snapshots. Tests distinguish omission, explicit empty and
+host-team references, and reject invalid IDs or non-shared/null inputs locally.
+The native route remains a channel create; no existing-relationship mutation is
+invented. Polling tests use a synthetic clock to preserve the 31-second interval
+without adding real wait time.
 
 ## Fixture provenance and permission boundaries
 
@@ -351,8 +359,8 @@ and `live: not-run`. No ledger success state is promoted by this change.
 
 ### New-TeamChannel (CORE-21)
 
-- **__AllParameterSets** — SDK: [Service.Create](../../../msteams/graph_api/channel/creation.go), [Service.CreateWithOwner](../../../msteams/graph_api/channel/creation.go).
-  Contract tests: [TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitNativeCRUDContracts](../../../msteams/graph_api/channel/service_test.go), [TestUnitSharedCreationAndOperation](../../../msteams/graph_api/channel/service_test.go), [TestUnitOwnerResolutionComposition](../../../msteams/graph_api/channel/service_test.go).
+- **__AllParameterSets** — SDK: [InitialSharedTeam](../../../msteams/graph_api/channel/models.go), [Service.Create](../../../msteams/graph_api/channel/creation.go), [Service.CreateWithOwner](../../../msteams/graph_api/channel/creation.go).
+  Contract tests: [TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary](../../../tests/contract/core/integration_test.go), [TestUnitIntegratedCoreSharedChannelOperationAndRead](../../../tests/contract/core/integration_test.go), [TestUnitNativeCRUDContracts](../../../msteams/graph_api/channel/service_test.go), [TestUnitSharedCreationAndOperation](../../../msteams/graph_api/channel/service_test.go), [TestUnitOwnerResolutionComposition](../../../msteams/graph_api/channel/service_test.go).
   Live tests: [TestAccChannelCRUD](../../../tests/integration/lab/graph/channel_test.go).
 
 ### Remove-CsTeamsTargetingPolicy (CORE-25)

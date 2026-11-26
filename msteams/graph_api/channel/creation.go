@@ -33,10 +33,11 @@ type ownerPayload struct {
 }
 
 type createPayload struct {
-	DisplayName    string         `json:"displayName"`
-	Description    *string        `json:"description,omitempty"`
-	MembershipType MembershipType `json:"membershipType"`
-	Members        []ownerPayload `json:"members,omitempty"`
+	DisplayName     string               `json:"displayName"`
+	Description     *string              `json:"description,omitempty"`
+	MembershipType  MembershipType       `json:"membershipType"`
+	Members         []ownerPayload       `json:"members,omitempty"`
+	SharedWithTeams *[]InitialSharedTeam `json:"sharedWithTeams,omitempty"`
 }
 
 func validateCreate(value CreateRequest) error {
@@ -49,6 +50,16 @@ func validateCreate(value CreateRequest) error {
 	}
 	if !validType(typeName) || value.OwnerUserID != nil && (typeName == Standard || !directoryID.MatchString(*value.OwnerUserID)) {
 		return client.ErrRequest
+	}
+	if value.SharedWithTeams != nil {
+		if typeName != Shared || *value.SharedWithTeams == nil {
+			return client.ErrRequest
+		}
+		for _, target := range *value.SharedWithTeams {
+			if !directoryID.MatchString(target.ID) {
+				return client.ErrRequest
+			}
+		}
 	}
 	return nil
 }
@@ -70,7 +81,7 @@ func (s *Service) Create(ctx context.Context, teamID string, value CreateRequest
 	if value.MembershipType == "" {
 		value.MembershipType = Standard
 	}
-	body := createPayload{DisplayName: value.DisplayName, Description: value.Description, MembershipType: value.MembershipType}
+	body := createPayload{DisplayName: value.DisplayName, Description: value.Description, MembershipType: value.MembershipType, SharedWithTeams: value.SharedWithTeams}
 	if value.OwnerUserID != nil {
 		env, err := s.scope.Session().Environment()
 		if err != nil {

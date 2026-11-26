@@ -60,3 +60,11 @@ Both pass the same Graph origin and addressed-team operation-route validation.
 A present malformed Location remains an error; the fallback does not hide it.
 Acceptance retains an operation handle rather than a completed channel, and local
 wait cancellation does not cancel or resubmit the remote create.
+
+`CreateRequest.SharedWithTeams` accepts typed `InitialSharedTeam` references for
+initial sharing while creating a shared channel, as documented in beta Example8.
+Nil omits the property; a pointer to an empty collection sends `[]`. A pointer to
+a nil collection is rejected instead of sending an undocumented null. References
+carry team UUIDs. The [compiled example](example_test.go) shows sharing the new
+channel with its host team. The service does not infer relationship POST/PATCH
+operations or claim that arbitrary cross-tenant recipients are authorized.
