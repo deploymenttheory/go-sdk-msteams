@@ -1,9 +1,10 @@
 package teamsapppolicyconfiguration
 
 import (
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	"regexp"
 	"strings"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
 var uriPattern = regexp.MustCompile(`^(h|H)(t|T)(t|T)(p|P)(s|S)://.+$`)
