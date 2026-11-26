@@ -71,7 +71,9 @@ go test -p 1 -count=1 -run '^TestUnit' \
   ./tests/contract/policies
 ```
 
-`gofmt`, `git diff --check`, the exact 60-command / 95-set matrix check, coverage validator, all 13 coverage regressions, test naming and all 46 acceptance guard regressions also passed. The earlier local attempt at the first batch was stopped by the disk guard before any package result; it is not counted as a pass. No source changed during the successful clean-checkpoint Go run. The later default-region, Get2, package InputObject and recording/banner selector additions were authored after that checkpoint and await their own incremental Go validation; the earlier pass is not attributed to untested edits.
+`gofmt`, `git diff --check`, the exact 60-command / 95-set matrix check, coverage validator, all 13 coverage regressions, test naming and all 46 acceptance guard regressions also passed. The earlier local attempt at the first batch was stopped by the disk guard before any package result; it is not counted as a pass. No source changed during the successful clean-checkpoint Go run.
+
+The later selector/regional batch passed at exact clean revision `2d50c827ad5a28a924c1d821ac9ee05b18e88781` after merging the docs-only current main. Session `7316` exited 0 for `policy_assignments`, `policy_packages`, `recording_messages`, `teams_custom_banner_text` and `tests/contract/policies`, using the same TestUnit/compile selection, `-p 1`, an owned temporary directory and a 14 GiB runtime guard; admission free space was 22.29 GiB. Other affected SDK source/test packages were unchanged from the earlier ten-package pass. No source changed during either run, and no local Go process remained after each terminal result.
 
 At revision `1e92884`, [remote lint](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45901658671/job/140188640093) reported one G304 finding in the fixture helper's variable-path `os.ReadFile`. The bounded `os.OpenRoot` fix is included in the tested checkpoint; configured remote lint/platform gates remain separate required checks.
 
