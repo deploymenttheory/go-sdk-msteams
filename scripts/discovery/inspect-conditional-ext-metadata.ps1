@@ -17,7 +17,7 @@ foreach($record in $observed){
    if($attributes.Count -eq 0){continue}
    $parameters=@($attributes|ForEach-Object{@{set=$_.ParameterSetName;mandatory=$_.Mandatory;position=$_.Position;pipeline=$_.ValueFromPipeline;pipeline_property=$_.ValueFromPipelineByPropertyName;remaining_arguments=$_.ValueFromRemainingArguments}})
    $validates=@($property.GetCustomAttributes([System.Management.Automation.ValidateSetAttribute],$true)|ForEach-Object{@{values=@($_.ValidValues);ignore_case=$_.IgnoreCase}})
-   $declarations+=@{name=$property.Name;type=$property.PropertyType.FullName;parameter_attributes=$parameters;validate_sets=$validates}
+   $declarations+=@{name=$property.Name;type=$property.PropertyType.FullName;parameter_attributes=$parameters;validate_sets=$validates;declared_attributes=@($property.CustomAttributes|ForEach-Object{[string]$_})}
   }
   $sets=@($cmdlet.ParameterSets|ForEach-Object{@{name=$_.Name;default=$_.IsDefault;parameters=@($_.Parameters|ForEach-Object{@{name=$_.Name;type=$_.ParameterType.FullName;mandatory=$_.IsMandatory;position=$_.Position;pipeline=$_.ValueFromPipeline;pipeline_property=$_.ValueFromPipelineByPropertyName;remaining_arguments=$_.ValueFromRemainingArguments;aliases=@($_.Aliases)}})}})
   $records+=@{name=$record.name;type=$type.FullName;assembly_file=$match.assembly_file;assembly_sha256=$match.assembly_sha256;root_exported=$record.root_exported;default_parameter_set=$metadata.DefaultParameterSetName;parameter_sets=$sets;property_declarations=$declarations}

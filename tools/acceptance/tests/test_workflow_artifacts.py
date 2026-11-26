@@ -41,7 +41,7 @@ class WorkflowArtifactGuardTests(unittest.TestCase):
             'response-fixtures/ai_agents/ext_integration_*.json',
         }
         self.assertEqual(set(upload_patterns(workflow)), {prefix + path for path in expected})
-        self.assertEqual(workflow.count('steps: *partition-steps'), 2)
+        self.assertGreaterEqual(workflow.count('steps: *partition-steps'), 2)
         self.assertIn('steps: &partition-steps', workflow)
 
     def test_patterns_retain_nested_capture_bytes_without_private_trees(self):

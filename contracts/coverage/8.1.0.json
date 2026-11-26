@@ -6588,23 +6588,91 @@
     {
       "name": "Get-CsTeamsAppPolicyConfiguration",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "teams_app_policy_configuration",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/124",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/3/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.GetByIdentity",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+            },
+            {
+              "name": "Service.List",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+            },
+            {
+              "name": "Service.ListFiltered",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConditionalGetIdentityFilterAndNullableProjection",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "Filter",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/3/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.GetByIdentity",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+            },
+            {
+              "name": "Service.List",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+            },
+            {
+              "name": "Service.ListFiltered",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConditionalGetIdentityFilterAndNullableProjection",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.GetByIdentity",
+            "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+          },
+          {
+            "name": "Service.List",
+            "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+          },
+          {
+            "name": "Service.ListFiltered",
+            "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conditional-settings-contract-notes.md",
+          "docs/implementation/ext/evidence/conditional-settings-serialization.json",
+          "docs/implementation/ext/evidence/conditional-settings-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "OCE-only compiled declaration; authorization, server acceptance and root-export availability are unqualified. No live Global setting mutation is configured.",
         "evidence": []
       },
       "exclusion": null
@@ -13561,23 +13629,91 @@
     {
       "name": "Get-CsTenantConfiguration",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "tenant_configuration",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/209",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/4/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.GetByIdentity",
+              "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+            },
+            {
+              "name": "Service.List",
+              "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+            },
+            {
+              "name": "Service.ListFiltered",
+              "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConditionalGetIdentityFilterAndNullableProjection",
+              "file": "msteams/teams_admin_api/tenant_configuration/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "Filter",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/4/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.GetByIdentity",
+              "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+            },
+            {
+              "name": "Service.List",
+              "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+            },
+            {
+              "name": "Service.ListFiltered",
+              "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConditionalGetIdentityFilterAndNullableProjection",
+              "file": "msteams/teams_admin_api/tenant_configuration/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.GetByIdentity",
+            "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+          },
+          {
+            "name": "Service.List",
+            "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+          },
+          {
+            "name": "Service.ListFiltered",
+            "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conditional-settings-contract-notes.md",
+          "docs/implementation/ext/evidence/conditional-settings-serialization.json",
+          "docs/implementation/ext/evidence/conditional-settings-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "OCE-only compiled declaration; authorization, server acceptance and root-export availability are unqualified. No live Global setting mutation is configured.",
         "evidence": []
       },
       "exclusion": null
@@ -38271,23 +38407,70 @@
     {
       "name": "Set-CsTeamsAppPolicyConfiguration",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "teams_app_policy_configuration",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/635",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/12/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.PatchByIdentity",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+            },
+            {
+              "name": "Service.UpdateByIdentity",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConditionalSetPreservesExplicitNullAndPreparationReceipt",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service_test.go"
+            },
+            {
+              "name": "TestUnitConditionalSetRetainsReadDenialAndAcceptedDecodeFailure",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service_test.go"
+            },
+            {
+              "name": "TestUnitConditionalSparsePatchOmitsUnboundFieldsAndKeepsFalseForce",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service_test.go"
+            },
+            {
+              "name": "TestUnitConditionalSelectedSettingValidationPrecedesCredentials",
+              "file": "msteams/teams_admin_api/teams_app_policy_configuration/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.PatchByIdentity",
+            "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+          },
+          {
+            "name": "Service.UpdateByIdentity",
+            "file": "msteams/teams_admin_api/teams_app_policy_configuration/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conditional-settings-contract-notes.md",
+          "docs/implementation/ext/evidence/conditional-settings-serialization.json",
+          "docs/implementation/ext/evidence/conditional-settings-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "OCE-only compiled declaration; authorization, server acceptance and root-export availability are unqualified. No live Global setting mutation is configured.",
         "evidence": []
       },
       "exclusion": null
@@ -42533,23 +42716,70 @@
     {
       "name": "Set-CsTenantConfiguration",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "tenant_configuration",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/705",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "Identity",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/13/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.PatchByIdentity",
+              "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+            },
+            {
+              "name": "Service.UpdateByIdentity",
+              "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitConditionalSetPreservesExplicitNullAndPreparationReceipt",
+              "file": "msteams/teams_admin_api/tenant_configuration/service_test.go"
+            },
+            {
+              "name": "TestUnitConditionalSetRetainsReadDenialAndAcceptedDecodeFailure",
+              "file": "msteams/teams_admin_api/tenant_configuration/service_test.go"
+            },
+            {
+              "name": "TestUnitConditionalSparsePatchOmitsUnboundFieldsAndKeepsFalseForce",
+              "file": "msteams/teams_admin_api/tenant_configuration/service_test.go"
+            },
+            {
+              "name": "TestUnitConditionalSelectedSettingValidationPrecedesCredentials",
+              "file": "msteams/teams_admin_api/tenant_configuration/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.PatchByIdentity",
+            "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+          },
+          {
+            "name": "Service.UpdateByIdentity",
+            "file": "msteams/teams_admin_api/tenant_configuration/service.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/conditional-settings-contract-notes.md",
+          "docs/implementation/ext/evidence/conditional-settings-serialization.json",
+          "docs/implementation/ext/evidence/conditional-settings-il.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "OCE-only compiled declaration; authorization, server acceptance and root-export availability are unqualified. No live Global setting mutation is configured.",
         "evidence": []
       },
       "exclusion": null

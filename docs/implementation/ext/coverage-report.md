@@ -2,8 +2,8 @@
 
 Owner: EXT-90 (#191). Baseline: MicrosoftTeams 8.1.0.
 
-The ledger assigns 100 commands, 108 default-session observed sets and 8 separately declared conditional sets to 12 EXT families.
-An additional 11 unowned nested candidates retain EXT research ownership.
+The ledger assigns 104 commands, 108 default-session observed sets and 14 separately declared conditional sets to 14 EXT families.
+An additional 7 unowned nested candidates retain EXT research ownership.
 Regenerate with `python3 tools/coverage/ext_report.py`; `--check` rejects stale output.
 
 ## Evidence boundaries
@@ -26,7 +26,11 @@ The [sanitized scoped CI evidence](evidence/integrated-1ed243c.json) records bot
 at merge revision `ade85818e2968e9a3ee2c2550e463511d17e0828`, source head
 `1ed243c75ec239560f94456f64506d07ba3c26c8`: five pinned comparisons and three
 independently cleaned entries, zero unresolved. No response fixtures were retained;
-the offline replies remain synthetic. This does not qualify installation or every EXT set.
+the initial offline replies remain synthetic. A later [captured run](evidence/integrated-25ad385.json)
+at merge `b7ab5738454c13ce82666337faf883cf8fbc49c6` / head `25ad385` again passed
+five comparisons with three cleanups and retained seven digest-verified response files.
+The captured replay cases consume those unchanged sanitized bodies with controlled request
+surrogates; they do not reconstruct private requests or qualify unobserved installer/settings calls.
 
 ## Live prerequisites and scope blockers
 
@@ -51,10 +55,10 @@ are source observations only; they do not settle public/support entitlement or w
 The hashed manifest declarations make the conditional boundary explicit: five installation/license
 commands are commented `#preview` in the root manifest; four conversation-role commands
 are exported by preview/OCE manifests, and six remaining settings commands by OCE only.
-Four installation commands now have in-progress implementation ownership and appear below
-under app_installation. Separate [compiled declaration metadata](evidence/conditional-command-metadata.json)
+Eight commands now have in-progress implementation ownership across app_installation,
+tenant_configuration and teams_app_policy_configuration. Separate [compiled declaration metadata](evidence/conditional-command-metadata.json)
 now captures all fifteen types and twenty-seven declared sets without invoking them; eight
-TeamScope/UserScope sets map to the installer implementation. This does not establish
+TeamScope/UserScope sets map to the installer implementation and six sets to conditional settings. This does not establish
 root-export availability or a live pass, and does not authorize
 excluding the remaining candidates or assuming the ordinary lab identity can exercise them.
 
@@ -62,15 +66,11 @@ excluding the remaining candidates or assuming the ordinary lab identity can exe
 | --- | --- | --- |
 | `Get-CsConversationRole` | `EXT-01` | Unowned; not implemented or qualified |
 | `Get-CsConversationRolesSetting` | `EXT-01` | Unowned; not implemented or qualified |
-| `Get-CsTeamsAppPolicyConfiguration` | `EXT-01` | Unowned; not implemented or qualified |
-| `Get-CsTenantConfiguration` | `EXT-01` | Unowned; not implemented or qualified |
 | `Get-LicenseReportForChangeNotificationSubscription` | `EXT-01` | Unowned; not implemented or qualified |
 | `New-CsConversationRole` | `EXT-01` | Unowned; not implemented or qualified |
 | `Remove-CsConversationRole` | `EXT-01` | Unowned; not implemented or qualified |
 | `Set-CsConversationRole` | `EXT-01` | Unowned; not implemented or qualified |
 | `Set-CsConversationRolesSetting` | `EXT-01` | Unowned; not implemented or qualified |
-| `Set-CsTeamsAppPolicyConfiguration` | `EXT-01` | Unowned; not implemented or qualified |
-| `Set-CsTenantConfiguration` | `EXT-01` | Unowned; not implemented or qualified |
 
 ## ai_agents
 
@@ -1101,6 +1101,56 @@ Owner: `EXT-29`. Implementation: `in-progress`; contract: `metadata-only`; live:
 | `RemoveViaIdentityExpanded` | [`Service.RemoveUserLicenseGracePeriod`](../../../msteams/teams_admin_api/tenant_identity/service.go) | [`TestUnitTenantIdentityGracePeriodRemovalWire`](../../../msteams/teams_admin_api/tenant_identity/service_test.go)<br>[`TestUnitTenantIdentityRejectsInputBeforeIO`](../../../msteams/teams_admin_api/tenant_identity/service_test.go) | None recorded |
 
 Recorded live limitation: Unqualified: ending a license grace period changes licensing state irreversibly, so the lab never calls it. The wire contract comes from the pinned module model and IL only.
+
+## tenant_configuration
+
+Contract and live limitations: [conditional-settings-contract-notes.md](conditional-settings-contract-notes.md).
+
+### Get-CsTenantConfiguration
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `Identity` (compiled declaration) | [`Service.GetByIdentity`](../../../msteams/teams_admin_api/tenant_configuration/service.go)<br>[`Service.List`](../../../msteams/teams_admin_api/tenant_configuration/service.go)<br>[`Service.ListFiltered`](../../../msteams/teams_admin_api/tenant_configuration/service.go) | [`TestUnitConditionalGetIdentityFilterAndNullableProjection`](../../../msteams/teams_admin_api/tenant_configuration/service_test.go) | None recorded |
+| `Filter` (compiled declaration) | [`Service.GetByIdentity`](../../../msteams/teams_admin_api/tenant_configuration/service.go)<br>[`Service.List`](../../../msteams/teams_admin_api/tenant_configuration/service.go)<br>[`Service.ListFiltered`](../../../msteams/teams_admin_api/tenant_configuration/service.go) | [`TestUnitConditionalGetIdentityFilterAndNullableProjection`](../../../msteams/teams_admin_api/tenant_configuration/service_test.go) | None recorded |
+
+Recorded live limitation: OCE-only compiled declaration; authorization, server acceptance and root-export availability are unqualified. No live Global setting mutation is configured.
+
+### Set-CsTenantConfiguration
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `Identity` (compiled declaration) | [`Service.PatchByIdentity`](../../../msteams/teams_admin_api/tenant_configuration/service.go)<br>[`Service.UpdateByIdentity`](../../../msteams/teams_admin_api/tenant_configuration/service.go) | [`TestUnitConditionalSetPreservesExplicitNullAndPreparationReceipt`](../../../msteams/teams_admin_api/tenant_configuration/service_test.go)<br>[`TestUnitConditionalSetRetainsReadDenialAndAcceptedDecodeFailure`](../../../msteams/teams_admin_api/tenant_configuration/service_test.go)<br>[`TestUnitConditionalSparsePatchOmitsUnboundFieldsAndKeepsFalseForce`](../../../msteams/teams_admin_api/tenant_configuration/service_test.go)<br>[`TestUnitConditionalSelectedSettingValidationPrecedesCredentials`](../../../msteams/teams_admin_api/tenant_configuration/service_test.go) | None recorded |
+
+Recorded live limitation: OCE-only compiled declaration; authorization, server acceptance and root-export availability are unqualified. No live Global setting mutation is configured.
+
+## teams_app_policy_configuration
+
+Contract and live limitations: [conditional-settings-contract-notes.md](conditional-settings-contract-notes.md).
+
+### Get-CsTeamsAppPolicyConfiguration
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `Identity` (compiled declaration) | [`Service.GetByIdentity`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service.go)<br>[`Service.List`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service.go)<br>[`Service.ListFiltered`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service.go) | [`TestUnitConditionalGetIdentityFilterAndNullableProjection`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service_test.go) | None recorded |
+| `Filter` (compiled declaration) | [`Service.GetByIdentity`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service.go)<br>[`Service.List`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service.go)<br>[`Service.ListFiltered`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service.go) | [`TestUnitConditionalGetIdentityFilterAndNullableProjection`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service_test.go) | None recorded |
+
+Recorded live limitation: OCE-only compiled declaration; authorization, server acceptance and root-export availability are unqualified. No live Global setting mutation is configured.
+
+### Set-CsTeamsAppPolicyConfiguration
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `Identity` (compiled declaration) | [`Service.PatchByIdentity`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service.go)<br>[`Service.UpdateByIdentity`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service.go) | [`TestUnitConditionalSetPreservesExplicitNullAndPreparationReceipt`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service_test.go)<br>[`TestUnitConditionalSetRetainsReadDenialAndAcceptedDecodeFailure`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service_test.go)<br>[`TestUnitConditionalSparsePatchOmitsUnboundFieldsAndKeepsFalseForce`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service_test.go)<br>[`TestUnitConditionalSelectedSettingValidationPrecedesCredentials`](../../../msteams/teams_admin_api/teams_app_policy_configuration/service_test.go) | None recorded |
+
+Recorded live limitation: OCE-only compiled declaration; authorization, server acceptance and root-export availability are unqualified. No live Global setting mutation is configured.
 
 ## unified_apps
 
