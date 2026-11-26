@@ -146,6 +146,9 @@ PROOFS = {
 # remain private even when a test fails.
 FAILURE_REASONS = (
     'integrated attendant validation category: duplicate-reference',
+    'integrated attendant validation category: duplicate-association',
+    'integrated attendant validation category: duplicate-flow',
+    'integrated attendant validation category: duplicate-schedule',
     'integrated attendant validation category: schedule-type',
     'integrated attendant validation category: association-priority',
     'integrated attendant validation category: missing-flow',

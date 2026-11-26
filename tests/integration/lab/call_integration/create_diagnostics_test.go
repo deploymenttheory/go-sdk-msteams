@@ -30,6 +30,12 @@ func createFailureCategory(raw []byte) string {
 		switch {
 		case strings.Contains(code, "PriorityMismatch"):
 			return "association-priority"
+		case strings.HasSuffix(code, "CallHandlingAssociationsContainsDuplicates"):
+			return "duplicate-association"
+		case strings.HasSuffix(code, "CallFlowsContainsDuplicates"):
+			return "duplicate-flow"
+		case strings.HasSuffix(code, "SchedulesContainsDuplicates"):
+			return "duplicate-schedule"
 		case strings.Contains(code, "Duplicate"):
 			return "duplicate-reference"
 		case strings.Contains(code, "InvalidScheduleType"):
@@ -45,7 +51,9 @@ func createFailureCategory(raw []byte) string {
 
 func TestUnitCreateFailureCategoriesDoNotPublishProviderValues(t *testing.T) {
 	for _, tc := range []struct{ body, want string }{
-		{`{"errorDetails":[{"ErrorCode":"AutoAttendant_CallHandlingAssociationsContainsDuplicates","Message":"private-tenant-value"}]}`, "duplicate-reference"},
+		{`{"errorDetails":[{"ErrorCode":"AutoAttendant_CallHandlingAssociationsContainsDuplicates","Message":"private-tenant-value"}]}`, "duplicate-association"},
+		{`{"errorDetails":[{"ErrorCode":"CallFlowsContainsDuplicates"}]}`, "duplicate-flow"},
+		{`{"errorDetails":[{"ErrorCode":"SchedulesContainsDuplicates"}]}`, "duplicate-schedule"},
 		{`{"errorDetails":[{"ErrorCode":"InvalidScheduleTypeUsedWithAssociation"}]}`, "schedule-type"},
 		{`{"errorDetails":[{"ErrorCode":"CallHandlingAssociationTypePriorityMismatch"}]}`, "association-priority"},
 		{`{"errorDetails":[{"ErrorCode":"AssociatedCallFlowNotFound"}]}`, "missing-flow"},
