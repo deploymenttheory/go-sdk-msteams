@@ -52,6 +52,15 @@ own. **Run workflow** also accepts `services` (comma-separated partition names) 
 run only those services after the auth job. The aggregate `TestAcc result` job
 then expects reports from those services only.
 
+The `ext_integration` partition also enables the existing response-fixture
+sanitizer for its two owned compositions. It exports only changed JSON or empty
+HTTP receipts from four fixed service/testdata label lists, with a per-file
+1 MiB bound, symlink/path checks and an additional private-data guard. The
+`response-fixtures.json` manifest binds each file digest to the exact CI revision;
+files live under `response-fixtures/` in that service artifact. Other partitions
+never enable this writer. These files contain no plaintext journals or private
+lab directory contents and do not establish coverage beyond the run's assertions.
+
 Selected tests and child cases must pass unless explicitly excluded as described
 below. The aggregate requires exactly one report per auth step (`all`) and per
 selected service step (`client-secret`). It rejects missing, duplicate or

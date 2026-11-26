@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -16,9 +17,9 @@ import (
 )
 
 const source = "msteams/graph_api/app_installation/service_test.go"
-const appID = "00000000-0000-4000-8000-000000000001"
+const catalogID = "00000000-0000-4000-8000-000000000001"
 const installedID = "installation-id-distinct-from-catalog-id"
-const item = `{"id":"` + installedID + `","teamsAppDefinition":{"id":"definition-id","teamsAppId":"` + appID + `","version":"1.0"},"future":false,"nullable":null,"empty":[]}`
+const item = `{"id":"` + installedID + `","teamsAppDefinition":{"id":"definition-id","teamsAppId":"` + catalogID + `","version":"1.0"},"future":false,"nullable":null,"empty":[]}`
 
 func exchange(method, target, body string, status int, reply string) contracttest.Exchange {
 	headers := http.Header{"Accept": {"application/json"}}
@@ -66,16 +67,16 @@ func TestUnitTeamAndUserInstallationLifecycle(t *testing.T) {
 	} {
 		t.Run(scope.name, func(t *testing.T) {
 			base := "https://graph.microsoft.com" + scope.path
-			permissions := []string{"ChannelMessage.Read.Group"}
+			consent := &ai.PermissionSet{ResourceSpecificPermissions: []ai.ResourcePermission{{PermissionValue: "ChannelMessage.Read.Group", PermissionType: "application"}, {PermissionValue: "ChannelMeeting.ReadBasic.Group", PermissionType: "delegated"}}}
 			run(t, contracttest.Case{Name: scope.name + "-lifecycle", Steps: []contracttest.Exchange{
-				exchange("POST", base, `{"teamsApp@odata.bind":"https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/`+appID+`","grantedResourceSpecificApplicationPermissions":["ChannelMessage.Read.Group"]}`, 201, ""),
+				exchange("POST", base, `{"teamsApp@odata.bind":"https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/`+catalogID+`","consentedPermissionSet":{"resourceSpecificPermissions":[{"permissionValue":"ChannelMessage.Read.Group","permissionType":"application"},{"permissionValue":"ChannelMeeting.ReadBasic.Group","permissionType":"delegated"}]}}`, 201, ""),
 				exchange("GET", base+query(""), "", 200, `{"value":[`+item+`]}`),
 				exchange("GET", base+"/"+installedID+query(""), "", 200, item),
 				exchange("POST", base+"/"+installedID+"/upgrade", `{}`, 204, ""),
 				exchange("DELETE", base+"/"+installedID, "", 204, ""),
 			}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				service := sdk.GraphAPI.AppInstallations
-				if _, err := service.Install(ctx, scope.target, ai.InstallRequest{AppID: appID, Permissions: ai.Permissions{Granted: &permissions}}); err != nil {
+				if _, err := service.Create(ctx, scope.target, ai.CreateRequest{CatalogID: catalogID, Consent: consent}); err != nil {
 					return contracttest.Observation{Err: err}
 				}
 				listed, err := service.List(ctx, scope.target, ai.ListOptions{})
@@ -89,10 +90,10 @@ func TestUnitTeamAndUserInstallationLifecycle(t *testing.T) {
 				if err != nil {
 					return contracttest.Observation{Err: err}
 				}
-				if string(value.RawFields["future"]) != "false" || string(value.RawFields["nullable"]) != "null" || string(value.RawFields["empty"]) != "[]" || len(value.AppDefinition) == 0 {
+				if string(value.RawFields["future"]) != "false" || string(value.RawFields["nullable"]) != "null" || string(value.RawFields["empty"]) != "[]" || value.AppDefinition == nil || value.AppDefinition.TeamsAppID == nil || *value.AppDefinition.TeamsAppID != catalogID {
 					t.Fatal("expanded installation presence lost")
 				}
-				if _, err = service.UpgradeByID(ctx, scope.target, value.ID, ai.Permissions{}); err != nil {
+				if _, err = service.UpgradeByID(ctx, scope.target, value.ID, nil); err != nil {
 					return contracttest.Observation{Err: err}
 				}
 				_, err = service.DeleteByID(ctx, scope.target, value.ID)
@@ -104,44 +105,60 @@ func TestUnitTeamAndUserInstallationLifecycle(t *testing.T) {
 
 func TestUnitCatalogResolutionRequiresCompleteUniqueInstallation(t *testing.T) {
 	t.Parallel()
-	base := "https://graph.microsoft.com/v1.0/teams/owned-team/installedApps"
-	for _, scenario := range []string{"missing", "duplicate", "partial-denied", "unique-delete", "unique-upgrade"} {
-		t.Run(scenario, func(t *testing.T) {
-			body := `{"value":[]}`
-			var want error
-			switch scenario {
-			case "missing":
-				want = ai.ErrNotFound
-			case "duplicate":
-				body = `{"value":[` + item + `,` + item + `]}`
-				want = ai.ErrAmbiguous
-			case "partial-denied":
-				body = `{"value":[` + item + `],"@odata.nextLink":"` + base + `?skiptoken=opaque"}`
-				want = auth.ErrForbidden
-			default:
-				body = `{"value":[` + item + `]}`
-			}
-			steps := []contracttest.Exchange{exchange("GET", base+query(appID), "", 200, body)}
-			if scenario == "partial-denied" {
-				steps = append(steps, exchange("GET", base+"?skiptoken=opaque", "", 403, `{"error":{"code":"Forbidden"}}`))
-			}
-			if scenario == "unique-delete" {
-				steps = append(steps, exchange("DELETE", base+"/"+installedID, "", 204, ""))
-			}
-			if scenario == "unique-upgrade" {
-				steps = append(steps, exchange("POST", base+"/"+installedID+"/upgrade", `{"grantedResourceSpecificApplicationPermissions":[]}`, 204, ""))
-			}
-			run(t, contracttest.Case{Name: scenario, Steps: steps, Want: contracttest.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				service := sdk.GraphAPI.AppInstallations
-				if scenario == "unique-upgrade" {
-					empty := []string{}
-					_, err := service.UpgradeByAppID(ctx, ai.Target{TeamID: "owned-team"}, appID, ai.Permissions{Granted: &empty})
-					return contracttest.Observation{Err: err}
+	for _, scope := range []struct {
+		name, path string
+		target     ai.Target
+	}{
+		{"team", "/v1.0/teams/owned-team/installedApps", ai.Target{TeamID: "owned-team"}},
+		{"user", "/v1.0/users/owned-user/teamwork/installedApps", ai.Target{UserID: "owned-user"}},
+	} {
+		base := "https://graph.microsoft.com" + scope.path
+		for _, scenario := range []string{"missing", "duplicate", "mismatch", "partial-denied", "unique-delete", "unique-without-definition", "unique-upgrade"} {
+			t.Run(scope.name+"/"+scenario, func(t *testing.T) {
+				body := `{"value":[]}`
+				var want error
+				switch scenario {
+				case "missing":
+					want = ai.ErrNotFound
+				case "duplicate":
+					body = `{"value":[` + item + `,` + item + `]}`
+					want = ai.ErrAmbiguous
+				case "unique-without-definition":
+					body = `{"value":[{"id":"` + installedID + `"}]}`
+				case "mismatch":
+					body = `{"value":[` + strings.Replace(item, catalogID, "other-catalog-id", 1) + `]}`
+					want = ai.ErrIdentityMismatch
+				case "partial-denied":
+					body = `{"value":[` + item + `],"@odata.nextLink":"` + base + `?skiptoken=opaque"}`
+					want = auth.ErrForbidden
+				default:
+					body = `{"value":[` + item + `]}`
 				}
-				_, err := service.DeleteByAppID(ctx, ai.Target{TeamID: "owned-team"}, appID)
-				return contracttest.Observation{Err: err}
-			}})
-		})
+				steps := []contracttest.Exchange{exchange("GET", base+query(catalogID), "", 200, body)}
+				if scenario == "partial-denied" {
+					steps = append(steps, exchange("GET", base+"?skiptoken=opaque", "", 403, `{"error":{"code":"Forbidden"}}`))
+				}
+				if scenario == "unique-delete" || scenario == "unique-without-definition" {
+					steps = append(steps, exchange("DELETE", base+"/"+installedID, "", 204, ""))
+				}
+				if scenario == "unique-upgrade" {
+					steps = append(steps, exchange("POST", base+"/"+installedID+"/upgrade", `{"consentedPermissionSet":{"resourceSpecificPermissions":[]}}`, 204, ""))
+				}
+				run(t, contracttest.Case{Name: scenario, Steps: steps, Want: contracttest.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					service := sdk.GraphAPI.AppInstallations
+					if scenario == "unique-upgrade" {
+						empty := &ai.PermissionSet{ResourceSpecificPermissions: []ai.ResourcePermission{}}
+						_, err := service.UpgradeByCatalogID(ctx, scope.target, catalogID, empty)
+						return contracttest.Observation{Err: err}
+					}
+					result, err := service.DeleteByCatalogID(ctx, scope.target, catalogID)
+					if scenario == "mismatch" && (result == nil || !result.LookupComplete || result.LookupResponse == nil || result.LookupResponse.StatusCode() != 200 || result.InstallationID != "" || result.ActionInvoked) {
+						t.Fatal("mismatched expanded catalog identity triggered or obscured a write")
+					}
+					return contracttest.Observation{Err: err}
+				}})
+			})
+		}
 	}
 }
 
@@ -149,20 +166,20 @@ func TestUnitInstallationInvalidTargetAndIDsSendNothing(t *testing.T) {
 	t.Parallel()
 	for _, target := range []ai.Target{{}, {TeamID: "team", UserID: "user"}, {TeamID: "../escape"}} {
 		run(t, contracttest.Case{Name: "invalid-target", Scope: "local", Want: contracttest.Expected{Error: ai.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			_, err := sdk.GraphAPI.AppInstallations.Install(ctx, target, ai.InstallRequest{AppID: appID})
+			_, err := sdk.GraphAPI.AppInstallations.Create(ctx, target, ai.CreateRequest{CatalogID: catalogID})
 			return contracttest.Observation{Err: err}
 		}})
 	}
 	run(t, contracttest.Case{Name: "invalid-id", Scope: "local", Want: contracttest.Expected{Error: ai.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-		_, err := sdk.GraphAPI.AppInstallations.UpgradeByID(ctx, ai.Target{UserID: "owned-user"}, "../escape", ai.Permissions{})
+		_, err := sdk.GraphAPI.AppInstallations.UpgradeByID(ctx, ai.Target{UserID: "owned-user"}, "../escape", nil)
 		return contracttest.Observation{Err: err}
 	}})
 }
 
 func TestUnitInstallationMutationDenialDoesNotReplay(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "install-denied", Steps: []contracttest.Exchange{exchange("POST", "https://graph.microsoft.com/v1.0/teams/owned-team/installedApps", `{"teamsApp@odata.bind":"https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/`+appID+`"}`, 403, `{"error":{"code":"Forbidden"}}`)}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-		_, err := sdk.GraphAPI.AppInstallations.Install(ctx, ai.Target{TeamID: "owned-team"}, ai.InstallRequest{AppID: appID})
+	run(t, contracttest.Case{Name: "install-denied", Steps: []contracttest.Exchange{exchange("POST", "https://graph.microsoft.com/v1.0/teams/owned-team/installedApps", `{"teamsApp@odata.bind":"https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/`+catalogID+`"}`, 403, `{"error":{"code":"Forbidden"}}`)}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		_, err := sdk.GraphAPI.AppInstallations.Create(ctx, ai.Target{TeamID: "owned-team"}, ai.CreateRequest{CatalogID: catalogID})
 		return contracttest.Observation{Err: err}
 	}})
 }
@@ -176,10 +193,41 @@ func TestUnitInstallationRejectsMissingIdentity(t *testing.T) {
 
 func TestUnitInstallationBindingUsesSelectedGraphCloud(t *testing.T) {
 	t.Parallel()
-	step := exchange("POST", "https://graph.microsoft.us/v1.0/users/owned-user/teamwork/installedApps", `{"teamsApp@odata.bind":"https://graph.microsoft.us/v1.0/appCatalogs/teamsApps/`+appID+`"}`, 201, "")
+	step := exchange("POST", "https://graph.microsoft.us/v1.0/users/owned-user/teamwork/installedApps", `{"teamsApp@odata.bind":"https://graph.microsoft.us/v1.0/appCatalogs/teamsApps/`+catalogID+`"}`, 201, "")
 	step.Request.Audience = "https://graph.microsoft.us"
 	run(t, contracttest.Case{Name: "selected-cloud-binding", Cloud: "gcch", Steps: []contracttest.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-		_, err := sdk.GraphAPI.AppInstallations.Install(ctx, ai.Target{UserID: "owned-user"}, ai.InstallRequest{AppID: appID})
+		_, err := sdk.GraphAPI.AppInstallations.Create(ctx, ai.Target{UserID: "owned-user"}, ai.CreateRequest{CatalogID: catalogID})
 		return contracttest.Observation{Err: err}
 	}})
+}
+
+func TestUnitNativeConsentValidatesPermissionTypeBeforeIO(t *testing.T) {
+	t.Parallel()
+	for _, consent := range []*ai.PermissionSet{{}, {ResourceSpecificPermissions: []ai.ResourcePermission{{PermissionValue: "Channel.Read.Group", PermissionType: "invented"}}}} {
+		run(t, contracttest.Case{Name: "invalid-native-consent", Scope: "local", Want: contracttest.Expected{Error: ai.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			_, err := sdk.GraphAPI.AppInstallations.Create(ctx, ai.Target{TeamID: "owned-team"}, ai.CreateRequest{CatalogID: catalogID, Consent: consent})
+			return contracttest.Observation{Err: err}
+		}})
+	}
+}
+
+func TestUnitNativeTeamCreateAcceptsDocumentedEmpty200(t *testing.T) {
+	t.Parallel()
+	run(t, contracttest.Case{Name: "team-empty-200", Steps: []contracttest.Exchange{exchange("POST", "https://graph.microsoft.com/v1.0/teams/owned-team/installedApps", `{"teamsApp@odata.bind":"https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/`+catalogID+`"}`, 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		_, err := sdk.GraphAPI.AppInstallations.Create(ctx, ai.Target{TeamID: "owned-team"}, ai.CreateRequest{CatalogID: catalogID})
+		return contracttest.Observation{Err: err}
+	}})
+}
+
+func TestUnitExpandedDefinitionPreservesTypedIdentitiesAndNestedPresence(t *testing.T) {
+	t.Parallel()
+	var value ai.Installation
+	raw := `{"id":"installed","teamsAppDefinition":{"id":"version-definition","teamsAppId":"catalog","azureADAppId":"aad-application","displayName":null,"version":"","authorization":{"requiredPermissionSet":{"resourceSpecificPermissions":[{"permissionValue":"Channel.Read.Group","permissionType":"delegated"}]}},"future":[]}}`
+	if json.Unmarshal([]byte(raw), &value) != nil || value.AppDefinition == nil {
+		t.Fatal("typed expanded definition failed to decode")
+	}
+	d := value.AppDefinition
+	if d.ID == nil || *d.ID != "version-definition" || d.TeamsAppID == nil || *d.TeamsAppID != "catalog" || d.AzureADAppID == nil || *d.AzureADAppID != "aad-application" || d.DisplayName != nil || d.Version == nil || *d.Version != "" || string(d.RawFields["displayName"]) != "null" || string(d.RawFields["future"]) != "[]" || d.Authorization == nil || d.Authorization.RequiredPermissionSet == nil || len(d.Authorization.RequiredPermissionSet.ResourceSpecificPermissions) != 1 || d.Authorization.RequiredPermissionSet.ResourceSpecificPermissions[0].PermissionType != ai.PermissionDelegated {
+		t.Fatal("expanded definition collapsed identities, known fields or raw presence")
+	}
 }

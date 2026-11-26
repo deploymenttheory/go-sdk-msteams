@@ -130,13 +130,56 @@
       "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/1",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "TeamScope",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/0/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.Create",
+              "file": "msteams/graph_api/app_installation/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitTeamAndUserInstallationLifecycle",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            },
+            {
+              "name": "TestUnitCatalogResolutionRequiresCompleteUniqueInstallation",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "UserScope",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/0/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.Create",
+              "file": "msteams/graph_api/app_installation/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitTeamAndUserInstallationLifecycle",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            },
+            {
+              "name": "TestUnitCatalogResolutionRequiresCompleteUniqueInstallation",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
         "status": "in-progress",
         "unsupported_stub": false,
         "symbols": [
           {
-            "name": "Service.Install",
+            "name": "Service.Create",
             "file": "msteams/graph_api/app_installation/service.go"
           }
         ]
@@ -146,12 +189,13 @@
         "evidence": [
           "docs/implementation/ext/app-installation-contract-notes.md",
           "docs/implementation/ext/evidence/nested-command-types.json",
-          "msteams/graph_api/app_installation/service_test.go"
+          "msteams/graph_api/app_installation/service_test.go",
+          "docs/implementation/ext/evidence/conditional-command-metadata.json"
         ]
       },
       "live": {
         "status": "not-run",
-        "reason": "No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.",
+        "reason": "Compiled declarations expose TeamScope/UserScope, separately from the immutable default-session snapshot. No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Native consent live acceptance and legacy cmdlet permission equivalence remain unqualified; fresh catalog read was HTTP 403.",
         "evidence": []
       },
       "exclusion": null
@@ -15662,7 +15706,58 @@
       "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/247",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "TeamScope",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/6/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.List",
+              "file": "msteams/graph_api/app_installation/service.go"
+            },
+            {
+              "name": "Service.GetByID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitTeamAndUserInstallationLifecycle",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            },
+            {
+              "name": "TestUnitCatalogResolutionRequiresCompleteUniqueInstallation",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "UserScope",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/6/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.List",
+              "file": "msteams/graph_api/app_installation/service.go"
+            },
+            {
+              "name": "Service.GetByID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitTeamAndUserInstallationLifecycle",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            },
+            {
+              "name": "TestUnitCatalogResolutionRequiresCompleteUniqueInstallation",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
         "status": "in-progress",
         "unsupported_stub": false,
@@ -15682,12 +15777,13 @@
         "evidence": [
           "docs/implementation/ext/app-installation-contract-notes.md",
           "docs/implementation/ext/evidence/nested-command-types.json",
-          "msteams/graph_api/app_installation/service_test.go"
+          "msteams/graph_api/app_installation/service_test.go",
+          "docs/implementation/ext/evidence/conditional-command-metadata.json"
         ]
       },
       "live": {
         "status": "not-run",
-        "reason": "No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.",
+        "reason": "Compiled declarations expose TeamScope/UserScope, separately from the immutable default-session snapshot. No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Native consent live acceptance and legacy cmdlet permission equivalence remain unqualified; fresh catalog read was HTTP 403.",
         "evidence": []
       },
       "exclusion": null
@@ -35185,7 +35281,58 @@
       "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/571",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "TeamScope",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/9/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.DeleteByID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            },
+            {
+              "name": "Service.DeleteByCatalogID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitTeamAndUserInstallationLifecycle",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            },
+            {
+              "name": "TestUnitCatalogResolutionRequiresCompleteUniqueInstallation",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "UserScope",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/9/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.DeleteByID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            },
+            {
+              "name": "Service.DeleteByCatalogID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitTeamAndUserInstallationLifecycle",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            },
+            {
+              "name": "TestUnitCatalogResolutionRequiresCompleteUniqueInstallation",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
         "status": "in-progress",
         "unsupported_stub": false,
@@ -35195,7 +35342,7 @@
             "file": "msteams/graph_api/app_installation/service.go"
           },
           {
-            "name": "Service.DeleteByAppID",
+            "name": "Service.DeleteByCatalogID",
             "file": "msteams/graph_api/app_installation/service.go"
           }
         ]
@@ -35205,12 +35352,13 @@
         "evidence": [
           "docs/implementation/ext/app-installation-contract-notes.md",
           "docs/implementation/ext/evidence/nested-command-types.json",
-          "msteams/graph_api/app_installation/service_test.go"
+          "msteams/graph_api/app_installation/service_test.go",
+          "docs/implementation/ext/evidence/conditional-command-metadata.json"
         ]
       },
       "live": {
         "status": "not-run",
-        "reason": "No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.",
+        "reason": "Compiled declarations expose TeamScope/UserScope, separately from the immutable default-session snapshot. No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Native consent live acceptance and legacy cmdlet permission equivalence remain unqualified; fresh catalog read was HTTP 403.",
         "evidence": []
       },
       "exclusion": null
@@ -44611,7 +44759,58 @@
       "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/744",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "TeamScope",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/14/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.UpgradeByID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            },
+            {
+              "name": "Service.UpgradeByCatalogID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitTeamAndUserInstallationLifecycle",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            },
+            {
+              "name": "TestUnitCatalogResolutionRequiresCompleteUniqueInstallation",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            }
+          ],
+          "live_tests": []
+        },
+        {
+          "name": "UserScope",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/14/parameter_sets/1",
+          "symbols": [
+            {
+              "name": "Service.UpgradeByID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            },
+            {
+              "name": "Service.UpgradeByCatalogID",
+              "file": "msteams/graph_api/app_installation/service.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitTeamAndUserInstallationLifecycle",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            },
+            {
+              "name": "TestUnitCatalogResolutionRequiresCompleteUniqueInstallation",
+              "file": "msteams/graph_api/app_installation/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
         "status": "in-progress",
         "unsupported_stub": false,
@@ -44621,7 +44820,7 @@
             "file": "msteams/graph_api/app_installation/service.go"
           },
           {
-            "name": "Service.UpgradeByAppID",
+            "name": "Service.UpgradeByCatalogID",
             "file": "msteams/graph_api/app_installation/service.go"
           }
         ]
@@ -44631,12 +44830,13 @@
         "evidence": [
           "docs/implementation/ext/app-installation-contract-notes.md",
           "docs/implementation/ext/evidence/nested-command-types.json",
-          "msteams/graph_api/app_installation/service_test.go"
+          "msteams/graph_api/app_installation/service_test.go",
+          "docs/implementation/ext/evidence/conditional-command-metadata.json"
         ]
       },
       "live": {
         "status": "not-run",
-        "reason": "No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.",
+        "reason": "Compiled declarations expose TeamScope/UserScope, separately from the immutable default-session snapshot. No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Native consent live acceptance and legacy cmdlet permission equivalence remain unqualified; fresh catalog read was HTTP 403.",
         "evidence": []
       },
       "exclusion": null

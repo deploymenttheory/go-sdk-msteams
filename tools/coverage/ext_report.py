@@ -33,10 +33,11 @@ def render(ledger):
                      and (r['research_owner'] or '').startswith('EXT-')), key=lambda r: r['name'].casefold())
     if {r['resource'] for r in rows} != FAMILIES.keys():
         raise ValueError('EXT family set changed; review scope before regenerating')
-    sets = sum(len(r['parameter_sets']) for r in rows)
+    conditional = sum('conditional-command-metadata.json' in g['metadata_ref'] for r in rows for g in r['parameter_sets'])
+    sets = sum(len(r['parameter_sets']) for r in rows) - conditional
     lines = ['# EXT command and parameter-set evidence inventory', '',
              'Owner: EXT-90 (#191). Baseline: MicrosoftTeams 8.1.0.', '',
-             f'The ledger assigns {len(rows)} commands and {sets} observed parameter sets to {len(FAMILIES)} EXT families.',
+             f'The ledger assigns {len(rows)} commands, {sets} default-session observed sets and {conditional} separately declared conditional sets to {len(FAMILIES)} EXT families.',
              f'An additional {len(nested)} unowned nested candidates retain EXT research ownership.',
              'Regenerate with `python3 tools/coverage/ext_report.py`; `--check` rejects stale output.', '',
              '## Evidence boundaries', '',
@@ -52,7 +53,12 @@ def render(ledger):
              'comparisons, and independently cleans its one journaled resource. The second opt-in',
              '`TestAccAgentTargetTemplateComposition` links an owned target template to an owned agent,',
              'verifies the reference after replacement with two pinned comparisons, and cleans both.',
-             'Neither scenario assigns users/accounts or enables a live call path. Registration is not a live pass.', '',
+             'Neither scenario assigns users/accounts or enables a live call path.',
+             'The [sanitized scoped CI evidence](evidence/integrated-1ed243c.json) records both passes',
+             'at merge revision `ade85818e2968e9a3ee2c2550e463511d17e0828`, source head',
+             '`1ed243c75ec239560f94456f64506d07ba3c26c8`: five pinned comparisons and three',
+             'independently cleaned entries, zero unresolved. No response fixtures were retained;',
+             'the offline replies remain synthetic. This does not qualify installation or every EXT set.', '',
              '## Live prerequisites and scope blockers', '',
              '- Fresh [Graph app-token claims](evidence/graph-permission-claims.json) show the listed broad',
              '  AppCatalog/Sites/Files roles absent from the bound CI identity; a fresh read-only catalog',
@@ -74,7 +80,10 @@ def render(ledger):
              'commands are commented `#preview` in the root manifest; four conversation-role commands',
              'are exported by preview/OCE manifests, and six remaining settings commands by OCE only.',
              'Four installation commands now have in-progress implementation ownership and appear below',
-             'under app_installation; their preview parameter sets remain unknown. This does not authorize',
+             'under app_installation. Separate [compiled declaration metadata](evidence/conditional-command-metadata.json)',
+             'now captures all fifteen types and twenty-seven declared sets without invoking them; eight',
+             'TeamScope/UserScope sets map to the installer implementation. This does not establish',
+             'root-export availability or a live pass, and does not authorize',
              'excluding the remaining candidates or assuming the ordinary lab identity can exercise them.', '',
              '| Candidate | Research owner | Current disposition |', '| --- | --- | --- |']
     for row in nested:
@@ -91,7 +100,7 @@ def render(ledger):
             lines += ['| Parameter set | Go symbols | Contract test mappings | Live test mappings |',
                       '| --- | --- | --- | --- |']
             for group in row['parameter_sets']:
-                cells = [f"`{group['name']}`"]
+                cells = [f"`{group['name']}`" + (" (compiled declaration)" if "conditional-command-metadata.json" in group["metadata_ref"] else "")]
                 for field in ('symbols', 'contract_tests', 'live_tests'):
                     cells.append('<br>'.join(reference(v) for v in group[field]) or 'None recorded')
                 lines.append('| ' + ' | '.join(cells) + ' |')

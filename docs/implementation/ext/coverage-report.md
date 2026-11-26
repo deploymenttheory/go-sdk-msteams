@@ -2,7 +2,7 @@
 
 Owner: EXT-90 (#191). Baseline: MicrosoftTeams 8.1.0.
 
-The ledger assigns 100 commands and 108 observed parameter sets to 12 EXT families.
+The ledger assigns 100 commands, 108 default-session observed sets and 8 separately declared conditional sets to 12 EXT families.
 An additional 11 unowned nested candidates retain EXT research ownership.
 Regenerate with `python3 tools/coverage/ext_report.py`; `--check` rejects stale output.
 
@@ -21,7 +21,12 @@ owned unassigned feedback policy, crosses the generic/typed adapters, requires t
 comparisons, and independently cleans its one journaled resource. The second opt-in
 `TestAccAgentTargetTemplateComposition` links an owned target template to an owned agent,
 verifies the reference after replacement with two pinned comparisons, and cleans both.
-Neither scenario assigns users/accounts or enables a live call path. Registration is not a live pass.
+Neither scenario assigns users/accounts or enables a live call path.
+The [sanitized scoped CI evidence](evidence/integrated-1ed243c.json) records both passes
+at merge revision `ade85818e2968e9a3ee2c2550e463511d17e0828`, source head
+`1ed243c75ec239560f94456f64506d07ba3c26c8`: five pinned comparisons and three
+independently cleaned entries, zero unresolved. No response fixtures were retained;
+the offline replies remain synthetic. This does not qualify installation or every EXT set.
 
 ## Live prerequisites and scope blockers
 
@@ -47,7 +52,10 @@ The hashed manifest declarations make the conditional boundary explicit: five in
 commands are commented `#preview` in the root manifest; four conversation-role commands
 are exported by preview/OCE manifests, and six remaining settings commands by OCE only.
 Four installation commands now have in-progress implementation ownership and appear below
-under app_installation; their preview parameter sets remain unknown. This does not authorize
+under app_installation. Separate [compiled declaration metadata](evidence/conditional-command-metadata.json)
+now captures all fifteen types and twenty-seven declared sets without invoking them; eight
+TeamScope/UserScope sets map to the installer implementation. This does not establish
+root-export availability or a live pass, and does not authorize
 excluding the remaining candidates or assuming the ordinary lab identity can exercise them.
 
 | Candidate | Research owner | Current disposition |
@@ -222,9 +230,10 @@ Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live:
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| No observed set; conditional scope requires evidence | [`Service.Install`](../../../msteams/graph_api/app_installation/service.go) | No set mapping | No set mapping |
+| `TeamScope` (compiled declaration) | [`Service.Create`](../../../msteams/graph_api/app_installation/service.go) | [`TestUnitTeamAndUserInstallationLifecycle`](../../../msteams/graph_api/app_installation/service_test.go)<br>[`TestUnitCatalogResolutionRequiresCompleteUniqueInstallation`](../../../msteams/graph_api/app_installation/service_test.go) | None recorded |
+| `UserScope` (compiled declaration) | [`Service.Create`](../../../msteams/graph_api/app_installation/service.go) | [`TestUnitTeamAndUserInstallationLifecycle`](../../../msteams/graph_api/app_installation/service_test.go)<br>[`TestUnitCatalogResolutionRequiresCompleteUniqueInstallation`](../../../msteams/graph_api/app_installation/service_test.go) | None recorded |
 
-Recorded live limitation: No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.
+Recorded live limitation: Compiled declarations expose TeamScope/UserScope, separately from the immutable default-session snapshot. No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Native consent live acceptance and legacy cmdlet permission equivalence remain unqualified; fresh catalog read was HTTP 403.
 
 ### Get-TeamsAppInstallation
 
@@ -232,9 +241,10 @@ Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live:
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| No observed set; conditional scope requires evidence | [`Service.List`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.GetByID`](../../../msteams/graph_api/app_installation/service.go) | No set mapping | No set mapping |
+| `TeamScope` (compiled declaration) | [`Service.List`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.GetByID`](../../../msteams/graph_api/app_installation/service.go) | [`TestUnitTeamAndUserInstallationLifecycle`](../../../msteams/graph_api/app_installation/service_test.go)<br>[`TestUnitCatalogResolutionRequiresCompleteUniqueInstallation`](../../../msteams/graph_api/app_installation/service_test.go) | None recorded |
+| `UserScope` (compiled declaration) | [`Service.List`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.GetByID`](../../../msteams/graph_api/app_installation/service.go) | [`TestUnitTeamAndUserInstallationLifecycle`](../../../msteams/graph_api/app_installation/service_test.go)<br>[`TestUnitCatalogResolutionRequiresCompleteUniqueInstallation`](../../../msteams/graph_api/app_installation/service_test.go) | None recorded |
 
-Recorded live limitation: No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.
+Recorded live limitation: Compiled declarations expose TeamScope/UserScope, separately from the immutable default-session snapshot. No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Native consent live acceptance and legacy cmdlet permission equivalence remain unqualified; fresh catalog read was HTTP 403.
 
 ### Remove-TeamsAppInstallation
 
@@ -242,9 +252,10 @@ Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live:
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| No observed set; conditional scope requires evidence | [`Service.DeleteByID`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.DeleteByAppID`](../../../msteams/graph_api/app_installation/service.go) | No set mapping | No set mapping |
+| `TeamScope` (compiled declaration) | [`Service.DeleteByID`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.DeleteByCatalogID`](../../../msteams/graph_api/app_installation/service.go) | [`TestUnitTeamAndUserInstallationLifecycle`](../../../msteams/graph_api/app_installation/service_test.go)<br>[`TestUnitCatalogResolutionRequiresCompleteUniqueInstallation`](../../../msteams/graph_api/app_installation/service_test.go) | None recorded |
+| `UserScope` (compiled declaration) | [`Service.DeleteByID`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.DeleteByCatalogID`](../../../msteams/graph_api/app_installation/service.go) | [`TestUnitTeamAndUserInstallationLifecycle`](../../../msteams/graph_api/app_installation/service_test.go)<br>[`TestUnitCatalogResolutionRequiresCompleteUniqueInstallation`](../../../msteams/graph_api/app_installation/service_test.go) | None recorded |
 
-Recorded live limitation: No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.
+Recorded live limitation: Compiled declarations expose TeamScope/UserScope, separately from the immutable default-session snapshot. No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Native consent live acceptance and legacy cmdlet permission equivalence remain unqualified; fresh catalog read was HTTP 403.
 
 ### Update-TeamsAppInstallation
 
@@ -252,9 +263,10 @@ Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live:
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| No observed set; conditional scope requires evidence | [`Service.UpgradeByID`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.UpgradeByAppID`](../../../msteams/graph_api/app_installation/service.go) | No set mapping | No set mapping |
+| `TeamScope` (compiled declaration) | [`Service.UpgradeByID`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.UpgradeByCatalogID`](../../../msteams/graph_api/app_installation/service.go) | [`TestUnitTeamAndUserInstallationLifecycle`](../../../msteams/graph_api/app_installation/service_test.go)<br>[`TestUnitCatalogResolutionRequiresCompleteUniqueInstallation`](../../../msteams/graph_api/app_installation/service_test.go) | None recorded |
+| `UserScope` (compiled declaration) | [`Service.UpgradeByID`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.UpgradeByCatalogID`](../../../msteams/graph_api/app_installation/service.go) | [`TestUnitTeamAndUserInstallationLifecycle`](../../../msteams/graph_api/app_installation/service_test.go)<br>[`TestUnitCatalogResolutionRequiresCompleteUniqueInstallation`](../../../msteams/graph_api/app_installation/service_test.go) | None recorded |
 
-Recorded live limitation: No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Runtime preview cmdlet parameter sets and legacy permission-body acceptance remain unknown; fresh catalog read was HTTP 403.
+Recorded live limitation: Compiled declarations expose TeamScope/UserScope, separately from the immutable default-session snapshot. No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Native consent live acceptance and legacy cmdlet permission equivalence remain unqualified; fresh catalog read was HTTP 403.
 
 ## cloud_call_data
 
