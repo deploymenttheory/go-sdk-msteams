@@ -200,6 +200,14 @@
             {
               "file": "msteams/graph_api/team_user_management/list_test.go",
               "name": "TestUnitCompositionMappingsExistInPinnedRuntime"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreOwnerAndNativeMembershipIdentity"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCorePartialOwnerFailureAndExplicitRecovery"
             }
           ],
           "live_tests": [
@@ -29329,6 +29337,10 @@
             {
               "file": "msteams/graph_api/team_management/creation_settings_test.go",
               "name": "TestUnitSettingsSerializeEveryInputField"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreCreationOwnershipControlsCompensation"
             }
           ],
           "live_tests": [
@@ -29371,6 +29383,10 @@
             {
               "file": "msteams/graph_api/team_management/validation_test.go",
               "name": "TestUnitCreationValidationPrecedesCredentialsAndWrites"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreCreationOwnershipControlsCompensation"
             }
           ],
           "live_tests": [
