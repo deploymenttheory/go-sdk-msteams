@@ -4,6 +4,7 @@ package teamsmeetingconfiguration
 import (
 	"encoding/json"
 	"regexp"
+	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -12,7 +13,7 @@ import (
 var ErrInput = policy.ErrInput
 
 // contextID is the pinned PublishedEntraAuthenticationContext.Id setter pattern
-// (culture-invariant, case-sensitive): c1 through c99.
+// (culture-invariant, case-sensitive): c1 through c99, with .NET's optional final LF.
 var contextID = regexp.MustCompile(`^c([1-9]|[1-9][0-9])$`)
 
 // PublishedEntraAuthenticationContext is one element of the compiled
@@ -55,7 +56,7 @@ func (v *PublishedEntraAuthenticationContext) Validate() error {
 	if v == nil {
 		return ErrInput
 	}
-	if v.ID != nil && !contextID.MatchString(*v.ID) {
+	if v.ID != nil && !contextID.MatchString(strings.TrimSuffix(*v.ID, "\n")) {
 		return ErrInput
 	}
 	return nil

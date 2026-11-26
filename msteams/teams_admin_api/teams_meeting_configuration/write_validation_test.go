@@ -2,6 +2,7 @@ package teamsmeetingconfiguration_test
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"testing"
 
@@ -29,7 +30,7 @@ func TestUnitWriteInputRejectsBeforeHTTP(t *testing.T) {
 		if _, _, err := service.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{PublishedEntraAuthenticationContexts: &resource.AuthenticationContextEdit{}}); !errors.Is(err, resource.ErrInput) {
 			t.Fatal("zero list edit accepted")
 		}
-		for _, id := range []string{"", "c0", "c100", "C1", "c01", " c1", "x"} {
+		for _, id := range []string{"", "c0", "c100", "C1", "c01", " c1", "x", "c1\r\n", "c1\n\n"} {
 			if _, _, err := service.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{PublishedEntraAuthenticationContexts: resource.AddAuthenticationContexts(bad(id))}); !errors.Is(err, resource.ErrInput) {
 				t.Fatal("invalid context Id accepted for update")
 			}
@@ -49,13 +50,36 @@ func TestUnitWriteInputRejectsBeforeHTTP(t *testing.T) {
 
 func TestUnitContextIdMatchesPinnedSetterPattern(t *testing.T) {
 	t.Parallel()
-	for _, id := range []string{"c1", "c9", "c10", "c55", "c99"} {
+	for _, id := range []string{"c1", "c9", "c10", "c55", "c99", "c1\n", "c99\n"} {
 		value := id
-		if (&resource.PublishedEntraAuthenticationContext{ID: &value}).Validate() != nil {
+		item := &resource.PublishedEntraAuthenticationContext{ID: &value}
+		if item.Validate() != nil {
 			t.Fatalf("valid context Id %s rejected", id)
+		}
+		if item.ID == nil || *item.ID != id {
+			t.Fatal("validation changed the assigned Id")
 		}
 	}
 	if (&resource.PublishedEntraAuthenticationContext{}).Validate() != nil {
 		t.Fatal("unassigned constructor-default Id rejected")
 	}
+}
+
+// Authored from the pinned setter/compiled PATCH contract, not a tenant capture.
+func TestUnitContextIdFinalLFIsPreservedInRequest(t *testing.T) {
+	t.Parallel()
+	id := "c1\n"
+	item := &resource.PublishedEntraAuthenticationContext{ID: &id}
+	body := json.RawMessage(`{"Identity":"Global","PublishedEntraAuthenticationContexts":[{"Identity":null,"Id":"c1\n","PublishedName":null,"PublishedDescription":null,"EntraName":null,"EntraDescription":null,"Published":null}]}`)
+	run(t, contracttest.Case{Name: "context-id-final-lf", Source: "msteams/teams_admin_api/teams_meeting_configuration/write_validation_test.go", Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{
+		compiledWire("PATCH", selected, set, body, 204, ""),
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		_, response, err := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{
+			PublishedEntraAuthenticationContexts: policy.Set([]*resource.PublishedEntraAuthenticationContext{item}),
+		}})
+		if item.ID == nil || *item.ID != "c1\n" {
+			t.Fatal("request normalized the caller's Id")
+		}
+		return contracttest.Observation{Response: response, Err: err}
+	}})
 }

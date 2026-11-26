@@ -102,3 +102,10 @@ Still unqualified:
 - delegated authentication and other clouds
 
 No create or delete methods are invented; the pinned module exports none.
+
+
+## Pinned context-ID validation edge (2026-11-26)
+
+Offline reflection of 8.1.0 `PublishedEntraAuthenticationContext.set_Id` (Core assembly SHA-256 `68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49`) checks null at IL3/8 and the regex at IL17–28; `.cctor` IL0 defines `^c([1-9]|[1-9][0-9])$`. Fresh controlled instances accepted and retained `c1` and `c1` followed by one LF; `c1` followed by CRLF and `c100` rejected. This is local setter evidence, not tenant acceptance.
+
+Go's end anchor differs from the .NET rule. Validation now ignores exactly one final LF for regex comparison while retaining the original Id pointer/string and serialized request. Regression tests cover accepted final LF, rejected CRLF/repeated LF/out-of-range values, and an authored PATCH preserving the LF. This follows the existing banner-model validation convention; no general whitespace normalization or claim of server persistence is added.

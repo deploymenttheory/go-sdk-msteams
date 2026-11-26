@@ -50,7 +50,7 @@ during preparation, and the complete resulting list is sent:
   `ErrorCannotRemoveElementsOf`, so a PowerShell Remove can never succeed.
 
 An assigned element `Id` must match the pinned setter pattern
-`^c([1-9]|[1-9][0-9])$` (`c1` to `c99`); nil elements are rejected.
+`^c([1-9]|[1-9][0-9])$` (`c1` to `c99`, including the .NET anchor's optional final LF). Validation preserves the assigned Id exactly; it does not trim the request value. CRLF and repeated final LF fail; nil elements are rejected.
 `PatchByIdentity` takes a full replacement list directly.
 
 Set requires an Identity and has no Global default. Bound Force keeps the
