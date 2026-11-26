@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"net/url"
 	"testing"
 	"testing/synctest"
 
@@ -13,6 +14,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
+	channelmember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_member"
 	relationship "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group_relationship"
 	teammanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_management"
 	teammember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_member"
@@ -97,6 +99,105 @@ func TestUnitIntegratedCoreOwnerAndNativeMembershipIdentity(t *testing.T) {
 			return contracttest.Observation{Response: response, Err: err}
 		},
 	})
+}
+
+// A channel conversation membership is independently addressed even when its
+// user already has a different native team conversation membership. These
+// authored vectors use Graph's documented create/role-patch/delete/list shapes.
+func TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery(t *testing.T) {
+	t.Parallel()
+	const channelID = "19:private/fixture@thread.tacv2"
+	const channelMembership = "opaque/channel+membership="
+	teamPath := "/v1.0/teams/" + integratedGroup + "/members/" + url.PathEscape(integratedMembership)
+	collection := "/beta/teams/" + integratedGroup + "/channels/" + url.PathEscape(channelID) + "/members"
+	byID := collection + "/" + url.PathEscape(channelMembership)
+	teamBody := `{"@odata.type":"#microsoft.graph.aadUserConversationMember","id":"` + integratedMembership + `","roles":["owner"],"userId":"` + integratedUser + `"}`
+	memberBody := `{"@odata.type":"#microsoft.graph.aadUserConversationMember","id":"` + channelMembership + `","roles":[],"userId":"` + integratedUser + `"}`
+	ownerBody := `{"@odata.type":"#microsoft.graph.aadUserConversationMember","id":"` + channelMembership + `","roles":["owner"],"userId":"` + integratedUser + `"}`
+	createBody := `{"@odata.type":"#microsoft.graph.aadUserConversationMember","roles":[],"user@odata.bind":"` + auth.GraphAudience + `/beta/users('` + integratedUser + `')"}`
+	for _, tc := range []struct {
+		name                           string
+		promotionStatus, cleanupStatus int
+	}{
+		{name: "successful-channel-role-and-independent-team", promotionStatus: 200, cleanupStatus: 204},
+		{name: "denied-promotion-owned-membership-recovered", promotionStatus: 403, cleanupStatus: 204},
+		{name: "denied-promotion-denied-recovery-is-not-completion", promotionStatus: 403, cleanupStatus: 403},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			promotionBody := ""
+			if tc.promotionStatus == 200 {
+				promotionBody = ownerBody
+			}
+			steps := []contracttest.Exchange{
+				coreExchange("GET", teamPath, "", 200, teamBody),
+				coreExchange("POST", collection, createBody, 201, memberBody),
+				coreExchange("PATCH", byID, `{"roles":["owner"]}`, tc.promotionStatus, promotionBody),
+				coreExchange("DELETE", byID, "", tc.cleanupStatus, ""),
+			}
+			mappings := []contracttest.Mapping{
+				{Command: "Add-TeamChannelUser", ParameterSet: "__AllParameterSets"},
+				{Command: "Remove-TeamChannelUser", ParameterSet: "__AllParameterSets"},
+			}
+			want := contracttest.Expected{Status: 403, Error: auth.ErrForbidden}
+			if tc.cleanupStatus == 204 {
+				steps = append(steps,
+					coreExchange("GET", collection, "", 200, `{"value":[]}`),
+					coreExchange("GET", teamPath, "", 200, teamBody),
+				)
+				mappings = append(mappings, contracttest.Mapping{Command: "Get-TeamChannelUser", ParameterSet: "__AllParameterSets"})
+				want = contracttest.Expected{Status: 200}
+			}
+			runIntegratedCore(t, contracttest.Case{Name: tc.name, Steps: steps, Mappings: mappings, Want: want,
+				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					teamMember, response, err := sdk.GraphAPI.TeamMembers.GetByID(ctx, integratedGroup, teammember.MembershipID(integratedMembership))
+					if err != nil {
+						return contracttest.Observation{Response: response, Err: err}
+					}
+					if string(teamMember.ID) != integratedMembership || teamMember.UserID == nil || string(*teamMember.UserID) != integratedUser {
+						t.Error("team membership prerequisite lost its native or directory identity")
+					}
+					created, response, err := sdk.GraphAPI.ChannelMembers.Create(ctx, integratedGroup, channelID,
+						channelmember.CreateRequest{UserID: channelmember.DirectoryUserID(integratedUser)})
+					if err != nil {
+						return contracttest.Observation{Response: response, Err: err}
+					}
+					if string(created.ID) != channelMembership || string(created.ID) == string(teamMember.ID) || created.UserID == nil || string(*created.UserID) != integratedUser {
+						t.Error("channel membership identity was substituted with team or directory identity")
+					}
+					promoted, response, err := sdk.GraphAPI.ChannelMembers.PromoteOwner(ctx, integratedGroup, channelID, created.ID)
+					if tc.promotionStatus == 200 {
+						if err != nil {
+							return contracttest.Observation{Response: response, Err: err}
+						}
+						if promoted.ID != created.ID || len(promoted.Roles) != 1 || promoted.Roles[0] != channelmember.Owner {
+							t.Error("channel promotion lost identity or owner role")
+						}
+					} else if !errors.Is(err, auth.ErrForbidden) || promoted != nil {
+						t.Error("denied channel promotion was reported as successful")
+						return contracttest.Observation{Response: response, Err: err}
+					}
+					// The confirmed creation receipt owns only this channel relationship.
+					// Explicit recovery must not target the team membership, user or group.
+					response, err = sdk.GraphAPI.ChannelMembers.DeleteByID(ctx, integratedGroup, channelID, created.ID)
+					if err != nil {
+						return contracttest.Observation{Response: response, Err: err}
+					}
+					remaining, err := sdk.GraphAPI.ChannelMembers.ListAll(ctx, integratedGroup, channelID, channelmember.ListOptions{}, client.PagingOptions{})
+					if err != nil {
+						return contracttest.Observation{Response: remaining.Response, Err: err}
+					}
+					if remaining.Pages != 1 || len(remaining.Items) != 0 {
+						t.Error("channel recovery did not establish complete membership absence")
+					}
+					retained, response, err := sdk.GraphAPI.TeamMembers.GetByID(ctx, integratedGroup, teamMember.ID)
+					if err == nil && (retained.ID != teamMember.ID || retained.UserID == nil || string(*retained.UserID) != integratedUser || len(retained.Roles) != 1 || retained.Roles[0] != teammember.Owner) {
+						t.Error("channel recovery altered independent team membership")
+					}
+					return contracttest.Observation{Response: response, Err: err}
+				},
+			})
+		})
+	}
 }
 
 func TestUnitIntegratedCorePartialOwnerFailureAndExplicitRecovery(t *testing.T) {

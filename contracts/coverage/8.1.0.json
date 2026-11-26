@@ -68,6 +68,10 @@
             {
               "file": "msteams/graph_api/channel_user_management/service_test.go",
               "name": "TestUnitFailuresStopBeforeFurtherChanges"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery"
             }
           ],
           "live_tests": [
@@ -15501,6 +15505,10 @@
             {
               "file": "msteams/graph_api/channel_user_management/list_test.go",
               "name": "TestUnitEnrichmentFailureNeverProducesACompleteList"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery"
             }
           ],
           "live_tests": [
@@ -35099,6 +35107,10 @@
             {
               "file": "msteams/graph_api/channel_user_management/service_test.go",
               "name": "TestUnitFailuresStopBeforeFurtherChanges"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery"
             }
           ],
           "live_tests": [

@@ -53,6 +53,30 @@ The native route remains a channel create; no existing-relationship mutation is
 invented. Polling tests use a synthetic clock to preserve the 31-second interval
 without adding real wait time.
 
+The channel/team membership integration adds three authored offline chains.
+An existing team conversation membership and a newly created channel conversation
+membership refer to the same directory user but carry distinct opaque native IDs.
+The successful chain promotes and deletes only the returned channel ID, verifies
+complete channel-membership absence, then rereads the unchanged team membership.
+The failure chains deny promotion after a confirmed channel membership write;
+explicit compensation targets only that owned relationship. Denied compensation
+remains an error with no claimed absence or completion.
+
+These shapes derive from the primary Graph beta
+[channel member create](https://learn.microsoft.com/en-us/graph/api/channel-post-members?view=graph-rest-beta),
+[role update](https://learn.microsoft.com/en-us/graph/api/channel-update-members?view=graph-rest-beta),
+[delete](https://learn.microsoft.com/en-us/graph/api/channel-delete-members?view=graph-rest-beta)
+and [list](https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta)
+contracts reviewed 2026-11-26. They use documented 201/member, 200/updated member,
+204/deleted membership and complete empty-list responses. Membership IDs are
+opaque and distinct from directory-user IDs; only private/shared channels support
+member writes. The vectors explicitly assume an authorized existing private
+channel and member prerequisite; they are not live eligibility or permission
+proof. Ledger references cover only the Add/Get/Remove-TeamChannelUser
+`__AllParameterSets` primitive paths exercised, with no status promotion.
+All three new identity/recovery cases pass a targeted guarded `-p 1` run;
+that execution does not acquire tenant credentials or perform live writes.
+
 ## Fixture provenance and permission boundaries
 
 These are **authored offline protocol vectors**, not captured tenant replies.
@@ -130,7 +154,10 @@ carried forward from the historical issue text:
   explicitly scopes its permission table and route to chats. The [resource page](https://learn.microsoft.com/en-us/graph/api/resources/teamsasyncoperation?view=graph-rest-1.0)
   establishes asynchronous status and polling semantics, but does not establish
   team-route grants. These sources confirm the discrepancy; assigning chat grants
-  to the pinned team route would be an unsupported inference. A real accepted
+  to the pinned team route would be an unsupported inference. The route-specific
+  [Get-MgBetaTeamOperation reference](https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.beta.teams/get-mgbetateamoperation?view=graph-powershell-beta)
+  also lists the generated operation selectors without a permission table; its
+  presence is not a grant contract. A real accepted
   team operation and authorization evidence are still required for live completion.
 - **Targeting policy:** [Set-CsTeamsTargetingPolicy](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/set-csteamstargetingpolicy?view=teams-ps)
   describes modification of existing tag settings. It does not establish an upsert
@@ -341,6 +368,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 
 - **__AllParameterSets** — SDK: [Service.Add](../../../msteams/graph_api/channel_user_management/service.go), [Service.ResolveByDisplayName](../../../msteams/graph_api/channel/names.go), [Service.ListAll](../../../msteams/graph_api/channel_member/service.go), [Service.Create](../../../msteams/graph_api/channel_member/service.go), [Service.PromoteOwner](../../../msteams/graph_api/channel_member/service.go), [Service.ResolveByUser](../../../msteams/graph_api/channel_member/resolution.go), [Resolver.Resolve](../../../msteams/graph_api/directory_user/resolver.go).
   Contract tests: [TestUnitAddRemoveAndOwnerCompositions](../../../msteams/graph_api/channel_user_management/service_test.go), [TestUnitFailuresStopBeforeFurtherChanges](../../../msteams/graph_api/channel_user_management/service_test.go).
+  Additional integrated primitive tests: [TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery](../../../tests/contract/core/integration_test.go).
   Live tests: [TestAccChannelMembershipCRUD](../../../tests/integration/lab/graph/channel_membership_test.go).
 
 ### Add-TeamUser (CORE-26)
@@ -437,6 +465,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 
 - **__AllParameterSets** — SDK: [Service.List](../../../msteams/graph_api/channel_user_management/list.go), [Service.ResolveByDisplayName](../../../msteams/graph_api/channel/names.go), [Service.ListAll](../../../msteams/graph_api/channel_member/service.go).
   Contract tests: [TestUnitListRoleOrderPresenceAndPagedEnrichment](../../../msteams/graph_api/channel_user_management/list_test.go), [TestUnitEnrichmentFailureNeverProducesACompleteList](../../../msteams/graph_api/channel_user_management/list_test.go).
+  Additional integrated primitive tests: [TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery](../../../tests/contract/core/integration_test.go).
   Live tests: [TestAccChannelMembershipCRUD](../../../tests/integration/lab/graph/channel_membership_test.go).
 
 ### Get-TeamIncomingChannel (CORE-21)
@@ -548,6 +577,7 @@ and `live: not-run`. No ledger success state is promoted by this change.
 
 - **__AllParameterSets** — SDK: [Service.Remove](../../../msteams/graph_api/channel_user_management/service.go), [Service.ResolveByDisplayName](../../../msteams/graph_api/channel/names.go), [Service.ListAll](../../../msteams/graph_api/channel_member/service.go), [Service.DemoteOwner](../../../msteams/graph_api/channel_member/service.go), [Service.DeleteByID](../../../msteams/graph_api/channel_member/service.go), [Service.ResolveByUser](../../../msteams/graph_api/channel_member/resolution.go), [Resolver.Resolve](../../../msteams/graph_api/directory_user/resolver.go).
   Contract tests: [TestUnitAddRemoveAndOwnerCompositions](../../../msteams/graph_api/channel_user_management/service_test.go), [TestUnitFailuresStopBeforeFurtherChanges](../../../msteams/graph_api/channel_user_management/service_test.go).
+  Additional integrated primitive tests: [TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery](../../../tests/contract/core/integration_test.go).
   Live tests: [TestAccChannelMembershipCRUD](../../../tests/integration/lab/graph/channel_membership_test.go).
 
 ### Remove-TeamTargetingHierarchy (CORE-25)
