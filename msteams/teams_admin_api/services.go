@@ -39,9 +39,11 @@ import (
 	targetinghierarchy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_hierarchy"
 	targetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/targeting_policy"
 	teamtemplate "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/team_template"
+	teamsaipolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ai_policy"
 	teamsapppermissionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_permission_policy"
 	teamsappsetuppolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_app_setup_policy"
 	teamsaudioconferencingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_audio_conferencing_policy"
+	teamsbyodanddeskspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_byod_and_desks_policy"
 	teamscallholdpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_hold_policy"
 	teamscallparkpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
 	teamscallingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_calling_policy"
@@ -56,6 +58,13 @@ import (
 	teamsexternalaccessconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
 	teamsfeedbackpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 	teamsfilespolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_files_policy"
+	teamsfirstpartymeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_first_party_meeting_template_configuration"
+	teamsguestcallingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_calling_configuration"
+	teamsguestmessagingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_messaging_configuration"
+	teamsipphonepolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ip_phone_policy"
+	teamsmedialoggingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_media_logging_policy"
+	teamsmeetingbroadcastconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_configuration"
+	teamsmeetingbroadcastpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_policy"
 	teamsmeetingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_configuration"
 	teamsmeetingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_policy"
 	teamsmeetingtemplateconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_template_configuration"
@@ -85,8 +94,10 @@ import (
 	teamsvirtualappointmentspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_virtual_appointments_policy"
 	teamsvoiceapplicationspolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_voice_applications_policy"
 	teamsworkloadpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_load_policy"
+	teamsworklocationdetectionpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_work_location_detection_policy"
 	tenantfederationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 	tenantidentity "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_identity"
+	tenantmigrationconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_migration_configuration"
 	unifiedapps "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/unified_apps"
 )
 
@@ -100,11 +111,14 @@ type Services struct {
 
 	TeamsUpgradeConfigurations                 *teamsupgradeconfiguration.Service
 	TeamsUpgradePolicies                       *teamsupgradepolicy.Service
+	TeamsMediaLoggingPolicies                  *teamsmedialoggingpolicy.Service
+	TeamsWorkLocationDetectionPolicies         *teamsworklocationdetectionpolicy.Service
 	TeamsTenantAbuseConfigurations             *teamstenantabuseconfiguration.Service
 	TeamsUpdateManagementPolicies              *teamsupdatemanagementpolicy.Service
 	TeamsTemplatePermissionPolicies            *teamstemplatepermissionpolicy.Service
 	TeamsSipDevicesConfigurations              *teamssipdevicesconfiguration.Service
 	TeamsRoomVideoTeleConferencingPolicies     *teamsroomvideoteleconferencingpolicy.Service
+	TeamsMeetingBroadcastPolicies              *teamsmeetingbroadcastpolicy.Service
 	TeamsSharedCallingRoutingPolicies          *teamssharedcallingroutingpolicy.Service
 	TeamsPersonalAttendantPolicies             *teamspersonalattendantpolicy.Service
 	TeamsRecordingRollOutPolicies              *teamsrecordingrolloutpolicy.Service
@@ -115,7 +129,9 @@ type Services struct {
 	TeamsMobilityPolicies                      *teamsmobilitypolicy.Service
 	TeamsMultiTenantOrganizationConfigurations *teamsmultitenantorganizationconfiguration.Service
 	TeamsMigrationConfigurations               *teamsmigrationconfiguration.Service
+	TeamsGuestCallingConfigurations            *teamsguestcallingconfiguration.Service
 	TeamsMessagingConfigurations               *teamsmessagingconfiguration.Service
+	TeamsMeetingBroadcastConfigurations        *teamsmeetingbroadcastconfiguration.Service
 	TeamsMeetingTemplatePermissionPolicies     *teamsmeetingtemplatepermissionpolicy.Service
 	TeamsMeetingTemplateConfigurations         *teamsmeetingtemplateconfiguration.Service
 	TeamsMessagingPolicies                     *teamsmessagingpolicy.Service
@@ -123,6 +139,8 @@ type Services struct {
 	TeamsMeetingConfigurations                 *teamsmeetingconfiguration.Service
 	TeamsEventsPolicies                        *teamseventspolicy.Service
 	TeamsFilesPolicies                         *teamsfilespolicy.Service
+	TeamsIPPhonePolicies                       *teamsipphonepolicy.Service
+	TeamsGuestMessagingConfigurations          *teamsguestmessagingconfiguration.Service
 	TeamsEnhancedEncryptionPolicies            *teamsenhancedencryptionpolicy.Service
 	TeamsEducationConfigurations               *teamseducationconfiguration.Service
 	TeamsEducationAssignmentsAppPolicies       *teamseducationassignmentsapppolicy.Service
@@ -135,9 +153,11 @@ type Services struct {
 	TeamsCallParkPolicies                      *teamscallparkpolicy.Service
 	TeamsCallHoldPolicies                      *teamscallholdpolicy.Service
 	TeamsAudioConferencingPolicies             *teamsaudioconferencingpolicy.Service
+	TeamsBYODAndDesksPolicies                  *teamsbyodanddeskspolicy.Service
 	AudioConferencingCustomPrompts             *audioconferencingprompts.Service
 	TeamsAppSetupPolicies                      *teamsappsetuppolicy.Service
 	TeamsAppPermissionPolicies                 *teamsapppermissionpolicy.Service
+	TeamsAIPolicies                            *teamsaipolicy.Service
 	RecordingMessages                          *recordingmessages.Service
 	PrivacyConfigurations                      *privacyconfiguration.Service
 	PolicyPackages                             *policypackages.Service
@@ -153,6 +173,7 @@ type Services struct {
 	ApplicationAccessPolicies                  *applicationaccesspolicy.Service
 	ApplicationMeetingConfigurations           *applicationmeetingconfiguration.Service
 	TenantFederationConfigurations             *tenantfederationconfiguration.Service
+	TenantMigrationConfigurations              *tenantmigrationconfiguration.Service
 	TeamTemplates                              *teamtemplate.Service
 	AudioFiles                                 *audioprompts.Service
 	CloudCallData                              *cloudcalldata.Service
@@ -179,6 +200,8 @@ type Services struct {
 	PrivateChannelMigration                    *privatechannelmigration.Service
 	Regions                                    *region.Service
 	UnifiedApps                                *unifiedapps.Service
+
+	TeamsFirstPartyMeetingTemplateConfigurations *teamsfirstpartymeetingtemplateconfiguration.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -216,11 +239,14 @@ func NewServices(session *client.Session) (*Services, error) {
 
 		TeamsUpgradeConfigurations:                 teamsupgradeconfiguration.NewService(scope),
 		TeamsUpgradePolicies:                       teamsupgradepolicy.NewService(backend),
+		TeamsMediaLoggingPolicies:                  teamsmedialoggingpolicy.NewService(backend),
+		TeamsWorkLocationDetectionPolicies:         teamsworklocationdetectionpolicy.NewService(scope),
 		TeamsTenantAbuseConfigurations:             teamstenantabuseconfiguration.NewService(scope),
 		TeamsUpdateManagementPolicies:              teamsupdatemanagementpolicy.NewService(scope),
 		TeamsTemplatePermissionPolicies:            teamstemplatepermissionpolicy.NewService(scope),
 		TeamsSipDevicesConfigurations:              teamssipdevicesconfiguration.NewService(scope),
 		TeamsRoomVideoTeleConferencingPolicies:     teamsroomvideoteleconferencingpolicy.NewService(backend),
+		TeamsMeetingBroadcastPolicies:              teamsmeetingbroadcastpolicy.NewService(backend),
 		TeamsSharedCallingRoutingPolicies:          teamssharedcallingroutingpolicy.NewService(scope),
 		TeamsPersonalAttendantPolicies:             teamspersonalattendantpolicy.NewService(scope),
 		TeamsRecordingRollOutPolicies:              teamsrecordingrolloutpolicy.NewService(scope),
@@ -231,7 +257,9 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsMobilityPolicies:                      teamsmobilitypolicy.NewService(scope),
 		TeamsMultiTenantOrganizationConfigurations: teamsmultitenantorganizationconfiguration.NewService(scope),
 		TeamsMigrationConfigurations:               teamsmigrationconfiguration.NewService(backend),
+		TeamsGuestCallingConfigurations:            teamsguestcallingconfiguration.NewService(backend),
 		TeamsMessagingConfigurations:               teamsmessagingconfiguration.NewService(scope),
+		TeamsMeetingBroadcastConfigurations:        teamsmeetingbroadcastconfiguration.NewService(backend),
 		TeamsMeetingTemplatePermissionPolicies:     teamsmeetingtemplatepermissionpolicy.NewService(scope),
 		TeamsMeetingTemplateConfigurations:         teamsmeetingtemplateconfiguration.NewService(scope),
 		TeamsMessagingPolicies:                     teamsmessagingpolicy.NewService(scope),
@@ -239,6 +267,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsMeetingConfigurations:                 teamsmeetingconfiguration.NewService(scope),
 		TeamsEventsPolicies:                        teamseventspolicy.NewService(scope),
 		TeamsFilesPolicies:                         teamsfilespolicy.NewService(scope),
+		TeamsIPPhonePolicies:                       teamsipphonepolicy.NewService(backend),
+		TeamsGuestMessagingConfigurations:          teamsguestmessagingconfiguration.NewService(backend),
 		TeamsEnhancedEncryptionPolicies:            teamsenhancedencryptionpolicy.NewService(backend),
 		TeamsEducationConfigurations:               teamseducationconfiguration.NewService(scope),
 		TeamsEducationAssignmentsAppPolicies:       teamseducationassignmentsapppolicy.NewService(scope),
@@ -251,9 +281,11 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsCallParkPolicies:                      teamscallparkpolicy.NewService(backend),
 		TeamsCallHoldPolicies:                      teamscallholdpolicy.NewService(scope),
 		TeamsAudioConferencingPolicies:             teamsaudioconferencingpolicy.NewService(backend),
+		TeamsBYODAndDesksPolicies:                  teamsbyodanddeskspolicy.NewService(scope),
 		AudioConferencingCustomPrompts:             audioconferencingprompts.NewService(scope),
 		TeamsAppSetupPolicies:                      teamsappsetuppolicy.NewService(scope),
 		TeamsAppPermissionPolicies:                 teamsapppermissionpolicy.NewService(scope),
+		TeamsAIPolicies:                            teamsaipolicy.NewService(scope),
 		RecordingMessages:                          recordingmessages.NewService(scope),
 		PrivacyConfigurations:                      privacyconfiguration.NewService(scope),
 		PolicyPackages:                             policypackages.NewService(scope),
@@ -269,6 +301,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		ApplicationAccessPolicies:                  applicationaccesspolicy.NewService(backend),
 		ApplicationMeetingConfigurations:           applicationmeetingconfiguration.NewService(backend),
 		TenantFederationConfigurations:             tenantfederationconfiguration.NewService(backend),
+		TenantMigrationConfigurations:              tenantmigrationconfiguration.NewService(backend),
 		TeamTemplates:                              teamtemplate.NewService(backend),
 		AudioFiles:                                 audioprompts.NewService(backend),
 		CloudCallData:                              cloudcalldata.NewService(backend),
@@ -295,6 +328,8 @@ func NewServices(session *client.Session) (*Services, error) {
 		PrivateChannelMigration:                    privatechannelmigration.NewService(migrationScope),
 		Regions:                                    region.NewService(regionScope),
 		UnifiedApps:                                unifiedapps.NewService(appCatalogScope),
+
+		TeamsFirstPartyMeetingTemplateConfigurations: teamsfirstpartymeetingtemplateconfiguration.NewService(scope),
 	}, nil
 }
 

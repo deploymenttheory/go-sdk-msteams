@@ -110,6 +110,9 @@ PROOFS = {
     'owned-compliance-recording-crud': (PROOF_MARKERS + ['application rejection and absence: passed'], ORACLE_MARKER, 2),
     'user-assignment': (USER_ASSIGNMENT_MARKERS, USER_ASSIGNMENT_ORACLE, 3),
     'group-assignment': (GROUP_ASSIGNMENT_MARKERS, GROUP_ASSIGNMENT_ORACLE, 6),
+    # Grant of a service built-in instance (no public New/Remove): no owned policy.
+    'media-logging-group-grant': (['group policy grant/read-back: passed', 'group policy delete/absence: passed', 'group assignment cleanup: passed'],
+                                  'PowerShell 8.1.0 / Go media logging group grant parity: passed', 3),
     'template-crud': (TEMPLATE_MARKERS, TEMPLATE_ORACLE, 4),
     'audio-file-lifecycle': (AUDIO_FILE_MARKERS, AUDIO_FILE_ORACLE, 1),
     'schedule-lifecycle': (SCHEDULE_MARKERS, SCHEDULE_ORACLE, 3),

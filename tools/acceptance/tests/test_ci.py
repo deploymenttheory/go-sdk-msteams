@@ -158,6 +158,19 @@ class AcceptanceGuardTests(unittest.TestCase):
             with self.subTest(absent=absent):
                 self.assertEqual(ci.evaluate(missing, [test], 0, proof=proof)['outcome'], 'failed')
 
+    def test_media_logging_group_grant_requires_each_phase_and_three_comparisons(self):
+        test = 'TestAccMediaLoggingPolicyGroupGrant'
+        proof = 'media-logging-group-grant'
+        markers, oracle, count = ci.PROOFS[proof]
+        events = [{'Test': test, 'Action': 'output', 'Output': marker} for marker in markers + [oracle] * count]
+        events.append({'Test': test, 'Action': 'pass'})
+        self.assertEqual(ci.evaluate(events, [test], 0, proof=proof)['outcome'], 'passed')
+        for absent in markers + [oracle]:
+            missing = events.copy()
+            missing.remove(next(event for event in missing if event.get('Output') == absent))
+            with self.subTest(absent=absent):
+                self.assertEqual(ci.evaluate(missing, [test], 0, proof=proof)['outcome'], 'failed')
+
     def test_optional_phone_fixture_rejects_foreign_tenants_and_dial_codes(self):
         tenant = '11111111-1111-1111-1111-111111111111'
         fixture = {'tenant_id': tenant, 'resource_account_id': '22222222-2222-2222-2222-222222222222',
