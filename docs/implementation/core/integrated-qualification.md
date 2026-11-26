@@ -352,8 +352,14 @@ singular properties onto the SDK's plural wire fields. The optional Giphy rating
 string and other untested template fields remain separate qualification gaps.
 The CI proof now requires both settings milestones and ten total comparisons
 (five per variant), preserving two owned journal entries and independent cleanup.
-This stronger extension is authored and awaits its own live result; the earlier
-six-comparison pass does not prove the new fields.
+This extension passed in [selective run 45883473663](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45883473663)
+at exact dispatch revision `22f01edc43d70cdbeffdf5ea850d38b2a2337952`.
+The [sanitized terminal report](evidence/template-settings-45883473663.json) records
+both children passing without skips, all seven required milestones, ten pinned
+comparisons and two independently cleaned entries with zero unresolved entries.
+The backend-auth partition was correctly unselected for this template-only run.
+This proves the selected template scenarios at that revision; it does not resolve
+the private-backend 401 or qualify other commands, fields or parameter sets.
 
 ## Command and parameter-set inventory
 
@@ -645,4 +651,4 @@ and `live: not-run`. No ledger success state is promoted by this change.
 
 Reviewed Graph results now exercise typed/native identities, nullable/future fields, complete paging, enrichment, role filters, mutation stages and later failures. New team compositions cover successful owned/supplied group creation, paired group/team reads, partial updates, archive/unarchive confirmation and out-of-order batch/user-list partial hydration. Pinned-source admin vectors exercise actual successful model/receipt branches, including opaque batch status and distinct hierarchy preparation/import outcomes. Existing template captures now reach response assertions for all input variants. These are offline conformance statements, not captured Graph responses or live tenant qualification.
 
-No global ledger status is promoted. Live Graph lifecycle/membership/shared topology, delegated regional consent, disposable deployment/hierarchy fixtures and the actual private-backend HTTP 401 remain qualification boundaries. Existing-relationship creation/update and policy upsert are not established by the public command contracts. Published CSV layouts are available and represented in authored inputs; actual semantic acceptance and completed processing still need owned live fixtures. Current-head template settings proof is tracked by the single selective run [45883473663](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45883473663) at `22f01edc43d70cdbeffdf5ea850d38b2a2337952`; it is not counted until its terminal report is inspected.
+No global ledger status is promoted. Live Graph lifecycle/membership/shared topology, delegated regional consent, disposable deployment/hierarchy fixtures and the actual private-backend HTTP 401 remain qualification boundaries. Existing-relationship creation/update and policy upsert are not established by the public command contracts. Published CSV layouts are available and represented in authored inputs; actual semantic acceptance and completed processing still need owned live fixtures. The selected template settings proof passed in [run 45883473663](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45883473663) at `22f01edc43d70cdbeffdf5ea850d38b2a2337952`; its inspected terminal report records ten pinned comparisons and two cleaned entries with zero unresolved entries. Later source changes and full current-head CI remain separately required.

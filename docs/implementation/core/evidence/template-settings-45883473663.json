@@ -1,0 +1,31 @@
+{
+  "outcome": "passed",
+  "revision": "22f01edc43d70cdbeffdf5ea850d38b2a2337952",
+  "run_url": "https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45883473663",
+  "event": "workflow_dispatch",
+  "artifact": "tenant-acceptance-service-team_template",
+  "auth_method": "client-secret",
+  "cloud": "commercial",
+  "baseline_version": "8.1.0",
+  "suite": "team_template/crud",
+  "required_child_outcomes": {
+    "TestAccTeamTemplateCRUD/expanded": "pass",
+    "TestAccTeamTemplateCRUD/json-body": "pass"
+  },
+  "mutation_assertions_observed": {
+    "template create/read-back and General channel: passed": true,
+    "template update/read-back: passed": true,
+    "template empty description/read-back: passed": true,
+    "template non-default boolean settings/read-back: passed": true,
+    "template explicit false settings/read-back: passed": true,
+    "template list: passed": true,
+    "template delete/absence: passed": true
+  },
+  "powershell_comparisons": 10,
+  "cleanup": {
+    "journal_entries": 2,
+    "cleaned_entries": 2,
+    "unresolved_entries": 0
+  },
+  "scope": "Expanded and JSON-body owned template lifecycle; 18 boolean settings true then false, explicit-empty description, pinned comparisons and independently verified cleanup. No blanket command or parameter-set qualification."
+}
