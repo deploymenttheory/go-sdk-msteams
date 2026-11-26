@@ -353,6 +353,16 @@ class AcceptanceGuardTests(unittest.TestCase):
                 self.assertIn(name + ': ' + reason, output.getvalue())
                 self.assertNotIn('private-response', output.getvalue() + json.dumps(report))
 
+    def test_call_create_diagnostics_keep_bounded_category_only(self):
+        name = 'TestAccScheduleAutoAttendantComposition'
+        reason = 'integrated attendant validation category: association-priority'
+        report = ci.evaluate([
+            {'Test': name, 'Action': 'output', 'Output': reason + ' private-response'},
+            {'Test': name, 'Action': 'fail'},
+        ], [name], 1)
+        self.assertEqual(report['failure_reasons'][name], [reason])
+        self.assertNotIn('private-response', json.dumps(report))
+
     def test_failure_reason_keeps_fixed_assertion_only(self):
         name = 'TestAccACSFederationConfigurationReadOnly'
         reason = 'pinned federation read oracle failed; no output retained'

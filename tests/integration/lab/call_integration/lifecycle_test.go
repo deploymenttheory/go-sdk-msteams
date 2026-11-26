@@ -158,10 +158,11 @@ func TestAccScheduleAutoAttendantComposition(t *testing.T) {
 	labkit.WriteResponseFixture(t, "schedules", "integration_fixed_create", response, replacements)
 	defaultID, afterHoursID := guid(t), guid(t)
 	replacements[defaultID], replacements[afterHoursID] = flowID, attendantID
-	association, _, err := sdk.TeamsAdminAPI.AutoAttendants.DraftCallHandlingAssociation(ctx, aa.CallHandlingAssociation{Type: ptr(aa.AssociationAfterHours), ScheduleID: schedule.ID, CallFlowID: &afterHoursID})
+	associations, err := draftAssociations(ctx, sdk.TeamsAdminAPI.AutoAttendants, *schedule.ID, *fixed.ID, afterHoursID)
 	if err != nil {
-		t.Fatal("owned schedule association draft failed")
+		t.Fatal("owned schedule association drafts failed")
 	}
+
 	disconnect := aa.MenuOption{Action: ptr(aa.ActionDisconnectCall), DtmfResponse: ptr(aa.DtmfAutomatic)}
 	makeFlow := func(id, name, greeting string) aa.CallFlow {
 		return aa.CallFlow{ID: &id, Name: &name, Greetings: []aa.Prompt{{ActiveType: ptr(aa.PromptTextToSpeech), TextToSpeechPrompt: &greeting}}, Menu: &aa.Menu{Name: ptr(name + " menu"), MenuOptions: []aa.MenuOption{disconnect}}}
@@ -172,11 +173,13 @@ func TestAccScheduleAutoAttendantComposition(t *testing.T) {
 	if err != nil {
 		t.Fatal("attendant create was not journaled")
 	}
-	attendant, response, err := sdk.TeamsAdminAPI.AutoAttendants.Create(ctx, aa.Settings{Name: &attendantName, LanguageID: ptr("en-US"), TimeZoneID: ptr("UTC"), DefaultCallFlow: &defaultFlow, CallFlows: &[]aa.CallFlow{afterHours}, CallHandlingAssociations: &[]aa.CallHandlingAssociation{*association, {Type: ptr(aa.AssociationHoliday), ScheduleID: fixed.ID, CallFlowID: &afterHoursID, Enabled: ptr(true)}}})
+	attendant, response, err := sdk.TeamsAdminAPI.AutoAttendants.Create(ctx, aa.Settings{Name: &attendantName, LanguageID: ptr("en-US"), TimeZoneID: ptr("UTC"), DefaultCallFlow: &defaultFlow, CallFlows: &[]aa.CallFlow{afterHours}, CallHandlingAssociations: &associations})
 	if err == nil && attendant != nil && attendant.ID != nil {
 		err = journal.Applied(attendantEntry, *attendant.ID)
 	}
 	if err != nil || attendant == nil || attendant.ID == nil {
+		handlers["auto-attendant"] = rejectedAttendantCleanup{service: sdk.TeamsAdminAPI.AutoAttendants, fallback: handlers["auto-attendant"], entryID: attendantEntry, fixture: attendantName, rejected: confirmedCreateRejection(response, err)}
+		logCreateFailure(t, response, err)
 		t.Fatal("integrated attendant create failed; journal retained")
 	}
 	replacements[*attendant.ID] = "00000000-0000-4000-8000-000000000004"

@@ -145,6 +145,13 @@ PROOFS = {
 # Publish fixed assertion text only. HTTP payloads and dynamic fixture names
 # remain private even when a test fails.
 FAILURE_REASONS = (
+    'integrated attendant validation category: duplicate-reference',
+    'integrated attendant validation category: schedule-type',
+    'integrated attendant validation category: association-priority',
+    'integrated attendant validation category: missing-flow',
+    'integrated attendant validation category: missing-schedule',
+    'integrated attendant validation category: other',
+    'integrated attendant validation category: unavailable',
     'read/list comparison: response fields missing',
     'read/list comparison: property sets differ',
     'read/list comparison: identity values differ',
