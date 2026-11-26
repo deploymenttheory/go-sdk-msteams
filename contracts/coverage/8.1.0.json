@@ -2906,6 +2906,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/group_response_test.go",
               "name": "TestUnitGroupReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/service_protocol_test.go",
+              "name": "TestUnitGeneratedReadDecodeFailureRetainsHTTPResponse"
             }
           ],
           "live_tests": []
@@ -2927,6 +2931,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/group_response_test.go",
               "name": "TestUnitGroupListsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/service_protocol_test.go",
+              "name": "TestUnitGeneratedReadDecodeFailureRetainsHTTPResponse"
             }
           ],
           "live_tests": []
@@ -5777,6 +5785,10 @@
             {
               "file": "tests/contract/policies/assignment_composition_test.go",
               "name": "TestUnitPolicyCompositionPackageModeRefusalDoesNotPoisonIndependentService"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageReadDecodeFailureRetainsHTTPResponse"
             }
           ],
           "live_tests": [
@@ -5807,6 +5819,10 @@
             {
               "file": "tests/contract/policies/assignment_composition_test.go",
               "name": "TestUnitPolicyCompositionBuildsPackageFromRecommendationAndRetainsPartialFailure"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageReadDecodeFailureRetainsHTTPResponse"
             }
           ],
           "live_tests": []

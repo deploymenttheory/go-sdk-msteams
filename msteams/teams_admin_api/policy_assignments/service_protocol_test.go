@@ -3,6 +3,7 @@ package policyassignments_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -116,6 +117,40 @@ func TestUnitGroupByPolicyAuthoredArrayAndNullableFields(t *testing.T) {
 					t.Fatal("Get2 lost the typed group array, identity, zero, empty or nullable fields")
 				}
 				return contracttest.Observation{Value: values, Response: response, Err: err}
+			}})
+		})
+	}
+}
+
+// Deliberately adversarial 200 bodies, not service captures. Pinned generated
+// Get/Get1 callbacks return IGroupAssignment/IGroupAssignment[] respectively.
+// Two representatives exercise the shared object/array SDK decoder error paths;
+// other normal read selectors already have independent positive assertions.
+func TestUnitGeneratedReadDecodeFailureRetainsHTTPResponse(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct{ name, path, reply string }{
+		{"group-get", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", `[]`},
+		{"group-list", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes", `{"value":[]}`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			run(t, contracttest.Case{Name: "malformed-read-" + tc.name, Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: mapping(tc.name), Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+tc.path, "Get-CsGroupPolicyAssignment", nil, 200, tc.reply)}, Want: contracttest.Expected{Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				observed := invoke(tc.name, ctx, sdk)
+				if !errors.Is(observed.Err, client.ErrDecode) || observed.Response == nil || observed.Response.StatusCode() != 200 || string(observed.Response.Body()) != tc.reply {
+					t.Fatal("read decode failure lost its actual accepted response or error")
+				}
+				switch value := observed.Value.(type) {
+				case *resource.GroupAssignment:
+					if value != nil {
+						t.Fatal("malformed item invented a typed group")
+					}
+				case []*resource.GroupAssignment:
+					if value != nil {
+						t.Fatal("enveloped array invented typed groups")
+					}
+				default:
+					t.Fatal("read wrapper returned the wrong typed result")
+				}
+				return observed
 			}})
 		})
 	}

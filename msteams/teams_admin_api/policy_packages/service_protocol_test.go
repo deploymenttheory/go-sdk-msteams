@@ -240,3 +240,42 @@ func TestUnitPackageBatchUnusableHandlesDoNotInventOperationID(t *testing.T) {
 		})
 	}
 }
+
+// Adversarial 200 bodies against pinned FormattedPackage/Summary[] callbacks,
+// not fabricated valid server payloads. These two vectors prove the shared
+// object/array decoder error propagation used by package reads and lists.
+func TestUnitPackageReadDecodeFailureRetainsHTTPResponse(t *testing.T) {
+	t.Parallel()
+	for _, vector := range requestCases() {
+		if vector.Name != "get" && vector.Name != "list" {
+			continue
+		}
+		vector.Status = 200
+		vector.Reply = `[]`
+		if vector.Name == "list" {
+			vector.Reply = `{"value":[]}`
+		}
+		t.Run(vector.Name, func(t *testing.T) {
+			mappings := mapping(vector.Name)
+			run(t, contracttest.Case{Name: "malformed-read-" + vector.Name, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mode: auth.Delegated, Mappings: mappings, Steps: []contracttest.Exchange{discovery(t), wire(vector, mappings[0].Command)}, Want: contracttest.Expected{Body: []byte(vector.Reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				observed := invoke(vector.Name, ctx, sdk)
+				if !errors.Is(observed.Err, client.ErrDecode) || observed.Response == nil || observed.Response.StatusCode() != 200 || string(observed.Response.Body()) != vector.Reply {
+					t.Fatal("package decode failure lost its accepted response or error")
+				}
+				switch value := observed.Value.(type) {
+				case *resource.Package:
+					if value != nil {
+						t.Fatal("malformed item invented a package")
+					}
+				case []*resource.Package:
+					if value != nil {
+						t.Fatal("enveloped array invented packages")
+					}
+				default:
+					t.Fatal("read wrapper returned the wrong typed result")
+				}
+				return observed
+			}})
+		})
+	}
+}
