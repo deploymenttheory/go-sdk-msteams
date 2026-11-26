@@ -751,6 +751,27 @@
         }
       ]
     },
+    "teams_guest_meeting_configuration": {
+      "package": "./tests/integration/lab/teams_guest_meeting_configuration",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccGuestMeetingConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccGuestMeetingConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
     "teams_ip_phone_policy": {
       "package": "./tests/integration/lab/teams_ip_phone_policy",
       "steps": [

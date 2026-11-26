@@ -1,70 +1,54 @@
-# Project Title
+# Microsoft Teams SDK documentation
 
-Simple overview of your project and its use or purpose.
+The SDK targets MicrosoftTeams PowerShell 8.1.0 management behaviour with a native
+Go runtime. Authentication, transport and resource services are implemented in
+stages; complete parity and release qualification remain outstanding.
 
->Make use of the [Markdow Syntax Guide](markdown-syntax-guide.md).
+## Using the SDK
 
-## Description
+- [Quick start and current project status](../README.md)
+- [Client configuration and environment variables](guides/client-configuration.md)
+- [Authentication methods, permissions and cloud limitations](guides/authentication.md)
+- [Graph services](../msteams/graph_api/services.go), including [teams](../msteams/graph_api/team/api_docs.md), [channels](../msteams/graph_api/channel/api_docs.md) and [membership](../msteams/graph_api/team_member/api_docs.md)
+- [Teams administration services](../msteams/teams_admin_api/services.go), including [meeting policies](../msteams/teams_admin_api/teams_meeting_policy/api_docs.md), [call queues](../msteams/teams_admin_api/call_queues/api_docs.md) and [applications](../msteams/teams_admin_api/unified_apps/api_docs.md)
 
-Describe your project.
+Resource packages contain `api_docs.md` and compiled `example_test.go` examples.
+Their references describe supported CRUD/actions, permissions, command mappings
+and live-test limitations. Request and response models belong to each resource.
 
-## Getting Started
+## Developing and verifying
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+- [Go toolchain, dependencies and quality gates](guides/development.md)
+- [Service implementation and public compatibility conventions](guides/service-development.md)
+- [Offline contract harness](../internal/contracttest/README.md)
+- [Tenant acceptance, fixtures, cleanup and selective skips](../tools/acceptance/README.md)
+- [Current capability and evidence ledger](../contracts/coverage/README.md)
+- [GitHub product baseline and backlog](https://github.com/deploymenttheory/go-sdk-msteams/issues/6)
 
-### Prerequisites
+Offline tests use `TestUnit`; credential-backed tenant tests use `TestAcc`.
+Run offline tests with `go test -run '^(TestUnit|Example)' ./...`. Live acceptance
+requires the explicit lab setup described above. A skip or expected denial does
+not qualify a successful resource operation.
 
-Describe any prerequisites or dependencies.
+## Architecture and compatibility
 
-### Installation
+- [Client and service composition](decisions/0001-client-and-service-composition.md)
+- [Portable authentication](decisions/0002-portable-authentication.md)
+- [Backend contracts, replay safety and compatibility](decisions/0003-backend-contracts-and-compatibility.md)
+- [Agreed implementation baseline](implementation/plan.md) and [subsequent amendments](implementation/plan-amendments.md)
+- [Pinned upstream evidence](../contracts/powershell/8.1.0/README.md)
+- [Upstream contract comparison](../tools/contractdiff/README.md)
+- [Candidate release discovery and review](../tools/releases/README.md)
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+The original plan and publication preview preserve historical approval evidence.
+Use GitHub and the coverage ledger for delivery status. SDK semantic versions are
+independent of the PowerShell baseline. Commercial lab results do not establish
+sovereign-cloud qualification.
 
-  ```bash
-  iex "&amp; { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI"
-  ```
+Current backlog work covers CALL, CORE, EXT, POL and LAB. VOICE administration is
+deferred because the lab lacks licensing for live testing; full-parity release
+requirements still include it.
 
-## Usage
+## Contributing and licence
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
-## FAQ and Known Issues
-
-Any advise for common problems or issues.
-  ```bash
-  command to run if program contains helper info
-  ```
-
-## Contributors
-
-Contributors names and contact info
-
-* You, Yourself and the Universe
-* [@your_twitter](<https://twitter.com/your_username>)
-
-## Contribution
-
-If you would like to become an active contributor to this repository or project, please follow the instructions provided in [`CONTRIBUTING.md`](../CONTRIBUTING.md).
-
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@your_twitter](<https://twitter.com/your_username>) - email@example.com
-
-Project Link: [https://github.com/your_username/repo_name](<https://github.com/your_username/repo_name>)
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See [`LICENSE`](`../../LICENSE`).
-
-## References
-
-* [Emoji Cheat Sheet](<https://github.com/ikatyang/emoji-cheat-sheet>)
-* [License Helper](<https://choosealicense.com/>)
+See [CONTRIBUTING.md](../CONTRIBUTING.md) and [LICENSE](../LICENSE).
