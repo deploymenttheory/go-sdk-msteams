@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -15,7 +16,9 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 )
 
-const captureSource = "docs/implementation/ext/evidence/response-fixtures-25ad385.json"
+// Exact response provenance: docs/implementation/ext/evidence/response-fixtures-25ad385.json.
+// The harness source is the mixed-response test vector; each body is loaded unchanged.
+const captureSource = "tests/integration/lab/ext_integration/captured_test.go"
 
 func captured(t *testing.T, service, name string) []byte {
 	t.Helper()
@@ -82,7 +85,7 @@ func TestUnitCapturedTypedFeedbackPreservesFullResponseSnapshots(t *testing.T) {
 				t.Fatal("captured typed identity missing")
 			}
 			// Direct compiled PolicyRP needs no generated-client discovery.
-			result, err := contracttest.Run(t.Context(), contracttest.Case{Name: "captured-feedback-" + fixture.mode, Family: "ext_integration", Scope: "service", Source: captureSource, Steps: []contracttest.Exchange{exchange(true, "GET", configPath+"/configuration/"+body.Identity, "Get-CsTeamsFeedbackPolicy", "", 200, string(raw))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			result, err := contracttest.Run(t.Context(), contracttest.Case{Name: "captured-feedback-" + strings.ToLower(fixture.mode), Family: "ext_integration", Scope: "service", Source: captureSource, Steps: []contracttest.Exchange{exchange(true, "GET", configPath+"/configuration/"+body.Identity, "Get-CsTeamsFeedbackPolicy", "", 200, string(raw))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				value, _, err := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.GetByIdentity(ctx, body.Identity)
 				if err != nil {
 					return contracttest.Observation{Err: err}
