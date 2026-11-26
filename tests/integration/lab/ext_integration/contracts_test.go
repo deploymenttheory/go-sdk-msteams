@@ -8,6 +8,7 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -45,6 +46,9 @@ func exchange(compiled bool, method, path, command, body string, status int, rep
 		headers.Set("MPACmdlet", "true")
 		headers[http.CanonicalHeaderKey("X-MS-Target-Uri")] = nil
 	} else {
+		// The generated ConfigAPI adapter uses standard segment escaping; the
+		// compiled PolicyRP transport additionally escapes the identity colon.
+		path = strings.ReplaceAll(path, "Tag%3A", "Tag:")
 		headers.Set("Accept", "application/json")
 		headers.Set("X-MS-Target-Uri", "https://admin.example.invalid/")
 		headers[http.CanonicalHeaderKey("MPACmdlet")] = nil

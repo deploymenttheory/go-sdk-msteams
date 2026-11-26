@@ -30,6 +30,17 @@ foreach($name in $names){
    }
   }
  }
- $result+=@{name=$name;types=$matched;root_exported=($null -ne (Get-Command -Name $name -Module MicrosoftTeams -ErrorAction SilentlyContinue))}
+ $declarations=@()
+ foreach($file in Get-ChildItem -LiteralPath $ModulePath -Filter '*.psd1'){
+  if($file.Name -ne 'MicrosoftTeams.psd1' -and $file.Name -ne 'Microsoft.Teams.PowerShell.TeamsCmdlets.psd1' -and $file.Name -notlike 'Microsoft.Teams.Policy.Administration.Cmdlets.Core.*'){continue}
+  $number=0
+  foreach($text in Get-Content -LiteralPath $file.FullName){
+   $number++
+   if($text.Contains("'"+$name+"'")){
+    $declarations+=@{file=$file.Name;line=$number;commented=$text.TrimStart().StartsWith('#');manifest_sha256=(Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()}
+   }
+  }
+ }
+ $result+=@{name=$name;types=$matched;manifest_declarations=$declarations;root_exported=($null -ne (Get-Command -Name $name -Module MicrosoftTeams -ErrorAction SilentlyContinue))}
 }
 $result|ConvertTo-Json -Depth 8 -Compress

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"testing"
-	"time"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
 	agents "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/ai_agents"

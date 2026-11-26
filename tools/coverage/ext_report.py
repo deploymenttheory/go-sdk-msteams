@@ -64,7 +64,11 @@ def render(ledger):
              'Read-only reflection against the verified pinned package found a compiled type for every one',
              'of these candidates and none exported by a normal macOS root-module import. The',
              '[assembly hashes, types and parameter declarations](evidence/nested-command-types.json)',
-             'are source observations only; they do not settle public/support entitlement or wire behavior.', '',
+             'are source observations only; they do not settle public/support entitlement or wire behavior.',
+             'The hashed manifest declarations make the conditional boundary explicit: five installation/license',
+             'commands are commented `#preview` in the root manifest; four conversation-role commands',
+             'are exported by preview/OCE manifests, and six remaining settings commands by OCE only.',
+             'This does not authorize excluding them or assuming the ordinary lab identity can exercise them.', '',
              '| Candidate | Research owner | Current disposition |', '| --- | --- | --- |']
     for row in nested:
         lines.append(f"| `{row['name']}` | `{row['research_owner']}` | Unowned; not implemented or qualified |")
