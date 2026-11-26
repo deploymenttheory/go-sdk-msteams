@@ -195,6 +195,31 @@ comparison. No migration, deployment or tenant setting is changed.
 at tested merge `d73e9778687a983fc62e3ebec09c6b423e64a4ed` (head `ee94535`)
 failed the SDK read with HTTP 401 before any PowerShell comparison. Exact
 service-authentication diagnosis remains in progress; no positive pass is claimed.
+
+The exact published 8.1.0 assemblies were inspected without connecting to a tenant.
+`Microsoft.Teams.PowerShell.TeamsCmdlets.dll` SHA-256 is
+`3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24`;
+`GetTenantPrivateChannelMigrationStatus.ProcessRecord` loads endpoint 13 at IL
+byte offset 67, authorizes it at 70, passes the cmdlet name to the HTTP factory at
+119, selects the Templates base URL at 125, and appends the status path at 130.
+The connection assembly SHA-256 is
+`c1c2b2d1c4a5306fb70f373df7ed5bfca4f9db58e90be358afd8a1d48ed46aea`;
+its `HttpHeaderHelper.AddUserAgentHeaders` loads `X-MS-CmdletName` at offset 62
+and adds it at 68. The SDK now sends that same cmdlet name while retaining its own
+SDK User-Agent. This corrects a pinned wire difference, but is not yet evidence
+that the header caused the live 401.
+
+The pinned endpoint-13 resource map confirms the SDK's existing audiences:
+commercial `https://templates.teams.microsoft.com`, China
+`https://templates.teams.microsoftonline.cn`, and US Government
+`https://templates.teams.microsoft.us`. The cloud-specific Templates origins and
+path prefixes also match the SDK. No audience or sovereign endpoint is inferred
+from the denial. On SDK failure the read-only acceptance now attempts the same
+bound pinned command and reports only a whitelisted oracle failure stage; the
+native failure remains a failure even if PowerShell succeeds. The client-secret
+oracle currently supplies Graph and Skype tokens, so its ability to authorize
+endpoint 13 is being checked independently before interpreting that comparison.
+
 Denial,
 missing tenant identity or mismatch fails the positive scenario; no live success
 is claimed before the new CI result. Known orchestration, hierarchy and region

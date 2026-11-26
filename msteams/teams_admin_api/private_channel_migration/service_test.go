@@ -26,7 +26,7 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	return r
 }
 func wire(origin, prefix, audience string, status int, body string) contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + prefix + "/channels/privateChannelMigrationStatus", Audience: audience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + prefix + "/channels/privateChannelMigrationStatus", Audience: audience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil, "X-MS-CmdletName": {"Get-TenantPrivateChannelMigrationStatus"}}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
 }
 
 func TestUnitMigrationCloudRequestPrefixesAndAudiences(t *testing.T) {
