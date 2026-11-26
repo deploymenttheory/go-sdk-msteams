@@ -22,7 +22,16 @@ import (
 
 func policyCompositionFixture(t *testing.T, family, name string) []byte {
 	t.Helper()
-	raw, err := os.ReadFile("../../../msteams/teams_admin_api/" + family + "/testdata/" + name)
+	directory, err := os.OpenRoot("../../../msteams/teams_admin_api")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		if err := directory.Close(); err != nil {
+			t.Error(err)
+		}
+	}()
+	raw, err := directory.ReadFile(family + "/testdata/" + name)
 	if err != nil {
 		t.Fatal(err)
 	}

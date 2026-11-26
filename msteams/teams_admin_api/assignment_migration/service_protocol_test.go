@@ -18,12 +18,12 @@ import (
 // Property/JsonProperty metadata supplies the shapes below. Future fields and
 // nullable presence are explicit SDK preservation extensions, not CLR defaults.
 // Full owning types and reproduction: pol90-current-test-audit.md source audit.
-const authoredJob = `{"MigrationEventId":"00000000-0000-4000-8000-000000000002","TenantId":"00000000-0000-4000-8000-000000000003","GroupId":"00000000-0000-4000-8000-000000000001","GroupName":"Fixture","PolicyType":"FixturePolicy","PolicyInstance":"Fixture","State":"PopulationInProgress","StartTime":"2026-01-01T12:00:00Z","CompletionTime":null,"DirectAssignmentsProcessed":0,"Future":false}`
+const authoredJob = `{"MigrationEventId":"00000000-0000-4000-8000-000000000002","TenantId":"00000000-0000-4000-8000-000000000003","GroupId":"00000000-0000-4000-8000-000000000001","GroupName":"Fixture","PolicyType":"FixturePolicy","PolicyInstance":"Fixture","State":"PopulationInProgress","StartTime":"2026-01-01T12:00:00Z","DirectAssignmentsProcessed":0,"Future":false}`
 
 func verifyAuthoredJob(t *testing.T, job *resource.Job) {
 	t.Helper()
-	if job == nil || job.MigrationEventID == nil || *job.MigrationEventID != "00000000-0000-4000-8000-000000000002" || job.GroupID == nil || *job.GroupID != request(false).GroupID || job.DirectAssignmentsProcessed == nil || *job.DirectAssignmentsProcessed != 0 || job.CompletionTime != nil || string(job.RawFields["CompletionTime"]) != "null" || string(job.RawFields["Future"]) != "false" {
-		t.Fatal("typed job identity, explicit zero/null, or future snapshot lost")
+	if job == nil || job.MigrationEventID == nil || *job.MigrationEventID != "00000000-0000-4000-8000-000000000002" || job.GroupID == nil || *job.GroupID != request(false).GroupID || job.DirectAssignmentsProcessed == nil || *job.DirectAssignmentsProcessed != 0 || job.CompletionTime != nil || job.RawFields["CompletionTime"] != nil || string(job.RawFields["Future"]) != "false" {
+		t.Fatal("typed job identity, zero/missing field, or future snapshot lost")
 	}
 	if state, ok := job.State.Text(); !ok || state != resource.PopulationInProgress {
 		t.Fatal("migration state changed or was interpreted as completion")

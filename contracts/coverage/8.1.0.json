@@ -1959,6 +1959,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -2028,6 +2032,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -2062,6 +2070,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -2113,6 +2125,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_test.go",
               "name": "TestUnitAssignmentRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/service_protocol_test.go",
+              "name": "TestUnitBatchAuthoredTypedResponses"
             }
           ],
           "live_tests": [
@@ -2135,6 +2151,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_test.go",
               "name": "TestUnitAssignmentRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/service_protocol_test.go",
+              "name": "TestUnitBatchAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -2784,8 +2804,16 @@
               "name": "TestUnitExternalAccessTypedProviderDispatch"
             },
             {
-              "file": "msteams/teams_admin_api/external_access_policy/filter_test.go",
-              "name": "TestUnitProviderFilteringIsLocalAndGlobalOrderIsExactFromRealResponses"
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionPreservesReceiptsAndIndependentRecovery"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
             }
           ],
           "live_tests": [
@@ -2846,6 +2874,14 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_test.go",
               "name": "TestUnitAssignmentRequestVectors"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/group_response_test.go",
+              "name": "TestUnitGroupReadsUseAcceptanceResponses"
             }
           ],
           "live_tests": []
@@ -2863,6 +2899,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_test.go",
               "name": "TestUnitAssignmentRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/group_response_test.go",
+              "name": "TestUnitGroupListsUseAcceptanceResponses"
             }
           ],
           "live_tests": []
@@ -2935,6 +2975,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -2952,6 +2996,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -2969,6 +3017,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -2986,6 +3038,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -5685,6 +5741,14 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionPackageModeRefusalDoesNotPoisonIndependentService"
             }
           ],
           "live_tests": [
@@ -5707,6 +5771,14 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionBuildsPackageFromRecommendationAndRetainsPartialFailure"
             }
           ],
           "live_tests": []
@@ -6309,8 +6381,8 @@
               "name": "TestUnitTypedProviderDispatch"
             },
             {
-              "file": "msteams/teams_admin_api/acs_federation_configuration/filter_test.go",
-              "name": "TestUnitProviderFilteringIsLocalAndGlobalOrderIsExactFromRealResponses"
+              "file": "msteams/teams_admin_api/acs_federation_configuration/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
             }
           ],
           "live_tests": [
@@ -7716,6 +7788,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/service_test.go",
               "name": "TestUnitBannerTypedProviderAndSelectors"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
             }
           ],
           "live_tests": [
@@ -7738,6 +7814,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/service_test.go",
               "name": "TestUnitBannerTypedProviderAndSelectors"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
             }
           ],
           "live_tests": [
@@ -8282,8 +8362,8 @@
               "name": "TestUnitTypedProviderDispatch"
             },
             {
-              "file": "msteams/teams_admin_api/teams_external_access_configuration/filter_test.go",
-              "name": "TestUnitProviderFilteringIsLocalAndGlobalOrderIsExactFromRealResponses"
+              "file": "msteams/teams_admin_api/teams_external_access_configuration/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
             }
           ],
           "live_tests": [
@@ -9169,6 +9249,22 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/service_test.go",
               "name": "TestUnitBrandingTypedProviderRequests"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionPreservesReceiptsAndIndependentRecovery"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionPackageModeRefusalDoesNotPoisonIndependentService"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
             }
           ],
           "live_tests": [
@@ -10462,6 +10558,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/service_test.go",
               "name": "TestUnitRecordingTypedProviderRequests"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
             }
           ],
           "live_tests": [
@@ -13674,8 +13774,8 @@
               "name": "TestUnitTenantFederationTypedDispatch"
             },
             {
-              "file": "msteams/teams_admin_api/tenant_federation_configuration/service_test.go",
-              "name": "TestUnitTenantFiltersUseRealResponses"
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
             }
           ],
           "live_tests": [
@@ -14165,6 +14265,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_test.go",
               "name": "TestUnitAssignmentRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/response_test.go",
+              "name": "TestUnitUserReadsUseAcceptanceResponses"
             }
           ],
           "live_tests": []
@@ -14182,6 +14286,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/failure_test.go",
               "name": "TestUnitAssignmentInputObjectSharesOpaqueUserRoute"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/response_test.go",
+              "name": "TestUnitUserReadsUseAcceptanceResponses"
             }
           ],
           "live_tests": []
@@ -14233,6 +14341,10 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -14280,6 +14392,10 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -14436,6 +14552,18 @@
             {
               "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
               "name": "TestUnitGPARejectsInvalidInputBeforeCredentialAcquisition"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_protocol_test.go",
+              "name": "TestUnitGPAAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_protocol_test.go",
+              "name": "TestUnitGPAAuthoredMalformedSuccessRetainsResponse"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
             }
           ],
           "live_tests": [
@@ -14492,6 +14620,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -14539,6 +14671,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -14590,6 +14726,18 @@
             {
               "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
               "name": "TestUnitGPARejectsInvalidInputBeforeCredentialAcquisition"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_protocol_test.go",
+              "name": "TestUnitGPAAuthoredTypedResponses"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionBuildsPackageFromRecommendationAndRetainsPartialFailure"
             }
           ],
           "live_tests": []
@@ -14641,6 +14789,10 @@
             {
               "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
               "name": "TestUnitGPARejectsInvalidInputBeforeCredentialAcquisition"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_protocol_test.go",
+              "name": "TestUnitGPAAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -14692,6 +14844,14 @@
             {
               "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
               "name": "TestUnitGPARejectsInvalidInputBeforeCredentialAcquisition"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_protocol_test.go",
+              "name": "TestUnitGPAAuthoredTypedResponses"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
             }
           ],
           "live_tests": []
@@ -16235,6 +16395,14 @@
             {
               "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
               "name": "TestUnitAssignmentsAndMutationsRejectInvalidInputBeforeTokens"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/assignment_protocol_test.go",
+              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/assignment_protocol_test.go",
+              "name": "TestUnitGrantRejectsOpaqueNonPolicySuccessBody"
             }
           ],
           "live_tests": []
@@ -16256,6 +16424,10 @@
             {
               "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
               "name": "TestUnitAssignmentsAndMutationsRejectInvalidInputBeforeTokens"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/assignment_protocol_test.go",
+              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
             }
           ],
           "live_tests": []
@@ -16277,6 +16449,10 @@
             {
               "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
               "name": "TestUnitAssignmentsAndMutationsRejectInvalidInputBeforeTokens"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/assignment_protocol_test.go",
+              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
             }
           ],
           "live_tests": []
@@ -16292,12 +16468,12 @@
           ],
           "contract_tests": [
             {
-              "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
-              "name": "TestUnitExternalAccessTypedProviderDispatch"
-            },
-            {
               "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
               "name": "TestUnitAssignmentsAndMutationsRejectInvalidInputBeforeTokens"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/assignment_protocol_test.go",
+              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
             }
           ],
           "live_tests": []
@@ -16357,6 +16533,14 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredDomainFailureAndMalformedReceipt"
             }
           ],
           "live_tests": []
@@ -19037,6 +19221,14 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/service_test.go",
               "name": "TestUnitBrandingTypedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/assignment_protocol_test.go",
+              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/assignment_protocol_test.go",
+              "name": "TestUnitGrantRejectsOpaqueNonPolicySuccessBody"
             }
           ],
           "live_tests": []
@@ -19058,6 +19250,10 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/service_test.go",
               "name": "TestUnitBrandingTypedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/assignment_protocol_test.go",
+              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
             }
           ],
           "live_tests": []
@@ -19079,6 +19275,10 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/service_test.go",
               "name": "TestUnitBrandingTypedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/assignment_protocol_test.go",
+              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
             }
           ],
           "live_tests": []
@@ -19096,6 +19296,10 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/failure_test.go",
               "name": "TestUnitBrandingInvalidInputRejectsBeforeCredentials"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/assignment_protocol_test.go",
+              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
             }
           ],
           "live_tests": []
@@ -21360,6 +21564,18 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredDomainFailureAndMalformedReceipt"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionBuildsPackageFromRecommendationAndRetainsPartialFailure"
             }
           ],
           "live_tests": []
@@ -21527,6 +21743,14 @@
             {
               "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
               "name": "TestUnitGPAMalformedAcceptedResponsesStayErrorsWithoutResubmission"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_protocol_test.go",
+              "name": "TestUnitGPAAuthoredTypedResponses"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
             }
           ],
           "live_tests": []
@@ -21792,6 +22016,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -21870,6 +22098,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -21917,6 +22149,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_test.go",
               "name": "TestUnitOCEDirectRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -21976,6 +22212,14 @@
             {
               "file": "msteams/teams_admin_api/assignment_migration/boundaries_test.go",
               "name": "TestUnitGPAMalformedAcceptedResponsesStayErrorsWithoutResubmission"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_protocol_test.go",
+              "name": "TestUnitGPAAuthoredTypedResponses"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
             }
           ],
           "live_tests": []
@@ -23063,6 +23307,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_test.go",
               "name": "TestUnitAssignmentRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/service_protocol_test.go",
+              "name": "TestUnitBatchAuthoredAcceptedHandlePresence"
             }
           ],
           "live_tests": []
@@ -23110,6 +23358,14 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredDomainFailureAndMalformedReceipt"
             }
           ],
           "live_tests": []
@@ -23485,6 +23741,18 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredDomainFailureAndMalformedReceipt"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionBuildsPackageFromRecommendationAndRetainsPartialFailure"
             }
           ],
           "live_tests": []
@@ -23638,10 +23906,6 @@
             {
               "file": "msteams/teams_admin_api/tenant_federation_configuration/domains_test.go",
               "name": "TestUnitDomainConstructorsAreLocal"
-            },
-            {
-              "file": "msteams/teams_admin_api/tenant_federation_configuration/domains_test.go",
-              "name": "TestUnitAllowListOwnsOriginalOrderAndRejectsInvalidZeroChoice"
             }
           ],
           "live_tests": []
@@ -23799,6 +24063,10 @@
             {
               "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
               "name": "TestUnitCreateComparisonIsExplicitAndDoesNotCloneGlobal"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
             }
           ],
           "live_tests": [
@@ -23855,6 +24123,14 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_test.go",
               "name": "TestUnitAssignmentRequestVectors"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/group_response_test.go",
+              "name": "TestUnitGroupWritesUseAcceptanceResponses"
             }
           ],
           "live_tests": []
@@ -26975,6 +27251,14 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/assets_test.go",
               "name": "TestUnitBrandingObjectEditsMatchTypedCoreExtension"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/service_protocol_test.go",
+              "name": "TestUnitBrandingNestedBuildersReachSuccessfulPatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
+              "name": "TestUnitBrandingAssetInputsUsePreparedSuccessfulPatch"
             }
           ],
           "live_tests": []
@@ -27026,6 +27310,18 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/service_test.go",
               "name": "TestUnitBrandingTypedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
+              "name": "TestUnitBrandingCreateComparisonPreservesAcceptedSubmission"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionPreservesReceiptsAndIndependentRecovery"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
             }
           ],
           "live_tests": []
@@ -27079,8 +27375,8 @@
               "name": "TestUnitBrandingLocalBuildersMatchTypedSetters"
             },
             {
-              "file": "msteams/teams_admin_api/meeting_branding/assets_test.go",
-              "name": "TestUnitBrandingObjectEditsMatchTypedCoreExtension"
+              "file": "msteams/teams_admin_api/meeting_branding/service_protocol_test.go",
+              "name": "TestUnitBrandingNestedBuildersReachSuccessfulPatch"
             }
           ],
           "live_tests": []
@@ -27416,8 +27712,8 @@
               "name": "TestUnitBrandingLocalBuildersMatchTypedSetters"
             },
             {
-              "file": "msteams/teams_admin_api/meeting_branding/assets_test.go",
-              "name": "TestUnitBrandingObjectEditsMatchTypedCoreExtension"
+              "file": "msteams/teams_admin_api/meeting_branding/service_protocol_test.go",
+              "name": "TestUnitBrandingNestedBuildersReachSuccessfulPatch"
             }
           ],
           "live_tests": []
@@ -27606,6 +27902,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/auto_create_test.go",
               "name": "TestUnitRecordingAutoCreateRetainsFreshIDWithoutReplay"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
             }
           ],
           "live_tests": []
@@ -27661,6 +27961,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/composition_test.go",
               "name": "TestUnitRecordingLocalBuilderHasNoCredentialsOrHTTP"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
             }
           ],
           "live_tests": []
@@ -30172,6 +30476,10 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
             }
           ],
           "live_tests": []
@@ -30240,6 +30548,10 @@
             {
               "file": "msteams/teams_admin_api/external_access_policy/service_test.go",
               "name": "TestUnitExternalAccessTypedProviderDispatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
             }
           ],
           "live_tests": [
@@ -30292,6 +30604,14 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/service_test.go",
               "name": "TestUnitAssignmentRequestVectors"
+            },
+            {
+              "file": "tests/contract/policies/assignment_composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsGroupMigrationAndCleanupIdentitiesDistinct"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/group_response_test.go",
+              "name": "TestUnitGroupWritesUseAcceptanceResponses"
             }
           ],
           "live_tests": []
@@ -32744,6 +33064,14 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/service_test.go",
               "name": "TestUnitBrandingTypedProviderRequests"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionPreservesReceiptsAndIndependentRecovery"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
             }
           ],
           "live_tests": []
@@ -33248,6 +33576,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/failure_test.go",
               "name": "TestUnitRecordingMutationErrorsKeepStatusAndNeverReplay"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
             }
           ],
           "live_tests": []
@@ -36067,6 +36399,10 @@
             {
               "file": "msteams/teams_admin_api/external_access_policy/failure_test.go",
               "name": "TestUnitUpdateFailurePreservesPreparationAndNeverReplays"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
             }
           ],
           "live_tests": [
@@ -39018,6 +39354,10 @@
             {
               "file": "msteams/teams_admin_api/teams_custom_banner_text/composition_test.go",
               "name": "TestUnitBannerUpdatePreparationFailures"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
             }
           ],
           "live_tests": []
@@ -39958,6 +40298,22 @@
             {
               "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
               "name": "TestUnitBrandingUpdatePreparationFailures"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/service_protocol_test.go",
+              "name": "TestUnitBrandingNestedBuildersReachSuccessfulPatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/composition_test.go",
+              "name": "TestUnitBrandingAssetInputsUsePreparedSuccessfulPatch"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionPreservesReceiptsAndIndependentRecovery"
+            },
+            {
+              "file": "msteams/teams_admin_api/meeting_branding/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
             }
           ],
           "live_tests": []
@@ -40830,6 +41186,10 @@
             {
               "file": "msteams/teams_admin_api/recording_messages/composition_test.go",
               "name": "TestUnitRecordingUpdatePreparationFailures"
+            },
+            {
+              "file": "tests/contract/policies/composition_test.go",
+              "name": "TestUnitPolicyCompositionKeepsRecordingAndBannerIdentitySeparate"
             }
           ],
           "live_tests": []
@@ -42519,6 +42879,10 @@
             {
               "file": "msteams/teams_admin_api/tenant_federation_configuration/service_test.go",
               "name": "TestUnitTenantInvalidInputsDoNotAcquireCredentials"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_federation_configuration/service_protocol_test.go",
+              "name": "TestUnitTenantFederationAuthoredDomainBuilderAndPUTAcceptance"
             }
           ],
           "live_tests": []
@@ -43978,6 +44342,10 @@
             {
               "file": "msteams/teams_admin_api/policy_packages/service_test.go",
               "name": "TestUnitPackageRequestVectors"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_packages/service_protocol_test.go",
+              "name": "TestUnitPackageAuthoredTypedResponses"
             }
           ],
           "live_tests": []
