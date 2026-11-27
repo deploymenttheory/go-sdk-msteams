@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -18,45 +18,43 @@ func TestUnitListReturnsOneNativePageWithoutImplicitTraversal(t *testing.T) {
 	next := auth.GraphAudience + "/v1.0/teams/" + teamID + "/members?$skiptoken=opaque%2B%2F%3D"
 	query := url.Values{"$filter": {"roles/any(r:r eq 'owner')"}, "$select": {"id,roles,userId"}, "$top": {"999"}}
 	body := `{"value":[{"id":"opaque","@odata.type":"#microsoft.graph.futureMember","roles":["future"],"userId":null,"tenantId":"other-tenant"}],"@odata.nextLink":"` + next + `","futurePage":7}`
-	nativeCase(t, contracttest.Case{Name: "single-page", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/teams/"+teamID+"/members?"+query.Encode(), "", 200, "")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	nativeCase(t, testutil.Case{Name: "single-page", Steps: []testutil.Exchange{wire("GET", auth.GraphAudience, "/v1.0/teams/"+teamID+"/members?"+query.Encode(), "", 200, body)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			page, response, err := sdk.GraphAPI.TeamMembers.List(ctx, teamID, teammember.ListOptions{Filter: "roles/any(r:r eq 'owner')", Select: []string{"id", "roles", "userId"}, Top: 999})
-			if err != nil && isRequestBoundary(ctx) {
-				return contracttest.Observation{Response: response, Err: err}
-			}
+
 			var value any
 			if page != nil {
 				value = map[string]any{"count": len(page.Items), "id": page.Items[0].ID, "roles": page.Items[0].Roles, "user_id": page.Items[0].UserID, "next": page.NextLink, "raw": page.RawFields}
 			}
-			return contracttest.Observation{Value: value, Response: response, Err: err}
-		}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"count":1,"id":"opaque","roles":["future"],"user_id":null,"next":"` + next + `","raw":` + body + `}`)}})
+			return testutil.Observation{Value: value, Response: response, Err: err}
+		}, Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`{"count":1,"id":"opaque","roles":["future"],"user_id":null,"next":"` + next + `","raw":` + body + `}`)}})
 }
 
-func listObservation(result client.ListResult[teammember.Member], err error) contracttest.Observation {
+func listObservation(result client.ListResult[teammember.Member], err error) testutil.Observation {
 	ids := []teammember.MembershipID{}
 	for _, member := range result.Items {
 		ids = append(ids, member.ID)
 	}
-	return contracttest.Observation{Value: map[string]any{"ids": ids, "pages": result.Pages}, Response: result.Response, Err: err}
+	return testutil.Observation{Value: map[string]any{"ids": ids, "pages": result.Pages}, Response: result.Response, Err: err}
 }
 
 func TestUnitListAllOpaquePagingAndFrozenOptions(t *testing.T) {
 	t.Parallel()
 	path := "/v1.0/teams/" + teamID + "/members"
 
-	nativeCase(t, contracttest.Case{Name: "all-pages", Steps: []contracttest.Exchange{
-		wire("GET", auth.GraphAudience, path+"?$select=id%2CuserId&$top=1", "", 200, ""),
-		wire("GET", auth.GraphAudience, path+"?$skiptoken=opaque%2B%2F%3D&$select=id%2CuserId", "", 200, "")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	nativeCase(t, testutil.Case{Name: "all-pages", Steps: []testutil.Exchange{
+		wire("GET", auth.GraphAudience, path+"?$select=id%2CuserId&$top=1", "", 200, `{"value":[{"id":"opaque-1"}],"@odata.nextLink":"`+auth.GraphAudience+path+`?$skiptoken=opaque%2B%2F%3D&$select=id%2CuserId"}`),
+		wire("GET", auth.GraphAudience, path+"?$skiptoken=opaque%2B%2F%3D&$select=id%2CuserId", "", 200, `{"value":[]}`)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			fields := []string{"id", "userId"}
 			pager, err := sdk.GraphAPI.TeamMembers.NewPager(teamID, teammember.ListOptions{Select: fields, Top: 1}, client.PagingOptions{MaxPages: 2, MaxItems: 1})
 			if err != nil {
-				return contracttest.Observation{Err: err}
+				return testutil.Observation{Err: err}
 			}
 			fields[0] = "changed-after-construction"
 			result, err := pager.Collect(ctx)
 			return listObservation(result, err)
-		}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"ids":["opaque-1"],"pages":2}`)}})
+		}, Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`{"ids":["opaque-1"],"pages":2}`)}})
 }
 
 func TestUnitListAllPreservesPartialResultsOnFailureAndLimits(t *testing.T) {
@@ -74,36 +72,34 @@ func TestUnitListAllPreservesPartialResultsOnFailureAndLimits(t *testing.T) {
 		{"foreign-next", "https://foreign.invalid/v1.0/teams/" + teamID + "/members", client.PagingOptions{}, false, client.ErrDestination, 200, 1},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", auth.GraphAudience, path, "", 200, `{"value":[{"id":"opaque"}],"@odata.nextLink":"`+tc.next+`"}`)}
+			steps := []testutil.Exchange{wire("GET", auth.GraphAudience, path, "", 200, `{"value":[{"id":"opaque"}],"@odata.nextLink":"`+tc.next+`"}`)}
 			if tc.second {
 				steps = append(steps, wire("GET", auth.GraphAudience, path+"?$skiptoken=next", "", 403, `{"error":{"code":"Forbidden"}}`))
 			}
-			nativeCase(t, contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			nativeCase(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return listObservation(sdk.GraphAPI.TeamMembers.ListAll(ctx, teamID, teammember.ListOptions{}, tc.limits))
-			}, Want: contracttest.Expected{Status: tc.status, Error: tc.want, JSON: json.RawMessage(`{"ids":["opaque"],"pages":1}`)}})
+			}, Want: testutil.Expected{Status: tc.status, Error: tc.want, JSON: json.RawMessage(`{"ids":["opaque"],"pages":1}`)}})
 		})
 	}
 	t.Run("aggregate-limit-retains-prefix", func(t *testing.T) {
-		nativeCase(t, contracttest.Case{Name: "item-limit", Steps: []contracttest.Exchange{
+		nativeCase(t, testutil.Case{Name: "item-limit", Steps: []testutil.Exchange{
 			wire("GET", auth.GraphAudience, path, "", 200, `{"value":[{"id":"opaque-1"}],"@odata.nextLink":"`+auth.GraphAudience+path+`?$skiptoken=next"}`),
 			wire("GET", auth.GraphAudience, path+"?$skiptoken=next", "", 200, `{"value":[{"id":"opaque-2"}]}`)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return listObservation(sdk.GraphAPI.TeamMembers.ListAll(ctx, teamID, teammember.ListOptions{}, client.PagingOptions{MaxItems: 1}))
-			}, Want: contracttest.Expected{Status: 200, Error: client.ErrItemLimit, JSON: json.RawMessage(`{"ids":["opaque-1"],"pages":2}`)}})
+			}, Want: testutil.Expected{Status: 200, Error: client.ErrItemLimit, JSON: json.RawMessage(`{"ids":["opaque-1"],"pages":2}`)}})
 	})
 }
 
 func TestUnitListRejectsMalformedCollectionsAndPreservesResponse(t *testing.T) {
 	t.Parallel()
 	for _, body := range []string{`{}`, `null`, `{"value":null}`, `{"value":[null]}`, `{"value":[{"userId":"directory-only"}]}`, `{"value":[],"@odata.nextLink":7}`} {
-		nativeCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/teams/"+teamID+"/members", "", 200, body)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		nativeCase(t, testutil.Case{Steps: []testutil.Exchange{wire("GET", auth.GraphAudience, "/v1.0/teams/"+teamID+"/members", "", 200, body)},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, response, err := sdk.GraphAPI.TeamMembers.List(ctx, teamID, teammember.ListOptions{})
-				if err != nil && isRequestBoundary(ctx) {
-					return contracttest.Observation{Response: response, Err: err}
-				}
-				return contracttest.Observation{Response: response, Err: err}
-			}, Want: contracttest.Expected{Status: 200, Error: client.ErrDecode}})
+
+				return testutil.Observation{Response: response, Err: err}
+			}, Want: testutil.Expected{Status: 200, Error: client.ErrDecode}})
 	}
 }
 
@@ -122,7 +118,7 @@ func TestUnitCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
 			case "invalid-style", "invalid-status", "invalid-limit":
 				want = client.ErrPagination
 			}
-			nativeCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			nativeCase(t, testutil.Case{Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				cancelled, cancel := context.WithCancel(ctx)
 				cancel()
 				var err error
@@ -141,7 +137,7 @@ func TestUnitCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
 					_, err = sdk.GraphAPI.TeamMembers.ListAll(cancelled, teamID, teammember.ListOptions{}, client.PagingOptions{})
 				case "closed":
 					if closeErr := sdk.Close(); closeErr != nil {
-						return contracttest.Observation{Err: closeErr}
+						return testutil.Observation{Err: closeErr}
 					}
 					_, err = sdk.GraphAPI.TeamMembers.NewPager(teamID, teammember.ListOptions{}, client.PagingOptions{})
 				case "wrong-backend":
@@ -162,8 +158,8 @@ func TestUnitCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
 					var service *teammember.Service
 					_, _, err = service.GetByID(ctx, teamID, memberID)
 				}
-				return contracttest.Observation{Err: err}
-			}, Want: contracttest.Expected{Error: want}})
+				return testutil.Observation{Err: err}
+			}, Want: testutil.Expected{Error: want}})
 		})
 	}
 }
@@ -171,9 +167,9 @@ func TestUnitCancellationClosedBackendAndInvalidPagerAreLocal(t *testing.T) {
 func TestUnitListAllRejectsUnexpectedSuccessfulStatus(t *testing.T) {
 	t.Parallel()
 	for _, status := range []int{202, 206} {
-		nativeCase(t, contracttest.Case{Name: "unexpected-status", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/teams/"+teamID+"/members", "", status, `{"value":[{"id":"opaque"}]}`)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		nativeCase(t, testutil.Case{Name: "unexpected-status", Steps: []testutil.Exchange{wire("GET", auth.GraphAudience, "/v1.0/teams/"+teamID+"/members", "", status, `{"value":[{"id":"opaque"}]}`)},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return listObservation(sdk.GraphAPI.TeamMembers.ListAll(ctx, teamID, teammember.ListOptions{}, client.PagingOptions{}))
-			}, Want: contracttest.Expected{Status: status, Error: client.ErrPageStatus, JSON: json.RawMessage(`{"ids":[],"pages":0}`)}})
+			}, Want: testutil.Expected{Status: status, Error: client.ErrPageStatus, JSON: json.RawMessage(`{"ids":[],"pages":0}`)}})
 	}
 }

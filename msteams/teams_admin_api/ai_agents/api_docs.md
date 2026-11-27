@@ -78,7 +78,7 @@ HTTP 401, so these methods need delegated credentials.
 ## Pinned source parsing and API correction
 
 The continuation source packet is linked from
-[the contract notes](../../../docs/implementation/ext/ai-agents-contract-notes.md).
+[unit tests](service_test.go).
 ConfigAPI requests use the private default command names
 `Get-CsAgent_Get`, `Get-CsAgent_Get1`, `New-CsAgent_New`,
 `Set-CsAgent_SetExpanded`, `Remove-CsAgent_Remove`, and `Get-CsAiAgents_Get`.

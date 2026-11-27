@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	aa "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/auto_attendants"
 )
@@ -35,14 +35,14 @@ func TestUnitBothAssociationsPreserveServerDraftPriority(t *testing.T) {
 	holiday := `{"Type":"Holiday","ScheduleId":"` + fixedID + `","CallFlowId":"` + holidayFlowID + `","Enabled":true}`
 	// Priorities here are synthetic normalized DTO fields, not a claim about the
 	// provider's holiday ordering rules; the caller must preserve either value.
-	run(t, "server-normalized-associations", []contracttest.Exchange{
+	run(t, "server-normalized-associations", []testutil.Exchange{
 		exchange("POST", "/Teams.VoiceApps/auto-attendants/call-handling-associations/draft", "New-CsAutoAttendantCallHandlingAssociation", after, 200, `{"CallHandlingAssociation":{"Type":"AfterHours","ScheduleId":"`+scheduleID+`","CallFlowId":"`+flowID+`","Enabled":true,"Priority":1}}`),
 		exchange("POST", "/Teams.VoiceApps/auto-attendants/call-handling-associations/draft", "New-CsAutoAttendantCallHandlingAssociation", holiday, 200, `{"CallHandlingAssociation":{"Type":"Holiday","ScheduleId":"`+fixedID+`","CallFlowId":"`+holidayFlowID+`","Enabled":true,"Priority":0}}`),
-	}, func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		values, err := draftAssociations(ctx, sdk.TeamsAdminAPI.AutoAttendants, scheduleID, fixedID, flowID, holidayFlowID)
 		if err == nil && (len(values) != 2 || values[0].Priority == nil || *values[0].Priority != 1 || values[1].Priority == nil || *values[1].Priority != 0 || values[0].CallFlowID == nil || *values[0].CallFlowID != flowID || values[1].CallFlowID == nil || *values[1].CallFlowID != holidayFlowID) {
 			t.Fatal("composition dropped provider-normalized association priorities")
 		}
-		return contracttest.Observation{Err: err}
+		return testutil.Observation{Err: err}
 	})
 }

@@ -78,7 +78,7 @@ These tests do not qualify live writes of the other settings, authentication
 context list edits (the lab list is empty), non-Global identities, effective
 meeting behavior, delegated authentication or other clouds.
 
-See [qualification](../../../docs/implementation/policies/meeting-configuration-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/meeting-configuration-lab-acceptance.md).
 
 The public port parameter setters store zero, so prepared Update retains its
 GET result before returning ErrInput without a PATCH for zero. Direct Patch

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -30,8 +30,8 @@ func TestUnitPromptsUpdatePreparationFailures(t *testing.T) {
 	}{"actual-read-denial", 400, string(readResponseFixture(t, "get_global_400.json"))})
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", item, setCommand, nil, tc.read, tc.body)}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			steps := []testutil.Exchange{wire("GET", item, setCommand, nil, tc.read, tc.body)}
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Prompts: resource.ClearPrompts()})
 				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked || v.HTTPAccepted {
 					t.Error("failed update lost preparation state or invented acceptance")
@@ -43,7 +43,7 @@ func TestUnitPromptsUpdatePreparationFailures(t *testing.T) {
 						t.Error("failure lost its HTTP status")
 					}
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}
@@ -51,11 +51,11 @@ func TestUnitPromptsUpdatePreparationFailures(t *testing.T) {
 
 func TestUnitPromptsEditsStopOnPreparationDenial(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "preparation-denial", Source: "msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, setCommand, nil, 403, "")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "preparation-denial", Steps: []testutil.Exchange{wire("GET", item, setCommand, nil, 403, "")}, Want: testutil.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Packages: resource.ChangePackages(nil, []*resource.PromptPackage{{}})})
 		if v == nil || v.ReadResponse == nil || v.Before != nil || v.PatchInvoked || v.HTTPAccepted {
 			t.Error("failed preparation invented a snapshot, patch or acceptance")
 		}
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }

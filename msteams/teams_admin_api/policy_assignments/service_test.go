@@ -8,46 +8,42 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 )
 
-const source = "msteams/teams_admin_api/policy_assignments/service_test.go"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const forest = "https://admin.example.invalid/"
 
-func run(t *testing.T, c contracttest.Case) contracttest.Result {
+func run(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family = "policy_assignments"
-	if c.Source == "" {
-		c.Source = source
-	}
+
 	if len(c.Steps) == 0 {
-		c.Scope = "local"
+
 	} else {
-		c.Scope = "service"
+
 		c.Want.Status = c.Steps[len(c.Steps)-1].Reply.Status
 	}
-	r, err := contracttest.Run(t.Context(), c)
+	r, err := testutil.Run(t.Context(), c)
 	if err != nil || !r.Passed() {
 		t.Fatalf("assignment contract %s differs: %v %+v", c.Name, err, r.Differences())
 	}
 	return r
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: 200, Body: body}}
 }
 
-func wire(method, url, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
+func wire(method, url, command string, body json.RawMessage, status int, reply string) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}}
 	h.Set("X-MS-CmdletName", command)
 	h.Set("X-MS-Target-Uri", forest)
@@ -55,7 +51,7 @@ func wire(method, url, command string, body json.RawMessage, status int, reply s
 	if body != nil {
 		h.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: url, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: url, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
 }
 
 func batchInput(name string) resource.BatchCreateRequest {
@@ -72,9 +68,9 @@ func batchInput(name string) resource.BatchCreateRequest {
 	return input
 }
 
-func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+func invoke(name string, ctx context.Context, sdk *msteams.Client) testutil.Observation {
 	s := sdk.TeamsAdminAPI.PolicyAssignments
-	var o contracttest.Observation
+	var o testutil.Observation
 	groupID, policyType := "fixture/group:@", "Fixture/Policy:@"
 	switch {
 	case name == "batch-list" || name == "batch-list-null":
@@ -111,30 +107,7 @@ func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.
 	return o
 }
 
-func mapping(name string) []contracttest.Mapping {
-	command, set := "Get-CsGroupPolicyAssignment", "Get"
-	switch {
-	case strings.HasPrefix(name, "group-update"):
-		return nil // Additional operation, no exported command claim.
-	case name == "group-list":
-		set = "Get1"
-	case name == "group-list-type" || name == "group-list-all":
-		set = "Get2"
-	case strings.HasPrefix(name, "user-effective"):
-		command, set = "Get-CsUserPolicyAssignment", "Get"
-	case strings.HasPrefix(name, "batch-list"):
-		command, set = "Get-CsBatchPolicyAssignmentOperation", "Get"
-	case name == "batch-get":
-		command, set = "Get-CsBatchPolicyAssignmentOperation", "Get1"
-	case strings.HasPrefix(name, "batch-create"):
-		command, set = "New-CsBatchPolicyAssignmentOperation", "NewExpanded"
-	case strings.HasPrefix(name, "group-create"):
-		command, set = "New-CsGroupPolicyAssignment", "NewExpanded"
-	case strings.HasPrefix(name, "group-delete"):
-		command, set = "Remove-CsGroupPolicyAssignment", "Remove"
-	}
-	return []contracttest.Mapping{{Command: command, ParameterSet: set}}
-}
+// Additional operation, no exported command claim.
 
 func TestUnitAssignmentRequestVectors(t *testing.T) {
 	t.Parallel()
@@ -163,16 +136,35 @@ func TestUnitAssignmentRequestVectors(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			command := "Set-CsGroupPolicyAssignment"
-			mappings := mapping(tc.name)
-			if len(mappings) > 0 {
-				command = mappings[0].Command
-			}
+			command := commandHeader(tc.name)
 			for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-				run(t, contracttest.Case{Name: tc.name + "-" + string(mode), Mode: mode, Mappings: mappings, Steps: []contracttest.Exchange{discovery(t), wire(tc.method, tc.url, command, tc.body, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: tc.name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{discovery(t), wire(tc.method, tc.url, command, tc.body, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					return invoke(tc.name, ctx, sdk)
-				}, Want: contracttest.Expected{Error: auth.ErrForbidden}})
+				}, Want: testutil.Expected{Error: auth.ErrForbidden}})
 			}
 		})
 	}
+}
+
+func commandHeader(name string) string {
+	command := "Get-CsGroupPolicyAssignment"
+	switch {
+	case strings.HasPrefix(name, "group-update"):
+		return "Set-CsGroupPolicyAssignment"
+	case name == "group-list":
+	case name == "group-list-type" || name == "group-list-all":
+	case strings.HasPrefix(name, "user-effective"):
+		command = "Get-CsUserPolicyAssignment"
+	case strings.HasPrefix(name, "batch-list"):
+		command = "Get-CsBatchPolicyAssignmentOperation"
+	case name == "batch-get":
+		command = "Get-CsBatchPolicyAssignmentOperation"
+	case strings.HasPrefix(name, "batch-create"):
+		command = "New-CsBatchPolicyAssignmentOperation"
+	case strings.HasPrefix(name, "group-create"):
+		command = "New-CsGroupPolicyAssignment"
+	case strings.HasPrefix(name, "group-delete"):
+		command = "Remove-CsGroupPolicyAssignment"
+	}
+	return command
 }

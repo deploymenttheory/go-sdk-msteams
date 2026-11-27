@@ -8,11 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 )
-
-const bindingSource = "msteams/teams_admin_api/teams_feedback_policy/testdata/get_global.json"
 
 func TestUnitFeedbackPolicyFiltersUseRealResponses(t *testing.T) {
 	t.Parallel()
@@ -69,17 +67,17 @@ func TestUnitFeedbackPolicyFiltersUseRealResponses(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "real-filter-" + tc.Name, Family: "teams_feedback_policy", Scope: "service", Source: "msteams/teams_admin_api/teams_feedback_policy/testdata/list.json",
-			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsFeedbackPolicy", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "real-filter-" + tc.Name,
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsFeedbackPolicy", 200, raw), Want: testutil.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.TeamsFeedbackPolicies
 				if tc.Pattern == "" {
 					value, response, err := service.List(ctx)
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				}
 				value, response, err := service.ListFiltered(ctx, tc.Pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {

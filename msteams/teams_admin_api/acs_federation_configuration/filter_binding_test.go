@@ -4,19 +4,17 @@ import (
 	"context"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/acs_federation_configuration"
 )
 
-// The effective pinned public Filter parameter inherits ValidateNotNullOrEmpty.
-// BaseTpmGetCmdlet<T>.FilterPolicies' empty branch handles an omitted filter;
-// it does not authorize binding an explicitly empty Filter. Source metadata/IL
-// and the distinction from List are recorded in pol90-current-test-audit.md.
+// These authored HTTP fixtures exercise request and result behavior.
+// Captured service responses are loaded separately from testdata.
 func TestUnitExplicitEmptyFilterRejectsBeforeCredentials(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "bound-empty-filter", Source: "msteams/teams_admin_api/acs_federation_configuration/filter_binding_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsAcsFederationConfiguration", ParameterSet: "Filter"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "bound-empty-filter", Want: testutil.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, response, err := sdk.TeamsAdminAPI.ACSFederationConfigurations.ListFiltered(ctx, "")
-		return contracttest.Observation{Value: value, Response: response, Err: err}
+		return testutil.Observation{Value: value, Response: response, Err: err}
 	}})
 }

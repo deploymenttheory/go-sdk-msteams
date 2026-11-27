@@ -1,0 +1,1044 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":0}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":1}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":-1}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":1.5}",
+      "projected_json": "2",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":\"1\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":\"1.5\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":\"18446744073709551615\"}",
+      "projected_json": "18446744073709551615",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":\"18446744073709551616\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":true}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdForTrialTenants\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":0}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":1}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":-1}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":1.5}",
+      "projected_json": "2",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":\"1\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":\"1.5\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":\"18446744073709551615\"}",
+      "projected_json": "18446744073709551615",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":\"18446744073709551616\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":true}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "AddMemberThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"AddMemberThresholdPerSeat\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":0}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":1}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":-1}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":1.5}",
+      "projected_json": "2",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":\"1\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":\"1.5\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":\"18446744073709551615\"}",
+      "projected_json": "18446744073709551615",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":\"18446744073709551616\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":true}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdForTrialTenants\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":0}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":1}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":-1}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":1.5}",
+      "projected_json": "2",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":\"1\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":\"1.5\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":\"18446744073709551615\"}",
+      "projected_json": "18446744073709551615",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":\"18446744073709551616\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":true}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "CreateThreadThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"CreateThreadThresholdPerSeat\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":0}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":1}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":-1}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":1.5}",
+      "projected_json": "2",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":\"1\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":\"1.5\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":\"18446744073709551615\"}",
+      "projected_json": "18446744073709551615",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":\"18446744073709551616\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":true}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64",
+      "input_json": "{\"LowSeatLimit\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":0}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":1}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":-1}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":1.5}",
+      "projected_json": "2",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":\"1\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":\"1.5\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":\"18446744073709551615\"}",
+      "projected_json": "18446744073709551615",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":\"18446744073709551616\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":true}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdForTrialTenants",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdForTrialTenants\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":0}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":1}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":-1}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":1.5}",
+      "projected_json": "2",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":\"1\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":\"1.5\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":\"18446744073709551615\"}",
+      "projected_json": "18446744073709551615",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":\"18446744073709551616\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":true}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SendMessageThresholdPerSeat",
+      "kind": "uint64",
+      "input_json": "{\"SendMessageThresholdPerSeat\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "SkipValidation",
+      "kind": "string",
+      "input_json": "{\"SkipValidation\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "TrialTenantValidation",
+      "kind": "string",
+      "input_json": "{\"TrialTenantValidation\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

@@ -17,4 +17,4 @@ filter fails with `ErrInput`. Models keep unknown fields, such as
 The compiled assembly contains a Set cmdlet for this configuration, but 8.1.0
 does not export it, so the SDK has no write method. Add and remove
 devices with `TeamsRemoteLogCollectionDevices`. See the
-[contract notes](../../../docs/implementation/ext/devices-contract-notes.md).
+[unit tests](service_test.go).

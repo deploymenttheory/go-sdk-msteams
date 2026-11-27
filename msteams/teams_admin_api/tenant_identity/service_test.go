@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -19,11 +19,11 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/tenant_identity/service_test.go"
-	probe        = "00000000-0000-4000-8000-000000000001"
-	tenantID     = "00000000-0000-4000-8000-0000000000aa"
-	jsonType     = "application/json; charset=utf-8"
-	groupQuery   = "go-sdk-msteams acceptance policy group"
+
+	probe      = "00000000-0000-4000-8000-000000000001"
+	tenantID   = "00000000-0000-4000-8000-0000000000aa"
+	jsonType   = "application/json; charset=utf-8"
+	groupQuery = "go-sdk-msteams acceptance policy group"
 )
 
 func readFile(t *testing.T, path string) []byte {
@@ -40,17 +40,17 @@ func readFile(t *testing.T, path string) []byte {
 	return raw
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	// Historic fixtures capture response bytes. This private header follows the
 	// independently audited Find wrapper/proxy path, not capture-time metadata.
 	if command == "Find-CsGroup" {
@@ -64,37 +64,20 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if reply == nil {
 		contentType = ""
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "tenant_identity"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !result.Passed() {
 		t.Fatalf("tenant identity contract %s differed: %+v", c.Name, result.Differences())
 	}
-}
-
-func mapping(command string, sets ...string) []contracttest.Mapping {
-	if len(sets) == 0 {
-		sets = []string{"__AllParameterSets"}
-	}
-	out := make([]contracttest.Mapping, 0, len(sets))
-	for _, set := range sets {
-		out = append(out, contracttest.Mapping{Command: command, ParameterSet: set})
-	}
-	return out
 }
 
 // apiError is the normalized error for a fixture: ConfigAPI reports the code
@@ -128,14 +111,14 @@ func TestUnitTenantIdentityReadsUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	tenant, groups := readFile(t, "testdata/tenant.json"), readFile(t, "testdata/search_groups.json")
 	empty := readFile(t, "testdata/search_groups_empty.json")
-	run(t, contracttest.Case{Name: "actual-reads", Source: "msteams/teams_admin_api/tenant_identity/testdata/tenant.json",
-		Mappings: append(mapping("Get-CsTenant", "Identity"), mapping("Find-CsGroup")...),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-reads",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", "/Teams.Tenant/tenants?defaultpropertyset=Extended", "Get-CsTenantObou_Get", nil, 200, tenant),
 			wire("GET", groupPath, "Find-CsGroup", nil, 200, groups),
 			wire("GET", "/Teams.VoiceApps/groups?SearchQuery=msteams-sdk-no-such-group-zz", "Find-CsGroup", nil, 200, empty)},
-		Want: contracttest.Expected{Status: 200, Body: empty},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: empty},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TenantIdentity
 			value, _, err := s.GetTenant(ctx)
 			if err != nil || *value.ObjectID != tenantID || len(value.AssignedPlans) != 5 || len(value.ProvisionedPlans) != 37 ||
@@ -153,7 +136,7 @@ func TestUnitTenantIdentityReadsUseAcceptanceResponses(t *testing.T) {
 			if err != nil || none == nil || len(none) != 0 {
 				t.Fatal("empty search was not a non-nil empty slice")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -197,12 +180,12 @@ func TestUnitTenantIdentityDenialsUseAcceptanceResponses(t *testing.T) {
 			}},
 	} {
 		reply := readFile(t, "testdata/"+c.fixture)
-		run(t, contracttest.Case{Name: "actual-" + c.name, Source: "msteams/teams_admin_api/tenant_identity/testdata/" + c.fixture, Mappings: mapping(c.command, c.sets...),
-			Steps: []contracttest.Exchange{discovery(t), wire("GET", c.path, c.command, nil, c.status, reply)},
-			Want:  contracttest.Expected{Status: c.status, Body: reply, APIError: apiError(c.status, reply)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "actual-" + c.name,
+			Steps: []testutil.Exchange{discovery(t), wire("GET", c.path, c.command, nil, c.status, reply)},
+			Want:  testutil.Expected{Status: c.status, Body: reply, APIError: apiError(c.status, reply)},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.TenantIdentity)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -213,10 +196,9 @@ func TestUnitTenantIdentitySuccessShapesPreserveFields(t *testing.T) {
 	configurations := []byte(`[{"Identity":"Tag:Custom","Enabled":true},{"Identity":"Global","Enabled":false},{"Identity":"Tag:Other","Enabled":true}]`)
 	single := []byte(`{"Identity":"Global","Enabled":false}`)
 	groups := []byte(`{"Groups":null,"Diagnostics":[{"x":1}]}`)
-	run(t, contracttest.Case{Name: "success-shapes",
-		Mappings: append(append(append(append(mapping("Get-CsAadTenant"), mapping("Get-CsAadUser")...), mapping("Get-CsCloudTenant")...), mapping("Get-CsCloudUser")...),
-			append(append(mapping("Get-CsHostingProvider"), mapping("Get-CsTenantLicensingConfiguration", "Filter", "Identity")...), mapping("Find-CsGroup")...)...),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "success-shapes",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", "/Teams.Tenant/AadTenant", "Get-CsAadTenant", nil, 200, directory),
 			wire("GET", "/Teams.User/AadUser/user@example.invalid", "Get-CsAadUser", nil, 200, directory),
 			wire("GET", "/Teams.InternalSupport/GetAADTenantData", "Get-CsCloudTenant", nil, 200, directory),
@@ -225,8 +207,8 @@ func TestUnitTenantIdentitySuccessShapesPreserveFields(t *testing.T) {
 			wire("GET", "/Skype.Policy/configurations/HostingProvider/configuration/Tag:Custom", "Get-CsHostingProvider", nil, 200, single),
 			wire("GET", "/Skype.Policy/configurations/TenantLicensingConfiguration", "Get-CsTenantLicensingConfiguration", nil, 200, configurations),
 			wire("GET", "/Teams.VoiceApps/groups?MailEnabledOnly=False&SearchQuery=abc", "Find-CsGroup", nil, 200, groups)},
-		Want: contracttest.Expected{Status: 200, Body: groups},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: groups},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TenantIdentity
 			check := func(value *ti.DirectoryObject, err error) {
 				if err != nil || *value.ObjectID != probe || *value.DisplayName != "Contoso" || len(value.RawFields) != 4 || string(value.RawFields["future"]) != `{"x":1}` {
@@ -258,7 +240,7 @@ func TestUnitTenantIdentitySuccessShapesPreserveFields(t *testing.T) {
 			if err != nil || found == nil || len(found) != 0 {
 				t.Fatal("null Groups was not an empty result")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -266,14 +248,14 @@ func TestUnitTenantIdentitySuccessShapesPreserveFields(t *testing.T) {
 // status contract only; the acceptance suite never calls this licensing write.
 func TestUnitTenantIdentityGracePeriodRemovalWire(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "grace-period-removal",
-		Mappings: mapping("Remove-CsUserLicenseGracePeriod", "Remove", "RemoveExpanded", "RemoveViaIdentity", "RemoveViaIdentityExpanded"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "grace-period-removal",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("PATCH", "/Teams.User/users/"+probe+"/AssignedPlans", "Remove-CsUserLicenseGracePeriod", json.RawMessage(`{}`), 204, nil),
 			wire("PATCH", "/Teams.User/users/user@example.invalid/AssignedPlans", "Remove-CsUserLicenseGracePeriod", json.RawMessage(`{"action":"Remove","capabilities":["MCOEV","MCOMEETADV"]}`), 204, nil),
 			wire("PATCH", "/Teams.User/users/"+probe+"/AssignedPlans", "Remove-CsUserLicenseGracePeriod", json.RawMessage(`{"capabilities":[]}`), 204, nil)},
-		Want: contracttest.Expected{Status: 204},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 204},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TenantIdentity
 			if _, err := s.RemoveUserLicenseGracePeriod(ctx, probe, ti.GracePeriodRemoval{}); err != nil {
 				t.Fatal("empty removal was not accepted")
@@ -282,7 +264,7 @@ func TestUnitTenantIdentityGracePeriodRemovalWire(t *testing.T) {
 				t.Fatal("expanded removal was not accepted")
 			}
 			response, err := s.RemoveUserLicenseGracePeriod(ctx, probe, ti.GracePeriodRemoval{Capabilities: []string{}})
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 

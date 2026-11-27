@@ -49,7 +49,7 @@ jobs:
         shell: bash
         run: go test -race -count=1 -shuffle=on -run '^(TestUnit|Example)' ./...
       - name: Run credential-free example
-        run: go run ./examples/baseline
+        run: go run ./examples/client-construction
   vulnerabilities:
     runs-on: ubuntu-latest
     timeout-minutes: 10

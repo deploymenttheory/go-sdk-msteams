@@ -118,11 +118,11 @@ entries. `LastProvisionTimeStamps` and `LastPublishTimeStamps` now use
 lexemes; this changes the earlier string-only map API. Existing consumers must
 decode individual values according to their actual type.
 
-The wire view keeps timestamp text and original map entries. It does not claim
-the public helper's CLR date conversion, null omission or numeric/object
-conversion. Its own [source and remaining projection work](../../../docs/implementation/ext/tenant-model-foundation.md)
-remain separate from Get-CsTenant qualification. Public TRPS/legacy selection
-is not assumed resolved, and no live status changes.
+Timestamp fields retain the service's original text, and dictionary values retain
+their JSON types and numeric lexemes. Consumers can decode the values they need
+using ordinary Go types. The SDK does not emulate CLR presentation or mutate
+values merely to reproduce PowerShell formatting. Unit tests cover the native
+wire view, malformed replies and retained HTTP receipts.
 
 ## Default Modern tenant request identity
 
@@ -131,9 +131,8 @@ ConfigAPI read. The public wrapper selects Get-CsTenantPoint for its default
 Modern route; that helper invokes the internal proxy, whose private cmdlet name
 passes through its invocation information to the final header writer. This
 header is source evidence, independently of historical response captures.
-See the [own handoff packet](../../../docs/implementation/ext/evidence/tenant-modern-handoff-source.json).
+See the [unit tests](service_test.go).
 The SDK keeps its own user-agent and shared audience/routing controls.
 
-This correction does not claim universal Modern flight selection, legacy
-transport or the public CLR date/dictionary projection. The returned native
-wire view and actual HTTP receipt remain available separately.
+The returned native wire view and actual HTTP receipt remain available
+separately. Server-side availability and permissions still require tenant tests.

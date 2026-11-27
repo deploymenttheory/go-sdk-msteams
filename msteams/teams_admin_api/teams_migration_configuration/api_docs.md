@@ -33,4 +33,4 @@ share the tenant lock. Permanent acceptance responses provide unit decoding and
 request fixtures. These checks do not establish effective legacy-client behavior,
 delegated authentication or other clouds.
 
-See [qualification](../../../docs/implementation/policies/messaging-migration-configuration-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/messaging-migration-configuration-lab-acceptance.md).

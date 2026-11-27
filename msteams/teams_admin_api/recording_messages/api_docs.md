@@ -73,7 +73,7 @@ headers, with fresh UUID correlation and no generated forest or Graph lookup.
 Synthetic application/delegated modes establish routing, not successful tenant
 authorization. Exact role, cloud, write/read-back/cleanup, shell coercion and
 effective behavior qualification remain open under #103. See [unit tests](service_test.go)
-and the [lab acceptance plan](../../../docs/implementation/policies/recording-messages-lab-acceptance.md).
+and the [lab acceptance plan](../../../docs/acceptance/recording-messages-lab-acceptance.md).
 
 The source null localization **modifier** clears the existing collection. Use
 `ClearLocalizations` for that operation; nil `UpdateRequest.Localizations` means

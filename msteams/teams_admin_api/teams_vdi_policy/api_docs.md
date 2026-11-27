@@ -30,5 +30,5 @@ units. Fault and source-binding vectors are separate from live server successes.
 The lab uses its existing Teams Administrator application. Existing/Global policies
 and assignments remain unchanged. Other bind persistence, successful grants,
 delegated flows and other clouds need separate qualification. See
-`docs/implementation/policies/vdi-virtual-appointments-contract-notes.md` for source
+the [testing guide](../../../docs/guides/testing.md) for source
 and recovery details.

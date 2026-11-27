@@ -1,11 +1,9 @@
 // Package msteams is the root of the native Microsoft Teams management SDK.
 //
-// The SDK is under development. PowerShellBaseline identifies the targeted
-// upstream contract; it does not assert implemented or tenant-tested coverage.
-// Client construction is local. Authentication providers and resource operations
-// are delivered by their implementation tickets.
+// Client construction is local. Authentication and resource operations are
+// exposed through the client and its service families.
 package msteams
 
-// PowerShellBaseline is the MicrosoftTeams PowerShell version targeted by the SDK.
-// SDK semantic versions are independent of this upstream contract version.
+// PowerShellBaseline identifies the MicrosoftTeams PowerShell version used by
+// selected acceptance comparisons. SDK semantic versions are independent.
 const PowerShellBaseline = "8.1.0"

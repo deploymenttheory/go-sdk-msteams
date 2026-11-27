@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
@@ -32,12 +32,12 @@ func TestUnitTenantFederationAuthoredDomainBuilderAndPUTAcceptance(t *testing.T)
 		t.Run(tc.name, func(t *testing.T) {
 			value := resource.NewAllowList(tc.list...)
 			input := resource.UpdateRequest{Settings: resource.Settings{AllowFederatedUsers: new(false)}, AllowedDomains: value}
-			r, err := contracttest.Run(t.Context(), contracttest.Case{Name: "put-" + tc.name, Family: "tenant_federation_configuration", Scope: "service", Source: "msteams/teams_admin_api/tenant_federation_configuration/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(t), wire("PUT", "/Skype.Policy/configurations/TenantFederationSettings/configuration/Global", setCommand, tc.body, 204, "")}, Want: contracttest.Expected{Status: 204, Body: []byte{}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			r, err := testutil.Run(t.Context(), testutil.Case{Name: "put-" + tc.name, Steps: []testutil.Exchange{discovery(t), wire("PUT", "/Skype.Policy/configurations/TenantFederationSettings/configuration/Global", setCommand, tc.body, 204, "")}, Want: testutil.Expected{Status: 204, Body: []byte{}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := sdk.TeamsAdminAPI.TenantFederationConfigurations.UpdateGlobal(ctx, input)
 				if err == nil && (response == nil || response.StatusCode() != 204) {
 					t.Fatal("PUT acceptance lost its no-content response")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 			if err != nil || !r.Passed() {
 				t.Fatalf("authored tenant federation PUT differs: %v %+v", err, r.Differences())

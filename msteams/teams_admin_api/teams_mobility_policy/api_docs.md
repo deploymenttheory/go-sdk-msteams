@@ -39,4 +39,4 @@ Recovery intent precedes create; the live responses provide permanent unit fixtu
 Teams Administrator is the tested lab role. Grants, effective client behavior,
 delegated flows and other clouds remain separately unqualified.
 
-See [qualification](../../../docs/implementation/policies/mobility-multi-tenant-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/mobility-multi-tenant-lab-acceptance.md).

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/meeting_branding"
@@ -265,29 +265,23 @@ func TestUnitBrandingLocalBuildersMatchTypedSetters(t *testing.T) {
 	}
 
 	for _, f := range fixture.Cases {
-		command := "New-CsTeamsMeetingBrandingTheme"
-		if f.Kind == "image" {
-			command = "New-CsTeamsMeetingBackgroundImage"
-		}
-		if f.Kind == "slate" {
-			command = "New-CsTeamsNdiAssuranceSlate"
-		}
+
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Source: assetSource, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Want: contracttest.Expected{JSON: f.Wire}, Invoke: func(context.Context, *msteams.Client) contracttest.Observation {
+			c := testutil.Case{Name: f.Name + "-" + string(mode), Mode: mode, Want: testutil.Expected{JSON: f.Wire}, Invoke: func(context.Context, *msteams.Client) testutil.Observation {
 				switch f.Kind {
 				case "image":
 					v, e := resource.NewBackgroundImage("fixture-image", -1, "Fixture", f.URI, resource.BackgroundImageOptions{})
-					return contracttest.Observation{Value: v, Err: e}
+					return testutil.Observation{Value: v, Err: e}
 				case "slate":
 					v, e := resource.NewAssuranceSlate("fixture-slate", "Fixture", f.URI, resource.AssuranceSlateOptions{})
-					return contracttest.Observation{Value: v, Err: e}
+					return testutil.Observation{Value: v, Err: e}
 				case "reaction":
 					v, e := resource.NewReaction("fixture-reaction", f.URI, "FutureReaction", resource.ReactionOptions{})
-					return contracttest.Observation{Value: v, Err: e}
+					return testutil.Observation{Value: v, Err: e}
 				default:
 					logo, color, alignment, no := "relative-or-future", "future-color", "FutureAlignment", false
 					v, e := resource.NewBrandingTheme("fixture-theme", resource.ThemeOptions{ThemeFields: resource.ThemeFields{LogoImageLightURI: &logo, BrandAccentColor: &color, ChatBackgroundImageAlignment: &alignment, EnableChatBackground: &no, Enabled: &no, DisableOriginalReactions: &no}})
-					return contracttest.Observation{Value: v, Err: e}
+					return testutil.Observation{Value: v, Err: e}
 				}
 			}}
 			if f.Rejected {
@@ -757,15 +751,12 @@ func TestUnitBrandingObjectEditsMatchTypedCoreExtension(t *testing.T) {
 	}
 
 	for _, f := range fixture.Lists {
-		command := "Set-CsTeamsMeetingBrandingPolicy"
-		if f.Kind == "reaction" {
-			command = "New-CsTeamsMeetingBrandingTheme"
-		}
+
 		name := f.Kind + "-" + f.Name + "-populated"
 		if f.Empty {
 			name = f.Kind + "-" + f.Name + "-empty"
 		}
-		run(t, contracttest.Case{Name: name, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Invoke: func(context.Context, *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Invoke: func(context.Context, *msteams.Client) testutil.Observation {
 			var ids []*string
 			var err error
 			if f.Kind == "policy" {
@@ -794,7 +785,7 @@ func TestUnitBrandingObjectEditsMatchTypedCoreExtension(t *testing.T) {
 					edit, err = resource.ChangeAssets(nil, []*resource.BackgroundImage{a})
 				}
 				if err != nil {
-					return contracttest.Observation{Err: err}
+					return testutil.Observation{Err: err}
 				}
 				list, e := edit.Apply(current)
 				err = e
@@ -802,7 +793,7 @@ func TestUnitBrandingObjectEditsMatchTypedCoreExtension(t *testing.T) {
 					raw, e := json.Marshal(list)
 					var values []*resource.BackgroundImage
 					if e != nil || json.Unmarshal(raw, &values) != nil {
-						return contracttest.Observation{Err: errors.New("invalid materialized assets")}
+						return testutil.Observation{Err: errors.New("invalid materialized assets")}
 					}
 					ids = []*string{}
 					for _, value := range values {
@@ -838,7 +829,7 @@ func TestUnitBrandingObjectEditsMatchTypedCoreExtension(t *testing.T) {
 					edit, err = resource.ChangeAssets(nil, []*resource.Reaction{a})
 				}
 				if err != nil {
-					return contracttest.Observation{Err: err}
+					return testutil.Observation{Err: err}
 				}
 				list, e := edit.Apply(current)
 				err = e
@@ -846,7 +837,7 @@ func TestUnitBrandingObjectEditsMatchTypedCoreExtension(t *testing.T) {
 					raw, e := json.Marshal(list)
 					var values []*resource.Reaction
 					if e != nil || json.Unmarshal(raw, &values) != nil {
-						return contracttest.Observation{Err: errors.New("invalid materialized reactions")}
+						return testutil.Observation{Err: errors.New("invalid materialized reactions")}
 					}
 					ids = []*string{}
 					for _, v := range values {
@@ -859,9 +850,9 @@ func TestUnitBrandingObjectEditsMatchTypedCoreExtension(t *testing.T) {
 				}
 			}
 			if (err != nil) != f.Observation.Rejected || err == nil && !reflect.DeepEqual(ids, f.Observation.IDs) {
-				return contracttest.Observation{Err: errors.New("pinned object-list behavior changed")}
+				return testutil.Observation{Err: errors.New("pinned object-list behavior changed")}
 			}
-			return contracttest.Observation{}
+			return testutil.Observation{}
 		}})
 	}
 }

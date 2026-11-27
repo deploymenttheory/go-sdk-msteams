@@ -41,4 +41,4 @@ unassigned and Global is not changed. Actual sanitized responses feed unit tests
 Grant persistence/propagation, effective live-event behavior, null/empty
 persistence, delegated modes and other clouds remain separate.
 
-See [qualification](../../../docs/implementation/policies/meeting-broadcast-policy-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/meeting-broadcast-policy-lab-acceptance.md).

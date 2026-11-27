@@ -1,0 +1,664 @@
+{
+  "observations": [
+    {
+      "input_json": "{}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "null",
+      "error": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.ParserException",
+      "conversion_error": null
+    },
+    {
+      "input_json": "[]",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "[null]",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "true",
+      "error": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.ParserException",
+      "conversion_error": null
+    },
+    {
+      "input_json": "37",
+      "error": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.ParserException",
+      "conversion_error": null
+    },
+    {
+      "input_json": "\"text\"",
+      "error": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.ParserException",
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"Global\",\"Future\":{\"x\":1}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "[{\"Identity\":\"other\"},{\"Identity\":\"global\"},{\"Identity\":\"Global\"},{\"Identity\":\"Tag:x\"}]",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"identity\":\"second\"}",
+      "error": null,
+      "conversion_error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"Identity\":\"second\"}",
+      "error": "System.ArgumentException",
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Identity\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnName\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":null}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":true}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":false}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":0}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":1}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":9007199254740993}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":1.20}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":\"\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":\"text\"}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":{}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":[]}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": " ",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"x\":1,\"x\":2}}",
+      "error": "System.ArgumentException",
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"X\":1,\"x\":2}}",
+      "error": null,
+      "conversion_error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"Future\":{\"K\":1,\"\\u212a\":2}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"S\":1,\"\\u017f\":2}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"I\":1,\"\\u0131\":2}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"i\":1,\"\\u0130\":2}}",
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"\\u03a3\":1,\"\\u03c2\":2}}",
+      "error": null,
+      "conversion_error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"Future\":{\"\\u00e9\":1,\"\\u00c9\":2}}",
+      "error": null,
+      "conversion_error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"SdnApiTo\\u212aen\":\"foreign-key\"}",
+      "error": null,
+      "conversion_error": null
+    }
+  ]
+}

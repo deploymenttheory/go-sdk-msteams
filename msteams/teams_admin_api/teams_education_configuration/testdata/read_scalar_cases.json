@@ -1,0 +1,420 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "EduGenerativeAIEnhancements",
+      "kind": "string",
+      "input_json": "{\"EduGenerativeAIEnhancements\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "ParentGuardianPreferredContactMethod",
+      "kind": "string",
+      "input_json": "{\"ParentGuardianPreferredContactMethod\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsEducationConfiguration",
+      "field": "UpdateParentInformation",
+      "kind": "string",
+      "input_json": "{\"UpdateParentInformation\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

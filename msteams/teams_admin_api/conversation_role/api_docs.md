@@ -86,6 +86,6 @@ while HTTPAccepted records only a 2xx receipt. Direct Create still sends only PO
 
 Request vectors include actual fully intercepted compiled binding; reply vectors are authored
 model cases. No new role or Global setting mutation is enabled in live CI. See
-[the full source notes](../../../docs/implementation/ext/conversation-role-contract-notes.md)
+[unit tests](service_test.go)
 for exact hashes, the twelve declared management sets and three additional
 builder declarations. No command is marked contract-complete from these tests.

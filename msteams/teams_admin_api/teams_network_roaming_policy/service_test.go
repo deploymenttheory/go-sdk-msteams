@@ -7,7 +7,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_network_roaming_policy"
@@ -29,9 +29,9 @@ func TestUnitSparsePutPreservesFalseEmptyZeroAndInt64(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			// These are request-binding vectors, not live claims that the service
 			// accepts zero or extreme bitrates. Terminate with a controlled failure.
-			run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("PUT", selected, set, json.RawMessage(tc.body), 503, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{compiledWire("PUT", selected, set, json.RawMessage(tc.body), 503, "")}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				r, e := sdk.TeamsAdminAPI.TeamsNetworkRoamingPolicies.UpdateGlobal(ctx, tc.args)
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -40,17 +40,17 @@ func TestUnitSparsePutPreservesFalseEmptyZeroAndInt64(t *testing.T) {
 func TestUnitCreateCompositionKeepsTheAcceptedPostWhenReadBackFails(t *testing.T) {
 	t.Parallel()
 	missing := readResponseFixture(t, "get_deleted_404.json")
-	run(t, contracttest.Case{Name: "create-read-failure", Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "create-read-failure", Steps: []testutil.Exchange{
 		compiledWire("POST", collection, create, json.RawMessage(`{"Identity":"fixture-policy"}`), 201, string(readResponseFixture(t, "create_201.body"))),
 		compiledWire("GET", collection+"/configuration/fixture-policy", get, nil, 404, string(missing)),
-	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsNetworkRoamingPolicies.Create(ctx, resource.CreateRequest{Identity: "fixture-policy"})
 		var partial *resource.ReadBackError
 		var api *client.APIError
 		if v == nil || v.Identity != "fixture-policy" || !errors.As(e, &partial) || partial.CreationResponse == nil || partial.CreationResponse.StatusCode() != 201 || !errors.As(e, &api) || api.StatusCode != 404 {
 			t.Fatal("accepted POST or subsequent failure was lost")
 		}
-		return contracttest.Observation{Response: r}
+		return testutil.Observation{Response: r}
 	}})
 }
 
@@ -65,18 +65,18 @@ func TestUnitMutationFailuresKeepStatusWithoutReplayOrReadBack(t *testing.T) {
 			case "delete":
 				method, command, path, body = "DELETE", "Remove-CsTeamsNetworkRoamingPolicy", selected, nil
 			}
-			run(t, contracttest.Case{Name: operation, Steps: []contracttest.Exchange{compiledWire(method, path, command, body, status, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: operation, Steps: []testutil.Exchange{compiledWire(method, path, command, body, status, "")}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.TeamsNetworkRoamingPolicies
 				switch operation {
 				case "create":
 					_, r, e := s.Create(ctx, resource.CreateRequest{Identity: "Global"})
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				case "update":
 					r, e := s.UpdateGlobal(ctx, resource.UpdateRequest{})
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				default:
 					r, e := s.DeleteByIdentity(ctx, "Global")
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				}
 			}})
 		}
@@ -90,24 +90,24 @@ func TestUnitFiltersAndEscapingUseModernRules(t *testing.T) {
 		count         int
 	}{{"all", " ", 2}, {"global", "[gG]lobal", 1}, {"tagged", "fixture-polic?", 1}, {"missing", "missing", 0}} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: get, ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, get, nil, 200, string(readResponseFixture(t, "owned_list.json")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{compiledWire("GET", collection, get, nil, 200, string(readResponseFixture(t, "owned_list.json")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsNetworkRoamingPolicies.ListFiltered(ctx, tc.pattern)
 				if e == nil && len(v) != tc.count {
 					t.Fatal("local Identity/Tag filter result differs")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
-	run(t, contracttest.Case{Name: "escaped", Steps: []contracttest.Exchange{compiledWire("GET", collection+"/configuration/Scope%2Fa%20b%3F%23%25", get, nil, 200, string(readResponseFixture(t, "get_global.json")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "escaped", Steps: []testutil.Exchange{compiledWire("GET", collection+"/configuration/Scope%2Fa%20b%3F%23%25", get, nil, 200, string(readResponseFixture(t, "get_global.json")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, r, e := sdk.TeamsAdminAPI.TeamsNetworkRoamingPolicies.GetByIdentity(ctx, "Scope/a b?#%")
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }
 
 func TestUnitInvalidInputContextAndClosedServicesStayLocal(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsNetworkRoamingPolicies
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -136,6 +136,6 @@ func TestUnitInvalidInputContextAndClosedServicesStayLocal(t *testing.T) {
 				t.Fatal("uninitialized service accepted")
 			}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

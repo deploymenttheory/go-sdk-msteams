@@ -47,4 +47,4 @@ These tests do not qualify live writes of the other settings, explicit
 null/empty persistence, effective guest meeting behavior, delegated
 authentication or other clouds.
 
-See [qualification](../../../docs/implementation/policies/guest-meeting-configuration-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/guest-meeting-configuration-lab-acceptance.md).

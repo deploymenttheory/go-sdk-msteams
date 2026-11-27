@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
@@ -20,21 +20,21 @@ func TestUnitNameCompositionsUseCompleteUniqueLookup(t *testing.T) {
 		{"delete", "DELETE", "Remove-TeamChannel", ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "name-" + tc.name,
-				Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "__AllParameterSets"}},
-				Steps: []contracttest.Exchange{
-					wire("GET", base+"/channels", "", 200, `{"value":[{"id":"other","displayName":"Other"}],"@odata.nextLink":"`+next+`"}`, "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-patch?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete?view=graph-rest-beta"),
-					wire("GET", next, "", 200, `{"value":[{"id":"`+channelID+`","displayName":"FIXTURE"}]}`, "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-patch?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete?view=graph-rest-beta"),
-					wire(tc.method, channelPath, tc.payload, 204, "", "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-patch?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete?view=graph-rest-beta"),
-				}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "name-" + tc.name,
+
+				Steps: []testutil.Exchange{
+					wire("GET", base+"/channels", "", 200, `{"value":[{"id":"other","displayName":"Other"}],"@odata.nextLink":"`+next+`"}`),
+					wire("GET", next, "", 200, `{"value":[{"id":"`+channelID+`","displayName":"FIXTURE"}]}`),
+					wire(tc.method, channelPath, tc.payload, 204, ""),
+				}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					if tc.method == "PATCH" {
 						empty := ""
 						r, e := sdk.GraphAPI.Channels.UpdateByDisplayName(ctx, teamID, "fixture", channel.UpdateRequest{Description: &empty}, client.PagingOptions{})
-						return contracttest.Observation{Response: r, Err: e}
+						return testutil.Observation{Response: r, Err: e}
 					}
 					r, e := sdk.GraphAPI.Channels.DeleteByDisplayName(ctx, teamID, "fixture", client.PagingOptions{})
-					return contracttest.Observation{Response: r, Err: e}
-				}, Want: contracttest.Expected{Status: 204}})
+					return testutil.Observation{Response: r, Err: e}
+				}, Want: testutil.Expected{Status: 204}})
 		})
 	}
 	for _, tc := range []struct {
@@ -47,10 +47,10 @@ func TestUnitNameCompositionsUseCompleteUniqueLookup(t *testing.T) {
 		{name: "incomplete", body: `{"value":[{"id":"first","displayName":"fixture"}],"@odata.nextLink":"` + next + `"}`, limits: client.PagingOptions{MaxPages: 1}, err: client.ErrPageLimit},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "name-" + tc.name, Steps: []contracttest.Exchange{wire("GET", base+"/channels", "", 200, tc.body, "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-patch?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "name-" + tc.name, Steps: []testutil.Exchange{wire("GET", base+"/channels", "", 200, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				r, e := sdk.GraphAPI.Channels.DeleteByDisplayName(ctx, teamID, "fixture", tc.limits)
-				return contracttest.Observation{Response: r, Err: e}
-			}, Want: contracttest.Expected{Status: 200, Error: tc.err}})
+				return testutil.Observation{Response: r, Err: e}
+			}, Want: testutil.Expected{Status: 200, Error: tc.err}})
 		})
 	}
 }
@@ -59,7 +59,7 @@ func TestUnitExplicitCollectionWrappers(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct{ name, path string }{{"all", "allChannels"}, {"incoming", "incomingChannels"}} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "wrapper-" + tc.name, Steps: []contracttest.Exchange{wire("GET", base+"/"+tc.path, "", 200, `{"value":[]}`, "https://learn.microsoft.com/en-us/graph/api/team-list-allchannels?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/team-list-incomingchannels?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "wrapper-" + tc.name, Steps: []testutil.Exchange{wire("GET", base+"/"+tc.path, "", 200, `{"value":[]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				var v client.ListResult[channel.Channel]
 				var e error
 				if tc.name == "all" {
@@ -67,8 +67,8 @@ func TestUnitExplicitCollectionWrappers(t *testing.T) {
 				} else {
 					v, e = sdk.GraphAPI.Channels.ListIncoming(ctx, teamID, channel.ReadOptions{}, client.PagingOptions{})
 				}
-				return contracttest.Observation{Value: v.Items, Response: v.Response, Err: e}
-			}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`null`)}})
+				return testutil.Observation{Value: v.Items, Response: v.Response, Err: e}
+			}, Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`null`)}})
 		})
 	}
 }

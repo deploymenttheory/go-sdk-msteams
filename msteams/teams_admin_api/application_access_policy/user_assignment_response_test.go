@@ -9,7 +9,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
@@ -52,16 +52,16 @@ func TestUnitUserAssignmentUsesAcceptanceResponses(t *testing.T) {
 	if json.Unmarshal(assigned, &expected) != nil || len(expected) != 1 || len(expected[0].Sources) != 1 {
 		t.Fatal("actual direct-assignment fixture is incomplete")
 	}
-	wire := func(method, path, command string, body json.RawMessage, reply []byte) contracttest.Exchange {
+	wire := func(method, path, command string, body json.RawMessage, reply []byte) testutil.Exchange {
 		headers := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {"https://admin.example.invalid/"}}
 		headers[http.CanonicalHeaderKey("MPACmdlet")] = nil
 		if body != nil {
 			headers.Set("Content-Type", "application/json")
 		}
-		return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: policyOrigin + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: body}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: reply}}
+		return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: policyOrigin + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: body}, Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: reply}}
 	}
-	steps := []contracttest.Exchange{
-		{Request: contracttest.WireRequest{Method: "GET", URL: policyOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(discoveryResponseFixture(t))}},
+	steps := []testutil.Exchange{
+		{Request: testutil.WireRequest{Method: "GET", URL: policyOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(discoveryResponseFixture(t))}},
 		wire("GET", get, "Get-CsUserPolicyAssignment", nil, before),
 		wire("PATCH", grant, "Grant-CsApplicationAccessPolicy", json.RawMessage(`{"policyName":"fixture-policy"}`), []byte(applicationResponseFixture(t, "assign_user.body"))),
 		wire("GET", get, "Get-CsUserPolicyAssignment", nil, assigned),
@@ -70,7 +70,7 @@ func TestUnitUserAssignmentUsesAcceptanceResponses(t *testing.T) {
 	}
 	// The assignment service and application-policy service own separate discovery adapters.
 	steps = slices.Insert(steps, 2, steps[0])
-	result, err := contracttest.Run(t.Context(), contracttest.Case{Name: "owned-user-assignment", Family: "application_access_policy", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/testdata/user_application_access_assigned.json", Steps: steps, Want: contracttest.Expected{Status: 200, Body: restored, JSON: restored}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	result, err := testutil.Run(t.Context(), testutil.Case{Name: "owned-user-assignment", Steps: steps, Want: testutil.Expected{Status: 200, Body: restored, JSON: restored}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.GetUser(ctx, user, "ApplicationAccessPolicy")
 		if err != nil || len(values) != 0 || response == nil || response.StatusCode() != 200 {
 			t.Fatal("actual initial assignment state differs")
@@ -105,7 +105,7 @@ func TestUnitUserAssignmentUsesAcceptanceResponses(t *testing.T) {
 		if err != nil || len(values) != 0 {
 			t.Fatal("actual cleared assignment state differs")
 		}
-		return contracttest.Observation{Value: values, Response: response, Err: err}
+		return testutil.Observation{Value: values, Response: response, Err: err}
 	}})
 	if err != nil || !result.Passed() {
 		t.Fatalf("actual user-assignment workflow differs: %v %+v", err, result.Differences())

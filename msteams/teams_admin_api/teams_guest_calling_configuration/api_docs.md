@@ -39,4 +39,4 @@ read/update tests share the tenant lock. Permanent sanitized acceptance response
 provide unit decoding and request fixtures. These checks do not establish
 effective guest private-calling behavior, delegated authentication or other clouds.
 
-See [qualification](../../../docs/implementation/policies/guest-calling-configuration-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/guest-calling-configuration-lab-acceptance.md).

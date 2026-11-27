@@ -67,4 +67,4 @@ Successful Teams roles, consent, cloud/feature availability, writes, read-back,
 cleanup and effective playback remain unqualified. No privilege grants are
 implicit in using this service. See the
 [unit tests](service_test.go)
-and [lab acceptance](../../../docs/implementation/policies/audio-conferencing-custom-prompts-lab-acceptance.md).
+and [lab acceptance](../../../docs/acceptance/audio-conferencing-custom-prompts-lab-acceptance.md).

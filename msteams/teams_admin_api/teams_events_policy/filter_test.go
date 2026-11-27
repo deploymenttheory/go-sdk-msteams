@@ -8,12 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-const bindingSource = "msteams/teams_admin_api/teams_events_policy/testdata/get_global.json"
 const getCommand = "Get-CsTeamsEventsPolicy"
 const grantCommand = "Grant-CsTeamsEventsPolicy"
 
@@ -72,17 +71,17 @@ func TestUnitEventsPolicyFiltersUseRealResponses(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "real-filter-" + tc.Name, Family: "teams_events_policy", Scope: "service", Source: "msteams/teams_admin_api/teams_events_policy/testdata/list.json",
-			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsEventsPolicy", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "real-filter-" + tc.Name,
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsEventsPolicy", 200, raw), Want: testutil.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.TeamsEventsPolicies
 				if tc.Pattern == "" {
 					value, response, err := service.List(ctx)
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				}
 				value, response, err := service.ListFiltered(ctx, tc.Pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {
@@ -2076,8 +2075,8 @@ func TestUnitEventsPolicyParameterlessGrantHasNoDispatch(t *testing.T) {
 	if !found {
 		t.Fatal("source no-scope failure not observed")
 	}
-	run(t, contracttest.Case{Name: "grant-no-scope", Source: bindingSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: policy.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "grant-no-scope", Want: testutil.Expected{Error: policy.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsEventsPolicies.Assign(ctx, policy.Assignment{})
-		return contracttest.Observation{Value: v, Response: r, Err: e}
+		return testutil.Observation{Value: v, Response: r, Err: e}
 	}})
 }

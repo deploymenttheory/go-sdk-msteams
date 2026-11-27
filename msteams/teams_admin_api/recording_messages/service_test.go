@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -32,17 +32,14 @@ func TestUnitRecordingTypedProviderRequests(t *testing.T) {
 			if x.Body != "" {
 				body = json.RawMessage(x.Body)
 			}
-			set := "ParentAndRelativeKey"
-			if f.Selector == "identity" {
-				set = "Identity"
-			}
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: x.CmdletName, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
+
+			c := testutil.Case{Name: f.Name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{wire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
 			// These retained vectors prove rejected request bytes, not decoding.
 			if f.Status != 400 || f.Response != "" {
 				t.Fatal("rejected-wire vector unexpectedly contains a response contract")
 			}
-			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+			c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.RecordingMessages
 				controls := policy.Controls{}
 				if f.Force {
@@ -54,23 +51,23 @@ func TestUnitRecordingTypedProviderRequests(t *testing.T) {
 				}
 				if f.Operation == "list" {
 					v, r, e := s.List(ctx)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				if f.Operation == "read" {
 					if f.Selector == "identity" {
 						v, r, e := s.GetByIdentity(ctx, scoped)
-						return contracttest.Observation{Value: v, Response: r, Err: e}
+						return testutil.Observation{Value: v, Response: r, Err: e}
 					}
 					v, r, e := s.GetByID(ctx, id)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				if f.Operation == "delete" {
 					if f.Selector == "identity" {
 						v, r, e := s.DeleteByIdentity(ctx, scoped, controls)
-						return contracttest.Observation{Value: v, Response: r, Err: e}
+						return testutil.Observation{Value: v, Response: r, Err: e}
 					}
 					v, r, e := s.DeleteByID(ctx, id, controls)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				settings := resource.Settings{}
 				input := resource.CreateRequest{Controls: controls}
@@ -85,19 +82,19 @@ func TestUnitRecordingTypedProviderRequests(t *testing.T) {
 				if f.Operation == "create" {
 					if f.Selector == "identity" {
 						v, r, e := s.CreateByIdentity(ctx, scoped, input)
-						return contracttest.Observation{Value: v, Response: r, Err: e}
+						return testutil.Observation{Value: v, Response: r, Err: e}
 					}
 					v, r, e := s.CreateByID(ctx, id, input)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				patch := resource.PatchRequest{Settings: settings, Controls: controls, BodyIdentity: policy.Set("read-model-identity")}
 				if f.Selector == "identity" {
 					v, r, e := s.PatchByIdentity(ctx, scoped, patch)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				patch.BodyID = policy.Set(relative)
 				v, r, e := s.PatchByID(ctx, id, patch)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}
 			run(t, c)
 		}
@@ -159,17 +156,17 @@ func TestUnitRecordingListFiltersUseRealResponses(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "real-filter-" + tc.Name, Family: "recording_messages", Scope: "service", Source: "msteams/teams_admin_api/recording_messages/testdata/list.json",
-			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsRecordingAndTranscriptionCustomMessage", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "real-filter-" + tc.Name,
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsRecordingAndTranscriptionCustomMessage", 200, raw), Want: testutil.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.RecordingMessages
 				if tc.Pattern == "" {
 					value, response, err := service.List(ctx)
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				}
 				value, response, err := service.ListFiltered(ctx, tc.Pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {

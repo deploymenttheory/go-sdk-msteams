@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -20,60 +20,55 @@ func TestUnitFeedbackPolicyAllMutationErrorsAreSingleSend(t *testing.T) {
 
 	for _, operation := range []string{"create", "patch", "delete", "user", "tenant", "group"} {
 		for _, status := range []int{400, 401, 403, 429, 503} {
-			command, set := newCommand, "Identity"
-			primarySource := source
-			if operation == "user" || operation == "tenant" || operation == "group" {
-				primarySource = grantSource
-			}
-			var steps []contracttest.Exchange
+			var steps []testutil.Exchange
 			switch operation {
 			case "create":
-				steps = []contracttest.Exchange{compiledWire("POST", collection, newCommand, json.RawMessage(`{"Identity":"Global"}`), status, `{"Message":"fixture-private"}`)}
+				steps = []testutil.Exchange{compiledWire("POST", collection, newCommand, json.RawMessage(`{"Identity":"Global"}`), status, `{"Message":"fixture-private"}`)}
 			case "patch":
-				command = setCommand
-				steps = []contracttest.Exchange{compiledWire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"Global","UserInitiatedMode":null}`), status, `{"Message":"fixture-private"}`)}
+
+				steps = []testutil.Exchange{compiledWire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"Global","UserInitiatedMode":null}`), status, `{"Message":"fixture-private"}`)}
 			case "delete":
-				command = deleteCommand
-				steps = []contracttest.Exchange{compiledWire("DELETE", item, deleteCommand, json.RawMessage(`{"Identity":"Global"}`), status, `{"Message":"fixture-private"}`)}
+
+				steps = []testutil.Exchange{compiledWire("DELETE", item, deleteCommand, json.RawMessage(`{"Identity":"Global"}`), status, `{"Message":"fixture-private"}`)}
 			case "user":
-				command = grantCommand
-				steps = []contracttest.Exchange{discovery(t), modernWire("PATCH", "/Skype.Policy/users/fixture%2Fuser/policies/TeamsFeedbackPolicy", json.RawMessage(`{"policyName":""}`), status, `{"Message":"fixture-private"}`)}
+
+				steps = []testutil.Exchange{discovery(t), modernWire("PATCH", "/Skype.Policy/users/fixture%2Fuser/policies/TeamsFeedbackPolicy", json.RawMessage(`{"policyName":""}`), status, `{"Message":"fixture-private"}`)}
 			case "tenant":
-				command, set = grantCommand, "GrantToTenant"
-				steps = []contracttest.Exchange{discovery(t), modernWire("PATCH", "/Skype.Policy/tenants/policies/TeamsFeedbackPolicy", json.RawMessage(`{"policyName":"","forceSwitchPresent":false}`), status, `{"Message":"fixture-private"}`)}
+
+				steps = []testutil.Exchange{discovery(t), modernWire("PATCH", "/Skype.Policy/tenants/policies/TeamsFeedbackPolicy", json.RawMessage(`{"policyName":"","forceSwitchPresent":false}`), status, `{"Message":"fixture-private"}`)}
 			case "group":
-				command, set = grantCommand, "GrantToGroup"
-				steps = []contracttest.Exchange{discovery(t), modernWire("POST", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsFeedbackPolicy", json.RawMessage(`{"policyName":""}`), status, `{"Message":"fixture-private"}`)}
+
+				steps = []testutil.Exchange{discovery(t), modernWire("POST", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsFeedbackPolicy", json.RawMessage(`{"policyName":""}`), status, `{"Message":"fixture-private"}`)}
 			}
-			run(t, contracttest.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Source: primarySource, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: fmt.Sprintf("%s-error-%d", operation, status), Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.TeamsFeedbackPolicies
-				var o contracttest.Observation
+				var o testutil.Observation
 				switch operation {
 				case "create":
 					_, r, e := s.CreateByIdentity(ctx, "Global", resource.CreateRequest{})
-					o = contracttest.Observation{Response: r, Err: e}
+					o = testutil.Observation{Response: r, Err: e}
 				case "patch":
 					_, r, e := s.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{UserInitiatedMode: policy.Null[string]()}})
-					o = contracttest.Observation{Response: r, Err: e}
+					o = testutil.Observation{Response: r, Err: e}
 				case "delete":
 					_, r, e := s.DeleteByIdentity(ctx, "Global", policy.Controls{})
-					o = contracttest.Observation{Response: r, Err: e}
+					o = testutil.Observation{Response: r, Err: e}
 				case "user":
 					r, e := s.AssignToUser(ctx, "fixture/user", "")
-					o = contracttest.Observation{Response: r, Err: e}
+					o = testutil.Observation{Response: r, Err: e}
 				case "tenant":
 					r, e := s.AssignTenantDefault(ctx, "", false)
-					o = contracttest.Observation{Response: r, Err: e}
+					o = testutil.Observation{Response: r, Err: e}
 				case "group":
 					v, r, e := s.AssignToGroup(ctx, "fixture/group", "", nil)
 					if v != nil && v.Accepted {
-						return contracttest.Observation{Err: errors.New("failed grant reported accepted")}
+						return testutil.Observation{Err: errors.New("failed grant reported accepted")}
 					}
-					o = contracttest.Observation{Response: r, Err: e}
+					o = testutil.Observation{Response: r, Err: e}
 				}
 				var api *client.APIError
 				if !errors.As(o.Err, &api) || api.StatusCode != status || strings.Contains(o.Err.Error(), "fixture-private") {
-					return contracttest.Observation{Err: errors.New("mutation status/redaction changed")}
+					return testutil.Observation{Err: errors.New("mutation status/redaction changed")}
 				}
 				o.Err = nil
 				return o
@@ -84,58 +79,58 @@ func TestUnitFeedbackPolicyAllMutationErrorsAreSingleSend(t *testing.T) {
 
 func TestUnitFeedbackPolicyInvalidInputContextAndBackendHaveNoHTTP(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsFeedbackPolicies
 		for _, id := range []string{"", " ", ".", "..", "scope/", "/empty", "scope/..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
-				return contracttest.Observation{Err: errors.New("invalid compiled identity accepted")}
+				return testutil.Observation{Err: errors.New("invalid compiled identity accepted")}
 			}
 		}
 		for _, pattern := range []string{"", "[broken"} {
 			if _, _, e := s.ListFiltered(ctx, pattern); !errors.Is(e, resource.ErrInput) {
-				return contracttest.Observation{Err: errors.New("invalid compiled filter accepted")}
+				return testutil.Observation{Err: errors.New("invalid compiled filter accepted")}
 			}
 		}
 		for _, input := range []resource.PatchRequest{{}, {Controls: policy.Controls{Force: new(true)}}} {
 			if _, _, e := s.PatchByIdentity(ctx, "Global", input); !errors.Is(e, resource.ErrInput) {
-				return contracttest.Observation{Err: errors.New("empty patch acquired credentials")}
+				return testutil.Observation{Err: errors.New("empty patch acquired credentials")}
 			}
 		}
 		if _, _, e := s.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{}); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("empty Set acquired credentials")}
+			return testutil.Observation{Err: errors.New("empty Set acquired credentials")}
 		}
 		for _, input := range []resource.Assignment{{}, {User: &resource.UserAssignment{Identity: "fixture"}, Tenant: &resource.TenantAssignment{}}} {
 			if _, _, e := s.Assign(ctx, input); !errors.Is(e, resource.ErrInput) {
-				return contracttest.Observation{Err: errors.New("invalid assignment scope acquired credentials")}
+				return testutil.Observation{Err: errors.New("invalid assignment scope acquired credentials")}
 			}
 		}
 		if _, e := s.AssignToUser(ctx, "", ""); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("empty user accepted")}
+			return testutil.Observation{Err: errors.New("empty user accepted")}
 		}
 		if _, _, e := s.AssignToGroup(ctx, "bad\nidentity", "", nil); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("invalid group accepted")}
+			return testutil.Observation{Err: errors.New("invalid group accepted")}
 		}
 		graph, e := client.NewScope(client.Graph, sdk.TeamsAdminAPI.Scope().Session())
 		if e != nil {
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}
 		wrong := resource.NewService(graph)
 		if _, _, e := wrong.List(ctx); !errors.Is(e, client.ErrDestination) {
-			return contracttest.Observation{Err: errors.New("wrong CRUD backend accepted")}
+			return testutil.Observation{Err: errors.New("wrong CRUD backend accepted")}
 		}
 		if _, e := wrong.AssignTenantDefault(ctx, "", false); !errors.Is(e, client.ErrDestination) {
-			return contracttest.Observation{Err: errors.New("wrong Grant backend accepted")}
+			return testutil.Observation{Err: errors.New("wrong Grant backend accepted")}
 		}
 		for _, missing := range []*resource.Service{nil, {}, resource.NewService(nil)} {
 			if _, _, e := missing.List(ctx); !errors.Is(e, client.ErrClosed) {
-				return contracttest.Observation{Err: errors.New("missing service accepted")}
+				return testutil.Observation{Err: errors.New("missing service accepted")}
 			}
 		}
 		canceled, cancel := context.WithCancel(ctx)
 		cancel()
 		if _, e := s.AssignTenantDefault(canceled, "", false); !errors.Is(e, context.Canceled) {
-			return contracttest.Observation{Err: errors.New("canceled Grant acquired credentials")}
+			return testutil.Observation{Err: errors.New("canceled Grant acquired credentials")}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

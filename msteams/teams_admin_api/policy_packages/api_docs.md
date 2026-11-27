@@ -74,4 +74,4 @@ Issue #101 remains in-progress for qualification. Tests map all nine commands an
 twelve sets, but full shell coercion, delegated live reads, mutation/read-back,
 effective assignment and cloud/mode deployment remain unqualified. See the
 [unit tests](service_test.go)
-and [lab plan](../../../docs/implementation/policies/policy-packages-lab-acceptance.md).
+and [lab plan](../../../docs/acceptance/policy-packages-lab-acceptance.md).

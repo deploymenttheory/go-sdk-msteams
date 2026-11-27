@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -27,11 +27,11 @@ func TestUnitRecordingUpdatePreparationFailures(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", item, "Set-CsTeamsRecordingAndTranscriptionCustomMessage", nil, tc.read, tc.body)}
+			steps := []testutil.Exchange{wire("GET", item, "Set-CsTeamsRecordingAndTranscriptionCustomMessage", nil, tc.read, tc.body)}
 			if tc.patch != 0 {
 				steps = append(steps, wire("PATCH", item, "Set-CsTeamsRecordingAndTranscriptionCustomMessage", json.RawMessage(`{}`), tc.patch, ""))
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/recording_messages/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.RecordingMessages.UpdateByID(ctx, relative, resource.UpdateRequest{Description: policy.Null[string]()})
 				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
 					t.Error("failed update lost preparation state or invented acceptance")
@@ -46,7 +46,7 @@ func TestUnitRecordingUpdatePreparationFailures(t *testing.T) {
 						t.Error("failure lost its HTTP status")
 					}
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}
@@ -54,19 +54,19 @@ func TestUnitRecordingUpdatePreparationFailures(t *testing.T) {
 
 func TestUnitRecordingListEditsStopOnPreparationDenial(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "preparation-denial", Source: "msteams/teams_admin_api/recording_messages/composition_test.go", Steps: []contracttest.Exchange{wire("GET", collection+"/configuration/Global", "Set-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 403, "")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "preparation-denial", Steps: []testutil.Exchange{wire("GET", collection+"/configuration/Global", "Set-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 403, "")}, Want: testutil.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.RecordingMessages.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Localizations: resource.ChangeLocalizations([]*resource.Localization{{Language: new("fr-FR"), InitiatorImplicit: new("b")}}, nil)})
 		if v == nil || v.ReadResponse == nil || v.Before != nil || v.PatchInvoked || v.HTTPAccepted {
 			t.Error("failed preparation invented a snapshot, patch or acceptance")
 		}
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }
 
 func TestUnitRecordingLocalBuilderHasNoCredentialsOrHTTP(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local-localization-builder", Source: "msteams/teams_admin_api/recording_messages/testdata/list.json", Mappings: []contracttest.Mapping{{Command: "New-CsTeamsRecordingAndTranscriptionLocalizationCustomMessage", ParameterSet: "Identity"}}, Want: contracttest.Expected{JSON: json.RawMessage(`{"Identity":null,"Language":"Future-Language","InitiatorImplicit":null,"ParticipantImplicit":null,"InitiatorExplicit":null,"ParticipantExplicitRequested":null,"ParticipantExplicitProvided":null,"AgreementDialogue":null}`)}, Invoke: func(_ context.Context, _ *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local-localization-builder", Want: testutil.Expected{JSON: json.RawMessage(`{"Identity":null,"Language":"Future-Language","InitiatorImplicit":null,"ParticipantImplicit":null,"InitiatorExplicit":null,"ParticipantExplicitRequested":null,"ParticipantExplicitProvided":null,"AgreementDialogue":null}`)}, Invoke: func(_ context.Context, _ *msteams.Client) testutil.Observation {
 		v, e := resource.NewLocalization(resource.LocalizationInput{Language: "Future-Language"})
-		return contracttest.Observation{Value: v, Err: e}
+		return testutil.Observation{Value: v, Err: e}
 	}})
 }

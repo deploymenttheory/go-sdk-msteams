@@ -1,0 +1,10 @@
+{
+  "AutomaticRecording": "future-value",
+  "AutomaticTranscription": "future-value",
+  "CalendarBookings": "future-value",
+  "CallScreening": "future-value",
+  "InboundFederatedCalls": "future-value",
+  "InboundInternalCalls": "future-value",
+  "InboundPSTNCalls": "future-value",
+  "PersonalAttendant": "future-value"
+}

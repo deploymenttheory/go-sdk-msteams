@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -50,18 +50,16 @@ func TestUnitRecordingAuthoredSelectorResponses(t *testing.T) {
 		{"remove-id", "remove", "id", "DELETE", remove, item, json.RawMessage(`{"Id":"` + relative + `"}`), 204},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			set, reply := "Identity", ""
-			if tc.selector == "id" {
-				set = "ParentAndRelativeKey"
-			}
-			want := contracttest.Expected{Body: []byte{}}
+			reply := ""
+
+			want := testutil.Expected{Body: []byte{}}
 			if tc.operation == "get" {
 				reply = authoredRecordingMessage
-				want = contracttest.Expected{JSON: json.RawMessage(reply), Body: []byte(reply)}
+				want = testutil.Expected{JSON: json.RawMessage(reply), Body: []byte(reply)}
 			}
-			run(t, contracttest.Case{Name: "typed-" + tc.name, Source: "msteams/teams_admin_api/recording_messages/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(tc.method, tc.path, tc.command, tc.body, tc.status, reply)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "typed-" + tc.name, Steps: []testutil.Exchange{wire(tc.method, tc.path, tc.command, tc.body, tc.status, reply)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.RecordingMessages
-				var observed contracttest.Observation
+				var observed testutil.Observation
 				var value *resource.Message
 				switch tc.operation {
 				case "get":
@@ -112,7 +110,7 @@ func TestUnitRecordingAuthoredNonemptyFilterPreservesTypedItem(t *testing.T) {
 	other := strings.ReplaceAll(authoredRecordingMessage, relative, "00000000-0000-4000-8000-000000000032")
 	reply := "[" + other + "," + authoredRecordingMessage + "]"
 	want := "[" + authoredRecordingMessage + "]"
-	run(t, contracttest.Case{Name: "nonempty-recording-filter", Source: "msteams/teams_admin_api/recording_messages/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsRecordingAndTranscriptionCustomMessage", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{wire("GET", collection, "Get-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, reply)}, Want: contracttest.Expected{JSON: json.RawMessage(want), Body: []byte(reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "nonempty-recording-filter", Steps: []testutil.Exchange{wire("GET", collection, "Get-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, reply)}, Want: testutil.Expected{JSON: json.RawMessage(want), Body: []byte(reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		values, response, err := sdk.TeamsAdminAPI.RecordingMessages.ListFiltered(ctx, "*"+relative)
 		if err == nil {
 			if len(values) != 1 {
@@ -120,7 +118,7 @@ func TestUnitRecordingAuthoredNonemptyFilterPreservesTypedItem(t *testing.T) {
 			}
 			verifyAuthoredRecordingMessage(t, values[0])
 		}
-		return contracttest.Observation{Value: values, Response: response, Err: err}
+		return testutil.Observation{Value: values, Response: response, Err: err}
 	}})
 }
 
@@ -131,12 +129,12 @@ func TestUnitRecordingAuthoredMalformed200RetainsResponse(t *testing.T) {
 		{"null-language", `{"RecordingAndTranscriptionLocalizationCustomMessage":[{"Language":null}]}`},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/recording_messages/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsRecordingAndTranscriptionCustomMessage", ParameterSet: "ParentAndRelativeKey"}}, Steps: []contracttest.Exchange{wire("GET", item, "Get-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, tc.reply)}, Want: contracttest.Expected{Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{wire("GET", item, "Get-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, tc.reply)}, Want: testutil.Expected{Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.RecordingMessages.GetByID(ctx, relative)
 				if value != nil {
 					t.Fatal("malformed recording reply exposed a fabricated result")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 		})
 	}
@@ -149,12 +147,12 @@ func TestUnitRecordingAuthoredComposedDeltaPreservesPreparationAndReadback(t *te
 	// Source comparator removes the first seven-field ordinal match, then adds
 	// in order. These are authored protocol values/readback, not persistence
 	// evidence from a tenant or proof of the unreleased meeting-client feature.
-	steps := []contracttest.Exchange{
+	steps := []testutil.Exchange{
 		wire("GET", item, "Set-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, authoredRecordingMessage),
 		wire("PATCH", item, "Set-CsTeamsRecordingAndTranscriptionCustomMessage", json.RawMessage(`{"Identity":"`+authoredRecordingIdentity+`","RecordingAndTranscriptionLocalizationCustomMessage":[`+nextLocalization+`]}`), 204, ""),
 		wire("GET", item, "Get-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, updated),
 	}
-	run(t, contracttest.Case{Name: "composed-recording-delta", Source: "msteams/teams_admin_api/recording_messages/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsRecordingAndTranscriptionCustomMessage", ParameterSet: "Identity"}, {Command: "Get-CsTeamsRecordingAndTranscriptionCustomMessage", ParameterSet: "Identity"}, {Command: "New-CsTeamsRecordingAndTranscriptionLocalizationCustomMessage", ParameterSet: "Identity"}}, Steps: steps, Want: contracttest.Expected{JSON: json.RawMessage(updated), Body: []byte(updated)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "composed-recording-delta", Steps: steps, Want: testutil.Expected{JSON: json.RawMessage(updated), Body: []byte(updated)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		add, err := resource.NewLocalization(resource.LocalizationInput{Language: "fr-FR", ParticipantImplicit: new("new message")})
 		if err != nil {
 			t.Fatal(err)
@@ -170,7 +168,7 @@ func TestUnitRecordingAuthoredComposedDeltaPreservesPreparationAndReadback(t *te
 			t.Fatal("authored recording readback lost the delta or an omitted scalar")
 		}
 		verifyAuthoredRecordingMessage(t, result.Before)
-		return contracttest.Observation{Value: value, Response: response, Err: err}
+		return testutil.Observation{Value: value, Response: response, Err: err}
 	}})
 }
 
@@ -179,7 +177,7 @@ func TestUnitRecordingBodyCloseCancellationStopsPreparationBeforePatch(t *testin
 	var stop context.CancelFunc
 	step := wire("GET", item, "Set-CsTeamsRecordingAndTranscriptionCustomMessage", nil, 200, authoredRecordingMessage)
 	step.Reply.OnBodyClose = func() { stop() }
-	run(t, contracttest.Case{Name: "recording-body-close-cancel", Source: "msteams/teams_admin_api/recording_messages/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsRecordingAndTranscriptionCustomMessage", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{step}, Want: contracttest.Expected{Body: []byte(authoredRecordingMessage), Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "recording-body-close-cancel", Steps: []testutil.Exchange{step}, Want: testutil.Expected{Body: []byte(authoredRecordingMessage), Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		operation, cancel := context.WithCancel(ctx)
 		defer cancel()
 		stop = cancel
@@ -190,6 +188,6 @@ func TestUnitRecordingBodyCloseCancellationStopsPreparationBeforePatch(t *testin
 		if !errors.Is(err, context.Canceled) || !errors.Is(operation.Err(), context.Canceled) || value == nil || value.Before != nil || value.After != nil || value.PatchInvoked || value.HTTPAccepted || value.ReadResponse == nil || value.ReadResponse.StatusCode() != 200 || response != value.ReadResponse {
 			t.Fatal("body-close cancellation lost the actual recording preparation stage")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }

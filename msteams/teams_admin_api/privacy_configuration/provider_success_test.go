@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -27,12 +27,12 @@ func TestUnitPrivacyPatchTypedSuccessAndMalformedResponse(t *testing.T) {
 		{name: "malformed-success", response: `{"Identity":"prepared-identity","EnablePrivacyMode":"invalid"}`, wantError: client.ErrDecode},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{
-				Name: tc.name, Source: "msteams/teams_admin_api/privacy_configuration/provider_success_test.go",
-				Mappings: []contracttest.Mapping{{Command: "Set-CsPrivacyConfiguration", ParameterSet: "Identity"}},
-				Steps:    []contracttest.Exchange{wire("PATCH", "/Skype.Policy/configurations/PrivacyConfiguration/configuration/Global", "Set-CsPrivacyConfiguration", json.RawMessage(`{"Identity":"prepared-identity","EnablePrivacyMode":false,"AutoInitiateContacts":null}`), 200, tc.response)},
-				Want:     contracttest.Expected{Status: 200, Body: []byte(tc.response), Error: tc.wantError},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{
+				Name: tc.name,
+
+				Steps: []testutil.Exchange{wire("PATCH", "/Skype.Policy/configurations/PrivacyConfiguration/configuration/Global", "Set-CsPrivacyConfiguration", json.RawMessage(`{"Identity":"prepared-identity","EnablePrivacyMode":false,"AutoInitiateContacts":null}`), 200, tc.response)},
+				Want:  testutil.Expected{Status: 200, Body: []byte(tc.response), Error: tc.wantError},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					value, response, err := sdk.TeamsAdminAPI.PrivacyConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{
 						Settings:     resource.Settings{EnablePrivacyMode: policy.Set(false), AutoInitiateContacts: policy.Null[bool]()},
 						BodyIdentity: policy.Set("prepared-identity"),
@@ -58,7 +58,7 @@ func TestUnitPrivacyPatchTypedSuccessAndMalformedResponse(t *testing.T) {
 							t.Fatal("typed patch response lost null or future fields")
 						}
 					}
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				},
 			})
 		})

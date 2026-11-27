@@ -31,4 +31,4 @@ internal XML Key differences are not immutable state across separate reads.
 The existing lab Teams Administrator application and secrets suffice. Successful
 Grant persistence/clear, other setting persistence, delegated tenant flows and
 other clouds remain unqualified. No existing policy or assignment changed.
-See `docs/implementation/policies/voice-applications-workload-contract-notes.md`.
+See the [testing guide](../../../docs/guides/testing.md).

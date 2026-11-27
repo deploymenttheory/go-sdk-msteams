@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group"
@@ -22,50 +22,41 @@ func creationRequest() management.CreateRequest {
 	alias := "fixture"
 	return management.CreateRequest{DisplayName: "Fixture", MailNickname: &alias, Owner: ownerID}
 }
-func runCase(t *testing.T, command string, c contracttest.Case) contracttest.Result {
+func runCase(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family = "team_management"
-	c.Source = "msteams/graph_api/team_management/service_test.go"
+
 	if c.Name == "" {
 		c.Name = "request-case"
 	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
+
 	if c.Mode == "" {
 		c.Mode = auth.Delegated
 	}
-	if len(c.Mappings) == 0 {
-		set := "__AllParameterSets"
-		if command == "Get-Team" {
-			set = "Identity"
-		}
-		c.Mappings = []contracttest.Mapping{{Command: command, ParameterSet: set}}
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil || !result.Passed() {
 		t.Fatalf("SDK request/validation differed: setup=%v differences=%+v", err, result.Differences())
 	}
 	return result
 }
-func creationCase(t *testing.T, set string, c contracttest.Case) contracttest.Result {
+func creationCase(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Mappings = []contracttest.Mapping{{Command: "New-Team", ParameterSet: set}}
-	return runCase(t, "New-Team", c)
+
+	return runCase(t, c)
 }
-func listCase(t *testing.T, c contracttest.Case) contracttest.Result {
+func listCase(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Mappings = []contracttest.Mapping{{Command: "Get-Team", ParameterSet: "Filters"}}
-	return runCase(t, "Get-Team", c)
+
+	return runCase(t, c)
 }
-func denied(method, path, body string) contracttest.Exchange {
+func denied(method, path, body string) testutil.Exchange {
 	headers := http.Header{"Accept": {"application/json"}}
 	var request json.RawMessage
 	if body != "" {
 		request = json.RawMessage(body)
 		headers.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: headers, JSON: request}, Reply: contracttest.Reply{Status: http.StatusForbidden, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(`{"error":{"code":"UnitRequestDenied"}}`)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: headers, JSON: request}, Reply: testutil.Reply{Status: http.StatusForbidden, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(`{"error":{"code":"UnitRequestDenied"}}`)}}
 }
 
 // These cases prove the outgoing first request and denial propagation.
@@ -75,7 +66,7 @@ func TestUnitManagementFirstRequestDenials(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct {
 		name, command string
-		request       contracttest.Exchange
+		request       testutil.Exchange
 		invoke        func(context.Context, *msteams.Client) error
 	}{
 		{name: "get-group-before-team", command: "Get-Team", request: denied("GET", "/v1.0/groups/"+groupID, ""), invoke: func(ctx context.Context, sdk *msteams.Client) error {
@@ -100,13 +91,13 @@ func TestUnitManagementFirstRequestDenials(t *testing.T) {
 		}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			c := contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{tc.request}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: tc.invoke(ctx, sdk)}
-			}, Want: contracttest.Expected{Error: auth.ErrForbidden}}
+			c := testutil.Case{Name: tc.name, Steps: []testutil.Exchange{tc.request}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: tc.invoke(ctx, sdk)}
+			}, Want: testutil.Expected{Error: auth.ErrForbidden}}
 			if tc.command == "New-Team" {
-				creationCase(t, "MigrateGroup", c)
+				creationCase(t, c)
 			} else {
-				runCase(t, tc.command, c)
+				runCase(t, c)
 			}
 		})
 	}
@@ -121,13 +112,13 @@ func TestUnitManagementListDiscoveryDenial(t *testing.T) {
 			}
 			step := denied("GET", "/beta/groups?"+q.Encode(), "")
 			step.Request.Headers.Set("ConsistencyLevel", "eventual")
-			listCase(t, contracttest.Case{Name: "discovery-denial", Steps: []contracttest.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			listCase(t, testutil.Case{Name: "discovery-denial", Steps: []testutil.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				result, err := sdk.GraphAPI.TeamManagement.List(ctx, management.ListOptions{DisplayName: search})
 				if result.Complete || result.DiscoveryComplete || len(result.Items) != 0 {
 					t.Error("denied discovery was reported complete")
 				}
-				return contracttest.Observation{Err: err}
-			}, Want: contracttest.Expected{Error: auth.ErrForbidden}})
+				return testutil.Observation{Err: err}
+			}, Want: testutil.Expected{Error: auth.ErrForbidden}})
 		})
 	}
 }
@@ -157,15 +148,15 @@ func TestUnitManagementCreateRequestVariantsDenied(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			creationCase(t, "CreateTeam", contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{denied("POST", "/v1.0/groups", string(payload))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			creationCase(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{denied("POST", "/v1.0/groups", string(payload))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				request := creationRequest()
 				request.Template = tc.template
 				result, err := sdk.GraphAPI.TeamManagement.Create(ctx, request)
 				if result.ID != "" || result.CreatedGroupOwned || result.Cleanup.Disposition == management.CleanupDeleted {
 					t.Error("denied creation fabricated ownership or cleanup")
 				}
-				return contracttest.Observation{Err: err}
-			}, Want: contracttest.Expected{Error: auth.ErrForbidden}})
+				return testutil.Observation{Err: err}
+			}, Want: testutil.Expected{Error: auth.ErrForbidden}})
 		})
 	}
 }
@@ -173,7 +164,7 @@ func TestUnitManagementSparsePropertyAndSettingsInput(t *testing.T) {
 	t.Parallel()
 	empty, disabled := "", false
 	request := management.UpdateRequest{Properties: group.UpdateRequest{Description: &empty}, Settings: team.Settings{MemberSettings: &team.MemberSettings{AllowCreateUpdateChannels: &disabled}}}
-	runCase(t, "Set-Team", contracttest.Case{Name: "sparse-property-denied", Steps: []contracttest.Exchange{denied("PATCH", "/v1.0/groups/"+groupID, `{"description":""}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	runCase(t, testutil.Case{Name: "sparse-property-denied", Steps: []testutil.Exchange{denied("PATCH", "/v1.0/groups/"+groupID, `{"description":""}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		result, err := sdk.GraphAPI.TeamManagement.UpdateByID(ctx, groupID, request)
 		if result.Value != nil {
 			t.Error("denied update fabricated a read-back")
@@ -181,6 +172,6 @@ func TestUnitManagementSparsePropertyAndSettingsInput(t *testing.T) {
 		if request.Settings.GuestSettings != nil || request.Settings.MessagingSettings != nil || request.Settings.DiscoverySettings != nil || *request.Settings.MemberSettings.AllowCreateUpdateChannels {
 			t.Error("failed update changed caller settings")
 		}
-		return contracttest.Observation{Err: err}
-	}, Want: contracttest.Expected{Error: auth.ErrForbidden}})
+		return testutil.Observation{Err: err}
+	}, Want: testutil.Expected{Error: auth.ErrForbidden}})
 }

@@ -1,0 +1,212 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "BulkSignIn",
+      "kind": "string",
+      "input_json": "{\"BulkSignIn\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsSipDevicesConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

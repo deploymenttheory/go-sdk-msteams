@@ -35,4 +35,4 @@ Administrator; policies remain unassigned and Global is not changed. Actual
 sanitized responses feed unit tests. Grant persistence/propagation, effective room
 calling, null/empty persistence, delegated modes and other clouds remain separate.
 
-See [qualification](../../../docs/implementation/policies/room-shared-calling-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/room-shared-calling-lab-acceptance.md).

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -53,7 +53,7 @@ func TestUnitOwnedCRUDDateTimeAndListEditsUseAcceptanceResponses(t *testing.T) {
 	if json.Unmarshal(missing, &envelope) != nil {
 		t.Fatal("invalid actual error fixture")
 	}
-	steps := []contracttest.Exchange{
+	steps := []testutil.Exchange{
 		compiledWire("POST", collection, "New-CsTeamsUpdateManagementPolicy", body(map[string]any{"Identity": "fixture-policy", "Description": before.Description, "AllowManagedUpdates": true, "UpdateDayOfWeek": int64(3), "UpdateTime": "19:30", "AllowPublicPreview": "Enabled", "DisabledInProductMessages": before.DisabledInProductMessages}), 201, string(readResponseFixture(t, "create_201.body"))),
 		compiledWire("GET", selected, "Get-CsTeamsUpdateManagementPolicy", nil, 200, string(beforeRaw)),
 		compiledWire("GET", selected, "Set-CsTeamsUpdateManagementPolicy", nil, 200, string(beforeRaw)),
@@ -72,7 +72,7 @@ func TestUnitOwnedCRUDDateTimeAndListEditsUseAcceptanceResponses(t *testing.T) {
 		compiledWire("DELETE", selected, "Remove-CsTeamsUpdateManagementPolicy", body(map[string]any{"Identity": id}), 204, string(readResponseFixture(t, "delete_204.body"))),
 		compiledWire("GET", selected, "Get-CsTeamsUpdateManagementPolicy", nil, 404, string(missing)),
 	}
-	run(t, contracttest.Case{Name: "owned-crud-datetime-list", Steps: steps, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{envelope.Code}, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "owned-crud-datetime-list", Steps: steps, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{envelope.Code}, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsUpdateManagementPolicies
 		check := func(expected *resource.Policy) {
 			v, _, e := s.GetByIdentity(ctx, id)
@@ -115,6 +115,6 @@ func TestUnitOwnedCRUDDateTimeAndListEditsUseAcceptanceResponses(t *testing.T) {
 			t.Fatal("owned delete differs")
 		}
 		_, r, e := s.GetByIdentity(ctx, id)
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }

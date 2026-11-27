@@ -30,6 +30,6 @@ repair; this does not establish application-mode eligibility or ineligibility.
 Certificate-connected pinned comparison runs in the credential-owning auth scope;
 the published module accepts exactly two Graph/Skype supplied tokens and cannot
 use that mode to acquire the separate Templates resource. See the
-[integrated qualification report](../../../docs/implementation/core/integrated-qualification.md)
+[unit tests](service_test.go)
 for exact assembly provenance, live evidence and remaining qualification gaps.
 No migration mutation is performed.

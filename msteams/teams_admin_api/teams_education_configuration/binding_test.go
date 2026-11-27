@@ -10,13 +10,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_education_configuration"
 )
-
-const bindingSource = "msteams/teams_admin_api/teams_education_configuration/testdata/get_global.json"
 
 type bindingRequest struct {
 	Name, Command string
@@ -25,9 +23,8 @@ type bindingRequest struct {
 		Failure *string
 
 		Output *struct {
-			ParameterSet string `json:"parameter_set"`
-			Bound        map[string]json.RawMessage
-			Specified    bool
+			Bound     map[string]json.RawMessage
+			Specified bool
 		}
 	}
 }
@@ -47,18 +44,15 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
-						Bound:        map[string]json.RawMessage{},
+						Bound: map[string]json.RawMessage{},
 					},
 				},
 			},
@@ -72,17 +66,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity": json.RawMessage("\"Global\""),
 						},
@@ -99,9 +90,8 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Failure: new("System.Management.Automation.ValidationMetadataException"),
@@ -117,17 +107,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Filter",
 						Bound: map[string]json.RawMessage{
 							"Filter": json.RawMessage("\"Fixture*\""),
 						},
@@ -144,9 +131,8 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Failure: new("System.Management.Automation.ValidationMetadataException"),
@@ -162,17 +148,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity": json.RawMessage("\"Global\""),
 						},
@@ -191,17 +174,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Force":    json.RawMessage("{\"IsPresent\":false}"),
 							"Identity": json.RawMessage("\"Global\""),
@@ -221,9 +201,8 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Failure: new("System.Management.Automation.ValidationMetadataException"),
@@ -240,17 +219,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":                json.RawMessage("\"Global\""),
 							"UpdateParentInformation": json.RawMessage("\"0\""),
@@ -272,17 +248,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"EduGenerativeAIEnhancements":          json.RawMessage("\"FutureEnhancement\""),
 							"Identity":                             json.RawMessage("\"Global\""),
@@ -305,17 +278,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Force":                   json.RawMessage("{\"IsPresent\":true}"),
 							"Identity":                json.RawMessage("\"Global\""),
@@ -336,17 +306,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":                             json.RawMessage("\"Global\""),
 							"ParentGuardianPreferredContactMethod": json.RawMessage("null"),
@@ -366,17 +333,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":                             json.RawMessage("\"Global\""),
 							"ParentGuardianPreferredContactMethod": json.RawMessage("\"\""),
@@ -396,17 +360,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"EduGenerativeAIEnhancements": json.RawMessage("null"),
 							"Identity":                    json.RawMessage("\"Global\""),
@@ -426,17 +387,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"EduGenerativeAIEnhancements": json.RawMessage("\"\""),
 							"Identity":                    json.RawMessage("\"Global\""),
@@ -456,17 +414,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":                json.RawMessage("\"Global\""),
 							"UpdateParentInformation": json.RawMessage("null"),
@@ -486,17 +441,14 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 					Failure *string
 
 					Output *struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}
 				}{
 					Output: &struct {
-						ParameterSet string `json:"parameter_set"`
-						Bound        map[string]json.RawMessage
-						Specified    bool
+						Bound     map[string]json.RawMessage
+						Specified bool
 					}{
-						ParameterSet: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":                json.RawMessage("\"Global\""),
 							"UpdateParentInformation": json.RawMessage("\"\""),
@@ -511,13 +463,12 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 	for _, f := range fixture.Cases {
 
 		bound := f.Arguments
-		set := "Identity"
+
 		if f.Observed.Output != nil {
 			bound = f.Observed.Output.Bound
-			set = f.Observed.Output.ParameterSet
-		} else if _, ok := bound["Filter"]; ok {
-			set = "Filter"
+
 		}
+
 		var identity, pattern string
 		if json.Unmarshal(bound["Identity"], &identity) != nil {
 			identity = ""
@@ -526,7 +477,7 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 			pattern = ""
 		}
 		verb, _, _ := strings.Cut(f.Command, "-")
-		c := contracttest.Case{Name: "binding-" + strings.ToLower(verb+"-"+f.Name), Source: bindingSource, Mappings: []contracttest.Mapping{{Command: f.Command, ParameterSet: set}}}
+		c := testutil.Case{Name: "binding-" + strings.ToLower(verb+"-"+f.Name)}
 		var settings resource.Settings
 		controls := policy.Controls{}
 		if f.Command == setCommand {
@@ -561,34 +512,34 @@ func TestUnitEducationConfigurationRejectedRequestsAndLocalBinding(t *testing.T)
 				body["Force"], _ = json.Marshal(value)
 			}
 			encoded, _ := json.Marshal(body)
-			c.Steps = []contracttest.Exchange{compiledWire("PATCH", item, setCommand, encoded, 400, "")}
+			c.Steps = []testutil.Exchange{compiledWire("PATCH", item, setCommand, encoded, 400, "")}
 		} else {
 			path, reply := collection, "[]"
 			if identity != "" {
 				path = item
 				reply = `{"Identity":"Global"}`
 			}
-			c.Steps = []contracttest.Exchange{compiledWire("GET", path, getCommand, nil, 400, reply)}
+			c.Steps = []testutil.Exchange{compiledWire("GET", path, getCommand, nil, 400, reply)}
 		}
 		if len(c.Steps) != 0 {
-			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+			c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 		}
-		c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TeamsEducationConfigurations
 			if f.Command == setCommand {
 				v, r, e := s.PatchByIdentity(ctx, identity, resource.PatchRequest{Settings: settings, Controls: controls})
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}
 			if _, ok := bound["Filter"]; ok {
 				v, r, e := s.ListFiltered(ctx, pattern)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}
 			if _, ok := bound["Identity"]; ok {
 				v, r, e := s.GetByIdentity(ctx, identity)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}
 			v, r, e := s.List(ctx)
-			return contracttest.Observation{Value: v, Response: r, Err: e}
+			return testutil.Observation{Value: v, Response: r, Err: e}
 		}
 		run(t, c)
 	}
@@ -649,17 +600,17 @@ func TestUnitEducationConfigurationFiltersUseRealResponses(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "real-filter-" + tc.Name, Family: "teams_education_configuration", Scope: "service", Source: "msteams/teams_admin_api/teams_education_configuration/testdata/list.json",
-			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsEducationConfiguration", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "real-filter-" + tc.Name,
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsEducationConfiguration", 200, raw), Want: testutil.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.TeamsEducationConfigurations
 				if tc.Pattern == "" {
 					value, response, err := service.List(ctx)
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				}
 				value, response, err := service.ListFiltered(ctx, tc.Pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {

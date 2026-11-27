@@ -63,7 +63,7 @@ Actual Global reads on 2026-11-21 returned 403 with client-secret and certificat
 credentials. Successful authorization, cloud/flight availability, mutations,
 read-back/cleanup and effective playback/grants remain open. See
 [unit tests](service_test.go)
-and [lab acceptance](../../../docs/implementation/policies/call-hold-policy-lab-acceptance.md).
+and [lab acceptance](../../../docs/acceptance/call-hold-policy-lab-acceptance.md).
 
 ## Owned CRUD acceptance
 

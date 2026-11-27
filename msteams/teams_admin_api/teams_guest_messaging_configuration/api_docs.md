@@ -46,4 +46,4 @@ the tenant lock. Permanent sanitized acceptance responses provide unit decoding
 and request fixtures. These checks do not establish effective guest chat
 behavior, delegated authentication or other clouds.
 
-See [qualification](../../../docs/implementation/policies/guest-messaging-configuration-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/guest-messaging-configuration-lab-acceptance.md).

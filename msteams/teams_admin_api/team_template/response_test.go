@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -35,13 +35,13 @@ func templateResponseFixture(t *testing.T, name string) []byte {
 	return raw
 }
 
-func templateResponseWire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func templateResponseWire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	h[http.CanonicalHeaderKey("MPACmdlet")] = nil
 	if body != nil {
 		h.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: reply}}
 }
 
 func responseDefinition(t *testing.T, body bool, short, description string, channels bool) (template.Definition, json.RawMessage) {
@@ -118,8 +118,8 @@ func TestUnitTemplateCRUDUsesAcceptanceResponses(t *testing.T) {
 			definition, createWire := responseDefinition(t, body, initialShort, initialDescription, false)
 			update, updateWire := responseDefinition(t, body, updatedShort, updatedDescription, true)
 			path := "/Teams.Templates/" + url.PathEscape(receipt.Reference)
-			steps := []contracttest.Exchange{
-				{Request: contracttest.WireRequest{Method: "GET", URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: serviceDiscoveryFixture(t)}},
+			steps := []testutil.Exchange{
+				{Request: testutil.WireRequest{Method: "GET", URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: serviceDiscoveryFixture(t)}},
 				templateResponseWire("POST", "/Teams.Templates/api/TeamTemplates/v1.0/Tenant/en-US", "New-CsTeamTemplate", expectedCreateBody(t, createWire), 201, created),
 				templateResponseWire("GET", path, "Get-CsTeamTemplate", nil, 200, before),
 				templateResponseWire("PUT", path, "Update-CsTeamTemplate", updateWire, 200, updated),
@@ -128,7 +128,7 @@ func TestUnitTemplateCRUDUsesAcceptanceResponses(t *testing.T) {
 				templateResponseWire("DELETE", path, "Remove-CsTeamTemplate", nil, 204, deleted),
 				templateResponseWire("GET", path, "Get-CsTeamTemplate", nil, 404, missing),
 			}
-			passCase(t, contracttest.Case{Name: prefix + "-actual-crud", Family: "team_templates", Scope: "service", Source: "msteams/teams_admin_api/team_template/testdata/" + prefix + "_create_readback.json", Steps: steps, Want: contracttest.Expected{Status: 404, Body: missing, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, OperationIDs: []string{failureReceipt.OperationID}, Codes: []string{failureReceipt.Errors[0].Code}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			passCase(t, testutil.Case{Name: prefix + "-actual-crud", Steps: steps, Want: testutil.Expected{Status: 404, Body: missing, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, OperationIDs: []string{failureReceipt.OperationID}, Codes: []string{failureReceipt.Errors[0].Code}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.TeamTemplates
 				value, response, err := s.Create(ctx, "en-US", definition)
 				if err != nil || response == nil || response.StatusCode() != 201 || value == nil || value.ODataID == nil || *value.ODataID != receipt.Reference || !reflect.DeepEqual(value.RawFields, mustTemplateObject(t, created)) {
@@ -171,7 +171,7 @@ func TestUnitTemplateCRUDUsesAcceptanceResponses(t *testing.T) {
 				if !errors.As(err, &failure) || failure.Envelope == nil || len(failure.Envelope.Errors) != 1 || failure.Envelope.Errors[0].Code == nil || *failure.Envelope.Errors[0].Code != failureReceipt.Errors[0].Code {
 					t.Fatal("actual template absence lost its error envelope")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 		})
 	}

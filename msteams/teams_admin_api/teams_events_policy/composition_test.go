@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -51,11 +51,11 @@ func TestUnitEventsPolicyUpdatePreparationFailures(t *testing.T) {
 	)
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{compiledWire("GET", item, setCommand, nil, tc.read, tc.body)}
+			steps := []testutil.Exchange{compiledWire("GET", item, setCommand, nil, tc.read, tc.body)}
 			if tc.patch != 0 {
 				steps = append(steps, compiledWire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"Global","Description":null}`), tc.patch, ""))
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/teams_events_policy/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsEventsPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{Description: policy.Null[string]()}})
 				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
 					t.Error("failed update lost preparation state or invented acceptance")
@@ -73,7 +73,7 @@ func TestUnitEventsPolicyUpdatePreparationFailures(t *testing.T) {
 						t.Error("failure lost its HTTP status")
 					}
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}
@@ -87,9 +87,9 @@ func TestUnitEventsPolicyCompiledGrantRetainsExplicitZeroAndSignedRankRequestDen
 		if e != nil {
 			t.Fatal(e)
 		}
-		run(t, contracttest.Case{Want: contracttest.Expected{Error: auth.ErrForbidden}, Name: fmt.Sprintf("group-rank-%d", rank), Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsEventsPolicy", ParameterSet: "GrantToGroup"}}, Steps: []contracttest.Exchange{compiledWire("POST", "/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsEventsPolicy", "Grant-CsTeamsEventsPolicy", body, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Want: testutil.Expected{Error: auth.ErrForbidden}, Name: fmt.Sprintf("group-rank-%d", rank), Steps: []testutil.Exchange{compiledWire("POST", "/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsEventsPolicy", "Grant-CsTeamsEventsPolicy", body, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, r, e := sdk.TeamsAdminAPI.TeamsEventsPolicies.AssignGroup(ctx, "group/fixture", new("Fixture"), rank)
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
 	}
 }

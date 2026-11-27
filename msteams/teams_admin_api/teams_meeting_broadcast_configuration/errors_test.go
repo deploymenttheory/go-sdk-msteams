@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_configuration"
@@ -39,9 +39,9 @@ func TestUnitAuthorizationFailureRetainsRealEnvelopeWithoutReplay(t *testing.T) 
 	}
 	codes, code := envelopeCodes(t, raw)
 	url := "https://support.example.com/broadcast"
-	c := contracttest.Case{Name: "denied", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json", Steps: []contracttest.Exchange{compiledWire("PUT", selected, set, json.RawMessage(`{"Identity":"Global","SupportURL":"https://support.example.com/broadcast"}`), 403, string(raw))}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{code}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	c := testutil.Case{Name: "denied", Steps: []testutil.Exchange{compiledWire("PUT", selected, set, json.RawMessage(`{"Identity":"Global","SupportURL":"https://support.example.com/broadcast"}`), 403, string(raw))}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{code}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		r, e := sdk.TeamsAdminAPI.TeamsMeetingBroadcastConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{SupportURL: &url})
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}}
 	run(t, c)
 }
@@ -54,9 +54,9 @@ func TestUnitServiceValidationRejectsProviderWithoutNameWithoutReplay(t *testing
 	const name = "update_allow_without_provider_400.json"
 	raw := readResponseFixture(t, name)
 	codes, code := envelopeCodes(t, raw)
-	c := contracttest.Case{Name: "sdn-missing-provider", Source: "msteams/teams_admin_api/teams_meeting_broadcast_configuration/testdata/" + name, Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("PUT", selected, set, json.RawMessage(`{"Identity":"Global","AllowSdnProviderForBroadcastMeeting":true}`), 400, string(raw))}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400, Codes: codes, ServiceErrorCodes: []int{code}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	c := testutil.Case{Name: "sdn-missing-provider", Steps: []testutil.Exchange{compiledWire("PUT", selected, set, json.RawMessage(`{"Identity":"Global","AllowSdnProviderForBroadcastMeeting":true}`), 400, string(raw))}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400, Codes: codes, ServiceErrorCodes: []int{code}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		r, e := sdk.TeamsAdminAPI.TeamsMeetingBroadcastConfigurations.UpdateGlobal(ctx, resource.UpdateRequest{AllowSdnProviderForBroadcastMeeting: new(true)})
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}}
 	run(t, c)
 }

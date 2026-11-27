@@ -58,4 +58,4 @@ fresh correlation UUID; no Graph lookup or modern forest header is added.
 Synthetic application/delegated tests prove routing, not tenant authorization.
 Successful tenant CRUD, server/cloud availability, cleanup and effective display
 remain open under #114. See [unit tests](service_test.go)
-and the [lab acceptance record](../../../docs/implementation/policies/banner-text-lab-acceptance.md).
+and the [lab acceptance record](../../../docs/acceptance/banner-text-lab-acceptance.md).

@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -33,16 +33,16 @@ func TestUnitAuthorizationFailureRetainsRealEnvelopeWithoutReplay(t *testing.T) 
 	if envelope.Code != "" {
 		codes = []string{envelope.Code}
 	}
-	want := contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}}
-	run(t, contracttest.Case{Name: "denied-write", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json", Steps: []contracttest.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","Description":"x"}`), 403, string(raw))}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	want := testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}}
+	run(t, testutil.Case{Name: "denied-write", Steps: []testutil.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","Description":"x"}`), 403, string(raw))}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{ScalarSettings: resource.ScalarSettings{Description: policy.Set("x")}}})
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
-	run(t, contracttest.Case{Name: "denied-preparation", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json", Steps: []contracttest.Exchange{compiledWire("GET", selected, set, nil, 403, string(raw))}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "denied-preparation", Steps: []testutil.Exchange{compiledWire("GET", selected, set, nil, 403, string(raw))}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{Description: policy.Set("x")}})
 		if v == nil || v.PatchInvoked || v.HTTPAccepted || v.ReadResponse == nil {
 			t.Fatal("denied preparation lost its receipt or attempted a mutation")
 		}
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }

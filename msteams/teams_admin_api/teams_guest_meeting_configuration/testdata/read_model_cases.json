@@ -1,0 +1,1124 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":null}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":true}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":true}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":false}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":false}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":false}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":true}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":-1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":true}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":1.5}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":true}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":1e-400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":false}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":1e400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":true}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":\"true\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":true}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":\" False \"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":false}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":\"\\u0000true\\u0000\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":true}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowExternalParticipantGiveRequestControl\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":null}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":true}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":true,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":false}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":false,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":false,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":true,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":-1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":true,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":1.5}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":true,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":1e-400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":false,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":1e400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":true,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":\"true\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":true,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":\" False \"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":false,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":\"\\u0000true\\u0000\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":true,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowIPVideo\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":null}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":true}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":true,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":false}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":false,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":false,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":true,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":-1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":true,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":1.5}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":true,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":1e-400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":false,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":1e400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":true,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":\"true\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":true,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":\" False \"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":false,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":\"\\u0000true\\u0000\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":true,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMeetNow\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":null}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":true}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":true,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":false}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":false,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":false,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":true,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":-1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":true,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":1.5}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":true,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":1e-400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":false,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":1e400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":true,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":\"true\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":true,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":\" False \"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":false,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":\"\\u0000true\\u0000\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":true,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowMultipleScreenshare\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":null}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":true}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":true,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":false}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":false,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":false,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":true,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":-1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":true,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":1.5}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":true,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":1e-400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":false,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":1e400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":true,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":\"true\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":true,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":\" False \"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":false,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":\"\\u0000true\\u0000\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":true,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowParticipantGiveRequestControl\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":null}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":true}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":true,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":false}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":false,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":false,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":true,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":-1}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":true,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":1.5}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":true,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":1e-400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":false,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":1e400}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":true,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":\"true\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":true,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":\" False \"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":false,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":\"\\u0000true\\u0000\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":true,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"AllowTranscription\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "{\"Identity\":\"true\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "{\"Identity\":\"false\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "{\"Identity\":\"0\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "{\"Identity\":\"37\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "{\"Identity\":\"9007199254740993\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "{\"Identity\":\"1.20\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "{\"Identity\":\"1E+03\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "{\"Identity\":\"-0\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "{\"Identity\":\"\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "{\"Identity\":\"text\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"c1\"}",
+      "projected_json": "{\"Identity\":\"c1\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"c99\"}",
+      "projected_json": "{\"Identity\":\"c99\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"c0\"}",
+      "projected_json": "{\"Identity\":\"c0\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"c100\"}",
+      "projected_json": "{\"Identity\":\"c100\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"c1\\n\"}",
+      "projected_json": "{\"Identity\":\"c1\\n\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"c1\\r\\n\"}",
+      "projected_json": "{\"Identity\":\"c1\\r\\n\",\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":null}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":true}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"true\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":false}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"false\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"0\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":37}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"37\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":9007199254740993}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"9007199254740993\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":1.20}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"1.20\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":1E+03}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"1E+03\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":-0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"-0\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":\"text\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"text\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":\"c1\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"c1\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":\"c99\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"c99\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":\"c0\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"c0\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":\"c100\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"c100\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":\"c1\\n\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"c1\\n\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":\"c1\\r\\n\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":\"c1\\r\\n\",\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"LiveCaptionsEnabledType\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":null}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":null,\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":true}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"true\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":false}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"false\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"0\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":37}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"37\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":9007199254740993}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"9007199254740993\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":1.20}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"1.20\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":1E+03}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"1E+03\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":-0}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"-0\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":\"text\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"text\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":\"c1\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"c1\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":\"c99\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"c99\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":\"c0\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"c0\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":\"c100\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"c100\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":\"c1\\n\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"c1\\n\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":\"c1\\r\\n\"}",
+      "projected_json": "{\"Identity\":null,\"AllowIPVideo\":null,\"ScreenSharingMode\":\"c1\\r\\n\",\"AllowMultipleScreenshare\":null,\"AllowMeetNow\":null,\"LiveCaptionsEnabledType\":null,\"AllowTranscription\":null,\"AllowParticipantGiveRequestControl\":null,\"AllowExternalParticipantGiveRequestControl\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsGuestMeetingConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"ScreenSharingMode\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

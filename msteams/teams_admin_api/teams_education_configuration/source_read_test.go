@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_education_configuration"
@@ -25,7 +25,7 @@ func TestUnitConfigurationPinnedScalarReadVectors(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = root.Close() }()
-	raw, err := root.ReadFile("docs/implementation/policies/evidence/pol91-qualified-read-scalars.json")
+	raw, err := root.ReadFile("msteams/teams_admin_api/teams_education_configuration/testdata/read_scalar_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,13 +89,12 @@ func TestUnitConfigurationPinnedScalarReadVectors(t *testing.T) {
 func TestUnitConfigurationScalarReadUsesRootClientAndKeepsReceipt(t *testing.T) {
 	t.Parallel()
 	const body = `{"Identity":37,"ParentGuardianPreferredContactMethod":false,"EduGenerativeAIEnhancements":1.20,"UpdateParentInformation":1E+03,"future":1}`
-	run(t, contracttest.Case{
-		Name:     "source-scalar-root-read",
-		Source:   "msteams/teams_admin_api/teams_education_configuration/source_read_test.go",
-		Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsEducationConfiguration", ParameterSet: "Identity"}},
-		Steps:    []contracttest.Exchange{compiledWire("GET", collection+"/configuration/Global", "Get-CsTeamsEducationConfiguration", nil, 200, body)},
-		Want:     contracttest.Expected{Status: 200, Body: []byte(body)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{
+		Name: "source-scalar-root-read",
+
+		Steps: []testutil.Exchange{compiledWire("GET", collection+"/configuration/Global", "Get-CsTeamsEducationConfiguration", nil, 200, body)},
+		Want:  testutil.Expected{Status: 200, Body: []byte(body)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.TeamsEducationConfigurations.GetByIdentity(ctx, "Global")
 			if err != nil || value == nil || response == nil || string(response.Body()) != body || value.RawFields["future"] == nil {
 				t.Fatal("source scalar read lost its value, raw extension or receipt")
@@ -112,7 +111,7 @@ func TestUnitConfigurationScalarReadUsesRootClientAndKeepsReceipt(t *testing.T) 
 			if value.UpdateParentInformation == nil || *value.UpdateParentInformation != "1E+03" {
 				t.Fatal("typed UpdateParentInformation conversion changed")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		},
 	})
 }

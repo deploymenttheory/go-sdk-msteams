@@ -53,7 +53,7 @@ effective-assignment inference, implicit polling or job deletion is provided.
 Update/Create composition results retain preparation and HTTP acceptance on failure.
 Writes never replay automatically. Read-back, rollback, atomic/ETag guarantees and
 propagation are explicit caller concerns. The [unit tests](service_test.go)
-and [lab plan](../../../docs/implementation/policies/online-voicemail-lab-acceptance.md)
+and [lab plan](../../../docs/acceptance/online-voicemail-lab-acceptance.md)
 separate candidate request correctness from successful tenant qualification.
 
 ### Executed owned CRUD

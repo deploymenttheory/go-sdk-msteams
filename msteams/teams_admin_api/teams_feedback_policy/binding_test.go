@@ -9,7 +9,7 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
@@ -26,7 +26,6 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 				Failure *string
 
 				Output *struct {
-					Set       string `json:"parameter_set"`
 					Bound     map[string]json.RawMessage
 					Specified *bool
 					NoScope   bool `json:"no_scope_result"`
@@ -41,7 +40,6 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 				Failure *string
 
 				Output *struct {
-					Set       string `json:"parameter_set"`
 					Bound     map[string]json.RawMessage
 					Specified *bool
 					NoScope   bool `json:"no_scope_result"`
@@ -57,19 +55,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set:   "Identity",
 						Bound: map[string]json.RawMessage{},
 					},
 				},
@@ -85,19 +80,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Filter",
 						Bound: map[string]json.RawMessage{
 							"Filter": json.RawMessage("\"Fixture*\""),
 						},
@@ -115,7 +107,6 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
@@ -135,7 +126,6 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
@@ -155,19 +145,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity": json.RawMessage("\"Fixture\""),
 						},
@@ -186,7 +173,6 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
@@ -206,19 +192,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity": json.RawMessage("\"Fixture\""),
 						},
@@ -238,19 +221,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Force":    json.RawMessage("{\"IsPresent\":false}"),
 							"Identity": json.RawMessage("\"Fixture\""),
@@ -271,7 +251,6 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
@@ -292,19 +271,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Force":    json.RawMessage("{\"IsPresent\":false}"),
 							"Identity": json.RawMessage("\"Fixture\""),
@@ -324,19 +300,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":          json.RawMessage("\"Fixture\""),
 							"UserInitiatedMode": json.RawMessage("null"),
@@ -357,19 +330,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":          json.RawMessage("\"Fixture\""),
 							"UserInitiatedMode": json.RawMessage("\"\""),
@@ -390,19 +360,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":           json.RawMessage("\"Fixture\""),
 							"ReceiveSurveysMode": json.RawMessage("null"),
@@ -423,19 +390,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":           json.RawMessage("\"Fixture\""),
 							"ReceiveSurveysMode": json.RawMessage("\"\""),
@@ -456,19 +420,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowScreenshotCollection": json.RawMessage("null"),
 							"Identity":                  json.RawMessage("\"Fixture\""),
@@ -489,19 +450,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowScreenshotCollection": json.RawMessage("false"),
 							"Identity":                  json.RawMessage("\"Fixture\""),
@@ -522,19 +480,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowEmailCollection": json.RawMessage("null"),
 							"Identity":             json.RawMessage("\"Fixture\""),
@@ -555,19 +510,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowEmailCollection": json.RawMessage("false"),
 							"Identity":             json.RawMessage("\"Fixture\""),
@@ -588,19 +540,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowLogCollection": json.RawMessage("null"),
 							"Identity":           json.RawMessage("\"Fixture\""),
@@ -621,19 +570,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowLogCollection": json.RawMessage("false"),
 							"Identity":           json.RawMessage("\"Fixture\""),
@@ -654,19 +600,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"EnableFeatureSuggestions": json.RawMessage("null"),
 							"Identity":                 json.RawMessage("\"Fixture\""),
@@ -687,19 +630,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"EnableFeatureSuggestions": json.RawMessage("false"),
 							"Identity":                 json.RawMessage("\"Fixture\""),
@@ -725,19 +665,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowEmailCollection":      json.RawMessage("true"),
 							"AllowLogCollection":        json.RawMessage("true"),
@@ -763,19 +700,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":          json.RawMessage("\"Fixture\""),
 							"UserInitiatedMode": json.RawMessage("null"),
@@ -796,19 +730,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":          json.RawMessage("\"Fixture\""),
 							"UserInitiatedMode": json.RawMessage("\"\""),
@@ -829,19 +760,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":           json.RawMessage("\"Fixture\""),
 							"ReceiveSurveysMode": json.RawMessage("null"),
@@ -862,19 +790,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"Identity":           json.RawMessage("\"Fixture\""),
 							"ReceiveSurveysMode": json.RawMessage("\"\""),
@@ -895,19 +820,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowScreenshotCollection": json.RawMessage("null"),
 							"Identity":                  json.RawMessage("\"Fixture\""),
@@ -928,19 +850,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowScreenshotCollection": json.RawMessage("false"),
 							"Identity":                  json.RawMessage("\"Fixture\""),
@@ -961,19 +880,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowEmailCollection": json.RawMessage("null"),
 							"Identity":             json.RawMessage("\"Fixture\""),
@@ -994,19 +910,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowEmailCollection": json.RawMessage("false"),
 							"Identity":             json.RawMessage("\"Fixture\""),
@@ -1027,19 +940,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowLogCollection": json.RawMessage("null"),
 							"Identity":           json.RawMessage("\"Fixture\""),
@@ -1060,19 +970,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowLogCollection": json.RawMessage("false"),
 							"Identity":           json.RawMessage("\"Fixture\""),
@@ -1093,19 +1000,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"EnableFeatureSuggestions": json.RawMessage("null"),
 							"Identity":                 json.RawMessage("\"Fixture\""),
@@ -1126,19 +1030,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"EnableFeatureSuggestions": json.RawMessage("false"),
 							"Identity":                 json.RawMessage("\"Fixture\""),
@@ -1164,19 +1065,16 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 					Failure *string
 
 					Output *struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}
 				}{
 					Output: &struct {
-						Set       string `json:"parameter_set"`
 						Bound     map[string]json.RawMessage
 						Specified *bool
 						NoScope   bool `json:"no_scope_result"`
 					}{
-						Set: "Identity",
 						Bound: map[string]json.RawMessage{
 							"AllowEmailCollection":      json.RawMessage("true"),
 							"AllowLogCollection":        json.RawMessage("true"),
@@ -1195,13 +1093,12 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 
 	for _, f := range fixture.Cases {
 
-		bound, set := f.Arguments, "Identity"
+		bound := f.Arguments
 		if f.Observed.Output != nil {
 			bound = f.Observed.Output.Bound
-			set = f.Observed.Output.Set
-		} else if _, ok := bound["Filter"]; ok {
-			set = "Filter"
+
 		}
+
 		encoded, e := json.Marshal(bound)
 		if e != nil {
 			t.Fatal(e)
@@ -1225,7 +1122,7 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 			}
 			controls.Force = new(v.IsPresent)
 		}
-		c := contracttest.Case{Name: strings.ToLower(f.Command + "-" + f.Name), Source: bindingSource, Mappings: []contracttest.Mapping{{Command: f.Command, ParameterSet: set}}}
+		c := testutil.Case{Name: strings.ToLower(f.Command + "-" + f.Name)}
 		invalid := f.Observed.Failure != nil || f.Command == setCommand && (f.Observed.Output == nil || f.Observed.Output.Specified == nil || !*f.Observed.Output.Specified)
 		if invalid {
 			c.Want.Error = resource.ErrInput
@@ -1266,36 +1163,36 @@ func TestUnitFeedbackPolicyRequestdCompiledBindings(t *testing.T) {
 			default:
 				t.Fatal("unknown source command")
 			}
-			c.Steps = []contracttest.Exchange{compiledWire(method, path, f.Command, body, status, reply)}
+			c.Steps = []testutil.Exchange{compiledWire(method, path, f.Command, body, status, reply)}
 		}
 		if len(c.Steps) != 0 {
-			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+			c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 		}
-		c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TeamsFeedbackPolicies
 			switch f.Command {
 			case getCommand:
 				if _, ok := bound["Filter"]; ok {
 					v, r, e := s.ListFiltered(ctx, pattern)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				if _, ok := bound["Identity"]; ok {
 					v, r, e := s.GetByIdentity(ctx, identity)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				v, r, e := s.List(ctx)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			case "New-CsTeamsFeedbackPolicy":
 				v, r, e := s.CreateByIdentity(ctx, identity, resource.CreateRequest{Settings: input, Controls: controls})
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			case setCommand:
 				v, r, e := s.PatchByIdentity(ctx, identity, resource.PatchRequest{Settings: input, Controls: controls})
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			case "Remove-CsTeamsFeedbackPolicy":
 				v, r, e := s.DeleteByIdentity(ctx, identity, controls)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}
-			return contracttest.Observation{Err: errors.New("unknown source command")}
+			return testutil.Observation{Err: errors.New("unknown source command")}
 		}
 		run(t, c)
 	}

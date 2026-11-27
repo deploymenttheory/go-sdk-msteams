@@ -7,21 +7,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_packages"
 )
 
-// These are primary-authored offline responses, not tenant captures. Pinned
-// private.dll SHA256 8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6:
-// Generated.Models.FormattedPackage::ToJson IL67/130/193/241/304;
-// PackageServiceModelsPostPackageResponse::ToJson IL52/186/312/438/491;
-// BatchPostPackageResponse IL138/191/254, CustomPackageResponse IL64.
-// Exact command callback statuses and nested model provenance are recorded in
-// docs/implementation/policies/pol90-current-test-audit.md. Raw future fields
-// and missing/null distinctions are explicitly SDK extensions to those models.
+// These authored HTTP fixtures exercise request and result behavior.
+// Captured service responses are loaded separately from testdata.
 const authoredPackage = `{"Name":"Fixture/Package:@","Description":"","PackageType":"Fixture","RecommendationType":null,"Policies":{"TeamsMeetingPolicy":"FixtureMeeting"},"Future":false}`
 
 func verifyAuthoredPackage(t *testing.T, value *resource.Package) {
@@ -60,12 +54,12 @@ func TestUnitPackageAuthoredTypedResponses(t *testing.T) {
 			default:
 				t.Fatal("request vector lacks an individually reviewed response contract")
 			}
-			mappings := mapping(vector.Name)
-			want := contracttest.Expected{Status: vector.Status, Body: []byte(vector.Reply)}
+			requestCommand := commandHeader(vector.Name)
+			want := testutil.Expected{Status: vector.Status, Body: []byte(vector.Reply)}
 			if kind != "delete" {
 				want.JSON = json.RawMessage(vector.Reply)
 			}
-			r, err := contracttest.Run(t.Context(), contracttest.Case{Name: "typed-" + vector.Name, Family: "policy_packages", Scope: "service", Mode: auth.Delegated, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mappings, Steps: []contracttest.Exchange{discovery(t), wire(vector, mappings[0].Command)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			r, err := testutil.Run(t.Context(), testutil.Case{Name: "typed-" + vector.Name, Mode: auth.Delegated, Steps: []testutil.Exchange{discovery(t), wire(vector, requestCommand)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				observed := invoke(vector.Name, ctx, sdk)
 				if observed.Err != nil {
 					return observed
@@ -133,8 +127,8 @@ func TestUnitPackageAuthoredDomainFailureAndMalformedReceipt(t *testing.T) {
 				}
 			}
 			vector.Status, vector.Reply = tc.status, tc.reply
-			mappings := mapping(tc.request)
-			c := contracttest.Case{Name: tc.name, Family: "policy_packages", Scope: "service", Mode: auth.Delegated, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mappings, Steps: []contracttest.Exchange{discovery(t), wire(vector, mappings[0].Command)}, Want: contracttest.Expected{Status: tc.status, Body: []byte(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			requestCommand := commandHeader(tc.request)
+			c := testutil.Case{Name: tc.name, Mode: auth.Delegated, Steps: []testutil.Exchange{discovery(t), wire(vector, requestCommand)}, Want: testutil.Expected{Status: tc.status, Body: []byte(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				observed := invoke(tc.request, ctx, sdk)
 				if tc.decode {
 					if !errors.Is(observed.Err, client.ErrDecode) {
@@ -161,7 +155,7 @@ func TestUnitPackageAuthoredDomainFailureAndMalformedReceipt(t *testing.T) {
 				observed.Err = nil
 				return observed
 			}}
-			r, err := contracttest.Run(t.Context(), c)
+			r, err := testutil.Run(t.Context(), c)
 			if err != nil || !r.Passed() {
 				t.Fatalf("authored package failure differs: %v %+v", err, r.Differences())
 			}
@@ -181,27 +175,27 @@ func TestUnitPackageInputObjectAuthoredSuccessfulGetAndRemove(t *testing.T) {
 	}{{"get", false}, {"remove", true}} {
 		t.Run(tc.name, func(t *testing.T) {
 			vector := requestCase{Name: "input-object-" + tc.name, Method: "GET", URL: origin + "/Teams.VerticalPackaging/package/Fixture%2FPackage%3A%40", Status: 200, Reply: authoredPackage}
-			command, set := "Get-CsPolicyPackage", "GetViaIdentity"
-			want := contracttest.Expected{JSON: json.RawMessage(authoredPackage), Body: []byte(authoredPackage)}
+			command := "Get-CsPolicyPackage"
+			want := testutil.Expected{JSON: json.RawMessage(authoredPackage), Body: []byte(authoredPackage)}
 			if tc.remove {
 				vector.Method, vector.URL, vector.Status, vector.Reply = "DELETE", origin+"/Teams.VerticalPackaging/package/custompackage/Fixture%2FPackage%3A%40", 204, ""
-				command, set = "Remove-CsCustomPolicyPackage", "RemoveViaIdentity"
-				want = contracttest.Expected{Body: []byte{}}
+				command = "Remove-CsCustomPolicyPackage"
+				want = testutil.Expected{Body: []byte{}}
 			}
-			run(t, contracttest.Case{Name: vector.Name, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), wire(vector, command)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: vector.Name, Steps: []testutil.Exchange{discovery(t), wire(vector, command)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				input := resource.Identity{PackageName: "Fixture/Package:@"}
 				if tc.remove {
 					value, response, err := sdk.TeamsAdminAPI.PolicyPackages.DeleteByIdentity(ctx, input)
 					if err == nil && (value == nil || !value.HTTPAccepted || value.ResponseMessage != nil || value.RawFields != nil) {
 						t.Fatal("InputObject removal lost its empty receipt or fabricated business data")
 					}
-					return contracttest.Observation{Response: response, Err: err}
+					return testutil.Observation{Response: response, Err: err}
 				}
 				value, response, err := sdk.TeamsAdminAPI.PolicyPackages.GetByIdentity(ctx, input)
 				if err == nil {
 					verifyAuthoredPackage(t, value)
 				}
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			}})
 		})
 	}
@@ -224,7 +218,7 @@ func TestUnitPackageBatchUnusableHandlesDoNotInventOperationID(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			vector := requestCase{Method: "POST", URL: origin + "/Teams.VerticalPackaging/package/operation/batchpackage", Body: json.RawMessage(`{"PackageType":"FixturePackage","UserIds":["fixture/a","fixture/a","fixture/b"]}`), Status: 202, Reply: tc.reply}
-			run(t, contracttest.Case{Name: "unusable-handle-" + tc.name, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mapping("batch-grant"), Steps: []contracttest.Exchange{discovery(t), wire(vector, "New-CsBatchPolicyPackageAssignmentOperation")}, Want: contracttest.Expected{JSON: json.RawMessage(tc.reply), Body: []byte(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "unusable-handle-" + tc.name, Steps: []testutil.Exchange{discovery(t), wire(vector, "New-CsBatchPolicyPackageAssignmentOperation")}, Want: testutil.Expected{JSON: json.RawMessage(tc.reply), Body: []byte(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.PolicyPackages.SubmitBatch(ctx, userInput())
 				if err == nil {
 					if value == nil || !value.HTTPAccepted || (tc.id == nil && value.OperationID != nil) || (tc.id != nil && (value.OperationID == nil || *value.OperationID != *tc.id)) {
@@ -235,7 +229,7 @@ func TestUnitPackageBatchUnusableHandlesDoNotInventOperationID(t *testing.T) {
 						t.Fatal("optional-handle raw presence was lost")
 					}
 				}
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			}})
 		})
 	}
@@ -256,8 +250,8 @@ func TestUnitPackageReadDecodeFailureRetainsHTTPResponse(t *testing.T) {
 			vector.Reply = `{"value":[]}`
 		}
 		t.Run(vector.Name, func(t *testing.T) {
-			mappings := mapping(vector.Name)
-			run(t, contracttest.Case{Name: "malformed-read-" + vector.Name, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mode: auth.Delegated, Mappings: mappings, Steps: []contracttest.Exchange{discovery(t), wire(vector, mappings[0].Command)}, Want: contracttest.Expected{Body: []byte(vector.Reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			requestCommand := commandHeader(vector.Name)
+			run(t, testutil.Case{Name: "malformed-read-" + vector.Name, Mode: auth.Delegated, Steps: []testutil.Exchange{discovery(t), wire(vector, requestCommand)}, Want: testutil.Expected{Body: []byte(vector.Reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				observed := invoke(vector.Name, ctx, sdk)
 				if !errors.Is(observed.Err, client.ErrDecode) || observed.Response == nil || observed.Response.StatusCode() != 200 || string(observed.Response.Body()) != vector.Reply {
 					t.Fatal("package decode failure lost its accepted response or error")
@@ -301,15 +295,14 @@ func TestUnitPackagePublicPolicyListBuilderAndTypedEmptyExtension(t *testing.T) 
 				t.Fatal("public PolicyList builder lost the source pair")
 			}
 			policyJSON := `[{"PolicyType":"TeamsMeetingPolicy","PolicyName":"FixtureMeeting"}]`
-			mappings := mapping(name)
 			if emptyDTO {
-				policies, policyJSON, mappings = []resource.PolicyPair{}, `[]`, nil
+				policies, policyJSON = []resource.PolicyPair{}, `[]`
 				name += "-native-empty-dto"
 			}
 			f := requestCase{Method: method, URL: origin + "/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage(`{"PackageName":"FixturePackage","PolicyList":` + policyJSON + `}`), Status: 403}
-			run(t, contracttest.Case{Name: name, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mappings, Steps: []contracttest.Exchange{discovery(t), wire(f, command)}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire(f, command)}, Want: testutil.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				input := resource.CustomPackageRequest{Name: new("FixturePackage"), Policies: policies}
-				var observed contracttest.Observation
+				var observed testutil.Observation
 				if update {
 					observed.Value, observed.Response, observed.Err = sdk.TeamsAdminAPI.PolicyPackages.Update(ctx, input)
 				} else {
@@ -327,9 +320,9 @@ func TestUnitPackagePublicPolicyListBuilderAndTypedEmptyExtension(t *testing.T) 
 func TestUnitPackageGroupBodyPreservesBoundWhitespace(t *testing.T) {
 	t.Parallel()
 	f := requestCase{Method: "POST", URL: origin + "/Teams.VerticalPackaging/package/group", Body: json.RawMessage(`{"GroupId":" ","PolicyRankings":[]}`), Status: 403}
-	run(t, contracttest.Case{Name: "group-bound-whitespace", Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mapping("group-assign"), Steps: []contracttest.Exchange{discovery(t), wire(f, "Grant-CsGroupPolicyPackageAssignment")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "group-bound-whitespace", Steps: []testutil.Exchange{discovery(t), wire(f, "Grant-CsGroupPolicyPackageAssignment")}, Want: testutil.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, response, err := sdk.TeamsAdminAPI.PolicyPackages.AssignGroup(ctx, resource.GroupAssignmentRequest{GroupID: " "})
-		return contracttest.Observation{Value: value, Response: response, Err: err}
+		return testutil.Observation{Value: value, Response: response, Err: err}
 	}})
 }
 
@@ -344,10 +337,10 @@ func TestUnitPackageCustomBodyNameBinding(t *testing.T) {
 			name, method, command = "update", "PUT", "Update-CsCustomPolicyPackage"
 		}
 		for _, missing := range []*string{nil, new("")} {
-			run(t, contracttest.Case{Name: name + "-missing-body-name", Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mapping(name), Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: name + "-missing-body-name", Want: testutil.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				input := customInput()
 				input.Name = missing
-				var observed contracttest.Observation
+				var observed testutil.Observation
 				if update {
 					observed.Value, observed.Response, observed.Err = sdk.TeamsAdminAPI.PolicyPackages.Update(ctx, input)
 				} else {
@@ -357,10 +350,10 @@ func TestUnitPackageCustomBodyNameBinding(t *testing.T) {
 			}})
 		}
 		f := requestCase{Method: method, URL: origin + "/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage(`{"PackageName":" ","PolicyList":[{"PolicyType":"TeamsMeetingPolicy","PolicyName":"FixtureMeeting"}]}`), Status: 403}
-		run(t, contracttest.Case{Name: name + "-bound-body-whitespace", Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mapping(name), Steps: []contracttest.Exchange{discovery(t), wire(f, command)}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name + "-bound-body-whitespace", Steps: []testutil.Exchange{discovery(t), wire(f, command)}, Want: testutil.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			input := customInput()
 			input.Name, input.Description = new(" "), nil
-			var observed contracttest.Observation
+			var observed testutil.Observation
 			if update {
 				observed.Value, observed.Response, observed.Err = sdk.TeamsAdminAPI.PolicyPackages.Update(ctx, input)
 			} else {

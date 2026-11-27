@@ -44,14 +44,14 @@ identity are acquired.
 The app-only dedicated lab historically returned 403 for both operations; the
 2026-11-23 irreversible-create authorization is preserved. Denials and authored
 array replies do not qualify successful creation, token usability, ownership or
-persistence. See [primary/source evidence](../../../docs/implementation/ext/cloud-call-data-contract-notes.md).
+persistence. See [unit tests](service_test.go).
 
 
 The selected Modern helpers use `X-MS-CmdletName` values
 `Get-CsCloudCallDataConnectionModern_Get` and
 `New-CsCloudCallDataConnectionModern_New`. The native resource now follows that
 source metadata instead of the earlier public-name convention. The bounded
-[handoff proof](../../../docs/implementation/ext/evidence/cloud-call-data-header-handoff.json)
+[unit tests](service_test.go)
 independently traces Modern command resolution, default parameters, Sync/async
 processors, helper invocation properties and the shared header writer. There is
 no default hidden invocation override in that path. This does not prove the

@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -59,46 +59,46 @@ func TestUnitOCEHeadersShareOneCorrelationPerOperationWithoutDiscovery(t *testin
 
 func TestUnitOCEContextValidationPreventsCredentialForwarding(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "oce-context-before-tokens", Source: oceSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "oce-context-before-tokens", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.PolicyAssignments
 		for _, input := range []resource.OCEContext{{}, {TenantID: "fixture"}, {TenantID: oceTenant, Environment: "unknown"}} {
 			if _, _, e := s.ListOCEGroups(ctx, input); !errors.Is(e, resource.ErrInput) {
-				return contracttest.Observation{Err: errors.New("invalid OCE context accepted")}
+				return testutil.Observation{Err: errors.New("invalid OCE context accepted")}
 			}
 		}
 		if _, _, e := s.ListOCEGroups(ctx, resource.OCEContext{TenantID: oceTenant, Environment: resource.OCEDOD}); !errors.Is(e, client.ErrDestination) {
-			return contracttest.Observation{Err: errors.New("OCE operation changed the configured cloud")}
+			return testutil.Observation{Err: errors.New("OCE operation changed the configured cloud")}
 		}
 		input := resource.OCEContext{TenantID: oceTenant}
 		if _, _, e := s.GetOCEBatchStatus(ctx, input, "not-a-guid", nil); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("invalid regional operation ID accepted")}
+			return testutil.Observation{Err: errors.New("invalid regional operation ID accepted")}
 		}
 		if _, _, e := s.GetOCEBatchStatus(ctx, input, oceOperation, new(resource.Region("unknown"))); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("invalid explicit region accepted")}
+			return testutil.Observation{Err: errors.New("invalid explicit region accepted")}
 		}
 		if _, _, e := s.RefreshOCEGroupUsers(ctx, input, oceGroup, resource.RegionNOAM, resource.OCERefreshOptions{UserID: new("invalid")}); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("invalid refresh user accepted")}
+			return testutil.Observation{Err: errors.New("invalid refresh user accepted")}
 		}
 		if _, _, e := s.ReprocessOCEGroupAssignment(ctx, input, oceGroup, "..", resource.RegionNOAM); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("unsafe OCE policy segment accepted")}
+			return testutil.Observation{Err: errors.New("unsafe OCE policy segment accepted")}
 		}
 		graph, e := client.NewScope(client.Graph, sdk.TeamsAdminAPI.Scope().Session())
 		if e != nil {
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}
 		if _, _, e := resource.NewService(graph).ListOCEGroups(ctx, input); !errors.Is(e, client.ErrDestination) {
-			return contracttest.Observation{Err: errors.New("OCE wrong backend accepted")}
+			return testutil.Observation{Err: errors.New("OCE wrong backend accepted")}
 		}
 		for _, missing := range []*resource.Service{nil, {}, resource.NewService(nil)} {
 			if _, _, e := missing.ListOCEGroups(ctx, input); !errors.Is(e, client.ErrClosed) {
-				return contracttest.Observation{Err: errors.New("missing OCE service accepted")}
+				return testutil.Observation{Err: errors.New("missing OCE service accepted")}
 			}
 		}
 		canceled, cancel := context.WithCancel(ctx)
 		cancel()
 		if _, _, e := s.ReprocessOCEBatch(canceled, input, oceOperation, resource.RegionNOAM); !errors.Is(e, context.Canceled) {
-			return contracttest.Observation{Err: errors.New("OCE cancellation lost")}
+			return testutil.Observation{Err: errors.New("OCE cancellation lost")}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

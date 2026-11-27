@@ -69,7 +69,7 @@ Application/delegated synthetic fixtures establish routing, not successful tenan
 RBAC, migration/feature availability or cloud support. Full shell/Newtonsoft
 coercion, writes/read-back/cleanup and effective access remain unqualified under
 #104. See [unit tests](service_test.go)
-and the [lab plan](../../../docs/implementation/policies/teams-app-permission-policy-lab-acceptance.md).
+and the [lab plan](../../../docs/acceptance/teams-app-permission-policy-lab-acceptance.md).
 
 ### Executed owned policy CRUD
 

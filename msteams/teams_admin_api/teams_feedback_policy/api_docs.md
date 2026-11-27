@@ -59,7 +59,7 @@ omitted required helper arguments fail at the source binding boundary and are
 not exposed as native operations. Mutations never replay automatically.
 
 See [unit tests](service_test.go)
-and [lab acceptance](../../../docs/implementation/policies/feedback-policy-lab-acceptance.md).
+and [lab acceptance](../../../docs/acceptance/feedback-policy-lab-acceptance.md).
 All five commands/eight sets have native mappings. Issue #119 remains open for
 full command and successful tenant qualification.
 

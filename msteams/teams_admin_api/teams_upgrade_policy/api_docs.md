@@ -28,4 +28,4 @@ wire tests cover discovery, headers, escaping, Force, signed rank and failure
 receipts; grant persistence remains unqualified. There are no public New/Set/Remove
 exports for this policy in the baseline. The lab uses its existing Teams
 Administrator application; delegated flows and other clouds remain unqualified.
-See `docs/implementation/policies/upgrade-contract-notes.md` for source evidence.
+See the [testing guide](../../../docs/guides/testing.md) for source evidence.

@@ -916,7 +916,7 @@ func TestAccRead(t *testing.T) {
             'region': {'package': lab + 'region', 'steps': [{'id': 'reads', 'tests': ['TestAccRegion']}]}}}
         base = json.loads(json.dumps(fixture))
         changed = lambda *files, base=base, references=None: ci.changed_services(fixture, list(files), base, references)
-        self.assertEqual(changed('docs/x.md', 'tools/acceptance/ci.py', 'contracts/coverage/8.1.0.json',
+        self.assertEqual(changed('docs/x.md', 'tools/acceptance/ci.py', 'docs/guides/testing.md',
                                  'msteams/teams_admin_api/services.go', 'tests/integration/lab/recovery/recovery_test.go',
                                  'msteams/auth/scoped_test.go', '.github/workflows/tenant-acceptance.yml'), [])
         self.assertEqual(changed('tests/integration/lab/schedules/schedules_test.go'), ['schedules'])

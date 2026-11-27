@@ -53,7 +53,7 @@ _, _, err := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.Upda
 )
 ```
 
-See [qualification](../../../docs/implementation/policies/first-party-meeting-template-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/first-party-meeting-template-lab-acceptance.md).
 
 Received JSON uses the own pinned DTO scalar profile: numeric/Boolean string
 values and nullable Boolean conversions are accepted where the model does,

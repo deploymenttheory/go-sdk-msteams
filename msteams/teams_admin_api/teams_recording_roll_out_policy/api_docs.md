@@ -40,4 +40,4 @@ flows and other clouds remain separately unqualified. The pinned module/source
 and actual API results are retained as the baseline contract; a current command
 reference URL redirects to the general module index.
 
-See [qualification](../../../docs/implementation/policies/personal-recording-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/personal-recording-lab-acceptance.md).

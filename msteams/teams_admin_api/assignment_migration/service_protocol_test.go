@@ -6,19 +6,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/assignment_migration"
 )
 
-// Authored offline vectors, not captured service replies. Pinned Core.dll
-// 68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49:
-// Custom.GPA Get status d__6 MoveNext IL336/458 deserialize List<Job>/Job;
-// Start migration d__22 IL277/389 and Clear d__22 IL338 deserialize Job.
-// Property/JsonProperty metadata supplies the shapes below. Future fields and
-// nullable presence are explicit SDK preservation extensions, not CLR defaults.
-// Full owning types and reproduction: pol90-current-test-audit.md source audit.
+// These authored HTTP fixtures exercise request and result behavior.
+// Captured service responses are loaded separately from testdata.
 const authoredJob = `{"MigrationEventId":"00000000-0000-4000-8000-000000000002","TenantId":"00000000-0000-4000-8000-000000000003","GroupId":"00000000-0000-4000-8000-000000000001","GroupName":"Fixture","PolicyType":"FixturePolicy","PolicyInstance":"Fixture","State":"PopulationInProgress","StartTime":"2026-01-01T12:00:00Z","DirectAssignmentsProcessed":0,"Future":false}`
 
 func verifyAuthoredJob(t *testing.T, job *resource.Job) {
@@ -46,7 +41,7 @@ func TestUnitGPAAuthoredTypedResponses(t *testing.T) {
 		{"clear", "clear", "POST", "directAssignmentsMigration/cleanup?allowNonEmptyGroup=False", authoredJob, json.RawMessage(body)},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			r, err := contracttest.Run(t.Context(), contracttest.Case{Name: "typed-" + tc.name, Family: "assignment_migration", Scope: "service", Source: "msteams/teams_admin_api/assignment_migration/service_protocol_test.go", Mappings: mapping(tc.operation), Steps: []contracttest.Exchange{wire(tc.operation, tc.method, tc.suffix, tc.body, 200, tc.reply)}, Want: contracttest.Expected{Status: 200, Body: []byte(tc.reply), JSON: json.RawMessage(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			r, err := testutil.Run(t.Context(), testutil.Case{Name: "typed-" + tc.name, Steps: []testutil.Exchange{wire(tc.operation, tc.method, tc.suffix, tc.body, 200, tc.reply)}, Want: testutil.Expected{Status: 200, Body: []byte(tc.reply), JSON: json.RawMessage(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				observed := invoke(ctx, sdk, tc.operation, false)
 				if observed.Err != nil {
 					return observed
@@ -101,7 +96,7 @@ func TestUnitGPAAuthoredMalformedSuccessRetainsResponse(t *testing.T) {
 		{"invalid-state", "read", "directAssignmentsMigration/fixture-job", `{"State":{}}`},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			r, err := contracttest.Run(t.Context(), contracttest.Case{Name: tc.name, Family: "assignment_migration", Scope: "service", Source: "msteams/teams_admin_api/assignment_migration/service_protocol_test.go", Mappings: mapping(tc.operation), Steps: []contracttest.Exchange{wire(tc.operation, "GET", tc.suffix, nil, 200, tc.reply)}, Want: contracttest.Expected{Status: 200, Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			r, err := testutil.Run(t.Context(), testutil.Case{Name: tc.name, Steps: []testutil.Exchange{wire(tc.operation, "GET", tc.suffix, nil, 200, tc.reply)}, Want: testutil.Expected{Status: 200, Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return invoke(ctx, sdk, tc.operation, false)
 			}})
 			if err != nil || !r.Passed() {
@@ -137,13 +132,13 @@ func TestUnitGPASubmissionPreservesBoundWhitespaceBodyStrings(t *testing.T) {
 				if op == "clear" {
 					suffix = "directAssignmentsMigration/cleanup?allowNonEmptyGroup=False"
 				}
-				run(t, contracttest.Case{Name: "whitespace-" + op + "-" + field, Source: "msteams/teams_admin_api/assignment_migration/service_protocol_test.go", Mappings: mapping(op), Steps: []contracttest.Exchange{wire(op, "POST", suffix, expected, 403, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: "whitespace-" + op + "-" + field, Steps: []testutil.Exchange{wire(op, "POST", suffix, expected, 403, "")}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					if op == "clear" {
 						v, r, e := sdk.TeamsAdminAPI.AssignmentMigrations.ClearDirectAssignments(ctx, input)
-						return contracttest.Observation{Value: v, Response: r, Err: e}
+						return testutil.Observation{Value: v, Response: r, Err: e}
 					}
 					v, r, e := sdk.TeamsAdminAPI.AssignmentMigrations.Create(ctx, input)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}})
 			})
 		}

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -63,38 +63,38 @@ func TestUnitBrandingTypedProviderRequests(t *testing.T) {
 	t.Parallel()
 
 	for _, f := range requestInputs(t) {
-		set := "Identity"
+
 		switch f.Operation {
 		case "user":
-			set = "GrantToUser"
+
 		case "tenant":
-			set = "GrantToTenant"
+
 		case "group":
-			set = "GrantToGroup"
+
 		}
 		var input json.RawMessage
 		if f.Request.Body != "" {
 			input = json.RawMessage(f.Request.Body)
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: f.Request.CmdletName, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(f.Request.Method, strings.TrimPrefix(f.Request.Url, origin), f.Request.CmdletName, input, f.Status, f.Response)}}
+			c := testutil.Case{Name: f.Name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{wire(f.Request.Method, strings.TrimPrefix(f.Request.Url, origin), f.Request.CmdletName, input, f.Status, f.Response)}}
 			// These retained vectors prove rejected request bytes, not decoding.
 			if f.Status != 400 || f.Response != "" {
 				t.Fatal("rejected-wire vector unexpectedly contains a response contract")
 			}
-			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+			c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.MeetingBrandingPolicies
 				switch f.Operation {
 				case "list":
 					v, r, e := s.List(ctx)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "create":
 					v, r, e := s.Create(ctx, resource.CreateRequest{Identity: scoped, Settings: settings(t, f.Nested)})
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "patch":
 					v, r, e := s.PatchByIdentity(ctx, scoped, resource.PatchRequest{Settings: settings(t, f.Nested), BodyIdentity: policy.Set("read-model-identity")})
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "delete":
 					controls := policy.Controls{}
 					if f.Force {
@@ -102,20 +102,20 @@ func TestUnitBrandingTypedProviderRequests(t *testing.T) {
 						controls.Force = &no
 					}
 					r, e := s.DeleteByIdentity(ctx, scoped, controls)
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				case "user":
 					v, r, e := s.AssignUser(ctx, "user/fixture", nil)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "tenant":
 					empty := ""
 					v, r, e := s.AssignTenantDefault(ctx, &empty, false)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "group":
 					v, r, e := s.AssignGroup(ctx, "group/fixture", nil, -1)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				default:
 					v, r, e := s.GetByIdentity(ctx, scoped)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 			}
 			run(t, c)

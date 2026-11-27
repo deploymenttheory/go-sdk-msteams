@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -65,7 +65,7 @@ func TestUnitConfigurationOwnCompiledReadVectors(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = root.Close() }()
-	raw, err := root.ReadFile("docs/implementation/policies/evidence/pol91-last-compiled-read.json")
+	raw, err := root.ReadFile("msteams/teams_admin_api/teams_meeting_configuration/testdata/read_model_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -122,7 +122,7 @@ func TestUnitConfigurationOwnCompiledReadVectors(t *testing.T) {
 func TestUnitConfigurationCoercedReadUsesRootClient(t *testing.T) {
 	t.Parallel()
 	const body = `{"Identity":false,"ClientAudioPort":1.5,"EnableQoS":"true","LogoURL":true,"PublishedEntraAuthenticationContexts":[{"Id":"c1","PublishedName":37,"Published":"True","Future":1},null],"publishedentraauthenticationcontexts":[{}],"FutureRoot":1}`
-	run(t, contracttest.Case{Name: "own-coerced-root-read", Source: "msteams/teams_admin_api/teams_meeting_configuration/source_read_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsMeetingConfiguration", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection+"/configuration/Global", "Get-CsTeamsMeetingConfiguration", nil, 200, body)}, Want: contracttest.Expected{Status: 200, Body: []byte(body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "own-coerced-root-read", Steps: []testutil.Exchange{compiledWire("GET", collection+"/configuration/Global", "Get-CsTeamsMeetingConfiguration", nil, 200, body)}, Want: testutil.Expected{Status: 200, Body: []byte(body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, response, err := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.GetByIdentity(ctx, "Global")
 		if err != nil || value == nil || response == nil || !bytes.Equal(response.Body(), []byte(body)) || !bytes.Equal(value.RawJSON, []byte(body)) {
 			t.Fatal("root read lost its model, receipt or raw snapshot")
@@ -134,7 +134,7 @@ func TestUnitConfigurationCoercedReadUsesRootClient(t *testing.T) {
 		if item == nil || item.ID == nil || *item.ID != "c1" || item.PublishedName == nil || *item.PublishedName != "37" || item.Published == nil || !*item.Published || !bytes.Contains(item.RawJSON, []byte(`"Future":1`)) {
 			t.Fatal("context read lost typed and raw distinction")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }
 
@@ -145,12 +145,12 @@ func TestUnitMeetingContextSetterFailureKeepsPreparationReceiptWithoutPatch(t *t
 		{"invalid-first-alias", `{"PublishedEntraAuthenticationContexts":[{"Id":"invalid","id":"c1"}]}`},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "context-setter-" + tc.name, Source: "msteams/teams_admin_api/teams_meeting_configuration/source_read_test.go", Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", selected, set, nil, 200, tc.body)}, Want: contracttest.Expected{Status: 200, Body: []byte(tc.body), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "context-setter-" + tc.name, Steps: []testutil.Exchange{compiledWire("GET", selected, set, nil, 200, tc.body)}, Want: testutil.Expected{Status: 200, Body: []byte(tc.body), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				result, response, err := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{DisableAnonymousJoin: policy.Set(false)}})
 				if !errors.Is(err, client.ErrDecode) || response == nil || !bytes.Equal(response.Body(), []byte(tc.body)) || result == nil || result.Before != nil || result.ReadResponse != response || result.PatchInvoked || result.HTTPAccepted || result.After != nil {
 					t.Fatal("source setter failure lost receipt or sent a mutation")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 		})
 	}

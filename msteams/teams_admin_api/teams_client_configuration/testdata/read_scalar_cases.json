@@ -1,0 +1,2396 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowBox\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowDropBox",
+      "kind": "boolean",
+      "input_json": "{\"AllowDropBox\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEgnyte",
+      "kind": "boolean",
+      "input_json": "{\"AllowEgnyte\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowEmailIntoChannel",
+      "kind": "boolean",
+      "input_json": "{\"AllowEmailIntoChannel\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGoogleDrive",
+      "kind": "boolean",
+      "input_json": "{\"AllowGoogleDrive\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowGuestUser",
+      "kind": "boolean",
+      "input_json": "{\"AllowGuestUser\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowOrganizationTab",
+      "kind": "boolean",
+      "input_json": "{\"AllowOrganizationTab\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowResourceAccountSendMessage",
+      "kind": "boolean",
+      "input_json": "{\"AllowResourceAccountSendMessage\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowRoleBasedChatPermissions",
+      "kind": "boolean",
+      "input_json": "{\"AllowRoleBasedChatPermissions\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowScopedPeopleSearchandAccess",
+      "kind": "boolean",
+      "input_json": "{\"AllowScopedPeopleSearchandAccess\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowShareFile",
+      "kind": "boolean",
+      "input_json": "{\"AllowShareFile\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "AllowSkypeBusinessInterop",
+      "kind": "boolean",
+      "input_json": "{\"AllowSkypeBusinessInterop\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ContentPin",
+      "kind": "string",
+      "input_json": "{\"ContentPin\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ExtendedWorkInfoInPeopleSearch",
+      "kind": "boolean",
+      "input_json": "{\"ExtendedWorkInfoInPeopleSearch\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "ResourceAccountContentAccess",
+      "kind": "string",
+      "input_json": "{\"ResourceAccountContentAccess\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "RestrictedSenderList",
+      "kind": "string",
+      "input_json": "{\"RestrictedSenderList\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsClientConfiguration",
+      "field": "UseUnifiedDomain",
+      "kind": "string",
+      "input_json": "{\"UseUnifiedDomain\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

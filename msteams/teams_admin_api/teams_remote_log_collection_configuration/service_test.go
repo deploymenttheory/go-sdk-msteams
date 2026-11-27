@@ -9,7 +9,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -20,7 +20,6 @@ const (
 	origin     = "https://api.interfaces.records.teams.microsoft.com"
 	collection = "/Skype.Policy/configurations/TeamsRemoteLogCollectionConfiguration"
 	getCmd     = "Get-CsTeamsRemoteLogCollectionConfiguration"
-	fixtures   = "msteams/teams_admin_api/teams_remote_log_collection_configuration/testdata/"
 )
 
 func readFile(t *testing.T, name string) []byte {
@@ -37,27 +36,19 @@ func readFile(t *testing.T, name string) []byte {
 	return body
 }
 
-func wire(path string, status int, reply []byte) contracttest.Exchange {
+func wire(path string, status int, reply []byte) testutil.Exchange {
 	h := http.Header{}
 	h.Set("MPACmdlet", "true")
 	h.Set("X-MS-CmdletName", getCmd)
 	h[http.CanonicalHeaderKey("X-MS-Target-Uri")] = nil
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json; charset=utf-8"}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json; charset=utf-8"}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "teams_remote_log_collection_configuration"
-	if c.Source == "" {
-		c.Source = "msteams/teams_admin_api/teams_remote_log_collection_configuration/service_test.go"
-	}
-	if len(c.Steps) == 0 {
-		c.Scope = "local"
-	} else {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -66,30 +57,26 @@ func run(t *testing.T, c contracttest.Case) {
 	}
 }
 
-func mapping(set string) []contracttest.Mapping {
-	return []contracttest.Mapping{{Command: getCmd, ParameterSet: set}}
-}
-
 func TestUnitConfigurationReadsUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	list, global := readFile(t, "list.json"), readFile(t, "get_global.json")
-	run(t, contracttest.Case{Name: "actual-list", Source: fixtures + "list.json", Mappings: mapping("Identity"),
-		Steps: []contracttest.Exchange{wire(collection, 200, list)}, Want: contracttest.Expected{Status: 200, Body: list},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "actual-list",
+		Steps: []testutil.Exchange{wire(collection, 200, list)}, Want: testutil.Expected{Status: 200, Body: list},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			values, response, err := sdk.TeamsAdminAPI.TeamsRemoteLogCollectionConfigurations.List(ctx)
 			if err != nil || len(values) != 1 || *values[0].Identity != "Global" || values[0].Devices == nil || values[0].RawFields["ConfigMetadata"] == nil {
 				t.Fatal("global configuration was lost")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "actual-get-global", Source: fixtures + "get_global.json", Mappings: mapping("Identity"),
-		Steps: []contracttest.Exchange{wire(collection+"/configuration/Global", 200, global)}, Want: contracttest.Expected{Status: 200, Body: global},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "actual-get-global",
+		Steps: []testutil.Exchange{wire(collection+"/configuration/Global", 200, global)}, Want: testutil.Expected{Status: 200, Body: global},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.TeamsRemoteLogCollectionConfigurations.GetByIdentity(ctx, "Global")
 			if err != nil || value == nil || len(value.Devices) != 0 || value.RawFields["SchemaVersion"] == nil {
 				t.Fatal("global configuration was lost")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -100,9 +87,9 @@ func TestUnitConfigurationEmbeddedDevicesAndFilter(t *testing.T) {
 		pattern string
 		count   int
 	}{{"Glo*", 1}, {"Other", 1}, {"missing", 0}} {
-		run(t, contracttest.Case{Name: fmt.Sprintf("filter-%d", index), Mappings: mapping("Filter"),
-			Steps: []contracttest.Exchange{wire(collection, 200, reply)}, Want: contracttest.Expected{Status: 200, Body: reply},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: fmt.Sprintf("filter-%d", index),
+			Steps: []testutil.Exchange{wire(collection, 200, reply)}, Want: testutil.Expected{Status: 200, Body: reply},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				values, response, err := sdk.TeamsAdminAPI.TeamsRemoteLogCollectionConfigurations.ListFiltered(ctx, c.pattern)
 				if err != nil || len(values) != c.count {
 					t.Fatal("local filter result differs")
@@ -113,22 +100,22 @@ func TestUnitConfigurationEmbeddedDevicesAndFilter(t *testing.T) {
 						t.Fatal("embedded device lost or exposed")
 					}
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
 
 func TestUnitConfigurationFailures(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "malformed", Mappings: mapping("Identity"),
-		Steps: []contracttest.Exchange{wire(collection+"/configuration/Global", 200, []byte(`{"Devices":{}}`))},
-		Want:  contracttest.Expected{Status: 200, Error: client.ErrDecode},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "malformed",
+		Steps: []testutil.Exchange{wire(collection+"/configuration/Global", 200, []byte(`{"Devices":{}}`))},
+		Want:  testutil.Expected{Status: 200, Error: client.ErrDecode},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.TeamsRemoteLogCollectionConfigurations.GetByIdentity(ctx, "Global")
 			if value != nil {
 				t.Fatal("malformed reply returned a value")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 	for name, invoke := range map[string]func(context.Context, *configuration.Service) error{
 		"empty-filter": func(ctx context.Context, s *configuration.Service) error {
@@ -140,9 +127,9 @@ func TestUnitConfigurationFailures(t *testing.T) {
 			return err
 		},
 	} {
-		run(t, contracttest.Case{Name: name, Mappings: mapping("Filter"), Want: contracttest.Expected{Error: configuration.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: invoke(ctx, sdk.TeamsAdminAPI.TeamsRemoteLogCollectionConfigurations)}
+		run(t, testutil.Case{Name: name, Want: testutil.Expected{Error: configuration.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: invoke(ctx, sdk.TeamsAdminAPI.TeamsRemoteLogCollectionConfigurations)}
 			}})
 	}
 	var s *configuration.Service

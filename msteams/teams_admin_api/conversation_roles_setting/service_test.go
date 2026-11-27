@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -18,7 +18,6 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-const source = "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
 const route = "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/configurations/ConversationRolesSetting"
 const firstID = "00000000-0000-4000-8000-000000000001"
 const nextID = "00000000-0000-4000-8000-000000000002"
@@ -28,23 +27,19 @@ const empty = `{"Identity":"Global","ConversationRoles":[]}`
 
 // Response bodies are authored source-constrained DTO vectors, never successful
 // tenant evidence. Captured expected requests are offline pinned serializer output.
-func wire(method, path, command, body string, status int, response string) contracttest.Exchange {
+func wire(method, path, command, body string, status int, response string) testutil.Exchange {
 	headers := http.Header{"MPACmdlet": {"true"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": nil}
 	var raw json.RawMessage
 	if body != "" {
 		raw = json.RawMessage(body)
 		headers.Set("Content-Type", "application/json; charset=utf-8")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: route + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: raw}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: route + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: raw}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
 }
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Source = source
-	c.Family = "conversation_roles_setting"
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, e := contracttest.Run(t.Context(), c)
+
+	result, e := testutil.Run(t.Context(), c)
 	if e != nil || !result.Passed() {
 		t.Fatalf("conversation settings vector differed: %v %+v", e, result.Differences())
 	}
@@ -91,16 +86,16 @@ func newRole(t *testing.T) *roles.Role {
 }
 func TestUnitConversationSettingsGetSetsPreservePresenceAndLocalFilter(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "get-selectors", Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "get-selectors", Steps: []testutil.Exchange{
 		wire("GET", "/configuration/Global", "Get-CsConversationRolesSetting", "", 200, before),
 		wire("GET", "", "Get-CsConversationRolesSetting", "", 200, `[`+before+`]`),
 		wire("GET", "", "Get-CsConversationRolesSetting", "", 200, `[`+before+`]`),
 		wire("GET", "", "Get-CsConversationRolesSetting", "", 200, `[`+before+`]`),
-	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		service := sdk.TeamsAdminAPI.ConversationRoleSettings
 		value, _, e := service.GetByIdentity(ctx, "Global")
 		if e != nil {
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}
 		if value == nil || len(value.ConversationRoles) != 1 || value.ConversationRoles[0].ID == nil || *value.ConversationRoles[0].ID != firstID || string(value.RawFields["Future"]) != "[]" {
 			t.Fatal("typed list/unknown presence lost")
@@ -112,14 +107,14 @@ func TestUnitConversationSettingsGetSetsPreservePresenceAndLocalFilter(t *testin
 		}
 		values, _, e := service.List(ctx)
 		if e != nil {
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}
 		if len(values) != 1 {
 			t.Fatal("list missing")
 		}
 		values, _, e = service.ListFiltered(ctx, "Glo*")
 		if e != nil {
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}
 		if len(values) != 1 {
 			t.Fatal("wildcard missing")
@@ -128,7 +123,7 @@ func TestUnitConversationSettingsGetSetsPreservePresenceAndLocalFilter(t *testin
 		if e == nil && len(values) != 0 {
 			t.Fatal("literal whitespace changed")
 		}
-		return contracttest.Observation{Err: e}
+		return testutil.Observation{Err: e}
 	}})
 }
 func TestUnitConversationSettingsFullTransitionPipelineMatchesPinnedBodies(t *testing.T) {
@@ -154,15 +149,15 @@ func TestUnitConversationSettingsFullTransitionPipelineMatchesPinnedBodies(t *te
 				if current == "nonempty" {
 					response = before
 				}
-				steps := []contracttest.Exchange{wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 200, response)}
-				want := contracttest.Expected{}
+				steps := []testutil.Exchange{wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 200, response)}
+				want := testutil.Expected{}
 				rejected := current == "nonempty" && scenario == "remove"
 				if rejected {
 					want.Error = settings.ErrInput
 				} else {
 					steps = append(steps, wire("PATCH", "/configuration/Global", "Set-CsConversationRolesSetting", captured(t, current, scenario), 204, ""))
 				}
-				run(t, contracttest.Case{Name: current + "-" + scenario, Steps: steps, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: current + "-" + scenario, Steps: steps, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					input := settings.UpdateParameters{ConversationRoles: policy.Set(modifier)}
 					if scenario == "null" {
 						input.ConversationRoles = policy.Null[*settings.ListModifier]()
@@ -172,10 +167,10 @@ func TestUnitConversationSettingsFullTransitionPipelineMatchesPinnedBodies(t *te
 						if !errors.Is(e, want.Error) || request == nil || request.Before() == nil || request.ReadResponse() == nil {
 							t.Fatal("comparison failure lost preparation")
 						}
-						return contracttest.Observation{Err: e}
+						return testutil.Observation{Err: e}
 					}
 					if e != nil {
-						return contracttest.Observation{Err: e}
+						return testutil.Observation{Err: e}
 					}
 					if request.ResourceIdentity() != "Global" || request.Before() == nil {
 						t.Fatal("preparation binding missing")
@@ -194,7 +189,7 @@ func TestUnitConversationSettingsFullTransitionPipelineMatchesPinnedBodies(t *te
 					if e == nil && (result == nil || result.Before == nil || !result.PatchInvoked || !result.HTTPAccepted || result.Before.Identity == nil || *result.Before.Identity != "Global") {
 						t.Fatal("frozen list request or stages changed")
 					}
-					return contracttest.Observation{Err: e}
+					return testutil.Observation{Err: e}
 				}})
 			})
 		}
@@ -225,26 +220,26 @@ func TestUnitConversationSettingsDenialAcceptedMalformedAndRetargetRetainStages(
 	t.Parallel()
 	for _, scenario := range []string{"denied", "malformed", "retarget"} {
 		t.Run(scenario, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 200, before)}
+			steps := []testutil.Exchange{wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 200, before)}
 			want := settings.ErrInput
 			if scenario == "denied" {
-				steps = []contracttest.Exchange{wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 403, `{"code":"Forbidden"}`)}
+				steps = []testutil.Exchange{wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 403, `{"code":"Forbidden"}`)}
 				want = auth.ErrForbidden
 			}
 			if scenario == "malformed" {
 				steps = append(steps, wire("PATCH", "/configuration/Global", "Set-CsConversationRolesSetting", captured(t, "nonempty", "null"), 200, `[]`))
 				want = client.ErrDecode
 			}
-			run(t, contracttest.Case{Name: scenario, Steps: steps, Want: contracttest.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: scenario, Steps: steps, Want: testutil.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				request, response, e := sdk.TeamsAdminAPI.ConversationRoleSettings.PrepareUpdateByIdentity(ctx, "Global", settings.UpdateParameters{ConversationRoles: policy.Null[*settings.ListModifier]()})
 				if scenario == "denied" {
 					if !errors.Is(e, want) || request == nil || request.ReadResponse() == nil || response == nil {
 						t.Fatal("denied preparation receipt missing")
 					}
-					return contracttest.Observation{Err: e}
+					return testutil.Observation{Err: e}
 				}
 				if e != nil {
-					return contracttest.Observation{Err: e}
+					return testutil.Observation{Err: e}
 				}
 				target := "Global"
 				if scenario == "retarget" {
@@ -260,7 +255,7 @@ func TestUnitConversationSettingsDenialAcceptedMalformedAndRetargetRetainStages(
 				if scenario == "malformed" && (!result.PatchInvoked || !result.HTTPAccepted || result.After != nil || response == nil) {
 					t.Fatal("accepted malformed result lost stages")
 				}
-				return contracttest.Observation{Err: e}
+				return testutil.Observation{Err: e}
 			}})
 		})
 	}
@@ -269,17 +264,17 @@ func TestUnitConversationSettingsUnboundRejectsBeforeCredentialsAndEmptyFilterIs
 	t.Parallel()
 	flag := false
 	for _, controls := range []policy.Controls{{}, {Force: &flag}} {
-		run(t, contracttest.Case{Name: "unbound-set", Scope: "local", Want: contracttest.Expected{Error: settings.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "unbound-set", Want: testutil.Expected{Error: settings.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			request, response, e := sdk.TeamsAdminAPI.ConversationRoleSettings.PrepareUpdateByIdentity(ctx, "Global", settings.UpdateParameters{Controls: controls})
 			if !errors.Is(e, settings.ErrInput) || request != nil || response != nil {
 				t.Fatal("unbound settings did not reject before authentication or preparation")
 			}
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}})
 	}
-	run(t, contracttest.Case{Name: "empty-filter", Scope: "local", Want: contracttest.Expected{Error: settings.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "empty-filter", Want: testutil.Expected{Error: settings.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, _, e := sdk.TeamsAdminAPI.ConversationRoleSettings.ListFiltered(ctx, "")
-		return contracttest.Observation{Err: e}
+		return testutil.Observation{Err: e}
 	}})
 }
 
@@ -296,14 +291,14 @@ func TestUnitConversationSettingsReplacementMatchesActualCompiledBinding(t *test
 	value := newRole(t)
 	value.ID = ptr(firstID)
 	value.Identity = ptr("Global/" + firstID)
-	run(t, contracttest.Case{Name: "actual-bound-list-replacement", Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "actual-bound-list-replacement", Steps: []testutil.Exchange{
 		wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 200, empty),
 		wire("PATCH", "/configuration/Global", "Set-CsConversationRolesSetting", fixture.Body, 204, ""),
-	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		service := sdk.TeamsAdminAPI.ConversationRoleSettings
 		request, _, e := service.PrepareUpdateByIdentity(ctx, "Global", settings.UpdateParameters{ConversationRoles: policy.Set(&settings.ListModifier{Replace: []*roles.Role{value}})})
 		if e != nil {
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}
 		if len(request.Projection().OmittedPaths) != 2 {
 			t.Fatal("actual nested permission omission was hidden")
@@ -312,6 +307,6 @@ func TestUnitConversationSettingsReplacementMatchesActualCompiledBinding(t *test
 		if e == nil && (result == nil || !result.HTTPAccepted) {
 			t.Fatal("binding-replay action receipt missing")
 		}
-		return contracttest.Observation{Err: e}
+		return testutil.Observation{Err: e}
 	}})
 }

@@ -1,0 +1,984 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":null}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":true}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":\"true\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":37}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":\"37\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":9007199254740993}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":\"9007199254740993\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":1.20}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":\"1.20\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":1E+03}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":\"1E+03\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":-0}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":\"-0\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":\"\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":\"text\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":\"text\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Description\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "{\"Identity\":\"true\",\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "{\"Identity\":\"37\",\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "{\"Identity\":\"9007199254740993\",\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "{\"Identity\":\"1.20\",\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "{\"Identity\":\"1E+03\",\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "{\"Identity\":\"-0\",\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "{\"Identity\":\"\",\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "{\"Identity\":\"text\",\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":null}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":[]}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":[null]}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[null],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":[{}]}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":true}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":37}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":\"ignored\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":[{}],\"teamsmeetingtemplates\":null}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":[{}],\"teamsmeetingtemplates\":[null]}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null},null],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "configuration",
+      "input_json": "{\"TeamsMeetingTemplates\":[{}],\"teamsmeetingtemplates\":true}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingTemplates\":[{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}],\"Description\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":null}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":true}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":\"true\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":37}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":\"37\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":9007199254740993}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":\"9007199254740993\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":1.20}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":\"1.20\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":1E+03}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":\"1E+03\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":-0}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":\"-0\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":\"\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":\"text\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":\"text\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Category\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":null}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":true}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":\"true\",\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":37}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":\"37\",\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":9007199254740993}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":\"9007199254740993\",\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":1.20}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":\"1.20\",\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":1E+03}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":\"1E+03\",\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":-0}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":\"-0\",\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":\"\",\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":\"text\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":\"text\",\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Description\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "{\"Identity\":\"true\",\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "{\"Identity\":\"37\",\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "{\"Identity\":\"9007199254740993\",\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "{\"Identity\":\"1.20\",\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "{\"Identity\":\"1E+03\",\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "{\"Identity\":\"-0\",\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "{\"Identity\":\"\",\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "{\"Identity\":\"text\",\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":null}",
+      "projected_json": null,
+      "error": "System.ArgumentNullException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":true}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":\"true\",\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":37}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":\"37\",\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":9007199254740993}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":\"9007199254740993\",\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":1.20}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":\"1.20\",\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":1E+03}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":\"1E+03\",\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":-0}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":\"-0\",\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":\"\",\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":\"text\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":\"text\",\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"Name\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":null}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":[]}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":[null]}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[null],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":[{}]}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":true}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":37}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":\"ignored\"}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":[{}],\"teamsmeetingoptions\":null}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":[{}],\"teamsmeetingoptions\":[null]}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null},null],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "template",
+      "input_json": "{\"TeamsMeetingOptions\":[{}],\"teamsmeetingoptions\":true}",
+      "projected_json": "{\"Identity\":null,\"TeamsMeetingOptions\":[{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}],\"Description\":null,\"Name\":null,\"Category\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "{\"Identity\":\"true\",\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "{\"Identity\":\"37\",\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "{\"Identity\":\"9007199254740993\",\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "{\"Identity\":\"1.20\",\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "{\"Identity\":\"1E+03\",\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "{\"Identity\":\"-0\",\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "{\"Identity\":\"\",\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "{\"Identity\":\"text\",\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsHidden\":null}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsHidden\":true}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":true,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsHidden\":1}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":true,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsHidden\":\"False\"}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":false,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsHidden\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsHidden\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsHidden\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsHidden\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsLocked\":null}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsLocked\":true}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":true,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsLocked\":1}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":true,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsLocked\":\"False\"}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":false,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsLocked\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsLocked\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsLocked\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"IsLocked\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":null}",
+      "projected_json": null,
+      "error": "System.ArgumentNullException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":true}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":\"true\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":37}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":\"37\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":9007199254740993}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":\"9007199254740993\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":1.20}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":\"1.20\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":1E+03}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":\"1E+03\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":-0}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":\"-0\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":\"\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":\"text\"}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":\"text\"}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Name\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":null}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":null,\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":true}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":\"true\",\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":37}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":\"37\",\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":9007199254740993}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":\"9007199254740993\",\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":1.20}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":\"1.20\",\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":1E+03}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":\"1E+03\",\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":-0}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":\"-0\",\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":\"\"}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":\"\",\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":\"text\"}",
+      "projected_json": "{\"Identity\":null,\"IsLocked\":null,\"IsHidden\":null,\"Value\":\"text\",\"Name\":null}",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
+      "kind": "option",
+      "input_json": "{\"Value\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

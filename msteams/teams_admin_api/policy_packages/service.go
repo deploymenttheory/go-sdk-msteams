@@ -3,13 +3,12 @@ package policypackages
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/url"
 	"strings"
 	"unicode"
 
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/capabilities"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/configapi"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policyrp"
@@ -22,13 +21,10 @@ import (
 type Service struct {
 	scope   *client.Scope
 	backend *configapi.Client
-	catalog *capabilities.Catalog
-	initErr error
 }
 
 func NewService(scope *client.Scope) *Service {
-	catalog, err := capabilities.NewCatalog()
-	return &Service{scope: scope, backend: configapi.New(scope), catalog: catalog, initErr: err}
+	return &Service{scope: scope, backend: configapi.New(scope)}
 }
 func (s *Service) ready(ctx context.Context) error {
 	if ctx == nil {
@@ -42,9 +38,6 @@ func (s *Service) ready(ctx context.Context) error {
 	}
 	if s.scope.Backend() != client.TeamsAdmin {
 		return client.ErrDestination
-	}
-	if s.initErr != nil {
-		return client.ErrRequest
 	}
 	return nil
 }
@@ -61,11 +54,8 @@ func (s *Service) request(ctx context.Context, command string, request client.Re
 	if err != nil {
 		return nil, false, err
 	}
-	report, err := s.catalog.Assess(command, info.Mode, environment.Name)
-	if err != nil && !errors.Is(err, capabilities.ErrUnknownProfile) {
-		return nil, false, client.ErrRequest
-	}
-	if err == nil && report.Support == capabilities.ModeDocumentedUnsupported {
+	// Preserve the existing operation-mode restriction without a command catalog.
+	if info.Mode == auth.Application && (environment.Name == "commercial" || environment.Name == "gcc" || environment.Name == "gcch" || environment.Name == "dod") {
 		return nil, false, client.ErrAuthenticationMode
 	}
 	parts := make([]string, len(request.Path))

@@ -38,7 +38,7 @@ responses. They cover read/list/filter, snapshot ownership, invalid inputs,
 context/cancellation, backend isolation, injected authorization failures and
 malformed replies. The example compiles without connecting to a tenant.
 
-See [qualification details](../../../docs/implementation/policies/meeting-template-policies-lab-acceptance.md).
+See [qualification details](../../../docs/acceptance/meeting-template-policies-lab-acceptance.md).
 
 Received JSON uses the own pinned DTO scalar profile: numeric/Boolean string
 values and nullable Boolean conversions are accepted where the model does,

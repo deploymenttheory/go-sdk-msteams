@@ -1,6 +1,6 @@
 # Tenant acceptance in CI
 
-All Go unit/offline contract tests use `TestUnit`; tenant tests use `TestAcc`.
+Go unit tests use `TestUnit`; real-tenant tests use `TestAcc`.
 `Example` and `TestMain` retain their Go toolchain meanings. Ordinary quality CI
 runs `go test -run '^(TestUnit|Example)'`. The naming guard also reconciles every
 `TestAcc` with exactly one partition step in [suites.json](suites.json) or a
@@ -91,8 +91,8 @@ python3 tools/acceptance/ci.py run --service teams_call_hold_policy --step reads
 
 The remaining acceptance tests are listed in `pending.json` with their missing
 fixtures, permissions, capabilities or execution mode. Resource tickets stay open
-until their successful operations are qualified. The first supported release
-requires complete command and parameter-set qualification.
+until the remaining SDK behaviour and tenant scenarios have been tested.
+Release decisions use unit regressions and actual tenant results.
 
 ## Selective acceptance skips
 
@@ -157,7 +157,7 @@ Only the prepare step receives the secret values. It writes private mode-0600
 files under an isolated runner-temp directory. Subsequent tests receive paths,
 explicit enablement and the approved `teams-administrator` access profile. The
 exact MicrosoftTeams 8.1.0 Gallery archive is SHA512-verified using the existing
-baseline tooling before extraction. PowerShell is an oracle for tests only.
+acceptance package helper before extraction. PowerShell is an oracle for tests only.
 
 Call-hold CRUD references the dedicated `go-sdk-msteams-ci-call-hold.wav` fixture
 uploaded with `Import-CsOnlineAudioFile -ApplicationId TenantGlobal`. This silent
@@ -246,10 +246,10 @@ The current lab returns PolicyRP 40003 for assignment migration and custom audio
 prompts, and 40301 for privacy configuration. The access-outcome tests verify the
 specific SDK error, retain its HTTP diagnostics and compare the actual PowerShell
 8.1.0 result. Authentication/setup errors and any different service response fail
-these tests. Changes in tenant access therefore trigger requalification.
+these tests. Rerun the relevant scenarios when tenant access changes.
 
-Successful reads and mutations for these resources remain pending on issues #95,
-#106 and #102. The original successful-read TestAcc tests remain registered in
+Successful reads and mutations for these resources remain tracked in the
+policy and configuration follow-ups #184, #185 and #186. The original successful-read TestAcc tests remain registered in
 `pending.json` until a suitable tenant or identity is available. No resource
 coverage state is promoted by a passing denial test.
 
@@ -375,7 +375,7 @@ Network roaming runs its `crud` step using modern POST/PUT/DELETE.
 Notification/feeds runs its own `crud` step, whose extra explicit-null
 Description check and three pinned comparisons are mandatory. Its native create
 is evidenced by the pinned unexported compiled New implementation and live tenant
-acceptance; public baseline mappings still contain only Get/Set/Remove. Both
+acceptance; the public API still distinguishes Get/Set/Remove operations. Both
 policy kinds have bound owned-resource recovery handlers and require GET404 plus
 list absence. Their fixtures are permanent service testdata, with no capture store.
 
@@ -526,7 +526,7 @@ serialized `global-reads` step. It requires exactly one Global policy in the
 filtered list, matching selected/listed typed fields and one pinned PowerShell
 comparison. A configured app denial, empty list or disabled oracle fails this
 positive read scenario. The test makes no policy, hierarchy or assignment change;
-legacy-flight eligibility and mutation effects remain separate qualification.
+legacy-flight eligibility and mutation effects need separate tenant scenarios.
 
 CORE private-channel migration conformance runs the existing bound-tenant singleton
 status read in `private_channel_migration/reads`. It requires matching tenant
@@ -562,15 +562,15 @@ cleaned journal entry. No Global configuration, user/group assignment, licensing
 state or service-wide cache is changed. Changes to either participating adapter
 select this partition.
 
-The [EXT inventory](../../docs/implementation/ext/coverage-report.md) records all
-owned command/parameter-set mappings, current live limitations and the fifteen
-unowned nested research candidates. Mappings and expected denials do not establish
-full qualification or successful tenant operations.
+Resource API docs and the GitHub backlog describe remaining functionality and
+tenant prerequisites. Unit request assertions and expected denials do not prove
+a successful operation against the tenant.
 
 The same partition's `agent-target-template` step creates an owned IVR tag
 template and an owned agent configuration referencing it, verifies the linkage
 after rename with two pinned comparisons, and requires two independently cleaned
 entries. No resource account or call flow is attached to the agent.
+
 ## Integrated CALL acceptance
 
 The `call_integration` partition composes owned schedules and auto attendants.
@@ -582,6 +582,5 @@ and requires all three journal entries cleaned
 in reverse creation order. It assigns no account, telephone number, user, group
 or policy. Changes to either service select this integration partition as well.
 
-The CALL [coverage inventory](../../docs/implementation/calls/coverage-report.md)
-names every command/parameter-set mapping and separates those mappings from
-actual passing evidence and remaining live prerequisites.
+Use the resource API docs, JSON-backed unit tests and actual acceptance results
+to review calling workflows and remaining tenant prerequisites.

@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
@@ -14,17 +14,15 @@ import (
 
 const applicationCleanupFixture = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-app-access"
 
-func runApplicationCleanupCase(t *testing.T, c contracttest.Case) {
+func runApplicationCleanupCase(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "application_access_lab_cleanup"
-	c.Source = "tests/integration/lab/application_access_policy/application_access_policy_cleanup_test.go"
-	c.Scope = "service"
+
 	discovery := labkit.CleanupExchange(
 		"GET", "/Teams.Tenant/serviceDiscovery", 200,
 		`{"Endpoints":{"AdminServiceEndpoint":"admin.example.invalid"}}`,
 	)
-	c.Steps = append([]contracttest.Exchange{discovery}, c.Steps...)
-	result, err := contracttest.Run(t.Context(), c)
+	c.Steps = append([]testutil.Exchange{discovery}, c.Steps...)
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,16 +42,16 @@ func TestUnitApplicationPolicyCleanupRequiresPositiveCreationResolution(t *testi
 		{name: "ambiguous", body: `[{"Identity":"` + applicationCleanupFixture + `"},{"Identity":"` + applicationCleanupFixture + `"}]`, want: lab.ErrUnresolved},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			runApplicationCleanupCase(t, contracttest.Case{
+			runApplicationCleanupCase(t, testutil.Case{
 				Name: tc.name,
-				Steps: []contracttest.Exchange{
+				Steps: []testutil.Exchange{
 					labkit.CleanupExchange("GET", "/Skype.Policy/configurations/ApplicationAccessPolicy", 200, tc.body),
 				},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					identity, err := (policyCleanup{sdk.TeamsAdminAPI.ApplicationAccessPolicies}).Resolve(ctx, lab.Entry{Fixture: applicationCleanupFixture})
-					return contracttest.Observation{Value: identity, Err: err}
+					return testutil.Observation{Value: identity, Err: err}
 				},
-				Want: contracttest.Expected{Error: tc.want, JSON: json.RawMessage(`"` + tc.identity + `"`)},
+				Want: testutil.Expected{Error: tc.want, JSON: json.RawMessage(`"` + tc.identity + `"`)},
 			})
 		})
 	}
@@ -64,12 +62,12 @@ func TestUnitApplicationPolicyCleanupVerifiesAbsenceAfterDelete(t *testing.T) {
 	const path = "/Skype.Policy/configurations/ApplicationAccessPolicy/configuration/" + applicationCleanupFixture
 	for _, tc := range []struct {
 		name  string
-		steps []contracttest.Exchange
+		steps []testutil.Exchange
 		want  error
 	}{
 		{
 			name: "delete-acceptance-is-not-absence",
-			steps: []contracttest.Exchange{
+			steps: []testutil.Exchange{
 				labkit.CleanupExchange("DELETE", path, 204, ""),
 				labkit.CleanupExchange("GET", path, 403, `{"error":{"code":"Forbidden"}}`),
 			},
@@ -77,7 +75,7 @@ func TestUnitApplicationPolicyCleanupVerifiesAbsenceAfterDelete(t *testing.T) {
 		},
 		{
 			name: "verified-absence",
-			steps: []contracttest.Exchange{
+			steps: []testutil.Exchange{
 				labkit.CleanupExchange("DELETE", path, 204, ""),
 				labkit.CleanupExchange("GET", path, 404, `{"error":{"code":"NotFound"}}`),
 				labkit.CleanupExchange("GET", "/Skype.Policy/configurations/ApplicationAccessPolicy", 200, `[]`),
@@ -85,15 +83,15 @@ func TestUnitApplicationPolicyCleanupVerifiesAbsenceAfterDelete(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			runApplicationCleanupCase(t, contracttest.Case{
+			runApplicationCleanupCase(t, testutil.Case{
 				Name: tc.name, Steps: tc.steps,
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					err := (policyCleanup{sdk.TeamsAdminAPI.ApplicationAccessPolicies}).Delete(ctx, lab.Entry{
 						Fixture: applicationCleanupFixture, ResourceID: applicationCleanupFixture,
 					})
-					return contracttest.Observation{Err: err}
+					return testutil.Observation{Err: err}
 				},
-				Want: contracttest.Expected{Error: tc.want},
+				Want: testutil.Expected{Error: tc.want},
 			})
 		})
 	}

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -30,7 +30,7 @@ func TestUnitOwnedCRUDUsesAcceptanceResponses(t *testing.T) {
 	if json.Unmarshal(before, &beforeRaw) != nil || json.Unmarshal(after, &afterRaw) != nil {
 		t.Fatal("invalid actual policy snapshots")
 	}
-	steps := []contracttest.Exchange{
+	steps := []testutil.Exchange{
 		compiledWire("POST", base, "New-CsTeamsNotificationAndFeedsPolicy", json.RawMessage(`{"Identity":"fixture-policy","Description":"SDK lab non-default initial description","SuggestedFeedsEnabledType":"EnabledUserOverride"}`), 201, string(create)),
 		compiledWire("GET", base+"/configuration/fixture-policy", "Get-CsTeamsNotificationAndFeedsPolicy", nil, 200, string(before)),
 		compiledWire("GET", tagged, "Set-CsTeamsNotificationAndFeedsPolicy", nil, 200, string(before)),
@@ -50,8 +50,8 @@ func TestUnitOwnedCRUDUsesAcceptanceResponses(t *testing.T) {
 	if json.Unmarshal(missing, &envelope) != nil {
 		t.Fatal("invalid error fixture")
 	}
-	run(t, contracttest.Case{Name: "owned-crud", Source: "msteams/teams_admin_api/teams_notification_and_feeds_policy/testdata/create_readback.json", Steps: steps,
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "owned-crud", Steps: steps,
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TeamsNotificationAndFeedsPolicies
 			_, response, err := s.CreateByIdentity(ctx, "fixture-policy", resource.CreateRequest{Settings: resource.Settings{Description: policy.Set("SDK lab non-default initial description"), SuggestedFeedsEnabledType: policy.Set("EnabledUserOverride")}})
 			if err != nil || response == nil || response.StatusCode() != 201 {
@@ -97,6 +97,6 @@ func TestUnitOwnedCRUDUsesAcceptanceResponses(t *testing.T) {
 			if !errors.As(err, &api) || api.StatusCode != 404 {
 				t.Fatal("actual absence response lost its typed error")
 			}
-			return contracttest.Observation{Response: response, Err: err}
-		}, Want: contracttest.Expected{Status: 404, Body: missing, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{envelope.Code}, ServiceErrorCodes: []int{envelope.ErrorCode}}}})
+			return testutil.Observation{Response: response, Err: err}
+		}, Want: testutil.Expected{Status: 404, Body: missing, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{envelope.Code}, ServiceErrorCodes: []int{envelope.ErrorCode}}}})
 }

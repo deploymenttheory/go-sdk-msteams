@@ -17,26 +17,13 @@ There is no automatic fallback between users and applications.
 | `ExternalProvider` | Explicit single mode | Borrowed provider or Azure credential adapter; caller owns credential lifecycle | [Configuration](client-configuration.md) |
 
 All SDK-native flows work without PowerShell. Host availability, tenant policies,
-consent and credential format support still apply. Offline contracts run on Linux,
+consent and credential format support still apply. Offline unit tests run on Linux,
 macOS and Windows; that is separate from live flow qualification. Secret and PEM
 certificate flows have lab evidence. Delegated and Azure managed identity live
 qualification remain outstanding; GitHub federation setup awaits explicit approval.
 
-Successful token acquisition does not establish operation authorization. Use the
-offline `msteams/capabilities` catalog for dated documentation observations:
-
-```go
-catalog, err := capabilities.NewCatalog()
-if err != nil {
-    return err
-}
-report, err := catalog.Assess("New-Team", auth.Application, "commercial")
-if err != nil {
-    return err
-}
-// report.Support is ModeDocumentedUnsupported. Other commands may be
-// ModeUnqualified: unknown never means authorized or implemented.
-```
+Successful token acquisition does not establish operation authorization. Check
+the actual API error and the documented permissions for the operation.
 
 At the operation boundary, use `errors.Is` with `auth.ErrUnauthenticated` and
 `auth.ErrForbidden` for HTTP 401 and 403. A 403 cannot identify a missing role by
@@ -49,8 +36,9 @@ string `Codes`. The compiled PolicyRP adapter recognizes HTTP 400 / `ClientError
 `ErrTenantCapabilityUnavailable`, preserving the original API error. Generic 400s,
 403s and arbitrary unsupported-feature text retain their original classifications.
 
-The capability catalog keeps source dates and documented permission boundaries.
-Resource tickets track the authorization and acceptance tests still required.
+Resource documentation describes permission requirements. Real-tenant tests
+establish which operations work for the configured identity; no offline command
+catalog can establish authorization.
 
 
 ## Environments and local sessions
@@ -67,5 +55,5 @@ a new client. WithAuthConfig replaces environment-loaded defaults. No machine-gl
 PowerShell settings or internal support-region headers are reproduced.
 
 Sovereign profiles have unit coverage; live qualification is still required.
-Managed identity remains commercial-only. The capability catalog records dated
-commercial/GCC/GCCH/DoD documentation observations.
+Managed identity remains commercial-only. Check each service's documented cloud
+limitations and available tenant results.

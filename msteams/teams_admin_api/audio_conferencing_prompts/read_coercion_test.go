@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/audio_conferencing_prompts"
@@ -57,7 +57,7 @@ func TestUnitPromptsReadMatchesPinnedScalarAndCollectionSemantics(t *testing.T) 
 		t.Fatal("invalid source read vectors")
 	}
 	for _, tc := range fixture.Observations {
-		run(t, contracttest.Case{Name: tc.Name, Source: "msteams/teams_admin_api/audio_conferencing_prompts/testdata/primary_read_vectors.json", Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire("GET", item, getCommand, nil, 200, tc.Input)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: tc.Name, Steps: []testutil.Exchange{wire("GET", item, getCommand, nil, 200, tc.Input)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, e := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.GetByIdentity(ctx, "Global")
 			if r == nil || r.StatusCode() != 200 || string(r.Body()) != tc.Input {
 				t.Fatal("read lost original successful HTTP receipt")
@@ -66,7 +66,7 @@ func TestUnitPromptsReadMatchesPinnedScalarAndCollectionSemantics(t *testing.T) 
 				if !errors.Is(e, client.ErrDecode) || v != nil {
 					t.Fatal("source-rejected shape or setter value accepted")
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}
 			if e != nil || v == nil || tc.Expected == nil {
 				t.Fatal("source-accepted read rejected")
@@ -79,7 +79,7 @@ func TestUnitPromptsReadMatchesPinnedScalarAndCollectionSemantics(t *testing.T) 
 			if !bytes.Equal(v.RawJSON, bytes.TrimSpace([]byte(tc.Input))) {
 				t.Fatal("typed coercion rewrote raw JSON snapshot")
 			}
-			return contracttest.Observation{Response: r}
+			return testutil.Observation{Response: r}
 		}})
 	}
 	p, e := resource.NewPromptPackage("00000000-0000-0000-0000-000000000002", "xx-future")

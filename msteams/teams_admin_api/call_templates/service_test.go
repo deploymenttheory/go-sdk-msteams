@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -18,13 +18,13 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/call_templates/service_test.go"
-	missing      = "00000000-0000-4000-8000-000000000001"
-	botID        = "00000000-0000-4000-8000-0000000000b0"
-	jsonType     = "application/json; charset=utf-8"
-	name         = "fixture-template"
-	initial      = "SDK lab non-default initial description"
-	updated      = "SDK lab non-default updated description"
+
+	missing  = "00000000-0000-4000-8000-000000000001"
+	botID    = "00000000-0000-4000-8000-0000000000b0"
+	jsonType = "application/json; charset=utf-8"
+	name     = "fixture-template"
+	initial  = "SDK lab non-default initial description"
+	updated  = "SDK lab non-default updated description"
 )
 
 func readFile(t *testing.T, path string) []byte {
@@ -41,49 +41,35 @@ func readFile(t *testing.T, path string) []byte {
 	return raw
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + "/Teams.VoiceApps/" + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {jsonType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + "/Teams.VoiceApps/" + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {jsonType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "call_templates"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !result.Passed() {
 		t.Fatalf("call template contract %s differed: %+v", c.Name, result.Differences())
 	}
-}
-
-func mapping(commands ...string) []contracttest.Mapping {
-	out := make([]contracttest.Mapping, 0, len(commands))
-	for _, command := range commands {
-		out = append(out, contracttest.Mapping{Command: command, ParameterSet: "__AllParameterSets"})
-	}
-	return out
 }
 
 func apiError(status int, body []byte) *client.APIError {
@@ -131,17 +117,17 @@ func replay[T any](t *testing.T, l lifecycle[T]) {
 	file := func(suffix string) []byte { return readFile(t, "testdata/"+l.label+"_"+suffix+".json") }
 	create, get, update, list, deleted, gone := file("create_201"), file("get"), file("update"), file("list"), file("delete"), file("delete_missing_404")
 	id := fixtureID(t, create, l.created)
-	run(t, contracttest.Case{Name: "actual-" + l.label + "-lifecycle", Source: "msteams/teams_admin_api/call_templates/testdata/" + l.label + "_create_201.json",
-		Mappings: mapping("New-"+l.noun, "Get-"+l.noun, "Set-"+l.noun, "Remove-"+l.noun),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-" + l.label + "-lifecycle",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", l.segment, "New-"+l.noun, json.RawMessage(l.createBody), 201, create),
 			wire("GET", l.segment+"/"+id, "Get-"+l.noun, nil, 200, get),
 			wire("PUT", l.segment+"/"+id, "Set-"+l.noun, json.RawMessage(l.updateBody), 200, update),
 			wire("GET", l.segment, "Get-"+l.noun, nil, 200, list),
 			wire("DELETE", l.segment+"/"+id, "Remove-"+l.noun, nil, 200, deleted),
 			wire("DELETE", l.segment+"/"+id, "Remove-"+l.noun, nil, 404, gone)},
-		Want: contracttest.Expected{Status: 404, Body: gone, APIError: apiError(404, gone)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 404, Body: gone, APIError: apiError(404, gone)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := l.templates(sdk)
 			value, response, err := s.Create(ctx, l.build())
 			if err != nil || response.StatusCode() != 201 || !is(l.id(value), id) || !l.createdOK(value) {
@@ -164,7 +150,7 @@ func replay[T any](t *testing.T, l lifecycle[T]) {
 				t.Fatal("captured delete was not accepted")
 			}
 			response, err = s.DeleteByID(ctx, id)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -310,63 +296,63 @@ func TestUnitAutoRecordingRejectionsUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	denied, list, invalid := readFile(t, "testdata/recording_create_401.json"), readFile(t, "testdata/recording_list.json"), readFile(t, "testdata/recording_update_invalid_400.json")
 	const noun = "CsAutoRecordingTemplate"
-	run(t, contracttest.Case{Name: "actual-auto-recording-denial", Source: "msteams/teams_admin_api/call_templates/testdata/recording_create_401.json",
-		Mappings: mapping("New-" + noun),
-		Steps: []contracttest.Exchange{discovery(t), wire("POST", "auto-recording", "New-"+noun,
+	run(t, testutil.Case{Name: "actual-auto-recording-denial",
+
+		Steps: []testutil.Exchange{discovery(t), wire("POST", "auto-recording", "New-"+noun,
 			json.RawMessage(`{"Name":"`+name+`","Description":"`+initial+`","TranscriptionEnabled":false,"RecordingEnabled":true,"AgentViewPermission":0,`+
 				`"SharePointHostName":"example.sharepoint.com","SharePointSiteName":"`+name+`","RecordingDocumentOwner":"`+missing+`"}`), 401, denied)},
-		Want: contracttest.Expected{Status: 401, Body: denied, APIError: apiError(401, denied)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 401, Body: denied, APIError: apiError(401, denied)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.CallTemplates.AutoRecording.Create(ctx, &ct.AutoRecordingTemplate{Name: ptr(name), Description: ptr(initial),
 				TranscriptionEnabled: ptr(false), RecordingEnabled: ptr(true), AgentViewPermission: ptr(ct.AgentViewPermissionNone),
 				SharePointHostName: ptr("example.sharepoint.com"), SharePointSiteName: ptr(name), RecordingDocumentOwner: ptr(missing)})
 			if value != nil {
 				t.Fatal("denied create returned a template")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "actual-auto-recording-list-and-invalid-update", Source: "msteams/teams_admin_api/call_templates/testdata/recording_update_invalid_400.json",
-		Mappings: mapping("Get-"+noun, "Set-"+noun),
-		Steps: []contracttest.Exchange{discovery(t), wire("GET", "auto-recording", "Get-"+noun, nil, 200, list),
+	run(t, testutil.Case{Name: "actual-auto-recording-list-and-invalid-update",
+
+		Steps: []testutil.Exchange{discovery(t), wire("GET", "auto-recording", "Get-"+noun, nil, 200, list),
 			wire("PUT", "auto-recording/"+missing, "Set-"+noun, json.RawMessage(`{"Name":"`+name+`","TranscriptionEnabled":false,"RecordingEnabled":false}`), 400, invalid)},
-		Want: contracttest.Expected{Status: 400, Body: invalid, APIError: apiError(400, invalid)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 400, Body: invalid, APIError: apiError(400, invalid)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.CallTemplates.AutoRecording
 			if values, _, err := s.List(ctx); err != nil || values == nil {
 				t.Fatal("empty auto recording list was not a non-nil slice")
 			}
 			_, response, err := s.UpdateByID(ctx, missing, &ct.AutoRecordingTemplate{Name: ptr(name), TranscriptionEnabled: ptr(false), RecordingEnabled: ptr(false)})
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
 func TestUnitMissingTemplateIsNotFound(t *testing.T) {
 	t.Parallel()
 	body := readFile(t, "testdata/get_missing_404.json")
-	run(t, contracttest.Case{Name: "actual-missing-template", Source: "msteams/teams_admin_api/call_templates/testdata/get_missing_404.json",
-		Mappings: mapping("Get-CsTagsTemplate"),
-		Steps:    []contracttest.Exchange{discovery(t), wire("GET", "ivr-tags-template/"+missing, "Get-CsTagsTemplate", nil, 404, body)},
-		Want:     contracttest.Expected{Status: 404, Body: body, APIError: apiError(404, body)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "actual-missing-template",
+
+		Steps: []testutil.Exchange{discovery(t), wire("GET", "ivr-tags-template/"+missing, "Get-CsTagsTemplate", nil, 404, body)},
+		Want:  testutil.Expected{Status: 404, Body: body, APIError: apiError(404, body)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.CallTemplates.Tags.GetByID(ctx, missing)
 			if value != nil {
 				t.Fatal("missing template returned a value")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 	// The lab observed the same 100004 body for every type's missing reads and deletes.
-	run(t, contracttest.Case{Name: "actual-missing-auto-recording", Source: "msteams/teams_admin_api/call_templates/testdata/get_missing_404.json",
-		Mappings: mapping("Get-CsAutoRecordingTemplate", "Remove-CsAutoRecordingTemplate"),
-		Steps: []contracttest.Exchange{discovery(t), wire("GET", "auto-recording/"+missing, "Get-CsAutoRecordingTemplate", nil, 404, body),
+	run(t, testutil.Case{Name: "actual-missing-auto-recording",
+
+		Steps: []testutil.Exchange{discovery(t), wire("GET", "auto-recording/"+missing, "Get-CsAutoRecordingTemplate", nil, 404, body),
 			wire("DELETE", "auto-recording/"+missing, "Remove-CsAutoRecordingTemplate", nil, 404, body)},
-		Want: contracttest.Expected{Status: 404, Body: body, APIError: apiError(404, body)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 404, Body: body, APIError: apiError(404, body)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.CallTemplates.AutoRecording
 			if _, _, err := s.GetByID(ctx, missing); err == nil {
 				t.Fatal("missing auto recording template was read")
 			}
 			response, err := s.DeleteByID(ctx, missing)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -380,12 +366,12 @@ func TestUnitMalformedResponsesFailDecode(t *testing.T) {
 		"get-wrong-tags-type":   `{"IvrTagsTemplate":{"Tags":{}}}`,
 		"get-wrong-target-type": `{"IvrTagsTemplate":{"Tags":[{"TagDetails":[]}]}}`,
 	} {
-		run(t, contracttest.Case{Name: name, Mappings: mapping("Get-CsTagsTemplate"),
-			Steps: []contracttest.Exchange{discovery(t), wire("GET", "ivr-tags-template/"+missing, "Get-CsTagsTemplate", nil, 200, []byte(reply))},
-			Want:  contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name,
+			Steps: []testutil.Exchange{discovery(t), wire("GET", "ivr-tags-template/"+missing, "Get-CsTagsTemplate", nil, 200, []byte(reply))},
+			Want:  testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, response, err := sdk.TeamsAdminAPI.CallTemplates.Tags.GetByID(ctx, missing)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 	for name, reply := range map[string]string{
@@ -394,20 +380,20 @@ func TestUnitMalformedResponsesFailDecode(t *testing.T) {
 		"list-null-item":     `{"ComplianceRecordings":[null]}`,
 		"list-bad-domain":    `{"ComplianceRecordings":[{"BotRequiredDuringCall":"yes"}]}`,
 	} {
-		run(t, contracttest.Case{Name: name, Mappings: mapping("Get-CsComplianceRecordingForCallQueueTemplate"),
-			Steps: []contracttest.Exchange{discovery(t), wire("GET", "compliance-recording", "Get-CsComplianceRecordingForCallQueueTemplate", nil, 200, []byte(reply))},
-			Want:  contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name,
+			Steps: []testutil.Exchange{discovery(t), wire("GET", "compliance-recording", "Get-CsComplianceRecordingForCallQueueTemplate", nil, 200, []byte(reply))},
+			Want:  testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, response, err := sdk.TeamsAdminAPI.CallTemplates.ComplianceRecording.List(ctx)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
-	run(t, contracttest.Case{Name: "undeclared-status", Mappings: mapping("Remove-CsSharedCallHistoryTemplate"),
-		Steps: []contracttest.Exchange{discovery(t), wire("DELETE", "shared-call-history-template/"+missing, "Remove-CsSharedCallHistoryTemplate", nil, 202, []byte(`{}`))},
-		Want:  contracttest.Expected{Status: 202, Error: ct.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "undeclared-status",
+		Steps: []testutil.Exchange{discovery(t), wire("DELETE", "shared-call-history-template/"+missing, "Remove-CsSharedCallHistoryTemplate", nil, 202, []byte(`{}`))},
+		Want:  testutil.Expected{Status: 202, Error: ct.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.CallTemplates.SharedCallHistory.DeleteByID(ctx, missing)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -492,9 +478,9 @@ func TestUnitInvalidInputFailsBeforeIO(t *testing.T) {
 			return e
 		},
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local", Want: contracttest.Expected{Error: ct.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.CallTemplates)}
+		run(t, testutil.Case{Name: name, Want: testutil.Expected{Error: ct.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.CallTemplates)}
 			}})
 	}
 }

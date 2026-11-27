@@ -48,7 +48,7 @@ the unit response fixtures. File-list writes, explicit scalar-null persistence,
 client propagation, delegated authentication and other clouds remain separately
 unqualified; source-backed request tests cover their binding contracts.
 
-See [qualification](../../../docs/implementation/policies/messaging-migration-configuration-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/messaging-migration-configuration-lab-acceptance.md).
 
 FileTypeBlockList now uses `[]*string` in the response model, preserving null
 entries separately from empty strings. This corrects its former lossy `[]string`

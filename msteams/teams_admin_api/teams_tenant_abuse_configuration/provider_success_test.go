@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -17,7 +17,6 @@ import (
 // Authored from the pinned Core nullable scalar/list DTO, not a tenant capture.
 const authoredRead = `{"Identity":"Global","LowSeatLimit":18446744073709551615,"TrialTenantValidation":null,"SkipValidation":"","CreateThreadThresholdPerSeat":0,"AddMemberThresholdPerSeat":null,"SendMessageThresholdPerSeat":9007199254740993,"CreateThreadThresholdForTrialTenants":1,"AddMemberThresholdForTrialTenants":2,"SendMessageThresholdForTrialTenants":3,"BlockedTenants":["entry",null,"entry",null],"Future":false}`
 
-const authoredSource = "msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go"
 const getCommand = "Get-CsTeamsTenantAbuseConfiguration"
 const setCommand = "Set-CsTeamsTenantAbuseConfiguration"
 const selected = collection + "/configuration/Global"
@@ -31,14 +30,14 @@ func assertAuthoredRead(t *testing.T, value *resource.Configuration) {
 
 func TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "typed-read", Source: authoredSource, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", selected, getCommand, nil, 200, authoredRead)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "typed-read", Steps: []testutil.Exchange{compiledWire("GET", selected, getCommand, nil, 200, authoredRead)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, response, err := sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations.GetByIdentity(ctx, "Global")
 		if err == nil {
 			assertAuthoredRead(t, value)
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
-	run(t, contracttest.Case{Name: "typed-collection", Source: authoredSource, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, getCommand, nil, 200, "["+authoredRead+"]")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "typed-collection", Steps: []testutil.Exchange{compiledWire("GET", collection, getCommand, nil, 200, "["+authoredRead+"]")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		values, response, err := sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations.List(ctx)
 		if err == nil && len(values) != 1 {
 			t.Fatal("typed Global-only collection changed")
@@ -46,10 +45,10 @@ func TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter(t *testing.T) {
 		if err == nil {
 			assertAuthoredRead(t, values[0])
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 	for _, pattern := range []string{"Glo?al", " "} {
-		run(t, contracttest.Case{Name: "literal-filter", Source: authoredSource, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, getCommand, nil, 200, "["+authoredRead+"]")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "literal-filter", Steps: []testutil.Exchange{compiledWire("GET", collection, getCommand, nil, 200, "["+authoredRead+"]")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			values, response, err := sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations.ListFiltered(ctx, pattern)
 			if err == nil && (pattern == " " && len(values) != 0 || pattern != " " && len(values) != 1) {
 				t.Fatal("literal whitespace or wildcard selection changed")
@@ -57,7 +56,7 @@ func TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter(t *testing.T) {
 			if err == nil && len(values) != 0 {
 				assertAuthoredRead(t, values[0])
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 	}
 }
@@ -65,14 +64,14 @@ func TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter(t *testing.T) {
 func TestUnitTenantAbuseNullablePreparedEditRetainsLaterFailureAndExplicitRecovery(t *testing.T) {
 	t.Parallel()
 	const accepted = `{"Identity":"Global","LowSeatLimit":0,"BlockedTenants":["entry",null,null,"ENTRY"]}`
-	run(t, contracttest.Case{Name: "nullable-edit-failure-recovery", Source: authoredSource, Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "nullable-edit-failure-recovery", Steps: []testutil.Exchange{
 		compiledWire("GET", selected, setCommand, nil, 200, authoredRead),
 		compiledWire("PATCH", selected, setCommand, json.RawMessage(accepted), 204, ""),
 		compiledWire("GET", selected, setCommand, nil, 200, accepted),
 		compiledWire("PATCH", selected, setCommand, json.RawMessage(`{"Identity":"Global","SkipValidation":null}`), 403, `{"Message":"controlled denial"}`),
 		compiledWire("PATCH", selected, setCommand, json.RawMessage(`{"Identity":"Global","LowSeatLimit":18446744073709551615,"BlockedTenants":["entry",null,"entry",null]}`), 204, ""),
 		compiledWire("GET", selected, getCommand, nil, 200, authoredRead),
-	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		service := sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations
 		first, response, err := service.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{LowSeatLimit: policy.Set(uint64(0))}, BlockedTenants: policy.ChangeNullableStrings([]*string{nil, new("ENTRY")}, []*string{nil, new("entry")})})
 		if err != nil || first == nil || !first.PatchInvoked || !first.HTTPAccepted || first.After != nil || first.ReadResponse == nil || string(first.ReadResponse.Body()) != authoredRead || response == nil || response.StatusCode() != 204 {
@@ -93,18 +92,18 @@ func TestUnitTenantAbuseNullablePreparedEditRetainsLaterFailureAndExplicitRecove
 		if err == nil {
 			assertAuthoredRead(t, value)
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }
 
 func TestUnitTenantAbuseMalformedSuccessRetainsPreparationReceiptWithoutPatch(t *testing.T) {
 	t.Parallel()
 	const invalid = `{"LowSeatLimit":18446744073709551616}`
-	run(t, contracttest.Case{Name: "overflow-preparation", Source: authoredSource, Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", selected, setCommand, nil, 200, invalid)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "overflow-preparation", Steps: []testutil.Exchange{compiledWire("GET", selected, setCommand, nil, 200, invalid)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, response, err := sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{BlockedTenants: policy.ReplaceNullableStrings(nil)})
 		if !errors.Is(err, client.ErrDecode) || response == nil || string(response.Body()) != invalid || value == nil || value.ReadResponse != response || value.Before != nil || value.After != nil || value.PatchInvoked || value.HTTPAccepted {
 			t.Fatal("malformed successful preparation lost receipt or allowed a later PATCH")
 		}
-		return contracttest.Observation{Response: response}
+		return testutil.Observation{Response: response}
 	}})
 }

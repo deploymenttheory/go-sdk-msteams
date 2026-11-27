@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -36,8 +36,8 @@ func createShiftsPair(ctx context.Context, sdk *msteams.Client) (*shifts.Connect
 	instance, _, err := s.CreateInstance(ctx, shifts.InstanceRequest{ConnectionID: connection.ID, Name: ptr("owned-instance"), ConnectorAdminEmails: []string{}, SyncFrequencyInMin: ptr(int32(0))})
 	return connection, instance, err
 }
-func shiftsCreateSteps() []contracttest.Exchange {
-	return []contracttest.Exchange{
+func shiftsCreateSteps() []testutil.Exchange {
+	return []testutil.Exchange{
 		exchange(false, "POST", shiftsV2+"/connections", "New-CsTeamsShiftsConnection", createConnectionBody, 201, connectionReply),
 		exchange(false, "POST", shiftsV2+"/connectorinstances", "New-CsTeamsShiftsConnectionInstance", createInstanceBody, 201, instanceReply),
 	}
@@ -50,10 +50,10 @@ func TestUnitShiftsConnectionInstanceAndAsyncOperationKeepDistinctIDs(t *testing
 		exchange(false, "GET", shiftsV1+"/operations/"+mapOperationID, "Get-CsTeamsShiftsConnectionOperation", "", 200, `{"Id":"`+mapOperationID+`","wfmConnectorInstanceId":"`+instanceID+`","status":"Completed","details":[{"status":"Failed","error":"WfmTeamNotFound","properties":{"teamId":"`+shiftsTeamID+`"}}]}`),
 		exchange(false, "GET", shiftsV1+"/connectorinstances/"+instanceID+"/teamconnects", "Get-CsTeamsShiftsConnectionTeamMap", "", 200, `{"teamConnects":[]}`),
 	)
-	run(t, "shifts-returned-identity-handoff", steps, nil, func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, "shifts-returned-identity-handoff", steps, nil, func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		connection, instance, err := createShiftsPair(ctx, sdk)
 		if err != nil {
-			return contracttest.Observation{Err: err}
+			return testutil.Observation{Err: err}
 		}
 		if connection.ID == nil || *connection.ID != connectionID || instance.ID == nil || *instance.ID != instanceID || instance.ConnectionID == nil || *instance.ConnectionID != *connection.ID || instance.SyncFrequencyInMin == nil || *instance.SyncFrequencyInMin != 0 || instance.ConnectorAdminEmails == nil {
 			t.Fatal("connection/instance identity or explicit empty/zero was lost")
@@ -61,14 +61,14 @@ func TestUnitShiftsConnectionInstanceAndAsyncOperationKeepDistinctIDs(t *testing
 		s := sdk.TeamsAdminAPI.ShiftsConnections
 		accepted, response, err := s.MapTeams(ctx, *instance.ID, []shifts.TeamMapping{{TeamID: shiftsTeamID, WfmTeamID: "wfm-team"}})
 		if err != nil {
-			return contracttest.Observation{Err: err}
+			return testutil.Observation{Err: err}
 		}
 		if response == nil || response.StatusCode() != 202 || accepted.OperationID == nil || *accepted.OperationID != mapOperationID || accepted.Status == nil || *accepted.Status != "NotStarted" {
 			t.Fatal("accepted async receipt lost its distinct operation ID")
 		}
 		operation, response, err := s.GetOperationByID(ctx, *accepted.OperationID)
 		if err != nil {
-			return contracttest.Observation{Err: err}
+			return testutil.Observation{Err: err}
 		}
 		// A completed envelope can still contain failed details. Neither 202 nor the
 		// outer Completed string alone proves a successfully persisted team mapping.
@@ -79,7 +79,7 @@ func TestUnitShiftsConnectionInstanceAndAsyncOperationKeepDistinctIDs(t *testing
 		if err == nil && (response == nil || response.StatusCode() != 200 || maps == nil || len(maps) != 0) {
 			t.Fatal("failed operation invented a persisted map")
 		}
-		return contracttest.Observation{Err: err}
+		return testutil.Observation{Err: err}
 	})
 }
 
@@ -92,10 +92,10 @@ func TestUnitShiftsSyncDenialPreservesReceiptsAndIndependentParentCleanup(t *tes
 		exchange(false, "DELETE", shiftsV2+"/connections/"+connectionID, "Remove-CsTeamsShiftsConnection", "", 204, ""),
 		exchange(false, "GET", shiftsV2+"/connections/"+connectionID, "Get-CsTeamsShiftsConnection", "", 404, `{"code":"NotFound"}`),
 	)
-	run(t, "shifts-sync-denial-independent-cleanup", steps, auth.ErrForbidden, func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, "shifts-sync-denial-independent-cleanup", steps, auth.ErrForbidden, func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		connection, instance, err := createShiftsPair(ctx, sdk)
 		if err != nil {
-			return contracttest.Observation{Err: err}
+			return testutil.Observation{Err: err}
 		}
 		if connection.ID == nil || instance.ID == nil {
 			t.Fatal("successful parent receipts lost their IDs")
@@ -126,6 +126,6 @@ func TestUnitShiftsSyncDenialPreservesReceiptsAndIndependentParentCleanup(t *tes
 		if _, response, err := s.GetConnectionByID(cleanup, *connection.ID); !errors.As(err, &absent) || absent.StatusCode != 404 || response == nil || response.StatusCode() != 404 {
 			t.Fatal("connection absence was not independently read")
 		}
-		return contracttest.Observation{Err: operationErr}
+		return testutil.Observation{Err: operationErr}
 	})
 }

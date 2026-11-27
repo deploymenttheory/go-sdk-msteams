@@ -55,4 +55,4 @@ Synthetic application/delegated tests establish wire behavior rather than live
 authorization. Successful tenant updates/read-back/restoration, cloud/server
 availability and effective assignment app behavior remain open under #115. See
 [unit tests](service_test.go)
-and the [lab acceptance record](../../../docs/implementation/policies/education-assignments-lab-acceptance.md).
+and the [lab acceptance record](../../../docs/acceptance/education-assignments-lab-acceptance.md).

@@ -1,28 +1,23 @@
 # Microsoft Teams Go SDK
 
-A native Go SDK project targeting the management behaviour of MicrosoftTeams PowerShell **8.1.0**, with Linux, macOS and Windows support and portable CI/CD authentication.
+A native Go SDK for Microsoft Teams administration, with Linux, macOS and Windows
+support and portable authentication for CI/CD.
 
-**Status:** active development. The SDK includes portable authentication providers,
-shared transport, Graph resources and Teams administration services. Complete
-8.1.0 parity and release qualification remain outstanding. See the
-[current coverage ledger](contracts/coverage/README.md) and
-[GitHub backlog](https://github.com/deploymenttheory/go-sdk-msteams/issues/6)
-for command-level delivery and evidence limitations.
+**Status:** active development. The SDK includes authentication providers, shared
+transport, Microsoft Graph resources and Teams administration services. See each
+resource's API documentation and the [GitHub backlog](https://github.com/deploymenttheory/go-sdk-msteams/issues/6)
+for supported functionality and remaining work.
 
-- [Agreed implementation plan](docs/implementation/plan.md)
-- [Plan amendments and resource CRUD contract](docs/implementation/plan-amendments.md)
-- [Published GitHub backlog](https://github.com/deploymenttheory/go-sdk-msteams/issues/6)
-- [Approved backlog preview](docs/implementation/backlog/README.md)
-- [Publication verification](docs/implementation/backlog/publication/README.md)
-- [Command coverage and ownership](docs/implementation/backlog/coverage.md)
-- [Pinned PowerShell discovery evidence](contracts/powershell/8.1.0/README.md)
-- [Reproduce the pinned baseline](tools/baseline/README.md)
-- [Compare upstream contract changes](tools/contractdiff/README.md)
-- [Discover releases and review candidate draft PRs](tools/releases/README.md)
+- [Documentation index](docs/README.md)
+- [Authentication and permissions](docs/guides/authentication.md)
+- [Client configuration](docs/guides/client-configuration.md)
+- [Service development](docs/guides/service-development.md)
+- [Unit and real-tenant acceptance testing](docs/guides/testing.md)
 
-The architecture follows the [Jamf Pro Go SDK](https://github.com/deploymenttheory/go-sdk-jamfpro-v2): a root client, shared transport, resource-specific services, typed models, examples and acceptance tests. PowerShell is a discovery and comparison tool, not a planned runtime dependency.
-
-The first supported release requires complete implementation and contract-test coverage of the reconciled management baseline. Available tenant capabilities will also receive live conformance tests; unavailable live scenarios remain explicitly identified.
+The architecture follows the [Jamf Pro Go SDK](https://github.com/deploymenttheory/go-sdk-jamfpro-v2):
+a root client, shared transport, resource-specific services, typed models,
+examples and acceptance tests. SDK consumers do not need PowerShell. Existing
+acceptance comparisons may use MicrosoftTeams PowerShell 8.1.0 as a test oracle.
 
 ## Getting started
 
@@ -76,73 +71,42 @@ SDK consumers do not need PowerShell. For Graph operations, see the
 
 ## Development
 
-Requires the pinned Go version in [go.mod](go.mod) (currently 1.27.4). The module is
-`github.com/deploymenttheory/go-sdk-msteams`; import the SDK entry point as
+Use the Go version pinned in [go.mod](go.mod). Import the SDK entry point as
 `github.com/deploymenttheory/go-sdk-msteams/msteams`.
 
 ```sh
 go build ./...
 go vet ./...
+go test -count=1 -shuffle=on -run '^(TestUnit|Example)' ./...
 go test -race -count=1 -shuffle=on -run '^(TestUnit|Example)' ./...
 go tool govulncheck -test ./...
-go run ./examples/baseline
 go run ./examples/client-construction
 ```
 
-Both examples need no credentials. The client example constructs and closes a local session without signing in. The baseline example prints the target contract version;
-it does not demonstrate an implemented Teams operation. See the
-[foundation guide](docs/guides/development.md) and [client configuration guide](docs/guides/client-configuration.md) for pinned dependencies, CI gates and
-package ownership. Offline quality CI runs on Linux, macOS and Windows without
-tenant secrets. The separate [tenant acceptance workflow](tools/acceptance/README.md)
-uses explicitly configured lab credentials and fixtures; ordinary unit checks do
-not establish live qualification.
-
-Repository layout, following the agreed Jamf composition:
+Unit tests use checked-in JSON fixtures and in-memory HTTP responses. They run
+without tenant credentials. The client-construction example is also credential-free.
+Real-tenant tests use `TestAcc`, explicit lab configuration, dedicated fixtures
+and independently verified cleanup. See the [acceptance guide](tools/acceptance/README.md).
 
 ```text
-go.mod, go.sum           module metadata only; no Go source at repository root
-msteams/                 SDK entry point, client composition and package tests
-  client.go, doc.go       public client and package documentation
-  client/                request boundary and shared transport
-  auth/                  portable audience-aware providers
-  config/, constants/    validated configuration and cloud definitions
-  shared/                narrowly scoped wire/model primitives
-  graph_api/<resource>/  typed Graph services
-  teams_admin_api/<resource>/  typed administration services and local builders
-  mocks/                offline doubles
-tests/integration/lab/  tenant conformance, pinned comparisons and recovery
-examples/                compiled usage examples
-contracts/powershell/     immutable upstream evidence
-contracts/coverage/       current command/parameter-set delivery ledger
-internal/dependencycheck/ cross-platform dependency compilation gate
-```
-
-## Review and validate the backlog
-
-```sh
-python3 tools/backlog/build.py
-python3 tools/backlog/validate.py
-```
-
-These commands operate locally and do not publish GitHub issues. The approved
-publication preview is historical; GitHub issues/PRs and the coverage ledger track
-current work. Do not regenerate the approved preview to represent implementation
-progress.
-
-```sh
-python3 tools/coverage/ledger.py
-# Release gate; expected to fail while implementation/qualification is incomplete:
-python3 tools/coverage/ledger.py --require-complete
+msteams/                 SDK entry point and resource services
+  client/, auth/         shared transport and portable authentication
+  graph_api/             typed Microsoft Graph resources
+  teams_admin_api/       typed administration services and local builders
+tests/integration/lab/   real-tenant acceptance and recovery
+examples/               compiled usage examples
 ```
 
 Current delivery work covers CALL, CORE, EXT, POL and LAB. Voice administration
-(VOICE) is deferred from this work because the lab lacks licensing for its live
-tests. This does not remove VOICE from the full-parity release requirements.
-Unavailable live scenarios retain explicit limitations.
+is deferred because the lab lacks licensing for its live tests. Missing
+permissions, licences or fixtures remain documented limitations; skipped tests
+do not establish successful tenant behaviour.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) and the
-[service development guide](docs/guides/service-development.md) for contribution
-and verification conventions.
+Use ordinary unit tests, JSON response fixtures and real-tenant acceptance to
+verify changes. Standalone contract research, command/parameter-set ledgers and
+CLR emulation are not part of the development or release workflow.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution conventions.
 
 ## Licence
 

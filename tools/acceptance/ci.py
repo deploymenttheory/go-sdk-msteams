@@ -534,26 +534,26 @@ def prepare(args):
     # Publish paths early so finalization also runs after a download/import failure.
     with Path(os.environ['GITHUB_ENV']).open('a') as stream:
         stream.write('MSTEAMS_LAB_PRIVATE_DIRECTORY=' + str(private) + '\n')
-    spec = importlib.util.spec_from_file_location('pinned_baseline', ROOT / 'tools/baseline/baseline.py')
-    baseline = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(baseline)
+    spec = importlib.util.spec_from_file_location('acceptance_powershell', HERE / 'powershell.py')
+    powershell = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(powershell)
     cache = getattr(args, 'cache_directory', None)
     cached = cache is not None and (cache / 'gallery.xml').is_file() and (cache / 'module.zip').is_file()
     metadata = args.metadata or (cache / 'gallery.xml' if cached else private / 'gallery.xml')
     archive = args.archive or (cache / 'module.zip' if cached else private / 'module.zip')
     if not args.metadata and not cached:
-        baseline.fetch(f"{baseline.GALLERY}/api/v2/Packages(Id='MicrosoftTeams',Version='{baseline.VERSION}')", metadata, 1024 * 1024)
+        powershell.fetch(f"{powershell.GALLERY}/api/v2/Packages(Id='MicrosoftTeams',Version='{powershell.VERSION}')", metadata, 1024 * 1024)
     if not args.archive and not cached:
-        baseline.fetch(f'{baseline.GALLERY}/api/v2/package/MicrosoftTeams/{baseline.VERSION}', archive)
+        powershell.fetch(f'{powershell.GALLERY}/api/v2/package/MicrosoftTeams/{powershell.VERSION}', archive)
     # A cached download is only a transport optimisation: the pinned checksum
     # is verified on every run before the module is extracted.
-    info = baseline.gallery_metadata(metadata.read_bytes(), baseline.VERSION)
-    baseline.verify_archive(archive, info, baseline.PIN)
+    info = powershell.gallery_metadata(metadata.read_bytes(), powershell.VERSION)
+    powershell.verify_archive(archive, info, powershell.PIN)
     if cache is not None and not cached:
         cache.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(metadata, cache / 'gallery.xml')
         shutil.copyfile(archive, cache / 'module.zip')
-    baseline.extract_archive(archive, private / 'module')
+    powershell.extract_archive(archive, private / 'module')
     print(f'Repository secrets loaded: {len(values)}. MicrosoftTeams 8.1.0 checksum verified.', flush=True)
 
 
@@ -659,7 +659,7 @@ def selected_services(registry):
 # they are shared by all clients, lab tests or tenant setup.
 SHARED_PATTERNS = [re.compile(pattern) for pattern in [
     r'^go\.(mod|sum)$',
-    r'^tools/baseline/',
+    r'^tools/acceptance/powershell\.py$',
     r'^internal/',
     r'^tests/integration/(auth|lab/internal)/',
     r'^msteams/[^/]+\.go$',
@@ -677,7 +677,7 @@ def changed_services(registry, files, base_registry, references=None):
     lab tests reference. A shared change (SHARED_PATTERNS) touches every
     service; unit test files in shared packages and acceptance workflow edits
     do not (the always-run auth partition exercises the partition steps).
-    ci.py, ledger, docs and services.go wiring changes touch none: unit tests
+    ci.py, docs and services.go wiring changes touch none: unit tests
     cover them, and pushes to main still run every partition."""
     services = registry.get('services', {})
     if any(pattern.search(path) for path in files if not path.endswith('_test.go') for pattern in SHARED_PATTERNS):

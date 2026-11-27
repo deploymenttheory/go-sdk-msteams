@@ -1,0 +1,1372 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Communities",
+      "kind": "string",
+      "input_json": "{\"Communities\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ContentBasedPhishingCheck",
+      "kind": "string",
+      "input_json": "{\"ContentBasedPhishingCheck\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "CustomEmojis",
+      "kind": "boolean",
+      "input_json": "{\"CustomEmojis\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableInOrganizationChatControl",
+      "kind": "boolean",
+      "input_json": "{\"EnableInOrganizationChatControl\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "EnableVideoMessageCaptions",
+      "kind": "boolean",
+      "input_json": "{\"EnableVideoMessageCaptions\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCheck",
+      "kind": "string",
+      "input_json": "{\"FileTypeCheck\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeCustomizationSetting",
+      "kind": "string",
+      "input_json": "{\"FileTypeCustomizationSetting\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "MessagingNotes",
+      "kind": "string",
+      "input_json": "{\"MessagingNotes\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "ReportIncorrectSecurityDetections",
+      "kind": "string",
+      "input_json": "{\"ReportIncorrectSecurityDetections\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":0}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":37}",
+      "projected_json": "37",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":-7}",
+      "projected_json": "-7",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":1.5}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":\"37\"}",
+      "projected_json": "37",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":\"Disabled\"}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":\"future\"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":true}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":2147483648}",
+      "projected_json": "-2147483648",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-or-int32",
+      "input_json": "{\"Storyline\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonSerializationException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "UrlReputationCheck",
+      "kind": "string",
+      "input_json": "{\"UrlReputationCheck\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

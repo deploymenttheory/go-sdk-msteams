@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
@@ -25,8 +25,8 @@ func TestUnitCallingCleanupReconcilesRejectedCreate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	wire := func(path string, status int, body []byte) contracttest.Exchange {
-		return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com" + path, Audience: auth.TeamsAdminAudience, Headers: http.Header{"MPACmdlet": {"true"}, "X-MS-CmdletName": {"Get-CsTeamsCallingPolicy"}, "X-MS-Target-Uri": nil}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	wire := func(path string, status int, body []byte) testutil.Exchange {
+		return testutil.Exchange{Request: testutil.WireRequest{Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com" + path, Audience: auth.TeamsAdminAudience, Headers: http.Header{"MPACmdlet": {"true"}, "X-MS-CmdletName": {"Get-CsTeamsCallingPolicy"}, "X-MS-Target-Uri": nil}}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 	}
 	for _, denied := range []bool{false, true} {
 		scenario := "verified-absence"
@@ -37,12 +37,12 @@ func TestUnitCallingCleanupReconcilesRejectedCreate(t *testing.T) {
 			scenario, status, body, want = "independent-read-denied", 403, nil, auth.ErrForbidden
 		}
 		t.Run(scenario, func(t *testing.T) {
-			result, err := contracttest.Run(t.Context(), contracttest.Case{Name: scenario, Family: "calling_policy_cleanup", Scope: "service", Source: "tests/integration/lab/teams_calling_policy/calling_policy_cleanup_test.go", Steps: []contracttest.Exchange{wire(base, 200, list), wire(base+"/configuration/"+name, status, body)}, Want: contracttest.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			result, err := testutil.Run(t.Context(), testutil.Case{Name: scenario, Steps: []testutil.Exchange{wire(base, 200, list), wire(base+"/configuration/"+name, status, body)}, Want: testutil.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				id, err := (callingPolicyCleanup{sdk.TeamsAdminAPI.TeamsCallingPolicies}).Resolve(ctx, lab.Entry{Fixture: name})
 				if id != "" {
 					t.Fatal("missing owned policy resolved to a different object")
 				}
-				return contracttest.Observation{Err: err}
+				return testutil.Observation{Err: err}
 			}})
 			if err != nil || !result.Passed() {
 				t.Fatalf("rejected-create cleanup differs: %v %+v", err, result.Differences())

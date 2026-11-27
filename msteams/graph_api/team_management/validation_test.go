@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -24,7 +24,7 @@ func TestUnitCreationValidationPrecedesCredentialsAndWrites(t *testing.T) {
 			mode = auth.Application
 			want = directoryuser.ErrCurrentUser
 		}
-		creationCase(t, "CreateTeam", contracttest.Case{Name: name, Scope: "local", Mode: mode, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		creationCase(t, testutil.Case{Name: name, Mode: mode, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value := creationRequest()
 			switch name {
 			case "empty-name":
@@ -64,10 +64,10 @@ func TestUnitCreationValidationPrecedesCredentialsAndWrites(t *testing.T) {
 			}
 			result, err := sdk.GraphAPI.TeamManagement.Create(ctx, value)
 			if err != nil {
-				return contracttest.Observation{Response: result.Response, Err: err}
+				return testutil.Observation{Response: result.Response, Err: err}
 			}
-			return contracttest.Observation{Response: result.Response, Err: err}
-		}, Want: contracttest.Expected{Error: want}})
+			return testutil.Observation{Response: result.Response, Err: err}
+		}, Want: testutil.Expected{Error: want}})
 	}
 }
 
@@ -83,7 +83,7 @@ func TestUnitArchiveValidationStopsBeforeAnyReadOrWrite(t *testing.T) {
 			mode = auth.Application
 			want = team.ErrArchiveOption
 		}
-		runCase(t, "Set-TeamArchivedState", contracttest.Case{Name: name, Scope: "local", Mode: mode, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		runCase(t, testutil.Case{Name: name, Mode: mode, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			options := management.ArchiveStateOptions{}
 			archived := true
 			switch name {
@@ -106,10 +106,10 @@ func TestUnitArchiveValidationStopsBeforeAnyReadOrWrite(t *testing.T) {
 			}
 			result, err := sdk.GraphAPI.TeamManagement.SetArchivedState(ctx, groupID, archived, options)
 			if err != nil {
-				return contracttest.Observation{Response: result.Response, Err: err}
+				return testutil.Observation{Response: result.Response, Err: err}
 			}
-			return contracttest.Observation{Response: result.Response, Err: err}
-		}, Want: contracttest.Expected{Error: want}})
+			return testutil.Observation{Response: result.Response, Err: err}
+		}, Want: testutil.Expected{Error: want}})
 	}
 }
 
@@ -125,7 +125,7 @@ func TestUnitListingLocalValidationAndCurrentUserMode(t *testing.T) {
 			mode = auth.Application
 			want = directoryuser.ErrCurrentUser
 		}
-		listCase(t, contracttest.Case{Name: name, Scope: "local", Mode: mode, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		listCase(t, testutil.Case{Name: name, Mode: mode, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			options := management.ListOptions{}
 			switch name {
 			case "batch-negative":
@@ -150,10 +150,10 @@ func TestUnitListingLocalValidationAndCurrentUserMode(t *testing.T) {
 			}
 			result, err := sdk.GraphAPI.TeamManagement.List(ctx, options)
 			if err != nil {
-				return contracttest.Observation{Response: result.Response, Err: err}
+				return testutil.Observation{Response: result.Response, Err: err}
 			}
-			return contracttest.Observation{Response: result.Response, Err: err}
-		}, Want: contracttest.Expected{Error: want}})
+			return testutil.Observation{Response: result.Response, Err: err}
+		}, Want: testutil.Expected{Error: want}})
 	}
 }
 
@@ -172,7 +172,7 @@ func TestUnitInvalidInputAndCancellationPerformNoIO(t *testing.T) {
 			case "wrong-backend":
 				want = client.ErrDestination
 			}
-			runCase(t, map[string]string{"get": "Get-Team", "update": "Set-Team"}[method], contracttest.Case{Name: method + "-" + condition, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, testutil.Case{Name: method + "-" + condition, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service, id := sdk.GraphAPI.TeamManagement, groupID
 				switch condition {
 				case "invalid-id":
@@ -181,18 +181,18 @@ func TestUnitInvalidInputAndCancellationPerformNoIO(t *testing.T) {
 					if method == "get" {
 						//nolint:contextcheck,staticcheck // Deliberately exercise rejection of nil contexts before authentication or I/O.
 						_, err := service.GetByID(nil, id)
-						return contracttest.Observation{Err: err}
+						return testutil.Observation{Err: err}
 					}
 					//nolint:contextcheck,staticcheck // Deliberately exercise rejection of nil contexts before authentication or I/O.
 					_, err := service.UpdateByID(nil, id, management.UpdateRequest{})
-					return contracttest.Observation{Err: err}
+					return testutil.Observation{Err: err}
 				case "cancelled":
 					cancelled, cancel := context.WithCancel(ctx)
 					cancel()
 					ctx = cancelled
 				case "closed":
 					if err := sdk.Close(); err != nil {
-						return contracttest.Observation{Err: err}
+						return testutil.Observation{Err: err}
 					}
 				case "nil-service":
 					service = nil
@@ -201,11 +201,11 @@ func TestUnitInvalidInputAndCancellationPerformNoIO(t *testing.T) {
 				}
 				if method == "get" {
 					_, err := service.GetByID(ctx, id)
-					return contracttest.Observation{Err: err}
+					return testutil.Observation{Err: err}
 				}
 				_, err := service.UpdateByID(ctx, id, management.UpdateRequest{})
-				return contracttest.Observation{Err: err}
-			}, Want: contracttest.Expected{Error: want}})
+				return testutil.Observation{Err: err}
+			}, Want: testutil.Expected{Error: want}})
 		}
 	}
 }

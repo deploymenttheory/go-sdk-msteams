@@ -67,4 +67,4 @@ Supplied-token callers must provide the scope-keyed token,
   goes out as `%24expand`. The module sends it literally.
 
 See [unit tests](service_test.go) and the
-[contract notes](../../../docs/implementation/ext/unified-apps-contract-notes.md).
+[unit tests](service_test.go).

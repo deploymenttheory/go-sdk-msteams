@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_messaging_configuration"
@@ -20,9 +20,9 @@ const set = "Set-CsTeamsGuestMessagingConfiguration"
 func TestUnitReadAndFiltersUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	raw := readResponseFixture(t, "get_global.json")
-	run(t, contracttest.Case{Name: "read", Mappings: []contracttest.Mapping{{Command: get, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", selected, get, nil, 200, string(raw))}, Want: contracttest.Expected{JSON: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "read", Steps: []testutil.Exchange{compiledWire("GET", selected, get, nil, 200, string(raw))}, Want: testutil.Expected{JSON: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsGuestMessagingConfigurations.GetByIdentity(ctx, "Global")
-		return contracttest.Observation{Value: v, Response: r, Err: e}
+		return testutil.Observation{Value: v, Response: r, Err: e}
 	}})
 	list := readResponseFixture(t, "list.json")
 	for _, tc := range []struct {
@@ -30,12 +30,12 @@ func TestUnitReadAndFiltersUseAcceptanceResponses(t *testing.T) {
 		count         int
 	}{{"all", " ", 1}, {"identity", "Glo?al", 1}, {"case", "[gG]lobal", 1}, {"missing", "missing", 0}} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: get, ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, get, nil, 200, string(list))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{compiledWire("GET", collection, get, nil, 200, string(list))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsGuestMessagingConfigurations.ListFiltered(ctx, tc.pattern)
 				if e == nil && len(v) != tc.count {
 					t.Fatal("local filter selection differs")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -60,9 +60,9 @@ func TestUnitUpdateUsesSparsePutAndActualEmptyReceipt(t *testing.T) {
 		{"every-setting", every, `{"Identity":"Global","AllowUserEditMessage":false,"AllowUserDeleteMessage":true,"AllowUserDeleteChat":false,"AllowUserChat":true,"AllowGiphy":false,"GiphyRatingType":"NoRestriction","AllowMemes":true,"AllowImmersiveReader":false,"AllowStickers":true}`},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("PUT", selected, set, json.RawMessage(tc.body), 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{compiledWire("PUT", selected, set, json.RawMessage(tc.body), 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				r, e := sdk.TeamsAdminAPI.TeamsGuestMessagingConfigurations.UpdateGlobal(ctx, tc.input)
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -70,9 +70,9 @@ func TestUnitUpdateUsesSparsePutAndActualEmptyReceipt(t *testing.T) {
 
 func TestUnitIdentityIsOneEscapedSegment(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "scoped-identity", Steps: []contracttest.Exchange{compiledWire("GET", collection+"/configuration/Scope%2Fa%20b%3F%23%25", get, nil, 200, string(readResponseFixture(t, "get_global.json")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "scoped-identity", Steps: []testutil.Exchange{compiledWire("GET", collection+"/configuration/Scope%2Fa%20b%3F%23%25", get, nil, 200, string(readResponseFixture(t, "get_global.json")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, r, e := sdk.TeamsAdminAPI.TeamsGuestMessagingConfigurations.GetByIdentity(ctx, "Scope/a b?#%")
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }
 
@@ -84,12 +84,12 @@ func TestUnitMalformedAndUnexpectedSuccessKeepMetadata(t *testing.T) {
 		err        error
 	}{{"null", "null", 200, client.ErrDecode}, {"array", "[]", 200, client.ErrDecode}, {"bad-boolean", `{"AllowMemes":"false"}`, 200, client.ErrDecode}, {"bad-string", `{"GiphyRatingType":1}`, 200, client.ErrDecode}, {"unexpected-status", "", 204, resource.ErrResponse}} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{compiledWire("GET", selected, get, nil, tc.status, tc.body)}, Want: contracttest.Expected{Error: tc.err}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{compiledWire("GET", selected, get, nil, tc.status, tc.body)}, Want: testutil.Expected{Error: tc.err}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsGuestMessagingConfigurations.GetByIdentity(ctx, "Global")
 				if v != nil || r == nil || r.StatusCode() != tc.status {
 					t.Fatal("failed read lost HTTP response or returned a configuration")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -97,7 +97,7 @@ func TestUnitMalformedAndUnexpectedSuccessKeepMetadata(t *testing.T) {
 
 func TestUnitValidationAndCancellationMakeNoRequests(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsGuestMessagingConfigurations
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -120,6 +120,6 @@ func TestUnitValidationAndCancellationMakeNoRequests(t *testing.T) {
 				t.Fatal("uninitialized service accepted")
 			}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

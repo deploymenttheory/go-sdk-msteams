@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -66,12 +66,12 @@ func TestUnitGroupReadsUseAcceptanceResponses(t *testing.T) {
 			if json.Unmarshal(raw, &expected) != nil {
 				t.Fatal("invalid actual group response")
 			}
-			run(t, contracttest.Case{Name: state, Source: "msteams/teams_admin_api/policy_assignments/testdata/group_application_access_" + state + "_get.json", Steps: []contracttest.Exchange{discovery(t), wire("GET", responseGroupPath+"/ApplicationAccessPolicy", "Get-CsGroupPolicyAssignment", nil, 200, string(raw))}, Want: contracttest.Expected{Body: raw, JSON: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: state, Steps: []testutil.Exchange{discovery(t), wire("GET", responseGroupPath+"/ApplicationAccessPolicy", "Get-CsGroupPolicyAssignment", nil, 200, string(raw))}, Want: testutil.Expected{Body: raw, JSON: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.PolicyAssignments.GetGroup(ctx, responseGroupID, "ApplicationAccessPolicy")
 				if err == nil {
 					verifyGroupRead(t, value, expected)
 				}
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			}})
 		})
 	}
@@ -86,7 +86,7 @@ func TestUnitGroupListsUseAcceptanceResponses(t *testing.T) {
 			if json.Unmarshal(raw, &expected) != nil || expected == nil {
 				t.Fatal("actual group list must remain a bare array")
 			}
-			run(t, contracttest.Case{Name: state, Source: "msteams/teams_admin_api/policy_assignments/testdata/group_application_access_" + state + ".json", Steps: []contracttest.Exchange{discovery(t), wire("GET", responseGroupPath, "Get-CsGroupPolicyAssignment", nil, 200, string(raw))}, Want: contracttest.Expected{Body: raw, JSON: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: state, Steps: []testutil.Exchange{discovery(t), wire("GET", responseGroupPath, "Get-CsGroupPolicyAssignment", nil, 200, string(raw))}, Want: testutil.Expected{Body: raw, JSON: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListGroup(ctx, responseGroupID)
 				if err == nil {
 					if len(values) != len(expected) {
@@ -96,7 +96,7 @@ func TestUnitGroupListsUseAcceptanceResponses(t *testing.T) {
 						verifyGroupRead(t, value, expected[i])
 					}
 				}
-				return contracttest.Observation{Value: values, Response: response, Err: err}
+				return testutil.Observation{Value: values, Response: response, Err: err}
 			}})
 		})
 	}
@@ -116,9 +116,9 @@ func TestUnitGroupWritesUseAcceptanceResponses(t *testing.T) {
 			if tc.policyName != "" {
 				body = json.RawMessage(`{"policyName":"` + tc.policyName + `","priority":1}`)
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/policy_assignments/group_response_test.go", Steps: []contracttest.Exchange{discovery(t), wire(tc.method, responseGroupPath+"/ApplicationAccessPolicy", tc.command, body, 204, string(raw))}, Want: contracttest.Expected{Body: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{discovery(t), wire(tc.method, responseGroupPath+"/ApplicationAccessPolicy", tc.command, body, 204, string(raw))}, Want: testutil.Expected{Body: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				settings := resource.GroupSettings{PolicyName: policy.Set(tc.policyName), Priority: policy.Set(int32(1))}
-				var observation contracttest.Observation
+				var observation testutil.Observation
 				var result *resource.OperationResult
 				switch tc.method {
 				case "PUT":
@@ -142,12 +142,12 @@ func TestUnitGroupDeletedReadsUseAcceptanceResponses(t *testing.T) {
 	for _, name := range []string{"get_deleted_404", "restored_get_deleted_404"} {
 		t.Run(name, func(t *testing.T) {
 			raw := groupResponseFixture(t, name+".json")
-			run(t, contracttest.Case{Name: name, Source: "msteams/teams_admin_api/policy_assignments/testdata/group_application_access_" + name + ".json", Steps: []contracttest.Exchange{discovery(t), wire("GET", responseGroupPath+"/ApplicationAccessPolicy", "Get-CsGroupPolicyAssignment", nil, 404, string(raw))}, Want: contracttest.Expected{Body: raw, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{"ClientError"}, ServiceErrorCodes: []int{40404}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire("GET", responseGroupPath+"/ApplicationAccessPolicy", "Get-CsGroupPolicyAssignment", nil, 404, string(raw))}, Want: testutil.Expected{Body: raw, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{"ClientError"}, ServiceErrorCodes: []int{40404}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.PolicyAssignments.GetGroup(ctx, responseGroupID, "ApplicationAccessPolicy")
 				if value != nil {
 					t.Fatal("deleted assignment fabricated a value")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 		})
 	}

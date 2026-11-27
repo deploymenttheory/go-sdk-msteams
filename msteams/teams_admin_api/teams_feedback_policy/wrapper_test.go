@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_feedback_policy"
 )
@@ -286,9 +286,9 @@ func TestUnitFeedbackPolicyMappedGrantForwarding(t *testing.T) {
 			if f.Name != "grant-missing-scope" {
 				continue
 			}
-			run(t, contracttest.Case{Name: f.Name, Source: wrapperSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: f.Name, Want: testutil.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, r, e := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.Assign(ctx, resource.Assignment{})
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 			continue
 		}
@@ -297,18 +297,18 @@ func TestUnitFeedbackPolicyMappedGrantForwarding(t *testing.T) {
 		}
 		call := f.Calls[0]
 		p := call.Parameters
-		set, method, path := "Identity", "PATCH", "/Skype.Policy/users/fixture%2Fuser/policies/TeamsFeedbackPolicy"
+		method, path := "PATCH", "/Skype.Policy/users/fixture%2Fuser/policies/TeamsFeedbackPolicy"
 		status := 200
 		body := map[string]any{"policyName": p.PolicyName}
 		input := resource.Assignment{User: &resource.UserAssignment{Identity: p.Identity, PolicyName: p.PolicyName}}
 		switch call.Operation {
 		case "assign-user":
 		case "assign-tenant":
-			set, path = "GrantToTenant", "/Skype.Policy/tenants/policies/TeamsFeedbackPolicy"
+			path = "/Skype.Policy/tenants/policies/TeamsFeedbackPolicy"
 			body["forceSwitchPresent"] = p.Force
 			input = resource.Assignment{Tenant: &resource.TenantAssignment{PolicyName: p.PolicyName}}
 		case "assign-group":
-			set, method, path, status = "GrantToGroup", "POST", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsFeedbackPolicy", 204
+			method, path, status = "POST", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/TeamsFeedbackPolicy", 204
 			if p.Rank != nil {
 				body["priority"] = *p.Rank
 			}
@@ -324,9 +324,9 @@ func TestUnitFeedbackPolicyMappedGrantForwarding(t *testing.T) {
 		if e != nil {
 			t.Fatal(e)
 		}
-		run(t, contracttest.Case{Name: f.Name, Source: wrapperSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), modernWire(method, path, encoded, status, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: f.Name, Steps: []testutil.Exchange{discovery(t), modernWire(method, path, encoded, status, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, r, e := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.Assign(ctx, input)
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
 	}
 }

@@ -44,4 +44,4 @@ user/group assignment, license or role is changed. Full grant/effective behavior
 null/empty persistence, delegated modes and other clouds remain unqualified.
 Permanent sanitized TestAcc responses feed the unit tests.
 
-See [qualification](../../../docs/implementation/policies/personal-recording-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/personal-recording-lab-acceptance.md).

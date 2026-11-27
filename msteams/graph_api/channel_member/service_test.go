@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -18,26 +18,19 @@ import (
 )
 
 const (
-	channelID                               = "19:channel/opaque@thread.tacv2"
-	teamID                                  = "11111111-1111-4111-8111-111111111111"
-	userID                                  = "22222222-2222-4222-8222-222222222222"
-	memberID     channelmember.MembershipID = "opaque+/=:#%雪"
-	nativeSource                            = "msteams/graph_api/channel_member/service_test.go"
+	channelID                            = "19:channel/opaque@thread.tacv2"
+	teamID                               = "11111111-1111-4111-8111-111111111111"
+	userID                               = "22222222-2222-4222-8222-222222222222"
+	memberID  channelmember.MembershipID = "opaque+/=:#%雪"
 )
 
-func nativeCase(t *testing.T, c contracttest.Case) contracttest.Result {
+func nativeCase(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
 	if c.Name == "" {
 		c.Name = "native-case"
 	}
-	c.Family = "native_channel_members"
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	if c.Source == "" {
-		c.Source = nativeSource
-	}
-	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -47,7 +40,7 @@ func nativeCase(t *testing.T, c contracttest.Case) contracttest.Result {
 	return result
 }
 
-func wire(method, origin, path, body string, status int, response string) contracttest.Exchange {
+func wire(method, origin, path, body string, status int, response string) testutil.Exchange {
 	var jsonBody json.RawMessage
 	if body != "" {
 		jsonBody = json.RawMessage(body)
@@ -56,17 +49,17 @@ func wire(method, origin, path, body string, status int, response string) contra
 	if body != "" {
 		headers.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: origin, Headers: headers, JSON: jsonBody},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: origin + path, Audience: origin, Headers: headers, JSON: jsonBody},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
 }
 
-func snapshot(value *channelmember.Member, response *resty.Response, err error) contracttest.Observation {
+func snapshot(value *channelmember.Member, response *resty.Response, err error) testutil.Observation {
 	var result any
 	if value != nil {
 		result = map[string]any{"id": value.ID, "user_id": value.UserID, "roles": value.Roles,
 			"type": value.Type, "email": value.Email, "display_name": value.DisplayName, "raw": value.RawFields}
 	}
-	return contracttest.Observation{Value: result, Response: response, Err: err}
+	return testutil.Observation{Value: result, Response: response, Err: err}
 }
 
 func resourceJSON(roles string) string {
@@ -88,56 +81,54 @@ func TestUnitNativeCRUDAndOwnerActions(t *testing.T) {
 	for _, tc := range []struct {
 		name, method, path, body, roles string
 		status                          int
-		invoke                          func(context.Context, *msteams.Client) contracttest.Observation
+		invoke                          func(context.Context, *msteams.Client) testutil.Observation
 	}{
 		{"create-owner", "POST", path, `{"@odata.type":"#microsoft.graph.aadUserConversationMember","roles":["owner"],"user@odata.bind":"` + origin + `/beta/users('` + userID + `')"}`, `["owner"]`, 201,
-			func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, channelID, channelmember.CreateRequest{UserID: userID, Roles: &owner}))
 			}},
 		{"create-member-empty", "POST", path, `{"@odata.type":"#microsoft.graph.aadUserConversationMember","roles":[],"user@odata.bind":"` + origin + `/beta/users('` + userID + `')"}`, `[]`, 201,
-			func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, channelID, channelmember.CreateRequest{UserID: userID, Roles: &empty}))
 			}},
 		{"create-member-omitted", "POST", path, `{"@odata.type":"#microsoft.graph.aadUserConversationMember","roles":[],"user@odata.bind":"` + origin + `/beta/users('` + userID + `')"}`, `[]`, 201,
-			func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, channelID, channelmember.CreateRequest{UserID: userID}))
 			}},
 		{"get-opaque", "GET", byID, "", `["owner"]`, 200,
-			func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return snapshot(sdk.GraphAPI.ChannelMembers.GetByID(ctx, teamID, channelID, memberID))
 			}},
 		{"update-omitted-retains", "PATCH", byID, `{}`, `["owner"]`, 200,
-			func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return snapshot(sdk.GraphAPI.ChannelMembers.UpdateByID(ctx, teamID, channelID, memberID, channelmember.UpdateRequest{}))
 			}},
 		{"update-owner", "PATCH", byID, `{"roles":["owner"]}`, `["owner"]`, 200,
-			func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return snapshot(sdk.GraphAPI.ChannelMembers.UpdateByID(ctx, teamID, channelID, memberID, channelmember.UpdateRequest{Roles: &owner}))
 			}},
 		{"promote-owner", "PATCH", byID, `{"roles":["owner"]}`, `["owner"]`, 200,
-			func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return snapshot(sdk.GraphAPI.ChannelMembers.PromoteOwner(ctx, teamID, channelID, memberID))
 			}},
 		{"demote-owner", "PATCH", byID, `{"roles":[]}`, `[]`, 200,
-			func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return snapshot(sdk.GraphAPI.ChannelMembers.DemoteOwner(ctx, teamID, channelID, memberID))
 			}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			raw := resourceJSON(tc.roles)
-			nativeCase(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{wire(tc.method, origin, tc.path, tc.body, tc.status, raw)},
-				Invoke: tc.invoke, Want: contracttest.Expected{Status: tc.status, JSON: expectedSnapshot(tc.roles, raw)}})
+			nativeCase(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{wire(tc.method, origin, tc.path, tc.body, tc.status, raw)},
+				Invoke: tc.invoke, Want: testutil.Expected{Status: tc.status, JSON: expectedSnapshot(tc.roles, raw)}})
 		})
 	}
 	t.Run("delete-membership-only", func(t *testing.T) {
-		nativeCase(t, contracttest.Case{Name: "delete", Steps: []contracttest.Exchange{wire("DELETE", origin, byID, "", 204, "")},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		nativeCase(t, testutil.Case{Name: "delete", Steps: []testutil.Exchange{wire("DELETE", origin, byID, "", 204, "")},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := sdk.GraphAPI.ChannelMembers.DeleteByID(ctx, teamID, channelID, memberID)
-				if err != nil && isRequestBoundary(ctx) {
-					return contracttest.Observation{Response: response, Err: err}
-				}
-				return contracttest.Observation{Response: response, Err: err}
-			}, Want: contracttest.Expected{Status: 204}})
+
+				return testutil.Observation{Response: response, Err: err}
+			}, Want: testutil.Expected{Status: 204}})
 	})
 }
 
@@ -153,11 +144,11 @@ func TestUnitCreateCloudAndConfiguredModeBindings(t *testing.T) {
 				origin := env.Endpoints.Graph
 				raw := resourceJSON(`[]`)
 				body := `{"@odata.type":"#microsoft.graph.aadUserConversationMember","roles":[],"user@odata.bind":"` + origin + `/beta/users('` + userID + `')"}`
-				nativeCase(t, contracttest.Case{Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{wire("POST", origin, "/beta/teams/"+teamID+"/channels/"+url.PathEscape(channelID)+"/members", body, 201, "")},
-					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				nativeCase(t, testutil.Case{Cloud: cloud, Mode: mode, Steps: []testutil.Exchange{wire("POST", origin, "/beta/teams/"+teamID+"/channels/"+url.PathEscape(channelID)+"/members", body, 201, raw)},
+					Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 						return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, channelID, channelmember.CreateRequest{UserID: userID}))
 					},
-					Want: contracttest.Expected{Status: 201, JSON: expectedSnapshot(`[]`, raw)}})
+					Want: testutil.Expected{Status: 201, JSON: expectedSnapshot(`[]`, raw)}})
 			})
 		}
 	}
@@ -168,18 +159,18 @@ func TestUnitNativeValidationDoesNotAcquireCredentials(t *testing.T) {
 	for index, roles := range [][]channelmember.Role{nil, {"member"}, {channelmember.Guest}, {"future"}, {channelmember.Owner, channelmember.Owner}} {
 		t.Run("roles-"+strconv.Itoa(index), func(t *testing.T) {
 			for _, action := range []string{"create", "update"} {
-				nativeCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				nativeCase(t, testutil.Case{Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					if action == "create" {
 						return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, channelID, channelmember.CreateRequest{UserID: userID, Roles: &roles}))
 					}
 					return snapshot(sdk.GraphAPI.ChannelMembers.UpdateByID(ctx, teamID, channelID, memberID, channelmember.UpdateRequest{Roles: &roles}))
-				}, Want: contracttest.Expected{Error: client.ErrRequest}})
+				}, Want: testutil.Expected{Error: client.ErrRequest}})
 			}
 		})
 	}
 	for _, id := range []channelmember.MembershipID{"", ".", "..", "private\n", "private\\segment", " "} {
 		for _, action := range []string{"get", "update", "delete"} {
-			nativeCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			nativeCase(t, testutil.Case{Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				switch action {
 				case "get":
 					return snapshot(sdk.GraphAPI.ChannelMembers.GetByID(ctx, teamID, channelID, id))
@@ -187,19 +178,17 @@ func TestUnitNativeValidationDoesNotAcquireCredentials(t *testing.T) {
 					return snapshot(sdk.GraphAPI.ChannelMembers.UpdateByID(ctx, teamID, channelID, id, channelmember.UpdateRequest{}))
 				default:
 					response, err := sdk.GraphAPI.ChannelMembers.DeleteByID(ctx, teamID, channelID, id)
-					return contracttest.Observation{Response: response, Err: err}
+					return testutil.Observation{Response: response, Err: err}
 				}
-			}, Want: contracttest.Expected{Error: client.ErrRequest}})
+			}, Want: testutil.Expected{Error: client.ErrRequest}})
 		}
 	}
 	for _, top := range []int{-1, 1000} {
-		nativeCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		nativeCase(t, testutil.Case{Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, response, err := sdk.GraphAPI.ChannelMembers.List(ctx, teamID, channelID, channelmember.ListOptions{Top: top})
-			if err != nil && isRequestBoundary(ctx) {
-				return contracttest.Observation{Response: response, Err: err}
-			}
-			return contracttest.Observation{Response: response, Err: err}
-		}, Want: contracttest.Expected{Error: client.ErrRequest}})
+
+			return testutil.Observation{Response: response, Err: err}
+		}, Want: testutil.Expected{Error: client.ErrRequest}})
 	}
 }
 
@@ -220,11 +209,11 @@ func TestUnitNativeHTTPAndEnvelopeFailures(t *testing.T) {
 		{"unauthenticated", `{"error":{"code":"Unauthorized","message":"private"}}`, 401, auth.ErrUnauthenticated},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			nativeCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("PATCH", auth.GraphAudience, path, `{}`, tc.status, tc.body)},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			nativeCase(t, testutil.Case{Steps: []testutil.Exchange{wire("PATCH", auth.GraphAudience, path, `{}`, tc.status, tc.body)},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					return snapshot(sdk.GraphAPI.ChannelMembers.UpdateByID(ctx, teamID, channelID, memberID, channelmember.UpdateRequest{}))
 				},
-				Want: contracttest.Expected{Status: tc.status, Error: tc.err}})
+				Want: testutil.Expected{Status: tc.status, Error: tc.err}})
 		})
 	}
 }
@@ -245,8 +234,8 @@ func TestUnitMutationFailureIsNotReplayedOrInferredAbsent(t *testing.T) {
 				if method == "PATCH" {
 					body = `{}`
 				}
-				nativeCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire(method, auth.GraphAudience, path, body, status, `{"error":{"code":"FixtureError","message":"private"}}`)},
-					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				nativeCase(t, testutil.Case{Steps: []testutil.Exchange{wire(method, auth.GraphAudience, path, body, status, `{"error":{"code":"FixtureError","message":"private"}}`)},
+					Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 						switch method {
 						case "POST":
 							return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, channelID, channelmember.CreateRequest{UserID: userID}))
@@ -254,9 +243,9 @@ func TestUnitMutationFailureIsNotReplayedOrInferredAbsent(t *testing.T) {
 							return snapshot(sdk.GraphAPI.ChannelMembers.UpdateByID(ctx, teamID, channelID, memberID, channelmember.UpdateRequest{}))
 						default:
 							response, err := sdk.GraphAPI.ChannelMembers.DeleteByID(ctx, teamID, channelID, memberID)
-							return contracttest.Observation{Response: response, Err: err}
+							return testutil.Observation{Response: response, Err: err}
 						}
-					}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureError"}}}})
+					}, Want: testutil.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureError"}}}})
 			})
 		}
 	}

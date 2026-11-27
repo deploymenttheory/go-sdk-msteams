@@ -35,7 +35,7 @@ made no tenant request or notification email and claims no complete issue parity
 
 The [deployment guide](https://learn.microsoft.com/en-us/microsoft-365/frontline/deploy-teams-at-scale),
 reviewed on 2026-11-26, specifies ordered columns for Teams.csv and Users.csv.
-The [CORE qualification report](../../../docs/implementation/core/integrated-qualification.md)
+The [unit tests](service_test.go)
 records those columns and current acceptance prerequisites. Owners need a Teams
 license. This documents caller inputs; BuildArchive still preserves original bytes
 and does not claim local validation of the service's CSV grammar or a typed

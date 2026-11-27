@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -56,7 +56,7 @@ func TestUnitPopulatedCRUDAndListEditsUseAcceptanceResponses(t *testing.T) {
 	if json.Unmarshal(missing, &envelope) != nil {
 		t.Fatal("invalid actual deletion error fixture")
 	}
-	steps := []contracttest.Exchange{
+	steps := []testutil.Exchange{
 		compiledWire("POST", collection, "New-CsTeamsTemplatePermissionPolicy", body(map[string]any{"Identity": "fixture-policy", "Description": before.Description, "HiddenTemplates": templates(before.HiddenTemplates)}), 201, string(readResponseFixture(t, "populated_create_201.body"))),
 		compiledWire("GET", selected, "Get-CsTeamsTemplatePermissionPolicy", nil, 200, string(beforeRaw)),
 		compiledWire("GET", selected, "Set-CsTeamsTemplatePermissionPolicy", nil, 200, string(beforeRaw)),
@@ -72,7 +72,7 @@ func TestUnitPopulatedCRUDAndListEditsUseAcceptanceResponses(t *testing.T) {
 		compiledWire("DELETE", selected, "Remove-CsTeamsTemplatePermissionPolicy", body(map[string]any{"Identity": id}), 204, string(readResponseFixture(t, "populated_delete_204.body"))),
 		compiledWire("GET", selected, "Get-CsTeamsTemplatePermissionPolicy", nil, 404, string(missing)),
 	}
-	run(t, contracttest.Case{Name: "populated-crud", Steps: steps, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{envelope.Code}, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "populated-crud", Steps: steps, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{envelope.Code}, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsTemplatePermissionPolicies
 		check := func(want *resource.Policy) {
 			got, _, e := s.GetByIdentity(ctx, id)
@@ -118,6 +118,6 @@ func TestUnitPopulatedCRUDAndListEditsUseAcceptanceResponses(t *testing.T) {
 			t.Fatal("populated delete differs")
 		}
 		_, r, e := s.GetByIdentity(ctx, id)
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }

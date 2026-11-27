@@ -21,7 +21,7 @@ module checksum database, and `go.sum` is checked in.
 Versions were resolved from the [Go module proxy](https://proxy.golang.org/) and their
 published `go.mod` files checked against the selected compiler. The [MSAL release](https://github.com/AzureAD/microsoft-authentication-library-for-go/releases/tag/v1.10.1)
 and [golangci-lint release](https://github.com/golangci/golangci-lint/releases/tag/v2.15.0)
-provide upstream provenance. Resty v2 retains the agreed public response contract.
+provide upstream provenance. Resty v2 provides the public response metadata type.
 
 `internal/dependencycheck/dependencies_test.go` references the portable dependency types
 so they compile on all supported platforms before production adapters exist. These are
@@ -41,12 +41,12 @@ go mod verify
 go mod tidy
 go build ./...
 go vet ./...
-go test -count=1 -shuffle=on ./...
-go test -race -count=1 -shuffle=on ./...
+go test -count=1 -shuffle=on -run '^(TestUnit|Example)' ./...
+go test -race -count=1 -shuffle=on -run '^(TestUnit|Example)' ./...
 golangci-lint run ./...
 golangci-lint fmt --diff
 go tool govulncheck -test ./...
-go run ./examples/baseline
+go run ./examples/client-construction
 ```
 
 Use golangci-lint 2.15.0 locally. The lint workflow runs analysis, applies configured
@@ -61,9 +61,9 @@ security job runs the module-pinned `go tool govulncheck -test ./...`; a finding
 the job. SAST runs through gosec in golangci-lint. All ordinary jobs use read-only
 repository permissions and require no tenant credentials.
 
-The baseline workflow separately requires PowerShell as a discovery oracle. SDK build
-and unit tests have no PowerShell dependency. Future tenant tests must be explicitly
-opted into and remain outside ordinary `go test ./...` execution.
+SDK build and unit tests have no PowerShell dependency. Real-tenant acceptance
+tests are explicitly configured and use `TestAcc`; selected scenarios can retain
+existing PowerShell comparisons. Standalone discovery/research workflows are removed.
 
 Release Please now uses the Go release type. Tag/release publication remains disabled
 with `skip-github-release` until QUAL establishes complete coverage and release readiness;

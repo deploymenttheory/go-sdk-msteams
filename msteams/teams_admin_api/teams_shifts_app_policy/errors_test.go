@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_shifts_app_policy"
@@ -32,9 +32,9 @@ func TestUnitAuthorizationFailureRetainsRealEnvelopeWithoutReplay(t *testing.T) 
 	if envelope.Code != "" {
 		codes = []string{envelope.Code}
 	}
-	c := contracttest.Case{Name: "denied", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json", Steps: []contracttest.Exchange{compiledWire("PUT", selected, set, json.RawMessage(`{"Identity":"Global","AllowTimeClockLocationDetection":false}`), 403, string(raw))}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	c := testutil.Case{Name: "denied", Steps: []testutil.Exchange{compiledWire("PUT", selected, set, json.RawMessage(`{"Identity":"Global","AllowTimeClockLocationDetection":false}`), 403, string(raw))}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		r, e := sdk.TeamsAdminAPI.TeamsShiftsAppPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{AllowTimeClockLocationDetection: new(false)})
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}}
 	run(t, c)
 }

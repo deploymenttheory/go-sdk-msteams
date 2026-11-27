@@ -67,7 +67,7 @@ On 2026-11-21 actual Global reads returned 403 using client-secret and certifica
 credentials. Successful authorization, cloud/flight availability, writes,
 read-back, cleanup and effective invite/assignment changes remain open. See
 [unit tests](service_test.go)
-and [lab acceptance](../../../docs/implementation/policies/audio-conferencing-policy-lab-acceptance.md).
+and [lab acceptance](../../../docs/acceptance/audio-conferencing-policy-lab-acceptance.md).
 
 ### Executed owned CRUD
 

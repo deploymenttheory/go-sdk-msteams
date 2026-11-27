@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -21,7 +21,7 @@ const (
 	audience = "08ff1ce2-4973-4b08-86a3-ebed13badc7f"
 	scope    = audience + "/AdminAppCatalog.ReadWrite.All"
 	admin    = "/AdminAppCatalog/ps/v2/admin/unifiedApp"
-	source   = "msteams/teams_admin_api/unified_apps/service_test.go"
+
 	app      = "00000000-0000-4000-8000-000000000001"
 	pending  = "00000000-0000-4000-8000-000000000006"
 	user     = "00000000-0000-4000-8000-000000000004"
@@ -43,7 +43,7 @@ func readFile(t *testing.T, path string) []byte {
 	return raw
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": nil}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
@@ -52,23 +52,17 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if reply == nil {
 		contentType = ""
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: audience, TokenScope: scope, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: origin + path, Audience: audience, TokenScope: scope, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "unified_apps"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
+
 	if c.Mode == "" {
 		c.Mode = auth.Delegated
 	}
-	result, err := contracttest.Run(t.Context(), c)
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,29 +71,21 @@ func run(t *testing.T, c contracttest.Case) {
 	}
 }
 
-func mapping(commands ...string) []contracttest.Mapping {
-	out := make([]contracttest.Mapping, 0, len(commands))
-	for _, command := range commands {
-		out = append(out, contracttest.Mapping{Command: command, ParameterSet: "__AllParameterSets"})
-	}
-	return out
-}
-
 func ptr[T any](v T) *T { return &v }
 
 func TestUnitUnifiedAppReadsDecodeCatalogShapes(t *testing.T) {
 	t.Parallel()
 	apps, one, staged, settings := readFile(t, "testdata/apps.json"), readFile(t, "testdata/app.json"), readFile(t, "testdata/pending.json"), readFile(t, "testdata/settings.json")
-	run(t, contracttest.Case{Name: "reads",
-		Mappings: mapping("Get-AllM365TeamsApps", "Get-M365TeamsApp", "Get-M365UnifiedCustomPendingApps", "Get-M365UnifiedTenantSettings"),
-		Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "reads",
+
+		Steps: []testutil.Exchange{
 			wire("GET", admin+"?%24expand=DeployedTo%2CAvailableTo%2Cmetadata", "Get-AllM365TeamsApps", nil, 200, apps),
 			wire("GET", admin+"/"+app+"?%24expand=metadata", "Get-M365TeamsApp", nil, 200, one),
 			wire("GET", admin+"/stagedApps", "Get-M365UnifiedCustomPendingApps", nil, 200, staged),
 			wire("GET", admin+"/settings", "Get-M365UnifiedTenantSettings", nil, 200, settings),
 			wire("GET", admin+"/settings?SettingNames=DefaultApp%2CEnableCopilotExtensibility", "Get-M365UnifiedTenantSettings", nil, 200, settings)},
-		Want: contracttest.Expected{Status: 200, Body: settings},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: settings},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.UnifiedApps
 			list, _, err := s.List(ctx)
 			if err != nil || len(list) != 2 || *list[0].AvailableTo.AssignmentType != ua.TypeEveryone || list[0].InstalledFor.Version != nil ||
@@ -120,7 +106,7 @@ func TestUnitUnifiedAppReadsDecodeCatalogShapes(t *testing.T) {
 				t.Fatalf("settings decode changed: %v", err)
 			}
 			named, response, err := s.GetTenantSettings(ctx, ua.SettingDefaultApp, ua.SettingEnableCopilotExtensibility)
-			return contracttest.Observation{Value: named, Response: response, Err: err}
+			return testutil.Observation{Value: named, Response: response, Err: err}
 		}})
 }
 
@@ -160,12 +146,12 @@ func TestUnitUnifiedAppWritesSendModuleBodies(t *testing.T) {
 				return s.UpdateTenantSettings(ctx, ua.TenantSettingsUpdate{SettingName: ua.SettingEnableCopilotExtensibility, SettingValue: ua.SettingValueSome, Groups: []string{group}, Operation: ua.OperationAdd})
 			}},
 	} {
-		run(t, contracttest.Case{Name: c.name, Mappings: mapping(c.command),
-			Steps: []contracttest.Exchange{wire(c.method, c.path, c.command, json.RawMessage(c.body), 204, nil)},
-			Want:  contracttest.Expected{Status: 204},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: c.name,
+			Steps: []testutil.Exchange{wire(c.method, c.path, c.command, json.RawMessage(c.body), 204, nil)},
+			Want:  testutil.Expected{Status: 204},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := c.invoke(ctx, sdk.TeamsAdminAPI.UnifiedApps)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -175,30 +161,30 @@ func TestUnitUnifiedAppReviewReadsEtagThenPuts(t *testing.T) {
 	const command = "Update-M365UnifiedCustomPendingApp"
 	staged, details := readFile(t, "testdata/pending.json"), readFile(t, "testdata/pending_details.json")
 	detailsPath := "/AdminAppCatalog/v2/admin/unifiedApps/stagedApps/" + pending + "/details"
-	run(t, contracttest.Case{Name: "review-published", Mappings: mapping(command),
-		Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "review-published",
+		Steps: []testutil.Exchange{
 			wire("GET", admin+"/stagedApps", command, nil, 200, staged),
 			wire("GET", detailsPath, command, nil, 200, details),
 			wire("PUT", admin+"/stagedApps/review", command, json.RawMessage(`{"Id":"`+pending+`","ReviewStatus":"Published","StagedAppDefinitionEtag":"3"}`), 200, []byte(`{}`))},
-		Want: contracttest.Expected{Status: 200},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.UnifiedApps.ReviewCustomPending(ctx, pending, "PUBLISHED")
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "review-unknown-app", Mappings: mapping(command),
-		Steps: []contracttest.Exchange{wire("GET", admin+"/stagedApps", command, nil, 200, staged)},
-		Want:  contracttest.Expected{Status: 200, Error: ua.ErrPendingAppNotFound},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "review-unknown-app",
+		Steps: []testutil.Exchange{wire("GET", admin+"/stagedApps", command, nil, 200, staged)},
+		Want:  testutil.Expected{Status: 200, Error: ua.ErrPendingAppNotFound},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.UnifiedApps.ReviewCustomPending(ctx, app, ua.ReviewRejected)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 	for _, body := range []string{`{}`, `{"stagedAppEntitlement":{"iteration":""}}`, `{"stagedAppEntitlement":null}`} {
-		run(t, contracttest.Case{Name: "review-missing-iteration", Mappings: mapping(command),
-			Steps: []contracttest.Exchange{wire("GET", admin+"/stagedApps", command, nil, 200, staged), wire("GET", detailsPath, command, nil, 200, []byte(body))},
-			Want:  contracttest.Expected{Status: 200, Error: ua.ErrMissingIteration},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "review-missing-iteration",
+			Steps: []testutil.Exchange{wire("GET", admin+"/stagedApps", command, nil, 200, staged), wire("GET", detailsPath, command, nil, 200, []byte(body))},
+			Want:  testutil.Expected{Status: 200, Error: ua.ErrMissingIteration},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := sdk.TeamsAdminAPI.UnifiedApps.ReviewCustomPending(ctx, pending, ua.ReviewRejected)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -206,37 +192,37 @@ func TestUnitUnifiedAppReviewReadsEtagThenPuts(t *testing.T) {
 func TestUnitUnifiedAppFailuresStayTyped(t *testing.T) {
 	t.Parallel()
 	forbidden := readFile(t, "testdata/forbidden_403.json")
-	run(t, contracttest.Case{Name: "forbidden", Mappings: mapping("Get-AllM365TeamsApps"),
-		Steps: []contracttest.Exchange{wire("GET", admin+"?%24expand=DeployedTo%2CAvailableTo%2Cmetadata", "Get-AllM365TeamsApps", nil, 403, forbidden)},
-		Want:  contracttest.Expected{Status: 403, Body: forbidden, Error: auth.ErrForbidden},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "forbidden",
+		Steps: []testutil.Exchange{wire("GET", admin+"?%24expand=DeployedTo%2CAvailableTo%2Cmetadata", "Get-AllM365TeamsApps", nil, 403, forbidden)},
+		Want:  testutil.Expected{Status: 403, Body: forbidden, Error: auth.ErrForbidden},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.UnifiedApps.List(ctx)
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
 	for _, body := range []string{`null`, `{}`, `[{"id":7}]`, `[{"availableTo":{"users":{}}}]`} {
-		run(t, contracttest.Case{Name: "malformed-list", Mappings: mapping("Get-AllM365TeamsApps"),
-			Steps: []contracttest.Exchange{wire("GET", admin+"?%24expand=DeployedTo%2CAvailableTo%2Cmetadata", "Get-AllM365TeamsApps", nil, 200, []byte(body))},
-			Want:  contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "malformed-list",
+			Steps: []testutil.Exchange{wire("GET", admin+"?%24expand=DeployedTo%2CAvailableTo%2Cmetadata", "Get-AllM365TeamsApps", nil, 200, []byte(body))},
+			Want:  testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.UnifiedApps.List(ctx)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			}})
 	}
 	for _, body := range []string{`null`, `[]`, `{"deployedTo":{"users":[{"id":"not-an-array"}]}}`} {
-		run(t, contracttest.Case{Name: "malformed-get", Mappings: mapping("Get-M365TeamsApp"),
-			Steps: []contracttest.Exchange{wire("GET", admin+"/"+app+"?%24expand=metadata", "Get-M365TeamsApp", nil, 200, []byte(body))},
-			Want:  contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "malformed-get",
+			Steps: []testutil.Exchange{wire("GET", admin+"/"+app+"?%24expand=metadata", "Get-M365TeamsApp", nil, 200, []byte(body))},
+			Want:  testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.UnifiedApps.Get(ctx, app)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			}})
 	}
-	run(t, contracttest.Case{Name: "undeclared-write-status", Mappings: mapping("Update-M365TeamsApp"),
-		Steps: []contracttest.Exchange{wire("PATCH", admin, "Update-M365TeamsApp", json.RawMessage(`{"id":"`+app+`","isBlocked":true}`), 201, []byte(`{}`))},
-		Want:  contracttest.Expected{Status: 201, Error: ua.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "undeclared-write-status",
+		Steps: []testutil.Exchange{wire("PATCH", admin, "Update-M365TeamsApp", json.RawMessage(`{"id":"`+app+`","isBlocked":true}`), 201, []byte(`{}`))},
+		Want:  testutil.Expected{Status: 201, Error: ua.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.UnifiedApps.Update(ctx, app, ua.AppUpdate{IsBlocked: ptr(true)})
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -306,29 +292,29 @@ func TestUnitUnifiedAppInvalidInputFailsLocally(t *testing.T) {
 			return r, err
 		},
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local",
-			Want: contracttest.Expected{Error: ua.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name,
+			Want: testutil.Expected{Error: ua.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := invoke(ctx, sdk.TeamsAdminAPI.UnifiedApps)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
 
 func TestUnitUnifiedAppProfileRejectsBeforeTokens(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "application-mode", Scope: "local", Mode: auth.Application,
-		Want: contracttest.Expected{Error: client.ErrAuthenticationMode},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "application-mode", Mode: auth.Application,
+		Want: testutil.Expected{Error: client.ErrAuthenticationMode},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.UnifiedApps.List(ctx)
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
 	for _, cloud := range []string{"gcc", "gcch", "dod", "china"} {
-		run(t, contracttest.Case{Name: cloud, Cloud: cloud, Scope: "local",
-			Want: contracttest.Expected{Error: client.ErrDestination},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: cloud, Cloud: cloud,
+			Want: testutil.Expected{Error: client.ErrDestination},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.UnifiedApps.GetTenantSettings(ctx)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			}})
 	}
 }

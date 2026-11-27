@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -14,7 +14,7 @@ import (
 
 func TestUnitConfigurationInputAndContextRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local-input-context", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local-input-context", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		service := sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations
 		for _, id := range []string{"", " ", ".", "..", "scope/", "/empty", "bad\\id", "bad\nidentity"} {
 			if _, _, err := service.GetByIdentity(ctx, id); !errors.Is(err, resource.ErrInput) {
@@ -55,6 +55,6 @@ func TestUnitConfigurationInputAndContextRejectBeforeHTTP(t *testing.T) {
 				t.Fatal("no-settings Update invented preparation")
 			}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

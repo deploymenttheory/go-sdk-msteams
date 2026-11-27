@@ -36,7 +36,7 @@ Delete or assignment operation is established by the two baseline commands.
 
 App/delegated token-mode fixtures establish request routing; successful tenant/RBAC/
 cloud behavior remains separate qualification. See [unit tests](service_test.go)
-and the [lab plan](../../../docs/implementation/policies/voicemail-validation-lab-acceptance.md).
+and the [lab plan](../../../docs/acceptance/voicemail-validation-lab-acceptance.md).
 
 An explicitly bound empty Filter is invalid and returns ErrInput before credentials
 or HTTP, matching the inherited ValidateNotNullOrEmpty binder. Use List for an

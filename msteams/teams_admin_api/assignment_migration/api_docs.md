@@ -38,6 +38,6 @@ Source requests the selected ConfigAPI resource's delegated user_impersonation s
 Application eligibility, feature activation, RBAC and cloud deployment need separate
 qualification; synthetic mode tests only establish routing. Both current dedicated-SPN
 read attempts returned HTTP 403. See [unit tests](service_test.go)
-and the [lab plan](../../../docs/implementation/policies/assignment-migration-lab-acceptance.md).
+and the [lab plan](../../../docs/acceptance/assignment-migration-lab-acceptance.md).
 
 Required Authority, PolicyType and PolicyName reject exact empty strings; bound whitespace is preserved in the body, matching the pinned binding without asserting that the server accepts those values. GUID validation/canonicalization and independent path/transport safety checks are unchanged.

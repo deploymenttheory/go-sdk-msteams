@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -25,18 +25,18 @@ func TestUnitEducationConfigurationRejectedProviderRequests(t *testing.T) {
 			if x.Body != "" {
 				body = json.RawMessage(x.Body)
 			}
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: x.CmdletName, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
+			c := testutil.Case{Name: f.Name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{compiledWire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
 			if x.Method == "" {
 				c.Steps = nil
-				c.Mappings = []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}
+
 				c.Want.Error = resource.ErrInput
 			} else {
 				if f.Status != 400 {
 					t.Fatal("rejected request probe unexpectedly contains a success contract")
 				}
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+				c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
-			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.TeamsEducationConfigurations
 				controls := policy.Controls{}
 				if f.ForceMode >= 0 {
@@ -45,19 +45,19 @@ func TestUnitEducationConfigurationRejectedProviderRequests(t *testing.T) {
 				switch f.Operation {
 				case "read":
 					v, r, e := s.GetByIdentity(ctx, scoped)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "list":
 					v, r, e := s.List(ctx)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 
 				}
 				var settings resource.Settings
 				if e := json.Unmarshal([]byte(f.Input), &settings); e != nil {
-					return contracttest.Observation{Err: e}
+					return testutil.Observation{Err: e}
 				}
 
 				v, r, e := s.PatchByIdentity(ctx, scoped, resource.PatchRequest{Settings: settings, Controls: controls, BodyIdentity: policy.Set("read-model-identity")})
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}
 			run(t, c)
 		}

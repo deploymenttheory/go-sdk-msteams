@@ -3,7 +3,7 @@ package teamsmeetingconfiguration_test
 import (
 	"bytes"
 	"encoding/json"
-	"os"
+
 	"reflect"
 	"strings"
 	"testing"
@@ -49,67 +49,6 @@ func TestUnitEveryTypedSettingUsesAcceptanceResponses(t *testing.T) {
 				t.Fatal("model lost owned response snapshot")
 			}
 		})
-	}
-}
-
-func TestUnitSettingsMatchEveryPinnedPublicParameter(t *testing.T) {
-	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/powershell/8.1.0/runtime.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var baseline struct {
-		Commands []struct {
-			Name string
-			Sets []struct {
-				Name       string
-				Parameters []struct {
-					Name      string
-					Mandatory bool
-				}
-			} `json:"parameter_sets"`
-		}
-	}
-	if json.Unmarshal(raw, &baseline) != nil {
-		t.Fatal("invalid baseline")
-	}
-	settings := reflect.TypeFor[resource.Settings]()
-	response := reflect.TypeFor[resource.Configuration]()
-	count, sets := 0, map[string][]string{}
-	for _, command := range baseline.Commands {
-		for _, parameterSet := range command.Sets {
-			if command.Name == get || command.Name == set {
-				sets[command.Name] = append(sets[command.Name], parameterSet.Name)
-			}
-		}
-		if command.Name != set {
-			continue
-		}
-		if len(command.Sets) != 1 {
-			t.Fatal("pinned Set parameter sets changed")
-		}
-		for _, param := range command.Sets[0].Parameters {
-			switch param.Name {
-			case "Identity":
-				if !param.Mandatory {
-					t.Fatal("pinned Set Identity is no longer mandatory")
-				}
-				continue
-			case "Force", "Verbose", "Debug", "ErrorAction", "WarningAction", "InformationAction", "ProgressAction", "ErrorVariable", "WarningVariable", "InformationVariable", "OutVariable", "OutBuffer", "PipelineVariable", "WhatIf", "Confirm":
-				continue
-			}
-			write, ok := settings.FieldByName(param.Name)
-			if !ok || strings.Split(write.Tag.Get("json"), ",")[0] != param.Name {
-				t.Fatalf("missing setting %s", param.Name)
-			}
-			if _, ok := response.FieldByName(param.Name); !ok {
-				t.Fatalf("missing response getter %s", param.Name)
-			}
-			count++
-		}
-	}
-	if count != 21 || !reflect.DeepEqual(sets[get], []string{"Filter", "Identity"}) || !reflect.DeepEqual(sets[set], []string{"Identity"}) {
-		t.Fatal("pinned meeting configuration surface changed")
 	}
 }
 

@@ -39,4 +39,4 @@ No write is replayed, read back or rolled back. A 204 returns no device.
 Models keep every received field in `RawFields` and redact `String`/`GoString`.
 The lab proves the read routes, the 400 for an invalid device ID and the 404s
 for Set and Remove of a missing record; a successful create, update or delete
-is unqualified. See the [contract notes](../../../docs/implementation/ext/devices-contract-notes.md).
+is unqualified. See the [unit tests](service_test.go).

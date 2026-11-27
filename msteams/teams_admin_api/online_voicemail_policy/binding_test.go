@@ -9,13 +9,11 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
-
-const bindingSource = "msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json"
 
 func TestUnitVoicemailBindingCompositionMatchesTypedHelper(t *testing.T) {
 	t.Parallel()
@@ -208,7 +206,7 @@ func TestUnitVoicemailBindingCompositionMatchesTypedHelper(t *testing.T) {
 		},
 	}
 
-	var results []contracttest.Result
+	var results []testutil.Result
 	for _, f := range fixture.Cases {
 		// The native API always returns typed results/metadata. It exposes no
 		// PassThru display switch; preserve the source bridge gap as evidence.
@@ -218,16 +216,16 @@ func TestUnitVoicemailBindingCompositionMatchesTypedHelper(t *testing.T) {
 			}
 			continue
 		}
-		set := "Identity"
+
 		input := resource.Assignment{PolicyName: policy.Set("Fixture")}
-		steps := []contracttest.Exchange{}
-		want := contracttest.Expected{}
+		steps := []testutil.Exchange{}
+		want := testutil.Expected{}
 		if f.Failure != nil {
 			want.Error = resource.ErrInput
 			if f.Name == "grant-missing-policy-name" {
 				input.PolicyName = policy.Field[string]{}
 				input.Tenant = &resource.TenantAssignment{}
-				set = "GrantToTenant"
+
 			}
 		} else {
 			if len(f.Calls) != 1 {
@@ -247,11 +245,11 @@ func TestUnitVoicemailBindingCompositionMatchesTypedHelper(t *testing.T) {
 					input.PolicyName = policy.Null[string]()
 				}
 			case "assign-tenant":
-				set, path = "GrantToTenant", "/Skype.Policy/tenants/policies/OnlineVoicemailPolicy"
+				path = "/Skype.Policy/tenants/policies/OnlineVoicemailPolicy"
 				input.Tenant = &resource.TenantAssignment{}
 				body["forceSwitchPresent"] = false
 			case "assign-group":
-				set, path, method, status = "GrantToGroup", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy", "POST", 204
+				path, method, status = "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup/policyTypes/OnlineVoicemailPolicy", "POST", 204
 				input.Group = &resource.GroupAssignment{ID: "fixture/group"}
 				if rank, ok := call.Parameters["Rank"]; ok {
 					var n int32
@@ -270,9 +268,9 @@ func TestUnitVoicemailBindingCompositionMatchesTypedHelper(t *testing.T) {
 			}
 			steps = append(steps, discovery(t), generatedWire(method, origin+path, "Grant-CsOnlineVoicemailPolicy", raw, status, ""))
 		}
-		results = append(results, run(t, contracttest.Case{Name: f.Name, Source: bindingSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: set}}, Steps: steps, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		results = append(results, run(t, testutil.Case{Name: f.Name, Steps: steps, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, e := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.AssignWithPowerShellBinding(ctx, input)
-			return contracttest.Observation{Value: v, Response: r, Err: e}
+			return testutil.Observation{Value: v, Response: r, Err: e}
 		}}))
 	}
 	if len(results) != 9 {
@@ -282,11 +280,11 @@ func TestUnitVoicemailBindingCompositionMatchesTypedHelper(t *testing.T) {
 
 func TestUnitVoicemailGeneratedIdentityUsesUnreservedEscaping(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: "generated-identity-unreserved", Source: generatedSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(t), generatedWire("PATCH", origin+"/Skype.Policy/users/sip%3Afixture%2Buser%40example.invalid/policies/OnlineVoicemailPolicy", "Grant-CsOnlineVoicemailPolicy", json.RawMessage(`{"policyName":"Fixture"}`), 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: "generated-identity-unreserved", Steps: []testutil.Exchange{discovery(t), generatedWire("PATCH", origin+"/Skype.Policy/users/sip%3Afixture%2Buser%40example.invalid/policies/OnlineVoicemailPolicy", "Grant-CsOnlineVoicemailPolicy", json.RawMessage(`{"policyName":"Fixture"}`), 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.AssignUser(ctx, "sip:fixture+user@example.invalid", policy.Set("Fixture"))
 		if e == nil && v == nil {
 			e = errors.New("missing native assignment outcome")
 		}
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }

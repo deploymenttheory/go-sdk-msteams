@@ -63,7 +63,7 @@ API methods are independent of PowerShell release numbers and internal flight
 switches. Synthetic application/delegated comparisons establish wire behavior,
 not tenant authorization, persistence or effective encryption. See
 [unit tests](service_test.go)
-and the [lab acceptance record](../../../docs/implementation/policies/enhanced-encryption-lab-acceptance.md).
+and the [lab acceptance record](../../../docs/acceptance/enhanced-encryption-lab-acceptance.md).
 Issue #117 and full command/tenant qualification remain open.
 
 ## Owned CRUD acceptance

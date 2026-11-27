@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -21,13 +21,13 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/mainline_attendants/service_test.go"
-	flows        = "/Teams.VoiceApps/mainline-attendant-flow"
-	spamID       = "00000000-0000-4000-8000-0000000000b1"
-	bookingID    = "00000000-0000-4000-8000-0000000000b2"
-	qaID         = "00000000-0000-4000-8000-0000000000b3"
-	probeID      = "00000000-0000-4000-8000-000000000001"
-	jsonType     = "application/json; charset=utf-8"
+
+	flows     = "/Teams.VoiceApps/mainline-attendant-flow"
+	spamID    = "00000000-0000-4000-8000-0000000000b1"
+	bookingID = "00000000-0000-4000-8000-0000000000b2"
+	qaID      = "00000000-0000-4000-8000-0000000000b3"
+	probeID   = "00000000-0000-4000-8000-000000000001"
+	jsonType  = "application/json; charset=utf-8"
 )
 
 func readFile(t *testing.T, path string) []byte {
@@ -44,17 +44,17 @@ func readFile(t *testing.T, path string) []byte {
 	return raw
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
@@ -63,34 +63,20 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if status >= 400 {
 		contentType = "application/json"
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "mainline_attendants"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !result.Passed() {
 		t.Fatalf("mainline attendant contract %s differed: %+v", c.Name, result.Differences())
 	}
-}
-
-func mapping(commands ...string) []contracttest.Mapping {
-	out := make([]contracttest.Mapping, 0, len(commands))
-	for _, command := range commands {
-		out = append(out, contracttest.Mapping{Command: command, ParameterSet: "__AllParameterSets"})
-	}
-	return out
 }
 
 func apiError(status int, body []byte) *client.APIError {
@@ -115,30 +101,30 @@ func text(value *string) string {
 func TestUnitMainlineAttendantReadsUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	information := readFile(t, "testdata/tenant_information.json")
-	run(t, contracttest.Case{Name: "tenant-information", Source: "msteams/teams_admin_api/mainline_attendants/testdata/tenant_information.json",
-		Mappings: mapping("Get-CsMainlineAttendantTenantInformation", "Get-CsMainlineAttendantSupportedLanguages", "Get-CsMainlineAttendantSupportedVoices"),
-		Steps:    []contracttest.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/information", "Get-CsMainlineAttendantTenantInformation", nil, 200, information)},
-		Want:     contracttest.Expected{Status: 200, Body: information},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "tenant-information",
+
+		Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/information", "Get-CsMainlineAttendantTenantInformation", nil, 200, information)},
+		Want:  testutil.Expected{Status: 200, Body: information},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.MainlineAttendants.GetTenantInformation(ctx)
 			if err != nil || text(value.DefaultLanguage) != "en-US" || text(value.DefaultTimeZone) != "UTC" || value.DefaultVoice == nil ||
 				len(value.SupportedLanguages) == 0 || len(value.SupportedVoices) == 0 || value.SupportedLanguages[0].ID == nil || value.SupportedVoices[0].ID == nil {
 				t.Fatal("mainline attendant tenant information was not decoded")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 
 	empty := readFile(t, "testdata/flows.json")
 	templates := readFile(t, "testdata/spam_detection_templates.json")
-	run(t, contracttest.Case{Name: "lists", Source: "msteams/teams_admin_api/mainline_attendants/testdata/flows.json",
-		Mappings: mapping("Get-CsMainlineAttendantFlow", "Get-CsMainlineAttendantAppointmentBookingFlow", "Get-CsMainlineAttendantQuestionAnswerFlow", "Get-CsMainlineAttendantSpamDetectionTemplate"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "lists",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", flows, "Get-CsMainlineAttendantFlow", nil, 200, empty),
 			wire("GET", flows+"/appointment-booking", "Get-CsMainlineAttendantAppointmentBookingFlow", nil, 200, readFile(t, "testdata/appointment_booking_flows.json")),
 			wire("GET", flows+"/question-answer?First=5&NameFilter=msteams&Skip=1", "Get-CsMainlineAttendantQuestionAnswerFlow", nil, 200, readFile(t, "testdata/question_answer_flows.json")),
 			wire("GET", flows+"/spam-detection-template?Descending=True&First=50&SortBy=Name", "Get-CsMainlineAttendantSpamDetectionTemplate", nil, 200, templates)},
-		Want: contracttest.Expected{Status: 200, Body: templates},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: templates},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.MainlineAttendants
 			if values, _, err := s.ListFlows(ctx, nil); err != nil || values == nil {
 				t.Fatal("flow list was not a non-nil slice")
@@ -153,22 +139,22 @@ func TestUnitMainlineAttendantReadsUseAcceptanceResponses(t *testing.T) {
 			if err != nil || values == nil {
 				t.Fatal("spam detection template list failed")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 
 	filtered := readFile(t, "testdata/flows_filtered.json")
-	run(t, contracttest.Case{Name: "flow-filters", Source: "msteams/teams_admin_api/mainline_attendants/testdata/flows_filtered.json",
-		Mappings: mapping("Get-CsMainlineAttendantFlow"),
-		Steps: []contracttest.Exchange{discovery(t), wire("GET", flows+"?NameFilter=fixture-qa&relatedConfigurationId="+probeID+"&type=QuestionAnswer",
+	run(t, testutil.Case{Name: "flow-filters",
+
+		Steps: []testutil.Exchange{discovery(t), wire("GET", flows+"?NameFilter=fixture-qa&relatedConfigurationId="+probeID+"&type=QuestionAnswer",
 			"Get-CsMainlineAttendantFlow", nil, 200, filtered)},
-		Want: contracttest.Expected{Status: 200, Body: filtered},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: filtered},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			values, response, err := sdk.TeamsAdminAPI.MainlineAttendants.ListFlows(ctx, &ma.FlowListOptions{Type: new(ma.FlowTypeQuestionAnswer),
 				RelatedConfigurationID: new(probeID), ListOptions: ma.ListOptions{NameFilter: new("fixture-qa")}})
 			if err != nil || len(values) != 1 || text(values[0].Identity) != qaID || text(values[0].Type) != ma.FlowTypeQuestionAnswer {
 				t.Fatal("filtered flow list was not decoded")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -198,21 +184,21 @@ func TestUnitMainlineAttendantMissingResourcesAreTypedErrors(t *testing.T) {
 			return s.DeleteAppointmentBookingFlowByID(ctx, bookingID)
 		}},
 	} {
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{discovery(t), wire(item.method, item.path, item.command, nil, 404, item.body)},
-			Want: contracttest.Expected{Status: 404, Body: item.body, APIError: apiError(404, item.body)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire(item.method, item.path, item.command, nil, 404, item.body)},
+			Want: testutil.Expected{Status: 404, Body: item.body, APIError: apiError(404, item.body)},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := item.invoke(ctx, sdk.TeamsAdminAPI.MainlineAttendants)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 	rejected := []byte(`{"code":"100001","message":"Fixture message","action":"Please input correct parameter values.","errorDetails":[{"ErrorCode":"MainlineAttendantQuestionAnswerFlow_KnowledgeBaseNullOrEmpty","Message":"Fixture message","Target":"KnowledgeBase","TargetEntityId":""}]}`)
-	run(t, contracttest.Case{Name: "update-without-knowledge-base", Mappings: mapping("Set-CsMainlineAttendantQuestionAnswerFlow"),
-		Steps: []contracttest.Exchange{discovery(t), wire("PUT", flows+"/question-answer/"+qaID, "Set-CsMainlineAttendantQuestionAnswerFlow",
+	run(t, testutil.Case{Name: "update-without-knowledge-base",
+		Steps: []testutil.Exchange{discovery(t), wire("PUT", flows+"/question-answer/"+qaID, "Set-CsMainlineAttendantQuestionAnswerFlow",
 			json.RawMessage(`{"Type":"QuestionAnswer","Description":"x"}`), 400, rejected)},
-		Want: contracttest.Expected{Status: 400, Body: rejected, APIError: apiError(400, rejected)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 400, Body: rejected, APIError: apiError(400, rejected)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.MainlineAttendants.UpdateQuestionAnswerFlowByID(ctx, qaID, ma.UpdateQuestionAnswerFlowRequest{Description: new("x")})
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
 }
 
@@ -221,17 +207,17 @@ func TestUnitMainlineAttendantSpamDetectionTemplateLifecycleUsesAcceptanceRespon
 	created, updated, got, deleted := readFile(t, "testdata/spam_detection_template_create_201.json"), readFile(t, "testdata/spam_detection_template_update.json"),
 		readFile(t, "testdata/spam_detection_template_get.json"), readFile(t, "testdata/spam_detection_template_delete.json")
 	item := flows + "/spam-detection-template/" + spamID
-	run(t, contracttest.Case{Name: "spam-lifecycle", Source: "msteams/teams_admin_api/mainline_attendants/testdata/spam_detection_template_create_201.json",
-		Mappings: mapping("New-CsMainlineAttendantSpamDetectionTemplate", "Set-CsMainlineAttendantSpamDetectionTemplate", "Get-CsMainlineAttendantSpamDetectionTemplate", "Remove-CsMainlineAttendantSpamDetectionTemplate"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "spam-lifecycle",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", flows+"/spam-detection-template", "New-CsMainlineAttendantSpamDetectionTemplate",
 				json.RawMessage(`{"Name":"Fixture name","Description":"Fixture description","EnableSpamDetection":true,"Action":"DisconnectCall"}`), 201, created),
 			wire("PUT", item, "Set-CsMainlineAttendantSpamDetectionTemplate",
 				json.RawMessage(`{"Name":"Fixture name","Description":"Fixture description","EnableSpamDetection":false,"Action":"DisconnectCall","RelatedConfigurationIds":[]}`), 200, updated),
 			wire("GET", item, "Get-CsMainlineAttendantSpamDetectionTemplate", nil, 200, got),
 			wire("DELETE", item, "Remove-CsMainlineAttendantSpamDetectionTemplate", nil, 200, deleted)},
-		Want: contracttest.Expected{Status: 200, Body: deleted},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: deleted},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.MainlineAttendants
 			value, response, err := s.CreateSpamDetectionTemplate(ctx, ma.CreateSpamDetectionTemplateRequest{Name: "Fixture name", Description: "Fixture description"})
 			if err != nil || response.StatusCode() != 201 || text(value.Identity) != spamID || value.EnableSpamDetection == nil || !*value.EnableSpamDetection ||
@@ -248,7 +234,7 @@ func TestUnitMainlineAttendantSpamDetectionTemplateLifecycleUsesAcceptanceRespon
 				t.Fatal("spam detection template read-back changed")
 			}
 			response, err = s.DeleteSpamDetectionTemplateByID(ctx, spamID)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -258,12 +244,12 @@ func TestUnitMainlineAttendantSpamDetectionTemplateSendsCallTargetAsTheModule(t 
 	body := `{"Name":"n","Description":"d","EnableSpamDetection":false,"Action":"TransferCallToTarget","InclusionScope":["a"],"ExclusionScope":[],` +
 		`"CallTarget":{"Id":"` + probeID + `","Type":"ApplicationEndpoint","EnableTranscription":true,"CallPriority":2}}`
 	other := `{"Name":"n","CallTarget":{"Id":"x","Type":"User","SharedVoicemailHistoryTemplateId":"h"}}`
-	run(t, contracttest.Case{Name: "call-target", Mappings: mapping("New-CsMainlineAttendantSpamDetectionTemplate", "Set-CsMainlineAttendantSpamDetectionTemplate"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "call-target",
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", flows+"/spam-detection-template", "New-CsMainlineAttendantSpamDetectionTemplate", json.RawMessage(body), 201, created),
 			wire("PUT", flows+"/spam-detection-template/"+spamID, "Set-CsMainlineAttendantSpamDetectionTemplate", json.RawMessage(other), 200, readFile(t, "testdata/spam_detection_template_update.json"))},
-		Want: contracttest.Expected{Status: 200, Body: readFile(t, "testdata/spam_detection_template_update.json")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: readFile(t, "testdata/spam_detection_template_update.json")},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.MainlineAttendants
 			if _, _, err := s.CreateSpamDetectionTemplate(ctx, ma.CreateSpamDetectionTemplateRequest{Name: "n", Description: "d", EnableSpamDetection: new(false),
 				Action: new(ma.SpamActionTransferCallToTarget), InclusionScope: []string{"a"}, ExclusionScope: []string{},
@@ -273,7 +259,7 @@ func TestUnitMainlineAttendantSpamDetectionTemplateSendsCallTargetAsTheModule(t 
 			}
 			value, response, err := s.UpdateSpamDetectionTemplateByID(ctx, spamID, ma.UpdateSpamDetectionTemplateRequest{Name: new("n"),
 				CallTarget: &ma.CallTarget{ID: new("x"), Type: new("User"), CallPriority: new(int32(1)), SharedVoicemailHistoryTemplateID: new("h")}})
-			return contracttest.Observation{Value: value != nil, Response: response, Err: err}
+			return testutil.Observation{Value: value != nil, Response: response, Err: err}
 		}})
 }
 
@@ -283,17 +269,17 @@ func TestUnitMainlineAttendantAppointmentBookingFlowLifecycleUsesAcceptanceRespo
 		readFile(t, "testdata/appointment_booking_flow_get.json"), readFile(t, "testdata/appointment_booking_flow_delete.json")
 	item := flows + "/appointment-booking/" + bookingID
 	const link = "https://outlook.office.com/book/example/"
-	run(t, contracttest.Case{Name: "booking-lifecycle", Source: "msteams/teams_admin_api/mainline_attendants/testdata/appointment_booking_flow_create_201.json",
-		Mappings: mapping("New-CsMainlineAttendantAppointmentBookingFlow", "Set-CsMainlineAttendantAppointmentBookingFlow", "Get-CsMainlineAttendantAppointmentBookingFlow", "Remove-CsMainlineAttendantAppointmentBookingFlow"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "booking-lifecycle",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", flows+"/appointment-booking", "New-CsMainlineAttendantAppointmentBookingFlow",
 				json.RawMessage(`{"Name":"n","Description":"d","AppointmentBookingPlatform":"MicrosoftBookings","BookingLink":"`+link+`"}`), 201, created),
 			wire("PUT", item, "Set-CsMainlineAttendantAppointmentBookingFlow",
 				json.RawMessage(`{"Name":"n","Type":"AppointmentBooking","RelatedConfigurationIds":[{"Id":"r","Name":"AA"}],"Description":"u","AppointmentBookingPlatform":"MicrosoftBookings","BookingLink":"`+link+`"}`), 200, updated),
 			wire("GET", item, "Get-CsMainlineAttendantAppointmentBookingFlow", nil, 200, got),
 			wire("DELETE", item, "Remove-CsMainlineAttendantAppointmentBookingFlow", nil, 200, deleted)},
-		Want: contracttest.Expected{Status: 200, Body: deleted},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: deleted},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.MainlineAttendants
 			platform := ma.BookingPlatformMicrosoftBookings
 			value, _, err := s.CreateAppointmentBookingFlow(ctx, ma.CreateAppointmentBookingFlowRequest{Name: "n", Description: "d", AppointmentBookingPlatform: &platform, BookingLink: new(link)})
@@ -309,7 +295,7 @@ func TestUnitMainlineAttendantAppointmentBookingFlowLifecycleUsesAcceptanceRespo
 				t.Fatal("appointment booking read-back changed")
 			}
 			response, err := s.DeleteAppointmentBookingFlowByID(ctx, bookingID)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -318,15 +304,15 @@ func TestUnitMainlineAttendantCustomBookingSendsEnumsAsIntegers(t *testing.T) {
 	created := readFile(t, "testdata/appointment_booking_flow_create_201.json")
 	definitions := `{"AuthenticateCaller":{"url":"https://example.invalid/a"}}`
 	encoded, _ := json.Marshal(definitions)
-	run(t, contracttest.Case{Name: "custom-booking", Mappings: mapping("New-CsMainlineAttendantAppointmentBookingFlow"),
-		Steps: []contracttest.Exchange{discovery(t), wire("POST", flows+"/appointment-booking", "New-CsMainlineAttendantAppointmentBookingFlow",
+	run(t, testutil.Case{Name: "custom-booking",
+		Steps: []testutil.Exchange{discovery(t), wire("POST", flows+"/appointment-booking", "New-CsMainlineAttendantAppointmentBookingFlow",
 			json.RawMessage(`{"Name":"n","Description":"d","AppointmentBookingPlatform":"Custom","CallerAuthenticationMethod":1,"ApiAuthenticationType":3,"ApiDefinitions":`+string(encoded)+`}`), 201, created)},
-		Want: contracttest.Expected{Status: 201, Body: created},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 201, Body: created},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.MainlineAttendants.CreateAppointmentBookingFlow(ctx, ma.CreateAppointmentBookingFlowRequest{Name: "n", Description: "d",
 				AppointmentBookingPlatform: new(ma.BookingPlatformCustom), CallerAuthenticationMethod: new(ma.CallerAuthenticationEmail),
 				APIAuthenticationType: new(ma.APIAuthenticationBearerTokenDynamic), APIDefinitions: new(definitions)})
-			return contracttest.Observation{Value: value != nil, Response: response, Err: err}
+			return testutil.Observation{Value: value != nil, Response: response, Err: err}
 		}})
 }
 
@@ -347,16 +333,16 @@ func TestUnitMainlineAttendantQuestionAnswerFlowLifecycleUsesAcceptanceResponses
 		t.Fatal("fixture unavailable")
 	}
 	updateBody, _ := json.Marshal(map[string]any{"Name": "n", "Type": "QuestionAnswer", "Description": "u", "KnowledgeBase": flow.Flow.KnowledgeBase})
-	run(t, contracttest.Case{Name: "qa-lifecycle", Source: "msteams/teams_admin_api/mainline_attendants/testdata/question_answer_flow_create_201.json",
-		Mappings: mapping("New-CsMainlineAttendantQuestionAnswerFlow", "Set-CsMainlineAttendantQuestionAnswerFlow", "Get-CsMainlineAttendantFlow", "Remove-CsMainlineAttendantQuestionAnswerFlow"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "qa-lifecycle",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", flows+"/question-answer", "New-CsMainlineAttendantQuestionAnswerFlow", createBody, 201, created),
 			wire("PUT", item, "Set-CsMainlineAttendantQuestionAnswerFlow", updateBody, 200, updated),
 			wire("GET", flows+"/"+qaID, "Get-CsMainlineAttendantFlow", nil, 200, got),
 			wire("DELETE", item, "Remove-CsMainlineAttendantQuestionAnswerFlow", nil, 200, deleted),
 			wire("GET", flows+"/"+qaID, "Get-CsMainlineAttendantFlow", nil, 404, gone)},
-		Want: contracttest.Expected{Status: 404, Body: gone, APIError: apiError(404, gone)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 404, Body: gone, APIError: apiError(404, gone)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.MainlineAttendants
 			value, _, err := s.CreateQuestionAnswerFlow(ctx, ma.CreateQuestionAnswerFlowRequest{Name: "n", Description: "d", APIAuthenticationType: new(ma.APIAuthenticationAPIKey),
 				KnowledgeBase: ma.KnowledgeBase{Files: []ma.KnowledgeBaseFile{{Name: "faq.txt", Content: []byte("Hours"), Description: "FAQ file"}},
@@ -383,7 +369,7 @@ func TestUnitMainlineAttendantQuestionAnswerFlowLifecycleUsesAcceptanceResponses
 				t.Fatal("question answer delete failed")
 			}
 			value, response, err := s.GetFlowByID(ctx, qaID)
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
 }
 
@@ -398,14 +384,14 @@ func TestUnitMainlineAttendantMalformedResponsesFailDecode(t *testing.T) {
 		"bad-related":   `{"MainlineAttendantFlowResponses":[{"RelatedConfigurationIds":[null]}]}`,
 		"array-element": `{"MainlineAttendantFlowResponses":[[]]}`,
 	} {
-		run(t, contracttest.Case{Name: "list-" + name, Steps: []contracttest.Exchange{discovery(t), wire("GET", flows, "Get-CsMainlineAttendantFlow", nil, 200, []byte(body))},
-			Want: contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "list-" + name, Steps: []testutil.Exchange{discovery(t), wire("GET", flows, "Get-CsMainlineAttendantFlow", nil, 200, []byte(body))},
+			Want: testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				values, response, err := sdk.TeamsAdminAPI.MainlineAttendants.ListFlows(ctx, nil)
 				if values != nil {
 					t.Fatal("malformed list returned values")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 	for name, body := range map[string]string{
@@ -413,32 +399,32 @@ func TestUnitMainlineAttendantMalformedResponsesFailDecode(t *testing.T) {
 		"information-null":    `{"MainlineAttendantTenantInformation":null}`,
 		"voice-null":          `{"MainlineAttendantTenantInformation":{"SupportedVoices":[null]}}`,
 	} {
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/information", "Get-CsMainlineAttendantTenantInformation", nil, 200, []byte(body))},
-			Want: contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/information", "Get-CsMainlineAttendantTenantInformation", nil, 200, []byte(body))},
+			Want: testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.MainlineAttendants.GetTenantInformation(ctx)
 				if value != nil {
 					t.Fatal("malformed tenant information returned a value")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
-	run(t, contracttest.Case{Name: "template-wrong-envelope", Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "template-wrong-envelope", Steps: []testutil.Exchange{discovery(t),
 		wire("GET", flows+"/spam-detection-template/"+spamID, "Get-CsMainlineAttendantSpamDetectionTemplate", nil, 200, []byte(`{"MainlineAttendantFlowResponse":{}}`))},
-		Want: contracttest.Expected{Status: 200, Error: client.ErrDecode},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Error: client.ErrDecode},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.MainlineAttendants.GetSpamDetectionTemplateByID(ctx, spamID)
 			if value != nil {
 				t.Fatal("malformed template returned a value")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "undeclared-status", Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "undeclared-status", Steps: []testutil.Exchange{discovery(t),
 		wire("DELETE", flows+"/question-answer/"+qaID, "Remove-CsMainlineAttendantQuestionAnswerFlow", nil, 202, nil)},
-		Want: contracttest.Expected{Status: 202, Error: ma.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 202, Error: ma.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.MainlineAttendants.DeleteQuestionAnswerFlowByID(ctx, qaID)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 	flow := ma.Flow{KnowledgeBase: new("not json")}
 	if _, err := flow.KnowledgeBaseDocuments(); !errors.Is(err, client.ErrDecode) {
@@ -527,9 +513,9 @@ func TestUnitMainlineAttendantInvalidInputFailsBeforeIO(t *testing.T) {
 			return e
 		},
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local", Want: contracttest.Expected{Error: ma.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.MainlineAttendants)}
+		run(t, testutil.Case{Name: name, Want: testutil.Expected{Error: ma.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.MainlineAttendants)}
 			}})
 	}
 }

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -17,19 +17,18 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-const generatedSource = "msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json"
 const forest = "https://admin.example.invalid/"
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	raw, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
 }
 
-func generatedWire(method, url, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
+func generatedWire(method, url, command string, body json.RawMessage, status int, reply string) testutil.Exchange {
 	h := http.Header{}
 	h.Set("Accept", "application/json")
 	h.Set("X-MS-CmdletName", command)
@@ -38,7 +37,7 @@ func generatedWire(method, url, command string, body json.RawMessage, status int
 	if body != nil {
 		h.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: url, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: url, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
 }
 
 func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
@@ -179,19 +178,14 @@ func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
 	}
 
 	for _, f := range fixture.Cases {
-		set, command := "Identity", "Grant-CsOnlineVoicemailPolicy"
-		if strings.HasPrefix(f.Name, "tenant") {
-			set = "GrantToTenant"
-		}
-		if strings.HasPrefix(f.Name, "group") || strings.HasPrefix(f.Name, "operation") {
-			set = "GrantToGroup"
-		}
+		command := "Grant-CsOnlineVoicemailPolicy"
+
 		if strings.HasPrefix(f.Name, "operation") {
 			command = "Get-CsBatchPolicyAssignmentOperation"
 			f.Body = nil // A JSON null fixture body denotes absent content here.
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Source: generatedSource, Mappings: []contracttest.Mapping{{Command: "Grant-CsOnlineVoicemailPolicy", ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), generatedWire(f.Method, f.URL, command, f.Body, f.Status, f.Reply)}}
+			c := testutil.Case{Name: f.Name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{discovery(t), generatedWire(f.Method, f.URL, command, f.Body, f.Status, f.Reply)}}
 			if f.Failure != nil {
 				c.Want.Error = client.ErrDecode
 			}
@@ -199,16 +193,16 @@ func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
 				c.Want.Error = auth.ErrForbidden
 			}
 			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+				c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
-			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.OnlineVoicemailPolicies
 				if strings.HasPrefix(f.Name, "operation") {
 					v, r, e := s.GetAssignmentOperation(ctx, "fixture/operation")
 					if e == nil && (v == nil || v.OverallStatus == nil || *v.OverallStatus != "Future") {
 						e = errors.New("open operation status lost")
 					}
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				}
 				name := policy.Set("Fixture")
 				if strings.Contains(f.Name, "null") || strings.HasPrefix(f.Name, "group-malformed") || f.Name == "group-empty-id" || f.Name == "group-forbidden" {
@@ -220,11 +214,11 @@ func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
 				var v *resource.AssignmentResult
 				if strings.HasPrefix(f.Name, "user") {
 					value, r, e := s.AssignUser(ctx, "fixture/user", name)
-					return contracttest.Observation{Value: value, Response: r, Err: e}
+					return testutil.Observation{Value: value, Response: r, Err: e}
 				}
 				if strings.HasPrefix(f.Name, "tenant") {
 					value, r, e := s.AssignTenantDefault(ctx, name, strings.Contains(f.Name, "force"))
-					return contracttest.Observation{Value: value, Response: r, Err: e}
+					return testutil.Observation{Value: value, Response: r, Err: e}
 				}
 				var priority *int32
 				if f.Name == "group-zero-priority" {
@@ -236,12 +230,12 @@ func TestUnitVoicemailGeneratedAssignmentRequests(t *testing.T) {
 				}
 				v, r, e := s.AssignGroup(ctx, "fixture/group", name, priority)
 				if r != nil && r.StatusCode() == 202 && (v == nil || !v.Accepted) {
-					return contracttest.Observation{Err: errors.New("group acceptance lost")}
+					return testutil.Observation{Err: errors.New("group acceptance lost")}
 				}
 				if e == nil && f.Name == "group-empty-id" && v.OperationID != nil {
 					e = errors.New("fabricated operation ID")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}
 			run(t, c)
 		}

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	federation "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_federation_configuration"
 )
@@ -65,10 +65,10 @@ func TestUnitDomainConstructorsAreLocal(t *testing.T) {
 		if len(observed[tc.name]) == 0 {
 			t.Fatal("missing pinned case")
 		}
-		r, err := contracttest.Run(t.Context(), contracttest.Case{Name: tc.name, Family: "tenant_federation_configuration", Scope: "local", Source: "msteams/teams_admin_api/tenant_federation_configuration/testdata/get_global.json", Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "__AllParameterSets"}}, Invoke: func(context.Context, *msteams.Client) contracttest.Observation {
+		r, err := testutil.Run(t.Context(), testutil.Case{Name: tc.name, Invoke: func(context.Context, *msteams.Client) testutil.Observation {
 			v, e := tc.build()
-			return contracttest.Observation{Value: v, Err: e}
-		}, Want: contracttest.Expected{JSON: observed[tc.name]}})
+			return testutil.Observation{Value: v, Err: e}
+		}, Want: testutil.Expected{JSON: observed[tc.name]}})
 		if err != nil || !r.Passed() {
 			t.Fatalf("local builder differs: %v %+v", err, r.Differences())
 		}

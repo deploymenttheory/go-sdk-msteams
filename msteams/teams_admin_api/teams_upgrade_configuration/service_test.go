@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -28,14 +28,14 @@ func TestUnitUpdateUsesActualPreparationAndSparsePatch(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	run(t, contracttest.Case{Name: "sparse-update", Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "sparse-update", Steps: []testutil.Exchange{
 		compiledWire("GET", selected, set, nil, 200, string(before)), compiledWire("PATCH", selected, set, body, 204, string(readResponseFixture(t, "update_204.body"))),
 		compiledWire("GET", selected, "Get-CsTeamsUpgradeConfiguration", nil, 200, string(after)),
-	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsUpgradeConfigurations
 		receipt, r, e := s.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{DownloadTeams: policy.Set(*changed.DownloadTeams)}})
 		if e != nil {
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}
 		if receipt == nil || receipt.Before == nil || receipt.ReadResponse == nil || !receipt.PatchInvoked || !receipt.HTTPAccepted || receipt.Before.DownloadTeams == nil || *receipt.Before.DownloadTeams != *initial.DownloadTeams {
 			t.Fatal("receipt lost preparation or acceptance")
@@ -44,7 +44,7 @@ func TestUnitUpdateUsesActualPreparationAndSparsePatch(t *testing.T) {
 		if e == nil && (value.DownloadTeams == nil || *value.DownloadTeams != *changed.DownloadTeams) {
 			t.Fatal("actual non-default typed value lost")
 		}
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }
 func TestUnitAllSettingsPreserveNullFalseOpaqueAndForce(t *testing.T) {
@@ -61,9 +61,9 @@ func TestUnitAllSettingsPreserveNullFalseOpaqueAndForce(t *testing.T) {
 		if e != nil {
 			t.Fatal(e)
 		}
-		run(t, contracttest.Case{Name: "source-bindings", Steps: []contracttest.Exchange{compiledWire("PATCH", selected, set, encoded, 503, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "source-bindings", Steps: []testutil.Exchange{compiledWire("PATCH", selected, set, encoded, 503, "")}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, r, e := sdk.TeamsAdminAPI.TeamsUpgradeConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: settings, Controls: policy.Controls{Force: new(false)}})
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
 	}
 }

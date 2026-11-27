@@ -22,7 +22,7 @@ func TestUnitMeetingTemplateOwnReadVectors(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = root.Close() }()
-	raw, err := root.ReadFile("docs/implementation/policies/evidence/pol91-template-read-models.json")
+	raw, err := root.ReadFile("msteams/teams_admin_api/teams_meeting_template_configuration/testdata/template_read_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}

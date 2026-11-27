@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -21,36 +21,36 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/provisioning_diagnostics/service_test.go"
-	probe        = "00000000-0000-4000-8000-000000000026"
-	tenant       = "00000000-0000-4000-8000-0000000000aa"
-	sip          = "sip:msteams-sdk-probe@example.invalid"
-	instance     = "MicrosoftCommunicationsOnline/msteams-sdk-probe"
+
+	probe    = "00000000-0000-4000-8000-000000000026"
+	tenant   = "00000000-0000-4000-8000-0000000000aa"
+	sip      = "sip:msteams-sdk-probe@example.invalid"
+	instance = "MicrosoftCommunicationsOnline/msteams-sdk-probe"
 )
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
 func ptr[T any](value T) *T { return &value }
 
 // operation is one SDK method with the exact request it must send.
 type operation struct {
-	name, command, set string
-	method, path       string
-	kind               string // "config", "move" or "oce"
-	body               string // expected JSON request body; empty means none
-	fixture            string // live denial fixture
-	invoke             func(context.Context, *pd.Service) (any, *resty.Response, error)
+	name, command string
+	method, path  string
+	kind          string // "config", "move" or "oce"
+	body          string // expected JSON request body; empty means none
+	fixture       string // live denial fixture
+	invoke        func(context.Context, *pd.Service) (any, *resty.Response, error)
 }
 
-func (o operation) request() contracttest.WireRequest {
+func (o operation) request() testutil.WireRequest {
 	h := http.Header{}
 	switch o.kind {
 	case "config":
@@ -60,32 +60,26 @@ func (o operation) request() contracttest.WireRequest {
 	case "oce":
 		h = http.Header{"X-MS-Tenant-Id": {tenant}}
 	}
-	w := contracttest.WireRequest{Method: o.method, URL: configOrigin + o.path, Audience: auth.TeamsAdminAudience, Headers: h}
+	w := testutil.WireRequest{Method: o.method, URL: configOrigin + o.path, Audience: auth.TeamsAdminAudience, Headers: h}
 	if o.body != "" {
 		w.JSON = json.RawMessage(o.body)
 	}
 	return w
 }
 
-func (o operation) steps(t *testing.T, status int, reply []byte) []contracttest.Exchange {
+func (o operation) steps(t *testing.T, status int, reply []byte) []testutil.Exchange {
 	t.Helper()
-	exchange := contracttest.Exchange{Request: o.request(), Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json; charset=utf-8"}}, Body: reply}}
+	exchange := testutil.Exchange{Request: o.request(), Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json; charset=utf-8"}}, Body: reply}}
 	if o.kind == "oce" {
-		return []contracttest.Exchange{exchange}
+		return []testutil.Exchange{exchange}
 	}
-	return []contracttest.Exchange{discovery(t), exchange}
+	return []testutil.Exchange{discovery(t), exchange}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "provisioning_diagnostics"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -110,114 +104,114 @@ var (
 
 func operations() []operation {
 	return []operation{
-		{name: "directory_diagnostic_data", command: "Get-CsBusinessVoiceDirectoryDiagnosticData", set: "__AllParameterSets", method: "GET", kind: "config",
+		{name: "directory_diagnostic_data", command: "Get-CsBusinessVoiceDirectoryDiagnosticData", method: "GET", kind: "config",
 			path: "/Teams.Cpc/bvdDiagnosticData/Users/NOAM/" + probe + "?resultSize=5&rowKey=" + probe, fixture: "directory_diagnostic_data_403.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.GetDirectoryDiagnosticData(ctx, pd.DirectoryDiagnosticQuery{Table: "Users", Region: "NOAM", PartitionKey: probe, RowKey: ptr(probe), ResultSize: ptr(int32(5))}))
 			}},
-		{name: "object_changelog", command: "Get-CsMasObjectChangelog", set: "Get", method: "GET", kind: "config",
+		{name: "object_changelog", command: "Get-CsMasObjectChangelog", method: "GET", kind: "config",
 			path: "/Teams.Tenant/GetMASObjectChangelog?Identity=" + probe + "&SchemaNames=UserAuthoredProps&Versions=3", fixture: "object_changelog_403.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.ListObjectChangelog(ctx, pd.ObjectChangelogQuery{Identity: probe, SchemaName: "UserAuthoredProps", Version: "3"}))
 			}},
-		{name: "versioned_schema_data", command: "Get-CsMasVersionedSchemaData", set: "__AllParameterSets", method: "GET", kind: "config",
+		{name: "versioned_schema_data", command: "Get-CsMasVersionedSchemaData", method: "GET", kind: "config",
 			path: "/Teams.Tenant/GetSchemaDataFromMAS?Identity=" + probe + "&SchemaName=User+Authored&Versions=3", fixture: "versioned_schema_data_403.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.ListVersionedSchemaData(ctx, pd.VersionedSchemaQuery{SchemaName: "User Authored", Identity: probe, Version: "3"}))
 			}},
-		{name: "user_setting", command: "Get-CsUssUserSettings", set: "Get", method: "GET", kind: "config",
+		{name: "user_setting", command: "Get-CsUssUserSettings", method: "GET", kind: "config",
 			path: "/Teams.UserSettings/api/v1/tenant/" + tenant + "/user/" + probe + "/setting?name=msteams+sdk%26probe", fixture: "user_setting_403.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.GetUserSetting(ctx, tenant, probe, "msteams sdk&probe"))
 			}},
-		{name: "set_user_setting", command: "Set-CsUssUserSettings", set: "Set", method: "PATCH", kind: "config", body: `{"value":1}`,
+		{name: "set_user_setting", command: "Set-CsUssUserSettings", method: "PATCH", kind: "config", body: `{"value":1}`,
 			path: "/Teams.UserSettings/api/v1/tenant/" + tenant + "/user/" + probe + "/setting/msteams-sdk-probe", fixture: "set_user_setting_403.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.SetUserSetting(ctx, tenant, probe, "msteams-sdk-probe", payload))
 			}},
-		{name: "custom_handler_callback", command: "Invoke-CsCustomHandlerCallBackNgtprov", set: "__AllParameterSets", method: "POST", kind: "config",
+		{name: "custom_handler_callback", command: "Invoke-CsCustomHandlerCallBackNgtprov", method: "POST", kind: "config",
 			path: "/Teams.Tenant/CustomHandlerCallback?eventname=msteams-sdk-probe&id=" + probe + "&operation=StatusQueryGetUri", fixture: "custom_handler_callback_401.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.InvokeCustomHandlerCallback(ctx, pd.CustomHandlerCallbackRequest{ID: probe, Operation: pd.StatusQueryGetURI, EventName: "msteams-sdk-probe"}))
 			}},
-		{name: "custom_handler", command: "Invoke-CsCustomHandlerNgtprov", set: "CustomExpanded", method: "POST", kind: "config",
+		{name: "custom_handler", command: "Invoke-CsCustomHandlerNgtprov", method: "POST", kind: "config",
 			path: "/Teams.Tenant/CustomHandler", body: `{"HandlerFullyQualifiedName":"msteams-sdk-invalid","Payload":"{}"}`, fixture: "custom_handler_401.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.InvokeCustomHandler(ctx, pd.CustomHandlerPayload{HandlerFullyQualifiedName: ptr("msteams-sdk-invalid"), Payload: ptr("{}")}))
 			}},
-		{name: "direct_object_sync", command: "Invoke-CsDirectObjectSync", set: "PostExpanded", method: "POST", kind: "config",
+		{name: "direct_object_sync", command: "Invoke-CsDirectObjectSync", method: "POST", kind: "config",
 			path: "/Teams.InternalSupport/ProvisioningOperations/DsRequest", fixture: "direct_object_sync_403.json",
 			body: `{"ServiceInstance":"x","ObjectId":"` + probe + `","ScenariosToSuppress":"s","ReSyncOptions":2,"DeploymentName":"EastUS","ObjectClass":"User","IsValidationRequest":true,"ObjectIds":["` + probe + `"]}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return two(s.SyncDirectObjects(ctx, pd.DirectObjectSyncRequest{ServiceInstance: ptr("x"), ObjectID: ptr(probe), ScenariosToSuppress: ptr("s"), ReSyncOptions: ptr(int64(2)),
 					DeploymentName: ptr("EastUS"), ObjectClass: ptr("User"), IsValidationRequest: ptr(true), ObjectIDs: []string{probe}}))
 			}},
-		{name: "msods_sync", command: "Invoke-CsMsodsSync", set: "PostExpanded", method: "POST", kind: "config",
+		{name: "msods_sync", command: "Invoke-CsMsodsSync", method: "POST", kind: "config",
 			path: "/Teams.Tenant/MsodsSync", fixture: "msods_sync_403.json",
 			body: `{"ServiceInstance":"x","TenantId":"` + probe + `","ScenariosToSuppress":"s","SynchronizeTenantWithAllObjects":true,"ReSyncOptions":2,"ObjectClass":"User","IsValidationRequest":true,"ObjectIds":["` + probe + `"]}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return two(s.SyncMsodsObjects(ctx, pd.MsodsSyncRequest{ServiceInstance: ptr("x"), TenantID: probe, ScenariosToSuppress: ptr("s"), SynchronizeTenantWithAllObjects: ptr(true),
 					ReSyncOptions: ptr(int64(2)), ObjectClass: "User", IsValidationRequest: ptr(true), ObjectIDs: []string{probe}}))
 			}},
-		{name: "rehome_user", command: "Invoke-CsRehomeuser", set: "Post", method: "POST", kind: "config", body: `{"value":1}`,
+		{name: "rehome_user", command: "Invoke-CsRehomeuser", method: "POST", kind: "config", body: `{"value":1}`,
 			path: "/Teams.User/RehomeUser/" + probe + "/moveUser", fixture: "rehome_user_403.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return two(s.RehomeUser(ctx, probe, payload))
 			}},
-		{name: "tenant_user_backfill", command: "Set-CsTenantUserBackfill", set: "Set", method: "POST", kind: "config", body: `{"value":1}`,
+		{name: "tenant_user_backfill", command: "Set-CsTenantUserBackfill", method: "POST", kind: "config", body: `{"value":1}`,
 			path: "/Teams.InternalSupport/SetBackfillToPubsub?operation=msteams-sdk+invalid", fixture: "tenant_user_backfill_403.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.SetTenantUserBackfill(ctx, "msteams-sdk invalid", payload))
 			}},
-		{name: "validate_user_move", set: "Validate", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/ValidateUser", fixture: "validate_user_move_403.json",
+		{name: "validate_user_move", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/ValidateUser", fixture: "validate_user_move_403.json",
 			body: `{"localDeploymentInfo":{"PresenceFqdn":"p.example.invalid","RegistrarFqdn":"r.example.invalid","HostingProviderFqdn":"h.example.invalid","MajorVersion":6},
 				"teamsData":{"MoveToTeams":true,"CheckEnterpriseVoice":false,"CheckCpc":true},"userSipUri":"` + sip + `","moveToCloud":true,"force":true,"cmdletVersion":"1.0"}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.ValidateUserMove(ctx, pd.ValidateUserMoveRequest{UserMove: move, CmdletVersion: "1.0", TeamsData: teams, MoveToCloud: true, Force: true,
 					LocalDeployment: pd.LocalDeployment{PresenceFqdn: "p.example.invalid", RegistrarFqdn: "r.example.invalid", HostingProviderFqdn: "h.example.invalid", MajorVersion: 6}}))
 			}},
-		{name: "begin_user_move", set: "BeginAndCompleteMove", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/BeginMove", fixture: "begin_user_move_403.json",
+		{name: "begin_user_move", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/BeginMove", fixture: "begin_user_move_403.json",
 			body: `{"userSipUri":"` + sip + `","majorVersion":"6"}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.BeginUserMove(ctx, pd.UserMoveVersionRequest{UserMove: move, MajorVersion: "6"}))
 			}},
-		{name: "complete_user_move", set: "BeginAndCompleteMove", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/CompleteMove", fixture: "complete_user_move_403.json",
+		{name: "complete_user_move", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/CompleteMove", fixture: "complete_user_move_403.json",
 			body: `{"userSipUri":"` + sip + `","majorVersion":"6"}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return two(s.CompleteUserMove(ctx, pd.UserMoveVersionRequest{UserMove: move, MajorVersion: "6"}))
 			}},
-		{name: "user_move_policies", set: "Rehome", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/GetPolicies", fixture: "user_move_policies_403.json",
+		{name: "user_move_policies", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/GetPolicies", fixture: "user_move_policies_403.json",
 			body: `{"userSipUri":"` + sip + `"}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.GetUserMovePolicies(ctx, move))
 			}},
-		{name: "rollback_user_move", set: "Rehome", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/Rollback", fixture: "rollback_user_move_403.json",
+		{name: "rollback_user_move", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/Rollback", fixture: "rollback_user_move_403.json",
 			body: `{"userSipUri":"` + sip + `"}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return two(s.RollbackUserMove(ctx, move))
 			}},
-		{name: "rehome_user_move", set: "Rehome", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/RehomeUser", fixture: "rehome_user_move_403.json",
+		{name: "rehome_user_move", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/RehomeUser", fixture: "rehome_user_move_403.json",
 			body: `{"teamsData":{"MoveToTeams":true,"CheckEnterpriseVoice":false,"CheckCpc":true},"userSipUri":"` + sip + `","moveToCloud":true}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return two(s.RehomeUserMove(ctx, pd.RehomeUserMoveRequest{UserMove: move, TeamsData: teams, MoveToCloud: true}))
 			}},
-		{name: "moved_resource_data", set: "MoveResourcedata", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/SetMovedResourceData", fixture: "moved_resource_data_403.json",
+		{name: "moved_resource_data", method: "POST", kind: "move", path: "/Teams.HostedMigrationService/SetMovedResourceData", fixture: "moved_resource_data_403.json",
 			body: `{"resourceData":{"Datastr":"msteams-sdk-probe"},"teamsData":{"MoveToTeams":true,"CheckEnterpriseVoice":false,"CheckCpc":true},"userSipUri":"` + sip + `","majorVersion":"6"}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return two(s.SetMovedResourceData(ctx, pd.MovedResourceDataRequest{UserMove: move, ResourceData: "msteams-sdk-probe", MajorVersion: "6", TeamsData: teams}))
 			}},
-		{name: "user_provisioning_history", command: "Get-CsUserProvHistory", set: "__AllParameterSets", method: "GET", kind: "oce",
+		{name: "user_provisioning_history", command: "Get-CsUserProvHistory", method: "GET", kind: "oce",
 			path: "/Teams.InternalSupport/AdminStoreOperations/userHistory/" + probe + "/EMEA", fixture: "user_provisioning_history_403.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return three(s.GetUserProvisioningHistory(ctx, tenant, strings.ToUpper(probe), pd.RegionEMEA))
 			}},
-		{name: "ngtprov_handler", command: "Invoke-CsGenericNgtProvCommand", set: "__AllParameterSets", method: "POST", kind: "oce", body: `{"value":1}`,
+		{name: "ngtprov_handler", command: "Invoke-CsGenericNgtProvCommand", method: "POST", kind: "oce", body: `{"value":1}`,
 			path:    "/Teams.InternalSupport/ProvisioningOperations/runHandler/EastUS?handler=msteams-sdk-invalid%3Ftenant%3D" + tenant + "%3Ftarget%3D" + probe + "%3FserviceInstance%3DMicrosoftCommunicationsOnline%2Fmsteams-sdk-probe",
 			fixture: "ngtprov_handler_403.json",
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
 				return two(s.InvokeNgtProvHandler(ctx, pd.NgtProvHandlerRequest{TenantID: tenant, Region: pd.DeploymentEastUS, HandlerName: "msteams-sdk-invalid", Target: probe, ServiceInstance: instance, Payload: payload}))
 			}},
-		{name: "directory_object_sync", command: "Invoke-CsDirectoryObjectSync", set: "__AllParameterSets", method: "POST", kind: "oce",
+		{name: "directory_object_sync", command: "Invoke-CsDirectoryObjectSync", method: "POST", kind: "oce",
 			path: "/Teams.InternalSupport/ProvisioningOperations/DsRequest", fixture: "directory_object_sync_403.json",
 			body: `{"ServiceInstance":"` + instance + `","DeploymentName":3,"ObjectId":"` + probe + `","ObjectIds":null,"ObjectClass":3,"SynchronizeTenantWithAllObjects":false,"IsValidationRequest":true,"ScenariosToSuppress":null}`,
 			invoke: func(ctx context.Context, s *pd.Service) (any, *resty.Response, error) {
@@ -225,14 +219,6 @@ func operations() []operation {
 					ObjectID: "{" + strings.ToUpper(probe) + "}", IsValidationRequest: true}))
 			}},
 	}
-}
-
-func (o operation) mapping() []contracttest.Mapping {
-	command := o.command
-	if o.kind == "move" {
-		command = "Move-CsInternalHelper"
-	}
-	return []contracttest.Mapping{{Command: command, ParameterSet: o.set}}
 }
 
 // fixtureError rebuilds the normalized API error from a live denial body.
@@ -262,15 +248,15 @@ func TestUnitProvisioningDiagnosticsDenialsUseAcceptanceResponses(t *testing.T) 
 		if strings.HasSuffix(o.fixture, "_401.json") {
 			status, want = 401, auth.ErrUnauthenticated
 		}
-		run(t, contracttest.Case{Name: "actual-" + strings.ReplaceAll(o.name, "_", "-"), Source: "msteams/teams_admin_api/provisioning_diagnostics/testdata/" + o.fixture, Mappings: o.mapping(),
+		run(t, testutil.Case{Name: "actual-" + strings.ReplaceAll(o.name, "_", "-"),
 			Steps: o.steps(t, status, body),
-			Want:  contracttest.Expected{Status: status, Body: body, APIError: fixtureError(t, status, body)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			Want:  testutil.Expected{Status: status, Body: body, APIError: fixtureError(t, status, body)},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := o.invoke(ctx, sdk.TeamsAdminAPI.ProvisioningDiagnostics)
 				if !errors.Is(err, want) || !isZero(value) {
 					t.Fatalf("%s denial was not classified or returned a value", o.name)
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -370,14 +356,14 @@ func TestUnitProvisioningDiagnosticsSuccessShapesPreserveFields(t *testing.T) {
 		if c.body != "" {
 			body = []byte(c.body)
 		}
-		run(t, contracttest.Case{Name: "success-" + strings.ReplaceAll(o.name, "_", "-"), Mappings: o.mapping(), Steps: o.steps(t, c.status, body),
-			Want: contracttest.Expected{Status: c.status},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "success-" + strings.ReplaceAll(o.name, "_", "-"), Steps: o.steps(t, c.status, body),
+			Want: testutil.Expected{Status: c.status},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := o.invoke(ctx, sdk.TeamsAdminAPI.ProvisioningDiagnostics)
 				if err != nil || !c.check(value) {
 					t.Fatalf("%s success value differs: %v", o.name, err)
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -419,14 +405,14 @@ func TestUnitProvisioningDiagnosticsFailuresStayTyped(t *testing.T) {
 		if c.body != "" {
 			body = []byte(c.body)
 		}
-		run(t, contracttest.Case{Name: fmt.Sprintf("failure-%d", index), Mappings: o.mapping(), Steps: o.steps(t, c.status, body),
-			Want: contracttest.Expected{Status: c.status, Error: c.want},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: fmt.Sprintf("failure-%d", index), Steps: o.steps(t, c.status, body),
+			Want: testutil.Expected{Status: c.status, Error: c.want},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := o.invoke(ctx, sdk.TeamsAdminAPI.ProvisioningDiagnostics)
 				if !isZero(value) {
 					t.Fatalf("%s failure returned a value", c.name)
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -543,9 +529,9 @@ func TestUnitProvisioningDiagnosticsRejectsInvalidInputLocally(t *testing.T) {
 		},
 	}
 	for name, call := range invalid {
-		run(t, contracttest.Case{Name: "invalid-" + name, Scope: "local", Want: contracttest.Expected{Error: pd.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.ProvisioningDiagnostics)}
+		run(t, testutil.Case{Name: "invalid-" + name, Want: testutil.Expected{Error: pd.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.ProvisioningDiagnostics)}
 			}})
 	}
 }
@@ -556,12 +542,12 @@ func TestUnitProvisioningDiagnosticsOCEObjectIDsReplaceObjectID(t *testing.T) {
 	t.Parallel()
 	o := operation{method: "POST", kind: "oce", path: "/Teams.InternalSupport/ProvisioningOperations/DsRequest",
 		body: `{"ServiceInstance":"` + instance + `","DeploymentName":19,"ObjectId":"00000000-0000-0000-0000-000000000000","ObjectIds":["` + probe + `"],"ObjectClass":0,"SynchronizeTenantWithAllObjects":true,"IsValidationRequest":false,"ScenariosToSuppress":"s"}`}
-	run(t, contracttest.Case{Name: "oce-object-ids", Mappings: []contracttest.Mapping{{Command: "Invoke-CsDirectoryObjectSync", ParameterSet: "__AllParameterSets"}}, Steps: o.steps(t, 200, nil),
-		Want: contracttest.Expected{Status: 200},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "oce-object-ids", Steps: o.steps(t, 200, nil),
+		Want: testutil.Expected{Status: 200},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.ProvisioningDiagnostics.SyncDirectoryObject(ctx, pd.DirectoryObjectSyncRequest{TenantID: tenant, Deployment: pd.DeploymentChinaNorth3,
 				ServiceInstance: instance, ObjectClass: pd.ObjectClassCompany, ObjectID: "ignored", ObjectIDs: []string{probe}, SynchronizeTenantWithAllObjects: true, ScenariosToSuppress: ptr("s")})
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 

@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_messaging_configuration"
@@ -18,12 +18,12 @@ func TestUnitMessagingNullableListPreparedEditRetainsSnapshotAndExplicitReadback
 	t.Parallel()
 	const before = `{"Identity":"Global","CustomEmojis":true,"Storyline":"Enabled","FileTypeBlockList":["entry",null,"entry",null],"Future":false}`
 	const after = `{"Identity":"Global","CustomEmojis":false,"Storyline":"Enabled","FileTypeBlockList":["entry",null,null,"ENTRY"],"Future":false}`
-	run(t, contracttest.Case{Name: "nullable-list-prepared-edit", Source: "msteams/teams_admin_api/teams_messaging_configuration/nullable_list_test.go", Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}, {Command: "Get-CsTeamsMessagingConfiguration", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "nullable-list-prepared-edit", Steps: []testutil.Exchange{
 		compiledWire("GET", collection, "Get-CsTeamsMessagingConfiguration", nil, 200, "["+before+"]"),
 		compiledWire("GET", selected, set, nil, 200, before),
 		compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","CustomEmojis":false,"FileTypeBlockList":["entry",null,null,"ENTRY"]}`), 204, ""),
 		compiledWire("GET", selected, "Get-CsTeamsMessagingConfiguration", nil, 200, after),
-	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		service := sdk.TeamsAdminAPI.TeamsMessagingConfigurations
 		// Omitted Identity is the public default collection path, independent of Filter.
 		listed, listResponse, listErr := service.List(ctx)
@@ -39,6 +39,6 @@ func TestUnitMessagingNullableListPreparedEditRetainsSnapshotAndExplicitReadback
 		if err == nil && (value == nil || value.CustomEmojis == nil || *value.CustomEmojis || !reflect.DeepEqual(value.FileTypeBlockList, []*string{new("entry"), nil, nil, new("ENTRY")}) || string(value.RawJSON) != after || string(value.RawFields["Future"]) != "false" || !reflect.DeepEqual(result.Before.FileTypeBlockList, []*string{new("entry"), nil, new("entry"), nil})) {
 			t.Fatal("explicit readback lost null entries or mutated earlier preparation")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }

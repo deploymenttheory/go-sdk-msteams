@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
@@ -36,13 +36,13 @@ func readResponseFixture(t *testing.T, name string) []byte {
 	return raw
 }
 
-func responseFixtureSteps(t *testing.T, path string, status int, body []byte) []contracttest.Exchange {
+func responseFixtureSteps(t *testing.T, path string, status int, body []byte) []testutil.Exchange {
 	t.Helper()
 	const origin = "https://api.interfaces.records.teams.microsoft.com"
-	var steps []contracttest.Exchange
-	return append(steps, contracttest.Exchange{
-		Request: contracttest.WireRequest{Method: http.MethodGet, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: http.Header{"X-MS-CmdletName": {"Get-CsOnlineVoicemailPolicy"}, "MPACmdlet": {"true"}, "X-MS-Target-Uri": nil}},
-		Reply:   contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body},
+	var steps []testutil.Exchange
+	return append(steps, testutil.Exchange{
+		Request: testutil.WireRequest{Method: http.MethodGet, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: http.Header{"X-MS-CmdletName": {"Get-CsOnlineVoicemailPolicy"}, "MPACmdlet": {"true"}, "X-MS-Target-Uri": nil}},
+		Reply:   testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body},
 	})
 }
 
@@ -55,19 +55,19 @@ func TestUnitGetGlobalResponseFixture(t *testing.T) {
 	if err := json.Unmarshal(raw, &expected); err != nil {
 		t.Fatal(err)
 	}
-	result, err := contracttest.Run(t.Context(), contracttest.Case{
-		Name: "get-global", Family: "online_voicemail_policy", Scope: "service", Source: "msteams/teams_admin_api/online_voicemail_policy/testdata/get_global.json",
+	result, err := testutil.Run(t.Context(), testutil.Case{
+		Name:  "get-global",
 		Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/OnlineVoicemailPolicy/configuration/Global", 200, raw),
-		Want:  contracttest.Expected{Status: http.StatusOK, Body: raw, JSON: raw},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want:  testutil.Expected{Status: http.StatusOK, Body: raw, JSON: raw},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.GetByIdentity(ctx, "Global")
 			if err == nil {
 				if value == nil || value.Identity == nil || *value.Identity != "Global" || !reflect.DeepEqual(value.ShareData, expected.Field) {
 					t.Fatal("typed identity or ShareData differs from the real response")
 				}
-				return contracttest.Observation{Value: value.RawFields, Response: response}
+				return testutil.Observation{Value: value.RawFields, Response: response}
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		},
 	})
 	if err != nil || !result.Passed() {
@@ -113,11 +113,11 @@ func TestUnitListResponseFixture(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	result, err := contracttest.Run(t.Context(), contracttest.Case{
-		Name: "list", Family: "online_voicemail_policy", Scope: "service", Source: "msteams/teams_admin_api/online_voicemail_policy/testdata/list.json",
+	result, err := testutil.Run(t.Context(), testutil.Case{
+		Name:  "list",
 		Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/OnlineVoicemailPolicy", 200, raw),
-		Want:  contracttest.Expected{Status: http.StatusOK, Body: raw, JSON: want},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want:  testutil.Expected{Status: http.StatusOK, Body: raw, JSON: want},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			values, response, err := sdk.TeamsAdminAPI.OnlineVoicemailPolicies.List(ctx)
 			if err == nil {
 				if len(values) != len(expected) {
@@ -133,7 +133,7 @@ func TestUnitListResponseFixture(t *testing.T) {
 					}
 				}
 			}
-			return contracttest.Observation{Value: values, Response: response, Err: err}
+			return testutil.Observation{Value: values, Response: response, Err: err}
 		},
 	})
 	if err != nil || !result.Passed() {

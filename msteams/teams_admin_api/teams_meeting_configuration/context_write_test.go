@@ -7,7 +7,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_configuration"
@@ -23,12 +23,12 @@ func TestUnitContextTypedWriterDropsRawFieldsAndPreservesReadView(t *testing.T) 
 		t.Fatal("own accepted read was rejected")
 	}
 	body := json.RawMessage(`{"Identity":"Global","PublishedEntraAuthenticationContexts":[{"Identity":null,"Id":"c1","PublishedName":"37","PublishedDescription":null,"EntraName":null,"EntraDescription":null,"Published":true},null]}`)
-	run(t, contracttest.Case{Name: "typed-context-write", Source: "msteams/teams_admin_api/teams_meeting_configuration/context_write_test.go", Steps: []contracttest.Exchange{compiledWire("PATCH", selected, set, body, 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "typed-context-write", Steps: []testutil.Exchange{compiledWire("PATCH", selected, set, body, 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, response, err := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{PublishedEntraAuthenticationContexts: policy.Set([]*resource.PublishedEntraAuthenticationContext{&item, nil})}})
 		if err == nil && (value != nil || !bytes.Equal(item.RawJSON, raw)) {
 			t.Fatal("typed wire mutated raw read view or invented a204model")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }
 
@@ -48,11 +48,11 @@ func TestUnitContextModifiersKeepNullMembersAndHelperStageFailures(t *testing.T)
 		{"remove-populated", `[{"Id":"c1"}]`, "", resource.ChangeAuthenticationContexts(nil, []*resource.PublishedEntraAuthenticationContext{entry}), resource.ErrInput},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{compiledWire("GET", selected, set, nil, 200, withContexts(t, tc.current))}
+			steps := []testutil.Exchange{compiledWire("GET", selected, set, nil, 200, withContexts(t, tc.current))}
 			if tc.want == nil {
 				steps = append(steps, compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","PublishedEntraAuthenticationContexts":`+tc.sent+`}`), 204, ""))
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/teams_meeting_configuration/context_write_test.go", Steps: steps, Want: contracttest.Expected{Error: tc.want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Want: testutil.Expected{Error: tc.want}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{PublishedEntraAuthenticationContexts: tc.edit})
 				if value == nil || value.Before == nil || value.ReadResponse == nil || value.ReadResponse.StatusCode() != 200 {
 					t.Fatal("helper outcome lost actual preparation")
@@ -64,7 +64,7 @@ func TestUnitContextModifiersKeepNullMembersAndHelperStageFailures(t *testing.T)
 				} else if err != nil || !value.PatchInvoked || !value.HTTPAccepted || value.After != nil {
 					t.Fatal("accepted modifier lost receipt semantics")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 		})
 	}

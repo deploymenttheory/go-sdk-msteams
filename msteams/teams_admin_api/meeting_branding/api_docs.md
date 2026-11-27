@@ -56,7 +56,7 @@ remain available to callers. Context, destination and audience checks remain sha
 Successful persistence, assignment, Premium feature effects, RBAC, cloud deployment
 and full binding/coercion parity remain separately qualified. See
 [unit tests](service_test.go) and
-the [lab plan](../../../docs/implementation/policies/meeting-branding-lab-acceptance.md).
+the [lab plan](../../../docs/acceptance/meeting-branding-lab-acceptance.md).
 
 ### Executed owned CRUD
 

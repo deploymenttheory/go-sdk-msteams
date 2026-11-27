@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
@@ -36,7 +36,7 @@ func TestUnitBatchAuthoredTypedResponses(t *testing.T) {
 		{"batch-get", "/fixture%2Foperation%3A%40", authoredBatch},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			r, err := contracttest.Run(t.Context(), contracttest.Case{Name: "typed-" + tc.name, Family: "policy_assignments", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: mapping(tc.name), Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+"/Skype.Policy/assignments/operations"+tc.suffix, "Get-CsBatchPolicyAssignmentOperation", nil, 200, tc.reply)}, Want: contracttest.Expected{Status: 200, Body: []byte(tc.reply), JSON: json.RawMessage(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			r, err := testutil.Run(t.Context(), testutil.Case{Name: "typed-" + tc.name, Steps: []testutil.Exchange{discovery(t), wire("GET", origin+"/Skype.Policy/assignments/operations"+tc.suffix, "Get-CsBatchPolicyAssignmentOperation", nil, 200, tc.reply)}, Want: testutil.Expected{Status: 200, Body: []byte(tc.reply), JSON: json.RawMessage(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				observed := invoke(tc.name, ctx, sdk)
 				if observed.Err != nil {
 					return observed
@@ -80,16 +80,16 @@ func TestUnitBatchAuthoredAcceptedHandlePresence(t *testing.T) {
 		{"malformed", `{"OperationId":`, nil, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			want := contracttest.Expected{Status: 202, Body: []byte(tc.reply)}
+			want := testutil.Expected{Status: 202, Body: []byte(tc.reply)}
 			if tc.decode {
 				want.Error = client.ErrDecode
 			}
-			r, err := contracttest.Run(t.Context(), contracttest.Case{Name: "batch-handle-" + tc.name, Family: "policy_assignments", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: mapping("batch-create-empty"), Steps: []contracttest.Exchange{discovery(t), wire("POST", origin+"/Skype.Policy/assignments/operations", "New-CsBatchPolicyAssignmentOperation", json.RawMessage(`{"identities":[]}`), 202, tc.reply)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			r, err := testutil.Run(t.Context(), testutil.Case{Name: "batch-handle-" + tc.name, Steps: []testutil.Exchange{discovery(t), wire("POST", origin+"/Skype.Policy/assignments/operations", "New-CsBatchPolicyAssignmentOperation", json.RawMessage(`{"identities":[]}`), 202, tc.reply)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.PolicyAssignments.CreateBatch(ctx, resource.BatchCreateRequest{Identities: []string{}})
 				if value == nil || !value.HTTPAccepted || (tc.id == nil && value.OperationID != nil) || (tc.id != nil && (value.OperationID == nil || *value.OperationID != *tc.id)) || (!tc.decode && value.RawFields == nil) {
 					t.Fatal("accepted batch conflated missing, null, empty or opaque handle")
 				}
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			}})
 			if err != nil || !r.Passed() {
 				t.Fatalf("batch receipt presence differs: %v %+v", err, r.Differences())
@@ -111,12 +111,12 @@ func TestUnitGroupByPolicyAuthoredArrayAndNullableFields(t *testing.T) {
 		{"all", "", ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "group-get2-" + tc.name, Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsGroupPolicyAssignment", ParameterSet: "Get2"}}, Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+"/Skype.Policy/groupPolicyAssignments"+tc.suffix, "Get-CsGroupPolicyAssignment", nil, 200, reply)}, Want: contracttest.Expected{JSON: json.RawMessage(reply), Body: []byte(reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "group-get2-" + tc.name, Steps: []testutil.Exchange{discovery(t), wire("GET", origin+"/Skype.Policy/groupPolicyAssignments"+tc.suffix, "Get-CsGroupPolicyAssignment", nil, 200, reply)}, Want: testutil.Expected{JSON: json.RawMessage(reply), Body: []byte(reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListGroupsByPolicy(ctx, tc.filter)
 				if err == nil && (len(values) != 1 || values[0] == nil || values[0].GroupID == nil || *values[0].GroupID != responseGroupID || values[0].Priority == nil || *values[0].Priority != 0 || values[0].PolicyType == nil || *values[0].PolicyType != "TeamsMeetingPolicy" || values[0].PolicyName == nil || *values[0].PolicyName != "" || values[0].CreatedTime != nil || string(values[0].RawFields["createdTime"]) != "null" || string(values[0].RawFields["Future"]) != "false") {
 					t.Fatal("Get2 lost the typed group array, identity, zero, empty or nullable fields")
 				}
-				return contracttest.Observation{Value: values, Response: response, Err: err}
+				return testutil.Observation{Value: values, Response: response, Err: err}
 			}})
 		})
 	}
@@ -133,7 +133,7 @@ func TestUnitGeneratedReadDecodeFailureRetainsHTTPResponse(t *testing.T) {
 		{"group-list", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes", `{"value":[]}`},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "malformed-read-" + tc.name, Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: mapping(tc.name), Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+tc.path, "Get-CsGroupPolicyAssignment", nil, 200, tc.reply)}, Want: contracttest.Expected{Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "malformed-read-" + tc.name, Steps: []testutil.Exchange{discovery(t), wire("GET", origin+tc.path, "Get-CsGroupPolicyAssignment", nil, 200, tc.reply)}, Want: testutil.Expected{Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				observed := invoke(tc.name, ctx, sdk)
 				if !errors.Is(observed.Err, client.ErrDecode) || observed.Response == nil || observed.Response.StatusCode() != 200 || string(observed.Response.Body()) != tc.reply {
 					t.Fatal("read decode failure lost its actual accepted response or error")

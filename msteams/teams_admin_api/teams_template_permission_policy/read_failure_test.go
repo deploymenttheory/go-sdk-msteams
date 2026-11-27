@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -19,25 +19,25 @@ func TestUnitReadsRetainAuthorizationAndDecodeFailures(t *testing.T) {
 		for _, status := range []int{401, 403, 404} {
 			for _, list := range []bool{false, true} {
 				path := "/Skype.Policy/configurations/TeamsTemplatePermissionPolicy"
-				set := "Filter"
+
 				if !list {
 					path += "/configuration/Global"
-					set = "Identity"
+
 				}
-				run(t, contracttest.Case{Name: fmt.Sprintf("read-error-%s-%d-%t", mode, status, list), Mode: mode, Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsTemplatePermissionPolicy", ParameterSet: set}}, Steps: []contracttest.Exchange{compiledWire("GET", path, "Get-CsTeamsTemplatePermissionPolicy", nil, status, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: fmt.Sprintf("read-error-%s-%d-%t", mode, status, list), Mode: mode, Steps: []testutil.Exchange{compiledWire("GET", path, "Get-CsTeamsTemplatePermissionPolicy", nil, status, "")}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					if list {
 						_, r, e := sdk.TeamsAdminAPI.TeamsTemplatePermissionPolicies.ListFiltered(ctx, "Global")
-						return contracttest.Observation{Response: r, Err: e}
+						return testutil.Observation{Response: r, Err: e}
 					}
 					_, r, e := sdk.TeamsAdminAPI.TeamsTemplatePermissionPolicies.GetByIdentity(ctx, "Global")
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				}})
 			}
 		}
 		for index, body := range []string{`{"Description":false}`, `[]`, `{`} {
-			run(t, contracttest.Case{Name: fmt.Sprintf("read-decode-%s-%d", mode, index), Mode: mode, Steps: []contracttest.Exchange{compiledWire("GET", "/Skype.Policy/configurations/TeamsTemplatePermissionPolicy/configuration/Global", "Get-CsTeamsTemplatePermissionPolicy", nil, 200, body)}, Want: contracttest.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: fmt.Sprintf("read-decode-%s-%d", mode, index), Mode: mode, Steps: []testutil.Exchange{compiledWire("GET", "/Skype.Policy/configurations/TeamsTemplatePermissionPolicy/configuration/Global", "Get-CsTeamsTemplatePermissionPolicy", nil, 200, body)}, Want: testutil.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, r, e := sdk.TeamsAdminAPI.TeamsTemplatePermissionPolicies.GetByIdentity(ctx, "Global")
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		}
 	}

@@ -61,5 +61,5 @@ returns the HTTP 201 receipt (`OperationId`) or nil for HTTP 204.
   report them.
 - `Start-CsExMeetingMigration -CleanupSipDisabled` and `-EnqueueSourceType`
   fail in the module with `NamedParameterNotFound`; they are not exposed.
-- See `docs/implementation/ext/migration-contract-notes.md` for evidence and
+- See the [testing guide](../../../docs/guides/testing.md) for evidence and
   what remains unqualified.

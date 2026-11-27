@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -92,7 +92,7 @@ func TestUnitFilesPolicyTypedInputsAndScopeRequests(t *testing.T) {
 			}
 			controls.Force = new(v.IsPresent)
 		}
-		c := contracttest.Case{Name: strings.ToLower(f.Command + "-" + f.Name), Mappings: []contracttest.Mapping{{Command: f.Command, ParameterSet: set}}}
+		c := testutil.Case{Name: strings.ToLower(f.Command + "-" + f.Name)}
 		invalid := f.Invalid
 		if invalid {
 			c.Want.Error = resource.ErrInput
@@ -154,54 +154,54 @@ func TestUnitFilesPolicyTypedInputsAndScopeRequests(t *testing.T) {
 			default:
 				t.Fatal("unknown test command")
 			}
-			c.Steps = []contracttest.Exchange{compiledWire(method, path, f.Command, body, status, reply)}
+			c.Steps = []testutil.Exchange{compiledWire(method, path, f.Command, body, status, reply)}
 			c.Want.APIError = &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}
 		}
-		c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TeamsFilesPolicies
 			switch f.Command {
 			case getCommand:
 				if _, ok := bound["Filter"]; ok {
 					v, r, e := s.ListFiltered(ctx, pattern)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				if _, ok := bound["Identity"]; ok {
 					v, r, e := s.GetByIdentity(ctx, identity)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				v, r, e := s.List(ctx)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			case "New-CsTeamsFilesPolicy":
 				v, r, e := s.CreateByIdentity(ctx, identity, resource.CreateRequest{Settings: input, Controls: controls})
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			case setCommand:
 				v, r, e := s.PatchByIdentity(ctx, identity, resource.PatchRequest{Settings: input, Controls: controls})
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			case "Remove-CsTeamsFilesPolicy":
 				v, r, e := s.DeleteByIdentity(ctx, identity, controls)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			case grantCommand:
 				switch set {
 				case "GrantToUser":
 					v, r, e := s.AssignUser(ctx, identity, name)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "GrantToTenant":
 					v, r, e := s.AssignTenantDefault(ctx, name, controls.Force != nil && *controls.Force)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "GrantToGroup":
 					var rank int32
 					var id string
 					if json.Unmarshal(bound["Rank"], &rank) != nil || json.Unmarshal(bound["Group"], &id) != nil {
-						return contracttest.Observation{Err: errors.New("invalid typed grant")}
+						return testutil.Observation{Err: errors.New("invalid typed grant")}
 					}
 					v, r, e := s.AssignGroup(ctx, id, name, rank)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				default:
 					v, r, e := s.Assign(ctx, policy.Assignment{})
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 			}
-			return contracttest.Observation{Err: errors.New("unknown test command")}
+			return testutil.Observation{Err: errors.New("unknown test command")}
 		}
 		run(t, c)
 	}

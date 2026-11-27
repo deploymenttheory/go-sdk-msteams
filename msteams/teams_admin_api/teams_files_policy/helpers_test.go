@@ -5,11 +5,10 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "msteams/teams_admin_api/teams_files_policy/testdata/get_global.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TeamsFilesPolicy"
 const item = collection + "/configuration/Global"
@@ -57,7 +56,7 @@ func requestInputs() []requestInputCase {
 	}
 }
 
-func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
+func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) testutil.Exchange {
 	h := http.Header{}
 	h.Set("MPACmdlet", "true")
 	h.Set("X-MS-CmdletName", command)
@@ -68,22 +67,19 @@ func compiledWire(method, path, command string, body json.RawMessage, status int
 	if len(body) == 0 {
 		body = nil
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
 }
 
-func run(t *testing.T, c contracttest.Case) contracttest.Result {
+func run(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family = "teams_files_policy"
-	if c.Source == "" {
-		c.Source = source
-	}
+
 	if len(c.Steps) == 0 {
-		c.Scope = "local"
+
 	} else {
-		c.Scope = "service"
+
 		c.Want.Status = c.Steps[len(c.Steps)-1].Reply.Status
 	}
-	result, err := contracttest.Run(t.Context(), c)
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil || !result.Passed() {
 		t.Fatalf("files policy behavior differs: %v %+v", err, result.Differences())
 	}

@@ -5,11 +5,10 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "msteams/teams_admin_api/teams_external_access_configuration/helpers_test.go"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const scoped = "scope /Fixture / Child"
 
@@ -445,7 +444,7 @@ func requestInputs(t *testing.T) []requestCase {
 
 	return v.Cases
 }
-func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply string) testutil.Exchange {
 	h := http.Header{}
 	h.Set("MPACmdlet", "true")
 	h.Set("X-MS-CmdletName", command)
@@ -453,30 +452,23 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if body != nil {
 		h.Set("Content-Type", "application/json; charset=utf-8")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"text/plain; charset=utf-8"}, "X-Ms-Configapi-Powershell-Warningmessage": {"fixture-warning"}}, Body: []byte(reply)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"text/plain; charset=utf-8"}, "X-Ms-Configapi-Powershell-Warningmessage": {"fixture-warning"}}, Body: []byte(reply)}}
 }
-func exchange(c requestCase) contracttest.Exchange {
+func exchange(c requestCase) testutil.Exchange {
 	var body json.RawMessage
 	if c.Request.Body != "" {
 		body = json.RawMessage(c.Request.Body)
 	}
 	return wire(c.Request.Method, c.Request.Url[len(origin):], c.Request.CmdletName, body, c.Status, c.Response)
 }
-func run(t *testing.T, c contracttest.Case) contracttest.Result {
+func run(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family = "teams_external_access_configuration"
-	if c.Source == "" {
-		c.Source = source
-	}
+
 	if len(c.Steps) > 0 {
 		c.Want.Status = c.Steps[len(c.Steps)-1].Reply.Status
-	} else {
-		c.Scope = "local"
 	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	r, err := contracttest.Run(t.Context(), c)
+
+	r, err := testutil.Run(t.Context(), c)
 	if err != nil || !r.Passed() {
 		t.Fatalf("provider differs: %v %+v", err, r.Differences())
 	}

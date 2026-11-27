@@ -44,4 +44,4 @@ persistence/propagation, effective device behavior, SearchOnCommonAreaPhoneMode 
 a live write, null/empty persistence, delegated modes and other clouds remain
 separate.
 
-See [qualification](../../../docs/implementation/policies/ip-phone-policy-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/ip-phone-policy-lab-acceptance.md).
