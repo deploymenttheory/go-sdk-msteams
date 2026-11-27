@@ -115,7 +115,9 @@ func TestUnitGeneratedExactDuplicateAndCaseOrdering(t *testing.T) {
 			got, marshalErr := json.Marshal(generatedSnapshot(value))
 			source, sourceErr := json.Marshal(item.Properties)
 			var sourceValue any
-			if sourceErr != nil || json.Unmarshal(source, &sourceValue) != nil {
+			decoder := json.NewDecoder(strings.NewReader(string(source)))
+			decoder.UseNumber()
+			if sourceErr != nil || decoder.Decode(&sourceValue) != nil {
 				t.Fatal("source getter snapshot unavailable")
 			}
 			// Canonicalize nested source objects too: RawMessage preserves their
