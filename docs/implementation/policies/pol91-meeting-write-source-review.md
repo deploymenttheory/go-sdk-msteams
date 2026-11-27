@@ -8,7 +8,7 @@ The same packet decodes a received context with PublishedName:37, Published:1 an
 
 The prior native write path had these concrete gaps: Add/Replace and primitive Patch reject source-permitted null members; the raw-preserving context MarshalJSON leaks unknown fields and pre-coercion scalar tokens into writes; Remove is not exposed even for the source-valid empty-list outcome. Existing tests label raw forwarding as source parity. Bound primitive Field.Null currently emits a null array despite the source bound-null modifier producing []; its explicit native/public-command boundary must be corrected or documented independently before qualification. The unassigned Id default is already supported by native Validate, and no blanket Id/default change is needed.
 
-The approved correction now uses a dedicated seven-field typed writer, permits null container members, normalizes bound null/nil replacements to [], exposes ChangeAuthenticationContexts, and preserves helper-stage failures after preparation. Edit constructors/apply own their snapshots as a Go API guarantee, not a claim that the CLR helper clones. The updated tests preserve the standalone nil-element Validate error separately from container acceptance. Execution remains pending against the combined read/write checkpoint. Native input validation ordering must remain explicit: a null Remove is a helper-stage failure after preparation, while invalid assigned Id setter values may reject before credentials. No live or offline command status changes follow from this source packet alone.
+The approved correction now uses a dedicated seven-field typed writer, permits null container members, normalizes bound null/nil replacements to [], exposes ChangeAuthenticationContexts, and preserves helper-stage failures after preparation. Edit constructors/apply own their snapshots as a Go API guarantee, not a claim that the CLR helper clones. The updated tests preserve the standalone nil-element Validate error separately from container acceptance. The corrected combined read/write checkpoint passed as recorded below. Native input validation ordering must remain explicit: a null Remove is a helper-stage failure after preparation, while invalid assigned Id setter values may reject before credentials. No live or offline command status changes follow from this source packet alone.
 
 
 ## Positive UInt32 setter boundary
@@ -38,4 +38,18 @@ before setting the mutation-invocation flag. The old zero-positive wire test is
 corrected to a positive value and renamed, with its existing unqualified
 contract-test reference updated; live references are untouched. Null still
 means null for these nullable scalar fields, and no 65535 ceiling is invented.
-Execution of this corrected write checkpoint remains pending.
+The corrected write checkpoint passed at c9e096f/73712; see the exact execution record below.
+
+
+## Corrected frozen execution
+
+At `c9e096f36f268d18f48ad6f8acb0b07bf2ad466b`, full affected SDK/lab/provider,
+root policy contracts and labkit verification passed 925 test events with no
+test failure or skip. Six test-bearing packages passed; the provider compiled
+without test files. The actual primitive/prepared zero guards, all own read
+vectors, typed writes/null modifiers and both nine-exchange later-failure and
+explicit caller recovery scenarios executed. Targeted gosec/nolintlint passed
+with zero issues; source diff was zero and owned scratch was removed.
+The [execution record](../../../contracts/coverage/evidence/pol91-last-compiled-execution.json)
+preserves exact scopes, commands, raw hashes and the real prior failed run.
+No command or live qualification follows from this record alone.
