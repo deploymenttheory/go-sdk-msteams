@@ -44,13 +44,15 @@ through the pinned internal proxy and shared header insertion. It freezes a
 source-compatible projection without issuing a PUT. `Projection()` and `Before()`
 return owned copies; inspecting or editing those copies cannot change the body.
 `UpdateSideloadedAppsInteraction(ctx, prepared)` accepts only a request prepared by
-that exact service and sends one PUT with Set metadata. The two requests are not
+that exact service and sends one PUT with private `Set-CsTeamsSettingsCustomApp_SetExpanded` metadata. The two requests are not
 atomic. A caller must account for concurrent changes between preparation and apply.
 
 The pure `ProjectSideloadedAppsInteraction` keeps exact-case nullable booleans and
 PascalCase `Lob…` strings, replaces the requested flag, and emits an empty
-`appSettingsList`. It copies only the two known exact-case config strings;
-null/malformed/unknown fields are omitted, and an empty projected config object
+`appSettingsList`. The wrapper-bound null switches become present false and null branding strings
+become present empty strings, including missing/unrecognized read fields. It
+copies only the two known exact-case config strings;
+nested null/malformed/unknown fields are omitted, and an empty projected config object
 is omitted entirely. Empty strings and false values survive. Omitted/changed paths
 show differences from the read snapshot; they do not prove server persistence.
 Default formatting of projections, prepared requests and action results is redacted.
@@ -73,3 +75,9 @@ an empty app list left managed entries unchanged is not a universal guarantee.
 `Update` sends the given document unchanged (nil fields omitted, a nil
 `AppSettingsList` sent as `[]`). The `Lob…` keys use the module's PascalCase
 request names. Every list entry needs an `ID`.
+
+The direct public flag projection also uses the private child Get header. The
+enhanced full-document `Get`, `Update` and older convenience retain the SDK's
+public-name header convention; that convention is a native extension, separately
+from exact source request construction. Earlier Get qualification is withdrawn
+until this correction has its own reviewed revision-bound replay proof.

@@ -216,3 +216,40 @@ The complete affected package passed again at clean frozen revision `4e7df9d`
 [revision-bound result](evidence/custom-app-set-4e7df9d-offline.json) records exact
 source hashes, raw Go JSON digest and every passing test event. Set/live statuses
 remain unchanged; this is a reviewable implementation checkpoint.
+
+
+## Binding and header correction after the DTO-only checkpoint
+
+Actual inert parameter binding followed by the real pinned SetExpanded setters
+and serializer supersedes the earlier DTO-only Set parity assumption. Fourteen
+observations (the original twelve plus malformed/casing boolean cases) show that
+all five copied nullable booleans bind as present false when missing/null/invalid,
+and all four copied null Lob strings bind as present empty strings. Nested typed
+config omission remains a separate generated-model rule. Historical DTO captures
+and the `4e7df9d` execution record remain unchanged, with their narrower phase
+explicitly preserved; they do not establish whole-wrapper Set parity.
+
+The exact shared header trace also corrects the earlier public Get metadata
+assumption: public Get and Set's preliminary Get use private child
+`Get-CsTeamsSettingsCustomApp_Get`; the source write uses
+`Set-CsTeamsSettingsCustomApp_SetExpanded`. Default ProcessArgs hooks signal
+execution identity and do not overwrite command headers. The earlier individual
+Get qualification at `4338e4b` is withdrawn pending corrected exact-header replay
+and a replacement reviewed decision; its historical evidence is not rewritten.
+Enhanced native full-document Get/direct Update keep their documented public-name
+convention separately. See [correction evidence](evidence/custom-app-binding-header-correction.json).
+
+The parameterized repository repro `scripts/discovery/observe-custom-app-bindings.ps1`
+was also executed against the verified package: all fourteen real bodies matched
+the preserved binding capture, without errors. Its inert C# command captures
+converted parameter values; actual pinned constructor/setters/serializer produce
+the separately recorded real body. Bounded [setter IL](evidence/custom-app-binding-setters-source.json)
+and exact repro/capture hashes are retained in the correction evidence. Full
+corrected custom-app TestUnit/Example execution passed session 64518; both Get
+and Set remain unqualified through this source-review checkpoint.
+
+A separate fifteenth real binder/setter observation reads a true target and
+requests false; the emitted target is present false. The final portable repro and
+Go pure replay include it, and the apply harness exercises requested false with
+a true read snapshot. The original fourteen-case capture remains separately
+preserved as `pinned-set-binding-projection-14.json`.

@@ -18,20 +18,25 @@ import (
 func TestUnitSourceSetProjection(t *testing.T) {
 	var fixture struct {
 		Cases []struct {
-			Name   string `json:"case"`
-			Input  string `json:"input_json"`
-			Output string `json:"request_serialized"`
+			Name             string `json:"case"`
+			Input            string `json:"input_json"`
+			Output           string `json:"real_body_json"`
+			RequestedEnabled *bool  `json:"requested_enabled"`
 		} `json:"cases"`
 	}
-	if err := json.Unmarshal(readFile(t, "testdata/pinned-set-projection.json"), &fixture); err != nil {
+	if err := json.Unmarshal(readFile(t, "testdata/pinned-set-binding-projection.json"), &fixture); err != nil {
 		t.Fatal(err)
 	}
-	if len(fixture.Cases) != 12 {
+	if len(fixture.Cases) != 15 {
 		t.Fatal("source observation cases missing")
 	}
 	for _, item := range fixture.Cases {
 		t.Run(item.Name, func(t *testing.T) {
-			got, err := cas.ProjectSideloadedAppsInteraction(json.RawMessage(item.Input), true)
+			enabled := true
+			if item.RequestedEnabled != nil {
+				enabled = *item.RequestedEnabled
+			}
+			got, err := cas.ProjectSideloadedAppsInteraction(json.RawMessage(item.Input), enabled)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -50,19 +55,30 @@ func TestUnitSourceSetProjection(t *testing.T) {
 		}
 	}
 	projection, err := cas.ProjectSideloadedAppsInteraction(json.RawMessage(`{"future":"private","appAccessRequestConfig":{"future":42},"isSideloadedAppsInteractionEnabled":false}`), true)
-	if err != nil || !reflect.DeepEqual(projection.OmittedPaths, []string{"appAccessRequestConfig", "appAccessRequestConfig.future", "future"}) || !reflect.DeepEqual(projection.ChangedPaths, []string{"appSettingsList", "isSideloadedAppsInteractionEnabled"}) {
+	if err != nil || !reflect.DeepEqual(projection.OmittedPaths, []string{"appAccessRequestConfig", "appAccessRequestConfig.future", "future"}) || !reflect.DeepEqual(projection.ChangedPaths, []string{"LobBackground", "LobLogo", "LobLogomark", "LobTextColor", "appSettingsList", "isAppsEnabled", "isAppsPurchaseEnabled", "isExternalAppsEnabledByDefault", "isLicenseBasedPinnedAppsEnabled", "isSideloadedAppsInteractionEnabled", "isTenantWideAutoInstallEnabled"}) {
 		t.Fatal("projection diagnostics differ")
 	}
 }
 
 func TestUnitPreparedSourceSet(t *testing.T) {
-	for _, status := range []int{204, 200, 403} {
-		t.Run(fmt.Sprint(status), func(t *testing.T) {
+	for _, item := range []struct {
+		name    string
+		status  int
+		enabled bool
+	}{
+		{"true-204", 204, true}, {"true-200", 200, true}, {"true-403", 403, true}, {"false-204", 204, false},
+	} {
+		t.Run(item.name, func(t *testing.T) {
+			status := item.status
 			before := []byte(`{"LobLogo":"private-logo","isAppsEnabled":false,"appAccessRequestConfig":{"future":"drop"}}`)
-			body := json.RawMessage(`{"LobLogo":"private-logo","isAppsEnabled":false,"isSideloadedAppsInteractionEnabled":true,"appSettingsList":[]}`)
-			run(t, contracttest.Case{Name: fmt.Sprintf("prepared-source-set-%d", status), Mappings: mapping(setCommand), Want: contracttest.Expected{Status: status}, Steps: []contracttest.Exchange{discovery(t), wire("GET", "Get-CsTeamsSettingsCustomApp_Get", nil, 200, before), wire("PUT", setCommand, body, status, nil)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			body := json.RawMessage(`{"LobBackground":"","LobLogo":"private-logo","LobLogomark":"","LobTextColor":"","isAppsEnabled":false,"isAppsPurchaseEnabled":false,"isExternalAppsEnabledByDefault":false,"isLicenseBasedPinnedAppsEnabled":false,"isTenantWideAutoInstallEnabled":false,"isSideloadedAppsInteractionEnabled":true,"appSettingsList":[]}`)
+			if !item.enabled {
+				before = []byte(`{"LobLogo":"private-logo","isAppsEnabled":false,"appAccessRequestConfig":{"future":"drop"},"isSideloadedAppsInteractionEnabled":true}`)
+				body = json.RawMessage(strings.Replace(string(body), `"isSideloadedAppsInteractionEnabled":true`, `"isSideloadedAppsInteractionEnabled":false`, 1))
+			}
+			run(t, contracttest.Case{Name: "prepared-source-set-" + item.name, Mappings: mapping(setCommand), Want: contracttest.Expected{Status: status}, Steps: []contracttest.Exchange{discovery(t), wire("GET", "Get-CsTeamsSettingsCustomApp_Get", nil, 200, before), wire("PUT", "Set-CsTeamsSettingsCustomApp_SetExpanded", body, status, nil)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				service := sdk.TeamsAdminAPI.CustomAppSettings
-				prepared, read, err := service.PrepareSideloadedAppsInteraction(ctx, true)
+				prepared, read, err := service.PrepareSideloadedAppsInteraction(ctx, item.enabled)
 				if err != nil || prepared == nil || read == nil {
 					t.Fatal("prepare failed")
 				}

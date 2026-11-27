@@ -14,8 +14,10 @@ import (
 )
 
 const (
-	getCommand = "Get-CsTeamsSettingsCustomApp"
-	setCommand = "Set-CsTeamsSettingsCustomApp"
+	getCommand       = "Get-CsTeamsSettingsCustomApp"
+	setCommand       = "Set-CsTeamsSettingsCustomApp"
+	sourceGetCommand = "Get-CsTeamsSettingsCustomApp_Get"
+	sourceSetCommand = "Set-CsTeamsSettingsCustomApp_SetExpanded"
 )
 
 // Service composes the bound ConfigAPI backend with lazy forest discovery.
@@ -74,7 +76,7 @@ func (s *Service) GetSideloadedAppsInteraction(ctx context.Context) (bool, *rest
 	if err := s.check(ctx); err != nil {
 		return false, nil, err
 	}
-	response, err := s.read(ctx, getCommand)
+	response, err := s.read(ctx, sourceGetCommand)
 	if err != nil {
 		return false, response, err
 	}

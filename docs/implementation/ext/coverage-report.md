@@ -157,7 +157,7 @@ Contract and live limitations: [app-catalog-contract-notes.md](app-catalog-contr
 
 ### Get-CsTeamsSettingsCustomApp
 
-Owner: `EXT-21`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
+Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |

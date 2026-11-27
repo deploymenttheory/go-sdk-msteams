@@ -11289,7 +11289,7 @@
         }
       ],
       "implementation": {
-        "status": "implemented",
+        "status": "in-progress",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -11303,9 +11303,10 @@
         ]
       },
       "contract": {
-        "status": "passed",
+        "status": "metadata-only",
         "evidence": [
-          "docs/implementation/ext/evidence/custom-app-get-4338e4b-contract.json"
+          "docs/implementation/ext/evidence/custom-app-get-4338e4b-contract.json",
+          "docs/implementation/ext/evidence/custom-app-binding-header-correction.json"
         ]
       },
       "live": {

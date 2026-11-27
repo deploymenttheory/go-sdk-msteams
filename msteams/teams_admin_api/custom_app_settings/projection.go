@@ -27,7 +27,8 @@ func (v WriteProjection) clone() WriteProjection {
 
 // ProjectSideloadedAppsInteraction reproduces the pinned Set wrapper's local
 // read-model and request-model projection. It performs no authentication or I/O.
-// Unknown fields and malformed nullable scalars are omitted, with visible paths.
+// Unknown fields are omitted with visible paths. Wrapper-added null switches and
+// strings pass through source binding as present false and empty strings.
 func ProjectSideloadedAppsInteraction(raw json.RawMessage, enabled bool) (WriteProjection, error) {
 	var before map[string]json.RawMessage
 	if json.Unmarshal(raw, &before) != nil || before == nil {
@@ -38,15 +39,19 @@ func ProjectSideloadedAppsInteraction(raw json.RawMessage, enabled bool) (WriteP
 	body["isSideloadedAppsInteractionEnabled"] = flag
 	for _, key := range []string{"isAppsEnabled", "isAppsPurchaseEnabled", "isExternalAppsEnabledByDefault", "isLicenseBasedPinnedAppsEnabled", "isTenantWideAutoInstallEnabled"} {
 		var value *bool
+		bound := false
 		if json.Unmarshal(before[key], &value) == nil && value != nil {
-			body[key], _ = json.Marshal(*value)
+			bound = *value
 		}
+		body[key], _ = json.Marshal(bound)
 	}
 	for _, key := range []string{"LobTextColor", "LobBackground", "LobLogo", "LobLogomark"} {
 		var value *string
+		bound := ""
 		if json.Unmarshal(before[key], &value) == nil && value != nil {
-			body[key], _ = json.Marshal(*value)
+			bound = *value
 		}
+		body[key], _ = json.Marshal(bound)
 	}
 	var nested map[string]json.RawMessage
 	_ = json.Unmarshal(before["appAccessRequestConfig"], &nested)
@@ -112,7 +117,7 @@ func (s *Service) PrepareSideloadedAppsInteraction(ctx context.Context, enabled 
 	if err := s.check(ctx); err != nil {
 		return nil, nil, err
 	}
-	response, err := s.read(ctx, "Get-CsTeamsSettingsCustomApp_Get")
+	response, err := s.read(ctx, sourceGetCommand)
 	if err != nil {
 		return nil, response, err
 	}
@@ -149,7 +154,7 @@ func (s *Service) UpdateSideloadedAppsInteraction(ctx context.Context, prepared 
 	if err := s.check(ctx); err != nil {
 		return result, nil, err
 	}
-	req := request(http.MethodPut, setCommand)
+	req := request(http.MethodPut, sourceSetCommand)
 	req.Replay = client.ReplayNever
 	req.Body = append(json.RawMessage(nil), prepared.projection.Body...)
 	result.UpdateInvoked = true
