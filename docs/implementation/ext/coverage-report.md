@@ -171,9 +171,9 @@ Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live:
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.List`](../../../msteams/graph_api/app_catalog/service.go)<br>[`Service.NewPager`](../../../msteams/graph_api/app_catalog/service.go) | [`TestUnitAppCatalogListBuildsTheModuleFilterAndFollowsPages`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogListDenialUsesLabResponse`](../../../msteams/graph_api/app_catalog/service_test.go) | [`TestAccAppCatalogReads`](../../../tests/integration/lab/custom_app_settings/app_catalog_test.go) |
+| `__AllParameterSets` | [`Service.List`](../../../msteams/graph_api/app_catalog/service.go)<br>[`Service.NewPager`](../../../msteams/graph_api/app_catalog/service.go) | [`TestUnitAppCatalogListBuildsTheModuleFilterAndFollowsPages`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogListDenialUsesLabResponse`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogPinnedNullableModels`](../../../msteams/graph_api/app_catalog/decoder_test.go)<br>[`TestUnitAppCatalogPinnedStringLexemesAndAliases`](../../../msteams/graph_api/app_catalog/decoder_test.go)<br>[`TestUnitAppCatalogPinnedEnvelopeReuse`](../../../msteams/graph_api/app_catalog/decoder_test.go)<br>[`TestUnitAppCatalogPinnedContinuationProjection`](../../../msteams/graph_api/app_catalog/decoder_test.go)<br>[`TestUnitAppCatalogSourceReadStatusPresenceAndControls`](../../../msteams/graph_api/app_catalog/presence_test.go)<br>[`TestUnitAppCatalogSourcePageAliasesAndPartialFailure`](../../../msteams/graph_api/app_catalog/presence_test.go) | [`TestAccAppCatalogReads`](../../../tests/integration/lab/custom_app_settings/app_catalog_test.go) |
 
-Recorded live limitation: Client-secret lab run confirmed the app-only HTTP 403 with pinned PowerShell parity. The lab identity lacks AppCatalog permissions, so a successful list needs separately authorized credentials.
+Recorded live limitation: Historical client-secret list returned HTTP 403 with pinned PowerShell parity. Current Graph docs support application AppCatalog.Read.All (or higher readwrite), but this lab has no successful catalog-read proof; no permissions are changed.
 
 ### Get-TeamsArtifacts
 
@@ -191,9 +191,9 @@ Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live:
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.Create`](../../../msteams/graph_api/app_catalog/service.go) | [`TestUnitAppCatalogPackageWrites`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogFailuresStayTyped`](../../../msteams/graph_api/app_catalog/service_test.go) | [`TestAccAppCatalogWrites`](../../../tests/integration/lab/custom_app_settings/app_catalog_test.go) |
+| `__AllParameterSets` | [`Service.Create`](../../../msteams/graph_api/app_catalog/service.go) | [`TestUnitAppCatalogPackageWrites`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogFailuresStayTyped`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads`](../../../msteams/graph_api/app_catalog/presence_test.go)<br>[`TestUnitAppCatalogPinnedNullableModels`](../../../msteams/graph_api/app_catalog/decoder_test.go) | [`TestAccAppCatalogWrites`](../../../tests/integration/lab/custom_app_settings/app_catalog_test.go) |
 
-Recorded live limitation: Client-secret lab run confirmed the app-only HTTP 403 for an empty package. The lab identity lacks AppCatalog permissions, so a successful create needs separately authorized credentials.
+Recorded live limitation: Historical client-secret invalid/empty-archive probe returned HTTP 403. Current published Graph create docs mark application access unsupported; successful publication needs appropriate delegated prerequisites and an approved owned package fixture, not merely an application write grant.
 
 ### Remove-TeamsApp
 
@@ -201,9 +201,9 @@ Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live:
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/graph_api/app_catalog/service.go) | [`TestUnitAppCatalogPackageWrites`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogFailuresStayTyped`](../../../msteams/graph_api/app_catalog/service_test.go) | [`TestAccAppCatalogWrites`](../../../tests/integration/lab/custom_app_settings/app_catalog_test.go) |
+| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/graph_api/app_catalog/service.go) | [`TestUnitAppCatalogPackageWrites`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogFailuresStayTyped`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads`](../../../msteams/graph_api/app_catalog/presence_test.go) | [`TestAccAppCatalogWrites`](../../../tests/integration/lab/custom_app_settings/app_catalog_test.go) |
 
-Recorded live limitation: Client-secret lab run confirmed the app-only HTTP 403 against a reserved app ID. The lab identity lacks AppCatalog permissions, so a successful delete needs separately authorized credentials.
+Recorded live limitation: Historical client-secret reserved-ID probe returned HTTP 403. Current published Graph delete docs mark application access unsupported and require delegated catalog/admin prerequisites. No successful owned deletion or new grant is claimed.
 
 ### Set-CsTeamsSettingsCustomApp
 
@@ -221,9 +221,9 @@ Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live:
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.UpdateByID`](../../../msteams/graph_api/app_catalog/service.go) | [`TestUnitAppCatalogPackageWrites`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogFailuresStayTyped`](../../../msteams/graph_api/app_catalog/service_test.go) | [`TestAccAppCatalogWrites`](../../../tests/integration/lab/custom_app_settings/app_catalog_test.go) |
+| `__AllParameterSets` | [`Service.UpdateByID`](../../../msteams/graph_api/app_catalog/service.go) | [`TestUnitAppCatalogPackageWrites`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogFailuresStayTyped`](../../../msteams/graph_api/app_catalog/service_test.go)<br>[`TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads`](../../../msteams/graph_api/app_catalog/presence_test.go) | [`TestAccAppCatalogWrites`](../../../tests/integration/lab/custom_app_settings/app_catalog_test.go) |
 
-Recorded live limitation: Client-secret lab run confirmed the app-only HTTP 403 against a reserved app ID. The lab identity lacks AppCatalog permissions, so a successful update needs separately authorized credentials.
+Recorded live limitation: Historical client-secret reserved-ID PUT probe returned HTTP 403. Pinned 8.1.0 uses PUT to the catalog ID; current docs describe a different delegated appDefinitions POST and cannot prove legacy PUT auth/server compatibility. Successful source-route mutation remains unqualified.
 
 ## app_installation
 

@@ -67,3 +67,26 @@ The existing serialized custom-app lab selection remains unchanged; no valid app
 package is published, app installed, role granted or permission purchased by this
 work. Historical 403 response bodies remain denial evidence only. Source reply
 vectors and mock HTTP receipts must not be called successful tenant operations.
+
+## Frozen affected validation
+
+The complete AppCatalog SDK TestUnit/Example suite and audited external
+custom-app lab consumer compiled/passed at clean `772483b` (session 90098, exit 0):
+32 passing test events, zero failure/skip, and both package terminals passed.
+The lab had no matching tests and no TestAcc ran. The
+[execution record](evidence/app-catalog-772483b-offline.json) retains exact code,
+consumer, source/fixture hashes and raw result digest. The preceding `8678086`
+run failed only two invalid uppercase fixture labels; its raw artifact is preserved.
+The passing revision changes those labels only, with no production/harness change.
+All four AppCatalog qualification/live states remain unchanged pending individual
+full-set/common-control/auth/error/native-boundary review.
+
+## Authorization evidence and current API discrepancy
+
+The [current official permission/protocol review](app-catalog-auth-and-current-api.md)
+distinguishes documented application reads from delegated-only published writes.
+The source Set PUT remains exact 8.1.0 behavior; current update documentation's
+appDefinitions POST is a separate route and cannot prove the legacy PUT's current
+auth requirements or server compatibility. Historical app-only 403 results are
+not operation success or a promise that granting write permissions would fix them.
+No role/consent or tenant operation is introduced by this documentation review.

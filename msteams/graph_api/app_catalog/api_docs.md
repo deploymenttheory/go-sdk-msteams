@@ -62,8 +62,18 @@ compiled examples retain that boundary. A nil package means omitted input and
 fails locally. An explicit nonnil empty slice represents a loaded zero-length
 file and is sent unchanged as application/zip, as the source permits. This does
 not establish that Graph accepts an empty package. Required mutation IDs still
-reject blank/control/path-navigation inputs. Permissions and role prerequisites
-remain the caller's responsibility; the dedicated lab's historical 403 results
+reject blank/control/path-navigation inputs. The dedicated lab's historical 403 results
 are denials, not successful lifecycle qualification.
 
 See [source and change notes](../../../docs/implementation/ext/app-catalog-native-contract-notes.md).
+
+## Authorization and current protocol
+
+Application catalog reads have documented AppCatalog.Read.All support. Current
+publish/delete/update documentation instead requires delegated prerequisites
+and marks application access unsupported. The pinned Set PUT is a separate
+legacy source operation from the currently documented appDefinitions POST;
+that newer permission table does not prove the legacy PUT's current auth support.
+See the [sourced permission and protocol table](../../../docs/implementation/ext/app-catalog-auth-and-current-api.md)
+for operation-specific guidance. The SDK acquires no new consent/role and does
+not switch identity or protocol automatically.

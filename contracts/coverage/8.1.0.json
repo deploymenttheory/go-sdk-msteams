@@ -16199,6 +16199,30 @@
             {
               "file": "msteams/graph_api/app_catalog/service_test.go",
               "name": "TestUnitAppCatalogListDenialUsesLabResponse"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/decoder_test.go",
+              "name": "TestUnitAppCatalogPinnedNullableModels"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/decoder_test.go",
+              "name": "TestUnitAppCatalogPinnedStringLexemesAndAliases"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/decoder_test.go",
+              "name": "TestUnitAppCatalogPinnedEnvelopeReuse"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/decoder_test.go",
+              "name": "TestUnitAppCatalogPinnedContinuationProjection"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/presence_test.go",
+              "name": "TestUnitAppCatalogSourceReadStatusPresenceAndControls"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/presence_test.go",
+              "name": "TestUnitAppCatalogSourcePageAliasesAndPartialFailure"
             }
           ],
           "live_tests": [
@@ -16225,13 +16249,20 @@
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-catalog-native-contract-notes.md",
+          "docs/implementation/ext/evidence/app-catalog-primary.json",
+          "docs/implementation/ext/evidence/app-catalog-get-supplement.json",
+          "docs/implementation/ext/evidence/app-catalog-new-input-binding.json",
+          "docs/implementation/ext/evidence/app-catalog-772483b-offline.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Client-secret lab run confirmed the app-only HTTP 403 with pinned PowerShell parity. The lab identity lacks AppCatalog permissions, so a successful list needs separately authorized credentials.",
+        "reason": "Historical client-secret list returned HTTP 403 with pinned PowerShell parity. Current Graph docs support application AppCatalog.Read.All (or higher readwrite), but this lab has no successful catalog-read proof; no permissions are changed.",
         "evidence": [
-          "docs/implementation/ext/app-catalog-contract-notes.md"
+          "docs/implementation/ext/app-catalog-contract-notes.md",
+          "docs/implementation/ext/app-catalog-auth-and-current-api.md"
         ]
       },
       "exclusion": null
@@ -30321,6 +30352,14 @@
             {
               "file": "msteams/graph_api/app_catalog/service_test.go",
               "name": "TestUnitAppCatalogFailuresStayTyped"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/presence_test.go",
+              "name": "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/decoder_test.go",
+              "name": "TestUnitAppCatalogPinnedNullableModels"
             }
           ],
           "live_tests": [
@@ -30343,13 +30382,20 @@
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-catalog-native-contract-notes.md",
+          "docs/implementation/ext/evidence/app-catalog-primary.json",
+          "docs/implementation/ext/evidence/app-catalog-get-supplement.json",
+          "docs/implementation/ext/evidence/app-catalog-new-input-binding.json",
+          "docs/implementation/ext/evidence/app-catalog-772483b-offline.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Client-secret lab run confirmed the app-only HTTP 403 for an empty package. The lab identity lacks AppCatalog permissions, so a successful create needs separately authorized credentials.",
+        "reason": "Historical client-secret invalid/empty-archive probe returned HTTP 403. Current published Graph create docs mark application access unsupported; successful publication needs appropriate delegated prerequisites and an approved owned package fixture, not merely an application write grant.",
         "evidence": [
-          "docs/implementation/ext/app-catalog-contract-notes.md"
+          "docs/implementation/ext/app-catalog-contract-notes.md",
+          "docs/implementation/ext/app-catalog-auth-and-current-api.md"
         ]
       },
       "exclusion": null
@@ -35978,6 +36024,10 @@
             {
               "file": "msteams/graph_api/app_catalog/service_test.go",
               "name": "TestUnitAppCatalogFailuresStayTyped"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/presence_test.go",
+              "name": "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads"
             }
           ],
           "live_tests": [
@@ -36000,13 +36050,20 @@
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-catalog-native-contract-notes.md",
+          "docs/implementation/ext/evidence/app-catalog-primary.json",
+          "docs/implementation/ext/evidence/app-catalog-get-supplement.json",
+          "docs/implementation/ext/evidence/app-catalog-new-input-binding.json",
+          "docs/implementation/ext/evidence/app-catalog-772483b-offline.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Client-secret lab run confirmed the app-only HTTP 403 against a reserved app ID. The lab identity lacks AppCatalog permissions, so a successful delete needs separately authorized credentials.",
+        "reason": "Historical client-secret reserved-ID probe returned HTTP 403. Current published Graph delete docs mark application access unsupported and require delegated catalog/admin prerequisites. No successful owned deletion or new grant is claimed.",
         "evidence": [
-          "docs/implementation/ext/app-catalog-contract-notes.md"
+          "docs/implementation/ext/app-catalog-contract-notes.md",
+          "docs/implementation/ext/app-catalog-auth-and-current-api.md"
         ]
       },
       "exclusion": null
@@ -44523,6 +44580,10 @@
             {
               "file": "msteams/graph_api/app_catalog/service_test.go",
               "name": "TestUnitAppCatalogFailuresStayTyped"
+            },
+            {
+              "file": "msteams/graph_api/app_catalog/presence_test.go",
+              "name": "TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads"
             }
           ],
           "live_tests": [
@@ -44545,13 +44606,20 @@
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-catalog-native-contract-notes.md",
+          "docs/implementation/ext/evidence/app-catalog-primary.json",
+          "docs/implementation/ext/evidence/app-catalog-get-supplement.json",
+          "docs/implementation/ext/evidence/app-catalog-new-input-binding.json",
+          "docs/implementation/ext/evidence/app-catalog-772483b-offline.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Client-secret lab run confirmed the app-only HTTP 403 against a reserved app ID. The lab identity lacks AppCatalog permissions, so a successful update needs separately authorized credentials.",
+        "reason": "Historical client-secret reserved-ID PUT probe returned HTTP 403. Pinned 8.1.0 uses PUT to the catalog ID; current docs describe a different delegated appDefinitions POST and cannot prove legacy PUT auth/server compatibility. Successful source-route mutation remains unqualified.",
         "evidence": [
-          "docs/implementation/ext/app-catalog-contract-notes.md"
+          "docs/implementation/ext/app-catalog-contract-notes.md",
+          "docs/implementation/ext/app-catalog-auth-and-current-api.md"
         ]
       },
       "exclusion": null
