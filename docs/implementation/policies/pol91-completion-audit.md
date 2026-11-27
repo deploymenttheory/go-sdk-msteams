@@ -50,8 +50,8 @@ T references name exact existing functions, not full semantic completion. Review
 | Get-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T63, T82 |
 | Get-CsTeamsSipDevicesConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T67, T83 |
 | Get-CsTeamsSipDevicesConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T66, T83 |
-| Get-CsTeamsTenantAbuseConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T69 |
-| Get-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T69 |
+| Get-CsTeamsTenantAbuseConfiguration | `Filter` | Direct compiled PolicyRp | Source-backed nullable-list correction and authored typed/partial/recovery tests present; frozen execution and command decision pending | T69, T91, T92 |
+| Get-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Source-backed nullable-list correction and authored typed/partial/recovery tests present; frozen execution and command decision pending | T69, T91, T92 |
 | Get-CsTeamsUpgradeConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T71, T84 |
 | Get-CsTeamsUpgradeConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T72, T84 |
 | Get-CsTenantMigrationConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T74 |
@@ -72,7 +72,7 @@ T references name exact existing functions, not full semantic completion. Review
 | Set-CsTeamsMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T62 |
 | Set-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T65, T85, T86 |
 | Set-CsTeamsSipDevicesConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T68, T87, T88 |
-| Set-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T70 |
+| Set-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Source-backed nullable-list correction and authored typed/partial/recovery tests present; frozen execution and command decision pending | T70, T91, T93, T94 |
 | Set-CsTeamsUpgradeConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T73, T89, T90 |
 | Set-CsTenantMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T75 |
 
@@ -171,6 +171,11 @@ T references name exact existing functions, not full semantic completion. Review
 | T88 | `TestUnitNullEmptyAndForceRemainExplicit` | [msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go](../../../msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go) |
 | T89 | `TestUnitConfigurationInputAndContextRejectBeforeHTTP` | [msteams/teams_admin_api/teams_upgrade_configuration/validation_test.go](../../../msteams/teams_admin_api/teams_upgrade_configuration/validation_test.go) |
 | T90 | `TestUnitAllSettingsPreserveNullFalseOpaqueAndForce` | [msteams/teams_admin_api/teams_upgrade_configuration/service_test.go](../../../msteams/teams_admin_api/teams_upgrade_configuration/service_test.go) |
+
+| T91 | `TestUnitConfigurationInputAndContextRejectBeforeHTTP` | [msteams/teams_admin_api/teams_tenant_abuse_configuration/validation_test.go](../../../msteams/teams_admin_api/teams_tenant_abuse_configuration/validation_test.go) |
+| T92 | `TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter` | [msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go](../../../msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go) |
+| T93 | `TestUnitTenantAbuseNullablePreparedEditRetainsLaterFailureAndExplicitRecovery` | [msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go](../../../msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go) |
+| T94 | `TestUnitTenantAbuseMalformedSuccessRetainsPreparationReceiptWithoutPatch` | [msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go](../../../msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go) |
 
 ## Acceptance boundary
 

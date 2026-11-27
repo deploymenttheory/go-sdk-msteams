@@ -1,0 +1,21 @@
+{
+  "source_hashes": {
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+  },
+  "reproducer_sha256": "f9684839b3be187fda9a308f985ace4094e261e7fc802869f0bab9cd710a8d4e",
+  "source_command": "Set-CsTeamsTenantAbuseConfiguration",
+  "source_parameter": "System.Management.Automation.PSListModifier`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+  "source_model": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsTenantAbuseConfiguration",
+  "binding_form": "inert compiled binder, literal array with null member",
+  "serialized_replacement": "{\"BlockedTenants\":[null,\"entry\"]}",
+  "deserialized_read_member_is_null": true,
+  "delta_after_remove_first_and_add": [
+    "entry",
+    null,
+    null,
+    "ENTRY"
+  ],
+  "management_lifecycle_invoked": false,
+  "authentication_or_http": false
+}

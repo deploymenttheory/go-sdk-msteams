@@ -8,6 +8,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_tenant_abuse_configuration"
 )
 
@@ -45,6 +46,14 @@ func TestUnitConfigurationInputAndContextRejectBeforeHTTP(t *testing.T) {
 		}
 		if _, _, err := resource.NewService(graph).List(ctx); !errors.Is(err, client.ErrDestination) {
 			t.Fatal("wrong backend acquired credentials")
+		}
+		for _, force := range []*bool{nil, new(false), new(true)} {
+			if _, response, err := service.PatchByIdentity(ctx, "Global", resource.PatchRequest{Controls: policy.Controls{Force: force}}); !errors.Is(err, resource.ErrInput) || response != nil {
+				t.Fatal("no-settings PATCH acquired credentials")
+			}
+			if value, response, err := service.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Controls: policy.Controls{Force: force}}); !errors.Is(err, resource.ErrInput) || value != nil || response != nil {
+				t.Fatal("no-settings Update invented preparation")
+			}
 		}
 		return contracttest.Observation{}
 	}})

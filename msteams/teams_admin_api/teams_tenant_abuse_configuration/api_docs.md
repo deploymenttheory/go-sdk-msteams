@@ -37,3 +37,12 @@ BaseTpm and PolicyRP provider. Current application-auth documentation describes
 RBAC-bound app access; this lab denial is not classified as universal app-mode
 unsupported. See the repository qualification notes and [Microsoft authentication
 reference](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication).
+
+The canonical BlockedTenants response field is now `[]*string`: null entries
+remain distinct from empty strings. This corrects its earlier lossy `[]string`
+projection and changes that public field type. `policy.NullableStrings`,
+`ReplaceNullableStrings`, `ChangeNullableStrings` and `ApplyNullable` preserve
+null members and copy pointed-to values. Existing Strings/ReplaceStrings/
+ChangeStrings and Apply([]string) signatures and nonnull behavior are retained.
+A nil edit omits the setting; an empty replacement/delta clears it. Prepared
+edits remove the first ordinal/null match, then append without deduplication.

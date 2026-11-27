@@ -105,7 +105,7 @@ func (s *Service) UpdateByIdentity(ctx context.Context, id string, input UpdateR
 	}
 	settings := Settings{ScalarSettings: input.ScalarSettings}
 	if input.BlockedTenants != nil {
-		settings.BlockedTenants, err = input.BlockedTenants.Apply(before.BlockedTenants)
+		settings.BlockedTenants, err = input.BlockedTenants.ApplyNullable(before.BlockedTenants)
 		if err != nil {
 			return result, read, err
 		}

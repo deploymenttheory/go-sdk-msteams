@@ -24,13 +24,13 @@ type Configuration struct {
 	CreateThreadThresholdForTrialTenants *uint64                    `json:"CreateThreadThresholdForTrialTenants"`
 	AddMemberThresholdForTrialTenants    *uint64                    `json:"AddMemberThresholdForTrialTenants"`
 	SendMessageThresholdForTrialTenants  *uint64                    `json:"SendMessageThresholdForTrialTenants"`
-	BlockedTenants                       []string                   `json:"BlockedTenants"`
+	BlockedTenants                       []*string                  `json:"BlockedTenants"`
 	RawFields                            map[string]json.RawMessage `json:"-"`
 	RawJSON                              json.RawMessage            `json:"-"`
 }
 
 func (v *Configuration) UnmarshalJSON(raw []byte) error {
-	value := Configuration{BlockedTenants: []string{}}
+	value := Configuration{BlockedTenants: []*string{}}
 	fields, e := object(raw, func(key string, body json.RawMessage) error {
 		switch strings.ToLower(key) {
 		case "identity":
@@ -55,7 +55,7 @@ func (v *Configuration) UnmarshalJSON(raw []byte) error {
 			return json.Unmarshal(body, &value.SendMessageThresholdForTrialTenants)
 		case "blockedtenants":
 			if !bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
-				var values []string
+				var values []*string
 				if json.Unmarshal(body, &values) != nil {
 					return client.ErrDecode
 				}

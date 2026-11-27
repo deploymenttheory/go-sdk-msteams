@@ -12564,6 +12564,14 @@
             {
               "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/response_test.go",
               "name": "TestUnitAuthorizationUsesActualTenantResponse"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go",
+              "name": "TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter"
             }
           ],
           "live_tests": [
@@ -12590,6 +12598,14 @@
             {
               "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/response_test.go",
               "name": "TestUnitAuthorizationUsesActualTenantResponse"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go",
+              "name": "TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter"
             }
           ],
           "live_tests": [
@@ -42112,6 +42128,18 @@
             {
               "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/settings_test.go",
               "name": "TestUnitAllPinnedSettingsBindExactValuesAndNull"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go",
+              "name": "TestUnitTenantAbuseNullablePreparedEditRetainsLaterFailureAndExplicitRecovery"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go",
+              "name": "TestUnitTenantAbuseMalformedSuccessRetainsPreparationReceiptWithoutPatch"
             }
           ],
           "live_tests": [
