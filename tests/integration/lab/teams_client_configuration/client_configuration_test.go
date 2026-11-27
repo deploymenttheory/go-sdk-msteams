@@ -46,7 +46,10 @@ func decodeClientConfigurationOracle(raw []byte, tenant string) (clientConfigura
 		}
 	}
 	settings, err := json.Marshal(v.Settings)
-	var model resource.Configuration
+	// The oracle emits already projected typed JSON. Keep its producer schema
+	// strict independently of the SDK's source-compatible wire coercions.
+	type oracleSettings resource.Configuration
+	var model oracleSettings
 	if err != nil || json.Unmarshal(settings, &model) != nil {
 		return clientConfigurationObservation{}, labkit.ErrOracle
 	}

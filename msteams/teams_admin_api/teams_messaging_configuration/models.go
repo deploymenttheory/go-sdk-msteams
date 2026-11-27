@@ -61,13 +61,13 @@ type Configuration struct {
 	ContentBasedPhishingCheck         *string                    `json:"ContentBasedPhishingCheck"`
 	ReportIncorrectSecurityDetections *string                    `json:"ReportIncorrectSecurityDetections"`
 	FileTypeCustomizationSetting      *string                    `json:"FileTypeCustomizationSetting"`
-	FileTypeBlockList                 []string                   `json:"FileTypeBlockList"`
+	FileTypeBlockList                 []*string                  `json:"FileTypeBlockList"`
 	RawFields                         map[string]json.RawMessage `json:"-"`
 	RawJSON                           json.RawMessage            `json:"-"`
 }
 
 func (v *Configuration) UnmarshalJSON(raw []byte) error {
-	value := Configuration{FileTypeBlockList: []string{}}
+	value := Configuration{FileTypeBlockList: []*string{}}
 	fields, err := object(raw, func(key string, body json.RawMessage) error {
 		switch strings.ToLower(key) {
 		case "identity":
@@ -96,7 +96,7 @@ func (v *Configuration) UnmarshalJSON(raw []byte) error {
 			return json.Unmarshal(body, &value.FileTypeCustomizationSetting)
 		case "filetypeblocklist":
 			if !bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
-				var items []string
+				var items []*string
 				if json.Unmarshal(body, &items) != nil {
 					return client.ErrDecode
 				}

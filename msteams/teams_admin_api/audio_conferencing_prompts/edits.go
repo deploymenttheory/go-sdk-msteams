@@ -15,7 +15,9 @@ func NewPromptPackage(id, defaultLocale string) (*PromptPackage, error) {
 	if !validID(id) {
 		return nil, ErrInput
 	}
-	return &PromptPackage{ID: new(id), DefaultLocale: new(defaultLocale)}, nil
+	value := emptyPackage()
+	value.ID, value.DefaultLocale = new(id), new(defaultLocale)
+	return &value, nil
 }
 
 func cloneString(v *string) *string {
@@ -109,6 +111,9 @@ func (e *edit[T]) Apply(current []*T) ([]*T, error) {
 	}
 	out := copyItems(current, e.clone)
 	for _, remove := range e.remove {
+		if remove == nil {
+			return nil, ErrInput
+		}
 		for i, item := range out {
 			same, err := e.equal(remove, item)
 			if err != nil {
@@ -128,7 +133,7 @@ func (e *edit[T]) Apply(current []*T) ([]*T, error) {
 type PromptEdit struct{ edit[Prompt] }
 
 // PackageEdit preserves the source prohibition on comparing package removals.
-// Remove from an empty list succeeds; examining any existing entry fails.
+// A non-null Remove from an empty list succeeds; comparing an existing entry fails.
 type PackageEdit struct{ edit[PromptPackage] }
 
 func (e *PromptEdit) Validate() error {

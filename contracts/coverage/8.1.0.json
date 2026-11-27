@@ -5317,7 +5317,11 @@
             },
             {
               "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service_test.go",
-              "name": "TestUnitValidationTypedProviderRequests"
+              "name": "TestUnitValidationRejectedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/filter_binding_test.go",
+              "name": "TestUnitValidationFilterBindingDistinguishesOmissionEmptyAndWhitespace"
             }
           ],
           "live_tests": [
@@ -5347,7 +5351,15 @@
             },
             {
               "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service_test.go",
-              "name": "TestUnitValidationTypedProviderRequests"
+              "name": "TestUnitValidationRejectedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/filter_binding_test.go",
+              "name": "TestUnitValidationFilterBindingDistinguishesOmissionEmptyAndWhitespace"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
             }
           ],
           "live_tests": [
@@ -5778,11 +5790,11 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
-              "name": "TestUnitPrivacyListFilteringAndGlobalOrderFromRealResponses"
+              "name": "TestUnitPrivacyRejectedFilterRequests"
             },
             {
               "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
-              "name": "TestUnitPrivacyWhitespaceFilterRemainsLiteralFromRealResponses"
+              "name": "TestUnitPrivacyAuthoredListAndLiteralFilterResponses"
             }
           ],
           "live_tests": [
@@ -5808,11 +5820,27 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/privacy_configuration/service_test.go",
-              "name": "TestUnitPrivacyTypedProviderRequests"
+              "name": "TestUnitPrivacyRejectedProviderRequests"
             },
             {
               "file": "msteams/teams_admin_api/privacy_configuration/failure_test.go",
               "name": "TestUnitPrivacyEmptyAndNullReadPresentation"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
+            },
+            {
+              "file": "tests/contract/policies/configuration_decode_recovery_test.go",
+              "name": "TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery"
+            },
+            {
+              "file": "tests/contract/policies/configuration_cancellation_test.go",
+              "name": "TestUnitConfigurationCanceledReadRetainsReceiptAndAllowsIndependentRead"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
+              "name": "TestUnitPrivacyAuthoredListAndLiteralFilterResponses"
             }
           ],
           "live_tests": [
@@ -6662,7 +6690,15 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/service_test.go",
-              "name": "TestUnitPromptsFiltersUseRealResponses"
+              "name": "TestUnitPromptsRejectedFilterRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsAuthoredTypedReadListAndFilters"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/read_coercion_test.go",
+              "name": "TestUnitPromptsReadMatchesPinnedScalarAndCollectionSemantics"
             }
           ],
           "live_tests": [
@@ -6688,7 +6724,15 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/service_test.go",
-              "name": "TestUnitPromptsTypedProviderRequests"
+              "name": "TestUnitPromptsRejectedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsAuthoredTypedReadListAndFilters"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/read_coercion_test.go",
+              "name": "TestUnitPromptsReadMatchesPinnedScalarAndCollectionSemantics"
             }
           ],
           "live_tests": [
@@ -7339,7 +7383,15 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/teams_client_configuration/service_test.go",
-              "name": "TestUnitClientConfigurationTypedCompiledCRUD"
+              "name": "TestUnitClientConfigurationRejectedCompiledRequests"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
+            },
+            {
+              "file": "tests/contract/policies/configuration_decode_recovery_test.go",
+              "name": "TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery"
             }
           ],
           "live_tests": [
@@ -7899,7 +7951,11 @@
             },
             {
               "file": "msteams/teams_admin_api/teams_education_configuration/binding_test.go",
-              "name": "TestUnitEducationConfigurationRequestdBindingValues"
+              "name": "TestUnitEducationConfigurationRejectedRequestsAndLocalBinding"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -7925,11 +7981,19 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/teams_education_configuration/service_test.go",
-              "name": "TestUnitEducationConfigurationTypedProviderRequests"
+              "name": "TestUnitEducationConfigurationRejectedProviderRequests"
             },
             {
               "file": "msteams/teams_admin_api/teams_education_configuration/binding_test.go",
-              "name": "TestUnitEducationConfigurationRequestdBindingValues"
+              "name": "TestUnitEducationConfigurationRejectedRequestsAndLocalBinding"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_configuration/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
             }
           ],
           "live_tests": [
@@ -9811,6 +9875,10 @@
             {
               "file": "msteams/teams_admin_api/teams_messaging_configuration/service_test.go",
               "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_configuration/nullable_list_test.go",
+              "name": "TestUnitMessagingNullableListPreparedEditRetainsSnapshotAndExplicitReadback"
             }
           ],
           "live_tests": [
@@ -10137,6 +10205,10 @@
             {
               "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go",
               "name": "TestUnitFilterUsesActualCollection"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -10163,6 +10235,10 @@
             {
               "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/response_test.go",
               "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -12140,6 +12216,10 @@
             {
               "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go",
               "name": "TestUnitFilterUsesActualCollection"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -12166,6 +12246,10 @@
             {
               "file": "msteams/teams_admin_api/teams_sip_devices_configuration/response_test.go",
               "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -12488,6 +12572,14 @@
             {
               "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/response_test.go",
               "name": "TestUnitAuthorizationUsesActualTenantResponse"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go",
+              "name": "TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter"
             }
           ],
           "live_tests": [
@@ -12514,6 +12606,14 @@
             {
               "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/response_test.go",
               "name": "TestUnitAuthorizationUsesActualTenantResponse"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go",
+              "name": "TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter"
             }
           ],
           "live_tests": [
@@ -12742,6 +12842,10 @@
             {
               "file": "msteams/teams_admin_api/teams_upgrade_configuration/filter_test.go",
               "name": "TestUnitFilterUsesActualCollection"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -12768,6 +12872,10 @@
             {
               "file": "msteams/teams_admin_api/teams_upgrade_configuration/response_test.go",
               "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -37250,7 +37358,7 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service_test.go",
-              "name": "TestUnitValidationTypedProviderRequests"
+              "name": "TestUnitValidationRejectedProviderRequests"
             },
             {
               "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/composition_test.go",
@@ -37259,6 +37367,18 @@
             {
               "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/failure_test.go",
               "name": "TestUnitValidationInputAndContextRejectBeforeTokens"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
+            },
+            {
+              "file": "tests/contract/policies/configuration_decode_recovery_test.go",
+              "name": "TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/provider_success_test.go",
+              "name": "TestUnitValidationSparsePatchAndPreparedUpdateReachAcceptedBranches"
             }
           ],
           "live_tests": []
@@ -37689,7 +37809,7 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/privacy_configuration/service_test.go",
-              "name": "TestUnitPrivacyTypedProviderRequests"
+              "name": "TestUnitPrivacyRejectedProviderRequests"
             },
             {
               "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
@@ -37702,6 +37822,14 @@
             {
               "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
               "name": "TestUnitPrivacySparseInputStopsOnPreparationDenial"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/provider_success_test.go",
+              "name": "TestUnitPrivacyPatchTypedSuccessAndMalformedResponse"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
             }
           ],
           "live_tests": []
@@ -38302,7 +38430,7 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/service_test.go",
-              "name": "TestUnitPromptsTypedProviderRequests"
+              "name": "TestUnitPromptsRejectedProviderRequests"
             },
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go",
@@ -38315,6 +38443,22 @@
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/failure_test.go",
               "name": "TestUnitPromptsPatchPreservesStatusAndNeverReplays"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsAcceptedUpdateRetainsLaterDenialAndCallerRestoration"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsNullRemovalFromEmptyListRetainsReadWithoutPatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsPatchTypedAndMalformedAcceptedReplies"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/read_coercion_test.go",
+              "name": "TestUnitPromptsReadMatchesPinnedScalarAndCollectionSemantics"
             }
           ],
           "live_tests": []
@@ -38767,6 +38911,22 @@
             {
               "file": "msteams/teams_admin_api/teams_client_configuration/composition_test.go",
               "name": "TestUnitClientConfigurationUpdatePreparationFailures"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
+            },
+            {
+              "file": "tests/contract/policies/configuration_decode_recovery_test.go",
+              "name": "TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery"
+            },
+            {
+              "file": "tests/contract/policies/configuration_cancellation_test.go",
+              "name": "TestUnitConfigurationCanceledReadRetainsReceiptAndAllowsIndependentRead"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/provider_success_test.go",
+              "name": "TestUnitClientConfigurationPatchRetainsTypedSuccessAndMalformedReceipt"
             }
           ],
           "live_tests": []
@@ -39196,15 +39356,19 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/teams_education_configuration/service_test.go",
-              "name": "TestUnitEducationConfigurationTypedProviderRequests"
+              "name": "TestUnitEducationConfigurationRejectedProviderRequests"
             },
             {
               "file": "msteams/teams_admin_api/teams_education_configuration/binding_test.go",
-              "name": "TestUnitEducationConfigurationRequestdBindingValues"
+              "name": "TestUnitEducationConfigurationRejectedRequestsAndLocalBinding"
             },
             {
               "file": "msteams/teams_admin_api/teams_education_configuration/composition_test.go",
               "name": "TestUnitEducationConfigurationUpdatePreparationFailures"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_configuration/provider_success_test.go",
+              "name": "TestUnitEducationSparsePatchAndPreparedUpdateAcceptedResponses"
             }
           ],
           "live_tests": []
@@ -40400,6 +40564,10 @@
             {
               "file": "msteams/teams_admin_api/teams_messaging_configuration/service_test.go",
               "name": "TestUnitUpdateUsesAcceptancePreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_configuration/nullable_list_test.go",
+              "name": "TestUnitMessagingNullableListPreparedEditRetainsSnapshotAndExplicitReadback"
             }
           ],
           "live_tests": [
@@ -40648,6 +40816,14 @@
             {
               "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go",
               "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go",
+              "name": "TestUnitNullEmptyAndForceRemainExplicit"
             }
           ],
           "live_tests": [
@@ -41707,6 +41883,14 @@
             {
               "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go",
               "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go",
+              "name": "TestUnitNullEmptyAndForceRemainExplicit"
             }
           ],
           "live_tests": [
@@ -41958,6 +42142,18 @@
             {
               "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/settings_test.go",
               "name": "TestUnitAllPinnedSettingsBindExactValuesAndNull"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go",
+              "name": "TestUnitTenantAbuseNullablePreparedEditRetainsLaterFailureAndExplicitRecovery"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go",
+              "name": "TestUnitTenantAbuseMalformedSuccessRetainsPreparationReceiptWithoutPatch"
             }
           ],
           "live_tests": [
@@ -42146,6 +42342,14 @@
             {
               "file": "msteams/teams_admin_api/teams_upgrade_configuration/service_test.go",
               "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/service_test.go",
+              "name": "TestUnitAllSettingsPreserveNullFalseOpaqueAndForce"
             }
           ],
           "live_tests": [

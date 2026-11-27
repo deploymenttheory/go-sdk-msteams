@@ -1,0 +1,234 @@
+{
+  "scope": "six direct compiled configuration commands/nine exact sets, contract execution only",
+  "commands": [
+    {
+      "name": "Get-CsTeamsClientConfiguration",
+      "outcome": "passed",
+      "revision": "01e469be0e8929a89be6e4f89298a8438177964b",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "execution": {
+        "session": "33122",
+        "packages": [
+          "./msteams/teams_admin_api/teams_client_configuration"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14,
+        "workspace_note": "Scoped committed client package/shared inputs unchanged; other resource test WIP was outside the compiled package."
+      },
+      "source_review": "docs/implementation/policies/pol91-compiled-config-source-review.md",
+      "integrated_execution": {
+        "revision": "0df43debf954ef27731953c530063647638a7e47",
+        "session": "93343",
+        "package": "./tests/contract/policies",
+        "selection": "^(TestUnit|Example)"
+      },
+      "limits": [
+        "Contract execution only; no live status promotion",
+        "Native path guards and early errors are distinct from public binder/PowerShell pipeline ordering",
+        "Typed/empty HTTP acceptance and raw snapshots do not establish effective tenant persistence",
+        "Minimum role, real change/oracle/restore and client effect remain unqualified"
+      ],
+      "binding_evidence": "docs/implementation/policies/evidence/pol91-field-binding.json",
+      "binding_reproducer": "scripts/discovery/observe-pol91-field-binding.ps1"
+    },
+    {
+      "name": "Set-CsTeamsClientConfiguration",
+      "outcome": "passed",
+      "revision": "01e469be0e8929a89be6e4f89298a8438177964b",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "execution": {
+        "session": "33122",
+        "packages": [
+          "./msteams/teams_admin_api/teams_client_configuration"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14,
+        "workspace_note": "Scoped committed client package/shared inputs unchanged; other resource test WIP was outside the compiled package."
+      },
+      "source_review": "docs/implementation/policies/pol91-compiled-config-source-review.md",
+      "integrated_execution": {
+        "revision": "0df43debf954ef27731953c530063647638a7e47",
+        "session": "93343",
+        "package": "./tests/contract/policies",
+        "selection": "^(TestUnit|Example)"
+      },
+      "limits": [
+        "Contract execution only; no live status promotion",
+        "Native path guards and early errors are distinct from public binder/PowerShell pipeline ordering",
+        "Typed/empty HTTP acceptance and raw snapshots do not establish effective tenant persistence",
+        "Minimum role, real change/oracle/restore and client effect remain unqualified"
+      ],
+      "binding_evidence": "docs/implementation/policies/evidence/pol91-field-binding.json",
+      "binding_reproducer": "scripts/discovery/observe-pol91-field-binding.ps1"
+    },
+    {
+      "name": "Get-CsPrivacyConfiguration",
+      "outcome": "passed",
+      "revision": "0ef95f7d34e6454e26abef8252e9d3f85b07c8df",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "execution": {
+        "session": "72461",
+        "packages": [
+          "./msteams/teams_admin_api/privacy_configuration",
+          "./msteams/teams_admin_api/online_voicemail_validation_configuration"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol91-compiled-config-source-review.md",
+      "integrated_execution": {
+        "revision": "0df43debf954ef27731953c530063647638a7e47",
+        "session": "93343",
+        "package": "./tests/contract/policies",
+        "selection": "^(TestUnit|Example)"
+      },
+      "limits": [
+        "Contract execution only; no live status promotion",
+        "Native path guards and early errors are distinct from public binder/PowerShell pipeline ordering",
+        "Typed/empty HTTP acceptance and raw snapshots do not establish effective tenant persistence",
+        "Minimum role, real change/oracle/restore and client effect remain unqualified"
+      ],
+      "binding_reproducer": "scripts/discovery/observe-pol91-field-binding.ps1",
+      "supporting_shared_binder_evidence": "docs/implementation/policies/evidence/pol91-field-binding.json",
+      "binding_scope_note": "Privacy direct basis: own four Nullable<Boolean> public/model metadata and actual DTO/resolver null/false/omission probe in source_review; artifact directly exercises client/validation, not Privacy invocation."
+    },
+    {
+      "name": "Set-CsPrivacyConfiguration",
+      "outcome": "passed",
+      "revision": "0ef95f7d34e6454e26abef8252e9d3f85b07c8df",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "execution": {
+        "session": "72461",
+        "packages": [
+          "./msteams/teams_admin_api/privacy_configuration",
+          "./msteams/teams_admin_api/online_voicemail_validation_configuration"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol91-compiled-config-source-review.md",
+      "integrated_execution": {
+        "revision": "0df43debf954ef27731953c530063647638a7e47",
+        "session": "93343",
+        "package": "./tests/contract/policies",
+        "selection": "^(TestUnit|Example)"
+      },
+      "limits": [
+        "Contract execution only; no live status promotion",
+        "Native path guards and early errors are distinct from public binder/PowerShell pipeline ordering",
+        "Typed/empty HTTP acceptance and raw snapshots do not establish effective tenant persistence",
+        "Minimum role, real change/oracle/restore and client effect remain unqualified"
+      ],
+      "binding_reproducer": "scripts/discovery/observe-pol91-field-binding.ps1",
+      "supporting_shared_binder_evidence": "docs/implementation/policies/evidence/pol91-field-binding.json",
+      "binding_scope_note": "Privacy direct basis: own four Nullable<Boolean> public/model metadata and actual DTO/resolver null/false/omission probe in source_review; artifact directly exercises client/validation, not Privacy invocation."
+    },
+    {
+      "name": "Get-CsOnlineVoicemailValidationConfiguration",
+      "outcome": "passed",
+      "revision": "0ef95f7d34e6454e26abef8252e9d3f85b07c8df",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "execution": {
+        "session": "72461",
+        "packages": [
+          "./msteams/teams_admin_api/privacy_configuration",
+          "./msteams/teams_admin_api/online_voicemail_validation_configuration"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol91-compiled-config-source-review.md",
+      "integrated_execution": {
+        "revision": "0df43debf954ef27731953c530063647638a7e47",
+        "session": "93343",
+        "package": "./tests/contract/policies",
+        "selection": "^(TestUnit|Example)"
+      },
+      "limits": [
+        "Contract execution only; no live status promotion",
+        "Native path guards and early errors are distinct from public binder/PowerShell pipeline ordering",
+        "Typed/empty HTTP acceptance and raw snapshots do not establish effective tenant persistence",
+        "Minimum role, real change/oracle/restore and client effect remain unqualified"
+      ],
+      "binding_evidence": "docs/implementation/policies/evidence/pol91-field-binding.json",
+      "binding_reproducer": "scripts/discovery/observe-pol91-field-binding.ps1"
+    },
+    {
+      "name": "Set-CsOnlineVoicemailValidationConfiguration",
+      "outcome": "passed",
+      "revision": "0ef95f7d34e6454e26abef8252e9d3f85b07c8df",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "execution": {
+        "session": "72461",
+        "packages": [
+          "./msteams/teams_admin_api/privacy_configuration",
+          "./msteams/teams_admin_api/online_voicemail_validation_configuration"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol91-compiled-config-source-review.md",
+      "integrated_execution": {
+        "revision": "0df43debf954ef27731953c530063647638a7e47",
+        "session": "93343",
+        "package": "./tests/contract/policies",
+        "selection": "^(TestUnit|Example)"
+      },
+      "limits": [
+        "Contract execution only; no live status promotion",
+        "Native path guards and early errors are distinct from public binder/PowerShell pipeline ordering",
+        "Typed/empty HTTP acceptance and raw snapshots do not establish effective tenant persistence",
+        "Minimum role, real change/oracle/restore and client effect remain unqualified"
+      ],
+      "binding_evidence": "docs/implementation/policies/evidence/pol91-field-binding.json",
+      "binding_reproducer": "scripts/discovery/observe-pol91-field-binding.ps1"
+    }
+  ],
+  "qualification_status": "superseded",
+  "qualification_note": "Historical successful executions remain valid within their stated inputs. Qualification withdrawn after own pinned JsonConvert DTO probes exposed unsupported read scalar coercions; implementation correction and new source-complete execution are required. No live status change."
+}

@@ -14,7 +14,8 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/privacy_configuration"
 )
 
-func TestUnitPrivacyTypedProviderRequests(t *testing.T) {
+// These controlled 400 request probes establish wire bytes, not successful decoding.
+func TestUnitPrivacyRejectedProviderRequests(t *testing.T) {
 	t.Parallel()
 
 	for _, f := range requestInputs(t) {
@@ -24,17 +25,10 @@ func TestUnitPrivacyTypedProviderRequests(t *testing.T) {
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
 			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: f.Request.CmdletName, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(f.Request.Method, strings.TrimPrefix(f.Request.Url, origin), f.Request.CmdletName, body, f.Status, f.Response)}}
-			if f.Request.FailureType != nil {
-				c.Want.Error = client.ErrDecode
-				if f.Status == 403 {
-					c.Want.Error = auth.ErrForbidden
-				}
-			} else if f.Response != "" {
-				c.Want.JSON = json.RawMessage(f.Response)
+			if f.Status != 400 {
+				t.Fatal("rejected request probe unexpectedly contains a success contract")
 			}
-			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			}
+			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.PrivacyConfigurations
 				if f.Operation == "list" {

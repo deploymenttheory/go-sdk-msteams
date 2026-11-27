@@ -15,7 +15,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
-func TestUnitPromptsTypedProviderRequests(t *testing.T) {
+func TestUnitPromptsRejectedProviderRequests(t *testing.T) {
 	t.Parallel()
 
 	for _, f := range requestInputs(t) {
@@ -26,17 +26,9 @@ func TestUnitPromptsTypedProviderRequests(t *testing.T) {
 				body = json.RawMessage(x.Body)
 			}
 			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: x.CmdletName, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
-			if x.FailureType != nil {
-				c.Want.Error = client.ErrDecode
-				if f.Status == 403 {
-					c.Want.Error = auth.ErrForbidden
-				}
-			} else if f.Response != "" {
-				c.Want.JSON = json.RawMessage(f.Response)
-			}
-			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			}
+			// These retained request vectors all use a controlled400. They do not
+			// assert typed success or malformed-success decoding.
+			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts
 				if f.Operation == "read" {
@@ -71,7 +63,7 @@ func TestUnitPromptsTypedProviderRequests(t *testing.T) {
 	}
 }
 
-func TestUnitPromptsFiltersUseRealResponses(t *testing.T) {
+func TestUnitPromptsRejectedFilterRequests(t *testing.T) {
 	t.Parallel()
 	// No successful list was observed for this service. Exercise only
 	// local filter validation/request construction against a controlled HTTP error.

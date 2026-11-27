@@ -57,10 +57,10 @@ func TestUnitPrivacyUpdatePreparationFailures(t *testing.T) {
 	}
 }
 
-func TestUnitPrivacyListFilteringAndGlobalOrderFromRealResponses(t *testing.T) {
+func TestUnitPrivacyRejectedFilterRequests(t *testing.T) {
 	t.Parallel()
-	// No successful list was observed for this service. Exercise only
-	// local filter validation/request construction against a controlled HTTP error.
+	// This retained fixture does not supply a successful list. These controlled
+	// errors prove request construction only, not current live capability.
 	for _, pattern := range []string{"*", "Global", "Fixture*"} {
 		result, err := contracttest.Run(t.Context(), contracttest.Case{
 			Name: "request-only-filter", Family: "privacy_configuration", Scope: "service", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json",
@@ -78,25 +78,46 @@ func TestUnitPrivacyListFilteringAndGlobalOrderFromRealResponses(t *testing.T) {
 
 }
 
-func TestUnitPrivacyWhitespaceFilterRemainsLiteralFromRealResponses(t *testing.T) {
+// Primary-authored Core PrivacyConfiguration DTOs, not a retained tenant list.
+// Only Global is authored; no unsupported nondefault scope is inferred.
+func TestUnitPrivacyAuthoredListAndLiteralFilterResponses(t *testing.T) {
 	t.Parallel()
-	// No successful list was observed for this service. Exercise only
-	// local filter validation/request construction against a controlled HTTP error.
-	for _, pattern := range []string{"*", "Global", "Fixture*"} {
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "request-only-filter", Family: "privacy_configuration", Scope: "service", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json",
-			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/PrivacyConfiguration", 400, nil),
-			Want:  contracttest.Expected{Status: 400, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				value, response, err := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
-			},
-		})
-		if err != nil || !result.Passed() {
-			t.Fatalf("request-only filter differs: %v %+v", err, result.Differences())
+	const body = `[{"Identity":"Global","EnablePrivacyMode":false,"AutoInitiateContacts":null,"Future":false}]`
+	for _, tc := range []struct {
+		name, pattern string
+		list          bool
+		count         int
+	}{
+		{name: "omitted-list", list: true, count: 1},
+		{name: "all", pattern: "*", count: 1},
+		{name: "case-insensitive-global", pattern: "global", count: 1},
+		{name: "missing", pattern: "__sdk_missing__"},
+		{name: "literal-whitespace", pattern: " "},
+	} {
+		set := "Filter"
+		if tc.list {
+			set = "Identity"
 		}
+		run(t, contracttest.Case{Name: "authored-" + tc.name, Source: "msteams/teams_admin_api/privacy_configuration/composition_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsPrivacyConfiguration", ParameterSet: set}}, Steps: []contracttest.Exchange{wire("GET", collection, "Get-CsPrivacyConfiguration", nil, 200, body)}, Want: contracttest.Expected{Body: []byte(body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			var values []*resource.Configuration
+			var observed contracttest.Observation
+			if tc.list {
+				values, observed.Response, observed.Err = sdk.TeamsAdminAPI.PrivacyConfigurations.List(ctx)
+			} else {
+				values, observed.Response, observed.Err = sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, tc.pattern)
+			}
+			if observed.Err == nil {
+				if len(values) != tc.count {
+					t.Fatal("successful list/filter did not execute its own selection")
+				}
+				if len(values) == 1 && (values[0] == nil || values[0].Identity == nil || *values[0].Identity != "Global" || values[0].EnablePrivacyMode == nil || *values[0].EnablePrivacyMode || string(values[0].RawFields["AutoInitiateContacts"]) != "null" || string(values[0].RawFields["Future"]) != "false") {
+					t.Fatal("typed privacy list lost identity, false/null or future data")
+				}
+			}
+			observed.Value = values
+			return observed
+		}})
 	}
-
 }
 
 func TestUnitPrivacySparseInputStopsOnPreparationDenial(t *testing.T) {
