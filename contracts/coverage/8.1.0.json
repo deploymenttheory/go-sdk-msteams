@@ -6694,7 +6694,11 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/service_test.go",
-              "name": "TestUnitPromptsFiltersUseRealResponses"
+              "name": "TestUnitPromptsRejectedFilterRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsAuthoredTypedReadListAndFilters"
             }
           ],
           "live_tests": [
@@ -6720,7 +6724,11 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/service_test.go",
-              "name": "TestUnitPromptsTypedProviderRequests"
+              "name": "TestUnitPromptsRejectedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsAuthoredTypedReadListAndFilters"
             }
           ],
           "live_tests": [
@@ -38436,7 +38444,7 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/service_test.go",
-              "name": "TestUnitPromptsTypedProviderRequests"
+              "name": "TestUnitPromptsRejectedProviderRequests"
             },
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go",
@@ -38449,6 +38457,18 @@
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/failure_test.go",
               "name": "TestUnitPromptsPatchPreservesStatusAndNeverReplays"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsAcceptedUpdateRetainsLaterDenialAndCallerRestoration"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsNullRemovalFromEmptyListRetainsReadWithoutPatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
+              "name": "TestUnitPromptsPatchTypedAndMalformedAcceptedReplies"
             }
           ],
           "live_tests": []

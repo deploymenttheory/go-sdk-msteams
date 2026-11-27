@@ -89,8 +89,8 @@ T references name exact existing functions, not full semantic completion. Review
 | T07 | `TestUnitPromptsEditsStopOnPreparationDenial` | [msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go](../../../msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go) |
 | T08 | `TestUnitPromptsUpdatePreparationFailures` | [msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go](../../../msteams/teams_admin_api/audio_conferencing_prompts/composition_test.go) |
 | T09 | `TestUnitPromptsPatchPreservesStatusAndNeverReplays` | [msteams/teams_admin_api/audio_conferencing_prompts/failure_test.go](../../../msteams/teams_admin_api/audio_conferencing_prompts/failure_test.go) |
-| T10 | `TestUnitPromptsFiltersUseRealResponses` | [msteams/teams_admin_api/audio_conferencing_prompts/service_test.go](../../../msteams/teams_admin_api/audio_conferencing_prompts/service_test.go) |
-| T11 | `TestUnitPromptsTypedProviderRequests` | [msteams/teams_admin_api/audio_conferencing_prompts/service_test.go](../../../msteams/teams_admin_api/audio_conferencing_prompts/service_test.go) |
+| T10 | `TestUnitPromptsRejectedFilterRequests` | [msteams/teams_admin_api/audio_conferencing_prompts/service_test.go](../../../msteams/teams_admin_api/audio_conferencing_prompts/service_test.go) |
+| T11 | `TestUnitPromptsRejectedProviderRequests` | [msteams/teams_admin_api/audio_conferencing_prompts/service_test.go](../../../msteams/teams_admin_api/audio_conferencing_prompts/service_test.go) |
 | T12 | `TestUnitValidationListFilteringAndGlobalOrderFromRealResponses` | [msteams/teams_admin_api/online_voicemail_validation_configuration/composition_test.go](../../../msteams/teams_admin_api/online_voicemail_validation_configuration/composition_test.go) |
 | T13 | `TestUnitValidationUpdatePreparationFailures` | [msteams/teams_admin_api/online_voicemail_validation_configuration/composition_test.go](../../../msteams/teams_admin_api/online_voicemail_validation_configuration/composition_test.go) |
 | T14 | `TestUnitValidationInputAndContextRejectBeforeTokens` | [msteams/teams_admin_api/online_voicemail_validation_configuration/failure_test.go](../../../msteams/teams_admin_api/online_voicemail_validation_configuration/failure_test.go) |
@@ -253,3 +253,7 @@ unchanged, leaving **21 commands / 32 sets**:
 meeting, meeting and meeting-template Get; **12 conditional / 18 sets** stay
 separate. Minimum authorization, actual null-member changes/readback/oracle/
 restoration, effective behavior and all live qualification remain unqualified.
+
+Audio branch repair/source proof is recorded in [its own review](pol91-prompts-source-review.md).
+The former denied vectors remain denial proofs; new positive/partial/null-removal
+branches require frozen execution before any command decision.

@@ -109,6 +109,9 @@ func (e *edit[T]) Apply(current []*T) ([]*T, error) {
 	}
 	out := copyItems(current, e.clone)
 	for _, remove := range e.remove {
+		if remove == nil {
+			return nil, ErrInput
+		}
 		for i, item := range out {
 			same, err := e.equal(remove, item)
 			if err != nil {
@@ -128,7 +131,7 @@ func (e *edit[T]) Apply(current []*T) ([]*T, error) {
 type PromptEdit struct{ edit[Prompt] }
 
 // PackageEdit preserves the source prohibition on comparing package removals.
-// Remove from an empty list succeeds; examining any existing entry fails.
+// A non-null Remove from an empty list succeeds; comparing an existing entry fails.
 type PackageEdit struct{ edit[PromptPackage] }
 
 func (e *PromptEdit) Validate() error {
