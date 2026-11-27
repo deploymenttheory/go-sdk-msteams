@@ -62,6 +62,10 @@ no reference mutation or automatic recovery is sent.
 New success/malformed/partial tests invoke the real SDK through the contract
 harness directly. Their protocol responses are authored from the actual model
 contract, not captured tenant evidence. Existing requestBoundary denial tests
-remain bounded request-construction evidence. Full affected Go execution is
-pending disk admission; no qualification or live state changes accompany this
-source/implementation checkpoint.
+remain bounded request-construction evidence. After headroom recovered, the
+[corrected execution](../../../contracts/coverage/evidence/core90-directory-receipt-execution.json)
+at ec4b0dd passed all 675 test/subtest events across ten affected packages, with
+zero failures/skips. Full configured lint on those packages returned zero issues;
+formatter comparison and post-run scoped diff were clean, and both owned scratch
+directories were removed. Current-head full CI remains required. No qualification
+or live state changes accompany this source/implementation checkpoint.

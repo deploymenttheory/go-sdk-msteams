@@ -1,0 +1,58 @@
+{
+  "scope": "Full ten affected CORE/supporting read, channel receipt, shared harness and caller package offline check. No CORE command/live qualification promotion.",
+  "revision": "ec4b0ddfd27d16e596407c94b4939355402b5573",
+  "session": "86999",
+  "result": "passed",
+  "toolchain": "go1.27.4",
+  "GOMAXPROCS": 2,
+  "parallel_packages": 1,
+  "count": 1,
+  "selection": "^(TestUnit|Example)",
+  "admission_free_gib": 16.594,
+  "runtime_disk_floor_gib": 14,
+  "test_pass_events": 675,
+  "test_fail_events": 0,
+  "test_skip_events": 0,
+  "package_passes": [
+    "github.com/deploymenttheory/go-sdk-msteams/internal/contracttest",
+    "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/directory_user",
+    "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel",
+    "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_user_management",
+    "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_user_management",
+    "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/team_management",
+    "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/shared_channel_management",
+    "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/group_relationship",
+    "github.com/deploymenttheory/go-sdk-msteams/tests/contract/core",
+    "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
+  ],
+  "raw_result": "/private/tmp/msteams-core-ec4-tests.json",
+  "raw_sha256": "cc867cf73fcfdfec5748297ef06587d101dc27a89eb7fbf792a9cf6f411b793e",
+  "configured_lint": {
+    "session": "49195",
+    "result": "passed",
+    "issues": 0,
+    "scope": "Same ten packages; full repository linter configuration, not enable-only subset",
+    "raw_result": "/private/tmp/msteams-core-ec4-lint.log",
+    "raw_sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47"
+  },
+  "formatter_diff": "golangci-lint fmt --diff on shared harness/directory_user/channel: no changes",
+  "post_run_scoped_diff": "zero",
+  "owned_test_and_lint_scratch_removed": true,
+  "source_observations": {
+    "scalar_rows": 70,
+    "property_controls": 11,
+    "consumer_IL_methods": 6
+  },
+  "prior_checkpoint": {
+    "revision": "c46ff4617674859a7231b1a87e9c4012ddb995c7",
+    "session": "30300",
+    "tests": "675passed10packages",
+    "lint": "oneQF1001 predicate readability diagnostic; fixed without suppression or behavior change"
+  },
+  "limits": [
+    "No local race/full-module sweep/TestAcc/authentication/tenant call or role change.",
+    "Earlier source-only/disk-refused checkpoints remain separate; current result supersedes pending local-execution status for this code revision only.",
+    "Current-head full CI and real acceptance failures remain independently required before PR merge.",
+    "Private migration backend failures remain unresolved; no skip or positive-live inference."
+  ]
+}
