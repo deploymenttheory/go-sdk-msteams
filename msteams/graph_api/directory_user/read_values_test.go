@@ -178,3 +178,62 @@ func TestUnitDirectoryGUIDMailSpellingsRetainCaseInsensitiveDeduplication(t *tes
 		return contracttest.Observation{Value: v.ID, Response: r, Err: e}
 	}})
 }
+
+func TestUnitDirectoryReadPreservesSourcePropertyMatchingAndAssignmentOrder(t *testing.T) {
+	raw, err := os.ReadFile("../../../docs/implementation/core/evidence/directory-user-read-source.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var source struct {
+		Controls []struct {
+			Input      string `json:"input_json"`
+			Projection struct {
+				ID            *string `json:"id"`
+				DisplayName   *string `json:"displayName"`
+				PrincipalName *string `json:"userPrincipalName"`
+				UserType      *string `json:"userType"`
+				Mail          *string `json:"mail"`
+			} `json:"projection"`
+			Exception *string `json:"exception"`
+		} `json:"property_controls"`
+	}
+	if json.Unmarshal(raw, &source) != nil || len(source.Controls) != 11 {
+		t.Fatal("source property controls unavailable")
+	}
+	for index, row := range source.Controls {
+		t.Run(fmt.Sprint(index), func(t *testing.T) {
+			var user directoryuser.User
+			err := json.Unmarshal([]byte(row.Input), &user)
+			if row.Exception != nil {
+				if !errors.Is(err, client.ErrDecode) {
+					t.Fatal("earlier rejected assignment was hidden")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			wantID := ""
+			if row.Projection.ID != nil {
+				wantID = *row.Projection.ID
+			}
+			if user.ID != wantID {
+				t.Fatal("source ID alias order/null reset changed")
+			}
+			for _, pair := range [][2]*string{{user.DisplayName, row.Projection.DisplayName}, {user.UserPrincipalName, row.Projection.PrincipalName}, {user.UserType, row.Projection.UserType}, {user.Mail, row.Projection.Mail}} {
+				if (pair[0] == nil) != (pair[1] == nil) || pair[0] != nil && *pair[0] != *pair[1] {
+					t.Fatal("source property match/assignment changed")
+				}
+			}
+			var fields map[string]json.RawMessage
+			if json.Unmarshal([]byte(row.Input), &fields) != nil || len(fields) != len(user.RawFields) {
+				t.Fatal("raw unknown/alias properties lost")
+			}
+			for name, value := range fields {
+				if string(user.RawFields[name]) != string(value) {
+					t.Fatal("raw token changed")
+				}
+			}
+		})
+	}
+}

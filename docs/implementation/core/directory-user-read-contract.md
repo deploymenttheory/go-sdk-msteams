@@ -12,7 +12,19 @@ operations. It invokes no management lifecycle, authentication or HTTP.
 [The source packet](evidence/directory-user-read-source.json) records 70 actual
 model observations: null/empty/string, Boolean, integer, exact large integer,
 fraction, exponent, overflow exponent, negative zero and rejected array/object
-for each of the five properties. The portable reproduction is:
+for each of the five properties. Eleven additional property controls prove ASCII aliases, last assignment/null
+reset, exact duplicates, immediate failure of an earlier invalid known field,
+and ignored long-s foreign keys even when their values are arrays or objects.
+The reader explicitly walks properties in wire order; Go Unicode SimpleFold
+struct matching is not used. Unknown properties remain in RawFields.
+
+Six versioned consumer IL bodies cover both GetUserId overloads, GetUpnForUsers,
+both generic HttpUtilities.Get overloads and generic GetAll. Every instruction
+records offsets and resolved operands using the owning generic context, plus
+complete IL bytes. This makes the lookup/current/mail/parser call-chain claims
+reproducible from the hash-verified assembly without invoking those consumers.
+
+The portable reproduction is:
 
 ```powershell
 pwsh -NoProfile -File scripts/discovery/observe-core-directory-user.ps1 -ModulePath <verified-8.1.0-module>

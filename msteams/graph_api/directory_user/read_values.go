@@ -3,6 +3,7 @@ package directoryuser
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
@@ -35,20 +36,62 @@ func (s *aadString) UnmarshalJSON(raw []byte) error {
 	return nil
 }
 
-func decodeUser(raw []byte, id *string, displayName, principalName, userType, mail **string, fields *map[string]json.RawMessage) error {
-	var wire struct {
-		ID            aadString `json:"id"`
-		DisplayName   aadString `json:"displayName"`
-		PrincipalName aadString `json:"userPrincipalName"`
-		UserType      aadString `json:"userType"`
-		Mail          aadString `json:"mail"`
+// asciiProperty matches these source ASCII property names without Go's
+// Unicode SimpleFold aliases (for example long-s). Values are read in wire
+// order: repeated exact names and ASCII aliases assign again, including null.
+func asciiProperty(name string) string {
+	raw := []byte(name)
+	for i, value := range raw {
+		if value >= 128 {
+			return ""
+		}
+		if value >= 'A' && value <= 'Z' {
+			raw[i] += 'a' - 'A'
+		}
 	}
-	if json.Unmarshal(raw, &wire) != nil || json.Unmarshal(raw, fields) != nil || *fields == nil {
+	return string(raw)
+}
+
+func decodeUser(raw []byte, id *string, displayName, principalName, userType, mail **string, fields *map[string]json.RawMessage) error {
+	decoder := json.NewDecoder(bytes.NewReader(raw))
+	token, err := decoder.Token()
+	if err != nil || token != json.Delim('{') {
 		return client.ErrDecode
 	}
-	if wire.ID.value != nil {
-		*id = *wire.ID.value
+	projected := map[string]*string{}
+	captured := map[string]json.RawMessage{}
+	for decoder.More() {
+		token, err = decoder.Token()
+		name, ok := token.(string)
+		if err != nil || !ok {
+			return client.ErrDecode
+		}
+		var value json.RawMessage
+		if decoder.Decode(&value) != nil {
+			return client.ErrDecode
+		}
+		captured[name] = value
+		key := asciiProperty(name)
+		switch key {
+		case "id", "displayname", "userprincipalname", "usertype", "mail":
+			var text aadString
+			if text.UnmarshalJSON(value) != nil {
+				return client.ErrDecode
+			}
+			projected[key] = text.value
+		}
 	}
-	*displayName, *principalName, *userType, *mail = wire.DisplayName.value, wire.PrincipalName.value, wire.UserType.value, wire.Mail.value
+	if token, err = decoder.Token(); err != nil || token != json.Delim('}') {
+		return client.ErrDecode
+	}
+	if _, err = decoder.Token(); err != io.EOF {
+		return client.ErrDecode
+	}
+	*id = ""
+	if projected["id"] != nil {
+		*id = *projected["id"]
+	}
+	*displayName, *principalName, *userType, *mail = projected["displayname"], projected["userprincipalname"], projected["usertype"], projected["mail"]
+	*fields = captured
 	return nil
 }

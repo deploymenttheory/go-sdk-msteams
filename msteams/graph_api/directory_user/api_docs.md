@@ -11,7 +11,9 @@ callers supply an explicit identity. Reads retain nullable/future fields and the
 complete object in `RawFields`. The five typed string fields follow the pinned
 AadUser JsonConvert string reader: strings are retained, Boolean/number tokens
 become their original text, null/missing optional fields stay nil, and arrays or
-objects in those fields fail decoding. A response ID is not required to be a
+objects in those fields fail decoding. Known fields match ASCII case aliases
+in wire order, including last assignment and null reset; unknown Unicode keys
+are retained raw and are not mistaken for ASCII fields. A response ID is not required to be a
 UUID. Missing/null IDs use the existing empty Go string representation in a
 read snapshot; completed resolution rejects empty IDs with `ErrDecode` and
 retains its snapshot/receipt without mail fallback. Downstream reference, owner,
