@@ -1,0 +1,137 @@
+{
+  "scope": "Four individually reviewed direct compiled commands / six exact sets; pending independent decision review before ledger changes.",
+  "review_status": "proposed",
+  "commands": [
+    {
+      "name": "Get-CsTeamsGuestMeetingConfiguration",
+      "parameter_sets": [
+        "Identity",
+        "Filter"
+      ],
+      "review_status": "proposed",
+      "proposed_implementation_status": "implemented",
+      "proposed_contract_status": "passed",
+      "revision": "c9e096f36f268d18f48ad6f8acb0b07bf2ad466b",
+      "execution": "contracts/coverage/evidence/pol91-last-compiled-execution.json",
+      "decision_report": "docs/implementation/policies/pol91-last-compiled-contract-decisions.md",
+      "source_controls": "docs/implementation/policies/evidence/pol91-last-compiled-controls.json",
+      "source_read": "docs/implementation/policies/evidence/pol91-last-compiled-read.json",
+      "source_write": "docs/implementation/policies/pol91-meeting-write-source-review.md",
+      "behavior_scope": "Own direct compiled Get and normalized resource; all eight scalar settings plus Identity; omitted/selected/list/filter, own read profile, owned raw snapshots and error/context behavior.",
+      "test_symbols": [
+        "TestUnitGetGlobalResponseFixture",
+        "TestUnitListResponseFixture",
+        "TestUnitFilterUsesActualCollection",
+        "TestUnitConfigurationOwnCompiledReadVectors",
+        "TestUnitConfigurationCoercedReadUsesRootClient"
+      ],
+      "limits": [
+        "Offline implementation/contract only; all live records/references unchanged.",
+        "Native typed inputs, early path safety/context, host presentation and confirmation remain explicit boundaries.",
+        "No conditional modern/remoting branch qualification, tenant behavior, minimum role or live parity follows."
+      ]
+    },
+    {
+      "name": "Set-CsTeamsGuestMeetingConfiguration",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "review_status": "proposed",
+      "proposed_implementation_status": "implemented",
+      "proposed_contract_status": "passed",
+      "revision": "c9e096f36f268d18f48ad6f8acb0b07bf2ad466b",
+      "execution": "contracts/coverage/evidence/pol91-last-compiled-execution.json",
+      "decision_report": "docs/implementation/policies/pol91-last-compiled-contract-decisions.md",
+      "source_controls": "docs/implementation/policies/evidence/pol91-last-compiled-controls.json",
+      "source_read": "docs/implementation/policies/evidence/pol91-last-compiled-read.json",
+      "source_write": "docs/implementation/policies/pol91-meeting-write-source-review.md",
+      "behavior_scope": "All eight bound keys/types; concrete ContainsKey guard; sparse null/false/empty/Force; prepared204 and later denial/accepted-malformed with caller reconciliation/restoration/readback.",
+      "test_symbols": [
+        "TestUnitEverySettingNullFalseEmptyAndForceRemainExplicit",
+        "TestUnitUpdateUsesActualPreparationAndSparsePatch",
+        "TestUnitMeetingAndGuestConfigurationFailuresKeepCallerRecoveryIndependent"
+      ],
+      "limits": [
+        "Offline implementation/contract only; all live records/references unchanged.",
+        "Native typed inputs, early path safety/context, host presentation and confirmation remain explicit boundaries.",
+        "No conditional modern/remoting branch qualification, tenant behavior, minimum role or live parity follows."
+      ]
+    },
+    {
+      "name": "Get-CsTeamsMeetingConfiguration",
+      "parameter_sets": [
+        "Identity",
+        "Filter"
+      ],
+      "review_status": "proposed",
+      "proposed_implementation_status": "implemented",
+      "proposed_contract_status": "passed",
+      "revision": "c9e096f36f268d18f48ad6f8acb0b07bf2ad466b",
+      "execution": "contracts/coverage/evidence/pol91-last-compiled-execution.json",
+      "decision_report": "docs/implementation/policies/pol91-last-compiled-contract-decisions.md",
+      "source_controls": "docs/implementation/policies/evidence/pol91-last-compiled-controls.json",
+      "source_read": "docs/implementation/policies/evidence/pol91-last-compiled-read.json",
+      "source_write": "docs/implementation/policies/pol91-meeting-write-source-review.md",
+      "behavior_scope": "Own direct compiled Get; all 21 settings and seven context fields; received string/Boolean/UInt32 with resource-positive and Id-setter constraints; aliases/defaults/raw/get/list/filter/error/context.",
+      "test_symbols": [
+        "TestUnitEveryTypedSettingUsesAcceptanceResponses",
+        "TestUnitGetGlobalResponseFixture",
+        "TestUnitListResponseFixture",
+        "TestUnitFilterUsesActualCollection",
+        "TestUnitConfigurationOwnCompiledReadVectors",
+        "TestUnitConfigurationCoercedReadUsesRootClient"
+      ],
+      "limits": [
+        "Offline implementation/contract only; all live records/references unchanged.",
+        "Native typed inputs, early path safety/context, host presentation and confirmation remain explicit boundaries.",
+        "No conditional modern/remoting branch qualification, tenant behavior, minimum role or live parity follows."
+      ]
+    },
+    {
+      "name": "Set-CsTeamsMeetingConfiguration",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "review_status": "proposed",
+      "proposed_implementation_status": "implemented",
+      "proposed_contract_status": "passed",
+      "revision": "c9e096f36f268d18f48ad6f8acb0b07bf2ad466b",
+      "execution": "contracts/coverage/evidence/pol91-last-compiled-execution.json",
+      "decision_report": "docs/implementation/policies/pol91-last-compiled-contract-decisions.md",
+      "source_controls": "docs/implementation/policies/evidence/pol91-last-compiled-controls.json",
+      "source_read": "docs/implementation/policies/evidence/pol91-last-compiled-read.json",
+      "source_write": "docs/implementation/policies/pol91-meeting-write-source-review.md",
+      "behavior_scope": "All 21 bound keys; positive-port failure stage; nullable modifiers, typed projection, own helper/error/Force behavior; prepared partial receipts and explicit caller recovery.",
+      "test_symbols": [
+        "TestUnitEverySettingNullFalsePositiveEmptyAndForceRemainExplicit",
+        "TestUnitContextTypedWriterDropsRawFieldsAndPreservesReadView",
+        "TestUnitContextModifiersKeepNullMembersAndHelperStageFailures",
+        "TestUnitContextEditSnapshotsOwnPointersAndRawBytes",
+        "TestUnitPositivePortZeroRetainsPreparationWithoutPatch",
+        "TestUnitMeetingAndGuestConfigurationFailuresKeepCallerRecoveryIndependent",
+        "TestUnitMeetingContextSetterFailureKeepsPreparationReceiptWithoutPatch"
+      ],
+      "limits": [
+        "Offline implementation/contract only; all live records/references unchanged.",
+        "Native typed inputs, early path safety/context, host presentation and confirmation remain explicit boundaries.",
+        "No conditional modern/remoting branch qualification, tenant behavior, minimum role or live parity follows."
+      ]
+    }
+  ],
+  "source_observations": {
+    "own_read_rows": 725,
+    "context_helper_serializer_rows": 11,
+    "positive_port_writer_rows": 24,
+    "selected_control_methods": 35
+  },
+  "proposed_pol91_total": {
+    "commands": 27,
+    "sets": 41
+  },
+  "remaining_after_approval": {
+    "commands": 12,
+    "sets": 18,
+    "source_group": "conditional modern/remoting; no exclusion or global parity inference"
+  },
+  "live_change": false
+}
