@@ -147,3 +147,14 @@ sanitized live response fixtures stay response-only evidence for these corrected
 source-derived requests. Full affected execution and independent review are
 required before any Find-CsGroup implementation/contract decision; all live
 states remain unchanged and #191 remains open.
+
+
+The frozen implementation `f2eeaf7` passed independent source/API and peer code
+review, including independent reruns matching all 31 model/11 envelope and 21
+binding observations. [Publication status](evidence/find-group-f2eeaf7-validation-status.json)
+records the exact source hash and review scope. Local Go execution was not
+started: 15.444 GiB free was below the approved 16 GiB admission floor. This is
+not a test failure or a successful Go check. Existing remote PR CI supplies the
+next execution evidence; Find-CsGroup remains unqualified until that evidence
+and final review are complete. The 13 previously approved EXT contracts and all
+live records remain unchanged.
