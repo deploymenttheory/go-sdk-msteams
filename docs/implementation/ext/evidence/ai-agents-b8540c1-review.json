@@ -1,6 +1,6 @@
 {
   "schema": "finite-command-review-packet",
-  "review": "pending; all seven implementation/contract/live states unchanged",
+  "review": "reviewed/passed: seven commands and seven ordinary sets; implementation and offline contract only",
   "revision": "b8540c170d6b046289d7bfd3bb09247b68bc9ad7",
   "commands": [
     {
@@ -37,7 +37,7 @@
       ],
       "source_packet_command_pointer": "docs/implementation/ext/evidence/ai-agents-source/primary.json#/commands/5",
       "additional_executed_tests": [],
-      "state": "review-pending; no ledger change",
+      "state": "reviewed/passed: implemented and offline contract passed; live unchanged",
       "current_live": {
         "status": "not-run",
         "reason": "MCPS rejects app-only tokens with HTTP 401 (the pinned module fails before sending in app-only sessions); only fabricated-thread rejection probes ran, so successful knowledge requests need delegated credentials and are unqualified.",
@@ -95,7 +95,7 @@
         "TestUnitAIAgentSourcePresenceAndQueryConstruction",
         "TestUnitAIAgentMalformedResponsesFailDecode"
       ],
-      "state": "review-pending; no ledger change",
+      "state": "reviewed/passed: implemented and offline contract passed; live unchanged",
       "current_live": {
         "status": "not-run",
         "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
@@ -143,7 +143,7 @@
         "TestUnitGeneratedAllKnownDescriptionFieldsUseExactSourceProjection",
         "TestUnitAIAgentCatalogProjectsCompletePinnedDescription"
       ],
-      "state": "review-pending; no ledger change",
+      "state": "reviewed/passed: implemented and offline contract passed; live unchanged",
       "current_live": {
         "status": "not-run",
         "reason": "Client-secret lab run proved the catalog route through an empty unknown-provider page and a non-GUID 400 with PowerShell count parity; no published catalog entries exist in the lab, so populated pages are unqualified.",
@@ -193,7 +193,7 @@
         "TestUnitAIAgentSourcePresenceAndQueryConstruction",
         "TestUnitAIAgentSourceSuccessStatusesAreExact"
       ],
-      "state": "review-pending; no ledger change",
+      "state": "reviewed/passed: implemented and offline contract passed; live unchanged",
       "current_live": {
         "status": "not-run",
         "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
@@ -236,7 +236,7 @@
       ],
       "source_packet_command_pointer": "docs/implementation/ext/evidence/ai-agents-source/primary.json#/commands/6",
       "additional_executed_tests": [],
-      "state": "review-pending; no ledger change",
+      "state": "reviewed/passed: implemented and offline contract passed; live unchanged",
       "current_live": {
         "status": "not-run",
         "reason": "MCPS rejects app-only tokens with HTTP 401 (the pinned module fails before sending in app-only sessions); only fabricated-thread rejection probes ran, so successful knowledge requests need delegated credentials and are unqualified.",
@@ -286,7 +286,7 @@
         "TestUnitAIAgentSourceSuccessStatusesAreExact",
         "TestUnitAIAgentRemoveNullResultsRetainReceiptAndNeverReplay"
       ],
-      "state": "review-pending; no ledger change",
+      "state": "reviewed/passed: implemented and offline contract passed; live unchanged",
       "current_live": {
         "status": "not-run",
         "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
@@ -335,7 +335,7 @@
       "additional_executed_tests": [
         "TestUnitAIAgentSourcePresenceAndQueryConstruction"
       ],
-      "state": "review-pending; no ledger change",
+      "state": "reviewed/passed: implemented and offline contract passed; live unchanged",
       "current_live": {
         "status": "not-run",
         "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
@@ -455,5 +455,26 @@
     "actual_inert_parser_getter_cases": 2,
     "array_rule": "disclosures and supportedLocales preserve null/nonstring positions, independently observed in exact pinned model",
     "positive_and_wrongtype_case_provenance": "source-only pinned FromJsonString + actual typed getters, no lifecycle/auth/HTTP"
-  }
+  },
+  "qualification_decision": {
+    "authority": "Root independent finite source/API/control/auth/output/error/identity/boundary review, following independent peer review of first repair and both finite gap fixes.",
+    "source_execution_revision": "b8540c170d6b046289d7bfd3bb09247b68bc9ad7",
+    "approved_commands": [
+      "Get-AIGeneratedKnowledgeContainer",
+      "Get-CsAgent",
+      "Get-CsAiAgents",
+      "New-CsAgent",
+      "Remove-AIGeneratedKnowledge",
+      "Remove-CsAgent",
+      "Set-CsAgent"
+    ],
+    "approved_sets": 7,
+    "scope": "implementation and offline contract only",
+    "live_records_unchanged": 745,
+    "live_before_and_after_sha256": "0e519b12c06fe87117798c301620bf560b82088e0e1d30518d897689037bde6c",
+    "release_ready": false,
+    "issue_191": "open"
+  },
+  "schema_version": 1,
+  "outcome": "passed"
 }

@@ -1,6 +1,7 @@
 # AI-agent seven-command review packet
 
-Review pending. No implementation, contract or live ledger state is changed.
+Independent review passed. Exactly seven command/seven ordinary-set implementation
+and offline-contract states are approved; all 745 live records remain identical.
 This packet covers the seven accepted public commands and their seven declared
 sets at frozen `b8540c1`, following the independently reviewed first repair
 `b838d0f` / `1cb18c1`. It does not treat symbols, synthetic replies, upstream
@@ -95,13 +96,14 @@ only the test's nested RawMessage key-order comparison; that raw artifact is
 retained. Source expected values and production code were not changed to make
 it pass. All three real Remove null-result service cases passed in both runs.
 
-The two peer-review gaps are now covered. Final per-command approval still
-requires review of this source/control/auth/native-boundary packet, including
-the bounded static ShouldProcess gate supplement for Set/Remove. No automatic seven-command promotion follows from aggregate
-passes. Live states for all 745 records remain unchanged, and #191 remains open.
+The two peer-review gaps are covered. Independent review verified the complete
+per-command source/control/auth/native-boundary packet, metadata ownership,
+file/source/reproducer hashes and exact 166-pass raw artifact, including the
+bounded static ShouldProcess supplement. Approval covers these seven commands
+and seven ordinary sets only. All 745 live states/references remain identical,
+release readiness is false, and #191 remains open.
 
-
-## Catalog model follow-up under review
+## Catalog model follow-up
 
 The first frozen repair left eleven known AiAgentDescription properties only in
 RawFields. That was insufficient for full catalog qualification. The additive
@@ -114,5 +116,11 @@ The original primary/five-packet manifest and a310c8e execution remain immutable
 Full affected execution at b8540c1 completed with three package terminals PASS
 and 166 test-pass events, zero failures/skips, no TestAcc. Exact hashes and raw
 provenance are in the successor JSON packet; the earlier a310c8e record is
-preserved. Get-CsAiAgents and all six other command records remain unchanged
-until independent review.
+preserved. Independent review approved Get-CsAiAgents together with the other
+six commands for implementation/offline contract only; live evidence remains unchanged.
+
+
+Native decoding accepts standard JSON. The reviewed coercion, null and ordering
+rules apply within that grammar; broader legacy parser syntax is not silently
+claimed as a native API contract. This boundary does not turn parse failures
+into empty/negative results or successful tenant operations.

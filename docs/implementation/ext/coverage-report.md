@@ -83,71 +83,71 @@ Contract and live limitations: [ai-agents-contract-notes.md](ai-agents-contract-
 
 ### Get-AIGeneratedKnowledgeContainer
 
-Owner: `EXT-20`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-20`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.ListKnowledgeContainers`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIGeneratedKnowledgeUsesMCPSProfile`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile`](../../../msteams/teams_admin_api/ai_agents/service_test.go) | [`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
+| `__AllParameterSets` | [`Service.ListKnowledgeContainers`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIGeneratedKnowledgeUsesMCPSProfile`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentNilContextAndServiceAreRejected`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct`](../../../msteams/teams_admin_api/ai_agents/generated_test.go) | [`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
 
 Recorded live limitation: MCPS rejects app-only tokens with HTTP 401 (the pinned module fails before sending in app-only sessions); only fabricated-thread rejection probes ran, so successful knowledge requests need delegated credentials and are unqualified.
 
 ### Get-CsAgent
 
-Owner: `EXT-20`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-20`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/ai_agents/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentReadsUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentListOptionsAndCatalogFilters`](../../../msteams/teams_admin_api/ai_agents/service_test.go) | [`TestAccAIAgentReads`](../../../tests/integration/lab/ai_agents/ai_agents_test.go)<br>[`TestAccAIAgentLifecycle`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
+| `__AllParameterSets` | [`Service.List`](../../../msteams/teams_admin_api/ai_agents/service.go)<br>[`Service.GetByID`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentReadsUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentListOptionsAndCatalogFilters`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentSourcePresenceAndQueryConstruction`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentMalformedResponsesFailDecode`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentNilContextAndServiceAreRejected`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitGeneratedExactDuplicateAndCaseOrdering`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNumericLexemesAndRanges`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedProjectionDefaultsAndRemoveMinimum`](../../../msteams/teams_admin_api/ai_agents/generated_test.go) | [`TestAccAIAgentReads`](../../../tests/integration/lab/ai_agents/ai_agents_test.go)<br>[`TestAccAIAgentLifecycle`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
 
 Recorded live limitation: Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.
 
 ### Get-CsAiAgents
 
-Owner: `EXT-20`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-20`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `Get` | [`Service.QueryPlatformAgents`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentReadsUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentListOptionsAndCatalogFilters`](../../../msteams/teams_admin_api/ai_agents/service_test.go) | [`TestAccAIAgentReads`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
+| `Get` | [`Service.QueryPlatformAgents`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentReadsUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentListOptionsAndCatalogFilters`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentSourcePresenceAndQueryConstruction`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentMalformedResponsesFailDecode`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentCatalogProjectsCompletePinnedDescription`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentNilContextAndServiceAreRejected`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitGeneratedExactDuplicateAndCaseOrdering`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNumericLexemesAndRanges`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedProjectionDefaultsAndRemoveMinimum`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedAllKnownDescriptionFieldsUseExactSourceProjection`](../../../msteams/teams_admin_api/ai_agents/generated_test.go) | [`TestAccAIAgentReads`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
 
 Recorded live limitation: Client-secret lab run proved the catalog route through an empty unknown-provider page and a non-GUID 400 with PowerShell count parity; no published catalog entries exist in the lab, so populated pages are unqualified.
 
 ### New-CsAgent
 
-Owner: `EXT-20`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-20`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.Create`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentRejectedWritesUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go) | [`TestAccAIAgentLifecycle`](../../../tests/integration/lab/ai_agents/ai_agents_test.go)<br>[`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
+| `__AllParameterSets` | [`Service.Create`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentRejectedWritesUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentSourcePresenceAndQueryConstruction`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentSourceSuccessStatusesAreExact`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentNilContextAndServiceAreRejected`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitGeneratedExactDuplicateAndCaseOrdering`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNumericLexemesAndRanges`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedProjectionDefaultsAndRemoveMinimum`](../../../msteams/teams_admin_api/ai_agents/generated_test.go) | [`TestAccAIAgentLifecycle`](../../../tests/integration/lab/ai_agents/ai_agents_test.go)<br>[`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
 
 Recorded live limitation: Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.
 
 ### Remove-AIGeneratedKnowledge
 
-Owner: `EXT-20`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-20`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DeleteKnowledge`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIGeneratedKnowledgeUsesMCPSProfile`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile`](../../../msteams/teams_admin_api/ai_agents/service_test.go) | [`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
+| `__AllParameterSets` | [`Service.DeleteKnowledge`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIGeneratedKnowledgeUsesMCPSProfile`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentNilContextAndServiceAreRejected`](../../../msteams/teams_admin_api/ai_agents/service_test.go) | [`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
 
 Recorded live limitation: MCPS rejects app-only tokens with HTTP 401 (the pinned module fails before sending in app-only sessions); only fabricated-thread rejection probes ran, so successful knowledge requests need delegated credentials and are unqualified.
 
 ### Remove-CsAgent
 
-Owner: `EXT-20`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-20`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentRejectedWritesUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go) | [`TestAccAIAgentLifecycle`](../../../tests/integration/lab/ai_agents/ai_agents_test.go)<br>[`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
+| `__AllParameterSets` | [`Service.DeleteByID`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentRejectedWritesUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentSourceSuccessStatusesAreExact`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentRemoveNullResultsRetainReceiptAndNeverReplay`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentNilContextAndServiceAreRejected`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitGeneratedExactDuplicateAndCaseOrdering`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNumericLexemesAndRanges`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedProjectionDefaultsAndRemoveMinimum`](../../../msteams/teams_admin_api/ai_agents/generated_test.go) | [`TestAccAIAgentLifecycle`](../../../tests/integration/lab/ai_agents/ai_agents_test.go)<br>[`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
 
 Recorded live limitation: Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.
 
 ### Set-CsAgent
 
-Owner: `EXT-20`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-20`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.UpdateByID`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentRejectedWritesUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go) | [`TestAccAIAgentLifecycle`](../../../tests/integration/lab/ai_agents/ai_agents_test.go)<br>[`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
+| `__AllParameterSets` | [`Service.UpdateByID`](../../../msteams/teams_admin_api/ai_agents/service.go) | [`TestUnitAIAgentLifecycleUsesAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentRejectedWritesUseAcceptanceResponses`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentSourcePresenceAndQueryConstruction`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentInvalidInputFailsBeforeIO`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitAIAgentNilContextAndServiceAreRejected`](../../../msteams/teams_admin_api/ai_agents/service_test.go)<br>[`TestUnitGeneratedExactDuplicateAndCaseOrdering`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNumericLexemesAndRanges`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct`](../../../msteams/teams_admin_api/ai_agents/generated_test.go)<br>[`TestUnitGeneratedProjectionDefaultsAndRemoveMinimum`](../../../msteams/teams_admin_api/ai_agents/generated_test.go) | [`TestAccAIAgentLifecycle`](../../../tests/integration/lab/ai_agents/ai_agents_test.go)<br>[`TestAccAIAgentRejectedWrites`](../../../tests/integration/lab/ai_agents/ai_agents_test.go) |
 
 Recorded live limitation: Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.
 
