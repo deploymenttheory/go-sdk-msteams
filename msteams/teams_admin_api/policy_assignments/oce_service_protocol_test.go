@@ -3,11 +3,13 @@ package policyassignments_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 )
 
@@ -129,6 +131,53 @@ func TestUnitOCEAuthoredTypedResponses(t *testing.T) {
 			}})
 			if err != nil || !r.Passed() {
 				t.Fatalf("authored typed OCE response differs: %v %+v", err, r.Differences())
+			}
+		})
+	}
+}
+
+// Source GPATorusCmdletBase.SubmitHTTPRequest<T> IL111 accepts every 2xx.
+// 206 here is an authored transport branch, not an observed service response.
+// Explicit LROS status requirements remain independent of that generic helper.
+func TestUnitOCEGenericSuccessRangePreservesTypedAndDecodeResults(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		name, operation, reply string
+		wantErr                error
+	}{
+		{name: "generic-typed", operation: "group-get", reply: authoredOCEGroup},
+		{name: "generic-malformed", operation: "group-get", reply: `{"groupId":`, wantErr: client.ErrDecode},
+		{name: "lros-still-exact", operation: "batch-status", reply: authoredOCEStatus, wantErr: resource.ErrResponse},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var vector oceRequestVector
+			for _, candidate := range oceRequestVectors() {
+				if candidate.name == tc.operation {
+					vector = candidate
+				}
+			}
+			c := contracttest.Case{Name: tc.name, Family: "policy_assignments", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go", Mappings: oceMapping(tc.operation), Steps: []contracttest.Exchange{oceWire(vector.method, vector.url, 206, tc.reply)}, Want: contracttest.Expected{Status: 206, Body: []byte(tc.reply), Error: tc.wantErr}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				observed := invokeOCE(tc.operation, ctx, sdk)
+				if !errors.Is(observed.Err, tc.wantErr) || observed.Response == nil || observed.Response.StatusCode() != 206 || string(observed.Response.Body()) != tc.reply {
+					t.Fatal("source success/error branch lost its response or error")
+				}
+				if tc.wantErr == nil {
+					value, ok := observed.Value.(*resource.GroupAssignment)
+					if !ok {
+						t.Fatal("generic successful status did not reach typed decoding")
+					}
+					verifyAuthoredOCEGroup(t, value)
+				} else if tc.operation == "batch-status" {
+					value, ok := observed.Value.(*resource.RegionalLookup[resource.OCEBatchStatus])
+					if !ok || value == nil || value.Value != nil || len(value.Attempts) != 1 || !errors.Is(value.Attempts[0].Err, resource.ErrResponse) {
+						t.Fatal("explicit LROS status list accepted generic 2xx or invented a status value")
+					}
+				}
+				return observed
+			}}
+			result, err := contracttest.Run(t.Context(), c)
+			if err != nil || !result.Passed() {
+				t.Fatalf("source success range differs: %v %+v", err, result.Differences())
 			}
 		})
 	}
