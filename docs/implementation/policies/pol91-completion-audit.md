@@ -1,9 +1,8 @@
-> Current qualification correction: all eighteen previously reviewed command
-> decisions (twenty-seven sets) are withdrawn after actual own pinned DTO
-> deserialization proved read coercion gaps. Historical executions below remain
-> bounded successes, not current full-contract proof. Current POL91 qualified
-> count is zero; every live state is unchanged. The nine resource profiles are
-> being recorded in the independent qualified-read-scalar evidence packet.
+> Current reviewed decision: **20 commands / 30 sets** are implemented and
+> offline contract-passed after own received-JSON repairs. Every live record is
+> unchanged. The [final decision report](pol91-final-contract-decisions.md) and
+> [versioned execution records](../../../contracts/coverage/evidence/pol91-final-contract-decisions.json)
+> supersede the historical qualification withdrawal below. #185 remains open.
 
 # POL91 finite command and source review
 
@@ -294,3 +293,16 @@ eighteen sets whose remote contracts remain separate. Full #185 remains open.
 Audio own scalar/list read vectors and frozen full execution now pass at
 8afc4ae /99815; [scope and exact source](pol91-prompts-source-review.md) remain
 separate from the current withdrawn qualifications. No status promotion yet.
+
+## Final reviewed frontier
+
+Exactly the twenty commands / thirty sets in the final decision packet are
+implemented/contract-passed. Historical canonical successes, real failed runs
+(including15393), corrections and final scoped executions remain distinct.
+Every745 live record is unchanged. No live qualification follows from this.
+
+Remaining **19 commands / 29 sets**: **7 compiled / 11 sets** across first-party
+templates, guest meeting, meeting and meeting-template Get, plus **12 conditional
+/ 18 sets** with separate remote contracts. These require their own finite
+source/behavior/execution decisions. Source symbols and child merges alone do
+not complete #185 or QUAL01.
