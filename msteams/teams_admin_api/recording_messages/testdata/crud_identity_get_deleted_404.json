@@ -1,0 +1,6 @@
+{
+  "code": "ClientError",
+  "message": "Fixture message",
+  "action": "Please check your request parameters. CorrelationId: 00000000-0000-4000-8000-92d91a5b32ce",
+  "errorCode": 40407
+}
