@@ -1,12 +1,12 @@
-# POL91 template command decisions — pending independent review
+# POL91 template command decisions — approved
 
-This packet proposes exactly three offline implementation/contract decisions,
-covering five exact sets. No ledger status has changed. With independent
-approval, POL91 would reach 23 commands / 35 sets, leaving 16 commands / 24 sets.
+This packet records exactly three approved offline implementation/contract decisions,
+covering five exact sets. The ledger applies only these reviewed decisions.
+POL91 reaches 23 commands / 35 sets, leaving 16 commands / 24 sets.
 Every live status, reason, evidence link and live test reference stays separate.
 Issue #185 remains open.
 
-| Command | Complete sets | Proposed decision and behavior basis |
+| Command | Complete sets | Reviewed decision and behavior basis |
 |---|---|---|
 | Get-CsTeamsFirstPartyMeetingTemplateConfiguration | Identity, Filter | Implemented / contract passed: own direct compiled type and normalization; omitted collection versus selected/scoped identity; effective nonempty Filter and local wildcard/Tag selection; complete root/template/option models, own scalar conversions, defaults, ordered list aliases, per-occurrence setters, owned raw snapshots and request/error/context boundaries. Permanent populated primitive responses exercise actual typed getter branches. |
 | Set-CsTeamsFirstPartyMeetingTemplateConfiguration | Identity | Implemented / contract passed: exactly Description:String and TeamsMeetingTemplates:PSListModifier<Template>; both concrete bound-key guards, sparse null/empty/omission/control semantics; own Name-keyed local helper and expanded serializer; complete prepared GET/PATCH behavior, receipt/error/acceptance separation, no automatic replay and explicit caller-selected restoration/readback after both later denial and accepted malformed data. |
@@ -113,7 +113,7 @@ race, full-module sweep, tenant request or permission change occurred.
 
 ## Finite remainder and live limits
 
-Approval would add only these three commands / five sets to the prior reviewed
+These decisions add only these three commands / five sets to the prior reviewed
 20 / 30. Four compiled commands / six sets remain: GuestMeeting Get/Set and
 Meeting Get/Set. Twelve conditional commands / eighteen sets retain separate
 unsettled remote-source branches. Their existence is not an exclusion, and

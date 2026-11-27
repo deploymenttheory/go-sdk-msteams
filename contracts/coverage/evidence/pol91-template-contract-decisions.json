@@ -1,6 +1,6 @@
 {
-  "scope": "Three individually reviewed direct compiled commands / five exact sets; pending independent review before ledger change.",
-  "review_status": "proposed",
+  "scope": "Three individually reviewed direct compiled commands / five exact sets; approved offline implementation and contract decisions.",
+  "review_status": "approved",
   "commands": [
     {
       "command": "Get-CsTeamsFirstPartyMeetingTemplateConfiguration",
@@ -12,8 +12,6 @@
       "execution": "contracts/coverage/evidence/pol91-template-read-execution.json",
       "source_review": "docs/implementation/policies/pol91-template-source-review.md",
       "decision_report": "docs/implementation/policies/pol91-template-contract-decisions.md",
-      "proposed_implementation_status": "implemented",
-      "proposed_contract_status": "passed",
       "test_symbols": [
         "TestUnitReadAndFiltersUseAcceptanceResponses",
         "TestUnitEveryTypedGetterUsesAcceptanceResponses",
@@ -23,7 +21,10 @@
         "Offline implementation/contract only; every live status and live test reference unchanged.",
         "Native safety/early errors/typed primitive presentation and standard JSON boundaries remain explicit.",
         "No invented command, paging, create/delete, minimum authorization or conditional remoting claim."
-      ]
+      ],
+      "implementation_status": "implemented",
+      "contract_status": "passed",
+      "outcome": "passed"
     },
     {
       "command": "Set-CsTeamsFirstPartyMeetingTemplateConfiguration",
@@ -34,8 +35,6 @@
       "execution": "contracts/coverage/evidence/pol91-firstparty-composition-execution.json",
       "source_review": "docs/implementation/policies/pol91-template-source-review.md",
       "decision_report": "docs/implementation/policies/pol91-template-contract-decisions.md",
-      "proposed_implementation_status": "implemented",
-      "proposed_contract_status": "passed",
       "test_symbols": [
         "TestUnitSettingsMatchEveryPinnedPublicParameter",
         "TestUnitTemplateEditsAreLocalOrdinalAndOwned",
@@ -48,7 +47,10 @@
         "Offline implementation/contract only; every live status and live test reference unchanged.",
         "Native safety/early errors/typed primitive presentation and standard JSON boundaries remain explicit.",
         "No invented command, paging, create/delete, minimum authorization or conditional remoting claim."
-      ]
+      ],
+      "implementation_status": "implemented",
+      "contract_status": "passed",
+      "outcome": "passed"
     },
     {
       "command": "Get-CsTeamsMeetingTemplateConfiguration",
@@ -60,8 +62,6 @@
       "execution": "contracts/coverage/evidence/pol91-template-read-execution.json",
       "source_review": "docs/implementation/policies/pol91-template-source-review.md",
       "decision_report": "docs/implementation/policies/pol91-template-contract-decisions.md",
-      "proposed_implementation_status": "implemented",
-      "proposed_contract_status": "passed",
       "test_symbols": [
         "TestUnitGetGlobalResponseFixture",
         "TestUnitListResponseFixture",
@@ -73,7 +73,10 @@
         "Offline implementation/contract only; every live status and live test reference unchanged.",
         "Native safety/early errors/typed primitive presentation and standard JSON boundaries remain explicit.",
         "No invented command, paging, create/delete, minimum authorization or conditional remoting claim."
-      ]
+      ],
+      "implementation_status": "implemented",
+      "contract_status": "passed",
+      "outcome": "passed"
     }
   ],
   "source_profiles": {
@@ -81,10 +84,6 @@
     "own_helper_nested_serializer_observations": 15
   },
   "live_change": false,
-  "proposed_pol91_total": {
-    "commands": 23,
-    "sets": 35
-  },
   "remaining_after_approval": {
     "commands": 16,
     "sets": 24,
@@ -92,5 +91,9 @@
     "compiled_sets": 6,
     "conditional_commands": 12,
     "conditional_sets": 18
+  },
+  "pol91_total": {
+    "commands": 23,
+    "sets": 35
   }
 }

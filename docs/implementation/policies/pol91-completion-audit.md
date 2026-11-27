@@ -1,8 +1,9 @@
-> Current reviewed decision: **20 commands / 30 sets** are implemented and
+> Current reviewed decision: **23 commands / 35 sets** are implemented and
 > offline contract-passed after own received-JSON repairs. Every live record is
 > unchanged. The [final decision report](pol91-final-contract-decisions.md) and
 > [versioned execution records](../../../contracts/coverage/evidence/pol91-final-contract-decisions.json)
-> supersede the historical qualification withdrawal below. #185 remains open.
+> and [template decision packet](pol91-template-contract-decisions.md) supersede
+> the historical qualification withdrawal below. #185 remains open.
 
 # POL91 finite command and source review
 
@@ -296,13 +297,14 @@ separate from the current withdrawn qualifications. No status promotion yet.
 
 ## Final reviewed frontier
 
-Exactly the twenty commands / thirty sets in the final decision packet are
-implemented/contract-passed. Historical canonical successes, real failed runs
-(including15393), corrections and final scoped executions remain distinct.
-Every745 live record is unchanged. No live qualification follows from this.
+Exactly **23 commands / 35 sets** are implemented/contract-passed: the prior
+[twenty-command packet](pol91-final-contract-decisions.md) plus the reviewed
+[three-command template packet](pol91-template-contract-decisions.md).
+Historical canonical successes, real failed runs (including 15393), corrections
+and final scoped executions remain distinct. Every one of the 745 live records
+and all nested live-test references are unchanged.
 
-Remaining **19 commands / 29 sets**: **7 compiled / 11 sets** across first-party
-templates, guest meeting, meeting and meeting-template Get, plus **12 conditional
-/ 18 sets** with separate remote contracts. These require their own finite
-source/behavior/execution decisions. Source symbols and child merges alone do
-not complete #185 or QUAL01.
+Remaining **16 commands / 24 sets**: **4 compiled / 6 sets** across GuestMeeting
+and Meeting Get/Set, plus **12 conditional / 18 sets** with separate remote
+contracts. These require their own finite source/behavior/execution decisions.
+Source symbols and child merges alone do not complete #185 or QUAL01.
