@@ -90,12 +90,17 @@ responses with full UInt64 width and null entries, a nullable prepared edit
 followed by later403 and caller restoration/readback, and malformed successful
 preparation retaining ErrDecode/raw receipt with no PATCH. They are not live
 fixtures. No settings/Force-only errors now execute as zero-request cases.
-Execution is pending at the next frozen code checkpoint; no contract or live
-status promotion is attached to these implementation changes.
+Full policy and TenantAbuse SDK TestUnit/Example plus the lab local recovery
+TestUnit passed at clean `4cb4ca15c6adccadb98d95208358b1bb2adcf2dd`,
+session `52681`, with an additional exact pre-correction Messaging nonnull
+list-edit compatibility case. Go 1.27.4 / GOMAXPROCS 2, `-p 1 -count=1`,
+31.97 GiB admission / 14 GiB runtime floor; owned scratch removed. Post-run
+selected/shared input diffs were zero. No TestAcc or race ran and no contract or
+live status promotion attaches to this correction.
 
 Other shared consumers inspected: Teams external access, ACS federation, external
 access policy, shared calling routing, update management policy and messaging.
 Their existing public builder/Apply signatures and nonnull wire behavior are
-preserved. Only TenantAbuse changes its response field in this correction.
-Messaging has its own List<String> source lead under separate verification; no
-other canonical field is changed merely because it uses this helper.
+preserved. TenantAbuse and the independently source-proven Messaging field receive
+canonical corrections. [Messaging source and execution boundaries](pol91-messaging-source-review.md)
+remain separate; no other canonical field changes merely because it uses this helper.

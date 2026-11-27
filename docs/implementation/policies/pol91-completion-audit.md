@@ -43,7 +43,7 @@ T references name exact existing functions, not full semantic completion. Review
 | Get-CsTeamsMeetingTemplateConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T57 |
 | Get-CsTeamsMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T58 |
 | Get-CsTeamsMessagingConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T59 |
-| Get-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T59 |
+| Get-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Independently source-proven nullable-list correction; complete command review pending | T59, T95 |
 | Get-CsTeamsMigrationConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T61 |
 | Get-CsTeamsMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T61 |
 | Get-CsTeamsMultiTenantOrganizationConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T64, T82 |
@@ -68,7 +68,7 @@ T references name exact existing functions, not full semantic completion. Review
 | Set-CsTeamsGuestMessagingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T45 |
 | Set-CsTeamsMeetingBroadcastConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T49, T46 |
 | Set-CsTeamsMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T55, T53, T52, T56 |
-| Set-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T60 |
+| Set-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Independently source-proven nullable-list correction; complete command review pending | T60, T95 |
 | Set-CsTeamsMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T62 |
 | Set-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T65, T85, T86 |
 | Set-CsTeamsSipDevicesConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T68, T87, T88 |
@@ -176,6 +176,8 @@ T references name exact existing functions, not full semantic completion. Review
 | T92 | `TestUnitTenantAbuseAuthoredTypedReadListAndLiteralFilter` | [msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go](../../../msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go) |
 | T93 | `TestUnitTenantAbuseNullablePreparedEditRetainsLaterFailureAndExplicitRecovery` | [msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go](../../../msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go) |
 | T94 | `TestUnitTenantAbuseMalformedSuccessRetainsPreparationReceiptWithoutPatch` | [msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go](../../../msteams/teams_admin_api/teams_tenant_abuse_configuration/provider_success_test.go) |
+
+| T95 | `TestUnitMessagingNullableListPreparedEditRetainsSnapshotAndExplicitReadback` | [msteams/teams_admin_api/teams_messaging_configuration/nullable_list_test.go](../../../msteams/teams_admin_api/teams_messaging_configuration/nullable_list_test.go) |
 
 ## Acceptance boundary
 

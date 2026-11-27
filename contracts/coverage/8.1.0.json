@@ -9867,6 +9867,10 @@
             {
               "file": "msteams/teams_admin_api/teams_messaging_configuration/service_test.go",
               "name": "TestUnitReadAndFiltersUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_configuration/nullable_list_test.go",
+              "name": "TestUnitMessagingNullableListPreparedEditRetainsSnapshotAndExplicitReadback"
             }
           ],
           "live_tests": [
@@ -40550,6 +40554,10 @@
             {
               "file": "msteams/teams_admin_api/teams_messaging_configuration/service_test.go",
               "name": "TestUnitUpdateUsesAcceptancePreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_messaging_configuration/nullable_list_test.go",
+              "name": "TestUnitMessagingNullableListPreparedEditRetainsSnapshotAndExplicitReadback"
             }
           ],
           "live_tests": [
