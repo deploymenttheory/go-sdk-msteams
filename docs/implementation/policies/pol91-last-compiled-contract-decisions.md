@@ -1,12 +1,12 @@
-# POL91 last compiled command decisions — pending independent review
+# POL91 last compiled command decisions — approved
 
-This packet proposes exactly four offline implementation/contract decisions,
-covering six exact sets. It does not change the ledger. Approval would bring
-POL91 to 27 commands / 41 sets, leaving twelve conditional commands / eighteen
+This packet records exactly four approved offline implementation/contract decisions,
+covering six exact sets. The ledger applies only these reviewed decisions.
+POL91 reaches 27 commands / 41 sets, leaving twelve conditional commands / eighteen
 sets. All live states, evidence and live-test references remain separate.
 Issue #185 and full qualification remain open.
 
-| Command | Every assigned set | Proposed implementation / contract decision |
+| Command | Every assigned set | Reviewed implementation / contract decision |
 |---|---|---|
 | Get-CsTeamsGuestMeetingConfiguration | Identity, Filter | Implemented / passed: actual exported compiled type, own normalization, omitted/default collection versus selected identity, complete eight-setting model, source-compatible nullable/scalar projection and raw ownership, local filters, errors and context/path guards. |
 | Set-CsTeamsGuestMeetingConfiguration | Identity | Implemented / passed: all eight bound keys/types, concrete presence guard, sparse null/false/empty/control handling, prepared GET/PATCH, empty acceptance versus typed output, later denial and accepted malformed response with retained preparation/receipts and explicit caller recovery. |
@@ -161,7 +161,7 @@ or full tenant lifecycle limits.
 
 ## Finite remainder
 
-These four commands / six sets are the final compiled group. Approval would add
+These four commands / six sets are the final compiled group. The approved decisions add
 them to the prior 23/35, reaching 27/41. Twelve conditional commands / eighteen
 sets remain. Their modern and remote contracts need their own source/behavior
 work; legacy absence is neither exclusion nor proof of full parity. This packet

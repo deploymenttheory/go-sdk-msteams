@@ -1,6 +1,6 @@
 {
-  "scope": "Four individually reviewed direct compiled commands / six exact sets; pending independent decision review before ledger changes.",
-  "review_status": "proposed",
+  "scope": "Four individually reviewed direct compiled commands / six exact sets; approved offline implementation and contract decisions.",
+  "review_status": "approved",
   "commands": [
     {
       "name": "Get-CsTeamsGuestMeetingConfiguration",
@@ -8,9 +8,7 @@
         "Identity",
         "Filter"
       ],
-      "review_status": "proposed",
-      "proposed_implementation_status": "implemented",
-      "proposed_contract_status": "passed",
+      "review_status": "approved",
       "revision": "c9e096f36f268d18f48ad6f8acb0b07bf2ad466b",
       "execution": "contracts/coverage/evidence/pol91-last-compiled-execution.json",
       "decision_report": "docs/implementation/policies/pol91-last-compiled-contract-decisions.md",
@@ -29,16 +27,17 @@
         "Offline implementation/contract only; all live records/references unchanged.",
         "Native typed inputs, early path safety/context, host presentation and confirmation remain explicit boundaries.",
         "No conditional modern/remoting branch qualification, tenant behavior, minimum role or live parity follows."
-      ]
+      ],
+      "implementation_status": "implemented",
+      "contract_status": "passed",
+      "outcome": "passed"
     },
     {
       "name": "Set-CsTeamsGuestMeetingConfiguration",
       "parameter_sets": [
         "Identity"
       ],
-      "review_status": "proposed",
-      "proposed_implementation_status": "implemented",
-      "proposed_contract_status": "passed",
+      "review_status": "approved",
       "revision": "c9e096f36f268d18f48ad6f8acb0b07bf2ad466b",
       "execution": "contracts/coverage/evidence/pol91-last-compiled-execution.json",
       "decision_report": "docs/implementation/policies/pol91-last-compiled-contract-decisions.md",
@@ -55,7 +54,10 @@
         "Offline implementation/contract only; all live records/references unchanged.",
         "Native typed inputs, early path safety/context, host presentation and confirmation remain explicit boundaries.",
         "No conditional modern/remoting branch qualification, tenant behavior, minimum role or live parity follows."
-      ]
+      ],
+      "implementation_status": "implemented",
+      "contract_status": "passed",
+      "outcome": "passed"
     },
     {
       "name": "Get-CsTeamsMeetingConfiguration",
@@ -63,9 +65,7 @@
         "Identity",
         "Filter"
       ],
-      "review_status": "proposed",
-      "proposed_implementation_status": "implemented",
-      "proposed_contract_status": "passed",
+      "review_status": "approved",
       "revision": "c9e096f36f268d18f48ad6f8acb0b07bf2ad466b",
       "execution": "contracts/coverage/evidence/pol91-last-compiled-execution.json",
       "decision_report": "docs/implementation/policies/pol91-last-compiled-contract-decisions.md",
@@ -85,16 +85,17 @@
         "Offline implementation/contract only; all live records/references unchanged.",
         "Native typed inputs, early path safety/context, host presentation and confirmation remain explicit boundaries.",
         "No conditional modern/remoting branch qualification, tenant behavior, minimum role or live parity follows."
-      ]
+      ],
+      "implementation_status": "implemented",
+      "contract_status": "passed",
+      "outcome": "passed"
     },
     {
       "name": "Set-CsTeamsMeetingConfiguration",
       "parameter_sets": [
         "Identity"
       ],
-      "review_status": "proposed",
-      "proposed_implementation_status": "implemented",
-      "proposed_contract_status": "passed",
+      "review_status": "approved",
       "revision": "c9e096f36f268d18f48ad6f8acb0b07bf2ad466b",
       "execution": "contracts/coverage/evidence/pol91-last-compiled-execution.json",
       "decision_report": "docs/implementation/policies/pol91-last-compiled-contract-decisions.md",
@@ -115,7 +116,10 @@
         "Offline implementation/contract only; all live records/references unchanged.",
         "Native typed inputs, early path safety/context, host presentation and confirmation remain explicit boundaries.",
         "No conditional modern/remoting branch qualification, tenant behavior, minimum role or live parity follows."
-      ]
+      ],
+      "implementation_status": "implemented",
+      "contract_status": "passed",
+      "outcome": "passed"
     }
   ],
   "source_observations": {
@@ -124,14 +128,14 @@
     "positive_port_writer_rows": 24,
     "selected_control_methods": 35
   },
-  "proposed_pol91_total": {
-    "commands": 27,
-    "sets": 41
-  },
   "remaining_after_approval": {
     "commands": 12,
     "sets": 18,
     "source_group": "conditional modern/remoting; no exclusion or global parity inference"
   },
-  "live_change": false
+  "live_change": false,
+  "pol91_total": {
+    "commands": 27,
+    "sets": 41
+  }
 }

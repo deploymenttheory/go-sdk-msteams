@@ -1,9 +1,10 @@
-> Current reviewed decision: **23 commands / 35 sets** are implemented and
-> offline contract-passed after own received-JSON repairs. Every live record is
-> unchanged. The [final decision report](pol91-final-contract-decisions.md) and
-> [versioned execution records](../../../contracts/coverage/evidence/pol91-final-contract-decisions.json)
-> and [template decision packet](pol91-template-contract-decisions.md) supersede
-> the historical qualification withdrawal below. #185 remains open.
+> Current reviewed decision: **27 commands / 41 sets** are implemented and
+> offline contract-passed. Every live record remains unchanged. The reviewed
+> [first twenty decisions](pol91-final-contract-decisions.md),
+> [template decisions](pol91-template-contract-decisions.md) and
+> [last compiled decisions](pol91-last-compiled-contract-decisions.md), with their
+> versioned execution records, supersede the historical withdrawal below.
+> #185 remains open.
 
 # POL91 finite command and source review
 
@@ -29,26 +30,26 @@ T references name exact existing functions, not full semantic completion. Review
 | Get-CsOnlineVoicemailValidationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed optional collection/selected identity or bound nonempty Filter; typed/empty/model/error behavior and versioned contract decision below | T12, T17, T15, T77 |
 | Get-CsPrivacyConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed optional collection/selected identity or bound nonempty Filter; typed/empty/model/error behavior and versioned contract decision below | T19, T18 |
 | Get-CsPrivacyConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed optional collection/selected identity or bound nonempty Filter; typed/empty/model/error behavior and versioned contract decision below | T25, T22, T77, T78, T76, T18 |
-| Get-CsTeamsAudioConferencingCustomPromptsConfiguration | `Filter` | Direct compiled PolicyRp | Own normalized compiled route and actual model/helper/serializer source settled; null-removal guard and authored positive/decode/partial branches awaiting frozen execution | T10, T96 |
-| Get-CsTeamsAudioConferencingCustomPromptsConfiguration | `Identity` | Direct compiled PolicyRp | Own normalized compiled route and actual model/helper/serializer source settled; null-removal guard and authored positive/decode/partial branches awaiting frozen execution | T11, T96 |
+| Get-CsTeamsAudioConferencingCustomPromptsConfiguration | `Filter` | Direct compiled PolicyRp | Independently reviewed own normalized model/helper/serializer and successful/decode/partial execution; [reviewed decision](pol91-final-contract-decisions.md) | T10, T96 |
+| Get-CsTeamsAudioConferencingCustomPromptsConfiguration | `Identity` | Direct compiled PolicyRp | Independently reviewed own normalized model/helper/serializer and successful/decode/partial execution; [reviewed decision](pol91-final-contract-decisions.md) | T11, T96 |
 | Get-CsTeamsClientConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed optional collection/selected identity or bound nonempty Filter; typed/empty/model/error behavior and versioned contract decision below | T28 |
 | Get-CsTeamsClientConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed optional collection/selected identity or bound nonempty Filter; typed/empty/model/error behavior and versioned contract decision below | T29, T77, T78 |
 | Get-CsTeamsEducationConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T30, T31, T80 |
 | Get-CsTeamsEducationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T33, T31, T80, T81 |
-| Get-CsTeamsFirstPartyMeetingTemplateConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T34 |
-| Get-CsTeamsFirstPartyMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T34 |
+| Get-CsTeamsFirstPartyMeetingTemplateConfiguration | `Filter` | Direct compiled PolicyRp | Independently reviewed own source and successful/error execution; [template decision](pol91-template-contract-decisions.md) | T34 |
+| Get-CsTeamsFirstPartyMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Independently reviewed own source and successful/error execution; [template decision](pol91-template-contract-decisions.md) | T34 |
 | Get-CsTeamsGuestCallingConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T37 |
 | Get-CsTeamsGuestCallingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T37 |
-| Get-CsTeamsGuestMeetingConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T42 |
-| Get-CsTeamsGuestMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T39, T40 |
+| Get-CsTeamsGuestMeetingConfiguration | `Filter` | Direct compiled PolicyRp | Independently reviewed complete own model/control/read/write/error/recovery behavior; [final compiled decision](pol91-last-compiled-contract-decisions.md) | T42 |
+| Get-CsTeamsGuestMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Independently reviewed complete own model/control/read/write/error/recovery behavior; [final compiled decision](pol91-last-compiled-contract-decisions.md) | T39, T40 |
 | Get-CsTeamsGuestMessagingConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T44 |
 | Get-CsTeamsGuestMessagingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T44 |
 | Get-CsTeamsMeetingBroadcastConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T48, T47 |
 | Get-CsTeamsMeetingBroadcastConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T48, T47 |
-| Get-CsTeamsMeetingConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T54 |
-| Get-CsTeamsMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T50, T51 |
-| Get-CsTeamsMeetingTemplateConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T57 |
-| Get-CsTeamsMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T58 |
+| Get-CsTeamsMeetingConfiguration | `Filter` | Direct compiled PolicyRp | Independently reviewed complete own model/control/read/write/error/recovery behavior; [final compiled decision](pol91-last-compiled-contract-decisions.md) | T54 |
+| Get-CsTeamsMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Independently reviewed complete own model/control/read/write/error/recovery behavior; [final compiled decision](pol91-last-compiled-contract-decisions.md) | T50, T51 |
+| Get-CsTeamsMeetingTemplateConfiguration | `Filter` | Direct compiled PolicyRp | Independently reviewed own source and successful/error execution; [template decision](pol91-template-contract-decisions.md) | T57 |
+| Get-CsTeamsMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Independently reviewed own source and successful/error execution; [template decision](pol91-template-contract-decisions.md) | T58 |
 | Get-CsTeamsMessagingConfiguration | `Filter` | Direct compiled PolicyRp | Individually complete own source/model/binding/control and successful/error execution review; versioned nullable-family decision below | T59 |
 | Get-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Individually complete own source/model/binding/control and successful/error execution review; versioned nullable-family decision below | T59, T95 |
 | Get-CsTeamsMigrationConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T61 |
@@ -66,15 +67,15 @@ T references name exact existing functions, not full semantic completion. Review
 | Set-CsApplicationMeetingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T05, T06, T02, T03 |
 | Set-CsOnlineVoicemailValidationConfiguration | `Identity` | Direct compiled PolicyRp | Individually source/model/control/binder reviewed; typed/empty accepted writes, decode/cancel/failure/recovery execution; versioned contract decision below | T17, T13, T14, T77, T78, T16 |
 | Set-CsPrivacyConfiguration | `Identity` | Direct compiled PolicyRp | Individually source/model/control/binder reviewed; typed/empty accepted writes, decode/cancel/failure/recovery execution; versioned contract decision below | T25, T21, T23, T20, T24, T77 |
-| Set-CsTeamsAudioConferencingCustomPromptsConfiguration | `Identity` | Direct compiled PolicyRp | Own normalized compiled route and actual model/helper/serializer source settled; null-removal guard and authored positive/decode/partial branches awaiting frozen execution | T11, T08, T07, T09, T97, T98, T99 |
+| Set-CsTeamsAudioConferencingCustomPromptsConfiguration | `Identity` | Direct compiled PolicyRp | Independently reviewed own normalized model/helper/serializer and successful/decode/partial execution; [reviewed decision](pol91-final-contract-decisions.md) | T11, T08, T07, T09, T97, T98, T99 |
 | Set-CsTeamsClientConfiguration | `Identity` | Direct compiled PolicyRp | Individually source/model/control/binder reviewed; typed/empty accepted writes, decode/cancel/failure/recovery execution; versioned contract decision below | T26, T77, T78, T76, T27 |
 | Set-CsTeamsEducationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T33, T31, T32, T79 |
-| Set-CsTeamsFirstPartyMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T36, T35 |
+| Set-CsTeamsFirstPartyMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Independently reviewed own source and successful/error execution; [template decision](pol91-template-contract-decisions.md) | T36, T35 |
 | Set-CsTeamsGuestCallingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T38 |
-| Set-CsTeamsGuestMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T43, T41 |
+| Set-CsTeamsGuestMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Independently reviewed complete own model/control/read/write/error/recovery behavior; [final compiled decision](pol91-last-compiled-contract-decisions.md) | T43, T41 |
 | Set-CsTeamsGuestMessagingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T45 |
 | Set-CsTeamsMeetingBroadcastConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T49, T46 |
-| Set-CsTeamsMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T55, T53, T52, T56 |
+| Set-CsTeamsMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Independently reviewed complete own model/control/read/write/error/recovery behavior; [final compiled decision](pol91-last-compiled-contract-decisions.md) | T55, T53, T52, T56 |
 | Set-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Individually complete own source/model/binding/control and successful/error execution review; versioned nullable-family decision below | T60, T95 |
 | Set-CsTeamsMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T62 |
 | Set-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T65, T85, T86 |
@@ -139,7 +140,7 @@ T references name exact existing functions, not full semantic completion. Review
 | T50 | `TestUnitGetGlobalResponseFixture` | [msteams/teams_admin_api/teams_meeting_configuration/response_test.go](../../../msteams/teams_admin_api/teams_meeting_configuration/response_test.go) |
 | T51 | `TestUnitListResponseFixture` | [msteams/teams_admin_api/teams_meeting_configuration/response_test.go](../../../msteams/teams_admin_api/teams_meeting_configuration/response_test.go) |
 | T52 | `TestUnitContextListEditsApplyToPreparationRead` | [msteams/teams_admin_api/teams_meeting_configuration/service_test.go](../../../msteams/teams_admin_api/teams_meeting_configuration/service_test.go) |
-| T53 | `TestUnitEverySettingNullFalseZeroEmptyAndForceRemainExplicit` | [msteams/teams_admin_api/teams_meeting_configuration/service_test.go](../../../msteams/teams_admin_api/teams_meeting_configuration/service_test.go) |
+| T53 | `TestUnitEverySettingNullFalsePositiveEmptyAndForceRemainExplicit` | [msteams/teams_admin_api/teams_meeting_configuration/service_test.go](../../../msteams/teams_admin_api/teams_meeting_configuration/service_test.go) |
 | T54 | `TestUnitFilterUsesActualCollection` | [msteams/teams_admin_api/teams_meeting_configuration/service_test.go](../../../msteams/teams_admin_api/teams_meeting_configuration/service_test.go) |
 | T55 | `TestUnitUpdateUsesActualPreparationAndSparsePatch` | [msteams/teams_admin_api/teams_meeting_configuration/service_test.go](../../../msteams/teams_admin_api/teams_meeting_configuration/service_test.go) |
 | T56 | `TestUnitContextIdFinalLFIsPreservedInRequest` | [msteams/teams_admin_api/teams_meeting_configuration/write_validation_test.go](../../../msteams/teams_admin_api/teams_meeting_configuration/write_validation_test.go) |
@@ -297,14 +298,15 @@ separate from the current withdrawn qualifications. No status promotion yet.
 
 ## Final reviewed frontier
 
-Exactly **23 commands / 35 sets** are implemented/contract-passed: the prior
-[twenty-command packet](pol91-final-contract-decisions.md) plus the reviewed
-[three-command template packet](pol91-template-contract-decisions.md).
-Historical canonical successes, real failed runs (including 15393), corrections
-and final scoped executions remain distinct. Every one of the 745 live records
-and all nested live-test references are unchanged.
+Exactly **27 commands / 41 sets** are implemented/contract-passed: the prior
+[twenty-command packet](pol91-final-contract-decisions.md), the reviewed
+[three-command template packet](pol91-template-contract-decisions.md) and the
+[final four compiled decisions](pol91-last-compiled-contract-decisions.md).
+Historical canonical successes, real failed runs (including 15393 and 34406),
+corrections and final scoped executions remain distinct. All 745 live records
+and nested live-test references remain unchanged.
 
-Remaining **16 commands / 24 sets**: **4 compiled / 6 sets** across GuestMeeting
-and Meeting Get/Set, plus **12 conditional / 18 sets** with separate remote
-contracts. These require their own finite source/behavior/execution decisions.
-Source symbols and child merges alone do not complete #185 or QUAL01.
+Remaining **12 conditional commands / 18 sets** across six families require
+separate modern/remote source, behavior and execution review. No conditional
+branch is promoted or excluded by the compiled work. Source symbols and child
+merges alone do not complete #185 or QUAL01.

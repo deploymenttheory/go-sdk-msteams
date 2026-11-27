@@ -9311,7 +9311,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -9329,8 +9329,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-last-compiled-contract-decisions.json#/commands/0"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -10046,7 +10048,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -10064,8 +10066,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-last-compiled-contract-decisions.json#/commands/2"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -41762,7 +41766,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -41776,8 +41780,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-last-compiled-contract-decisions.json#/commands/1"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -42225,7 +42231,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -42239,8 +42245,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-last-compiled-contract-decisions.json#/commands/3"
+        ]
       },
       "live": {
         "status": "not-run",
