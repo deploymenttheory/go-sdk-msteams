@@ -27,7 +27,7 @@ jobs:
       MSTEAMS_TENANT_ID: ${{ secrets.MSTEAMS_LAB_TENANT_ID }}
       MSTEAMS_CLIENT_ID: ${{ secrets.MSTEAMS_LAB_CLIENT_ID }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5
         with:
           go-version-file: go.mod
