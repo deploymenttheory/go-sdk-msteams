@@ -22,7 +22,7 @@
     "admission_floor_gib": 16,
     "runtime_guard_gib": 14,
     "current_free_gib": 20.79,
-    "reason": "below admission; foreign build/test activity prevents shared-cache cleanup; use exact-head CI validation"
+    "reason": "Earlier admission was below16GiB; at this record snapshot headroom had recovered to20.79GiB. Focused local execution had not yet started; fresh admission and runtime guard remain required."
   },
   "static_checks": {
     "ledger": "passed745;noqualificationspromoted",
