@@ -131,7 +131,7 @@ func TestUnitTenantIdentityReadsUseAcceptanceResponses(t *testing.T) {
 	run(t, contracttest.Case{Name: "actual-reads", Source: "msteams/teams_admin_api/tenant_identity/testdata/tenant.json",
 		Mappings: append(mapping("Get-CsTenant", "Identity"), mapping("Find-CsGroup")...),
 		Steps: []contracttest.Exchange{discovery(t),
-			wire("GET", "/Teams.Tenant/tenants?defaultpropertyset=Extended", "Get-CsTenant", nil, 200, tenant),
+			wire("GET", "/Teams.Tenant/tenants?defaultpropertyset=Extended", "Get-CsTenantObou_Get", nil, 200, tenant),
 			wire("GET", groupPath, "Find-CsGroup", nil, 200, groups),
 			wire("GET", "/Teams.VoiceApps/groups?SearchQuery=msteams-sdk-no-such-group-zz", "Find-CsGroup", nil, 200, empty)},
 		Want: contracttest.Expected{Status: 200, Body: empty},

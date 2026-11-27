@@ -134,15 +134,16 @@ func dotnetBool(value bool) string {
 	return "False"
 }
 
-// GetTenant is Get-CsTenant: GET Teams.Tenant/tenants with the Extended
-// default property set. The module's Filter, Identity and ResultSize
-// parameters fail parameter binding and have no SDK equivalent.
+// GetTenant reads the source-default Modern Get-CsTenant route with the Extended
+// property set. It returns the native wire view. Public CLR projection and
+// legacy/flight-selected transport remain separate qualification boundaries.
+// Filter, Identity and ResultSize are not parameters of the Modern helper.
 func (s *Service) GetTenant(ctx context.Context) (*Tenant, *resty.Response, error) {
 	if err := s.ready(ctx); err != nil {
 		return nil, nil, err
 	}
 	var value Tenant
-	response, err := s.do(ctx, "Get-CsTenant", client.Request{Method: http.MethodGet, Path: []string{"Teams.Tenant", "tenants"}, Query: url.Values{"defaultpropertyset": {"Extended"}}, Replay: client.ReplaySafe}, http.StatusOK, &value)
+	response, err := s.do(ctx, "Get-CsTenantObou_Get", client.Request{Method: http.MethodGet, Path: []string{"Teams.Tenant", "tenants"}, Query: url.Values{"defaultpropertyset": {"Extended"}}, Replay: client.ReplaySafe}, http.StatusOK, &value)
 	if err != nil {
 		return nil, response, err
 	}

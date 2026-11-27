@@ -123,3 +123,17 @@ the public helper's CLR date conversion, null omission or numeric/object
 conversion. Its own [source and remaining projection work](../../../docs/implementation/ext/tenant-model-foundation.md)
 remain separate from Get-CsTenant qualification. Public TRPS/legacy selection
 is not assumed resolved, and no live status changes.
+
+## Default Modern tenant request identity
+
+`GetTenant` sends `X-MS-CmdletName: Get-CsTenantObou_Get` for the Extended
+ConfigAPI read. The public wrapper selects Get-CsTenantPoint for its default
+Modern route; that helper invokes the internal proxy, whose private cmdlet name
+passes through its invocation information to the final header writer. This
+header is source evidence, independently of historical response captures.
+See the [own handoff packet](../../../docs/implementation/ext/evidence/tenant-modern-handoff-source.json).
+The SDK keeps its own user-agent and shared audience/routing controls.
+
+This correction does not claim universal Modern flight selection, legacy
+transport or the public CLR date/dictionary projection. The returned native
+wire view and actual HTTP receipt remain available separately.
