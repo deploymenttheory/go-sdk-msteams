@@ -1,0 +1,48 @@
+{
+  "scope": "CORE193 directory-read and channel-owner receipt checkpoint, approved for draft CI validation only.",
+  "code_revision": "10396f6d42db7498d11961bb8750f505e817777b",
+  "directory_revision": "533f11d",
+  "source_packet": "docs/implementation/core/evidence/directory-user-read-source.json",
+  "source_packet_sha256": "fdf0c9d73df0d263fac9d53f506353974a1da67922c4dda76750c7c861a910f6",
+  "root_source_reproduction": {
+    "session": "77309",
+    "exit_code": 0,
+    "exact_parsed_match": true,
+    "original_scalar_rows": 70,
+    "added_property_controls": 11,
+    "consumer_method_bodies": 6,
+    "producer_hash_verified": true
+  },
+  "independent_review": {
+    "directory": "passed after ordered ASCII property correction; no Go run",
+    "channel": "passed after correcting two fixture scopes to service; no Go run"
+  },
+  "local_execution": {
+    "go_started": false,
+    "admission_floor_gib": 16,
+    "runtime_guard_gib": 14,
+    "current_free_gib": 20.79,
+    "reason": "below admission; foreign build/test activity prevents shared-cache cleanup; use exact-head CI validation"
+  },
+  "static_checks": {
+    "ledger": "passed745;noqualificationspromoted",
+    "test_categories": {
+      "unit": 1734,
+      "acceptance": 208
+    },
+    "branch_diff_check": "passed",
+    "format": "gofmt clean"
+  },
+  "qualification_change": false,
+  "live_state_change": false,
+  "pending": [
+    "Current-head build/vet/offline unit/race and focused affected-package result verification.",
+    "Current-head lint/formatter/clean-tree and acceptance result gates.",
+    "Private migration backend native and pinned getter401 remains an unresolved genuine failure, not a successful or skipped positive test."
+  ],
+  "limits": [
+    "Directory response reading does not authorize or validate subsequent mutations.",
+    "OwnerResponse fallback is a lookup receipt, not evidence of a creation outcome.",
+    "No new local TestAcc, tenant request, privilege change, fallback identity or replay."
+  ]
+}
