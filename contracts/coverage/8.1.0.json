@@ -39289,6 +39289,10 @@
             {
               "file": "msteams/teams_admin_api/teams_education_configuration/composition_test.go",
               "name": "TestUnitEducationConfigurationUpdatePreparationFailures"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_configuration/provider_success_test.go",
+              "name": "TestUnitEducationSparsePatchAndPreparedUpdateAcceptedResponses"
             }
           ],
           "live_tests": []

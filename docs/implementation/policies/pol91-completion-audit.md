@@ -61,7 +61,7 @@ T references name exact existing functions, not full semantic completion. Review
 | Set-CsPrivacyConfiguration | `Identity` | Direct compiled PolicyRp | Individually source/model/control/binder reviewed; typed/empty accepted writes, decode/cancel/failure/recovery execution; versioned contract decision below | T25, T21, T23, T20, T24, T77 |
 | Set-CsTeamsAudioConferencingCustomPromptsConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T11, T08, T07, T09 |
 | Set-CsTeamsClientConfiguration | `Identity` | Direct compiled PolicyRp | Individually source/model/control/binder reviewed; typed/empty accepted writes, decode/cancel/failure/recovery execution; versioned contract decision below | T26, T77, T78, T76, T27 |
-| Set-CsTeamsEducationConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T33, T31, T32 |
+| Set-CsTeamsEducationConfiguration | `Identity` | Direct compiled PolicyRp | Three plain String setters and bound-key control reviewed; typed/malformed PATCH and prepared acceptance execute at d34f149/52700; final command decision remains under review | T33, T31, T32, T79 |
 | Set-CsTeamsFirstPartyMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T36, T35 |
 | Set-CsTeamsGuestCallingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T38 |
 | Set-CsTeamsGuestMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T43, T41 |
@@ -158,6 +158,7 @@ T references name exact existing functions, not full semantic completion. Review
 | T76 | `TestUnitConfigurationCanceledReadRetainsReceiptAndAllowsIndependentRead` | [tests/contract/policies/configuration_cancellation_test.go](../../../tests/contract/policies/configuration_cancellation_test.go) |
 | T77 | `TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate` | [tests/contract/policies/configuration_composition_test.go](../../../tests/contract/policies/configuration_composition_test.go) |
 | T78 | `TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery` | [tests/contract/policies/configuration_decode_recovery_test.go](../../../tests/contract/policies/configuration_decode_recovery_test.go) |
+| T79 | `TestUnitEducationSparsePatchAndPreparedUpdateAcceptedResponses` | [msteams/teams_admin_api/teams_education_configuration/provider_success_test.go](../../../msteams/teams_admin_api/teams_education_configuration/provider_success_test.go) |
 
 ## Acceptance boundary
 

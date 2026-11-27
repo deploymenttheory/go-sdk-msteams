@@ -96,3 +96,56 @@ read before authored empty PATCH204 and checks Before/read receipt versus
 HTTPAccepted, with no After or persistence claim. No tenant request, fixture
 capture or ledger status promotion accompanies this added branch. Execution
 will be bound to its committed source checkpoint before qualification decisions.
+
+Full Education TestUnit/Example passed at clean `d34f149` (session `52700`),
+Go 1.27.4, GOMAXPROCS=2, `-p 1 -count=1`, 14 GiB disk guard and
+owned scratch directory removed after completion; admission 39.23 GiB. The first
+sandbox attempt stopped at Go-cache access before any test ran; the authorized
+cache-access run is the execution proof. No race or live test ran. This test
+reference update leaves the command contract and every live status unchanged.
+
+## Finite follow-up: Upgrade, SIP devices and MTO
+
+These six Get/Set commands are direct compiled Core/PolicyRp operations with
+exact Get Identity/Filter and Set Identity sets. Fresh effective metadata and
+actual setters identify this complete write-field inventory:
+
+| Family | All public setting/DTO types | Concrete AreParametersSpecified |
+|---|---|---|
+| TeamsUpgradeConfiguration | DownloadTeams and BlockLegacyAuthorization: Nullable<Boolean>; SfBMeetingJoinUx: String | ContainsKey at IL16/39/62 |
+| TeamsSipDevicesConfiguration | BulkSignIn: String | ContainsKey16 |
+| TeamsMultiTenantOrganizationConfiguration | CopilotFromHomeTenant: String | ContainsKey16 |
+
+Every listed public setting has only ParameterAttribute and its DTO setter is
+plain stfld2/ret7. There is no source enum, nonempty or cross-field validator in
+these fields. Effective Filter nonempty attributes are part of the initial
+14-compiled-get sweep. Identity binding versus native encoded-path safety and
+early error ordering stay separate as for the first six decisions. No source
+observation states that an arbitrary opaque string is accepted by a tenant.
+The already recorded compiled String/Nullable<Boolean> binder observations are
+supporting shared-type behavior; they did not directly invoke these three
+families' binders. This table comes from their own concrete metadata/setters.
+Bound-key guards and the actual shared resolver establish selected false/null/
+empty versus omitted-property serialization; Force alone is not a setting.
+
+Reproduce against the hash-checked module using Get-Command
+`Get-CsTeamsUpgradeConfiguration`/`Set-CsTeamsUpgradeConfiguration` (substitute
+TeamsSipDevicesConfiguration or TeamsMultiTenantOrganizationConfiguration),
+inspect Parameters/ParameterSets and obtain the closed model from the Set
+ImplementingType.BaseType generic argument. Use the portable IL reader on each
+concrete `Set{type}Cmdlet.AreParametersSpecified` and Core `{type}.set_{field}`.
+This reproduces offsets without depending on temporary host files. The shared
+route/auth/header/list/filter/status/decoder/no-replay and resolver sections
+above apply to the same exact compiled base/helper methods; none of the three
+uses a conditional Trps dispatch. Minimum roles and live behavior are separate.
+
+Existing full packages already contain retained selected/list/readback models,
+successful filter operations, prepared reads followed by accepted empty204,
+explicit null/empty/false/Force request cases, actual403 envelope retention,
+zero-request context/destination/filter/identity guards and owned snapshots.
+Upgrade additionally replays a caller-issued independent readback. SIP/MTO
+prepare/acceptance tests do not claim independent effective readback. No new
+permutation is added merely to count these existing success branches. Their
+complete-package execution and individual command decisions are pending the
+same finite source review, rather than being blocked categorically on live
+fixtures or being promoted from method names.
