@@ -25,3 +25,7 @@ On a verified extracted package, import MicrosoftTeams.psd1 and inspect `(Get-Co
 ## Remaining work
 
 This first checkpoint changes no implementation/contract/live status. Integrated identity/type interactions, successful Set/partial-failure/recovery compositions, every command/set's full binding/model/control behavior and current live oracle/restore evidence still require review. Compiled source controls will be checked independently of retained transport request fixtures. No tenant mutation, extra workflow dispatch, grant, immutable preview regeneration or full-ticket completion claim is added.
+
+## Checkpoint execution
+
+At exact clean revision `8b02a8a85c3f4a05f03fd4c190c7616285ac31b9`, session `70009` exited 0 for the complete online_voicemail_validation_configuration package with `-p 1 -count=1 -run '^(TestUnit|Example)'`, GOMAXPROCS=2, an owned temporary directory and the 14 GiB runtime guard (50.85 GiB free at admission). This includes the existing typed get/list/filter/setter/error tests and the new three-way filter regression. No race, whole-module sweep or tenant test ran locally. The later documentation/metadata checkpoint does not change those compiled inputs; current-head remote CI remains separately required.
