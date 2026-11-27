@@ -1,0 +1,27 @@
+# POL91 configuration qualification checkpoint
+
+Scope: [POL-91 #185](https://github.com/deploymenttheory/go-sdk-msteams/issues/185), 20 assigned resources, 39 commands and 59 exact parameter sets on main `2028f86758df816d89bc6bce136f1c61f461fbb3`. All referenced native symbol files exist; that inventory is not full implementation, contract or live qualification. The issue's historical recovery table is not a claim that no later read succeeded.
+
+## First source-confirmed correction
+
+`Get-CsOnlineVoicemailValidationConfiguration` resolves directly to Core's compiled `GetOnlineVoicemailValidationConfigurationCmdlet`, closed over `BaseTpmGetCmdlet<OnlineVoicemailValidationConfiguration>`. Effective public Filter metadata contains ParameterAttribute for the optional Filter set and inherited ValidateNotNullOrEmptyAttribute. The concrete command does not override Filter. The immutable runtime snapshot's empty validation array omitted this inherited constraint; it is not evidence that explicit empty binding is valid.
+
+PolicyRp `BaseTpmGetCmdlet<T>.FilterPolicies` reads Filter at IL2, calls String.IsNullOrEmpty at IL7 and returns the original collection at IL17. That branch handles omission after binding. The native ListFiltered method previously reached it with an explicitly empty argument; the resource wrapper now returns its existing ErrInput before credentials/HTTP. List still represents omission, and literal whitespace/nonempty wildcard values are preserved. The shared helper and other families are unchanged.
+
+The regression distinguishes three operations: explicit empty has zero requests/credentials; omitted List replays the permanent list response; a literal-space filter also reaches the successful list response and correctly produces no matching identities. Existing get/list response and filtering tests remain separate successful primitive evidence. A permanent fixture pointer does not make the newly authored compound test a captured tenant scenario.
+
+## Bounded binder sweep
+
+All 20 assigned public Get commands were inspected after importing only the pinned module. Fourteen resolve to compiled cmdlets with effective ValidateNotNullOrEmpty on Filter. Thirteen native wrappers already reject explicit empty; voicemail validation is the one missing guard. Six public functions have conditional proxy dispatch and no local inherited Filter validator; no new validator or unconditional backend guarantee is inferred for them.
+
+The compiled group is voicemail validation, privacy, audio conferencing custom prompts, Teams client, education, first-party meeting templates, guest meeting, meeting, meeting templates, messaging, multi-tenant organization, SIP devices, tenant abuse and upgrade. The conditional proxy group is application meeting, guest calling, guest messaging, meeting broadcast, Teams migration and tenant migration.
+
+## Reproduction and provenance
+
+Pinned MicrosoftTeams 8.1.0 package SHA256 is `78c5f73347a97b2e4810222e702f79b0fe6d5c8ec4f3b52b4b2891c70b445ab7`. Core.dll SHA256 is `68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49`; PolicyRp.dll is `a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51`.
+
+On a verified extracted package, import MicrosoftTeams.psd1 and inspect `(Get-Command Get-CsOnlineVoicemailValidationConfiguration).Parameters['Filter'].Attributes`; enumerate ImplementingType.GetProperties with DeclaredOnly separately to verify no Filter override. Repeat Get-Command metadata inspection for all 20 names selected by the issue's ledger resources. The [portable hash-checked IL decoder](https://github.com/deploymenttheory/go-sdk-msteams/blob/de4218ca88f001a65117a206176886b52541e307/docs/implementation/policies/pol04-primary-source-audit.md#portable-reproduction) reads GetMethodBody and resolves operands with owning generic context; use it for the named shared helper. No command ProcessRecord, authentication, tenant operation or additional permission is needed.
+
+## Remaining work
+
+This first checkpoint changes no implementation/contract/live status. Integrated identity/type interactions, successful Set/partial-failure/recovery compositions, every command/set's full binding/model/control behavior and current live oracle/restore evidence still require review. Compiled source controls will be checked independently of retained transport request fixtures. No tenant mutation, extra workflow dispatch, grant, immutable preview regeneration or full-ticket completion claim is added.

@@ -5318,6 +5318,10 @@
             {
               "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service_test.go",
               "name": "TestUnitValidationTypedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/filter_binding_test.go",
+              "name": "TestUnitValidationFilterBindingDistinguishesOmissionEmptyAndWhitespace"
             }
           ],
           "live_tests": [
@@ -5348,6 +5352,10 @@
             {
               "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/service_test.go",
               "name": "TestUnitValidationTypedProviderRequests"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/filter_binding_test.go",
+              "name": "TestUnitValidationFilterBindingDistinguishesOmissionEmptyAndWhitespace"
             }
           ],
           "live_tests": [
