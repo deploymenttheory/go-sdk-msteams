@@ -31,7 +31,11 @@ Known raw fields retain their received JSON rather than the projected value.
 Public-model tests replay all 436 own Client/Privacy/Education source vectors,
 including rejection cases. Separate real-root-client reads verify exact typed
 values, route/response identity distinction, unknown raw fields and HTTP receipts.
-Full affected execution is pending at this implementation checkpoint; these
+The initial full check passed the new vectors/root-client scenarios but exposed
+older negative test inputs that the source actually accepts. Those inputs now use
+source-rejected shapes. The lab oracle keeps a separate strict schema for its
+already-projected PowerShell output; SDK wire coercion does not loosen that
+producer validation. A corrected full frozen check is pending; these
 changes do not restore qualification or establish tenant behavior.
 
 The remaining six families need their own opt-in corrections. The packet also

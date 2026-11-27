@@ -23,7 +23,7 @@ func TestUnitEducationSparsePatchAndPreparedUpdateAcceptedResponses(t *testing.T
 	for _, malformed := range []bool{false, true} {
 		name, reply := "typed", typed
 		if malformed {
-			name, reply = "malformed", `{"Identity":"body-identity","EduGenerativeAIEnhancements":false}`
+			name, reply = "malformed", `{"Identity":"body-identity","EduGenerativeAIEnhancements":{}}`
 		}
 		run(t, contracttest.Case{Name: name, Source: source, Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{
 			compiledWire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"body-identity","ParentGuardianPreferredContactMethod":null,"EduGenerativeAIEnhancements":""}`), 200, reply),
