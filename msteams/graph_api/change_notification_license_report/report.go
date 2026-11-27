@@ -6,11 +6,9 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	graphbatch "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/batch"
-	directoryuser "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/directory_user"
 )
 
 // GetOptions bounds each collection and the number of distinct license subjects.
@@ -65,11 +63,11 @@ func (s *Service) Get(ctx context.Context, period Period, options GetOptions) (*
 		return result, errors.Join(ErrPartial, e)
 	}
 	result.UsersComplete = true
-	byID := make(map[string][]*directoryuser.User)
-	byUPN := make(map[string][]*directoryuser.User)
+	byID := make(map[string][]*DirectoryUser)
+	byUPN := make(map[string][]*DirectoryUser)
 	for i := range result.Users.Items {
 		u := &result.Users.Items[i]
-		key := strings.ToLower(u.ID)
+		key := u.ID
 		byID[key] = append(byID[key], u)
 		if u.UserPrincipalName != nil {
 			byUPN[*u.UserPrincipalName] = append(byUPN[*u.UserPrincipalName], u)
@@ -88,7 +86,7 @@ func (s *Service) Get(ctx context.Context, period Period, options GetOptions) (*
 		}
 		row.DirectoryUser = user
 		row.DirectoryUserID = user.ID
-		key := strings.ToLower(user.ID)
+		key := user.ID
 		if _, found := unique[key]; !found {
 			unique[key] = len(ids)
 			ids = append(ids, user.ID)
@@ -110,7 +108,7 @@ func (s *Service) Get(ctx context.Context, period Period, options GetOptions) (*
 		if row.DirectoryUserID == "" {
 			continue
 		}
-		index := unique[strings.ToLower(row.DirectoryUserID)]
+		index := unique[row.DirectoryUserID]
 		if index >= len(result.Licenses) {
 			row.Err = errors.Join(row.Err, ErrPartial)
 			outcome = errors.Join(outcome, ErrPartial)
@@ -130,12 +128,12 @@ func (s *Service) Get(ctx context.Context, period Period, options GetOptions) (*
 	return result, nil
 }
 
-func resolveUser(activity Activity, byID, byUPN map[string][]*directoryuser.User) (*directoryuser.User, error) {
-	var values []*directoryuser.User
-	if activity.UserID != nil && userIDPattern.MatchString(*activity.UserID) {
-		// A declared usable directory ID is authoritative across renamed/reused UPNs.
+func resolveUser(activity Activity, byID, byUPN map[string][]*DirectoryUser) (*DirectoryUser, error) {
+	var values []*DirectoryUser
+	if activity.UserID != nil && *activity.UserID != "" {
+		// A declared directory ID is authoritative across renamed/reused UPNs.
 		// Do not fall back to a different UPN owner when that ID cannot be resolved.
-		values = byID[strings.ToLower(*activity.UserID)]
+		values = byID[*activity.UserID]
 	} else if activity.UserPrincipalName != nil {
 		values = byUPN[*activity.UserPrincipalName]
 	}
@@ -273,7 +271,7 @@ func matchingPlan(items []LicenseDetail) (*bool, bool, error) {
 			continue
 		}
 		for _, plan := range license.ServicePlans {
-			if plan == nil || plan.ID == nil || !userIDPattern.MatchString(*plan.ID) {
+			if plan == nil || plan.ID == nil || !planIDPattern.MatchString(*plan.ID) {
 				known = false
 				continue
 			}

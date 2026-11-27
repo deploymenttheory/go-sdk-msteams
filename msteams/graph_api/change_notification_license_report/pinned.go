@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"math"
-
-	directoryuser "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/directory_user"
 )
 
 var ErrSourceShape = errors.New("license report data cannot represent the pinned projection")
@@ -41,11 +39,11 @@ func (v PinnedRow) GoString() string { return v.String() }
 // ProjectPinnedRows is a pure compatibility projection, never a Graph request.
 // Native read/composition data remains available independently when source Int32
 // limits, duplicate UPNs or malformed nested values cannot be projected exactly.
-func ProjectPinnedRows(activity []Activity, users []directoryuser.User, licenses map[string][]*PinnedLicense) ([]PinnedRow, error) {
+func ProjectPinnedRows(activity []Activity, users []DirectoryUser, licenses map[string][]*PinnedLicense) ([]PinnedRow, error) {
 	if licenses == nil {
 		return nil, ErrSourceShape
 	}
-	byUPN := make(map[string]directoryuser.User)
+	byUPN := make(map[string]DirectoryUser)
 	for _, user := range users {
 		if user.UserPrincipalName == nil {
 			return nil, ErrSourceShape

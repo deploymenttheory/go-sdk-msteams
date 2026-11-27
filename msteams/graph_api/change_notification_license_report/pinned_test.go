@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	report "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/change_notification_license_report"
-	directoryuser "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/directory_user"
 )
 
 func ptr[T any](v T) *T         { return &v }
@@ -15,7 +14,7 @@ func num(v string) *json.Number { n := json.Number(v); return &n }
 func TestUnitPinnedRowsKeepSourceWrapMissingNullAndDisplayFallback(t *testing.T) {
 	t.Parallel()
 	activity := []report.Activity{{UserPrincipalName: ptr("a"), PrivateChatMessageCount: num("2147483647"), TeamChatMessageCount: num("1")}, {UserPrincipalName: ptr("b")}, {UserPrincipalName: ptr("c")}}
-	users := []directoryuser.User{{ID: userID, UserPrincipalName: ptr("a"), DisplayName: ptr("")}}
+	users := []report.DirectoryUser{{ID: userID, UserPrincipalName: ptr("a"), DisplayName: ptr("")}}
 	values := map[string][]*report.PinnedLicense{"a": nil, "b": {}}
 	rows, e := report.ProjectPinnedRows(activity, users, values)
 	if e != nil || len(rows) != 2 || rows[0].NumberOfMessagesSent != -2147483648 || rows[0].DisplayName != "" || rows[0].HasRequiredLicensePlan != "" || rows[1].DisplayName != "Not Found" || rows[1].HasRequiredLicensePlan != "False" {

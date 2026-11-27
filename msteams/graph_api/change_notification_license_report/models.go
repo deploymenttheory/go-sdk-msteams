@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
-	directoryuser "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/directory_user"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -39,6 +38,37 @@ func validPeriod(v Period) bool {
 // SourcePlanID is the pinned source's service-plan presence predicate. Matching
 // it is not proof of current entitlement, billing state or effective authority.
 const SourcePlanID = "6dc145d6-95dd-4191-b9c3-185575ee6f6b"
+
+// DirectoryUser is this composition's minimal directory read snapshot. Graph
+// defines its ID as an opaque String, not a GUID; ID and UPN remain distinct.
+// The existing UUID-only resolver is deliberately not used for these reads.
+type DirectoryUser struct {
+	ID                string                     `json:"id"`
+	DisplayName       *string                    `json:"displayName"`
+	UserPrincipalName *string                    `json:"userPrincipalName"`
+	RawFields         map[string]json.RawMessage `json:"-"`
+	RawJSON           json.RawMessage            `json:"-"`
+}
+
+func (v *DirectoryUser) UnmarshalJSON(raw []byte) error {
+	type snapshot DirectoryUser
+	var next snapshot
+	if json.Unmarshal(raw, &next) != nil || json.Unmarshal(raw, &next.RawFields) != nil || next.RawFields == nil || next.ID == "" {
+		return client.ErrDecode
+	}
+	next.RawJSON = append(json.RawMessage(nil), raw...)
+	*v = DirectoryUser(next)
+	return nil
+}
+func (v DirectoryUser) MarshalJSON() ([]byte, error) {
+	if v.RawJSON != nil {
+		return append([]byte(nil), v.RawJSON...), nil
+	}
+	type snapshot DirectoryUser
+	return json.Marshal(snapshot(v))
+}
+func (DirectoryUser) String() string     { return "Graph report directory user (redacted)" }
+func (v DirectoryUser) GoString() string { return v.String() }
 
 // Activity retains documented report identity/count fields and the whole response.
 // Graph CSDL declares Edm.Stream and the JSON documentation specifies no count
@@ -157,7 +187,7 @@ func (v LicenseOutcome) GoString() string { return v.String() }
 // MessageCount and HasMatchingSourcePlan are nil when their evidence is missing.
 type Row struct {
 	Activity              Activity
-	DirectoryUser         *directoryuser.User
+	DirectoryUser         *DirectoryUser
 	DirectoryUserID       string
 	MessageCount          *big.Int
 	HasMatchingSourcePlan *bool
@@ -172,7 +202,7 @@ func (v Row) GoString() string { return v.String() }
 // data-availability result, never subscription or authorization qualification.
 type ReportResult struct {
 	Activity                                                    client.ListResult[Activity]
-	Users                                                       client.ListResult[directoryuser.User]
+	Users                                                       client.ListResult[DirectoryUser]
 	Licenses                                                    []LicenseOutcome
 	Rows                                                        []Row
 	ActivityComplete, UsersComplete, LicensesComplete, Complete bool

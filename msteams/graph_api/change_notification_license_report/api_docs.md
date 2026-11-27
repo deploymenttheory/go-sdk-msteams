@@ -14,8 +14,8 @@ read-only; it does not create a subscription, assign licenses or change roles.
 Periods are 7, 30, 90 or 180 days. Activity uses beta JSON, `$top=2000` and
 `$format=application/json`; users use v1.0 `$top=999`. License requests use the
 first-party `/users/{id}/licenseDetails` route, not concatenated UPN syntax.
-Reported ID, reported UPN and resolved directory ID are separate fields. A usable
-report GUID is authoritative; otherwise an exact unique UPN match is required from
+Reported ID, reported UPN and resolved directory ID are separate fields. A nonempty
+reported directory ID is authoritative; otherwise an exact unique UPN match is required from
 a complete user traversal. No UPN normalization or reused-name retargeting occurs.
 
 `Get` completes activity and user traversal before resolving subjects, then batches
@@ -52,3 +52,16 @@ The conditional compiled cmdlet has one Period set; it is commented preview in t
 root manifest. Native primitives and pure projection do not establish default-session
 export, supported app license access or successful tenant qualification. See the
 [primary/source evidence](../../../docs/implementation/ext/license-report-contract-notes.md).
+
+
+Graph [user](https://learn.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0)
+and [directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-1.0)
+primary schemas define ID as an opaque String; directoryObject explicitly permits
+non-GUID IDs. This resource therefore uses a dedicated minimal `DirectoryUser`
+snapshot, exact ID comparison and safely escaped ID path segments. A reported
+nonempty ID is authoritative even when non-GUID, so a missing match cannot retarget
+through UPN. Missing/empty report IDs may use unique exact UPN resolution from a
+complete directory read. Continuations compare the decoded single subject segment
+exactly, including case, while retaining the fixed resource and trusted origin.
+The shared UUID-only directory resolver is unchanged. GUID format remains a
+validation rule for documented `servicePlanInfo.servicePlanId`, not user identity.

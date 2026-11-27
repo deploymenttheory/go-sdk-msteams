@@ -8,14 +8,14 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
-	directoryuser "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/directory_user"
 	"github.com/go-resty/resty/v2"
 )
 
-var userIDPattern = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
+var planIDPattern = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
 
 // Service binds documented Graph reads to one session. It does not provision
 // subscriptions, acquire extra roles or change the caller's authentication mode.
@@ -103,7 +103,7 @@ func (s *Service) ListActivity(ctx context.Context, period Period, options ListO
 
 // ListUsers reads the documented directory ID/UPN/display-name projection. IDs
 // are retained separately from UPNs; no user lifecycle operation is exposed.
-func (s *Service) ListUsers(ctx context.Context, options ListOptions) (*client.ListResult[directoryuser.User], error) {
+func (s *Service) ListUsers(ctx context.Context, options ListOptions) (*client.ListResult[DirectoryUser], error) {
 	if e := s.ready(ctx); e != nil {
 		return nil, e
 	}
@@ -113,7 +113,7 @@ func (s *Service) ListUsers(ctx context.Context, options ListOptions) (*client.L
 	if e != nil {
 		return nil, e
 	}
-	return collect[directoryuser.User](ctx, s.scope, request, options, guard)
+	return collect[DirectoryUser](ctx, s.scope, request, options, guard)
 }
 
 // ListLicenseDetailsByUserID uses only the documented directory-ID path. It
@@ -123,7 +123,7 @@ func (s *Service) ListLicenseDetailsByUserID(ctx context.Context, id string, opt
 	if e := s.licenseMode(ctx); e != nil {
 		return nil, e
 	}
-	if !userIDPattern.MatchString(id) {
+	if !validUserID(id) {
 		return nil, ErrInput
 	}
 	guard, e := s.licenseContinuation(id)
@@ -149,8 +149,12 @@ func (s *Service) licenseContinuation(id string) (func(string) error, error) {
 		}
 		// Keep the same user and license resource as well as the same cloud. Query
 		// tokens remain opaque; the shared pager supplies cycle/page/item guards.
-		parts := strings.Split(strings.TrimPrefix(value.Path, "/"), "/")
-		if len(parts) != 4 || parts[0] != "v1.0" || parts[1] != "users" || !strings.EqualFold(parts[2], id) || parts[3] != "licenseDetails" {
+		parts := strings.Split(strings.TrimPrefix(value.EscapedPath(), "/"), "/")
+		subject := ""
+		if len(parts) == 4 {
+			subject, e = url.PathUnescape(parts[2])
+		}
+		if e != nil || len(parts) != 4 || parts[0] != "v1.0" || parts[1] != "users" || subject != id || parts[3] != "licenseDetails" {
 			return client.ErrDestination
 		}
 		return nil
@@ -196,4 +200,10 @@ func (s *Service) resourceContinuation(path string) (func(string) error, error) 
 		}
 		return nil
 	}, nil
+}
+
+// IDs are opaque Graph strings. These checks match the transport's segment
+// constraints, not a GUID schema or a UPN-to-ID conversion.
+func validUserID(id string) bool {
+	return id != "" && id != "." && id != ".." && !strings.ContainsRune(id, '\\') && !strings.ContainsFunc(id, unicode.IsControl)
 }

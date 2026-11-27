@@ -249,3 +249,43 @@ func TestUnitLicenseReportPartialDirectoryCannotEstablishResolution(t *testing.T
 		return contracttest.Observation{Err: e}
 	}})
 }
+
+func TestUnitLicenseReportOpaqueDirectoryIDRemainsAuthoritativeAndSubjectBound(t *testing.T) {
+	t.Parallel()
+	const id = "opaque#User-1"
+	const escaped = "opaque%23User-1"
+	next := graph + "/v1.0/users/" + escaped + "/licenseDetails?$skiptoken=opaque"
+	row := `{"userId":"` + id + `","userPrincipalName":"old@example.invalid","privateChatMessageCount":1,"teamChatMessageCount":0}`
+	directory := `{"value":[{"id":"` + id + `","userPrincipalName":"renamed@example.invalid"}]}`
+	run(t, contracttest.Case{Name: "opaque-directory-id", Steps: []contracttest.Exchange{
+		wire("GET", activityURL("D7"), "", 200, `{"value":[`+row+`]}`),
+		wire("GET", graph+"/v1.0/users?$select=id,displayName,userPrincipalName&$top=999", "", 200, directory),
+		wire("POST", graph+"/v1.0/$batch", batchRequest(escaped), 200, `{"responses":[{"id":"0","status":200,"body":{"value":[],"@odata.nextLink":"`+next+`"}}]}`),
+		wire("GET", next, "", 200, `{"value":[]}`),
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, e := sdk.GraphAPI.ChangeNotificationLicenseReports.Get(ctx, report.Period7Days, report.GetOptions{})
+		if e == nil && (result == nil || !result.Complete || result.Rows[0].DirectoryUserID != id || result.Licenses[0].Pages != 2 || result.Rows[0].HasMatchingSourcePlan == nil || *result.Rows[0].HasMatchingSourcePlan) {
+			t.Fatal("opaque ID was rejected, normalized or retargeted")
+		}
+		return contracttest.Observation{Err: e}
+	}})
+	run(t, contracttest.Case{Name: "opaque-id-primitive", Steps: []contracttest.Exchange{
+		wire("GET", graph+"/v1.0/users/"+escaped+"/licenseDetails", "", 200, `{"value":[]}`),
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, e := sdk.GraphAPI.ChangeNotificationLicenseReports.ListLicenseDetailsByUserID(ctx, id, report.ListOptions{})
+		if e == nil && (result == nil || len(result.Items) != 0) {
+			t.Fatal("opaque-ID primitive result changed")
+		}
+		return contracttest.Observation{Err: e}
+	}})
+	run(t, contracttest.Case{Name: "opaque-id-not-upn", Steps: []contracttest.Exchange{
+		wire("GET", activityURL("D7"), "", 200, `{"value":[`+row+`]}`),
+		wire("GET", graph+"/v1.0/users?$select=id,displayName,userPrincipalName&$top=999", "", 200, `{"value":[{"id":"opaque#user-1","userPrincipalName":"old@example.invalid"}]}`),
+	}, Want: contracttest.Expected{Error: report.ErrIdentity}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, e := sdk.GraphAPI.ChangeNotificationLicenseReports.Get(ctx, report.Period7Days, report.GetOptions{})
+		if !errors.Is(e, report.ErrIdentity) || result == nil || len(result.Licenses) != 0 || result.Rows[0].DirectoryUserID != "" {
+			t.Fatal("opaque ID was case folded or fell back to UPN")
+		}
+		return contracttest.Observation{Err: e}
+	}})
+}

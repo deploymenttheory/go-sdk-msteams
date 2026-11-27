@@ -52,7 +52,7 @@ directory-user and directory-ID license-detail reads, plus `Get` composition.
 The native activity request uses documented `$top=2000`, not the source's literal
 `top=10000`. Native license requests use the documented `/users/{id}/licenseDetails`
 path only after complete directory resolution. Reported user ID, reported UPN and
-resolved directory ID remain distinct. A usable report GUID is authoritative:
+resolved directory ID remain distinct. A nonempty reported directory ID is authoritative:
 missing ID resolution cannot retarget a reused UPN. UPN-only rows require one exact
 ordinal match; duplicate/missing identities produce a partial result.
 
@@ -94,3 +94,23 @@ owns the remaining conditional command/set without promoting implementation,
 contract or live qualification. Downstream delegated credentials/roles and actual
 successful read evidence remain external prerequisites; no new license, role or
 subscription has been created.
+
+
+Graph [user](https://learn.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0)
+and [directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-1.0)
+primary schemas define ID as an opaque String; directoryObject explicitly permits
+non-GUID IDs. This resource therefore uses a dedicated minimal `DirectoryUser`
+snapshot, exact ID comparison and safely escaped ID path segments. A reported
+nonempty ID is authoritative even when non-GUID, so a missing match cannot retarget
+through UPN. Missing/empty report IDs may use unique exact UPN resolution from a
+complete directory read. Continuations compare the decoded single subject segment
+exactly, including case, while retaining the fixed resource and trusted origin.
+The shared UUID-only directory resolver is unchanged. GUID format remains a
+validation rule for documented `servicePlanInfo.servicePlanId`, not user identity.
+
+
+The opaque-ID correction passed the focused report package in session 63983 on
+2026-11-27. The new regression uses a non-GUID ID containing `#`, verifies its
+single-segment escaping through both batch and direct reads, follows only its exact
+subject continuation, and refuses case-folded ID/UPN fallback. This is an authored
+schema-valid vector, not a claim that a particular tenant issues that identifier.

@@ -11502,6 +11502,10 @@
             {
               "file": "msteams/teams_admin_api/shifts_connections/service_test.go",
               "name": "TestUnitShiftsConnectionsSuccessShapesPreserveFields"
+            },
+            {
+              "name": "TestUnitShiftsSyncDenialPreservesReceiptsAndIndependentParentCleanup",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
             }
           ],
           "live_tests": [
@@ -11780,6 +11784,10 @@
             {
               "file": "msteams/teams_admin_api/shifts_connections/service_test.go",
               "name": "TestUnitShiftsConnectionsSuccessShapesPreserveFields"
+            },
+            {
+              "name": "TestUnitShiftsSyncDenialPreservesReceiptsAndIndependentParentCleanup",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
             }
           ],
           "live_tests": [
@@ -11864,6 +11872,10 @@
             {
               "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
               "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            },
+            {
+              "name": "TestUnitShiftsConnectionInstanceAndAsyncOperationKeepDistinctIDs",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
             }
           ],
           "live_tests": [
@@ -12024,6 +12036,10 @@
             {
               "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
               "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            },
+            {
+              "name": "TestUnitShiftsConnectionInstanceAndAsyncOperationKeepDistinctIDs",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
             }
           ],
           "live_tests": [
@@ -15179,6 +15195,10 @@
             },
             {
               "name": "TestUnitLicenseReportPartialDirectoryCannotEstablishResolution",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportOpaqueDirectoryIDRemainsAuthoritativeAndSubjectBound",
               "file": "msteams/graph_api/change_notification_license_report/service_test.go"
             }
           ],
@@ -28596,6 +28616,14 @@
             {
               "file": "msteams/teams_admin_api/shifts_connections/service_test.go",
               "name": "TestUnitShiftsConnectionsSuccessShapesPreserveFields"
+            },
+            {
+              "name": "TestUnitShiftsConnectionInstanceAndAsyncOperationKeepDistinctIDs",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
+            },
+            {
+              "name": "TestUnitShiftsSyncDenialPreservesReceiptsAndIndependentParentCleanup",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
             }
           ],
           "live_tests": [
@@ -28676,6 +28704,14 @@
             {
               "file": "msteams/teams_admin_api/shifts_connections/sync_test.go",
               "name": "TestUnitShiftsSyncSuccessShapesPreserveFields"
+            },
+            {
+              "name": "TestUnitShiftsConnectionInstanceAndAsyncOperationKeepDistinctIDs",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
+            },
+            {
+              "name": "TestUnitShiftsSyncDenialPreservesReceiptsAndIndependentParentCleanup",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
             }
           ],
           "live_tests": [
@@ -28800,6 +28836,14 @@
             {
               "file": "msteams/teams_admin_api/shifts_connections/service_test.go",
               "name": "TestUnitShiftsConnectionsSuccessShapesPreserveFields"
+            },
+            {
+              "name": "TestUnitShiftsConnectionInstanceAndAsyncOperationKeepDistinctIDs",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
+            },
+            {
+              "name": "TestUnitShiftsSyncDenialPreservesReceiptsAndIndependentParentCleanup",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
             }
           ],
           "live_tests": [
@@ -34188,6 +34232,10 @@
             {
               "file": "msteams/teams_admin_api/shifts_connections/service_test.go",
               "name": "TestUnitShiftsConnectionsAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "name": "TestUnitShiftsSyncDenialPreservesReceiptsAndIndependentParentCleanup",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
             }
           ],
           "live_tests": [
@@ -34264,6 +34312,10 @@
             {
               "file": "msteams/teams_admin_api/shifts_connections/service_test.go",
               "name": "TestUnitShiftsConnectionsAuthorizationDenialUsesAcceptanceResponses"
+            },
+            {
+              "name": "TestUnitShiftsSyncDenialPreservesReceiptsAndIndependentParentCleanup",
+              "file": "tests/integration/lab/ext_integration/shifts_composition_test.go"
             }
           ],
           "live_tests": [
