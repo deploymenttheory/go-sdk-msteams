@@ -57,7 +57,9 @@ func TestUnitClientConfigurationPatchRetainsTypedSuccessAndMalformedReceipt(t *t
 						if value.RestrictedSenderList == nil || *value.RestrictedSenderList != "" {
 							t.Fatal("response was replaced with the submitted null setting")
 						}
-						if !bytes.Equal(value.RawJSON, tc.body) || value.RawFields["Key"] == nil {
+						// encoding/json passes the object without outer whitespace to
+						// UnmarshalJSON; the HTTP receipt above keeps every byte.
+						if !bytes.Equal(value.RawJSON, bytes.TrimSpace(tc.body)) || value.RawFields["Key"] == nil {
 							t.Fatal("typed response lost its complete received snapshot")
 						}
 					}
