@@ -1,0 +1,450 @@
+{
+  "scope": "Read-only source method bodies from inspect-ext-il.ps1; no inspected method invoked. Selected generated model and selected-Get override callback only, not complete HTTP status/callback closure.",
+  "types": [
+    {
+      "fields": [
+        {
+          "literal": false,
+          "constant": null,
+          "type": "string",
+          "name": "<BeforeJson>k__BackingField"
+        },
+        {
+          "literal": false,
+          "constant": null,
+          "type": "string",
+          "name": "_identity"
+        },
+        {
+          "literal": false,
+          "constant": null,
+          "type": "System.Collections.Generic.Dictionary[string,System.Object]",
+          "name": "__additionalProperties"
+        }
+      ],
+      "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+      "methods": [
+        {
+          "method": "Void BeforeFromJson(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject, Boolean ByRef)",
+          "il_sha256": "8be2c5c5c71f753128bc57ace7e3fa0abd1712eb4fc88dd592a76db6c8ce1fd8",
+          "exceptions": [],
+          "instructions": [
+            {
+              "op": "nop",
+              "offset": 0,
+              "operand": null
+            },
+            {
+              "op": "ldarg.0",
+              "offset": 1,
+              "operand": null
+            },
+            {
+              "op": "ldarg.1",
+              "offset": 2,
+              "operand": null
+            },
+            {
+              "op": "callvirt",
+              "offset": 3,
+              "operand": "System.Object.System.String ToString()"
+            },
+            {
+              "op": "call",
+              "offset": 8,
+              "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration.Void set_BeforeJson(System.String)"
+            },
+            {
+              "op": "nop",
+              "offset": 13,
+              "operand": null
+            },
+            {
+              "op": "ret",
+              "offset": 14,
+              "operand": null
+            }
+          ],
+          "locals": []
+        },
+        {
+          "method": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.IXdsConfiguration FromJson(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode)",
+          "il_sha256": "442e05956ff47fa3dea590c3e15a5c760e76a57c2dff9031937408dba0f8ae1f",
+          "exceptions": [],
+          "instructions": [
+            {
+              "op": "nop",
+              "offset": 0,
+              "operand": null
+            },
+            {
+              "op": "ldarg.0",
+              "offset": 1,
+              "operand": null
+            },
+            {
+              "op": "isinst",
+              "offset": 2,
+              "operand": ".Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject"
+            },
+            {
+              "op": "stloc.0",
+              "offset": 7,
+              "operand": null
+            },
+            {
+              "op": "ldloc.0",
+              "offset": 8,
+              "operand": null
+            },
+            {
+              "op": "brtrue.s",
+              "offset": 9,
+              "operand": 14
+            },
+            {
+              "op": "ldnull",
+              "offset": 11,
+              "operand": null
+            },
+            {
+              "op": "br.s",
+              "offset": 12,
+              "operand": 37
+            },
+            {
+              "op": "ldloc.0",
+              "offset": 14,
+              "operand": null
+            },
+            {
+              "op": "newobj",
+              "offset": 15,
+              "operand": "System.Collections.Generic.HashSet[string].Void .ctor()"
+            },
+            {
+              "op": "dup",
+              "offset": 20,
+              "operand": null
+            },
+            {
+              "op": "ldstr",
+              "offset": 21,
+              "operand": "Identity"
+            },
+            {
+              "op": "callvirt",
+              "offset": 26,
+              "operand": "System.Collections.Generic.HashSet[string].Boolean Add(System.String)"
+            },
+            {
+              "op": "pop",
+              "offset": 31,
+              "operand": null
+            },
+            {
+              "op": "newobj",
+              "offset": 32,
+              "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration.Void .ctor(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject, System.Collections.Generic.HashSet`1[System.String])"
+            },
+            {
+              "op": "stloc.1",
+              "offset": 37,
+              "operand": null
+            },
+            {
+              "op": "br.s",
+              "offset": 38,
+              "operand": 40
+            },
+            {
+              "op": "ldloc.1",
+              "offset": 40,
+              "operand": null
+            },
+            {
+              "op": "ret",
+              "offset": 41,
+              "operand": null
+            }
+          ],
+          "locals": [
+            "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonObject (0)",
+            "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.IXdsConfiguration (1)"
+          ]
+        },
+        {
+          "method": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.IXdsConfiguration FromJsonString(System.String)",
+          "il_sha256": "2fac9dce67dfff520ee7665ff6186a67ca04fd94746b4d52c847248b50a2747b",
+          "exceptions": [],
+          "instructions": [
+            {
+              "op": "ldarg.0",
+              "offset": 0,
+              "operand": null
+            },
+            {
+              "op": "call",
+              "offset": 1,
+              "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode.Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode Parse(System.String)"
+            },
+            {
+              "op": "call",
+              "offset": 6,
+              "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration.Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.IXdsConfiguration FromJson(Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.JsonNode)"
+            },
+            {
+              "op": "ret",
+              "offset": 11,
+              "operand": null
+            }
+          ],
+          "locals": []
+        }
+      ],
+      "extractor_sha256": "9a2b958c4435d40c137954af83a6116bf2ed8582fc8ae23250e9cf5d7efd00dc",
+      "baseline_version": "8.1.0",
+      "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration"
+    },
+    {
+      "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+      "baseline_version": "8.1.0",
+      "fields": [
+        {
+          "name": "__invocationInfo",
+          "type": "System.Management.Automation.InvocationInfo",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "_cancellationTokenSource",
+          "type": "System.Threading.CancellationTokenSource",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "_apiVersion",
+          "type": "string",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "<Break>k__BackingField",
+          "type": "switch",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "_configName",
+          "type": "string",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "_configType",
+          "type": "string",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "<HttpPipelineAppend>k__BackingField",
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.SendAsyncStep[]",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "<HttpPipelinePrepend>k__BackingField",
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.SendAsyncStep[]",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "<Pipeline>k__BackingField",
+          "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.HttpPipeline",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "<Proxy>k__BackingField",
+          "type": "uri",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "<ProxyCredential>k__BackingField",
+          "type": "pscredential",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "<ProxyUseDefaultCredentials>k__BackingField",
+          "type": "switch",
+          "constant": null,
+          "literal": false
+        },
+        {
+          "name": "_schemaVersion",
+          "type": "string",
+          "constant": null,
+          "literal": false
+        }
+      ],
+      "methods": [
+        {
+          "method": "Void overrideOnOk(System.Net.Http.HttpResponseMessage, System.Threading.Tasks.Task`1[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.IXdsConfiguration], System.Threading.Tasks.Task`1[System.Boolean] ByRef)",
+          "instructions": [
+            {
+              "operand": null,
+              "offset": 0,
+              "op": "nop"
+            },
+            {
+              "operand": null,
+              "offset": 1,
+              "op": "ldarg.1"
+            },
+            {
+              "operand": 0,
+              "offset": 2,
+              "op": "ldloca.s"
+            },
+            {
+              "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.generated.custom.Helpers.HttpResponseMessageHelper, Microsoft.Teams.ConfigAPI.Cmdlets.private, Version=9.1116.2.0, Culture=neutral, PublicKeyToken=null.Boolean TryGetWarning(System.Net.Http.HttpResponseMessage, System.String ByRef)",
+              "offset": 4,
+              "op": "call"
+            },
+            {
+              "operand": null,
+              "offset": 9,
+              "op": "stloc.2"
+            },
+            {
+              "operand": null,
+              "offset": 10,
+              "op": "ldloc.2"
+            },
+            {
+              "operand": 23,
+              "offset": 11,
+              "op": "brfalse.s"
+            },
+            {
+              "operand": null,
+              "offset": 13,
+              "op": "nop"
+            },
+            {
+              "operand": null,
+              "offset": 14,
+              "op": "ldarg.0"
+            },
+            {
+              "operand": null,
+              "offset": 15,
+              "op": "ldloc.0"
+            },
+            {
+              "operand": "System.Management.Automation.Cmdlet.Void WriteWarning(System.String)",
+              "offset": 16,
+              "op": "call"
+            },
+            {
+              "operand": null,
+              "offset": 21,
+              "op": "nop"
+            },
+            {
+              "operand": null,
+              "offset": 22,
+              "op": "nop"
+            },
+            {
+              "operand": null,
+              "offset": 23,
+              "op": "ldarg.2"
+            },
+            {
+              "operand": "System.Threading.Tasks.Task[Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.IXdsConfiguration].Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.IXdsConfiguration get_Result()",
+              "offset": 24,
+              "op": "callvirt"
+            },
+            {
+              "operand": null,
+              "offset": 29,
+              "op": "stloc.1"
+            },
+            {
+              "operand": null,
+              "offset": 30,
+              "op": "ldarg.0"
+            },
+            {
+              "operand": null,
+              "offset": 31,
+              "op": "ldloc.1"
+            },
+            {
+              "operand": ".Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration",
+              "offset": 32,
+              "op": "isinst"
+            },
+            {
+              "operand": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.XdsConfiguration.System.String get_BeforeJson()",
+              "offset": 37,
+              "op": "callvirt"
+            },
+            {
+              "operand": null,
+              "offset": 42,
+              "op": "ldc.i4.1"
+            },
+            {
+              "operand": "System.Management.Automation.Cmdlet.Void WriteObject(System.Object, Boolean)",
+              "offset": 43,
+              "op": "call"
+            },
+            {
+              "operand": null,
+              "offset": 48,
+              "op": "nop"
+            },
+            {
+              "operand": null,
+              "offset": 49,
+              "op": "ldarg.3"
+            },
+            {
+              "operand": null,
+              "offset": 50,
+              "op": "ldc.i4.1"
+            },
+            {
+              "operand": "System.Threading.Tasks.Task.System.Threading.Tasks.Task`1[System.Boolean] FromResult[Boolean](Boolean)",
+              "offset": 51,
+              "op": "call"
+            },
+            {
+              "operand": null,
+              "offset": 56,
+              "op": "stind.ref"
+            },
+            {
+              "operand": null,
+              "offset": 57,
+              "op": "ret"
+            }
+          ],
+          "exceptions": [],
+          "locals": [
+            "System.String (0)",
+            "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Models.IXdsConfiguration (1)",
+            "System.Boolean (2)"
+          ],
+          "il_sha256": "603da174e5de216f0996fbb0b0560c19fee7ddad8689a6b3f099c068683b6eab"
+        }
+      ],
+      "extractor_sha256": "9a2b958c4435d40c137954af83a6116bf2ed8582fc8ae23250e9cf5d7efd00dc",
+      "type": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Cmdlets.GetCsConfiguration_Get1"
+    }
+  ]
+}

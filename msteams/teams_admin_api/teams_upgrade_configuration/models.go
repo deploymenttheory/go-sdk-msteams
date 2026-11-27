@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policyrp"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	"github.com/go-resty/resty/v2"
 )
@@ -23,13 +24,26 @@ type Configuration struct {
 }
 
 func (p *Configuration) UnmarshalJSON(raw []byte) error {
-	type snapshot Configuration
-	var next snapshot
-	if json.Unmarshal(raw, &next) != nil || json.Unmarshal(raw, &next.RawFields) != nil || next.RawFields == nil {
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(raw, &fields) != nil || fields == nil {
 		return client.ErrDecode
 	}
-	next.RawJSON = append(json.RawMessage(nil), raw...)
-	*p = Configuration(next)
+	var wire struct {
+		Identity                 policyrp.ReadString `json:"Identity"`
+		DownloadTeams            policyrp.ReadBool   `json:"DownloadTeams"`
+		SfBMeetingJoinUx         policyrp.ReadString `json:"SfBMeetingJoinUx"`
+		BlockLegacyAuthorization policyrp.ReadBool   `json:"BlockLegacyAuthorization"`
+	}
+	if json.Unmarshal(raw, &wire) != nil {
+		return client.ErrDecode
+	}
+	*p = Configuration{
+		Identity:                 wire.Identity.Value,
+		DownloadTeams:            wire.DownloadTeams.Value,
+		SfBMeetingJoinUx:         wire.SfBMeetingJoinUx.Value,
+		BlockLegacyAuthorization: wire.BlockLegacyAuthorization.Value,
+		RawFields:                fields, RawJSON: append(json.RawMessage(nil), raw...),
+	}
 	return nil
 }
 func (p Configuration) MarshalJSON() ([]byte, error) {

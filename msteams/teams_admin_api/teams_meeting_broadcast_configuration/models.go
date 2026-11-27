@@ -24,6 +24,8 @@ type ReadOptions struct {
 // runtime blob SdnRuntimeconfiguration. SdnAPIToken is a provider credential:
 // String/GoString never print it, and RawFields/RawJSON hold the complete
 // response, so callers must not log those either.
+// Typed fields are convenience views of matching JSON kinds. Other value kinds
+// remain available in RawFields/RawJSON without scalar coercion or a read error.
 type Configuration struct {
 	Identity                            *string                    `json:"Identity"`
 	SupportURL                          *string                    `json:"SupportURL"`
@@ -40,13 +42,36 @@ type Configuration struct {
 }
 
 func (v *Configuration) UnmarshalJSON(raw []byte) error {
-	type plain Configuration
-	var value plain
-	if json.Unmarshal(raw, &value) != nil || json.Unmarshal(raw, &value.RawFields) != nil || value.RawFields == nil {
+	var value Configuration
+	if !validReadKeys(raw) || json.Unmarshal(raw, &value.RawFields) != nil || value.RawFields == nil {
 		return client.ErrDecode
 	}
+	for name, token := range value.RawFields {
+		switch foldReadKey(name) {
+		case "IDENTITY":
+			value.Identity = readValue[string](token)
+		case "SUPPORTURL":
+			value.SupportURL = readValue[string](token)
+		case "ALLOWSDNPROVIDERFORBROADCASTMEETING":
+			value.AllowSdnProviderForBroadcastMeeting = readValue[bool](token)
+		case "SDNNAME":
+			value.SdnName = readValue[string](token)
+		case "SDNLICENSEID":
+			value.SdnLicenseID = readValue[string](token)
+		case "SDNAZURESUBSCRIPTIONID":
+			value.SdnAzureSubscriptionID = readValue[string](token)
+		case "SDNAPITEMPLATEURL":
+			value.SdnAPITemplateURL = readValue[string](token)
+		case "SDNAPITOKEN":
+			value.SdnAPIToken = readValue[string](token)
+		case "SDNRUNTIMECONFIGURATION":
+			value.SdnRuntimeConfiguration = readValue[string](token)
+		case "SDNATTENDEEFALLBACKCOUNT":
+			value.SdnAttendeeFallbackCount = readValue[int64](token)
+		}
+	}
 	value.RawJSON = append(json.RawMessage(nil), raw...)
-	*v = Configuration(value)
+	*v = value
 	return nil
 }
 func (v Configuration) MarshalJSON() ([]byte, error) {

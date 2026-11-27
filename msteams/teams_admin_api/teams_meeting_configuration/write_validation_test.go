@@ -38,8 +38,9 @@ func TestUnitWriteInputRejectsBeforeHTTP(t *testing.T) {
 				t.Fatal("invalid context Id accepted for patch")
 			}
 		}
-		if _, _, err := service.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{PublishedEntraAuthenticationContexts: resource.ReplaceAuthenticationContexts(nil)}); !errors.Is(err, resource.ErrInput) {
-			t.Fatal("nil context element accepted")
+		var missing *resource.PublishedEntraAuthenticationContext
+		if !errors.Is(missing.Validate(), resource.ErrInput) {
+			t.Fatal("standalone nil context accepted")
 		}
 		if _, _, err := service.PatchByIdentity(ctx, "", resource.PatchRequest{Settings: resource.Settings{ScalarSettings: resource.ScalarSettings{EnableQoS: policy.Set(true)}}}); !errors.Is(err, resource.ErrInput) {
 			t.Fatal("empty Set identity accepted")

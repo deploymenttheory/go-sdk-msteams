@@ -46,10 +46,10 @@ func TestUnitRestoreSendsExplicitNullAndEmptyString(t *testing.T) {
 	}})
 }
 
-// Every pinned Set parameter binds by its exact name. False, zero and empty
+// Every pinned Set parameter binds by its exact name. False, positive integers and empty
 // values are sent rather than dropped, explicit null is retained and Force
 // keeps the compiled string form.
-func TestUnitEverySettingNullFalseZeroEmptyAndForceRemainExplicit(t *testing.T) {
+func TestUnitEverySettingNullFalsePositiveEmptyAndForceRemainExplicit(t *testing.T) {
 	t.Parallel()
 	c1 := "c1"
 	name := "Sensitive meetings"
@@ -69,12 +69,12 @@ func TestUnitEverySettingNullFalseZeroEmptyAndForceRemainExplicit(t *testing.T) 
 			},
 			PublishedEntraAuthenticationContexts: policy.Set([]*resource.PublishedEntraAuthenticationContext{{ID: &c1, PublishedName: &name, Published: &published}}),
 		}},
-		{"null", `{"Identity":"Global","LogoURL":null,"EnableWorkIQTranscriptAccess":null,"ClientVideoPort":null,"PublishedEntraAuthenticationContexts":null,"Force":"False"}`, resource.Settings{
+		{"null", `{"Identity":"Global","LogoURL":null,"EnableWorkIQTranscriptAccess":null,"ClientVideoPort":null,"PublishedEntraAuthenticationContexts":[],"Force":"False"}`, resource.Settings{
 			ScalarSettings:                       resource.ScalarSettings{LogoURL: policy.Null[string](), EnableWorkIQTranscriptAccess: policy.Null[bool](), ClientVideoPort: policy.Null[uint32]()},
 			PublishedEntraAuthenticationContexts: policy.Null[[]*resource.PublishedEntraAuthenticationContext](),
 		}},
-		{"zero-empty", `{"Identity":"Global","CustomFooterText":"","ClientAudioPort":0,"EnableQoS":false,"PublishedEntraAuthenticationContexts":[],"Force":"False"}`, resource.Settings{
-			ScalarSettings:                       resource.ScalarSettings{CustomFooterText: policy.Set(""), ClientAudioPort: policy.Set[uint32](0), EnableQoS: policy.Set(false)},
+		{"positive-empty", `{"Identity":"Global","CustomFooterText":"","ClientAudioPort":1,"EnableQoS":false,"PublishedEntraAuthenticationContexts":[],"Force":"False"}`, resource.Settings{
+			ScalarSettings:                       resource.ScalarSettings{CustomFooterText: policy.Set(""), ClientAudioPort: policy.Set[uint32](1), EnableQoS: policy.Set(false)},
 			PublishedEntraAuthenticationContexts: policy.Set([]*resource.PublishedEntraAuthenticationContext{}),
 		}},
 	} {
@@ -88,11 +88,12 @@ func TestUnitEverySettingNullFalseZeroEmptyAndForceRemainExplicit(t *testing.T) 
 }
 
 // The compiled cmdlet applies its PSListModifier to the preparation read and
-// sends the complete list. Existing elements are re-sent exactly as received;
+// sends the complete list. Existing elements use the typed known-field projection;
 // Add appends without deduplication; Replace wins; an empty modifier clears.
 func TestUnitContextListEditsApplyToPreparationRead(t *testing.T) {
 	t.Parallel()
 	const existing = `[{"Identity":"c1","Id":"c1","PublishedName":"Existing","PublishedDescription":"kept","EntraName":"Entra","EntraDescription":null,"Published":true,"Unknown":1}]`
+	const projected = `[{"Identity":"c1","Id":"c1","PublishedName":"Existing","PublishedDescription":"kept","EntraName":"Entra","EntraDescription":null,"Published":true}]`
 	c1, c2 := "c1", "c2"
 	added := &resource.PublishedEntraAuthenticationContext{ID: &c2}
 	duplicate := &resource.PublishedEntraAuthenticationContext{ID: &c1}
@@ -102,8 +103,8 @@ func TestUnitContextListEditsApplyToPreparationRead(t *testing.T) {
 		name, current, sent string
 		edit                *resource.AuthenticationContextEdit
 	}{
-		{"add-to-existing", existing, `[` + existing[1:len(existing)-1] + `,` + addedJSON + `]`, resource.AddAuthenticationContexts(added)},
-		{"add-duplicate-id", existing, `[` + existing[1:len(existing)-1] + `,` + duplicateJSON + `]`, resource.AddAuthenticationContexts(duplicate)},
+		{"add-to-existing", existing, `[` + projected[1:len(projected)-1] + `,` + addedJSON + `]`, resource.AddAuthenticationContexts(added)},
+		{"add-duplicate-id", existing, `[` + projected[1:len(projected)-1] + `,` + duplicateJSON + `]`, resource.AddAuthenticationContexts(duplicate)},
 		{"add-to-actual-empty", "[]", `[` + addedJSON + `]`, resource.AddAuthenticationContexts(added)},
 		{"add-to-null", "null", `[` + addedJSON + `]`, resource.AddAuthenticationContexts(added)},
 		{"replace", existing, `[` + addedJSON + `]`, resource.ReplaceAuthenticationContexts(added)},

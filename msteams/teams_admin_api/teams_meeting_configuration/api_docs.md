@@ -30,14 +30,15 @@ settings, `ClientMediaPortRangeEnabled`, `LimitPresenterRolePermissions`,
 `FeedbackSurveyForAnonymousUsers`, `ReportMeeting` and
 `PublishedEntraAuthenticationContexts`. The context list is
 constructor-initialized in the module, so it is never nil after decoding. Each
-element keeps its received JSON, so an Add edit re-sends existing elements
-unchanged. `Configuration` also keeps unknown `RawFields` and an owned `RawJSON`
+element keeps its received JSON for inspection. A dedicated typed writer sends
+all seven known fields and drops unknown fields; it does not resend raw JSON. `Configuration` also keeps unknown `RawFields` and an owned `RawJSON`
 snapshot.
 
 `ScalarSettings` uses `policy.Field[T]` for the 20 scalar Set parameters, so
 omission, explicit null and false, zero or empty values stay distinct. The
-compiled setters impose no URL, enum, length or port-range rule, so none is
-added locally; strings such as `Enabled`/`Disabled` are sent verbatim.
+six port/range DTO setters accept null or 1 through UInt32 max and reject zero;
+there is no invented 65535 ceiling. Other setters impose no URL, enum or length
+rule; strings such as `Enabled`/`Disabled` are sent verbatim.
 
 `PublishedEntraAuthenticationContexts` is a PSListModifier in the module. In
 `UpdateByIdentity` it is an `AuthenticationContextEdit` applied to the list read
@@ -46,12 +47,18 @@ during preparation, and the complete resulting list is sent:
 - `ReplaceAuthenticationContexts(values...)` replaces the list; no values clears it.
 - `AddAuthenticationContexts(values...)` appends without deduplication; no values
   is the module's empty modifier and clears the list.
-- Remove is not offered: the pinned cmdlet's element comparer always throws
-  `ErrorCannotRemoveElementsOf`, so a PowerShell Remove can never succeed.
+- `ChangeAuthenticationContexts(add, remove)` removes before appending. Nonnull
+  Remove entries succeed on an empty list; a populated-list comparison or null
+  Remove fails after preparation, retaining its read receipt without a PATCH.
 
 An assigned element `Id` must match the pinned setter pattern
-`^c([1-9]|[1-9][0-9])$` (`c1` to `c99`, including the .NET anchor's optional final LF). Validation preserves the assigned Id exactly; it does not trim the request value. CRLF and repeated final LF fail; nil elements are rejected.
-`PatchByIdentity` takes a full replacement list directly.
+`^c([1-9]|[1-9][0-9])$` (`c1` to `c99`, including the .NET anchor's optional final LF). Validation preserves the assigned Id exactly; it does not trim the request value. CRLF and repeated final LF fail. Null container members are allowed; an unassigned
+Id remains the constructor default. Edit constructors/results own their pointers
+and raw bytes as a native Go ownership guarantee.
+`PatchByIdentity` takes a full replacement list directly. A bound null or nil
+replacement now normalizes to `[]`, matching the actual source clear behavior;
+this corrects the earlier primitive wire value `null`. It is not a claim that
+the backend accepts a JSON-null array.
 
 Set requires an Identity and has no Global default. Bound Force keeps the
 compiled string form. `UpdateResult` keeps the preparation read, mutation
@@ -72,3 +79,8 @@ context list edits (the lab list is empty), non-Global identities, effective
 meeting behavior, delegated authentication or other clouds.
 
 See [qualification](../../../docs/implementation/policies/meeting-configuration-lab-acceptance.md).
+
+The public port parameter setters store zero, so prepared Update retains its
+GET result before returning ErrInput without a PATCH for zero. Direct Patch
+rejects zero before HTTP. This corrects the previous source-incompatible zero
+wire acceptance; explicit null remains distinct from omission.

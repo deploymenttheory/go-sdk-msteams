@@ -72,3 +72,26 @@ func TestUnitMeetingTemplateOraclesUseAcceptanceFields(t *testing.T) {
 		}
 	}
 }
+
+// Public producer output remains canonical even where the backend DTO reader
+// accepts source-proven scalar coercions or ignores whole primitive lists.
+func TestUnitMeetingTemplateOracleRejectsCoercibleProducerTypes(t *testing.T) {
+	t.Parallel()
+	const tenant = "00000000-0000-4000-8000-000000000003"
+	for _, kind := range []string{"configuration", "firstparty"} {
+		for _, settings := range []string{
+			`{"Description":37,"TeamsMeetingTemplates":[]}`,
+			`{"Description":null,"TeamsMeetingTemplates":true}`,
+			`{"Description":null,"TeamsMeetingTemplates":[{"Name":false}]}`,
+			`{"Description":null,"TeamsMeetingTemplates":[{"Name":"t","TeamsMeetingOptions":[{"Name":"o","IsLocked":1}]}]}`,
+		} {
+			report, err := json.Marshal(map[string]any{"success": true, "tenant_id": tenant, "identity": "Global", "settings": json.RawMessage(settings)})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := DecodeMeetingTemplatePolicyOracle(report, kind, tenant); err == nil {
+				t.Fatal("coercible backend value accepted as canonical producer output")
+			}
+		}
+	}
+}

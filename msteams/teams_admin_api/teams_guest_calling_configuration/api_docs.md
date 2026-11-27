@@ -2,9 +2,11 @@
 
 Use `sdk.TeamsAdminAPI.TeamsGuestCallingConfigurations` for the public 8.1.0
 Get-CsTeamsGuestCallingConfiguration and Set-CsTeamsGuestCallingConfiguration
-functions. Both are `Remoting` proxies whose pinned `CmdletConfig.json` selects
-`Get-CsConfigurationModern`/`Set-CsConfigurationModern` with
-`ConfigType=TeamsGuestCallingConfiguration`, i.e. modern ConfigAPI remoting.
+functions. Both have `Remoting` mappings with modern candidates
+`Get-CsConfigurationModern`/`Set-CsConfigurationModern` and
+`ConfigType=TeamsGuestCallingConfiguration`. Public default dispatch remains
+session-flight dependent; this native service implements the modern candidate,
+without claiming an implemented legacy server contract.
 
 | Native operation | PowerShell behavior |
 |---|---|

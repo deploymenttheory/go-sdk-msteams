@@ -1,4 +1,4 @@
-> Historical qualification statements below are superseded by the [read-contract withdrawal](pol91-completion-audit.md#qualification-withdrawal-and-finite-repair-queue). Own decoder corrections and requalification are pending; historical execution scopes remain valid.
+> Current approved decisions and corrected read-profile execution are in [the final report](pol91-final-contract-decisions.md); older canonical-only qualifications below remain bounded historical evidence. Live status is unchanged.
 
 # POL91 TenantAbuse nullable-list boundary
 

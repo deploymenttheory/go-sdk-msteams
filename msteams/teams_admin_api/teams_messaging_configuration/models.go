@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policyrp"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
@@ -67,40 +68,52 @@ type Configuration struct {
 }
 
 func (v *Configuration) UnmarshalJSON(raw []byte) error {
-	value := Configuration{FileTypeBlockList: []*string{}}
+	var wire struct {
+		Identity                          policyrp.ReadString `json:"Identity"`
+		EnableVideoMessageCaptions        policyrp.ReadBool   `json:"EnableVideoMessageCaptions"`
+		EnableInOrganizationChatControl   policyrp.ReadBool   `json:"EnableInOrganizationChatControl"`
+		CustomEmojis                      policyrp.ReadBool   `json:"CustomEmojis"`
+		Storyline                         readStoryline       `json:"Storyline"`
+		Communities                       policyrp.ReadString `json:"Communities"`
+		MessagingNotes                    policyrp.ReadString `json:"MessagingNotes"`
+		FileTypeCheck                     policyrp.ReadString `json:"FileTypeCheck"`
+		UrlReputationCheck                policyrp.ReadString `json:"UrlReputationCheck"`
+		ContentBasedPhishingCheck         policyrp.ReadString `json:"ContentBasedPhishingCheck"`
+		ReportIncorrectSecurityDetections policyrp.ReadString `json:"ReportIncorrectSecurityDetections"`
+		FileTypeCustomizationSetting      policyrp.ReadString `json:"FileTypeCustomizationSetting"`
+	}
+	if json.Unmarshal(raw, &wire) != nil {
+		return client.ErrDecode
+	}
+	value := Configuration{
+		Identity:                          wire.Identity.Value,
+		EnableVideoMessageCaptions:        wire.EnableVideoMessageCaptions.Value,
+		EnableInOrganizationChatControl:   wire.EnableInOrganizationChatControl.Value,
+		CustomEmojis:                      wire.CustomEmojis.Value,
+		Storyline:                         wire.Storyline.Value,
+		Communities:                       wire.Communities.Value,
+		MessagingNotes:                    wire.MessagingNotes.Value,
+		FileTypeCheck:                     wire.FileTypeCheck.Value,
+		UrlReputationCheck:                wire.UrlReputationCheck.Value,
+		ContentBasedPhishingCheck:         wire.ContentBasedPhishingCheck.Value,
+		ReportIncorrectSecurityDetections: wire.ReportIncorrectSecurityDetections.Value,
+		FileTypeCustomizationSetting:      wire.FileTypeCustomizationSetting.Value,
+		FileTypeBlockList:                 []*string{},
+	}
 	fields, err := object(raw, func(key string, body json.RawMessage) error {
-		switch strings.ToLower(key) {
-		case "identity":
-			return json.Unmarshal(body, &value.Identity)
-		case "enablevideomessagecaptions":
-			return json.Unmarshal(body, &value.EnableVideoMessageCaptions)
-		case "enableinorganizationchatcontrol":
-			return json.Unmarshal(body, &value.EnableInOrganizationChatControl)
-		case "customemojis":
-			return json.Unmarshal(body, &value.CustomEmojis)
-		case "storyline":
-			return json.Unmarshal(body, &value.Storyline)
-		case "communities":
-			return json.Unmarshal(body, &value.Communities)
-		case "messagingnotes":
-			return json.Unmarshal(body, &value.MessagingNotes)
-		case "filetypecheck":
-			return json.Unmarshal(body, &value.FileTypeCheck)
-		case "urlreputationcheck":
-			return json.Unmarshal(body, &value.UrlReputationCheck)
-		case "contentbasedphishingcheck":
-			return json.Unmarshal(body, &value.ContentBasedPhishingCheck)
-		case "reportincorrectsecuritydetections":
-			return json.Unmarshal(body, &value.ReportIncorrectSecurityDetections)
-		case "filetypecustomizationsetting":
-			return json.Unmarshal(body, &value.FileTypeCustomizationSetting)
-		case "filetypeblocklist":
-			if !bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
-				var items []*string
-				if json.Unmarshal(body, &items) != nil {
-					return client.ErrDecode
-				}
-				value.FileTypeBlockList = append(value.FileTypeBlockList, items...)
+		if strings.EqualFold(key, "FileTypeBlockList") && !bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
+			// JsonConvert ignores scalar assignments to this getter-only list. Objects
+			// still reject, while arrays populate the existing collection in wire order.
+			token := bytes.TrimSpace(body)
+			if len(token) > 0 && token[0] != '[' && token[0] != '{' {
+				return nil
+			}
+			var items []policyrp.ReadString
+			if json.Unmarshal(body, &items) != nil {
+				return client.ErrDecode
+			}
+			for _, item := range items {
+				value.FileTypeBlockList = append(value.FileTypeBlockList, item.Value)
 			}
 		}
 		return nil

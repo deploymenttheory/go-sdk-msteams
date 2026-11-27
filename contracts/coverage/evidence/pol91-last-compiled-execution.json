@@ -1,0 +1,65 @@
+{
+  "scope": "Corrected full Guest/Meeting source-read, typed-write, positiveInteger and cross-family recovery offline check. No qualification or live promotion.",
+  "revision": "c9e096f36f268d18f48ad6f8acb0b07bf2ad466b",
+  "session": "73712",
+  "result": "passed",
+  "toolchain": "go1.27.4",
+  "GOMAXPROCS": 2,
+  "parallel_packages": 1,
+  "count": 1,
+  "selection": "TestUnit|Example",
+  "runtime_disk_floor_gib": 14,
+  "admission_free_gib": 28.46,
+  "packages": [
+    "msteams/teams_admin_api/teams_guest_meeting_configuration",
+    "msteams/teams_admin_api/teams_meeting_configuration",
+    "msteams/teams_admin_api/internal/policyrp",
+    "tests/contract/policies",
+    "tests/integration/lab/internal/labkit",
+    "tests/integration/lab/teams_guest_meeting_configuration",
+    "tests/integration/lab/teams_meeting_configuration"
+  ],
+  "test_pass_events": 925,
+  "test_fail_events": 0,
+  "test_skip_events": 0,
+  "test_bearing_package_passes": 6,
+  "compile_only_package": "internal/policyrp; Go reports package skip because it has no test files, not a skipped test case",
+  "raw_result": "/private/tmp/msteams-pol91-last-c9e096f-tests.json",
+  "raw_sha256": "82e8f3bc03094b5ef8ff820ebfdddf2935815b391cc81700007c030a9c4ea4b1",
+  "targeted_lint": {
+    "session": "79196",
+    "result": "passed",
+    "issues": 0,
+    "enabled": [
+      "gosec",
+      "nolintlint"
+    ],
+    "packages": [
+      "internal/policyrp",
+      "teams_guest_meeting_configuration",
+      "teams_meeting_configuration"
+    ],
+    "raw_result": "/private/tmp/msteams-pol91-last-c9e096f-lint.log",
+    "raw_sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47"
+  },
+  "source_observations": {
+    "own_read_model_rows": 725,
+    "own_context_helper_serializer_rows": 11,
+    "own_positive_port_setter_writer_rows": 24
+  },
+  "prior_real_failure": {
+    "revision": "4e7a06dc2ae691b4d23beea366653aa2dca3f776",
+    "session": "34406",
+    "raw_result": "/private/tmp/msteams-pol91-last-compiled-4e7a06d-tests.json",
+    "cause": "36 zero-conversion own read vectors plus parent failed: missing resource-specific positiveInteger minimum. Generic UInt32 conversion itself correctly allows zero.",
+    "correction": "Resource-only positive read wrapper and typed write validation; primitive pre-HTTP, prepared after GET before PatchInvoked. Source allows null/1..UInt32max; no invented65535cap."
+  },
+  "post_run_scoped_diff": "zero across affected SDK/labs/provider/root contracts/labkit, client/auth/module files and source inputs",
+  "owned_test_and_lint_scratch_removed": true,
+  "limits": [
+    "No TestAcc, tenant request, authentication, role change, race or full-module test sweep.",
+    "Source/model observations and authored compound failures/recovery are distinct from retained primitive response captures.",
+    "No automatic replay or rollback and no persistence/effective behavior/minimum authorization claim.",
+    "All current23command35set qualifications and live records remain unchanged by this execution record."
+  ]
+}
