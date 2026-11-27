@@ -155,3 +155,57 @@ func TestUnitTargetingFailuresDoNotInventSuccessOrReplayWrites(t *testing.T) {
 		}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status, Codes: []string{"Unavailable"}}}})
 	}
 }
+
+// Native 200 object/array and bodyless 204 vectors are authored from pinned
+// ConfigAPI handlers. Null/future retention is SDK behavior, not pinned parity.
+func TestUnitTargetingSuccessfulReadFilterAndSparseMutation(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		name, method, path, command, reply string
+		status                             int
+		body                               json.RawMessage
+	}{
+		{"read", "GET", collection + "/configuration/Global", "Get-CsTeamsTargetingPolicy", `{"Identity":"Global","CustomTagsMode":"Enabled","Description":null,"future":false}`, 200, nil},
+		{"filter", "GET", collection, "Get-CsTeamsTargetingPolicy", `[{"Identity":"tag:Fixture","Description":"owned"},{"Identity":"Global"},{"Identity":"tag:Other"}]`, 200, nil},
+		{"list", "GET", collection, "Get-CsTeamsTargetingPolicy", `[{"Identity":"tag:Fixture","Description":"owned"},{"Identity":"Global"},{"Identity":"tag:Other"}]`, 200, nil},
+		{"update", "PUT", collection + "/configuration/Global", "Set-CsTeamsTargetingPolicy", "", 204, json.RawMessage(`{"Identity":"Global","Description":""}`)},
+		{"delete", "DELETE", collection + "/configuration/Global", "Remove-CsTeamsTargetingPolicy", "", 204, nil},
+	} {
+		step := wire(tc.method, tc.path, tc.command, tc.body, tc.status, tc.reply)
+		step.Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0"}
+		set := "Identity"
+		if tc.name == "filter" {
+			set = "Filter"
+		}
+		run(t, contracttest.Case{Name: "positive-" + tc.name, Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			s := sdk.TeamsAdminAPI.TargetingPolicies
+			switch tc.name {
+			case "read":
+				v, r, err := s.GetByIdentity(ctx, "Global")
+				if err == nil && (v == nil || v.Identity != "Global" || v.CustomTagsMode == nil || *v.CustomTagsMode != "Enabled" || v.Description != nil || string(v.RawFields["Description"]) != "null" || string(v.RawFields["future"]) != "false") {
+					t.Fatal("policy snapshot lost typed/raw fields")
+				}
+				return contracttest.Observation{Response: r, Err: err}
+			case "list":
+				v, r, err := s.List(ctx)
+				if err == nil && (len(v) != 3 || v[0].Identity != "Global" || v[1].Identity != "tag:Fixture" || v[2].Identity != "tag:Other") {
+					t.Fatal("native list sort or identities differ")
+				}
+				return contracttest.Observation{Response: r, Err: err}
+			case "filter":
+				v, r, err := s.ListFiltered(ctx, "fIX*")
+				if err == nil && (len(v) != 1 || v[0].Identity != "tag:Fixture") {
+					t.Fatal("case-insensitive tag filter did not select exact policy")
+				}
+				return contracttest.Observation{Response: r, Err: err}
+			case "update":
+				empty := ""
+				r, err := s.UpdateGlobal(ctx, policy.UpdateRequest{Description: &empty})
+				return contracttest.Observation{Response: r, Err: err}
+			default:
+				r, err := s.DeleteByIdentity(ctx, "Global")
+				return contracttest.Observation{Response: r, Err: err}
+			}
+		}, Want: contracttest.Expected{Status: tc.status, Body: []byte(tc.reply)}})
+	}
+}

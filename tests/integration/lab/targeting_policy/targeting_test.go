@@ -22,21 +22,37 @@ func TestAccTargetingPolicyReadOnly(t *testing.T) {
 	sdk, binding, _ := labkit.SDKClient(t)
 	ctx, stop := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer stop()
-	value, _, err := sdk.TeamsAdminAPI.TargetingPolicies.GetByIdentity(ctx, "Global")
+	value, response, err := sdk.TeamsAdminAPI.TargetingPolicies.GetByIdentity(ctx, "Global")
 	if err != nil || value == nil || !strings.EqualFold(value.Identity, "Global") {
-		t.Fatal("selected modern targeting policy read failed")
+		status := 0
+		if response != nil {
+			status = response.StatusCode()
+		}
+		t.Fatalf("selected modern targeting policy read failed (HTTP %d)", status)
 	}
-	listed, _, err := sdk.TeamsAdminAPI.TargetingPolicies.ListFiltered(ctx, "Global")
+	labkit.WriteResponseFixture(t, "targeting_policy", "get_global", response, nil)
+	listed, response, err := sdk.TeamsAdminAPI.TargetingPolicies.ListFiltered(ctx, "Global")
 	if err != nil {
-		t.Fatal("filtered modern targeting policy read failed")
+		status := 0
+		if response != nil {
+			status = response.StatusCode()
+		}
+		t.Fatalf("filtered modern targeting policy read failed (HTTP %d)", status)
 	}
-	found := false
+	found := 0
 	for _, item := range listed {
-		found = found || strings.EqualFold(item.Identity, "Global")
+		if strings.EqualFold(item.Identity, "Global") {
+			found++
+			if !reflect.DeepEqual(policyObservation(*value), policyObservation(item)) {
+				t.Fatal("selected and listed targeting Global policy fields differ")
+			}
+		}
 	}
-	if !found {
+	if found != 1 {
 		t.Fatal("Global policy missing from filtered list")
 	}
+	labkit.WriteResponseFixture(t, "targeting_policy", "list_global", response, nil)
+	t.Log("targeting Global read/list: passed")
 	if oracle {
 		tenant, _, ok := strings.Cut(binding, "|")
 		if !ok || !labkit.DirectoryID.MatchString(tenant) {
@@ -46,6 +62,7 @@ func TestAccTargetingPolicyReadOnly(t *testing.T) {
 		if actual == nil || !reflect.DeepEqual(policyObservation(*value), *actual) {
 			t.Fatal("PowerShell and Go selected targeting policy fields differ")
 		}
+		t.Log("PowerShell 8.1.0 / Go targeting policy read parity: passed")
 	}
 	t.Log("selected modern targeting reads observed; legacy flight eligibility and mutation effects remain separately qualified")
 }

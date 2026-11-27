@@ -25,12 +25,10 @@ func TestUnitUploadPictureUsesGroupPhotoRouteAndOriginalBytes(t *testing.T) {
 	for _, status := range []int{200, 204, 503} {
 		t.Run(strconv.Itoa(status), func(t *testing.T) {
 			jpeg := "\xff\xd8\xff\x00fixture-binary\xff\xd9"
-			sdk, _, calls := fixture(t, "commercial", auth.Application, exchange{method: "PUT", path: "/v1.0/groups/" + teamID + "/photo/$value", binary: jpeg, contentType: "image/jpeg", status: status})
+			sdk, _, calls := fixture(t, "commercial", auth.Application, exchange{method: "PUT", path: "/v1.0/groups/" + teamID + "/photo/$value", binary: jpeg, contentType: "image/jpeg", status: status, protocolSource: "https://learn.microsoft.com/en-us/graph/api/profilephoto-update?view=graph-rest-1.0"})
 			source := &pictureSource{Reader: strings.NewReader(jpeg)}
 			response, err := sdk.GraphAPI.Teams.UploadPicture(t.Context(), teamID, source)
-			if errors.Is(err, auth.ErrForbidden) {
-				return
-			}
+
 			if response == nil || response.StatusCode() != status || (err != nil) != (status == 503) || source.closes != 1 || *calls != 1 {
 				t.Fatal("picture transfer changed bytes, lost metadata, leaked source or replayed")
 			}

@@ -1,0 +1,1833 @@
+{
+  "schema_version": 1,
+  "scope": "Pure actual AadUser JsonConvert data operations and consumer IL inspection; no management lifecycle, auth or HTTP",
+  "powershell_version": "7.6.6",
+  "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+  "producer_sha256": "2cecc91b8366afbb190b424197b6e3210ce10a074725eb4d8d2929ec5c799150",
+  "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser",
+  "properties": [
+    {
+      "name": "Id",
+      "type": "System.String",
+      "setter_il": "02037D230100042A",
+      "getter_il": "027B230100042A"
+    },
+    {
+      "name": "DisplayName",
+      "type": "System.String",
+      "setter_il": "02037D1F0100042A",
+      "getter_il": "027B1F0100042A"
+    },
+    {
+      "name": "UserPrincipalName",
+      "type": "System.String",
+      "setter_il": "02037D280100042A",
+      "getter_il": "027B280100042A"
+    },
+    {
+      "name": "UserType",
+      "type": "System.String",
+      "setter_il": "02037D270100042A",
+      "getter_il": "027B270100042A"
+    },
+    {
+      "name": "Mail",
+      "type": "System.String",
+      "setter_il": "02037D210100042A",
+      "getter_il": "027B210100042A"
+    }
+  ],
+  "observations": [
+    {
+      "field": "id",
+      "input_json": "{\"id\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    }
+  ],
+  "property_controls": [
+    {
+      "input_json": "{\"diſplayName\":\"foreign\",\"uſerPrincipalName\":\"foreign\"}",
+      "projection": {
+        "id": null,
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"diſplayName\":{},\"uſerPrincipalName\":[]}",
+      "projection": {
+        "id": null,
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"displayName\":\"first\",\"DISPLAYNAME\":\"last\"}",
+      "projection": {
+        "id": null,
+        "displayName": "last",
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"displayName\":\"first\",\"DISPLAYNAME\":null}",
+      "projection": {
+        "id": null,
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"id\":\"first\",\"ID\":null}",
+      "projection": {
+        "id": null,
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"ID\":null,\"id\":\"last\"}",
+      "projection": {
+        "id": "last",
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"id\":\"first\",\"id\":\"last\"}",
+      "projection": {
+        "id": "last",
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"id\":{},\"ID\":\"later\"}",
+      "projection": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "input_json": "{\"DISPLAYNAME\":37,\"USERPRINCIPALNAME\":false,\"USERTYPE\":true,\"MAIL\":1e2}",
+      "projection": {
+        "id": null,
+        "displayName": "37",
+        "userPrincipalName": "false",
+        "userType": "true",
+        "mail": "1e2"
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"displayName\":\"known\",\"diſplayName\":{}}",
+      "projection": {
+        "id": null,
+        "displayName": "known",
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"diſplayName\":{},\"displayName\":\"known\"}",
+      "projection": {
+        "id": null,
+        "displayName": "known",
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    }
+  ],
+  "consumer_methods": [
+    {
+      "declaring_type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.GraphUtilities",
+      "signature": "System.String GetUserId(System.Net.Http.HttpClient, System.String)",
+      "il_hex": "0372A58A0070283B00000A733200000A0A0206285300002B0B076FF20200062A",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "ldarg.1",
+          "operand": null
+        },
+        {
+          "offset": 1,
+          "opcode": "ldstr",
+          "operand": "/v1.0/me?$select=id"
+        },
+        {
+          "offset": 6,
+          "opcode": "call",
+          "operand": "string.System.String Concat(System.String, System.String)"
+        },
+        {
+          "offset": 11,
+          "opcode": "newobj",
+          "operand": "uri.Void .ctor(System.String)"
+        },
+        {
+          "offset": 16,
+          "opcode": "stloc.0",
+          "operand": null
+        },
+        {
+          "offset": 17,
+          "opcode": "ldarg.0",
+          "operand": null
+        },
+        {
+          "offset": 18,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 19,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser Get[AadUser](System.Net.Http.HttpClient, System.Uri)"
+        },
+        {
+          "offset": 24,
+          "opcode": "stloc.1",
+          "operand": null
+        },
+        {
+          "offset": 25,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 26,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser.System.String get_Id()"
+        },
+        {
+          "offset": 31,
+          "opcode": "ret",
+          "operand": null
+        }
+      ]
+    },
+    {
+      "declaring_type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.GraphUtilities",
+      "signature": "System.String GetUserId(System.Net.Http.HttpClient, System.String, System.String)",
+      "il_hex": "0472E720007003284700000A733200000A0A02066F5A00000A6F4200000A0B076F4300000A2C2C076F0401000A6F0501000A6F5901000A13061206285A01000A13041104285400002B130511056FF20200062A076F4400000A209401000033400472CD8A00700372B4260070285D00000A733200000A0A0206285500002B130711076F5B01000A285600002B2C1211076F5B01000A285700002B6FF20200062A07120228780500062608287A0500060D076F4400000A72AF06007009283B00000A73740500067A",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "ldarg.2",
+          "operand": null
+        },
+        {
+          "offset": 1,
+          "opcode": "ldstr",
+          "operand": "/v1.0/users/"
+        },
+        {
+          "offset": 6,
+          "opcode": "ldarg.1",
+          "operand": null
+        },
+        {
+          "offset": 7,
+          "opcode": "call",
+          "operand": "string.System.String Concat(System.String, System.String, System.String)"
+        },
+        {
+          "offset": 12,
+          "opcode": "newobj",
+          "operand": "uri.Void .ctor(System.String)"
+        },
+        {
+          "offset": 17,
+          "opcode": "stloc.0",
+          "operand": null
+        },
+        {
+          "offset": 18,
+          "opcode": "ldarg.0",
+          "operand": null
+        },
+        {
+          "offset": 19,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 20,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpClient.System.Threading.Tasks.Task`1[System.Net.Http.HttpResponseMessage] GetAsync(System.Uri)"
+        },
+        {
+          "offset": 25,
+          "opcode": "callvirt",
+          "operand": "System.Threading.Tasks.Task[System.Net.Http.HttpResponseMessage].System.Net.Http.HttpResponseMessage get_Result()"
+        },
+        {
+          "offset": 30,
+          "opcode": "stloc.1",
+          "operand": null
+        },
+        {
+          "offset": 31,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 32,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpResponseMessage.Boolean get_IsSuccessStatusCode()"
+        },
+        {
+          "offset": 37,
+          "opcode": "brfalse.s",
+          "operand": 83
+        },
+        {
+          "offset": 39,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 40,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.Http.HttpContent get_Content()"
+        },
+        {
+          "offset": 45,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpContent.System.Threading.Tasks.Task`1[System.String] ReadAsStringAsync()"
+        },
+        {
+          "offset": 50,
+          "opcode": "callvirt",
+          "operand": "System.Threading.Tasks.Task[string].System.Runtime.CompilerServices.TaskAwaiter`1[System.String] GetAwaiter()"
+        },
+        {
+          "offset": 55,
+          "opcode": "stloc.s",
+          "operand": 6
+        },
+        {
+          "offset": 57,
+          "opcode": "ldloca.s",
+          "operand": 6
+        },
+        {
+          "offset": 59,
+          "opcode": "call",
+          "operand": "System.Runtime.CompilerServices.TaskAwaiter[string].System.String GetResult()"
+        },
+        {
+          "offset": 64,
+          "opcode": "stloc.s",
+          "operand": 4
+        },
+        {
+          "offset": 66,
+          "opcode": "ldloc.s",
+          "operand": 4
+        },
+        {
+          "offset": 68,
+          "opcode": "call",
+          "operand": "Newtonsoft.Json.JsonConvert.Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser DeserializeObject[AadUser](System.String)"
+        },
+        {
+          "offset": 73,
+          "opcode": "stloc.s",
+          "operand": 5
+        },
+        {
+          "offset": 75,
+          "opcode": "ldloc.s",
+          "operand": 5
+        },
+        {
+          "offset": 77,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser.System.String get_Id()"
+        },
+        {
+          "offset": 82,
+          "opcode": "ret",
+          "operand": null
+        },
+        {
+          "offset": 83,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 84,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.HttpStatusCode get_StatusCode()"
+        },
+        {
+          "offset": 89,
+          "opcode": "ldc.i4",
+          "operand": 404
+        },
+        {
+          "offset": 94,
+          "opcode": "bne.un.s",
+          "operand": 160
+        },
+        {
+          "offset": 96,
+          "opcode": "ldarg.2",
+          "operand": null
+        },
+        {
+          "offset": 97,
+          "opcode": "ldstr",
+          "operand": "/v1.0/myorganization/users?$filter=mail eq '"
+        },
+        {
+          "offset": 102,
+          "opcode": "ldarg.1",
+          "operand": null
+        },
+        {
+          "offset": 103,
+          "opcode": "ldstr",
+          "operand": "'"
+        },
+        {
+          "offset": 108,
+          "opcode": "call",
+          "operand": "string.System.String Concat(System.String, System.String, System.String, System.String)"
+        },
+        {
+          "offset": 113,
+          "opcode": "newobj",
+          "operand": "uri.Void .ctor(System.String)"
+        },
+        {
+          "offset": 118,
+          "opcode": "stloc.0",
+          "operand": null
+        },
+        {
+          "offset": 119,
+          "opcode": "ldarg.0",
+          "operand": null
+        },
+        {
+          "offset": 120,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 121,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse`1[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser] Get[PageResponse`1](System.Net.Http.HttpClient, System.Uri)"
+        },
+        {
+          "offset": 126,
+          "opcode": "stloc.s",
+          "operand": 7
+        },
+        {
+          "offset": 128,
+          "opcode": "ldloc.s",
+          "operand": 7
+        },
+        {
+          "offset": 130,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser].System.Collections.Generic.IList`1[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser] get_Objects()"
+        },
+        {
+          "offset": 135,
+          "opcode": "call",
+          "operand": "System.Linq.Enumerable.Boolean Any[AadUser](System.Collections.Generic.IEnumerable`1[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser])"
+        },
+        {
+          "offset": 140,
+          "opcode": "brfalse.s",
+          "operand": 160
+        },
+        {
+          "offset": 142,
+          "opcode": "ldloc.s",
+          "operand": 7
+        },
+        {
+          "offset": 144,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser].System.Collections.Generic.IList`1[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser] get_Objects()"
+        },
+        {
+          "offset": 149,
+          "opcode": "call",
+          "operand": "System.Linq.Enumerable.Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser First[AadUser](System.Collections.Generic.IEnumerable`1[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser])"
+        },
+        {
+          "offset": 154,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser.System.String get_Id()"
+        },
+        {
+          "offset": 159,
+          "opcode": "ret",
+          "operand": null
+        },
+        {
+          "offset": 160,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 161,
+          "opcode": "ldloca.s",
+          "operand": 2
+        },
+        {
+          "offset": 163,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.DeserializeMSGraphApiErrorRoot.Boolean TryDeserializeMSGraphApiErrorRoot(System.Net.Http.HttpResponseMessage, Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiErrorRoot ByRef)"
+        },
+        {
+          "offset": 168,
+          "opcode": "pop",
+          "operand": null
+        },
+        {
+          "offset": 169,
+          "opcode": "ldloc.2",
+          "operand": null
+        },
+        {
+          "offset": 170,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.DeserializeMSGraphApiErrorRoot.System.String GetResponseDisplayString(Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiErrorRoot)"
+        },
+        {
+          "offset": 175,
+          "opcode": "stloc.3",
+          "operand": null
+        },
+        {
+          "offset": 176,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 177,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.HttpStatusCode get_StatusCode()"
+        },
+        {
+          "offset": 182,
+          "opcode": "ldstr",
+          "operand": "Error occurred while executing "
+        },
+        {
+          "offset": 187,
+          "opcode": "ldloc.3",
+          "operand": null
+        },
+        {
+          "offset": 188,
+          "opcode": "call",
+          "operand": "string.System.String Concat(System.String, System.String)"
+        },
+        {
+          "offset": 193,
+          "opcode": "newobj",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.ApiException.Void .ctor(Int32, System.String)"
+        },
+        {
+          "offset": 198,
+          "opcode": "throw",
+          "operand": null
+        }
+      ]
+    },
+    {
+      "declaring_type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.GraphUtilities",
+      "signature": "System.Collections.Generic.IDictionary`2[System.String,System.String] GetUpnForUsers(System.Net.Http.HttpClient, System.Collections.Generic.IList`1[System.String], System.String)",
+      "il_hex": "739500000A0A735D01000A0B036F5E01000A17590C036F6D00000A0D38AE000000096F6E00000A13040772278B0070110472398B0070284700000A6F5F01000A26081F0A5D3A81000000076F2500000A16076F6001000A18596F6101000A13050472438B0070110572A98B0070285D00000A733200000A1306021106282A00002B130711076FE100000A13082B1D120828E200000A13090611096FF202000611096FFC0200066F9600000A120828E500000A2DDADE0E1208FE163800001B6F4A00000ADC076F6201000A260817590C096F6F00000A3A47FFFFFFDE0A092C06096F4A00000ADC062A",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "newobj",
+          "operand": "System.Collections.Generic.Dictionary[string,string].Void .ctor()"
+        },
+        {
+          "offset": 5,
+          "opcode": "stloc.0",
+          "operand": null
+        },
+        {
+          "offset": 6,
+          "opcode": "newobj",
+          "operand": "System.Text.StringBuilder.Void .ctor()"
+        },
+        {
+          "offset": 11,
+          "opcode": "stloc.1",
+          "operand": null
+        },
+        {
+          "offset": 12,
+          "opcode": "ldarg.1",
+          "operand": null
+        },
+        {
+          "offset": 13,
+          "opcode": "callvirt",
+          "operand": "System.Collections.Generic.ICollection[string].Int32 get_Count()"
+        },
+        {
+          "offset": 18,
+          "opcode": "ldc.i4.1",
+          "operand": null
+        },
+        {
+          "offset": 19,
+          "opcode": "sub",
+          "operand": null
+        },
+        {
+          "offset": 20,
+          "opcode": "stloc.2",
+          "operand": null
+        },
+        {
+          "offset": 21,
+          "opcode": "ldarg.1",
+          "operand": null
+        },
+        {
+          "offset": 22,
+          "opcode": "callvirt",
+          "operand": "System.Collections.Generic.IEnumerable[string].System.Collections.Generic.IEnumerator`1[System.String] GetEnumerator()"
+        },
+        {
+          "offset": 27,
+          "opcode": "stloc.3",
+          "operand": null
+        },
+        {
+          "offset": 28,
+          "opcode": "br",
+          "operand": 207
+        },
+        {
+          "offset": 33,
+          "opcode": "ldloc.3",
+          "operand": null
+        },
+        {
+          "offset": 34,
+          "opcode": "callvirt",
+          "operand": "System.Collections.Generic.IEnumerator[string].System.String get_Current()"
+        },
+        {
+          "offset": 39,
+          "opcode": "stloc.s",
+          "operand": 4
+        },
+        {
+          "offset": 41,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 42,
+          "opcode": "ldstr",
+          "operand": "(id eq '"
+        },
+        {
+          "offset": 47,
+          "opcode": "ldloc.s",
+          "operand": 4
+        },
+        {
+          "offset": 49,
+          "opcode": "ldstr",
+          "operand": "')or"
+        },
+        {
+          "offset": 54,
+          "opcode": "call",
+          "operand": "string.System.String Concat(System.String, System.String, System.String)"
+        },
+        {
+          "offset": 59,
+          "opcode": "callvirt",
+          "operand": "System.Text.StringBuilder.System.Text.StringBuilder Append(System.String)"
+        },
+        {
+          "offset": 64,
+          "opcode": "pop",
+          "operand": null
+        },
+        {
+          "offset": 65,
+          "opcode": "ldloc.2",
+          "operand": null
+        },
+        {
+          "offset": 66,
+          "opcode": "ldc.i4.s",
+          "operand": 10
+        },
+        {
+          "offset": 68,
+          "opcode": "rem",
+          "operand": null
+        },
+        {
+          "offset": 69,
+          "opcode": "brtrue",
+          "operand": 203
+        },
+        {
+          "offset": 74,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 75,
+          "opcode": "callvirt",
+          "operand": "System.Object.System.String ToString()"
+        },
+        {
+          "offset": 80,
+          "opcode": "ldc.i4.0",
+          "operand": null
+        },
+        {
+          "offset": 81,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 82,
+          "opcode": "callvirt",
+          "operand": "System.Text.StringBuilder.Int32 get_Length()"
+        },
+        {
+          "offset": 87,
+          "opcode": "ldc.i4.2",
+          "operand": null
+        },
+        {
+          "offset": 88,
+          "opcode": "sub",
+          "operand": null
+        },
+        {
+          "offset": 89,
+          "opcode": "callvirt",
+          "operand": "string.System.String Substring(Int32, Int32)"
+        },
+        {
+          "offset": 94,
+          "opcode": "stloc.s",
+          "operand": 5
+        },
+        {
+          "offset": 96,
+          "opcode": "ldarg.2",
+          "operand": null
+        },
+        {
+          "offset": 97,
+          "opcode": "ldstr",
+          "operand": "/beta/users?$select=id,userprincipalname&$filter=("
+        },
+        {
+          "offset": 102,
+          "opcode": "ldloc.s",
+          "operand": 5
+        },
+        {
+          "offset": 104,
+          "opcode": "ldstr",
+          "operand": ")"
+        },
+        {
+          "offset": 109,
+          "opcode": "call",
+          "operand": "string.System.String Concat(System.String, System.String, System.String, System.String)"
+        },
+        {
+          "offset": 114,
+          "opcode": "newobj",
+          "operand": "uri.Void .ctor(System.String)"
+        },
+        {
+          "offset": 119,
+          "opcode": "stloc.s",
+          "operand": 6
+        },
+        {
+          "offset": 121,
+          "opcode": "ldarg.0",
+          "operand": null
+        },
+        {
+          "offset": 122,
+          "opcode": "ldloc.s",
+          "operand": 6
+        },
+        {
+          "offset": 124,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.System.Collections.Generic.List`1[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser] GetAll[AadUser](System.Net.Http.HttpClient, System.Uri)"
+        },
+        {
+          "offset": 129,
+          "opcode": "stloc.s",
+          "operand": 7
+        },
+        {
+          "offset": 131,
+          "opcode": "ldloc.s",
+          "operand": 7
+        },
+        {
+          "offset": 133,
+          "opcode": "callvirt",
+          "operand": "System.Collections.Generic.List[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser].Enumerator GetEnumerator()"
+        },
+        {
+          "offset": 138,
+          "opcode": "stloc.s",
+          "operand": 8
+        },
+        {
+          "offset": 140,
+          "opcode": "br.s",
+          "operand": 171
+        },
+        {
+          "offset": 142,
+          "opcode": "ldloca.s",
+          "operand": 8
+        },
+        {
+          "offset": 144,
+          "opcode": "call",
+          "operand": "System.Collections.Generic.List`1+Enumerator[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser].Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser get_Current()"
+        },
+        {
+          "offset": 149,
+          "opcode": "stloc.s",
+          "operand": 9
+        },
+        {
+          "offset": 151,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 152,
+          "opcode": "ldloc.s",
+          "operand": 9
+        },
+        {
+          "offset": 154,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser.System.String get_Id()"
+        },
+        {
+          "offset": 159,
+          "opcode": "ldloc.s",
+          "operand": 9
+        },
+        {
+          "offset": 161,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser.System.String get_UserPrincipalName()"
+        },
+        {
+          "offset": 166,
+          "opcode": "callvirt",
+          "operand": "System.Collections.Generic.Dictionary[string,string].Void Add(System.String, System.String)"
+        },
+        {
+          "offset": 171,
+          "opcode": "ldloca.s",
+          "operand": 8
+        },
+        {
+          "offset": 173,
+          "opcode": "call",
+          "operand": "System.Collections.Generic.List`1+Enumerator[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser].Boolean MoveNext()"
+        },
+        {
+          "offset": 178,
+          "opcode": "brtrue.s",
+          "operand": 142
+        },
+        {
+          "offset": 180,
+          "opcode": "leave.s",
+          "operand": 196
+        },
+        {
+          "offset": 182,
+          "opcode": "ldloca.s",
+          "operand": 8
+        },
+        {
+          "offset": 184,
+          "opcode": "constrained.",
+          "operand": "System.Collections.Generic.List`1[T].System.Collections.Generic.List`1+Enumerator[Microsoft.Teams.PowerShell.TeamsCmdlets.Model.AadUser]"
+        },
+        {
+          "offset": 190,
+          "opcode": "callvirt",
+          "operand": "System.IDisposable.Void Dispose()"
+        },
+        {
+          "offset": 195,
+          "opcode": "endfinally",
+          "operand": null
+        },
+        {
+          "offset": 196,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 197,
+          "opcode": "callvirt",
+          "operand": "System.Text.StringBuilder.System.Text.StringBuilder Clear()"
+        },
+        {
+          "offset": 202,
+          "opcode": "pop",
+          "operand": null
+        },
+        {
+          "offset": 203,
+          "opcode": "ldloc.2",
+          "operand": null
+        },
+        {
+          "offset": 204,
+          "opcode": "ldc.i4.1",
+          "operand": null
+        },
+        {
+          "offset": 205,
+          "opcode": "sub",
+          "operand": null
+        },
+        {
+          "offset": 206,
+          "opcode": "stloc.2",
+          "operand": null
+        },
+        {
+          "offset": 207,
+          "opcode": "ldloc.3",
+          "operand": null
+        },
+        {
+          "offset": 208,
+          "opcode": "callvirt",
+          "operand": "System.Collections.IEnumerator.Boolean MoveNext()"
+        },
+        {
+          "offset": 213,
+          "opcode": "brtrue",
+          "operand": 33
+        },
+        {
+          "offset": 218,
+          "opcode": "leave.s",
+          "operand": 230
+        },
+        {
+          "offset": 220,
+          "opcode": "ldloc.3",
+          "operand": null
+        },
+        {
+          "offset": 221,
+          "opcode": "brfalse.s",
+          "operand": 229
+        },
+        {
+          "offset": 223,
+          "opcode": "ldloc.3",
+          "operand": null
+        },
+        {
+          "offset": 224,
+          "opcode": "callvirt",
+          "operand": "System.IDisposable.Void Dispose()"
+        },
+        {
+          "offset": 229,
+          "opcode": "endfinally",
+          "operand": null
+        },
+        {
+          "offset": 230,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 231,
+          "opcode": "ret",
+          "operand": null
+        }
+      ]
+    },
+    {
+      "declaring_type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities",
+      "signature": "T Get[T](System.Net.Http.HttpClient, System.Uri)",
+      "il_hex": "020314285800002B2A",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "ldarg.0",
+          "operand": null
+        },
+        {
+          "offset": 1,
+          "opcode": "ldarg.1",
+          "operand": null
+        },
+        {
+          "offset": 2,
+          "opcode": "ldnull",
+          "operand": null
+        },
+        {
+          "offset": 3,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.T Get[T](System.Net.Http.HttpClient, System.Uri, System.Collections.Generic.Dictionary`2[System.String,System.String])"
+        },
+        {
+          "offset": 8,
+          "opcode": "ret",
+          "operand": null
+        }
+      ]
+    },
+    {
+      "declaring_type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities",
+      "signature": "T Get[T](System.Net.Http.HttpClient, System.Uri, System.Collections.Generic.Dictionary`2[System.String,System.String])",
+      "il_hex": "0228AA00000A03041428D10200060A066F4300000A2C2A066F0401000A6F0501000A6F0601000A0B07284C00000A2D0707285900002B2A1202FE154B00001B082A06120328780500062C2B09287A0500061304066F4400000A72AF0600701104283B00000A096F860500066F7F05000673750500067A066F0401000A6F0501000A6F0601000A1305066F4400000A110573740500067A",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "ldarg.0",
+          "operand": null
+        },
+        {
+          "offset": 1,
+          "opcode": "call",
+          "operand": "System.Net.Http.HttpMethod.System.Net.Http.HttpMethod get_Get()"
+        },
+        {
+          "offset": 6,
+          "opcode": "ldarg.1",
+          "operand": null
+        },
+        {
+          "offset": 7,
+          "opcode": "ldarg.2",
+          "operand": null
+        },
+        {
+          "offset": 8,
+          "opcode": "ldnull",
+          "operand": null
+        },
+        {
+          "offset": 9,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.System.Net.Http.HttpResponseMessage SendRequest(System.Net.Http.HttpClient, System.Net.Http.HttpMethod, System.Uri, System.Collections.Generic.Dictionary`2[System.String,System.String], System.Net.Http.HttpContent)"
+        },
+        {
+          "offset": 14,
+          "opcode": "stloc.0",
+          "operand": null
+        },
+        {
+          "offset": 15,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 16,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpResponseMessage.Boolean get_IsSuccessStatusCode()"
+        },
+        {
+          "offset": 21,
+          "opcode": "brfalse.s",
+          "operand": 65
+        },
+        {
+          "offset": 23,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 24,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.Http.HttpContent get_Content()"
+        },
+        {
+          "offset": 29,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpContent.System.Threading.Tasks.Task`1[System.String] ReadAsStringAsync()"
+        },
+        {
+          "offset": 34,
+          "opcode": "callvirt",
+          "operand": "System.Threading.Tasks.Task[string].System.String get_Result()"
+        },
+        {
+          "offset": 39,
+          "opcode": "stloc.1",
+          "operand": null
+        },
+        {
+          "offset": 40,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 41,
+          "opcode": "call",
+          "operand": "string.Boolean IsNullOrWhiteSpace(System.String)"
+        },
+        {
+          "offset": 46,
+          "opcode": "brtrue.s",
+          "operand": 55
+        },
+        {
+          "offset": 48,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 49,
+          "opcode": "call",
+          "operand": "Newtonsoft.Json.JsonConvert.T DeserializeObject[T](System.String)"
+        },
+        {
+          "offset": 54,
+          "opcode": "ret",
+          "operand": null
+        },
+        {
+          "offset": 55,
+          "opcode": "ldloca.s",
+          "operand": 2
+        },
+        {
+          "offset": 57,
+          "opcode": "initobj",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.T"
+        },
+        {
+          "offset": 63,
+          "opcode": "ldloc.2",
+          "operand": null
+        },
+        {
+          "offset": 64,
+          "opcode": "ret",
+          "operand": null
+        },
+        {
+          "offset": 65,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 66,
+          "opcode": "ldloca.s",
+          "operand": 3
+        },
+        {
+          "offset": 68,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.DeserializeMSGraphApiErrorRoot.Boolean TryDeserializeMSGraphApiErrorRoot(System.Net.Http.HttpResponseMessage, Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiErrorRoot ByRef)"
+        },
+        {
+          "offset": 73,
+          "opcode": "brfalse.s",
+          "operand": 118
+        },
+        {
+          "offset": 75,
+          "opcode": "ldloc.3",
+          "operand": null
+        },
+        {
+          "offset": 76,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.DeserializeMSGraphApiErrorRoot.System.String GetResponseDisplayString(Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiErrorRoot)"
+        },
+        {
+          "offset": 81,
+          "opcode": "stloc.s",
+          "operand": 4
+        },
+        {
+          "offset": 83,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 84,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.HttpStatusCode get_StatusCode()"
+        },
+        {
+          "offset": 89,
+          "opcode": "ldstr",
+          "operand": "Error occurred while executing "
+        },
+        {
+          "offset": 94,
+          "opcode": "ldloc.s",
+          "operand": 4
+        },
+        {
+          "offset": 96,
+          "opcode": "call",
+          "operand": "string.System.String Concat(System.String, System.String)"
+        },
+        {
+          "offset": 101,
+          "opcode": "ldloc.3",
+          "operand": null
+        },
+        {
+          "offset": 102,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiErrorRoot.Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiError get_Error()"
+        },
+        {
+          "offset": 107,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.MSGraphApiError.System.String get_Code()"
+        },
+        {
+          "offset": 112,
+          "opcode": "newobj",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.ApiException.Void .ctor(Int32, System.String, System.String)"
+        },
+        {
+          "offset": 117,
+          "opcode": "throw",
+          "operand": null
+        },
+        {
+          "offset": 118,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 119,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.Http.HttpContent get_Content()"
+        },
+        {
+          "offset": 124,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpContent.System.Threading.Tasks.Task`1[System.String] ReadAsStringAsync()"
+        },
+        {
+          "offset": 129,
+          "opcode": "callvirt",
+          "operand": "System.Threading.Tasks.Task[string].System.String get_Result()"
+        },
+        {
+          "offset": 134,
+          "opcode": "stloc.s",
+          "operand": 5
+        },
+        {
+          "offset": 136,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 137,
+          "opcode": "callvirt",
+          "operand": "System.Net.Http.HttpResponseMessage.System.Net.HttpStatusCode get_StatusCode()"
+        },
+        {
+          "offset": 142,
+          "opcode": "ldloc.s",
+          "operand": 5
+        },
+        {
+          "offset": 144,
+          "opcode": "newobj",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.ApiException.Void .ctor(Int32, System.String)"
+        },
+        {
+          "offset": 149,
+          "opcode": "throw",
+          "operand": null
+        }
+      ]
+    },
+    {
+      "declaring_type": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities",
+      "signature": "System.Collections.Generic.List`1[T] GetAll[T](System.Net.Http.HttpClient, System.Uri)",
+      "il_hex": "736301000A0A0203285A00002B0B06076F6401000A6F6501000A076F6601000A284C00000A2D0F076F6601000A733200000A10012BD0062A",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "newobj",
+          "operand": "System.Collections.Generic.List[T].Void .ctor()"
+        },
+        {
+          "offset": 5,
+          "opcode": "stloc.0",
+          "operand": null
+        },
+        {
+          "offset": 6,
+          "opcode": "ldarg.0",
+          "operand": null
+        },
+        {
+          "offset": 7,
+          "opcode": "ldarg.1",
+          "operand": null
+        },
+        {
+          "offset": 8,
+          "opcode": "call",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Utils.HttpUtilities.Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse`1[T] Get[PageResponse`1](System.Net.Http.HttpClient, System.Uri)"
+        },
+        {
+          "offset": 13,
+          "opcode": "stloc.1",
+          "operand": null
+        },
+        {
+          "offset": 14,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 15,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 16,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse[T].System.Collections.Generic.IList`1[T] get_Objects()"
+        },
+        {
+          "offset": 21,
+          "opcode": "callvirt",
+          "operand": "System.Collections.Generic.List[T].Void AddRange(System.Collections.Generic.IEnumerable`1[T])"
+        },
+        {
+          "offset": 26,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 27,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse[T].System.String get_NextLink()"
+        },
+        {
+          "offset": 32,
+          "opcode": "call",
+          "operand": "string.Boolean IsNullOrWhiteSpace(System.String)"
+        },
+        {
+          "offset": 37,
+          "opcode": "brtrue.s",
+          "operand": 54
+        },
+        {
+          "offset": 39,
+          "opcode": "ldloc.1",
+          "operand": null
+        },
+        {
+          "offset": 40,
+          "opcode": "callvirt",
+          "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.Model.PageResponse[T].System.String get_NextLink()"
+        },
+        {
+          "offset": 45,
+          "opcode": "newobj",
+          "operand": "uri.Void .ctor(System.String)"
+        },
+        {
+          "offset": 50,
+          "opcode": "starg.s",
+          "operand": 1
+        },
+        {
+          "offset": 52,
+          "opcode": "br.s",
+          "operand": 6
+        },
+        {
+          "offset": 54,
+          "opcode": "ldloc.0",
+          "operand": null
+        },
+        {
+          "offset": 55,
+          "opcode": "ret",
+          "operand": null
+        }
+      ]
+    }
+  ]
+}

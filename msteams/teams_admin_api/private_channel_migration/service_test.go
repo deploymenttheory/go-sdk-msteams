@@ -3,6 +3,7 @@ package privatechannelmigration_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"testing"
 
@@ -26,7 +27,7 @@ func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	return r
 }
 func wire(origin, prefix, audience string, status int, body string) contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + prefix + "/channels/privateChannelMigrationStatus", Audience: audience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
+	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + prefix + "/channels/privateChannelMigrationStatus", Audience: audience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil, "X-MS-CmdletName": {"Get-TenantPrivateChannelMigrationStatus"}}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
 }
 
 func TestUnitMigrationCloudRequestPrefixesAndAudiences(t *testing.T) {
@@ -96,4 +97,32 @@ func TestUnitMigrationMalformedDetailsRemainExplicitCallerData(t *testing.T) {
 		v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
 		return contracttest.Observation{Value: v, Response: r, Err: err}
 	}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
+}
+
+// Authored from the pinned 8.1.0 PrivateChannelMigrationStatusResponse model;
+// see docs/implementation/core/authored-protocol-sources.md. This is not a capture.
+func TestUnitMigrationSuccessfulNativeSnapshotAndExplicitDetailDecode(t *testing.T) {
+	t.Parallel()
+	for _, details := range []string{`{"pending":2}`, `not-json`} {
+		body, _ := json.Marshal(map[string]any{"TenantId": "offline-tenant", "MigrationStatus": "RequiresAdminAttention", "Details": details, "LastChecked": "2026-11-20T12:00:00Z", "MigrationStartTimeStamp": nil, "MigrationCompletionTimeStamp": nil, "future": false})
+		step := wire("https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com", 200, string(body))
+		step.Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0"}
+		run(t, contracttest.Case{Name: "native-success", Mappings: []contracttest.Mapping{{Command: "Get-TenantPrivateChannelMigrationStatus", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
+			if err == nil {
+				if v == nil || v.TenantID == nil || *v.TenantID != "offline-tenant" || v.MigrationStatus == nil || *v.MigrationStatus != "RequiresAdminAttention" || v.LastChecked == nil || *v.LastChecked != "2026-11-20T12:00:00Z" || v.Details == nil || *v.Details != details || v.MigrationStartTimestamp != nil || v.MigrationCompletionTimestamp != nil || string(v.RawFields["future"]) != "false" {
+					t.Fatal("native snapshot lost typed, opaque or nullable data")
+				}
+				decoded, decodeErr := v.DecodeDetails()
+				if details == "not-json" {
+					if !errors.Is(decodeErr, client.ErrDecode) || *v.Details != details {
+						t.Fatal("caller decode changed successful native result")
+					}
+				} else if decodeErr != nil || string(decoded["pending"]) != "2" {
+					t.Fatal("explicit detail decoding failed")
+				}
+			}
+			return contracttest.Observation{Response: r, Err: err}
+		}, Want: contracttest.Expected{Status: 200, Body: body}})
+	}
 }

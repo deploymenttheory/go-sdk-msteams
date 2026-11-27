@@ -68,6 +68,18 @@
             {
               "file": "msteams/graph_api/channel_user_management/service_test.go",
               "name": "TestUnitFailuresStopBeforeFurtherChanges"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery"
+            },
+            {
+              "file": "msteams/graph_api/channel_user_management/service_resolution_test.go",
+              "name": "TestUnitPrivateUPNFailurePreventsMembershipReadsAndWrites"
+            },
+            {
+              "file": "msteams/graph_api/channel_user_management/service_resolution_test.go",
+              "name": "TestUnitSharedNullEmailAndTenantSelectionUseReturnedMembership"
             }
           ],
           "live_tests": [
@@ -253,6 +265,14 @@
             {
               "file": "msteams/graph_api/team_user_management/list_test.go",
               "name": "TestUnitCompositionMappingsExistInPinnedRuntime"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreOwnerAndNativeMembershipIdentity"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCorePartialOwnerFailureAndExplicitRecovery"
             }
           ],
           "live_tests": [
@@ -2397,6 +2417,10 @@
             {
               "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
               "name": "TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed"
+            },
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
+              "name": "TestUnitBatchAcceptedSubmissionAndOpaqueStatus"
             }
           ],
           "live_tests": [
@@ -2423,6 +2447,10 @@
             {
               "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
               "name": "TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed"
+            },
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
+              "name": "TestUnitBatchAcceptedSubmissionAndOpaqueStatus"
             }
           ],
           "live_tests": [
@@ -13135,6 +13163,10 @@
             {
               "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
               "name": "TestUnitTargetingFilterRequestAndLocalValidation"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestUnitTargetingSuccessfulReadFilterAndSparseMutation"
             }
           ],
           "live_tests": [
@@ -13165,6 +13197,10 @@
             {
               "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
               "name": "TestUnitTargetingFilterRequestAndLocalValidation"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestUnitTargetingSuccessfulReadFilterAndSparseMutation"
             }
           ],
           "live_tests": [
@@ -16125,6 +16161,10 @@
             {
               "file": "msteams/teams_admin_api/region/service_test.go",
               "name": "TestUnitApplicationRegionAndUnqualifiedCloudsRejectBeforeTokens"
+            },
+            {
+              "file": "msteams/teams_admin_api/region/service_test.go",
+              "name": "TestUnitRegionSuccessfulUserAndGroupSnapshots"
             }
           ],
           "live_tests": [
@@ -16228,6 +16268,10 @@
             {
               "file": "msteams/graph_api/team_operation/service_test.go",
               "name": "TestUnitWaitDenialRetainsResumableHandle"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelOperationAndRead"
             }
           ],
           "live_tests": [
@@ -16460,6 +16504,14 @@
             {
               "file": "msteams/graph_api/team_management/validation_test.go",
               "name": "TestUnitListingLocalValidationAndCurrentUserMode"
+            },
+            {
+              "file": "msteams/graph_api/team_management/protocol_test.go",
+              "name": "TestUnitManagementTenantHydrationCorrelatesAndRetainsPartialFailure"
+            },
+            {
+              "file": "msteams/graph_api/team_management/protocol_test.go",
+              "name": "TestUnitManagementUserDiscoveryAndFailedLaterReadRetainPrefix"
             }
           ],
           "live_tests": [
@@ -16494,6 +16546,10 @@
             {
               "file": "msteams/graph_api/team_management/validation_test.go",
               "name": "TestUnitInvalidInputAndCancellationPerformNoIO"
+            },
+            {
+              "file": "msteams/graph_api/team_management/protocol_test.go",
+              "name": "TestUnitManagementSuccessfulPairedReadAndPartialUpdate"
             }
           ],
           "live_tests": [
@@ -16630,6 +16686,10 @@
             {
               "file": "msteams/graph_api/channel/service_test.go",
               "name": "TestUnitCollectionsAndPaging"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelOperationAndRead"
             }
           ],
           "live_tests": [
@@ -16698,6 +16758,10 @@
             {
               "file": "msteams/graph_api/channel_user_management/list_test.go",
               "name": "TestUnitEnrichmentFailureNeverProducesACompleteList"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery"
             }
           ],
           "live_tests": [
@@ -17078,6 +17142,10 @@
             {
               "file": "msteams/teams_admin_api/targeting_hierarchy/projection_test.go",
               "name": "TestUnitStatusErrorProjectionFromLocalOperationValues"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service_test.go",
+              "name": "TestUnitHierarchySuccessfulPreparationImportStatusAndDelete"
             }
           ],
           "live_tests": [
@@ -17218,12 +17286,20 @@
             {
               "file": "msteams/teams_admin_api/private_channel_migration/service_test.go",
               "name": "TestUnitMigrationProfilesDoNotFallbackAndWrongBackendIsLocal"
+            },
+            {
+              "file": "msteams/teams_admin_api/private_channel_migration/service_test.go",
+              "name": "TestUnitMigrationSuccessfulNativeSnapshotAndExplicitDetailDecode"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/private_channel_migration/deployment_migration_test.go",
               "name": "TestAccPrivateChannelMigrationReadOnly"
+            },
+            {
+              "file": "tests/integration/lab/private_channel_migration/deployment_migration_test.go",
+              "name": "TestAccPrivateChannelMigrationAuthentication"
             }
           ]
         }
@@ -24684,6 +24760,10 @@
             {
               "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
               "name": "TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed"
+            },
+            {
+              "file": "msteams/teams_admin_api/batch_deployment/service_test.go",
+              "name": "TestUnitBatchAcceptedSubmissionAndOpaqueStatus"
             }
           ],
           "live_tests": []
@@ -31186,6 +31266,14 @@
             {
               "file": "msteams/graph_api/team_management/creation_settings_test.go",
               "name": "TestUnitSettingsSerializeEveryInputField"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreCreationOwnershipControlsCompensation"
+            },
+            {
+              "file": "msteams/graph_api/team_management/protocol_test.go",
+              "name": "TestUnitManagementSuccessfulOwnedAndSuppliedGroupCreation"
             }
           ],
           "live_tests": [
@@ -31223,11 +31311,15 @@
           "contract_tests": [
             {
               "file": "msteams/graph_api/team_management/service_test.go",
-              "name": "TestUnitManagementCreateRequestVariantsDenied"
+              "name": "TestUnitManagementFirstRequestDenials"
             },
             {
-              "file": "msteams/graph_api/team_management/validation_test.go",
-              "name": "TestUnitCreationValidationPrecedesCredentialsAndWrites"
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreCreationOwnershipControlsCompensation"
+            },
+            {
+              "file": "msteams/graph_api/team_management/protocol_test.go",
+              "name": "TestUnitManagementSuccessfulOwnedAndSuppliedGroupCreation"
             }
           ],
           "live_tests": [
@@ -31310,6 +31402,10 @@
             {
               "file": "msteams/graph_api/channel/creation.go",
               "name": "Service.CreateWithOwner"
+            },
+            {
+              "file": "msteams/graph_api/channel/models.go",
+              "name": "InitialSharedTeam"
             }
           ],
           "contract_tests": [
@@ -31324,6 +31420,26 @@
             {
               "file": "msteams/graph_api/channel/service_test.go",
               "name": "TestUnitOwnerResolutionComposition"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelOperationAndRead"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelContentLocationTrustBoundary"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreSharedChannelCancellationRetainsOperation"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreInitialSharesValidateBeforeHTTP"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreInitialShareShapesRemainServerValidated"
             }
           ],
           "live_tests": [
@@ -31345,6 +31461,10 @@
           {
             "file": "msteams/graph_api/channel/creation.go",
             "name": "Service.CreateWithOwner"
+          },
+          {
+            "file": "msteams/graph_api/channel/models.go",
+            "name": "InitialSharedTeam"
           }
         ]
       },
@@ -35980,6 +36100,10 @@
             {
               "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
               "name": "TestUnitTargetingFailuresDoNotInventSuccessOrReplayWrites"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestUnitTargetingSuccessfulReadFilterAndSparseMutation"
             }
           ],
           "live_tests": []
@@ -36960,8 +37084,8 @@
               "name": "TestUnitLocalValidationAndCancellationPerformNoIO"
             },
             {
-              "file": "msteams/graph_api/team/picture_test.go",
-              "name": "TestUnitUploadPictureUsesGroupPhotoRouteAndOriginalBytes"
+              "file": "msteams/graph_api/team/service_test.go",
+              "name": "TestUnitNativeCRUDSuccessfulTypedAndRawResponses"
             }
           ],
           "live_tests": [
@@ -37106,6 +37230,10 @@
             {
               "file": "msteams/graph_api/channel_user_management/service_test.go",
               "name": "TestUnitFailuresStopBeforeFurtherChanges"
+            },
+            {
+              "file": "tests/contract/core/integration_test.go",
+              "name": "TestUnitIntegratedCoreChannelMembershipOwnershipAndRecovery"
             }
           ],
           "live_tests": [
@@ -37348,6 +37476,10 @@
             {
               "file": "msteams/teams_admin_api/targeting_hierarchy/failure_test.go",
               "name": "TestUnitHierarchyDeletionFailuresAreNotReplayed"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service_test.go",
+              "name": "TestUnitHierarchySuccessfulPreparationImportStatusAndDelete"
             }
           ],
           "live_tests": []
@@ -44337,6 +44469,10 @@
             {
               "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
               "name": "TestUnitSparseIdentityUpdateAndOpenValues"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_policy/service_test.go",
+              "name": "TestUnitTargetingSuccessfulReadFilterAndSparseMutation"
             }
           ],
           "live_tests": []
@@ -45720,6 +45856,10 @@
             {
               "file": "msteams/graph_api/team_management/creation_settings_test.go",
               "name": "TestUnitSettingsSerializeEveryInputField"
+            },
+            {
+              "file": "msteams/graph_api/team_management/protocol_test.go",
+              "name": "TestUnitManagementSuccessfulPairedReadAndPartialUpdate"
             }
           ],
           "live_tests": [
@@ -45816,6 +45956,10 @@
             {
               "file": "msteams/graph_api/team_management/validation_test.go",
               "name": "TestUnitArchiveValidationStopsBeforeAnyReadOrWrite"
+            },
+            {
+              "file": "msteams/graph_api/team_management/protocol_test.go",
+              "name": "TestUnitManagementArchiveRequiresIndependentReadback"
             }
           ],
           "live_tests": [
@@ -46137,6 +46281,10 @@
             {
               "file": "msteams/teams_admin_api/targeting_hierarchy/failure_test.go",
               "name": "TestUnitHierarchyOptionsProfilesAndSourceValidationAreLocal"
+            },
+            {
+              "file": "msteams/teams_admin_api/targeting_hierarchy/service_test.go",
+              "name": "TestUnitHierarchySuccessfulPreparationImportStatusAndDelete"
             }
           ],
           "live_tests": []

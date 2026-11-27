@@ -7,6 +7,15 @@
         "tests": [
           "TestAccApplicationAccess"
         ]
+      },
+      {
+        "id": "private-migration-backend",
+        "package": "./tests/integration/lab/private_channel_migration",
+        "proof": "private-migration-auth",
+        "tests": [
+          "TestAccPrivateChannelMigrationAuthentication"
+        ],
+        "when_service": "private_channel_migration"
       }
     ]
   },
@@ -1739,6 +1748,31 @@
           "journal_entries_per_test": 1,
           "tests": [
             "TestAccFirstPartyMeetingTemplateConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
+    "targeting_policy": {
+      "package": "./tests/integration/lab/targeting_policy",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "proof": "targeting-policy-read",
+          "tests": [
+            "TestAccTargetingPolicyReadOnly"
+          ]
+        }
+      ]
+    },
+    "private_channel_migration": {
+      "package": "./tests/integration/lab/private_channel_migration",
+      "steps": [
+        {
+          "id": "reads",
+          "proof": "private-migration-read",
+          "tests": [
+            "TestAccPrivateChannelMigrationReadOnly"
           ]
         }
       ]

@@ -122,7 +122,9 @@ try {
         if ($observed.Count -ne 1 -or $observed[0] -isnot [string]) { throw 'Expected one opaque status string.' }
         $report = @{success=$true; stage='complete'; batch_status=[string]$observed[0]}
     } elseif ($request.kind -eq 'private-migration') {
+        $report.stage = 'read'
         $observed = @(Get-TenantPrivateChannelMigrationStatus -ErrorAction Stop)
+        $report.stage = 'projection'
         if ($observed.Count -ne 1 -or [string]$observed[0].TenantId -ine [string]$identity.tenant_id) { throw 'Expected bound tenant migration observation.' }
         foreach ($property in @('TenantId','MigrationStatus','Details')) {
             if ($null -eq $observed[0].PSObject.Properties[$property]) { throw 'Incomplete migration projection.' }
@@ -182,7 +184,7 @@ try {
         $report = @{success=$true; stage='complete'; users=@($users)}
     }
 } catch {
-    $report = @{success=$false; stage=$report.stage}
+    $report = @{success=$false; failure_stage=$report.stage}
 } finally {
     if ($connected) { Disconnect-MicrosoftTeams -Confirm:$false -ErrorAction SilentlyContinue | Out-Null }
     if ($null -ne $certificate) { $certificate.Dispose() }

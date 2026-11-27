@@ -502,6 +502,48 @@ MSTEAMS_LAB_RECOVERY_FILE=/private/lab/journal.jsonl \
   go test -count=1 -run '^TestAccRecoverOwnedPolicies$' ./tests/integration/lab/recovery
 ```
 
+CORE-90 extends each owned team-template CRUD variant (expanded and JSON Body)
+with an explicit empty Description update. Both variants must retain the updated
+short description and General channel, persist the empty description, and compare
+it with pinned PowerShell. The same fixtures now set all 18 boolean fields in
+Member, Guest, Fun, Messaging and Discovery settings to non-default true, then
+explicit false, with native and pinned comparison after each update. The
+`template-crud` proof requires all three additional milestones and five comparisons
+per variant (ten total), alongside independent post-delete absence and two cleaned
+journal entries. Prior four- and six-comparison runs remain evidence for their
+original scopes only; they do not qualify the new settings checks.
+
+CORE targeting-policy conformance runs as the `targeting_policy` partition's
+serialized `global-reads` step. It requires exactly one Global policy in the
+filtered list, matching selected/listed typed fields and one pinned PowerShell
+comparison. A configured app denial, empty list or disabled oracle fails this
+positive read scenario. The test makes no policy, hierarchy or assignment change;
+legacy-flight eligibility and mutation effects remain separate qualification.
+
+CORE private-channel migration conformance runs the existing bound-tenant singleton
+status read in `private_channel_migration/reads`. It requires matching tenant
+identity and one pinned PowerShell status/details comparison. It starts no
+migration or deployment and needs no existing orchestration selector. A denied
+read fails this positive scenario; it does not become a successful migration.
+
+The auth partition can register read-only backend conformance separately from its
+base provider authentication step. A backend step's `when_service` names its
+required service selection; its optional package must resolve inside
+`tests/integration`. Private migration uses this scope to compare certificate-connected
+PowerShell with both native credential methods, because pinned 8.1.0's supplied-token
+mode supports only the Graph/Skype pair. Certificate files remain auth-job inputs. CI runs base authentication and the
+selected backend step in separate auth jobs: a failed backend check fails the
+aggregate but does not prevent unrelated service jobs from running.
+For an explicit prepared auth-only run, select the exact step:
+
+```sh
+MSTEAMS_LAB_AUTH_METHOD=all python3 tools/acceptance/ci.py run --auth --step private-migration-backend --report-directory /private/tmp/acceptance-results
+```
+
+The ordinary private migration service step still requires a successful bound-tenant
+native read; HTTP 401 is a failure. Backend parity is reported in the separate
+selected auth step and never inferred from token acquisition.
+
 ## Integrated EXT acceptance
 
 The `ext_integration` partition creates one SDK-owned, unassigned feedback policy

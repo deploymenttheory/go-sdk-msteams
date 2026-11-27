@@ -36,7 +36,40 @@ try{
     if((Get-Command Get-CsTeamTemplate).Parameters.ContainsKey('MsftInternalProcessingMode')){$parameters.MsftInternalProcessingMode='ForceModern'}
     $values=@(Get-CsTeamTemplate @parameters)
     if($values.Count -ne 1 -or $values[0].DisplayName -cne $fixture){throw 'Expected one owned template'}
-    $report=@{success=$true;display_name=[string]$values[0].DisplayName;short_description=[string]$values[0].ShortDescription;description=[string]$values[0].Description;channel_names=@($values[0].Channel|Where-Object{$null -ne $_}|ForEach-Object{[string]$_.DisplayName})}
+    # Pinned ITeam*Settings property names are singular; wire JSON is plural.
+    $settings=@{}
+    $fields=@{
+      member_add_remove_apps=@('MemberSetting','AllowAddRemoveApp')
+      member_private_channels=@('MemberSetting','AllowCreatePrivateChannel')
+      member_create_update_channels=@('MemberSetting','AllowCreateUpdateChannel')
+      member_connectors=@('MemberSetting','AllowCreateUpdateRemoveConnector')
+      member_tabs=@('MemberSetting','AllowCreateUpdateRemoveTab')
+      member_delete_channels=@('MemberSetting','AllowDeleteChannel')
+      member_upload_custom_app=@('MemberSetting','UploadCustomApp')
+      guest_create_update_channels=@('GuestSetting','AllowCreateUpdateChannel')
+      guest_delete_channels=@('GuestSetting','AllowDeleteChannel')
+      fun_custom_memes=@('FunSetting','AllowCustomMeme')
+      fun_giphy=@('FunSetting','AllowGiphy')
+      fun_stickers_memes=@('FunSetting','AllowStickersAndMeme')
+      messaging_channel_mentions=@('MessagingSetting','AllowChannelMention')
+      messaging_owner_delete=@('MessagingSetting','AllowOwnerDeleteMessage')
+      messaging_team_mentions=@('MessagingSetting','AllowTeamMention')
+      messaging_user_delete=@('MessagingSetting','AllowUserDeleteMessage')
+      messaging_user_edit=@('MessagingSetting','AllowUserEditMessage')
+      discovery_search=@('DiscoverySetting','ShowInTeamsSearchAndSuggestion')
+    }
+    foreach($key in $fields.Keys){
+      $object=$values[0].PSObject.Properties[$fields[$key][0]]
+      if($null -eq $object){throw 'Pinned settings object property missing'}
+      $enabled=$false
+      if($null -ne $object.Value){
+        $property=$object.Value.PSObject.Properties[$fields[$key][1]]
+        if($null -eq $property -or $property.Value -isnot [bool]){throw 'Pinned boolean setting missing'}
+        $enabled=[bool]$property.Value
+      }
+      $settings[$key]=$enabled
+    }
+    $report=@{success=$true;settings=$settings;display_name=[string]$values[0].DisplayName;short_description=[string]$values[0].ShortDescription;description=[string]$values[0].Description;channel_names=@($values[0].Channel|Where-Object{$null -ne $_}|ForEach-Object{[string]$_.DisplayName})}
 }catch{
     $report=@{success=$false}
 }finally{

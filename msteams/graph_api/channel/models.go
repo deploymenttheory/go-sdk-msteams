@@ -72,6 +72,12 @@ func (c Channel) HostTeamID() (string, error) {
 	return host, nil
 }
 
+// InitialSharedTeam identifies a team in the documented sharedWithTeams input
+// of channel creation. It is a write reference, not a sharing relationship snapshot.
+type InitialSharedTeam struct {
+	ID string `json:"id"`
+}
+
 // CreateRequest contains only the established channel creation properties.
 // Empty MembershipType selects standard. OwnerUserID is an existing Entra
 // directory UUID, not a membership ID or an unresolved UPN.
@@ -80,6 +86,11 @@ type CreateRequest struct {
 	Description    *string
 	MembershipType MembershipType
 	OwnerUserID    *string
+	// SharedWithTeams is the documented initial-share input for shared creation.
+	// Nil omits the field, an empty collection sends [], and a pointer to a nil
+	// slice sends null. The service validates unsupported shapes/combinations;
+	// serialization alone does not establish their acceptance.
+	SharedWithTeams *[]InitialSharedTeam
 }
 
 // UpdateRequest preserves omission versus explicitly empty strings. Membership

@@ -144,3 +144,48 @@ func TestUnitBatchSubmissionLocalModelKeepsOptionalIdentities(t *testing.T) {
 		t.Fatal("local submission decoding lost optional identity")
 	}
 }
+
+// These are authored HTTP vectors from pinned 8.1.0 response handlers, not a
+// successful tenant deployment. Acceptance only supplies a status identity;
+// Get preserves arbitrary status text without deciding workflow completion.
+func TestUnitBatchAcceptedSubmissionAndOpaqueStatus(t *testing.T) {
+	t.Parallel()
+	// Exact ordered columns follow the linked frontline deployment guide.
+	// Identity/name values are authored, and no deployment is submitted live.
+	teams := "Team Name,Existing Team ID,Visibility,Team Template ID\r\nOffline team,,Private,\r\n"
+	users := "User Full Name,User UPN or ID,Team Name,ActionType,Owner or Member\r\nOffline owner,offline-owner@example.invalid,Offline team,AddMember,Owner\r\n"
+	archive, buildErr := deployment.BuildArchive(t.Context(), strings.NewReader(teams), strings.NewReader(users), budget)
+	if buildErr != nil {
+		t.Fatal(buildErr)
+	}
+	accepted := batchWire("POST", "/batchflwdeployment", createBody(t, archive), 202, `{"instanceId":"offline/instance","executionId":"offline-execution","future":false}`)
+	accepted.Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0", "https://learn.microsoft.com/en-us/microsoft-365/frontline/deploy-teams-at-scale"}
+	for _, identity := range []bool{false, true} {
+		set := "Get"
+		if identity {
+			set = "GetViaIdentity"
+		}
+		status := batchWire("GET", "/scenarios/"+url.PathEscape("offline/instance"), nil, 200, "Completed\r\npartial result; not JSON")
+		status.Reply.ProtocolSources = accepted.Reply.ProtocolSources
+		run(t, contracttest.Case{Name: "accepted-then-" + strings.ToLower(set), Mappings: []contracttest.Mapping{{Command: "New-CsBatchTeamsDeployment", ParameterSet: "__AllParameterSets"}, {Command: "Get-CsBatchTeamsDeploymentStatus", ParameterSet: set}}, Steps: []contracttest.Exchange{discover(t), accepted, status}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			submission, r, err := sdk.TeamsAdminAPI.BatchDeployments.Create(ctx, deployment.CreateRequest{Archive: archive, UsersToNotify: "fixture@example.invalid"})
+			if err != nil {
+				return contracttest.Observation{Response: r, Err: err}
+			}
+			if submission == nil || submission.InstanceID == nil || *submission.InstanceID != "offline/instance" || submission.ExecutionID == nil || *submission.ExecutionID != "offline-execution" || string(submission.RawFields["future"]) != "false" {
+				t.Fatal("accepted identities or raw metadata lost")
+			}
+			var value *deployment.Status
+			if identity {
+				value, r, err = sdk.TeamsAdminAPI.BatchDeployments.GetByIdentity(ctx, deployment.Identity{OrchestrationID: *submission.InstanceID})
+			} else {
+				value, r, err = sdk.TeamsAdminAPI.BatchDeployments.GetByID(ctx, *submission.InstanceID)
+			}
+			var text any
+			if value != nil {
+				text = value.Text
+			}
+			return contracttest.Observation{Value: text, Response: r, Err: err}
+		}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`"Completed\r\npartial result; not JSON"`)}})
+	}
+}

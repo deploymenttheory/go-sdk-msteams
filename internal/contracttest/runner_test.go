@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -276,6 +277,13 @@ func TestUnitRunInvalidFixtureNeverInvokes(t *testing.T) {
 		edit func(*Case)
 	}{
 		{name: "missing name", edit: func(c *Case) { c.Name = "" }},
+		{name: "non-primary protocol source", edit: func(c *Case) { c.Steps[0].Reply.ProtocolSources = []string{"https://example.invalid/schema"} }},
+		{name: "protocol source credentials", edit: func(c *Case) {
+			c.Steps[0].Reply.ProtocolSources = []string{"https://secret@learn.microsoft.com/graph/api/team-get"}
+		}},
+		{name: "protocol source downgrade", edit: func(c *Case) {
+			c.Steps[0].Reply.ProtocolSources = []string{"http://learn.microsoft.com/graph/api/team-get"}
+		}},
 		{name: "foreign source", edit: func(c *Case) { c.Source = "https://example.invalid/secret.json" }},
 		{name: "source traversal", edit: func(c *Case) { c.Source = "contracts/../../secret.json" }},
 		{name: "absolute testdata source", edit: func(c *Case) { c.Source = "/msteams/graph_api/channel/testdata/channel.json" }},
@@ -422,5 +430,15 @@ func TestUnitRunBinaryComparesExactBytesWithoutNormalization(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestUnitProtocolSourcesRemainOfflineAnnotations(t *testing.T) {
+	t.Parallel()
+	c := graphCase()
+	c.Steps[0].Reply.ProtocolSources = []string{"https://learn.microsoft.com/en-us/graph/api/organization-list?view=graph-rest-1.0"}
+	result := requirePass(t, c)
+	if strings.Contains(fmt.Sprint(result), "learn.microsoft.com") || result.httpCalls != 1 {
+		t.Fatal("protocol annotation leaked or caused an extra request")
 	}
 }

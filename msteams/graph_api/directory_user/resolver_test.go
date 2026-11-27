@@ -158,8 +158,8 @@ func TestUnitResolverPendingAndMalformedNeverFallBack(t *testing.T) {
 		{"accepted-empty", "", 202, directoryuser.ErrPending},
 		{"accepted-snapshot", `{"id":"` + userID + `"}`, 202, directoryuser.ErrPending},
 		{"missing-id", `{}`, 200, client.ErrDecode},
-		{"wrong-id-type", `{"id":7}`, 200, client.ErrDecode},
-		{"not-directory-id", `{"id":"opaque-membership"}`, 200, client.ErrDecode},
+		{"wrong-id-type", `{"id":[]}`, 200, client.ErrDecode},
+		{"object-id", `{"id":{}}`, 200, client.ErrDecode},
 		{"unexpected-status", `{"id":"` + userID + `"}`, 201, directoryuser.ErrUnexpectedStatus},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

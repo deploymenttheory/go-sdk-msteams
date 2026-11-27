@@ -38,9 +38,10 @@ func TestUnitListRoleOrderPresenceAndPagedEnrichment(t *testing.T) {
 	ownerID, guestID := teamID, tenantID
 
 	query := usersPath(ownerID, userID, guestID)
+	members := `{"value":[{"id":"guest","userId":"` + guestID + `","roles":["guest"],"tenantId":"` + tenantID + `"},{"id":"member","userId":"` + userID + `","email":"old@fixture.invalid","roles":[]},{"id":"owner","userId":"` + ownerID + `","displayName":"Owner","roles":["owner"]},{"id":"future","userId":null,"email":"unknown@fixture.invalid","roles":["future"]}]}`
 
 	run(t, contracttest.Case{Name: "list-role-order-paged-upns", Mappings: []contracttest.Mapping{{Command: "Get-TeamChannelUser", ParameterSet: "__AllParameterSets"}},
-		Steps: []contracttest.Exchange{channelRead("standard"), wire("GET", membersPath(), "", 200, ""), wire("GET", query, "", 200, ""), wire("GET", "/beta/users?$skiptoken=opaque%2Bvalue", "", 200, "")},
+		Steps: []contracttest.Exchange{channelRead("standard"), wire("GET", membersPath(), "", 200, members, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta"), wire("GET", query, "", 200, `{"value":[{"id":"`+ownerID+`","userPrincipalName":"owner@fixture.invalid"},{"id":"`+userID+`","userPrincipalName":null}],"@odata.nextLink":"https://graph.microsoft.com/beta/users?$skiptoken=opaque%2Bvalue"}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta"), wire("GET", "/beta/users?$skiptoken=opaque%2Bvalue", "", 200, `{"value":[{"id":"`+guestID+`","userPrincipalName":"guest@external.invalid"}]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			return listed(sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{}))
 		},
@@ -53,6 +54,7 @@ func TestUnitListRoleOrderPresenceAndPagedEnrichment(t *testing.T) {
 
 func TestUnitRoleFilterPrecedesEnrichment(t *testing.T) {
 	t.Parallel()
+	members := `{"value":[{"id":"owner","userId":"` + teamID + `","roles":["owner"]},{"id":"member","userId":"` + userID + `","roles":[]},{"id":"guest","userId":"` + tenantID + `","roles":["guest"]}]}`
 
 	for _, tc := range []struct{ name, role, id string }{
 		{"owner", "OwNeR", teamID}, {"member", "Member", userID}, {"guest", "GUEST", tenantID},
@@ -60,7 +62,7 @@ func TestUnitRoleFilterPrecedesEnrichment(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 
 			want := fmt.Sprintf(`{"complete":true,"members":3,"items":[{"id":%q,"user_id":%q,"user":null,"name":null,"role":%q,"tenant":null}]}`, tc.name, tc.id, tc.name)
-			run(t, contracttest.Case{Name: "role-" + tc.name, Steps: []contracttest.Exchange{channelRead("private"), wire("GET", membersPath(), "", 200, ""), wire("GET", usersPath(tc.id), "", 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "role-" + tc.name, Steps: []contracttest.Exchange{channelRead("private"), wire("GET", membersPath(), "", 200, members, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta"), wire("GET", usersPath(tc.id), "", 200, `{"value":[{"id":"`+tc.id+`","userPrincipalName":null}]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				return listed(sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{Role: management.Role(tc.role)}))
 			}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(want)}})
 		})
@@ -76,7 +78,7 @@ func TestUnitEnrichmentChunksDistinctIDsAndStillRefreshesExistingUPNs(t *testing
 		rows[i] = fmt.Sprintf(`{"id":"membership-%d","userId":%q,"userPrincipalName":"existing@fixture.invalid","roles":[]}`, i, ids[i])
 	}
 	rows[11] = fmt.Sprintf(`{"id":"duplicate-user-membership","userId":%q,"userPrincipalName":"existing@fixture.invalid","roles":[]}`, ids[0])
-	run(t, contracttest.Case{Name: "enrich-eleven-distinct-twelve-members", Steps: []contracttest.Exchange{channelRead("shared"), wire("GET", membersPath(), "", 200, ""), wire("GET", usersPath(ids[:10]...), "", 200, ""), wire("GET", usersPath(ids[10]), "", 200, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, contracttest.Case{Name: "enrich-eleven-distinct-twelve-members", Steps: []contracttest.Exchange{channelRead("shared"), wire("GET", membersPath(), "", 200, `{"value":[`+strings.Join(rows, ",")+`]}`, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta"), wire("GET", usersPath(ids[:10]...), "", 200, `{"value":[]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta"), wire("GET", usersPath(ids[10]), "", 200, `{"value":[]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		value, err := sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{})
 		if err != nil && isRequestBoundary(ctx) {
 			return contracttest.Observation{Response: value.Response, Err: err}
@@ -108,7 +110,7 @@ func TestUnitEnrichmentFailureNeverProducesACompleteList(t *testing.T) {
 		{"bounded-continuation", `{"value":[],"@odata.nextLink":"https://graph.microsoft.com/beta/users?$skiptoken=next"}`, 200, 1, client.ErrPageLimit},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "enrich-" + tc.name, Steps: []contracttest.Exchange{channelRead("private"), roster(), wire("GET", usersPath(userID), "", tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "enrich-" + tc.name, Steps: []contracttest.Exchange{channelRead("private"), roster(), wire("GET", usersPath(userID), "", tc.status, tc.body, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				value, err := sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{UserLookupMaxPages: tc.maxPages})
 				if err != nil && isRequestBoundary(ctx) {
 					return contracttest.Observation{Response: value.Response, Err: err}

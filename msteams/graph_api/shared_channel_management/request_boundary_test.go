@@ -11,9 +11,9 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-// requestBoundary checks request construction and a controlled denial. No Graph
-// success response is available from TestAcc, so it cannot prove decoding or a
-// successful multi-stage workflow. Local and existing negative cases stay intact.
+// requestBoundary retains a controlled denial for unreviewed success replies.
+// Individually sourced authored replies execute their intended protocol path;
+// neither path establishes live Graph qualification.
 func requestBoundary(t *testing.T, c contracttest.Case) contracttest.Case {
 	t.Helper()
 	if c.Scope == "local" || len(c.Steps) == 0 {
@@ -25,6 +25,11 @@ func requestBoundary(t *testing.T, c contracttest.Case) contracttest.Case {
 		return c
 	}
 	for index, step := range c.Steps {
+		// Reviewed authored replies execute the actual success/result path.
+		// Sources are validated by contracttest and are never live evidence.
+		if len(step.Reply.ProtocolSources) != 0 {
+			continue
+		}
 		if step.Reply.Status < 200 || step.Reply.Status >= 300 {
 			continue
 		}

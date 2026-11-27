@@ -15,7 +15,7 @@ import (
 const unknownID = "55555555-5555-4555-8555-555555555555"
 
 func listRead(kind, body string) contracttest.Exchange {
-	return wire("GET", "/v1.0/groups/"+groupID+"/"+kind+"?$select=id%2CdisplayName%2CuserPrincipalName%2CuserType", "", 200, body)
+	return wire("GET", "/v1.0/groups/"+groupID+"/"+kind+"?$select=id%2CdisplayName%2CuserPrincipalName%2CuserType", "", 200, body, "https://learn.microsoft.com/en-us/graph/api/group-list-members?view=graph-rest-1.0", "https://learn.microsoft.com/en-us/graph/api/group-list-owners?view=graph-rest-1.0")
 }
 
 func listed(value management.ListResult, err error) contracttest.Observation {

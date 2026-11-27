@@ -79,7 +79,7 @@ func (s *Service) Get(ctx context.Context) (*Status, *resty.Response, error) {
 		return nil, nil, client.ErrDestination
 	}
 	path := append(strings.Split(strings.TrimPrefix(profile.PathPrefix, "/"), "/"), "channels", "privateChannelMigrationStatus")
-	response, err := s.scope.Do(ctx, client.Request{Method: http.MethodGet, Path: path, Header: http.Header{"Accept": {"application/json"}}, Replay: client.ReplaySafe}, nil)
+	response, err := s.scope.Do(ctx, client.Request{Method: http.MethodGet, Path: path, Header: http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {"Get-TenantPrivateChannelMigrationStatus"}}, Replay: client.ReplaySafe}, nil)
 	if err != nil {
 		return nil, response, err
 	}

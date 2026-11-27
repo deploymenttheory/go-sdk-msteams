@@ -36,3 +36,16 @@ func ExampleService_ListComplete() {
 	}
 	_ = list
 }
+
+// Compile-only: initial sharing is part of a new shared channel, not an update
+// to an existing sharing relationship. The host and owner are caller-selected.
+func ExampleService_Create_sharedWithHost() {
+	create := func(ctx context.Context, sdk *msteams.Client, teamID, ownerID string) (channel.CreateResult, error) {
+		shares := []channel.InitialSharedTeam{{ID: teamID}}
+		return sdk.GraphAPI.Channels.Create(ctx, teamID, channel.CreateRequest{
+			DisplayName: "Shared project", MembershipType: channel.Shared,
+			OwnerUserID: &ownerID, SharedWithTeams: &shares,
+		})
+	}
+	_ = create
+}

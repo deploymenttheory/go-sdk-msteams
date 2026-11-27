@@ -17,6 +17,16 @@ the root client's tenant, selected Graph cloud and Graph audience.
 | `ResolveByDisplayName`, `UpdateByDisplayName`, `DeleteByDisplayName` | Complete unique hosted-name lookup and optional ID-based mutation |
 | `ResumeOperation` | Local reopening of a validated beta team-operation location |
 
+`CreateWithOwner` retains `OwnerResolution` and its last `OwnerResponse` alongside
+the creation result. If a later local owner guard or cancellation prevents the
+POST, `Response` retains that preparation response. When POST returns an HTTP
+response, `Response` describes creation while `OwnerResponse` remains independently
+available, including on denial or accepted malformed output. A directory read
+does not establish creation eligibility. Primitive `Create` has no resolution
+metadata; no retry or compensation is added by the composition.
+If creation produces no HTTP response, the fallback is a lookup receipt; it does
+not establish the creation outcome.
+
 IDs remain opaque channel strings and are escaped as individual segments. Team
 and owner directory IDs must be UUIDs. Creation defaults to `standard`; only
 standard/private/shared are writable membership types. Owner input is allowed
@@ -53,3 +63,19 @@ claims. The historical myorganization user fallback is not used.
 See [unit tests](service_test.go)
 and [unit tests](service_test.go).
 Live tenant CRUD and PowerShell conformance remain unqualified.
+
+Shared-channel 202 receipts accept Location and, when it is absent, the
+[documented Content-Location](https://learn.microsoft.com/en-us/graph/api/channel-post?view=graph-rest-beta).
+Both pass the same Graph origin and addressed-team operation-route validation.
+A present malformed Location remains an error; the fallback does not hide it.
+Acceptance retains an operation handle rather than a completed channel, and local
+wait cancellation does not cancel or resubmit the remote create.
+
+`CreateRequest.SharedWithTeams` accepts typed `InitialSharedTeam` references for
+initial sharing while creating a shared channel, as documented in beta Example8.
+Nil omits the property; a pointer to an empty collection sends `[]`; a pointer to
+a nil collection preserves explicit JSON null. Null or incompatible membership
+inputs remain service-validated, with no acceptance claim from serialization. References
+carry team UUIDs. The [compiled example](example_test.go) shows sharing the new
+channel with its host team. The service does not infer relationship POST/PATCH
+operations or claim that arbitrary cross-tenant recipients are authorized.

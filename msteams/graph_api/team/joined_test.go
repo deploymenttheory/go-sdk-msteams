@@ -32,9 +32,6 @@ func TestUnitJoinedTeamsRejectInvalidBoundsAndSuccessfulNon200(t *testing.T) {
 	for _, status := range []int{202, 206} {
 		sdk, _, _ := fixture(t, "commercial", auth.Application, exchange{method: "GET", path: "/v1.0/users/" + userID + "/joinedTeams", status: status, body: `{"value":[]}`})
 		result, err := sdk.GraphAPI.Teams.ListJoined(t.Context(), userID, client.PagingOptions{})
-		if errors.Is(err, auth.ErrForbidden) {
-			return
-		}
 		if !errors.Is(err, client.ErrPageStatus) || len(result.Items) != 0 || result.Response == nil || result.Response.StatusCode() != status {
 			t.Fatal("unexpected success established a complete joined collection")
 		}

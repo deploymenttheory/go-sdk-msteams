@@ -22,7 +22,8 @@ const (
 	retailOrigin      = "https://retailservices.teams.microsoft.com"
 	hierarchyOrigin   = "https://hierarchy.teams.microsoft.com"
 	hierarchyAudience = "https://chatsvcagg.teams.microsoft.com"
-	csvBytes          = "name,parent\r\nFixture,Root\r\n"
+	// Published Set-TeamTargetingHierarchy column layout; rows are authored offline.
+	csvBytes = "TargetName,ParentName,TeamId,Location:Clothing,Location:Jewelry,#Bucket1,#Bucket2\r\nOffline root,,11111111-1111-4111-8111-111111111111,0,0,,\r\n"
 )
 
 func hierarchyPath() string { return "/api/v1/hierarchies/" + tenant }
@@ -192,5 +193,75 @@ func TestUnitUploadCompositionDenialsRetainPreparationState(t *testing.T) {
 				return uploaded(v, err)
 			}, Want: contracttest.Expected{Status: tc.status, JSON: json.RawMessage(tc.want), Error: tc.err}})
 		})
+	}
+}
+
+// These protocol vectors follow the pinned handlers/models listed in
+// authored-protocol-sources.md. Preparation responses are deliberately opaque;
+// an accepted import remains distinct from successful ingestion.
+func TestUnitHierarchySuccessfulPreparationImportStatusAndDelete(t *testing.T) {
+	t.Parallel()
+	const primary = "https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0"
+	reviewed := func(step contracttest.Exchange) contracttest.Exchange {
+		step.Reply.ProtocolSources = []string{primary}
+		return step
+	}
+	for _, tc := range []struct {
+		name    string
+		version hierarchy.Version
+		steps   []contracttest.Exchange
+		want    string
+		status  int
+		err     error
+	}{
+		{"v1-optional-handle", hierarchy.V1, []contracttest.Exchange{reviewed(uploadWire(hierarchy.V1, 202, `{}`))}, `{"found":false,"create_attempted":false,"created":false,"import_attempted":true,"accepted":true,"request_id":null}`, 202, nil},
+		{"v2-existing", hierarchy.V2, []contracttest.Exchange{reviewed(wire(hierarchy.V2, "GET", hierarchyPath(), 200, "opaque preparation")), reviewed(uploadWire(hierarchy.V2, 202, `{"id":"offline-import"}`))}, `{"found":true,"create_attempted":false,"created":false,"import_attempted":true,"accepted":true,"request_id":"offline-import"}`, 202, nil},
+		{"v2-create", hierarchy.V2, []contracttest.Exchange{reviewed(wire(hierarchy.V2, "GET", hierarchyPath(), 404, "")), reviewed(createWire(201, "")), reviewed(uploadWire(hierarchy.V2, 202, `{"id":"offline-import"}`))}, `{"found":false,"create_attempted":true,"created":true,"import_attempted":true,"accepted":true,"request_id":"offline-import"}`, 202, nil},
+		{"v2-import-denied-after-create", hierarchy.V2, []contracttest.Exchange{reviewed(wire(hierarchy.V2, "GET", hierarchyPath(), 404, "")), reviewed(createWire(201, "")), uploadWire(hierarchy.V2, 403, "")}, `{"found":false,"create_attempted":true,"created":true,"import_attempted":true,"accepted":false,"request_id":null}`, 403, auth.ErrForbidden},
+	} {
+		run(t, contracttest.Case{Name: tc.name, Mappings: mapping("Set-TeamTargetingHierarchy"), Steps: tc.steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			src, input := source()
+			v, err := sdk.TeamsAdminAPI.TargetingHierarchy.UploadCSV(ctx, input, tc.version)
+			if src.closes != 1 {
+				t.Fatal("CSV ownership was lost")
+			}
+			if tc.version == hierarchy.V2 && tc.name != "v2-existing" && (v.CreationResponse == nil || v.CreationResponse.StatusCode() != 201) {
+				t.Fatal("successful preparation receipt was lost")
+			}
+			if tc.name == "v2-existing" && (v.LookupResponse == nil || v.LookupResponse.StatusCode() != 200) {
+				t.Fatal("lookup receipt lost")
+			}
+			if v.ImportHTTPAccepted && tc.version == hierarchy.V2 && (v.Import == nil || string(v.Import.RawFields["id"]) != `"offline-import"`) {
+				t.Fatal("native import handle lost")
+			}
+			return uploaded(v, err)
+		}, Want: contracttest.Expected{Status: tc.status, JSON: json.RawMessage(tc.want), Error: tc.err}})
+	}
+	for _, version := range []hierarchy.Version{hierarchy.V1, hierarchy.V2} {
+		path, body, wantStatus := "/api/rest/v1/nodes/upload/status", `{"id":"offline-operation","status":"Successful","lastUpdatedAt":"2026-11-20T12:00:00Z","filename":"fixture.csv","future":false}`, "Successful"
+		deletePath := "/api/rest/v1/nodes/hierarchy"
+		if version == hierarchy.V2 {
+			path = hierarchyPath() + "/operations/latest"
+			body = `{"id":"offline-operation","status":"Succeeded","lastActionDateTime":"2026-11-20T12:00:00Z","fileName":"fixture.csv","future":false}`
+			deletePath = hierarchyPath()
+		}
+		run(t, contracttest.Case{Name: "status-then-delete-v" + string(version), Mappings: append(mapping("Get-TeamTargetingHierarchyStatus"), mapping("Remove-TeamTargetingHierarchy")...), Steps: []contracttest.Exchange{reviewed(wire(version, "GET", path, 200, body)), reviewed(wire(version, "DELETE", deletePath, 204, ""))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			v, r, err := sdk.TeamsAdminAPI.TargetingHierarchy.GetStatus(ctx, "", version)
+			if err != nil {
+				return contracttest.Observation{Response: r, Err: err}
+			}
+			if v == nil || v.ID != "offline-operation" || v.Status == nil || *v.Status != wantStatus || v.Filename == nil || *v.Filename != "fixture.csv" || v.LastUpdatedAt == nil || *v.LastUpdatedAt != "2026-11-20T12:00:00Z" {
+				t.Fatal("status projection lost native operation")
+			}
+			if version == hierarchy.V2 {
+				if v.RawStatus == nil || *v.RawStatus != "Succeeded" || v.Hierarchy == nil || string(v.Hierarchy.RawFields["future"]) != "false" {
+					t.Fatal("v2 projection lost raw state")
+				}
+			} else if v.Retail == nil || string(v.Retail.RawFields["future"]) != "false" {
+				t.Fatal("v1 projection lost native state")
+			}
+			r, err = sdk.TeamsAdminAPI.TargetingHierarchy.Delete(ctx, version)
+			return contracttest.Observation{Response: r, Err: err}
+		}, Want: contracttest.Expected{Status: 204}})
 	}
 }
