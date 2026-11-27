@@ -1,34 +1,21 @@
-# POL-27 policy assignment tenant acceptance
+# Policy assignment tenant tests
 
-Issue #100 remains open. Ordinary and conditional OCE services have native methods,
-request/model observations and exact parameter-set mappings. No successful live
-policy-assignment qualification is claimed.
+The SDK implements group assignment CRUD, effective-user reads and batch
+submission/status, with separate conditional OCE operations. Native tests cover
+requests, omitted/null/empty values, decoded outcomes, partial failures and HTTP
+receipts. See the [SDK reference](../../msteams/teams_admin_api/policy_assignments/api_docs.md).
 
-`TestAccPolicyAssignmentsReadOnly` requires MSTEAMS_LAB_READ_ONLY=1 and the private
-MSTEAMS_LAB_IDENTITY_FILE. MSTEAMS_LAB_AUTH_METHOD selects client-secret or certificate.
-It lists generated jobs, then reads at most five returned operation IDs. It never
-submits work, edits assignments/rank, changes permissions or invokes OCE actions.
-Failures retain only HTTP status and whether discovery failed, without payloads.
+The dedicated application-access policy scenarios already exercise user grant,
+read and clear/restoration, plus group create/read/update/delete and group grant.
+Their tenant runs passed in certificate and client-secret modes. Actual response
+JSON drives the service's unit regressions. Group tests preserve the prior empty
+assignment and remove both owned policies; independent cleanup and six selected
+PowerShell comparisons are required by the runner.
 
-Actual dedicated-SPN runs in both credential modes completed discovery and received
-resource HTTP 403 on the list. Per-ID reads were not reached. The Get command's live
-state is unavailable; no successful contract/live parity state is promoted.
-
-`TestAccPolicyAssignmentsOCEReadOnly` uses the same read-only gate and binds the
-explicit OCE target to the authenticating lab tenant. It only lists regional status.
-Actual secret and certificate runs each made three regional attempts and ended
-with HTTP 403. It never enables a privileged PowerShell profile, elevates eligibility
-or invokes refresh/reprocessing. Successful regional qualification is unavailable.
-
-Successful future qualification needs list/status comparison against the pinned
-module and explicit tenant-bound fixtures for group/user effective reads. Preserve
-rank and direct/group source provenance without inventing a precedence rule.
-Group creation/update/deletion and batch submission need explicit mutation gates,
-owned disposable fixtures, non-default read-back and defined cleanup. A 201/202/204
-alone proves acceptance, not effective assignment convergence or per-user success.
-
-OCE reads/actions have additional contributor eligibility and explicit tenant,
-environment and regional context. They must be exercised separately from ordinary
-tenant policy operations. No OCE profile is activated, no role is granted and no
-eligibility is inferred from a denial. Reprocessing/refresh may affect existing
-users and require a separately scoped consequential test, not automatic cleanup.
+Generic batch and OCE read tests remain pending: a suitable tenant/job fixture and
+OCE contributor eligibility are not configured. Earlier 403 responses do not prove
+all authentication modes are unsupported. Batch submission needs controlled users
+and original-state snapshots; OCE refresh/reprocessing requires an explicit target
+tenant, environment/region, eligibility and consequential opt-in. No test activates
+a privileged profile or grants roles automatically. Effective-user precedence,
+member propagation and cross-group ranking remain separate from HTTP acceptance.

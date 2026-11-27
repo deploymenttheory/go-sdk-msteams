@@ -97,8 +97,8 @@ class CallFixtureExportGuardTests(unittest.TestCase):
                 with self.assertRaises(ci.response_fixtures.ExportError):
                     ci.response_fixtures.state(root, ci.CALL_RESPONSE_FIXTURES)
 
-    def test_writer_opt_in_is_scoped_to_call_integration(self):
-        for service in ['svc', 'call_integration']:
+    def test_writer_opt_in_is_scoped_to_selected_partitions(self):
+        for service in ['svc', 'call_integration', 'recording_messages', 'teams_custom_banner_text']:
             with self.subTest(service=service), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory).resolve()
                 private = root / 'private'
@@ -115,4 +115,22 @@ class CallFixtureExportGuardTests(unittest.TestCase):
                 with patch.object(ci,'ROOT',root), patch.object(ci,'HERE',root), patch.dict(os.environ,{'MSTEAMS_LAB_PRIVATE_DIRECTORY':str(private),'MSTEAMS_LAB_CAPTURE_HOLIDAY_FIXTURE':'1','MSTEAMS_UPDATE_TESTDATA':'1'},clear=True), patch.object(ci.subprocess,'run',side_effect=process), contextlib.redirect_stdout(io.StringIO()):
                     self.assertEqual(ci.run(args), 0)
                 self.assertEqual(environments[0].get('MSTEAMS_LAB_CAPTURE_HOLIDAY_FIXTURE'), '1' if service=='call_integration' else None)
-                self.assertNotIn('MSTEAMS_UPDATE_TESTDATA', environments[0])
+                self.assertEqual(environments[0].get('MSTEAMS_UPDATE_TESTDATA'), '1' if service in ci.POL_RESPONSE_FIXTURES else None)
+
+
+class PolicyFixtureExportGuardTests(unittest.TestCase):
+    def test_exports_owned_lifecycle_json_and_empty_receipts_only(self):
+        for service in ci.POL_RESPONSE_FIXTURES:
+            with self.subTest(service=service), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory).resolve()
+                folder = root / 'msteams/teams_admin_api' / service / 'testdata'
+                folder.mkdir(parents=True)
+                (folder / 'crud_id_create_readback.json').write_text('{"Identity":"Global/00000000-0000-4000-8000-000000000031","Description":"Fixture description"}')
+                (folder / 'crud_identity_delete_204.body').write_bytes(b'')
+                rules = {service: ci.POL_RESPONSE_FIXTURES[service]}
+                ci.response_fixtures.capture(root, root / 'reports', {}, 'b' * 40, rules)
+                manifest = json.loads((root / 'reports/response-fixtures.json').read_text())
+                self.assertEqual(len(manifest['files']), 2)
+                (folder / 'recovery.json').write_text('{}')
+                with self.assertRaises(ci.response_fixtures.ExportError):
+                    ci.response_fixtures.capture(root, root / 'rejected', {}, 'b' * 40, rules)

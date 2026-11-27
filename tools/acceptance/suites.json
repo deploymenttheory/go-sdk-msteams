@@ -401,6 +401,16 @@
           "tests": [
             "TestAccRecordingMessagesReadOnly"
           ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccRecordingMessagesCRUDByID",
+            "TestAccRecordingMessagesCRUDByIdentity"
+          ]
         }
       ]
     },
@@ -674,6 +684,16 @@
           "id": "reads",
           "tests": [
             "TestAccBannerTextReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccBannerTextCRUDByID",
+            "TestAccBannerTextCRUDByIdentity"
           ]
         }
       ]

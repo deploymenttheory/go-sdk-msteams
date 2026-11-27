@@ -1,31 +1,22 @@
-# POL-28 delegated tenant acceptance
+# Policy package tenant tests
 
-Issue #101 remains open. Native methods, request/model observations and exact
-parameter-set mappings do not establish successful tenant qualification.
+The SDK implements package reads, custom create/update/delete, synchronous user
+assignment, group assignment and distinct asynchronous batch submission. Ordinary
+JSON-backed tests cover request bodies, partial business failures, retained HTTP
+receipts, omission/empty values and cancellation. See the [SDK reference](../../msteams/teams_admin_api/policy_packages/api_docs.md).
 
-TestAccPolicyPackagesReadOnly requires MSTEAMS_LAB_READ_ONLY=1 and the private
-MSTEAMS_LAB_IDENTITY_FILE for the expected lab tenant. Without a separately supplied
-delegated context it verifies the existing SPN's documented local mode rejection,
-then skips tenant qualification. The actual configured-SPN run took this path;
-no package request, token acquisition, role/consent change or tenant write occurred.
-This is an unavailable delegated prerequisite, not a successful live read.
+Application-mode sessions are rejected locally for the commercial, GCC, GCC High
+and DoD profiles before discovery or token acquisition. Successful live package
+reads and writes need a separately supplied delegated identity. An application
+permission grant does not satisfy that prerequisite.
 
-To exercise reads later, set MSTEAMS_LAB_PACKAGE_DELEGATED_FILE to a private JSON
-file (same private-file permissions as other lab credentials). Required fields are
-tenant_id, identity_id, access_token and expires_at (RFC3339). Optional cloud selects
-the existing environment profile; optional user_id enables selected user/recommendation
-reads. The supplied Teams token must belong to a delegated identity in the same
-expected tenant, and expire more than one minute in the future. Token mode is the
-trusted caller's declaration, not a JWT-inspection or entitlement guarantee.
+`TestAccPolicyPackagesReadOnly` uses `MSTEAMS_LAB_PACKAGE_DELEGATED_FILE`, a private
+JSON file with `tenant_id`, `identity_id`, `access_token` and RFC3339 `expires_at`.
+Optional `cloud` selects the environment; optional `user_id` enables selected user
+and recommendation reads. The loader rejects a wrong tenant, empty/expired token,
+unknown fields and trailing data. Tokens and identifiers are never printed.
 
-The loader rejects wrong tenants, expired/empty tokens, unknown JSON fields and
-trailing documents without retaining output. It never prints tokens or identifiers.
-The read test lists packages and reads at most five returned names; optional user
-reads do not grant/modify anything. It never invokes custom CRUD, group/user grants
-or asynchronous batch assignment. PowerShell projection comparison remains a
-separate qualification step; the SDK itself needs no PowerShell runtime.
-
-Mutation qualification needs explicit gates, disposable tenant-bound package/user/
-group fixtures, non-default read-back and cleanup. Keep synchronous partial failures
-separate from asynchronous HTTP acceptance and effective policy convergence. No
-SPN permission grant can substitute for the documented delegated-mode requirement.
+The current automated tenant suite has no delegated package fixture, so it does
+not claim package CRUD or effective assignments passed. Future writes require
+explicit mutation gates, disposable package/user/group subjects and independently
+verified cleanup/restoration. An accepted batch ID is not effective-policy success.

@@ -1,0 +1,21 @@
+[
+  {
+    "RecordingAndTranscriptionLocalizationCustomMessage": [
+      {
+        "Language": "en-US",
+        "InitiatorImplicit": null,
+        "ParticipantImplicit": "SDK lab updated recording notice",
+        "InitiatorExplicit": null,
+        "ParticipantExplicitRequested": null,
+        "ParticipantExplicitProvided": null,
+        "AgreementDialogue": null
+      }
+    ],
+    "Id": "00000000-0000-4000-8000-000000000031",
+    "Description": "Fixture description",
+    "ConfigMetadata": {
+      "Authority": "Tenant"
+    },
+    "Identity": "Global/00000000-0000-4000-8000-000000000031"
+  }
+]

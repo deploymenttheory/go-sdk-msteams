@@ -12,7 +12,7 @@ import (
 
 func main() {
 	sdk, err := msteams.NewClient(&msteams.AuthConfig{
-		Method: auth.ManagedIdentity, TenantID: "example-tenant",
+		Method: auth.ManagedIdentity, TenantID: "00000000-0000-4000-8000-000000000001",
 	}, msteams.WithHTTPTimeout(30*time.Second))
 	if err != nil {
 		log.Fatal(err)

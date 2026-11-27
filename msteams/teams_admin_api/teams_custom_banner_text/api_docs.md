@@ -56,6 +56,7 @@ are caller-owned sensitive data.
 Calls use the selected Teams audience/origin and compiled policy headers with a
 fresh correlation UUID; no Graph lookup or modern forest header is added.
 Synthetic application/delegated tests prove routing, not tenant authorization.
-Successful tenant CRUD, server/cloud availability, cleanup and effective display
-remain open under #114. See [unit tests](service_test.go)
+Owned ID/full-identity CRUD tests cover persisted text updates, omitted descriptions
+and independent cleanup. Server/cloud availability and effective display remain
+environment-specific; see the lab guide for execution requirements and results. See [unit tests](service_test.go)
 and the [lab acceptance record](../../../docs/acceptance/banner-text-lab-acceptance.md).

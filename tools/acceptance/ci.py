@@ -19,6 +19,19 @@ FIXTURE_SPEC = importlib.util.spec_from_file_location('acceptance_response_fixtu
 response_fixtures = importlib.util.module_from_spec(FIXTURE_SPEC)
 FIXTURE_SPEC.loader.exec_module(response_fixtures)
 CALL_RESPONSE_FIXTURES = {'schedules': {'integration_holidays'}}
+# Only the two owned-record lifecycle partitions can refresh these fixtures.
+POL_RESPONSE_FIXTURES = {
+    service: {
+        name + suffix
+        for name in {'list', 'get_by_id'} | {
+            'crud_' + selector + '_' + stage
+            for selector in ('id', 'identity')
+            for stage in ('create', 'create_readback', 'update_readback', 'list', 'delete', 'get_deleted')
+        }
+        for suffix in ('', '_201', '_202', '_204', '_400', '_401', '_403', '_404', '_409', '_500', '_502', '_503')
+    }
+    for service in ('recording_messages', 'teams_custom_banner_text')
+}
 PROOF_MARKERS = [
     'policy create/read-back: passed',
     'policy update/read-back and omission: passed',
@@ -873,9 +886,11 @@ def run(args):
         # Certificate support is proven once by the auth partition; services
         # do not repeat it for every resource.
         raise AcceptanceFailure('Service partitions run with client-secret authentication only.')
+    fixture_rules = (CALL_RESPONSE_FIXTURES if service == 'call_integration' else
+                     {service: POL_RESPONSE_FIXTURES[service]} if service in POL_RESPONSE_FIXTURES else None)
     try:
         fixture_before = (ext_fixture_state(ROOT) if service == 'ext_integration' else
-                          response_fixtures.state(ROOT, CALL_RESPONSE_FIXTURES) if service == 'call_integration' else None)
+                          response_fixtures.state(ROOT, fixture_rules) if fixture_rules else None)
     except response_fixtures.ExportError as error:
         raise AcceptanceFailure(str(error)) from None
     reports = []
@@ -896,7 +911,7 @@ def run(args):
             'MSTEAMS_LAB_POWERSHELL_ORACLE': '1', 'MSTEAMS_LAB_AUTH_METHOD': mode,
             'MSTEAMS_LAB_ACCESS_PROFILE': 'teams-administrator', 'MSTEAMS_LIVE_ACCESS': '1',
         })
-        if service == 'ext_integration':
+        if service == 'ext_integration' or service in POL_RESPONSE_FIXTURES:
             env['MSTEAMS_UPDATE_TESTDATA'] = '1'
         if service == 'call_integration':
             env['MSTEAMS_LAB_CAPTURE_HOLIDAY_FIXTURE'] = '1'
@@ -957,7 +972,7 @@ def run(args):
             capture_ext_fixtures(ROOT, args.report_directory, fixture_before, revision)
         else:
             try:
-                response_fixtures.capture(ROOT, args.report_directory, fixture_before, revision, CALL_RESPONSE_FIXTURES)
+                response_fixtures.capture(ROOT, args.report_directory, fixture_before, revision, fixture_rules)
             except response_fixtures.ExportError as error:
                 raise AcceptanceFailure(str(error)) from None
     write_json(args.report_directory / 'summary.json', summary)

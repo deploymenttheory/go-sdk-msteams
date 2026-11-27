@@ -39,6 +39,10 @@ class WorkflowArtifactGuardTests(unittest.TestCase):
             'response-fixtures/teams_feedback_policy/integration_*.json',
             'response-fixtures/call_templates/ext_integration_*.json',
             'response-fixtures/ai_agents/ext_integration_*.json',
+            'response-fixtures/recording_messages/*.json',
+            'response-fixtures/recording_messages/*.body',
+            'response-fixtures/teams_custom_banner_text/*.json',
+            'response-fixtures/teams_custom_banner_text/*.body',
         }
         self.assertEqual(set(upload_patterns(workflow)), {prefix + path for path in expected})
         self.assertGreaterEqual(workflow.count('steps: *partition-steps'), 2)

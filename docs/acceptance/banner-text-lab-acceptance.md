@@ -1,27 +1,35 @@
-# Teams custom banner text lab acceptance
+# Banner text tenant tests
 
-On 2026-11-21, TestAccBannerTextReadOnly attempted the CustomBannerText collection
-read using the dedicated lab SPN in client-secret and certificate modes. Both
-actual resource reads returned HTTP 403. No response payload, tenant/client ID
-or credential was retained. Filtered/selected reads and optional pinned comparison
-were not reached. No banner, policy, assignment, role, consent or privilege changed.
-This authorization failure does not establish feature availability or live CRUD.
+`teams_custom_banner_text` runs bounded list/full-identity/relative-ID reads against
+the configured tenant. Current reads pass with the lab application identity; the
+earlier 403 and administrator-grant notes are historical, not current prerequisites.
 
-Automatic approval review previously rejected the tenant-wide Teams Administrator
-grant; explicit approval remains pending. No workaround or privilege change was
-applied.
+`TestAccBannerTextCRUDByID` and `TestAccBannerTextCRUDByIdentity` create one owned,
+unassigned record with non-default text, read it back, update only text while
+preserving the description, verify its list entry, delete it and independently
+check selected/list absence. The existing PowerShell reader compares both states
+when enabled, including the list count and the selected scalar projection.
 
-The harness gates credential access, bounds execution and optional oracle output,
-and compares list/filter with at most five full/relative selector reads. Its
-optional certificate oracle pins the 8.1.0 module/Core/PolicyRp hashes, binds to
-the canonical tenant, compares source list/selected reads, and reports only known
-nullable Id/Text/Description projections. Even an empty SDK list requires a source
-list/count comparison when the oracle is enabled. Strict decoding rejects missing
-fields, wrong types/tenant/count/selectors, duplicates and trailing output.
-Certificates/sessions are disposed and output buffers cleared. No writes run.
+Writes require mutation opt-in and a private recovery journal. The journal's random
+fixture determines a UUID and an exact description ownership marker. Recovery
+refuses foreign IDs, changed ownership, denied reads and inconsistent absence.
+It uses a fresh bounded context after cancellation and retains unresolved state.
+These tests edit no existing banner, Global setting or policy assignment. Banner
+activation requires associating its ID with a compliance-recording policy; see
+[Microsoft's setup guide](https://learn.microsoft.com/en-us/microsoftteams/teams-compliance-recording-custom-banner).
+Displayed behaviour requires separate controlled subjects.
 
-Remaining qualification includes successful authorized list/filter/read and
-pinned comparisons; uniquely tagged create/default-ID/read-back/update/delete and
-cleanup; source null/empty/Force and server validation; read-derived selector
-semantics, cloud/authentication coverage and actual displayed banner behavior.
-Issue #114 and remaining tenant testing remain open.
+CI exports only bounded, sanitized response JSON and empty receipts. Review new
+`crud_id_*` and `crud_identity_*` captures before using them in offline tests.
+See [test setup](../../tools/acceptance/README.md) and [SDK methods](../../msteams/teams_admin_api/teams_custom_banner_text/api_docs.md).
+
+## Executed owned lifecycle
+
+Both ID and full-identity scenarios passed with client-secret authentication in
+[run 45984997202](https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45984997202)
+on 2026-11-27, at the PR merge revision `de1aec55e7f5d3020c9cee875588d6058b22358d`.
+Each scenario completed create/read-back, sparse update/omission, list and
+independent deletion/absence checks, with two successful PowerShell comparisons.
+Both recovery entries were cleaned; the finalizer reported zero unresolved entries.
+Sanitized response JSON and empty receipts now drive `TestUnitCapturedOwnedLifecycle`
+in the service package. The unit test clearly labels its synthetic PATCH acknowledgement.

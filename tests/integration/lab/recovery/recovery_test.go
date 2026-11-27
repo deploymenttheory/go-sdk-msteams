@@ -25,6 +25,7 @@ import (
 	mainlineattendantsacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/mainline_attendants"
 	meetingbrandingacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/meeting_branding"
 	onlinevoicemailpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/online_voicemail_policy"
+	recordingmessagesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/recording_messages"
 	schedulesacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/schedules"
 	teamtemplateacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/team_template"
 	teamsaipolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_ai_policy"
@@ -37,6 +38,7 @@ import (
 	teamscallingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_calling_policy"
 	teamschannelspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_channels_policy"
 	teamscortanapolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_cortana_policy"
+	bannertextacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_custom_banner_text"
 	teamsenhancedencryptionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_enhanced_encryption_policy"
 	teamseventspolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_events_policy"
 	teamsfeedbackpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_feedback_policy"
@@ -93,6 +95,8 @@ func handlerSets(sdk *msteams.Client) []map[string]lab.Handler {
 		externalaccesspolicyacc.RecoveryHandlers(sdk),
 		mainlineattendantsacc.RecoveryHandlers(sdk),
 		meetingbrandingacc.RecoveryHandlers(sdk),
+		recordingmessagesacc.RecoveryHandlers(sdk),
+		bannertextacc.RecoveryHandlers(sdk),
 		schedulesacc.RecoveryHandlers(sdk),
 		onlinevoicemailpolicyacc.RecoveryHandlers(sdk),
 		teamtemplateacc.RecoveryHandlers(sdk),
@@ -183,6 +187,8 @@ func TestUnitRecoveryRegistryKinds(t *testing.T) {
 		"auto-recording-template",
 		"auto-attendant",
 		"branding-policy",
+		"banner-text",
+		"recording-message",
 		"byod-and-desks-policy",
 		"call-hold-policy",
 		"call-park-policy",
