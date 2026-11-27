@@ -271,3 +271,15 @@ change, while MyCommand.Name remains the selected private command and supplies
 the header. The parameterized `scripts/discovery/inspect-custom-app-header-closure.ps1`
 reproduces this bounded source-plus-inert evidence. No actual management lifecycle,
 authentication, HTTP request or wire header capture is claimed.
+
+## Reviewed replacement decision at b3166ee
+
+Independent review approved exactly Get and Set's accepted public
+`__AllParameterSets` implementation and offline contract decisions after checking
+the corrected source chain, real binder/setter observations, nine exact code/fixture
+hashes and the complete 44-pass execution result. The
+[replacement decision](evidence/custom-app-b3166ee-contract.json) records those
+bounds. Source Set WhatIf still performs the unhooked preliminary GET and withholds
+the PUT; a native caller can Prepare then withhold Apply. Earlier withdrawn/wrong-phase
+evidence remains unchanged. All live flags and the remaining EXT command states
+remain unchanged; this does not establish tenant persistence or finish EXT-90.

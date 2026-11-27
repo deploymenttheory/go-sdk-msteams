@@ -11289,7 +11289,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -11303,10 +11303,9 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
+        "status": "passed",
         "evidence": [
-          "docs/implementation/ext/evidence/custom-app-get-4338e4b-contract.json",
-          "docs/implementation/ext/evidence/custom-app-binding-header-correction.json"
+          "docs/implementation/ext/evidence/custom-app-b3166ee-contract.json"
         ]
       },
       "live": {
@@ -42240,7 +42239,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -42266,12 +42265,9 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
+        "status": "passed",
         "evidence": [
-          "docs/implementation/ext/app-catalog-contract-notes.md",
-          "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json",
-          "docs/implementation/ext/evidence/custom-app-set-header-source.json",
-          "docs/implementation/ext/evidence/custom-app-set-projection-source.json"
+          "docs/implementation/ext/evidence/custom-app-b3166ee-contract.json"
         ]
       },
       "live": {
