@@ -7942,6 +7942,10 @@
             {
               "file": "msteams/teams_admin_api/teams_education_configuration/binding_test.go",
               "name": "TestUnitEducationConfigurationRejectedRequestsAndLocalBinding"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -7972,6 +7976,14 @@
             {
               "file": "msteams/teams_admin_api/teams_education_configuration/binding_test.go",
               "name": "TestUnitEducationConfigurationRejectedRequestsAndLocalBinding"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_education_configuration/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
             }
           ],
           "live_tests": [
@@ -7983,7 +7995,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -8001,8 +8013,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-small-compiled-config.json#/commands/0"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -10179,6 +10193,10 @@
             {
               "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go",
               "name": "TestUnitFilterUsesActualCollection"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -10205,6 +10223,10 @@
             {
               "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/response_test.go",
               "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -10216,7 +10238,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -10234,8 +10256,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-small-compiled-config.json#/commands/1"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -12182,6 +12206,10 @@
             {
               "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go",
               "name": "TestUnitFilterUsesActualCollection"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -12208,6 +12236,10 @@
             {
               "file": "msteams/teams_admin_api/teams_sip_devices_configuration/response_test.go",
               "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -12219,7 +12251,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -12237,8 +12269,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-small-compiled-config.json#/commands/2"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -12784,6 +12818,10 @@
             {
               "file": "msteams/teams_admin_api/teams_upgrade_configuration/filter_test.go",
               "name": "TestUnitFilterUsesActualCollection"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -12810,6 +12848,10 @@
             {
               "file": "msteams/teams_admin_api/teams_upgrade_configuration/response_test.go",
               "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/response_test.go",
+              "name": "TestUnitListResponseFixture"
             }
           ],
           "live_tests": [
@@ -12821,7 +12863,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -12839,8 +12881,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-small-compiled-config.json#/commands/3"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -39299,7 +39343,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -39313,8 +39357,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-small-compiled-config.json#/commands/4"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -40736,6 +40782,14 @@
             {
               "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go",
               "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go",
+              "name": "TestUnitNullEmptyAndForceRemainExplicit"
             }
           ],
           "live_tests": [
@@ -40747,7 +40801,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -40761,8 +40815,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-small-compiled-config.json#/commands/5"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -41795,6 +41851,14 @@
             {
               "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go",
               "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go",
+              "name": "TestUnitNullEmptyAndForceRemainExplicit"
             }
           ],
           "live_tests": [
@@ -41806,7 +41870,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -41820,8 +41884,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-small-compiled-config.json#/commands/6"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -42234,6 +42300,14 @@
             {
               "file": "msteams/teams_admin_api/teams_upgrade_configuration/service_test.go",
               "name": "TestUnitUpdateUsesActualPreparationAndSparsePatch"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/validation_test.go",
+              "name": "TestUnitConfigurationInputAndContextRejectBeforeHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_upgrade_configuration/service_test.go",
+              "name": "TestUnitAllSettingsPreserveNullFalseOpaqueAndForce"
             }
           ],
           "live_tests": [
@@ -42245,7 +42319,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -42259,8 +42333,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol91-small-compiled-config.json#/commands/7"
+        ]
       },
       "live": {
         "status": "not-run",

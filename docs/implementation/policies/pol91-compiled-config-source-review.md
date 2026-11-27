@@ -45,7 +45,7 @@ Verify the package and loaded assembly paths against these hashes before model c
 
 The shared Set no-settings branch is WriteError, before its token path, not quiet success. Native ErrInput before I/O represents that error-return boundary; caller controls confirmation and continuation. Public Set composes a preparation read and selected sparse PATCH, using the received body Identity independently of the route. The native PatchByIdentity primitive is additional explicit behavior and is not mislabeled a public Set without preparation. HTTP acceptance, typed received output and effective persistence are separate; no automatic readback, restoration, replay or transaction is inferred.
 
-The initial audit records exact four-package proofs at 42fd88e (87948/29006), clean root0df43de/93343 for success/denial/malformed/cancellation/recovery and distinct retained versus authored bytes. New review identified two bounded evidence gaps: privacy's duplicate filter test never exercised successful filtering/actual whitespace, and voicemail Set never reached an accepted submission. The pending source-authored replacements close those branches without fabricating a tenant capture or nondefault privacy scope. Client's new typed PATCH200/malformed200 full-package result is separately bound to 01e469b/33122; its initial outer-whitespace test assertion failure is a corrected test oracle, not a production regression. Final new privacy/validation execution and individual status decisions are recorded only after their source checkpoint passes.
+The initial audit records exact four-package proofs at 42fd88e (87948/29006), clean root 0df43de / 93343 for success/denial/malformed/cancellation/recovery and distinct retained versus authored bytes. New review identified two bounded evidence gaps: privacy's duplicate filter test never exercised successful filtering/actual whitespace, and voicemail Set never reached an accepted submission. The pending source-authored replacements close those branches without fabricating a tenant capture or nondefault privacy scope. Client's new typed PATCH200/malformed200 full-package result is separately bound to 01e469b/33122; its initial outer-whitespace test assertion failure is a corrected test oracle, not a production regression. Final new privacy/validation execution and individual status decisions are recorded only after their source checkpoint passes.
 
 Live authorization/minimum role, actual tenant change/readback/oracle/restore and client effects remain unqualified. Nothing in this source review promotes live status or closes #185.
 
@@ -146,6 +146,41 @@ zero-request context/destination/filter/identity guards and owned snapshots.
 Upgrade additionally replays a caller-issued independent readback. SIP/MTO
 prepare/acceptance tests do not claim independent effective readback. No new
 permutation is added merely to count these existing success branches. Their
-complete-package execution and individual command decisions are pending the
-same finite source review, rather than being blocked categorically on live
-fixtures or being promoted from method names.
+complete-package execution and individual command decisions are recorded below,
+with live fixtures and effective behavior kept separate from contract proof.
+
+The complete Upgrade/SIP/MTO package TestUnit/Example baseline passed at clean
+`20490c0`, session `82938` (36.31 GiB admission, Go 1.27.4 / GOMAXPROCS 2,
+`-p 1 -count=1`, owned scratch, 14 GiB guard). Review then found that their
+existing local guard tests did not actually invoke either no-settings write
+method. The bounded additions call both Patch and prepared Update with omitted,
+false and true Force but no settings, asserting ErrInput, nil typed result and
+nil response with zero HTTP. At clean
+`d014e7827f31d57bb2d0be4ad1ae3adcdf0ae91c`, exact
+TestUnitConfigurationInputAndContextRejectBeforeHTTP passed in all three
+packages, session `65890` (36.80 GiB admission; same guard/owned scratch, removed
+at completion). This supplemental execution covers only the changed local
+cases; it is not mislabeled a second full-package run.
+
+The null/empty SIP/MTO request combinations are primary-authored request
+vectors paired with retained empty204 reply bytes; they are not captures of
+those null/empty mutations succeeding in a tenant. Upgrade's503 request vectors
+likewise establish selected serialization with controlled rejection, not
+successful server eligibility for opaque strings. Actual accepted update
+fixtures and independent readback snapshots remain separately identified.
+
+### Eight individually reviewed command decisions
+
+| Commands / exact sets | Complete reviewed behavior and execution | Remaining live boundary |
+|---|---|---|
+| Get/Set-CsTeamsEducationConfiguration / Get Identity+Filter, Set Identity | All three opaque strings, actual property setters, concrete bound-key control, inherited binder/Force/path and shared compiled route/result rules; retained get/list/filter, zero-request guards/no-settings, source-authored typed200/malformed200 and prepared204, plus later HTTP/preparation failures. Full package d34f149/52700. | Actual change/readback/oracle/restore, effective education behavior and minimum role remain unqualified. |
+| Get/Set-CsTeamsUpgradeConfiguration / Get Identity+Filter, Set Identity | All three nullable settings, no extra validators, exact bound-key/no-settings semantics, optional collection/selected read and literal filtering; retained typed before/accepted204/caller readback and owned snapshots, false/null/opaque/Force rejected request proofs, real403/no-replay and shared source response/error rules. Full package 20490c0 / 82938; new no-settings cases d014e78 / 65890. | Each field's effective tenant behavior and full oracle/restore/permission/cloud qualification stay separate. |
+| Get/Set-CsTeamsSipDevicesConfiguration / Get Identity+Filter, Set Identity | Complete single String BulkSignIn public/model inventory, null/empty/omitted distinctions, exact concrete guard, selected/list/filter, retained before/accepted204, typed snapshots, actual403/no-replay, source-authored null/empty/Force wire cases and zero-request guards. Full package 20490c0 / 82938; no-settings d014e78 / 65890. | No effective SIP-device behavior or broad live qualification is inferred from transport acceptance/replayed snapshots. |
+| Get/Set-CsTeamsMultiTenantOrganizationConfiguration / Get Identity+Filter, Set Identity | Complete single String CopilotFromHomeTenant public/model inventory and same individually verified plain setter/bound-key rules; retained typed get/list/filter/prepared204 and snapshots, actual403/no-replay, authored null/empty/Force and no-settings guards. Full package 20490c0 / 82938; no-settings d014e78 / 65890. | Effective cross-tenant Copilot behavior, minimum role and all live qualification remain unchanged. |
+
+This packet records eight reviewed implemented/contract-passed commands and
+twelve exact sets. [Versioned execution records](../../../contracts/coverage/evidence/pol91-small-compiled-config.json) bind the decisions. It uses common-source evidence for unchanged shared model/status/filter/
+control behavior, not a claim that each generic helper permutation was rerun in
+every family. The earlier clean root 0df43de / 93343 compositions remain bounded to
+client/privacy/validation; none is relabeled an Education/Upgrade/SIP/MTO
+cross-family composition. Every live record and the other command states remain unchanged.

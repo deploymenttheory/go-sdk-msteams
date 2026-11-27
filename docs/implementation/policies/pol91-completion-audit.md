@@ -6,9 +6,9 @@ Scope: [#185](https://github.com/deploymenttheory/go-sdk-msteams/issues/185), **
 
 Actual public Get-Command metadata resolves 27 compiled commands and 12 functions. Every function was independently checked in pinned CmdletConfig.json: all 12 are Remoting mappings with modern Get/Set-CsConfigurationModern candidates. That classification is not inferred from Function kind. Mapping hash: 754d149c1a5904158e9f01eb55ba44d15c17b7e66f7556385ea894f4ff84d906. The same conditional lifecycle boundary already researched in merged POL04/05/08 remains separate from the directly compiled contracts; no remoting exclusion or unconditional modern flight is declared.
 
-The current finite focus is Get/Set for Teams client, privacy and voicemail-validation: 6 commands / 9 sets. Direct model/binding/control/route/response source and actual successful/error compositions are in [the compiled source review](pol91-compiled-config-source-review.md). The independent 13-row actual compiled binder probe closes optional String literal-null versus DTO serialization, while documenting their separate layers. No source symbol or denied transport probe is promoted on that basis.
+The reviewed completed contract scope is 14 commands / 21 sets across client, privacy, voicemail-validation, Education, Upgrade, SIP devices and MTO. The first packet covers 6 commands / 9 sets. Direct model/binding/control/route/response source and actual successful/error compositions are in [the compiled source review](pol91-compiled-config-source-review.md). The independent 13-row actual compiled binder probe closes optional String literal-null versus DTO serialization, while documenting their separate layers. No source symbol or denied transport probe is promoted on that basis.
 
-The further review queue is 21 compiled commands / 32 sets in the other eleven compiled resources, plus 12 conditional commands / 18 sets across six modern/remote families. Existing successful Get/Set tests and child evidence will be inspected before adding new tests. A missing proof branch differs from an unavailable live fixture or server contract; none of these groups is blanket tenant-blocked.
+After the reviewed scalar follow-up, the further queue is 13 compiled commands / 20 sets across seven resources, plus 12 conditional commands / 18 sets across six modern/remote families. Existing successful Get/Set tests and child evidence will be inspected before adding new tests. A missing proof branch differs from an unavailable live fixture or server contract; none of these groups is blanket tenant-blocked.
 
 ## Every command/set
 
@@ -26,8 +26,8 @@ T references name exact existing functions, not full semantic completion. Review
 | Get-CsTeamsAudioConferencingCustomPromptsConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T11 |
 | Get-CsTeamsClientConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed optional collection/selected identity or bound nonempty Filter; typed/empty/model/error behavior and versioned contract decision below | T28 |
 | Get-CsTeamsClientConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed optional collection/selected identity or bound nonempty Filter; typed/empty/model/error behavior and versioned contract decision below | T29, T77, T78 |
-| Get-CsTeamsEducationConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T30, T31 |
-| Get-CsTeamsEducationConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T33, T31 |
+| Get-CsTeamsEducationConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T30, T31, T80 |
+| Get-CsTeamsEducationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T33, T31, T80, T81 |
 | Get-CsTeamsFirstPartyMeetingTemplateConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T34 |
 | Get-CsTeamsFirstPartyMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T34 |
 | Get-CsTeamsGuestCallingConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T37 |
@@ -46,14 +46,14 @@ T references name exact existing functions, not full semantic completion. Review
 | Get-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T59 |
 | Get-CsTeamsMigrationConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T61 |
 | Get-CsTeamsMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T61 |
-| Get-CsTeamsMultiTenantOrganizationConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T64 |
-| Get-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T63 |
-| Get-CsTeamsSipDevicesConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T67 |
-| Get-CsTeamsSipDevicesConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T66 |
+| Get-CsTeamsMultiTenantOrganizationConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T64, T82 |
+| Get-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T63, T82 |
+| Get-CsTeamsSipDevicesConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T67, T83 |
+| Get-CsTeamsSipDevicesConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T66, T83 |
 | Get-CsTeamsTenantAbuseConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T69 |
 | Get-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T69 |
-| Get-CsTeamsUpgradeConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T71 |
-| Get-CsTeamsUpgradeConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T72 |
+| Get-CsTeamsUpgradeConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T71, T84 |
+| Get-CsTeamsUpgradeConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T72, T84 |
 | Get-CsTenantMigrationConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T74 |
 | Get-CsTenantMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T74 |
 | Set-CsApplicationMeetingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T05, T06, T02, T03 |
@@ -61,7 +61,7 @@ T references name exact existing functions, not full semantic completion. Review
 | Set-CsPrivacyConfiguration | `Identity` | Direct compiled PolicyRp | Individually source/model/control/binder reviewed; typed/empty accepted writes, decode/cancel/failure/recovery execution; versioned contract decision below | T25, T21, T23, T20, T24, T77 |
 | Set-CsTeamsAudioConferencingCustomPromptsConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T11, T08, T07, T09 |
 | Set-CsTeamsClientConfiguration | `Identity` | Direct compiled PolicyRp | Individually source/model/control/binder reviewed; typed/empty accepted writes, decode/cancel/failure/recovery execution; versioned contract decision below | T26, T77, T78, T76, T27 |
-| Set-CsTeamsEducationConfiguration | `Identity` | Direct compiled PolicyRp | Three plain String setters and bound-key control reviewed; typed/malformed PATCH and prepared acceptance execute at d34f149/52700; final command decision remains under review | T33, T31, T32, T79 |
+| Set-CsTeamsEducationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T33, T31, T32, T79 |
 | Set-CsTeamsFirstPartyMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T36, T35 |
 | Set-CsTeamsGuestCallingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T38 |
 | Set-CsTeamsGuestMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T43, T41 |
@@ -70,10 +70,10 @@ T references name exact existing functions, not full semantic completion. Review
 | Set-CsTeamsMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T55, T53, T52, T56 |
 | Set-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T60 |
 | Set-CsTeamsMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T62 |
-| Set-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T65 |
-| Set-CsTeamsSipDevicesConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T68 |
+| Set-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T65, T85, T86 |
+| Set-CsTeamsSipDevicesConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T68, T87, T88 |
 | Set-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T70 |
-| Set-CsTeamsUpgradeConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T73 |
+| Set-CsTeamsUpgradeConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T73, T89, T90 |
 | Set-CsTenantMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T75 |
 
 ## Mapped function index
@@ -160,11 +160,23 @@ T references name exact existing functions, not full semantic completion. Review
 | T78 | `TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery` | [tests/contract/policies/configuration_decode_recovery_test.go](../../../tests/contract/policies/configuration_decode_recovery_test.go) |
 | T79 | `TestUnitEducationSparsePatchAndPreparedUpdateAcceptedResponses` | [msteams/teams_admin_api/teams_education_configuration/provider_success_test.go](../../../msteams/teams_admin_api/teams_education_configuration/provider_success_test.go) |
 
+| T80 | `TestUnitListResponseFixture` | [msteams/teams_admin_api/teams_education_configuration/response_test.go](../../../msteams/teams_admin_api/teams_education_configuration/response_test.go) |
+| T81 | `TestUnitGetGlobalResponseFixture` | [msteams/teams_admin_api/teams_education_configuration/response_test.go](../../../msteams/teams_admin_api/teams_education_configuration/response_test.go) |
+| T82 | `TestUnitListResponseFixture` | [msteams/teams_admin_api/teams_multi_tenant_organization_configuration/response_test.go](../../../msteams/teams_admin_api/teams_multi_tenant_organization_configuration/response_test.go) |
+| T83 | `TestUnitListResponseFixture` | [msteams/teams_admin_api/teams_sip_devices_configuration/response_test.go](../../../msteams/teams_admin_api/teams_sip_devices_configuration/response_test.go) |
+| T84 | `TestUnitListResponseFixture` | [msteams/teams_admin_api/teams_upgrade_configuration/response_test.go](../../../msteams/teams_admin_api/teams_upgrade_configuration/response_test.go) |
+| T85 | `TestUnitConfigurationInputAndContextRejectBeforeHTTP` | [msteams/teams_admin_api/teams_multi_tenant_organization_configuration/validation_test.go](../../../msteams/teams_admin_api/teams_multi_tenant_organization_configuration/validation_test.go) |
+| T86 | `TestUnitNullEmptyAndForceRemainExplicit` | [msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go](../../../msteams/teams_admin_api/teams_multi_tenant_organization_configuration/service_test.go) |
+| T87 | `TestUnitConfigurationInputAndContextRejectBeforeHTTP` | [msteams/teams_admin_api/teams_sip_devices_configuration/validation_test.go](../../../msteams/teams_admin_api/teams_sip_devices_configuration/validation_test.go) |
+| T88 | `TestUnitNullEmptyAndForceRemainExplicit` | [msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go](../../../msteams/teams_admin_api/teams_sip_devices_configuration/service_test.go) |
+| T89 | `TestUnitConfigurationInputAndContextRejectBeforeHTTP` | [msteams/teams_admin_api/teams_upgrade_configuration/validation_test.go](../../../msteams/teams_admin_api/teams_upgrade_configuration/validation_test.go) |
+| T90 | `TestUnitAllSettingsPreserveNullFalseOpaqueAndForce` | [msteams/teams_admin_api/teams_upgrade_configuration/service_test.go](../../../msteams/teams_admin_api/teams_upgrade_configuration/service_test.go) |
+
 ## Acceptance boundary
 
 The issue requires all assigned contracts, integrated identity/type behavior and authorization/recovery across boundaries, combined tests/example compilation, source command-list comparison, available real oracle/restore/cleanup evidence and a signed-off report consumed by QUAL01. The first checkpoints prove the one missing Filter guard, repair misleading denied-probe attribution and execute typed/empty accepted writes plus later failure, malformed received data and cancellation recovery. Exact SDK and root execution revisions remain separate. This does not establish every remaining setting/source branch, live change/effect, minimum authorization, oracle parity or restoration.
 
-The first six commands / nine sets have individually reviewed implementation/contract decisions below; all other contract/implementation states and every live state remain unchanged. Immutable metadata remains unchanged. #185 stays open; child merges and successful readonly CI jobs do not sign off unsupported operations, unknown public branches or unexecuted outcomes.
+The first six commands / nine sets and eight additional commands / twelve sets have individually reviewed decisions below. Other implementation/contract states and every live state remain unchanged. Immutable metadata remains unchanged. #185 stays open; child merges and successful readonly CI jobs do not sign off unsupported operations, unknown public branches or unexecuted outcomes.
 
 ## First six individual command decisions
 
@@ -179,4 +191,22 @@ The first six commands / nine sets have individually reviewed implementation/con
 | Get-CsOnlineVoicemailValidationConfiguration / Identity, Filter | Retained typed get/list/filter, corrected bound-empty guard, omission/literal whitespace, nullable Boolean/URI source-setter rules, complete raw/error handling; actual invalid URI 200 is decode failure. | Actual service eligibility/authoritative comparisons remain scoped; no extra role or URI reachability claim. |
 | Set-CsOnlineVoicemailValidationConfiguration / Identity | Both managed fields/public binder/URI model validation, bound false/null, source no-settings error, typed sparsePATCH 200 and prepared Update 204 now execute; denied/malformed preparation retains receipts and forbids later PATCH/replay. | Both real nondefault settings, oracle and controlled restore remain unqualified. |
 
-These six commands / nine sets are individually implemented/contract-passed. Remaining 33 commands / 50 sets comprise 21 other compiled commands / 32 sets and 12 conditional commands / 18 sets. Every live record is unchanged; full #185 sign-off remains open.
+This first checkpoint established six commands / nine sets. The additional eight-command decision below brings the current reviewed total to 14 commands / 21 sets. Every live record is unchanged; full #185 sign-off remains open.
+
+## Eight additional scalar-family decisions
+
+Education, Upgrade, SIP devices and MTO Get (Identity/Filter) and Set (Identity)
+are individually implemented/contract-passed: eight commands / twelve sets.
+The [complete source/control/behavior table](pol91-compiled-config-source-review.md#eight-individually-reviewed-command-decisions)
+and [versioned execution records](../../../contracts/coverage/evidence/pol91-small-compiled-config.json)
+retain full Education d34f149 / 52700, three-package baseline 20490c0 / 82938
+and supplemental no-settings d014e78 / 65890 separately. Only the supplementary
+local cases changed after the baseline full execution. Captured replies, authored
+request/reply combinations and generic shared-source behavior remain explicit.
+
+The total is now **14 reviewed commands / 21 exact sets**. Remaining **25 commands /
+38 sets** comprise **13 compiled commands / 20 sets** (audio prompts, first-party
+templates, guest meeting, meeting, meeting-template Get, messaging, tenant abuse)
+and **12 conditional commands / 18 sets**. These remaining groups have distinct
+model/update/source branches; none is assumed tenant-blocked or complete. Every
+live state remains unchanged and full #185 qualification remains open.
