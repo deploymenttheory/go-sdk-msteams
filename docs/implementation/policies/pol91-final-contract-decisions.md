@@ -75,3 +75,15 @@ The aggregate own source scope is 973 observations across nine families plus
 Audio 62. Full six-family af8514b/97339 remains the previous coherent baseline;
 final enum closure is the separately bound changed-family descendant. The approved ledger decisions restore only these reviewed offline qualifications;
 all live states remain unchanged.
+
+## Current-main continuation verification
+
+The earlier partial PR was externally merged before the six-family corrections
+and these decisions. The continuation integrates current main `d04d0b6` at
+`f892bfa` and passes the [combined affected check](../../../contracts/coverage/evidence/pol91-main-integration.json):
+1,408 test/subtest events, zero failures/skips, all 23 test-bearing packages
+passing and the shared internal provider compiling. No tenant operations ran.
+The scoped post-execution diff was zero. Against current main, exactly the
+approved twenty records differ; all 1,839 live fields and live-test references
+remain identical. This provides a reviewable follow-up for #185 and does not
+close its remaining nineteen command decisions.
