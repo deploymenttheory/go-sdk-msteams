@@ -21899,6 +21899,10 @@
             {
               "file": "tests/contract/policies/migration_failure_composition_test.go",
               "name": "TestUnitPolicyCompositionMigrationDecodeFailureKeepsIndependentReadUsable"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_protocol_test.go",
+              "name": "TestUnitGPASubmissionPreservesBoundWhitespaceBodyStrings"
             }
           ],
           "live_tests": []
@@ -22372,6 +22376,10 @@
             {
               "file": "tests/contract/policies/migration_failure_composition_test.go",
               "name": "TestUnitPolicyCompositionMigrationDecodeFailureKeepsIndependentReadUsable"
+            },
+            {
+              "file": "msteams/teams_admin_api/assignment_migration/service_protocol_test.go",
+              "name": "TestUnitGPASubmissionPreservesBoundWhitespaceBodyStrings"
             }
           ],
           "live_tests": []

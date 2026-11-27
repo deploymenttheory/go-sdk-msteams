@@ -3,6 +3,7 @@ package assignmentmigration_test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -107,5 +108,44 @@ func TestUnitGPAAuthoredMalformedSuccessRetainsResponse(t *testing.T) {
 				t.Fatalf("malformed successful GPA response differs: %v %+v", err, r.Differences())
 			}
 		})
+	}
+}
+
+// The mandatory body strings have no whitespace validator in the pinned
+// effective binding or concrete/model setters. Preserve their literal bytes;
+// a denied response here proves wire projection, not server-valid values.
+func TestUnitGPASubmissionPreservesBoundWhitespaceBodyStrings(t *testing.T) {
+	t.Parallel()
+	for _, op := range []string{"create", "clear"} {
+		for _, field := range []string{"authority", "policytype", "policyname"} {
+			t.Run(op+"-"+field, func(t *testing.T) {
+				input := request(false)
+				authority, kind, name := input.Authority, input.PolicyType, input.PolicyName
+				switch field {
+				case "authority":
+					input.Authority = " "
+					authority = " "
+				case "policytype":
+					input.PolicyType = " "
+					kind = " "
+				case "policyname":
+					input.PolicyName = " "
+					name = " "
+				}
+				expected := json.RawMessage(fmt.Sprintf(`{"authority":%q,"policytype":%q,"policyname":%q,"groupid":%q}`, authority, kind, name, input.GroupID))
+				suffix := "directAssignmentsMigration/migrate?allowNonEmptyGroup=False"
+				if op == "clear" {
+					suffix = "directAssignmentsMigration/cleanup?allowNonEmptyGroup=False"
+				}
+				run(t, contracttest.Case{Name: "whitespace-" + op + "-" + field, Source: "msteams/teams_admin_api/assignment_migration/service_protocol_test.go", Mappings: mapping(op), Steps: []contracttest.Exchange{wire(op, "POST", suffix, expected, 403, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					if op == "clear" {
+						v, r, e := sdk.TeamsAdminAPI.AssignmentMigrations.ClearDirectAssignments(ctx, input)
+						return contracttest.Observation{Value: v, Response: r, Err: e}
+					}
+					v, r, e := sdk.TeamsAdminAPI.AssignmentMigrations.Create(ctx, input)
+					return contracttest.Observation{Value: v, Response: r, Err: e}
+				}})
+			})
+		}
 	}
 }
