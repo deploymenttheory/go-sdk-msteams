@@ -2,11 +2,11 @@
 
 Review pending. No implementation, contract or live ledger state is changed.
 This packet covers the seven accepted public commands and their seven declared
-sets at frozen `a310c8e`, following the independently reviewed first repair
+sets at frozen `b8540c1`, following the independently reviewed first repair
 `b838d0f` / `1cb18c1`. It does not treat symbols, synthetic replies, upstream
 binding observations or denials as successful tenant operations.
 
-[Exact execution, hashes and seven metadata mappings](evidence/ai-agents-a310c8e-review.json)
+[Exact execution, hashes and seven metadata mappings](evidence/ai-agents-b8540c1-review.json)
 include every existing per-set symbol/test reference and its immutable runtime
 pointer. [Primary source and supplement manifest](evidence/ai-agents-source/manifest.json)
 bind the portable pinned bodies/reproducers. The shared header proof is reused
@@ -88,8 +88,8 @@ licenses, grants, fallback identity or tenant configuration was changed.
 
 ## Actual execution and remaining decision scope
 
-Full AI SDK, AI lab and EXT integration TestUnit/Example selection at a310c8e:
-three package terminals PASS, 162 test-pass events, zero failures/skips; no
+Full AI SDK, AI lab and EXT integration TestUnit/Example selection at b8540c1:
+three package terminals PASS, 166 test-pass events, zero failures/skips; no
 TestAcc. The exact raw SHA/command are in the JSON packet. Earlier 07e7df2 failed
 only the test's nested RawMessage key-order comparison; that raw artifact is
 retained. Source expected values and production code were not changed to make
@@ -111,5 +111,8 @@ extra, disclosures, supported locales, five tile URLs and webpage. The
 contains two real inert parser/getter observations: all eleven positive fields
 (including both additional nullable arrays), and wrong-type/exact-case handling.
 The original primary/five-packet manifest and a310c8e execution remain immutable.
-New full affected execution is required before this follow-up can be approved;
-Get-CsAiAgents and all six other command records remain unchanged meanwhile.
+Full affected execution at b8540c1 completed with three package terminals PASS
+and 166 test-pass events, zero failures/skips, no TestAcc. Exact hashes and raw
+provenance are in the successor JSON packet; the earlier a310c8e record is
+preserved. Get-CsAiAgents and all six other command records remain unchanged
+until independent review.
