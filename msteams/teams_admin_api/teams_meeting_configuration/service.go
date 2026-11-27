@@ -116,6 +116,9 @@ func (s *Service) UpdateByIdentity(ctx context.Context, id string, input UpdateR
 		}
 		settings.PublishedEntraAuthenticationContexts = policy.Set(contexts)
 	}
+	if err := validatePositivePorts(settings.ScalarSettings); err != nil {
+		return result, read, err
+	}
 	patch := PatchRequest{Settings: settings, Controls: input.Controls, BodyIdentity: policy.Null[string]()}
 	if before.Identity != nil {
 		patch.BodyIdentity = policy.Set(*before.Identity)

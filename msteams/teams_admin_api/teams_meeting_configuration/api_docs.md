@@ -36,8 +36,9 @@ snapshot.
 
 `ScalarSettings` uses `policy.Field[T]` for the 20 scalar Set parameters, so
 omission, explicit null and false, zero or empty values stay distinct. The
-compiled setters impose no URL, enum, length or port-range rule, so none is
-added locally; strings such as `Enabled`/`Disabled` are sent verbatim.
+six port/range DTO setters accept null or 1 through UInt32 max and reject zero;
+there is no invented 65535 ceiling. Other setters impose no URL, enum or length
+rule; strings such as `Enabled`/`Disabled` are sent verbatim.
 
 `PublishedEntraAuthenticationContexts` is a PSListModifier in the module. In
 `UpdateByIdentity` it is an `AuthenticationContextEdit` applied to the list read
@@ -78,3 +79,8 @@ context list edits (the lab list is empty), non-Global identities, effective
 meeting behavior, delegated authentication or other clouds.
 
 See [qualification](../../../docs/implementation/policies/meeting-configuration-lab-acceptance.md).
+
+The public port parameter setters store zero, so prepared Update retains its
+GET result before returning ErrInput without a PATCH for zero. Direct Patch
+rejects zero before HTTP. This corrects the previous source-incompatible zero
+wire acceptance; explicit null remains distinct from omission.

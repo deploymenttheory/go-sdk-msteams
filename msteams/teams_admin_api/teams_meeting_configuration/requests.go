@@ -9,8 +9,8 @@ import (
 )
 
 // ScalarSettings distinguishes omission, explicit null and bound false, zero
-// or empty values for the 20 scalar Set parameters. The compiled setters impose
-// no enum, URL, length or port-range rule, so none is invented here.
+// or empty values for the 20 scalar Set parameters. The six port/range DTO
+// setters require positive UInt32 values; no 65535 cap, URL or enum is invented.
 type ScalarSettings struct {
 	LogoURL                                policy.Field[string] `json:"LogoURL,omitzero"`
 	LegalURL                               policy.Field[string] `json:"LegalURL,omitzero"`
@@ -192,6 +192,9 @@ type authenticationContextWrite struct {
 }
 
 func meetingFields(input Settings) (map[string]json.RawMessage, error) {
+	if err := validatePositivePorts(input.ScalarSettings); err != nil {
+		return nil, err
+	}
 	fields, err := policyrp.Fields(input.ScalarSettings)
 	if err != nil {
 		return nil, err
@@ -215,4 +218,15 @@ func meetingFields(input Settings) (map[string]json.RawMessage, error) {
 		fields["PublishedEntraAuthenticationContexts"] = raw
 	}
 	return fields, nil
+}
+
+// The public parameter setters store zero, but the own DTO positiveInteger
+// setters reject it. Prepared Update runs this only after its preparation GET.
+func validatePositivePorts(input ScalarSettings) error {
+	for _, field := range []policy.Field[uint32]{input.ClientAudioPort, input.ClientAudioPortRange, input.ClientVideoPort, input.ClientVideoPortRange, input.ClientAppSharingPort, input.ClientAppSharingPortRange} {
+		if value, ok := field.Value(); ok && value == 0 {
+			return ErrInput
+		}
+	}
+	return nil
 }

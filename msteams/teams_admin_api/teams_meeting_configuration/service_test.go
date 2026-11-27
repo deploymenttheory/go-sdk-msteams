@@ -46,10 +46,10 @@ func TestUnitRestoreSendsExplicitNullAndEmptyString(t *testing.T) {
 	}})
 }
 
-// Every pinned Set parameter binds by its exact name. False, zero and empty
+// Every pinned Set parameter binds by its exact name. False, positive integers and empty
 // values are sent rather than dropped, explicit null is retained and Force
 // keeps the compiled string form.
-func TestUnitEverySettingNullFalseZeroEmptyAndForceRemainExplicit(t *testing.T) {
+func TestUnitEverySettingNullFalsePositiveEmptyAndForceRemainExplicit(t *testing.T) {
 	t.Parallel()
 	c1 := "c1"
 	name := "Sensitive meetings"
@@ -73,8 +73,8 @@ func TestUnitEverySettingNullFalseZeroEmptyAndForceRemainExplicit(t *testing.T) 
 			ScalarSettings:                       resource.ScalarSettings{LogoURL: policy.Null[string](), EnableWorkIQTranscriptAccess: policy.Null[bool](), ClientVideoPort: policy.Null[uint32]()},
 			PublishedEntraAuthenticationContexts: policy.Null[[]*resource.PublishedEntraAuthenticationContext](),
 		}},
-		{"zero-empty", `{"Identity":"Global","CustomFooterText":"","ClientAudioPort":0,"EnableQoS":false,"PublishedEntraAuthenticationContexts":[],"Force":"False"}`, resource.Settings{
-			ScalarSettings:                       resource.ScalarSettings{CustomFooterText: policy.Set(""), ClientAudioPort: policy.Set[uint32](0), EnableQoS: policy.Set(false)},
+		{"positive-empty", `{"Identity":"Global","CustomFooterText":"","ClientAudioPort":1,"EnableQoS":false,"PublishedEntraAuthenticationContexts":[],"Force":"False"}`, resource.Settings{
+			ScalarSettings:                       resource.ScalarSettings{CustomFooterText: policy.Set(""), ClientAudioPort: policy.Set[uint32](1), EnableQoS: policy.Set(false)},
 			PublishedEntraAuthenticationContexts: policy.Set([]*resource.PublishedEntraAuthenticationContext{}),
 		}},
 	} {

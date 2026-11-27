@@ -1,0 +1,205 @@
+{
+  "scope": "Actual own nullable positiveInteger DTO setters, selected nested-bound serializer and public parameter setter IL. No management lifecycle, authentication or HTTP.",
+  "hashes": {
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+  },
+  "reproducer_sha256": "0a146f23f85e96083691dc4fd95caaa1559a6adbc1cf837bcd515b9b46dcb100",
+  "public_set_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTeamsMeetingConfigurationCmdlet",
+  "observations": [
+    {
+      "field": "ClientAudioPort",
+      "case": "null",
+      "parameter_setter_il": "02037dbf0a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAudioPort\":null}"
+    },
+    {
+      "field": "ClientAudioPort",
+      "case": "zero",
+      "parameter_setter_il": "02037dbf0a00042a",
+      "stage": "dto-setter",
+      "error": "XsdClassGenerator.PropertyArgumentOutOfRangeException",
+      "serialized": null
+    },
+    {
+      "field": "ClientAudioPort",
+      "case": "one",
+      "parameter_setter_il": "02037dbf0a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAudioPort\":1}"
+    },
+    {
+      "field": "ClientAudioPort",
+      "case": "maximum",
+      "parameter_setter_il": "02037dbf0a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAudioPort\":4294967295}"
+    },
+    {
+      "field": "ClientAudioPortRange",
+      "case": "null",
+      "parameter_setter_il": "02037dc00a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAudioPortRange\":null}"
+    },
+    {
+      "field": "ClientAudioPortRange",
+      "case": "zero",
+      "parameter_setter_il": "02037dc00a00042a",
+      "stage": "dto-setter",
+      "error": "XsdClassGenerator.PropertyArgumentOutOfRangeException",
+      "serialized": null
+    },
+    {
+      "field": "ClientAudioPortRange",
+      "case": "one",
+      "parameter_setter_il": "02037dc00a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAudioPortRange\":1}"
+    },
+    {
+      "field": "ClientAudioPortRange",
+      "case": "maximum",
+      "parameter_setter_il": "02037dc00a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAudioPortRange\":4294967295}"
+    },
+    {
+      "field": "ClientVideoPort",
+      "case": "null",
+      "parameter_setter_il": "02037dc10a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientVideoPort\":null}"
+    },
+    {
+      "field": "ClientVideoPort",
+      "case": "zero",
+      "parameter_setter_il": "02037dc10a00042a",
+      "stage": "dto-setter",
+      "error": "XsdClassGenerator.PropertyArgumentOutOfRangeException",
+      "serialized": null
+    },
+    {
+      "field": "ClientVideoPort",
+      "case": "one",
+      "parameter_setter_il": "02037dc10a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientVideoPort\":1}"
+    },
+    {
+      "field": "ClientVideoPort",
+      "case": "maximum",
+      "parameter_setter_il": "02037dc10a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientVideoPort\":4294967295}"
+    },
+    {
+      "field": "ClientVideoPortRange",
+      "case": "null",
+      "parameter_setter_il": "02037dc20a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientVideoPortRange\":null}"
+    },
+    {
+      "field": "ClientVideoPortRange",
+      "case": "zero",
+      "parameter_setter_il": "02037dc20a00042a",
+      "stage": "dto-setter",
+      "error": "XsdClassGenerator.PropertyArgumentOutOfRangeException",
+      "serialized": null
+    },
+    {
+      "field": "ClientVideoPortRange",
+      "case": "one",
+      "parameter_setter_il": "02037dc20a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientVideoPortRange\":1}"
+    },
+    {
+      "field": "ClientVideoPortRange",
+      "case": "maximum",
+      "parameter_setter_il": "02037dc20a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientVideoPortRange\":4294967295}"
+    },
+    {
+      "field": "ClientAppSharingPort",
+      "case": "null",
+      "parameter_setter_il": "02037dc30a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAppSharingPort\":null}"
+    },
+    {
+      "field": "ClientAppSharingPort",
+      "case": "zero",
+      "parameter_setter_il": "02037dc30a00042a",
+      "stage": "dto-setter",
+      "error": "XsdClassGenerator.PropertyArgumentOutOfRangeException",
+      "serialized": null
+    },
+    {
+      "field": "ClientAppSharingPort",
+      "case": "one",
+      "parameter_setter_il": "02037dc30a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAppSharingPort\":1}"
+    },
+    {
+      "field": "ClientAppSharingPort",
+      "case": "maximum",
+      "parameter_setter_il": "02037dc30a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAppSharingPort\":4294967295}"
+    },
+    {
+      "field": "ClientAppSharingPortRange",
+      "case": "null",
+      "parameter_setter_il": "02037dc40a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAppSharingPortRange\":null}"
+    },
+    {
+      "field": "ClientAppSharingPortRange",
+      "case": "zero",
+      "parameter_setter_il": "02037dc40a00042a",
+      "stage": "dto-setter",
+      "error": "XsdClassGenerator.PropertyArgumentOutOfRangeException",
+      "serialized": null
+    },
+    {
+      "field": "ClientAppSharingPortRange",
+      "case": "one",
+      "parameter_setter_il": "02037dc40a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAppSharingPortRange\":1}"
+    },
+    {
+      "field": "ClientAppSharingPortRange",
+      "case": "maximum",
+      "parameter_setter_il": "02037dc40a00042a",
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"ClientAppSharingPortRange\":4294967295}"
+    }
+  ],
+  "management_lifecycle_invoked": false,
+  "authentication_or_http": false
+}
