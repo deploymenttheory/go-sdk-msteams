@@ -1,0 +1,1973 @@
+{
+  "scope": "Pure pinned modern received-JSON/presentation stages only. Not whole-command, generated response parser, flight dispatch, legacy or tenant execution.",
+  "helper_source_sha256": "03dbc3a85e12c98dd1807d604782c6a90d0656569541cd9540738825a7fcb255",
+  "reproducer_sha256": "5f434f5c502ea882143e9dc6bd3ee4b3bba42eb29dff6649e1a9839dc2b3534f",
+  "powershell_version": "7.6.6",
+  "extracted_functions": [
+    {
+      "name": "Custom-ToString",
+      "start_line": 421,
+      "end_line": 435
+    },
+    {
+      "name": "Convert-PsCustomObjectToPsObject",
+      "start_line": 437,
+      "end_line": 461
+    },
+    {
+      "name": "Get-FormatsForConfig",
+      "start_line": 463,
+      "end_line": 576
+    },
+    {
+      "name": "Set-FormatOnConfigObject",
+      "start_line": 578,
+      "end_line": 615
+    },
+    {
+      "name": "Sort-GlobalFirst",
+      "start_line": 411,
+      "end_line": 418
+    }
+  ],
+  "observations": [
+    {
+      "input_json": "{}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{}]",
+      "error": null
+    },
+    {
+      "input_json": "{}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "null",
+      "expose": false,
+      "stage": "format",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "input_json": "null",
+      "expose": true,
+      "stage": "format",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "input_json": "[]",
+      "expose": false,
+      "stage": "format",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "input_json": "[]",
+      "expose": true,
+      "stage": "format",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "input_json": "[null]",
+      "expose": false,
+      "stage": "format",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "input_json": "[null]",
+      "expose": true,
+      "stage": "format",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "input_json": "true",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[true]",
+      "error": null
+    },
+    {
+      "input_json": "true",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "37",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[37]",
+      "error": null
+    },
+    {
+      "input_json": "37",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "\"text\"",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[\"text\"]",
+      "error": null
+    },
+    {
+      "input_json": "\"text\"",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"Global\",\"Future\":{\"x\":1}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"Global\",\"Future\":{\"x\":1}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"Global\",\"Future\":{\"x\":1}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"Global\",\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "[{\"Identity\":\"other\"},{\"Identity\":\"global\"},{\"Identity\":\"Global\"},{\"Identity\":\"Tag:x\"}]",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 4,
+      "projected_json": "[{\"Identity\":\"global\"},{\"Identity\":\"Global\"},{\"Identity\":\"other\"},{\"Identity\":\"Tag:x\"}]",
+      "error": null
+    },
+    {
+      "input_json": "[{\"Identity\":\"other\"},{\"Identity\":\"global\"},{\"Identity\":\"Global\"},{\"Identity\":\"Tag:x\"}]",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 4,
+      "projected_json": "[{\"Identity\":\"global\",\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null},{\"Identity\":\"Global\",\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null},{\"Identity\":\"other\",\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null},{\"Identity\":\"Tag:x\",\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"identity\":\"second\"}",
+      "expose": false,
+      "stage": "json-and-psserializer",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"identity\":\"second\"}",
+      "expose": true,
+      "stage": "json-and-psserializer",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"Identity\":\"second\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"second\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"Identity\":\"second\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"second\",\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":true,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":false,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":0,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":1,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":9007199254740993,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":1.2,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"\",\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"text\",\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":{},\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 0,
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 0,
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":true,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":false,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":0,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":1,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":9007199254740993,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":1.2,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":\"\",\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":\"text\",\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":{},\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SupportURL\":[]}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":[],\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":true,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":false,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":0,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":1,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":9007199254740993,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":1.2,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":\"\",\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":\"text\",\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":{},\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowSdnProviderForBroadcastMeeting\":[]}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":[],\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":true,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":false,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":0,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":1,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":9007199254740993,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":1.2,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":\"\",\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":\"text\",\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":{},\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnName\":[]}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":[],\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":true,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":false,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":0,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":1,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":9007199254740993,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":1.2,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":\"\",\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":\"text\",\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":{},\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnLicenseId\":[]}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":[],\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":true,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":false,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":0,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":1,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":9007199254740993,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":1.2,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":\"\",\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":\"text\",\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":{},\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAzureSubscriptionId\":[]}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":[],\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":true,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":false,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":0,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":1,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":9007199254740993,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":1.2,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":\"\",\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":\"text\",\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":{},\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiTemplateUrl\":[]}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":[],\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":true,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":false,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":0,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":1,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":9007199254740993,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":1.2,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":\"\",\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":\"text\",\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":{},\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnApiToken\":[]}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":[],\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":true,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":false,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":0,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":1,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":9007199254740993,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":1.2,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":\"\",\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":\"text\",\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":{},\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnRuntimeconfiguration\":[]}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":[],\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":null}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":true}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":false}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":0}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":1}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":9007199254740993}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":1.20}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":\"\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":\"text\"}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":{}}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"SdnAttendeeFallbackCount\":[]}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":[]}",
+      "expose": true,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null,\"SupportURL\":null,\"AllowSdnProviderForBroadcastMeeting\":null,\"SdnName\":null,\"SdnLicenseId\":null,\"SdnAzureSubscriptionId\":null,\"SdnApiTemplateUrl\":null,\"SdnApiToken\":null,\"SdnRuntimeconfiguration\":null,\"SdnAttendeeFallbackCount\":[]}]",
+      "error": null
+    }
+  ],
+  "management_lifecycle_invoked": false,
+  "authentication_or_http": false
+}
