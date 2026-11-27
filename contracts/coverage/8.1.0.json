@@ -5356,6 +5356,10 @@
             {
               "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/filter_binding_test.go",
               "name": "TestUnitValidationFilterBindingDistinguishesOmissionEmptyAndWhitespace"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
             }
           ],
           "live_tests": [
@@ -5821,6 +5825,10 @@
             {
               "file": "msteams/teams_admin_api/privacy_configuration/failure_test.go",
               "name": "TestUnitPrivacyEmptyAndNullReadPresentation"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
             }
           ],
           "live_tests": [
@@ -7348,6 +7356,10 @@
             {
               "file": "msteams/teams_admin_api/teams_client_configuration/service_test.go",
               "name": "TestUnitClientConfigurationRejectedCompiledRequests"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
             }
           ],
           "live_tests": [
@@ -37267,6 +37279,10 @@
             {
               "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/failure_test.go",
               "name": "TestUnitValidationInputAndContextRejectBeforeTokens"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
             }
           ],
           "live_tests": []
@@ -37714,6 +37730,10 @@
             {
               "file": "msteams/teams_admin_api/privacy_configuration/provider_success_test.go",
               "name": "TestUnitPrivacyPatchTypedSuccessAndMalformedResponse"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
             }
           ],
           "live_tests": []
@@ -38779,6 +38799,10 @@
             {
               "file": "msteams/teams_admin_api/teams_client_configuration/composition_test.go",
               "name": "TestUnitClientConfigurationUpdatePreparationFailures"
+            },
+            {
+              "file": "tests/contract/policies/configuration_composition_test.go",
+              "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
             }
           ],
           "live_tests": []
