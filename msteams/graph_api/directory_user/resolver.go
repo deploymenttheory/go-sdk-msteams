@@ -288,7 +288,11 @@ func (r *Resolver) byMail(ctx context.Context, selector string, maxPages int) (R
 			}
 			// UUID text has case-insensitive spelling; opaque IDs have no
 			// evidenced normalization rule and must match exactly.
-			if selected.ID != user.ID && !(directoryID.MatchString(selected.ID) && directoryID.MatchString(user.ID) && strings.EqualFold(selected.ID, user.ID)) {
+			sameID := selected.ID == user.ID
+			if !sameID && directoryID.MatchString(selected.ID) && directoryID.MatchString(user.ID) {
+				sameID = strings.EqualFold(selected.ID, user.ID)
+			}
+			if !sameID {
 				return Resolution{}, response, ErrAmbiguous
 			}
 		}
