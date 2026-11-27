@@ -1,4 +1,4 @@
-# POL91 meeting-template compiled frontier — pending execution/review
+# POL91 meeting-template compiled frontier — pending command decisions
 
 Scope: FirstParty Get (Identity, Filter), FirstParty Set (Identity), MeetingTemplate Get (Identity, Filter). No ledger or live promotion is proposed before complete source/control and execution review.
 
@@ -10,6 +10,19 @@ The own read path accepts numeric/Boolean string conversions and nullable Boolea
 
 Independent control reflection: own AreParametersSpecified checks bound TeamsMeetingTemplates at IL11/16 and Description at IL34/39, not their values; UpdateProperties applies helper at IL66 and independently writes bound Description at IL82/87/101. Identity and Filter have effective ValidateNotNullOrEmpty, while Description and TeamsMeetingTemplates have no extra validation attributes. Both Gets default to Identity with separate Filter; FirstParty Set has one Identity set. Native path safety and early error/typed presentation remain explicit API boundaries.
 
-Pending source/checkpoint work: apply the reviewed resource-local read corrections; replay full own typed projections independently of MarshalJSON's raw view; preserve RawFields and RawJSON; replace two obsolete Description:false malformed vectors with source-rejected objects; keep canonical oracle producer validation strict with recursive producer DTOs ahead of SDK setter validation. Full affected SDK + shared labkit + corresponding lab packages must run at a frozen revision before any qualification decision.
+The correction applies resource-local read adapters and replays full own typed projections independently of MarshalJSON's raw view while preserving RawFields and RawJSON. Two obsolete Description:false malformed vectors now use source-rejected objects. Canonical oracle producer validation stays strict with recursive producer DTOs ahead of SDK setter validation. The full affected SDK, shared labkit and corresponding lab check is recorded below; complete command decisions remain under review.
 
-The correction is present in the continuation worktree after the prior combined continuation checkpoint passed. Execution of this new source frontier is pending. No management lifecycle, authentication, HTTP, tenant mutation, permission change or new TestAcc run has occurred.
+The correction is present in the continuation worktree after the prior combined continuation checkpoint passed. The frozen decoder checkpoint passed its bounded full affected check; complete per-command decisions remain pending. No management lifecycle, authentication, HTTP, tenant mutation, permission change or new TestAcc run has occurred.
+
+
+## Frozen correction execution
+
+At `2d72bcd4e64b6e9413e3eae3a2744f7f4bca7f37`, session 6554 passed the full
+TestUnit/Example selection for both SDKs, shared labkit and both corresponding
+lab packages: 416 passing events, zero failures/skips, five package terminals.
+The [execution record](../../../contracts/coverage/evidence/pol91-template-read-execution.json)
+retains exact source scope, raw-result hash, portable replay and admission detail.
+Scoped source diff was zero and owned scratch was removed. No live test ran.
+The existing prepared 204/readback and denial tests remain separately scoped;
+a later prepared-write failure and explicit recovery assertion is the next
+bounded gap before proposing FirstParty Set qualification.
