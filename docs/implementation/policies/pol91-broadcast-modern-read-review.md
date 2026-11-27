@@ -142,6 +142,14 @@ objects. Failed decoding leaves an existing destination value unchanged.
 Nonobject root acceptance, service status requirements and write behavior are
 unchanged by this object-view repair, pending their separate source closure.
 
+The [corrected execution record](../../../contracts/coverage/evidence/pol91-broadcast-dynamic-execution.json)
+binds the repair to a8acfb62c18d45a74fb84e5fb2d2ff40423f03b2, session 4154.
+All 278 test/subtest events and all four affected SDK/root-contract/lab packages
+passed; no test failed or skipped. Targeted gosec/nolintlint returned zero
+issues. The owned scratch directories were removed, and scoped source diff was
+zero after execution. This is an offline affected-package check, not a full
+module, race, tenant or command-qualification result.
+
 The modern Get helper forwards ConfigName only for a non-whitespace Identity,
 applies non-whitespace Filter locally with Identity/Tag wildcard matching, and
 adds the exposure query through its pipeline prepend. The Set helper inserts
