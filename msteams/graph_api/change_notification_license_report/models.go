@@ -18,7 +18,7 @@ var (
 	ErrIdentity    = errors.New("license report identity resolution is missing or ambiguous")
 	ErrCount       = errors.New("license report count is unavailable or not an integer")
 	ErrSourceRange = errors.New("license report value is outside pinned Int32 projection")
-	ErrLicenseMode = errors.New("Graph license details documents delegated authentication only")
+	ErrLicenseMode = errors.New("graph license details documents delegated authentication only")
 )
 
 // Period selects the four documented aggregation windows.
@@ -219,7 +219,7 @@ func integer(v *json.Number) (*big.Int, error) {
 	// Preserve arbitrary wire numbers, but bound derived arithmetic independently
 	// of schema width so a hostile short exponent cannot allocate unbounded memory.
 	text := v.String()
-	if len(text) == 0 || len(text) > 4096 || (!(text[0] >= '0' && text[0] <= '9') && text[0] != '-') || !json.Valid([]byte(text)) {
+	if len(text) == 0 || len(text) > 4096 || ((text[0] < '0' || text[0] > '9') && text[0] != '-') || !json.Valid([]byte(text)) {
 		return nil, ErrCount
 	}
 	if index := strings.IndexAny(text, "eE"); index >= 0 {

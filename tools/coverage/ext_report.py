@@ -137,13 +137,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
-    report = render(json.loads((ROOT / 'contracts/coverage/8.1.0.json').read_text()))
+    report = render(json.loads((ROOT / 'contracts/coverage/8.1.0.json').read_text(encoding='utf-8')))
     if args.check:
-        if not DESTINATION.exists() or DESTINATION.read_text() != report:
+        if not DESTINATION.exists() or DESTINATION.read_text(encoding='utf-8') != report:
             parser.exit(1, 'EXT report is stale; run tools/coverage/ext_report.py\n')
         print('EXT command/set and unresolved-candidate inventory matches the ledger')
     else:
-        DESTINATION.write_text(report)
+        DESTINATION.write_text(report, encoding='utf-8', newline='\n')
 
 
 if __name__ == '__main__':

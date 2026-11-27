@@ -73,7 +73,7 @@ func ProjectPinnedRows(activity []Activity, users []DirectoryUser, licenses map[
 			return result, e
 		}
 		// The source IL performs unchecked Int32 add, then widens to Int64.
-		count := int64(int32(uint32(private) + uint32(team)))
+		count := int64(private + team)
 		row := PinnedRow{UserPrincipalName: upn, DisplayName: "Not Found", NumberOfMessagesSent: count}
 		if user, found := byUPN[upn]; found && user.DisplayName != nil {
 			row.DisplayName = *user.DisplayName

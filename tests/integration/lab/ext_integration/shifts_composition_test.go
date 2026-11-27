@@ -72,11 +72,11 @@ func TestUnitShiftsConnectionInstanceAndAsyncOperationKeepDistinctIDs(t *testing
 		}
 		// A completed envelope can still contain failed details. Neither 202 nor the
 		// outer Completed string alone proves a successfully persisted team mapping.
-		if operation.ID == nil || *operation.ID != *accepted.OperationID || operation.WfmConnectorInstanceID == nil || *operation.WfmConnectorInstanceID != *instance.ID || len(operation.Details) != 1 || operation.Details[0].Status == nil || *operation.Details[0].Status != "Failed" || operation.Details[0].Error == nil || *operation.Details[0].Error != "WfmTeamNotFound" {
+		if response == nil || response.StatusCode() != 200 || operation.ID == nil || *operation.ID != *accepted.OperationID || operation.WfmConnectorInstanceID == nil || *operation.WfmConnectorInstanceID != *instance.ID || len(operation.Details) != 1 || operation.Details[0].Status == nil || *operation.Details[0].Status != "Failed" || operation.Details[0].Error == nil || *operation.Details[0].Error != "WfmTeamNotFound" {
 			t.Fatal("operation handoff or per-detail failure was flattened")
 		}
 		maps, response, err := s.ListTeamMaps(ctx, *instance.ID)
-		if err == nil && (maps == nil || len(maps) != 0) {
+		if err == nil && (response == nil || response.StatusCode() != 200 || maps == nil || len(maps) != 0) {
 			t.Fatal("failed operation invented a persisted map")
 		}
 		return contracttest.Observation{Err: err}
