@@ -1,3 +1,10 @@
+> Current qualification correction: all eighteen previously reviewed command
+> decisions (twenty-seven sets) are withdrawn after actual own pinned DTO
+> deserialization proved read coercion gaps. Historical executions below remain
+> bounded successes, not current full-contract proof. Current POL91 qualified
+> count is zero; every live state is unchanged. The nine resource profiles are
+> being recorded in the independent qualified-read-scalar evidence packet.
+
 # POL91 finite command and source review
 
 Scope: [#185](https://github.com/deploymenttheory/go-sdk-msteams/issues/185), **20 resources / 39 commands / 59 sets**. Every assigned set is enumerated below. This is a review inventory, not a completed qualification or a count of symbols as delivered parity. The initial audit and first six-command source review preserve exact source and execution boundaries.
@@ -6,7 +13,7 @@ Scope: [#185](https://github.com/deploymenttheory/go-sdk-msteams/issues/185), **
 
 Actual public Get-Command metadata resolves 27 compiled commands and 12 functions. Every function was independently checked in pinned CmdletConfig.json: all 12 are Remoting mappings with modern Get/Set-CsConfigurationModern candidates. That classification is not inferred from Function kind. Mapping hash: 754d149c1a5904158e9f01eb55ba44d15c17b7e66f7556385ea894f4ff84d906. The same conditional lifecycle boundary already researched in merged POL04/05/08 remains separate from the directly compiled contracts; no remoting exclusion or unconditional modern flight is declared.
 
-The reviewed completed contract scope is 18 commands / 27 sets across client, privacy, voicemail-validation, Education, Upgrade, SIP devices, MTO, TenantAbuse and Messaging. The first packet covers 6 commands / 9 sets. Direct model/binding/control/route/response source and actual successful/error compositions are in [the compiled source review](pol91-compiled-config-source-review.md). The independent 13-row actual compiled binder probe closes optional String literal-null versus DTO serialization, while documenting their separate layers. No source symbol or denied transport probe is promoted on that basis.
+The historical reviewed contract packets covered 18 commands / 27 sets across client, privacy, voicemail-validation, Education, Upgrade, SIP devices, MTO, TenantAbuse and Messaging. The first packet covers 6 commands / 9 sets. Direct model/binding/control/route/response source and actual successful/error compositions are in [the compiled source review](pol91-compiled-config-source-review.md). The independent 13-row actual compiled binder probe closes optional String literal-null versus DTO serialization, while documenting their separate layers. No source symbol or denied transport probe is promoted on that basis.
 
 After the reviewed nullable-family follow-up, the further queue is 9 compiled commands / 14 sets across five resources, plus 12 conditional commands / 18 sets across six modern/remote families. Existing successful Get/Set tests and child evidence will be inspected before adding new tests. A missing proof branch differs from an unavailable live fixture or server contract; none of these groups is blanket tenant-blocked.
 
@@ -262,3 +269,24 @@ restoration, effective behavior and all live qualification remain unqualified.
 Audio branch repair/source proof is recorded in [its own review](pol91-prompts-source-review.md).
 The former denied vectors remain denial proofs; new positive/partial/null-removal
 branches require frozen execution before any command decision.
+
+## Qualification withdrawal and finite repair queue
+
+Own Core DTO probes independently confirmed all nine families accept numeric or
+Boolean Identity JSON as strings, while their current SDK decoders reject it.
+Privacy additionally accepts numeric/quoted Boolean fields; Client string
+properties preserve large numeric tokens. These are received JSON semantics,
+not PowerShell argument binding, so prior native presentation explanations do
+not establish complete read-contract equivalence.
+
+All eighteen Get/Set decisions across twenty-seven sets are therefore returned
+to in-progress / metadata-only. Set depends on the same preparation decoder.
+The three versioned execution artifacts are marked superseded for qualification,
+not erased or relabeled failures: their actual canonical-case tests still passed.
+Raw snapshot ownership, successful branch repairs, list fixes and source audits
+remain useful bounded evidence. No live state or immutable metadata changes.
+
+The finite queue now distinguishes eighteen commands / twenty-seven sets needing
+own-profile decoder correction and requalification, nine other compiled commands
+/ fourteen sets still undergoing full review, and twelve conditional commands /
+eighteen sets whose remote contracts remain separate. Full #185 remains open.

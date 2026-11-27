@@ -228,5 +228,7 @@
       "binding_evidence": "docs/implementation/policies/evidence/pol91-field-binding.json",
       "binding_reproducer": "scripts/discovery/observe-pol91-field-binding.ps1"
     }
-  ]
+  ],
+  "qualification_status": "superseded",
+  "qualification_note": "Historical successful executions remain valid within their stated inputs. Qualification withdrawn after own pinned JsonConvert DTO probes exposed unsupported read scalar coercions; implementation correction and new source-complete execution are required. No live status change."
 }

@@ -137,5 +137,7 @@
         "selection": "TestUnit|Example"
       }
     }
-  ]
+  ],
+  "qualification_status": "superseded",
+  "qualification_note": "Historical successful executions remain valid within their stated inputs. Qualification withdrawn after own pinned JsonConvert DTO probes exposed unsupported read scalar coercions; implementation correction and new source-complete execution are required. No live status change."
 }
