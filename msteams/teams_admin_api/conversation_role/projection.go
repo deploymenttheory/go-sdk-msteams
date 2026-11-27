@@ -22,7 +22,6 @@ type WriteProjection struct {
 	Body         json.RawMessage
 	OmittedPaths []string
 	ChangedPaths []string
-	NoOp         bool
 }
 
 func (WriteProjection) String() string     { return "conversation write projection (redacted)" }
@@ -146,10 +145,10 @@ func (v UpdateRequest) GoString() string              { return v.String() }
 // UpdateResult retains preparation, projected loss and action stages on error.
 // HTTPAccepted does not establish persisted or effective permissions.
 type UpdateResult struct {
-	Before, After                    *Role
-	ReadResponse                     *resty.Response
-	Projection                       WriteProjection
-	PatchInvoked, HTTPAccepted, NoOp bool
+	Before, After              *Role
+	ReadResponse               *resty.Response
+	Projection                 WriteProjection
+	PatchInvoked, HTTPAccepted bool
 }
 
 func (UpdateResult) String() string     { return "conversation update result (redacted)" }

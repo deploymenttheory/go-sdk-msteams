@@ -148,3 +148,22 @@ No command is marked fully implemented or contract-complete. The six full
 command contracts, full permission-write semantics and persistence, supplemental
 builder public scope and actual tenant behavior remain unresolved until their
 full criteria have revision-backed execution evidence.
+
+## No-settings selection correction
+
+The [exact concrete/base observation](evidence/conditional-set-selection.json)
+and [reproducer](../../../scripts/discovery/inspect-ext-set-selection.ps1) verify
+all four EXT conditional Set overrides. Each uses BoundParameters.ContainsKey,
+not a truthy value or nullable HasValue test. Once bound, null, false, zero or
+empty counts as selection; separate type/model validation still applies. Only
+the actual mutable field names count, not Force or selector Id/Identity.
+
+With no mutable key the shared BaseTpmSetCmdlet.ProcessRecord constructs
+ProcessRecordFailed/category7, invokes WriteError at IL115, and branches out
+before token handling at IL145. Its exact method hash is
+`c06e7863f0da89a8ba5fd748b249139faf88fb6557fe7e01ad90a9fb14cf7b01`.
+The native conversation Prepare helpers therefore return ErrInput before any
+read/authentication, rather than the initially authored success/no-op outcome.
+Tenant/app configuration already rejected this case; focused Force-only tests
+keep all four resources aligned. Bound null ConversationRoles remains a selected
+list clear, and explicit false/null scalar projections remain supported.

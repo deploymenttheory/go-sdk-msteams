@@ -265,19 +265,18 @@ func TestUnitConversationSettingsDenialAcceptedMalformedAndRetargetRetainStages(
 		})
 	}
 }
-func TestUnitConversationSettingsUnboundIsNoOpAndEmptyFilterIsLocal(t *testing.T) {
+func TestUnitConversationSettingsUnboundRejectsBeforeCredentialsAndEmptyFilterIsLocal(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "unbound-set", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-		request, _, e := sdk.TeamsAdminAPI.ConversationRoleSettings.PrepareUpdateByIdentity(ctx, "Global", settings.UpdateParameters{})
-		if e != nil {
+	flag := false
+	for _, controls := range []policy.Controls{{}, {Force: &flag}} {
+		run(t, contracttest.Case{Name: "unbound-set", Scope: "local", Want: contracttest.Expected{Error: settings.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			request, response, e := sdk.TeamsAdminAPI.ConversationRoleSettings.PrepareUpdateByIdentity(ctx, "Global", settings.UpdateParameters{Controls: controls})
+			if !errors.Is(e, settings.ErrInput) || request != nil || response != nil {
+				t.Fatal("unbound settings did not reject before authentication or preparation")
+			}
 			return contracttest.Observation{Err: e}
-		}
-		result, _, e := sdk.TeamsAdminAPI.ConversationRoleSettings.UpdateByIdentity(ctx, "Global", *request)
-		if e == nil && (result == nil || !result.NoOp || result.PatchInvoked) {
-			t.Fatal("unbound list made request")
-		}
-		return contracttest.Observation{Err: e}
-	}})
+		}})
+	}
 	run(t, contracttest.Case{Name: "empty-filter", Scope: "local", Want: contracttest.Expected{Error: settings.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		_, _, e := sdk.TeamsAdminAPI.ConversationRoleSettings.ListFiltered(ctx, "")
 		return contracttest.Observation{Err: e}

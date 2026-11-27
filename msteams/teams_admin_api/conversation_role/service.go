@@ -115,9 +115,7 @@ func (s *Service) prepare(ctx context.Context, identity, selector, set string, i
 	}
 	request := &UpdateRequest{owner: s, identity: identity, selector: selector, set: set}
 	if !input.specified() {
-		request.prepared = true
-		request.projection = WriteProjection{Command: setCommand, ParameterSet: set, NoOp: true}
-		return request, nil, nil
+		return nil, nil, ErrInput
 	}
 	before, response, e := s.resource.Get(ctx, identity, setCommand)
 	request.before, request.read = before, response
@@ -146,15 +144,12 @@ func (s *Service) UpdateByID(ctx context.Context, id string, input UpdateRequest
 	return s.update(ctx, id, RelativeIDSet, input)
 }
 func (s *Service) update(ctx context.Context, selector, set string, input UpdateRequest) (*UpdateResult, *resty.Response, error) {
-	result := &UpdateResult{Before: input.Before(), ReadResponse: input.read, Projection: input.Projection(), NoOp: input.projection.NoOp}
+	result := &UpdateResult{Before: input.Before(), ReadResponse: input.read, Projection: input.Projection()}
 	if e := s.ready(ctx); e != nil {
 		return result, nil, e
 	}
 	if !input.prepared || input.owner != s || input.selector != selector || input.set != set {
 		return result, nil, ErrInput
-	}
-	if input.projection.NoOp {
-		return result, nil, nil
 	}
 	var body map[string]json.RawMessage
 	if json.Unmarshal(input.projection.Body, &body) != nil {

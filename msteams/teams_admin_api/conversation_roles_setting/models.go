@@ -78,10 +78,10 @@ func (UpdateRequest) String() string                      { return "conversation
 func (v UpdateRequest) GoString() string                  { return v.String() }
 
 type UpdateResult struct {
-	Before, After                    *Configuration
-	ReadResponse                     *resty.Response
-	Projection                       roles.WriteProjection
-	PatchInvoked, HTTPAccepted, NoOp bool
+	Before, After              *Configuration
+	ReadResponse               *resty.Response
+	Projection                 roles.WriteProjection
+	PatchInvoked, HTTPAccepted bool
 }
 
 func (UpdateResult) String() string     { return "conversation settings update result (redacted)" }

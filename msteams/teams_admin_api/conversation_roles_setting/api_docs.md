@@ -22,7 +22,8 @@ bound to its preparing service/client and exact resource identity; copying or
 modifying exposed views cannot alter the frozen body or transfer it to another
 principal/target.
 
-- Unbound ConversationRoles is NoOp, including Force alone.
+- Unbound ConversationRoles, including Force alone, returns ErrInput before
+  credentials or the preparation read. This is distinct from bound null.
 - Bound null or all-empty modifier clears the current list.
 - Nonempty Replace wins, bypassing Add and Remove.
 - Otherwise Remove on an empty current list does nothing; Add then appends in

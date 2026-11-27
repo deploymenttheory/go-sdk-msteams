@@ -56,7 +56,8 @@ not automatically logged. There is no additional approval flag or consent flow.
 
 Bound Name/IsAssignable null and false remain distinct from omission. Dates are
 non-null CLR values when selected. Selecting no mutable settings, including
-Force alone, produces an explicit NoOp without credentials or HTTP. Selected
+Force alone, returns ErrInput before credentials or HTTP, matching the base
+cmdlet's early ProcessRecordFailed error. Selected
 null Permissions fails local CLR projection after preparation, retaining the
 read receipt. A bound Force false uses the observed `"False"` string.
 

@@ -79,3 +79,10 @@ There is no create/delete/grant surface in these four declarations, and none is
 invented. OCE export availability, authorization and actual server acceptance
 remain unqualified. No live Global configuration mutation or role/license change
 is configured. The coverage ledger stays in-progress/metadata-only/not-run.
+
+The [four-resource selection audit](evidence/conditional-set-selection.json)
+confirms both configuration overrides select by bound-key membership even when
+a value is null, false, zero or empty. Value constraints are separate: zero
+limits/empty URI are invalid selected model values, not omitted settings. No
+mutable key (including Force alone) produces the base nonterminating error before
+a token/read; the SDK returns ErrInput before credentials.

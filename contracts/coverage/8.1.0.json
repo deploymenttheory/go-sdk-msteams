@@ -36679,7 +36679,7 @@
               "file": "msteams/teams_admin_api/conversation_role/service_test.go"
             },
             {
-              "name": "TestUnitConversationUnboundSetIsNoOpAndEmptyFilterIsLocalError",
+              "name": "TestUnitConversationUnboundSetRejectsBeforeCredentialsAndEmptyFilterIsLocalError",
               "file": "msteams/teams_admin_api/conversation_role/service_test.go"
             }
           ],
@@ -36716,7 +36716,8 @@
           "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
           "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
           "docs/implementation/ext/evidence/conversation-role-presence.json",
-          "docs/implementation/ext/evidence/conversation-role-il.json"
+          "docs/implementation/ext/evidence/conversation-role-il.json",
+          "docs/implementation/ext/evidence/conditional-set-selection.json"
         ]
       },
       "live": {
@@ -36765,7 +36766,7 @@
               "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
             },
             {
-              "name": "TestUnitConversationSettingsUnboundIsNoOpAndEmptyFilterIsLocal",
+              "name": "TestUnitConversationSettingsUnboundRejectsBeforeCredentialsAndEmptyFilterIsLocal",
               "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
             }
           ],
@@ -36798,7 +36799,8 @@
           "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
           "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
           "docs/implementation/ext/evidence/conversation-role-presence.json",
-          "docs/implementation/ext/evidence/conversation-role-il.json"
+          "docs/implementation/ext/evidence/conversation-role-il.json",
+          "docs/implementation/ext/evidence/conditional-set-selection.json"
         ]
       },
       "live": {
@@ -38969,7 +38971,8 @@
         "evidence": [
           "docs/implementation/ext/conditional-settings-contract-notes.md",
           "docs/implementation/ext/evidence/conditional-settings-serialization.json",
-          "docs/implementation/ext/evidence/conditional-settings-il.json"
+          "docs/implementation/ext/evidence/conditional-settings-il.json",
+          "docs/implementation/ext/evidence/conditional-set-selection.json"
         ]
       },
       "live": {
@@ -43354,7 +43357,8 @@
         "evidence": [
           "docs/implementation/ext/conditional-settings-contract-notes.md",
           "docs/implementation/ext/evidence/conditional-settings-serialization.json",
-          "docs/implementation/ext/evidence/conditional-settings-il.json"
+          "docs/implementation/ext/evidence/conditional-settings-il.json",
+          "docs/implementation/ext/evidence/conditional-set-selection.json"
         ]
       },
       "live": {

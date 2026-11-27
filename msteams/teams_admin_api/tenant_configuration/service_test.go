@@ -171,3 +171,19 @@ func TestUnitConditionalExplicitEmptyFilterFailsBeforeCredentials(t *testing.T) 
 		return contracttest.Observation{Err: err}
 	}})
 }
+
+func TestUnitConditionalForceAloneIsNotASetting(t *testing.T) {
+	t.Parallel()
+	flag := false
+	for _, patch := range []bool{false, true} {
+		run(t, contracttest.Case{Name: "force-only", Scope: "local", Want: contracttest.Expected{Error: config.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			var e error
+			if patch {
+				_, _, e = sdk.TeamsAdminAPI.TenantConfigurations.PatchByIdentity(ctx, "Global", config.PatchRequest{Controls: policy.Controls{Force: &flag}})
+			} else {
+				_, _, e = sdk.TeamsAdminAPI.TenantConfigurations.UpdateByIdentity(ctx, "Global", config.UpdateRequest{Controls: policy.Controls{Force: &flag}})
+			}
+			return contracttest.Observation{Err: e}
+		}})
+	}
+}
