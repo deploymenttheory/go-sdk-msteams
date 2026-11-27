@@ -2459,6 +2459,10 @@
             {
               "file": "msteams/teams_admin_api/cloud_call_data/service.go",
               "name": "Service.Get"
+            },
+            {
+              "name": "Service.List",
+              "file": "msteams/teams_admin_api/cloud_call_data/service.go"
             }
           ],
           "contract_tests": [
@@ -2469,6 +2473,18 @@
             {
               "file": "msteams/teams_admin_api/cloud_call_data/service_test.go",
               "name": "TestUnitCloudCallDataReturnsTokenWithoutPrintingIt"
+            },
+            {
+              "name": "TestUnitCloudCallDataListFollowsObservedModernArrayParser",
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go"
+            },
+            {
+              "name": "TestUnitCloudCallDataCardinalityRetainsReadAndAcceptedActionOutcomes",
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go"
+            },
+            {
+              "name": "TestUnitCloudCallDataFailuresStayTyped",
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go"
             }
           ],
           "live_tests": [
@@ -2486,12 +2502,20 @@
           {
             "file": "msteams/teams_admin_api/cloud_call_data/service.go",
             "name": "Service.Get"
+          },
+          {
+            "name": "Service.List",
+            "file": "msteams/teams_admin_api/cloud_call_data/service.go"
           }
         ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/cloud-call-data-contract-notes.md",
+          "docs/implementation/ext/evidence/cloud-call-data-modern-contract.json",
+          "docs/implementation/ext/evidence/cloud-call-data-parser.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -23870,6 +23894,10 @@
             {
               "file": "msteams/teams_admin_api/cloud_call_data/service.go",
               "name": "Service.Create"
+            },
+            {
+              "name": "Service.CreateWithResult",
+              "file": "msteams/teams_admin_api/cloud_call_data/service.go"
             }
           ],
           "contract_tests": [
@@ -23884,6 +23912,14 @@
             {
               "file": "msteams/teams_admin_api/cloud_call_data/service_test.go",
               "name": "TestUnitCloudCallDataFailuresStayTyped"
+            },
+            {
+              "name": "TestUnitCloudCallDataCardinalityRetainsReadAndAcceptedActionOutcomes",
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go"
+            },
+            {
+              "name": "TestUnitCloudCallDataCreateResultSeparatesHTTPReceiptFromSourceSuccess",
+              "file": "msteams/teams_admin_api/cloud_call_data/service_test.go"
             }
           ],
           "live_tests": [
@@ -23901,12 +23937,20 @@
           {
             "file": "msteams/teams_admin_api/cloud_call_data/service.go",
             "name": "Service.Create"
+          },
+          {
+            "name": "Service.CreateWithResult",
+            "file": "msteams/teams_admin_api/cloud_call_data/service.go"
           }
         ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/cloud-call-data-contract-notes.md",
+          "docs/implementation/ext/evidence/cloud-call-data-modern-contract.json",
+          "docs/implementation/ext/evidence/cloud-call-data-parser.json"
+        ]
       },
       "live": {
         "status": "not-run",

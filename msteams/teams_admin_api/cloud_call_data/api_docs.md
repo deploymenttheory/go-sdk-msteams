@@ -1,32 +1,47 @@
-# Cloud call data connection
+# Cloud call data connections
 
-Use `sdk.TeamsAdminAPI.CloudCallData` for the tenant's cloud call data
-connection, which lets on-premises Skype for Business Server deployments upload
-call data to the cloud. Operations use the shared client/auth/transport controls
-through the ConfigAPI backend and need no PowerShell runtime. Constructing the
-root client or this service performs no network I/O.
+`TeamsAdminAPI.CloudCallData` implements the source-backed Modern ConfigAPI
+resource at `/Teams.InternalSupport/CloudCallDataConnection`. Constructors perform
+no I/O; methods use the existing ConfigAPI audience/forest/session controls.
+The public PowerShell proxies choose Modern versus legacy through session flighting;
+this native resource does not emulate legacy remoting or claim universal selection.
 
-| Resource method | PowerShell command | Wire operation | Declared successful statuses |
-| --- | --- | --- | --- |
-| `Get(ctx)` | `Get-CsCloudCallDataConnection` | GET `/Teams.InternalSupport/CloudCallDataConnection` | 200 |
-| `Create(ctx)` | `New-CsCloudCallDataConnection` | POST `/Teams.InternalSupport/CloudCallDataConnection` (no body) | 200, 201 |
+| Method | Wire/result |
+| --- | --- |
+| `List(ctx)` | GET; full returned connection array, HTTP 200 only |
+| `Get(ctx)` | Unique-result convenience over List |
+| `CreateWithResult(ctx)` | POST with no body; full typed action outcome, HTTP 200 only |
+| `Create(ctx)` | Unique-result convenience over CreateWithResult |
 
-Both cmdlets take no parameters. Every method takes a context and returns the
-actual Resty response alongside its value/error. `Get` is replay-safe; `Create`
-is never replayed automatically. Any other HTTP status is an
-`*client.APIError`; an undeclared success status is `ErrResponse`.
+Existing Get/Create signatures remain available. Their previously authored object
+response/201 assumptions are corrected: both Modern parser callbacks require an
+array and both dispatch success only at 200. Object/null roots and unsupported
+2xx statuses fail with the response retained; 201 is not a declared success.
 
-## Token
+List preserves empty text as a nil array, `[]` as an allocated empty array, and
+null/nonobject entries as nil models. Each object preserves exact raw fields.
+The pinned projection recognizes uppercase `Token` only; absent/null/non-string
+or wrong-case values yield nil typed Token, while empty string remains nonnil.
+RawFields retains data ignored by that projection, an explicit native extension.
+Tokens and response bodies are credentials: inspect deliberately and never log them.
+Connection/result/cardinality-error String/GoString values are redacted.
 
-`Connection.Token` is the credential the on-premises deployment uses. Treat it
-as a secret: `Connection` formats as `cloud call data connection (redacted)`
-with `%v`, `%+v` and `%#v`. `Token` is nil when the service sends null or omits
-it, and `RawFields` keeps every service property.
+Get/Create require exactly one non-null returned model. Zero, multiple or a lone
+null entry returns `ErrCardinality`, not an arbitrary element. Use
+`errors.As(err, &cardinality)` with `*CardinalityError` to inspect every Returned
+model and Response; for Create it also retains the full CreateOutcome, invocation
+and HTTP-acceptance flags. This error does not establish that creation failed or
+that no connection exists. Never replay blindly after an accepted/uncertain action.
 
-## Restrictions
+CreateWithResult records attempted invocation and a 2xx receipt separately from
+parsed/source-declared success. Its returned connections are not assumed newly
+created or owned. There is no remove operation or automatic compensation.
+List/Get are replay-safe under the native shared policy; creation is ReplayNever.
+The pinned default pipeline has no built-in retry loop, so native read retries
+are an explicit client-policy difference. No extra grants, roles or fallback
+identity are acquired.
 
-- App-only Teams Administrator credentials receive HTTP 403 `Forbidden` on
-  both `Get` and `Create` (observed live), and the tenant is unchanged;
-  `errors.Is(err, auth.ErrForbidden)` reports it.
-- The connection is a tenant singleton and the module has no cmdlet to remove
-  it, so `Create` is a one-way operation.
+The app-only dedicated lab historically returned 403 for both operations; the
+2026-11-23 irreversible-create authorization is preserved. Denials and authored
+array replies do not qualify successful creation, token usability, ownership or
+persistence. See [primary/source evidence](../../../docs/implementation/ext/cloud-call-data-contract-notes.md).
