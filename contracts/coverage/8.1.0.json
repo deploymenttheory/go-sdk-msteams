@@ -5829,6 +5829,14 @@
             {
               "file": "tests/contract/policies/configuration_composition_test.go",
               "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
+            },
+            {
+              "file": "tests/contract/policies/configuration_decode_recovery_test.go",
+              "name": "TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery"
+            },
+            {
+              "file": "tests/contract/policies/configuration_cancellation_test.go",
+              "name": "TestUnitConfigurationCanceledReadRetainsReceiptAndAllowsIndependentRead"
             }
           ],
           "live_tests": [
@@ -7360,6 +7368,10 @@
             {
               "file": "tests/contract/policies/configuration_composition_test.go",
               "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
+            },
+            {
+              "file": "tests/contract/policies/configuration_decode_recovery_test.go",
+              "name": "TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery"
             }
           ],
           "live_tests": [
@@ -37283,6 +37295,10 @@
             {
               "file": "tests/contract/policies/configuration_composition_test.go",
               "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
+            },
+            {
+              "file": "tests/contract/policies/configuration_decode_recovery_test.go",
+              "name": "TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery"
             }
           ],
           "live_tests": []
@@ -38803,6 +38819,14 @@
             {
               "file": "tests/contract/policies/configuration_composition_test.go",
               "name": "TestUnitConfigurationGlobalIdentitiesKeepPartialFailureAndExplicitRecoverySeparate"
+            },
+            {
+              "file": "tests/contract/policies/configuration_decode_recovery_test.go",
+              "name": "TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery"
+            },
+            {
+              "file": "tests/contract/policies/configuration_cancellation_test.go",
+              "name": "TestUnitConfigurationCanceledReadRetainsReceiptAndAllowsIndependentRead"
             }
           ],
           "live_tests": []
