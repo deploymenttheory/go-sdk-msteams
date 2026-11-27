@@ -1,0 +1,35 @@
+{
+  "scope": "Actual pure pinned generated response parser, DTO getters/setters and request serializer; copied property sequence mirrors hashed custom Set wrapper. Does not invoke custom wrapper, parameter binder, management lifecycle, auth or HTTP.",
+  "exact_distinctions": {
+    "nested_unknown": "future dropped during GetCustomAppSettingResponse/AppAccessRequestConfig materialization; no extension-data field exists.",
+    "nested_null_or_absent": "Response AppAccessRequestConfig getter lazily creates empty typed object; copied object has no fields to emit, so containing appAccessRequestConfig omitted by AddIf JsonObject.Keys.Count>0.",
+    "nested_empty_future_only_known_null_wrong_case": "Entire appAccessRequestConfig omitted.",
+    "nested_known_empty_strings": "Empty strings are emitted, so appAccessRequestConfig present with known empty strings.",
+    "branding_pascal": "LobTextColor/LobBackground/LobLogo/LobLogomark exact PascalCase input strings survive response getters and copied PascalCase request keys.",
+    "branding_camel": "lower camelCase fields ignored by source generated parser, no branding PUT keys.",
+    "branding_both": "PascalCase values win regardless of camel values; source exact-key lookup.",
+    "branding_null": "Omitted in PUT.",
+    "branding_empty": "Empty strings retained in PUT.",
+    "boolean_copy": "Exact lower-camel booleans copied with nullable presence; false retained, null omitted; supplied target sideload flag overrides read.",
+    "per_app_list": "Source wrapper always assigns empty array; returned raw appSettingsList/other future top-level fields not copied."
+  },
+  "native_current_mismatches": [
+    "Preserving nested RawFields.future in SetSideloadedAppsInteraction is not pinned custom Set behavior.",
+    "Omitting all branding fails parity when response carries recognized PascalCase Lob* fields.",
+    "Emitting appAccessRequestConfig:{} or null-only known members differs from source omission."
+  ],
+  "source_references": {
+    "custom_function": "/private/tmp/ext90-customapp-script-evidence.json, Merged_custom_PsExt.ps1 lines2541ff, definition_sha256245689a3875f3c77db33d55841939f1740627dad905aa9cfc49a5ec0d134f746",
+    "response_lazy_getter_method_sha256": "a43b68ecb8758bc8314b7aa9e89d5d0159f426943715200ea1475b93411e8a64",
+    "request_tojson_method_sha256": "d8e6842fbfbebf8511414bd2005cf984f672d3c1cce02c053508d5d631f0a8a8",
+    "addif_named_method_sha256": "a771d3e7414810af9cc074ea468ca589f7e06ef1561d462c5798d2d188a60ccf"
+  },
+  "artifact_hashes": {
+    "/private/tmp/ext90-customapp-set-pure.ps1": "8ca22af4043f428df7a3efcedbe7b3030917682c2e385512cf5df436e2bd3088",
+    "/private/tmp/ext90-customapp-set-pure.json": "c4eac705cda4121bb95bdd8349b46b478ada9b1ecb4f5a7d7b41730058e3928d",
+    "/private/tmp/ext90-customapp-set-primary.json": "c7d6669d7f46a02bcbbc93d4d532e519d295c0a9037df22238574a0d10a3c504",
+    "/private/tmp/ext90-customapp-addif-il.json": "bac946f4e471206be4ccf6a4a1eb837ac176ee31a5af0151ae9601c4583a0993",
+    "/private/tmp/ext90-customapp-script-evidence.json": "5676a48d3c07962e4155aede5de85bc81662a21dfc45992255c3468b7a50302b"
+  },
+  "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6"
+}

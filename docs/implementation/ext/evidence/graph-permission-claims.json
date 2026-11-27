@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-11-26T19:30:36.320397+00:00",
+  "identity_binding": "Same tenant/client SHA256 binding as the verified CALL CI recovery journal; identifiers deliberately omitted.",
+  "auth_method": "client-secret",
+  "token_acquired": true,
+  "permission_presence": {
+    "AppCatalog.Read.All": false,
+    "AppCatalog.ReadWrite.All": false,
+    "Sites.Read.All": false,
+    "Sites.ReadWrite.All": false,
+    "Files.Read.All": false,
+    "Files.ReadWrite.All": false
+  },
+  "resource_operation_performed": true,
+  "limitations": [
+    "The read-only app-catalog probe was denied; it does not qualify successful catalog behavior.",
+    "Scoped permissions and all alternative permission combinations were not evaluated.",
+    "No role assignment, consent, license purchase or tenant resource mutation was performed."
+  ],
+  "read_only_probe": {
+    "observed_at_utc": "2026-11-26T19:31:24.506938+00:00",
+    "route": "GET /v1.0/appCatalogs/teamsApps",
+    "http_status": 403,
+    "response_body_retained": false,
+    "mutation_performed": false
+  }
+}

@@ -212,6 +212,25 @@
         }
       ]
     },
+    "ext_integration": {
+      "package": "./tests/integration/lab/ext_integration",
+      "steps": [
+        {
+          "id": "generic-typed-configuration",
+          "mutation": true,
+          "proof": "ext-integration",
+          "journal_entries_per_test": 1,
+          "tests": ["TestAccGenericTypedConfigurationComposition"]
+        },
+        {
+          "id": "agent-target-template",
+          "mutation": true,
+          "proof": "ext-agent-template",
+          "journal_entries_per_test": 2,
+          "tests": ["TestAccAgentTargetTemplateComposition"]
+        }
+      ]
+    },
     "configuration_diagnostics": {
       "package": "./tests/integration/lab/configuration_diagnostics",
       "steps": [

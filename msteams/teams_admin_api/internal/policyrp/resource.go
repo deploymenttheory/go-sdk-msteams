@@ -46,6 +46,8 @@ func (s *Resource[T]) Ready(ctx context.Context) error {
 	}
 	switch s.name {
 	case "TeamsVoiceApplicationsPolicy", "TeamsVdiPolicy", "TeamsVirtualAppointmentsPolicy", "TeamsUpgradeConfiguration", "TeamsTenantAbuseConfiguration", "TeamsUpdateManagementPolicy", "TeamsTemplatePermissionPolicy", "TeamsSipDevicesConfiguration", "TeamsShiftsPolicy", "TeamsSharedCallingRoutingPolicy", "TeamsPersonalAttendantPolicy", "TeamsRecordingRollOutPolicy", "TeamsNotificationAndFeedsPolicy", "TeamsMobilityPolicy", "TeamsMultiTenantOrganizationConfiguration", "TeamsGuestMeetingConfiguration", "TeamsMessagingConfiguration", "TeamsMeetingTemplateConfiguration", "TeamsFirstPartyMeetingTemplateConfiguration", "TeamsMeetingTemplatePermissionPolicy", "TeamsMeetingPolicy", "TeamsMeetingConfiguration", "TeamsMessagingPolicy", "ExternalAccessPolicy", "TeamsAcsFederationConfiguration", "TeamsExternalAccessConfiguration", "TeamsMeetingBrandingPolicy", "OnlineVoicemailPolicy", "OnlineVoicemailValidationConfiguration", "PrivacyConfiguration", "TeamsRecordingAndTranscriptionCustomMessage", "TeamsAppPermissionPolicy", "TeamsAppSetupPolicy", "TeamsAudioConferencingCustomPromptsConfiguration", "TeamsCallHoldPolicy", "TeamsCallingPolicy", "TeamsChannelsPolicy", "TeamsClientConfiguration", "CustomBannerText", "TeamsEducationAssignmentsAppPolicy", "TeamsEducationConfiguration", "TeamsEventsPolicy", "TeamsFeedbackPolicy", "TeamsFilesPolicy", "TeamsComplianceRecordingPolicy", "TeamsComplianceRecordingApplication", "TeamsRemoteLogCollectionConfiguration", "TeamsRemoteLogCollectionDevice":
+	case "TenantConfiguration", "TeamsAppPolicyConfiguration":
+	case "ConversationRole", "ConversationRolesSetting":
 	default:
 		return client.ErrDestination
 	}

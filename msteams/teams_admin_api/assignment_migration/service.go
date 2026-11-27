@@ -147,7 +147,7 @@ func (s *Service) submit(ctx context.Context, operation, command string, input C
 	if err := s.ready(ctx); err != nil {
 		return nil, nil, err
 	}
-	if strings.TrimSpace(input.Authority) == "" || strings.TrimSpace(input.PolicyType) == "" || strings.TrimSpace(input.PolicyName) == "" || !groupGUID.MatchString(input.GroupID) {
+	if input.Authority == "" || input.PolicyType == "" || input.PolicyName == "" || !groupGUID.MatchString(input.GroupID) {
 		return nil, nil, ErrInput
 	}
 	input.GroupID = strings.ToLower(input.GroupID)

@@ -52,6 +52,15 @@ own. **Run workflow** also accepts `services` (comma-separated partition names) 
 run only those services after the auth job. The aggregate `TestAcc result` job
 then expects reports from those services only.
 
+The `ext_integration` partition also enables the existing response-fixture
+sanitizer for its two owned compositions. It exports only changed JSON or empty
+HTTP receipts from four fixed service/testdata label lists, with a per-file
+1 MiB bound, symlink/path checks and an additional private-data guard. The
+`response-fixtures.json` manifest binds each file digest to the exact CI revision;
+files live under `response-fixtures/` in that service artifact. Other partitions
+never enable this writer. These files contain no plaintext journals or private
+lab directory contents and do not establish coverage beyond the run's assertions.
+
 Selected tests and child cases must pass unless explicitly excluded as described
 below. The aggregate requires exactly one report per auth step (`all`) and per
 selected service step (`client-secret`). It rejects missing, duplicate or
@@ -486,3 +495,23 @@ mutation opt-in and fixture files described above:
 MSTEAMS_LAB_RECOVERY_FILE=/private/lab/journal.jsonl \
   go test -count=1 -run '^TestAccRecoverOwnedPolicies$' ./tests/integration/lab/recovery
 ```
+
+## Integrated EXT acceptance
+
+The `ext_integration` partition creates one SDK-owned, unassigned feedback policy
+through the generic configuration API, reads and sparsely updates it through the
+typed feedback service, then replaces it through the generic API and verifies the
+typed result. It requires three pinned PowerShell comparisons and one independently
+cleaned journal entry. No Global configuration, user/group assignment, licensing
+state or service-wide cache is changed. Changes to either participating adapter
+select this partition.
+
+The [EXT inventory](../../docs/implementation/ext/coverage-report.md) records all
+owned command/parameter-set mappings, current live limitations and the fifteen
+unowned nested research candidates. Mappings and expected denials do not establish
+full qualification or successful tenant operations.
+
+The same partition's `agent-target-template` step creates an owned IVR tag
+template and an owned agent configuration referencing it, verifies the linkage
+after rename with two pinned comparisons, and requires two independently cleaned
+entries. No resource account or call flow is attached to the agent.

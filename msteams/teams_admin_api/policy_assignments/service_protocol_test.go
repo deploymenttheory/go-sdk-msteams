@@ -1,0 +1,157 @@
+package policyassignments_test
+
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"testing"
+
+	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
+)
+
+// Primary-authored ordinary generated batch responses, not OCE or captures.
+// Pinned private.dll 8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6:
+// GetCsBatchPolicyAssignmentOperation_Get/Get1 onOk bind SimpleBatchJobStatus[]
+// and BatchJobStatus; NewExpanded onAccepted binds BatchOperationId whose ToJson
+// IL64 key is OperationId. Status keys are lowercamel, IDs are opaque strings.
+// This differs from OCE's Pascal-key, GUID-native regional response protocol.
+const authoredSimpleBatch = `{"operationId":"fixture/operation:@","operationName":"Fixture","overallStatus":"InProgress","notStartedCount":0,"inProgressCount":1,"completedCount":0,"errorCount":0,"createdBy":"fixture-creator","createdTime":"2026-01-01T12:00:00Z","completedTime":null,"Future":false}`
+const authoredBatch = `{"operationId":"fixture/operation:@","operationName":"Fixture","overallStatus":"InProgress","notStartedCount":0,"inProgressCount":1,"completedCount":0,"errorCount":0,"createdBy":"fixture-creator","createdTime":"2026-01-01T12:00:00Z","completedTime":null,"userState":[{"id":"fixture/user:@","state":"InProgress","result":""}],"Future":false}`
+
+func verifyAuthoredBatch(t *testing.T, value *resource.BatchStatus) {
+	t.Helper()
+	if value == nil || value.OperationID == nil || *value.OperationID != "fixture/operation:@" || value.NotStartedCount == nil || *value.NotStartedCount != 0 || value.InProgressCount == nil || *value.InProgressCount != 1 || value.CompletedTime != nil || string(value.RawFields["completedTime"]) != "null" || string(value.RawFields["Future"]) != "false" {
+		t.Fatal("batch status lost opaque identity, counters, null or future snapshot")
+	}
+}
+
+func TestUnitBatchAuthoredTypedResponses(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct{ name, suffix, reply string }{
+		{"batch-list", "", "[" + authoredSimpleBatch + "]"},
+		{"batch-list-filter", "?status=Future%20%2F%3F%26%3A%40", "[" + authoredSimpleBatch + "]"},
+		{"batch-get", "/fixture%2Foperation%3A%40", authoredBatch},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			r, err := contracttest.Run(t.Context(), contracttest.Case{Name: "typed-" + tc.name, Family: "policy_assignments", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: mapping(tc.name), Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+"/Skype.Policy/assignments/operations"+tc.suffix, "Get-CsBatchPolicyAssignmentOperation", nil, 200, tc.reply)}, Want: contracttest.Expected{Status: 200, Body: []byte(tc.reply), JSON: json.RawMessage(tc.reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				observed := invoke(tc.name, ctx, sdk)
+				if observed.Err != nil {
+					return observed
+				}
+				if tc.name == "batch-get" {
+					value, ok := observed.Value.(*resource.BatchStatus)
+					if !ok {
+						t.Fatal("batch item returned the wrong type")
+					}
+					verifyAuthoredBatch(t, value)
+					if len(value.UserState) != 1 || value.UserState[0] == nil || value.UserState[0].ID == nil || *value.UserState[0].ID != "fixture/user:@" || value.UserState[0].Result == nil || *value.UserState[0].Result != "" {
+						t.Fatal("batch detail lost distinct user identity or explicit empty outcome")
+					}
+				} else {
+					values, ok := observed.Value.([]*resource.BatchStatus)
+					if !ok || len(values) != 1 {
+						t.Fatal("batch collection did not return a nonempty typed slice")
+					}
+					verifyAuthoredBatch(t, values[0])
+				}
+				return observed
+			}})
+			if err != nil || !r.Passed() {
+				t.Fatalf("authored batch response differs: %v %+v", err, r.Differences())
+			}
+		})
+	}
+}
+
+func TestUnitBatchAuthoredAcceptedHandlePresence(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct {
+		name, reply string
+		id          *string
+		decode      bool
+	}{
+		{"opaque", `{"OperationId":"fixture/operation:@","Future":false}`, new("fixture/operation:@"), false},
+		{"missing", `{}`, nil, false},
+		{"null", `{"OperationId":null}`, nil, false},
+		{"empty", `{"OperationId":""}`, new(""), false},
+		{"malformed", `{"OperationId":`, nil, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			want := contracttest.Expected{Status: 202, Body: []byte(tc.reply)}
+			if tc.decode {
+				want.Error = client.ErrDecode
+			}
+			r, err := contracttest.Run(t.Context(), contracttest.Case{Name: "batch-handle-" + tc.name, Family: "policy_assignments", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: mapping("batch-create-empty"), Steps: []contracttest.Exchange{discovery(t), wire("POST", origin+"/Skype.Policy/assignments/operations", "New-CsBatchPolicyAssignmentOperation", json.RawMessage(`{"identities":[]}`), 202, tc.reply)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				value, response, err := sdk.TeamsAdminAPI.PolicyAssignments.CreateBatch(ctx, resource.BatchCreateRequest{Identities: []string{}})
+				if value == nil || !value.HTTPAccepted || (tc.id == nil && value.OperationID != nil) || (tc.id != nil && (value.OperationID == nil || *value.OperationID != *tc.id)) || (!tc.decode && value.RawFields == nil) {
+					t.Fatal("accepted batch conflated missing, null, empty or opaque handle")
+				}
+				return contracttest.Observation{Value: value, Response: response, Err: err}
+			}})
+			if err != nil || !r.Passed() {
+				t.Fatalf("batch receipt presence differs: %v %+v", err, r.Differences())
+			}
+		})
+	}
+}
+
+// Pinned GetCsGroupPolicyAssignment_Get2 onOk is Task<IGroupAssignment[]>;
+// ProcessRecordAsync d__50 IL891 calls GroupGetPolicyAssignment2(policyType).
+// Generated GroupAssignment::ToJson keys: groupId67,priority123,policyType186,
+// policyName249,createdBy312,createdTime398. Priority and CreatedTime are nullable
+// here, unlike the separate compiled OCE GUID/nonnullable projection.
+func TestUnitGroupByPolicyAuthoredArrayAndNullableFields(t *testing.T) {
+	t.Parallel()
+	const reply = `[{"groupId":"00000000-0000-4000-8000-000000000020","priority":0,"policyType":"TeamsMeetingPolicy","policyName":"","createdBy":"fixture-creator","createdTime":null,"Future":false}]`
+	for _, tc := range []struct{ name, filter, suffix string }{
+		{"by-type", "TeamsMeetingPolicy", "?policyType=TeamsMeetingPolicy"},
+		{"all", "", ""},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			run(t, contracttest.Case{Name: "group-get2-" + tc.name, Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsGroupPolicyAssignment", ParameterSet: "Get2"}}, Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+"/Skype.Policy/groupPolicyAssignments"+tc.suffix, "Get-CsGroupPolicyAssignment", nil, 200, reply)}, Want: contracttest.Expected{JSON: json.RawMessage(reply), Body: []byte(reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				values, response, err := sdk.TeamsAdminAPI.PolicyAssignments.ListGroupsByPolicy(ctx, tc.filter)
+				if err == nil && (len(values) != 1 || values[0] == nil || values[0].GroupID == nil || *values[0].GroupID != responseGroupID || values[0].Priority == nil || *values[0].Priority != 0 || values[0].PolicyType == nil || *values[0].PolicyType != "TeamsMeetingPolicy" || values[0].PolicyName == nil || *values[0].PolicyName != "" || values[0].CreatedTime != nil || string(values[0].RawFields["createdTime"]) != "null" || string(values[0].RawFields["Future"]) != "false") {
+					t.Fatal("Get2 lost the typed group array, identity, zero, empty or nullable fields")
+				}
+				return contracttest.Observation{Value: values, Response: response, Err: err}
+			}})
+		})
+	}
+}
+
+// Deliberately adversarial 200 bodies, not service captures. Pinned generated
+// Get/Get1 callbacks return IGroupAssignment/IGroupAssignment[] respectively.
+// Two representatives exercise the shared object/array SDK decoder error paths;
+// other normal read selectors already have independent positive assertions.
+func TestUnitGeneratedReadDecodeFailureRetainsHTTPResponse(t *testing.T) {
+	t.Parallel()
+	for _, tc := range []struct{ name, path, reply string }{
+		{"group-get", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", `[]`},
+		{"group-list", "/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes", `{"value":[]}`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			run(t, contracttest.Case{Name: "malformed-read-" + tc.name, Source: "msteams/teams_admin_api/policy_assignments/service_protocol_test.go", Mappings: mapping(tc.name), Steps: []contracttest.Exchange{discovery(t), wire("GET", origin+tc.path, "Get-CsGroupPolicyAssignment", nil, 200, tc.reply)}, Want: contracttest.Expected{Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				observed := invoke(tc.name, ctx, sdk)
+				if !errors.Is(observed.Err, client.ErrDecode) || observed.Response == nil || observed.Response.StatusCode() != 200 || string(observed.Response.Body()) != tc.reply {
+					t.Fatal("read decode failure lost its actual accepted response or error")
+				}
+				switch value := observed.Value.(type) {
+				case *resource.GroupAssignment:
+					if value != nil {
+						t.Fatal("malformed item invented a typed group")
+					}
+				case []*resource.GroupAssignment:
+					if value != nil {
+						t.Fatal("enveloped array invented typed groups")
+					}
+				default:
+					t.Fatal("read wrapper returned the wrong typed result")
+				}
+				return observed
+			}})
+		})
+	}
+}

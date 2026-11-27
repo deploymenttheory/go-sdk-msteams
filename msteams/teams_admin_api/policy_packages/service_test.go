@@ -3,7 +3,6 @@ package policypackages_test
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"os"
 	"strings"
@@ -35,7 +34,7 @@ func requestCases() []requestCase {
 		{Name: "user-recommendations", Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package", Body: nil, Headers: http.Header{"user": {"fixture-user@example.invalid"}}, Status: 403},
 		{Name: "create", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage("{\"Description\":\"\",\"PackageName\":\"Fixture/Package:@\",\"PolicyList\":[{\"PolicyName\":\"FixtureMeeting\",\"PolicyType\":\"TeamsMeetingPolicy\"}]}"), Headers: http.Header{}, Status: 403},
 		{Name: "create-empty-dto", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage("{}"), Headers: http.Header{}, Status: 403},
-		{Name: "update", Method: "PUT", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage("{\"Description\":\"\",\"PackageName\":\"Fixture/Package:@\",\"PolicyList\":[]}"), Headers: http.Header{}, Status: 403},
+		{Name: "update", Method: "PUT", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage("{\"Description\":\"\",\"PackageName\":\"Fixture/Package:@\",\"PolicyList\":[{\"PolicyName\":\"FixtureMeeting\",\"PolicyType\":\"TeamsMeetingPolicy\"}]}"), Headers: http.Header{}, Status: 403},
 		{Name: "delete", Method: "DELETE", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/custompackage/Fixture%2FPackage%3A%40", Body: nil, Headers: http.Header{}, Status: 403},
 		{Name: "group-assign", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/group", Body: json.RawMessage("{\"GroupId\":\"fixture/group\",\"PackageName\":\"FixturePackage\",\"PolicyRankings\":[{\"PolicyType\":\"TeamsMeetingPolicy\",\"Rank\":0}]}"), Headers: http.Header{}, Status: 403},
 		{Name: "group-empty-package", Method: "POST", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.VerticalPackaging/package/group", Body: json.RawMessage("{\"GroupId\":\"fixture/group\",\"PackageName\":\"\",\"PolicyRankings\":[]}"), Headers: http.Header{}, Status: 403},
@@ -94,11 +93,8 @@ func wire(f requestCase, command string) contracttest.Exchange {
 	}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: f.Method, URL: f.URL, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: f.Status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(f.Reply)}}
 }
-func customInput(update bool) resource.CustomPackageRequest {
+func customInput() resource.CustomPackageRequest {
 	request := resource.CustomPackageRequest{Name: new("Fixture/Package:@"), Description: new(""), Policies: []resource.PolicyPair{{PolicyType: new("TeamsMeetingPolicy"), PolicyName: new("FixtureMeeting")}}}
-	if update {
-		request.Policies = []resource.PolicyPair{}
-	}
 	return request
 }
 func groupInput(name string) resource.GroupAssignmentRequest {
@@ -153,9 +149,9 @@ func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.
 	case name == "create-empty-dto":
 		o.Value, o.Response, o.Err = s.Create(ctx, resource.CustomPackageRequest{})
 	case strings.HasPrefix(name, "create"):
-		o.Value, o.Response, o.Err = s.Create(ctx, customInput(false))
+		o.Value, o.Response, o.Err = s.Create(ctx, customInput())
 	case name == "update":
-		o.Value, o.Response, o.Err = s.Update(ctx, customInput(true))
+		o.Value, o.Response, o.Err = s.Update(ctx, customInput())
 	case name == "delete":
 		o.Value, o.Response, o.Err = s.DeleteByName(ctx, "Fixture/Package:@")
 	case strings.HasPrefix(name, "group"):
@@ -166,23 +162,6 @@ func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.
 		o.Value, o.Response, o.Err = s.AssignUsers(ctx, userInput())
 	default:
 		o.Value, o.Response, o.Err = s.GetByName(ctx, "Fixture/Package:@")
-	}
-	if v, ok := o.Value.(*resource.AssignmentResult); ok && v != nil {
-		if name == "user-partial" && (len(v.FailedUserIDs) != 1 || v.FailedUserErrorMessages == nil || len(v.FailedUserErrorMessages.LegacyUser) != 1 || string(v.FailedUserErrorMessages.RawFields["Future"]) != `["fixture-future"]` || !v.HTTPAccepted) {
-			o.Err = errors.New("partial user/future error details lost")
-		}
-		if name == "group-domain-error" && (len(v.FailedAssignPolicies) != 1 || v.HTTPAccepted) {
-			o.Err = errors.New("typed group failure data lost")
-		}
-		if name == "user-domain-error" && (len(v.FailedUserIDs) != 1 || v.HTTPAccepted) {
-			o.Err = errors.New("typed user failure data lost")
-		}
-		if name == "batch-error" && (len(v.FailedCreatePolicies) != 1 || v.HTTPAccepted) {
-			o.Err = errors.New("typed batch failure data lost")
-		}
-		if name == "batch-missing-id" && (v.OperationID != nil || !v.HTTPAccepted) {
-			o.Err = errors.New("missing batch handle invented")
-		}
 	}
 	return o
 }

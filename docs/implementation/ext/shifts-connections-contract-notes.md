@@ -74,3 +74,24 @@ system.
 EXT-28 (sync, team mappings, WFM teams and users, error reports) shares this
 service root and adds its methods and models to this package; see
 [shifts-sync-contract-notes.md](shifts-sync-contract-notes.md).
+
+
+## Cross-family offline composition audit
+
+The integrated cases in
+[`shifts_composition_test.go`](../../../tests/integration/lab/ext_integration/shifts_composition_test.go)
+feed the returned connection ID into connector-instance creation, then the distinct
+returned instance ID into team mapping and the distinct accepted operation ID into
+operation reads. Explicit empty administrator-email and zero sync-frequency values
+survive that handoff. A 202/NotStarted receipt is not treated as completed mapping:
+a later authored Completed envelope retains its failed detail, and a separate
+team-map read remains empty. No source-defined status interpretation is invented.
+
+A second case preserves the later map request's 403 receipt/error while separately
+removing the two known parent receipts and reading each exact ID as typed HTTP 404.
+Cleanup has its own timeout and ignores cancellation of the operation context. This
+is an authored offline composition, not a real recovery journal or successful WFM
+qualification; it performs no tenant operation. Existing source routes/status/model
+observations above constrain the vectors. Focused package TestUnit/Example validation
+passed in session 36120 on 2026-11-27. Both successful live Shifts use and actual
+mapping/cleanup behavior still require service authorization and owned WFM/team fixtures.

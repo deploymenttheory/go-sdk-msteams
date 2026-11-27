@@ -78,18 +78,11 @@ func TestUnitBrandingTypedProviderRequests(t *testing.T) {
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
 			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: f.Request.CmdletName, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(f.Request.Method, strings.TrimPrefix(f.Request.Url, origin), f.Request.CmdletName, input, f.Status, f.Response)}}
-			if f.Request.FailureType != nil {
-				if f.Status == 403 {
-					c.Want.Error = auth.ErrForbidden
-				} else {
-					c.Want.Error = client.ErrDecode
-				}
-			} else if f.Response != "" && f.Operation != "delete" {
-				c.Want.JSON = json.RawMessage(f.Response)
+			// These retained vectors prove rejected request bytes, not decoding.
+			if f.Status != 400 || f.Response != "" {
+				t.Fatal("rejected-wire vector unexpectedly contains a response contract")
 			}
-			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			}
+			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.MeetingBrandingPolicies
 				switch f.Operation {

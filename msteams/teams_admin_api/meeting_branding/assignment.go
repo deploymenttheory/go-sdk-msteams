@@ -10,8 +10,8 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-// Assign requires exactly one explicit scope. Missing scope mirrors the compiled
-// Grant's local no-scope rejection, rather than inventing a fourth assignment.
+// Assign requires exactly one explicit scope. The compiled Grant default set
+// has no resource operation; native Go rejects absent scope before credentials.
 // PolicyName nil/empty remain distinct; their server clear/default effects are
 // unqualified. A group response remains an optional policy snapshot, not a job.
 func (s *Service) Assign(ctx context.Context, input policy.Assignment) (*Policy, *resty.Response, error) {

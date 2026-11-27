@@ -27,6 +27,32 @@ def service_run(root, **kwargs):
 
 
 class AcceptanceGuardTests(unittest.TestCase):
+    def test_ext_compositions_require_each_phase_and_pinned_comparison(self):
+        for proof, test in [('ext-integration', 'TestAccGenericTypedConfigurationComposition'),
+                            ('ext-agent-template', 'TestAccAgentTargetTemplateComposition')]:
+            markers, oracle, count = ci.PROOFS[proof]
+            events = [{'Test': test, 'Action': 'output', 'Output': marker}
+                      for marker in markers + [oracle] * count]
+            events.append({'Test': test, 'Action': 'pass'})
+            self.assertEqual(ci.evaluate(events, [test], 0, proof=proof)['outcome'], 'passed')
+            for omitted in markers + [oracle]:
+                incomplete = events.copy()
+                incomplete.remove(next(event for event in incomplete if event.get('Output') == omitted))
+                with self.subTest(proof=proof, omitted=omitted):
+                    self.assertEqual(ci.evaluate(incomplete, [test], 0, proof=proof)['outcome'], 'failed')
+
+    def test_ext_composition_tracks_both_configuration_adapters(self):
+        fixture = registry({'id': 'reads', 'tests': ['TestAccRead']},
+                           service='ext_integration', package='./tests/integration/lab/ext_integration')
+        for path in ['msteams/teams_admin_api/configuration_diagnostics/service.go',
+                     'msteams/teams_admin_api/teams_feedback_policy/models.go',
+                     'tests/integration/lab/configuration_diagnostics/recovery.go',
+                     'msteams/teams_admin_api/ai_agents/models.go',
+                     'msteams/teams_admin_api/call_templates/service.go']:
+            with self.subTest(path=path):
+                self.assertEqual(ci.changed_services(fixture, [path], fixture), ['ext_integration'])
+        self.assertEqual(ci.changed_services(fixture, ['README.md'], fixture), [])
+
     def test_skip_selection_requires_exact_registered_names_and_public_reasons(self):
         suites = registry({'id': 'crud', 'tests': ['TestAccRead', 'TestAccPhone']})
         with tempfile.TemporaryDirectory() as directory:
@@ -874,6 +900,103 @@ func TestAccRead(t *testing.T) {
         events.remove(next(event for event in events if event.get('Output') == oracle))
         self.assertEqual(ci.evaluate(events, [name], 0, proof='owned-notification-crud')['outcome'], 'failed')
 
+
+
+class ExtFixtureExportGuardTests(unittest.TestCase):
+    def fixture(self, root, name='integration_generic_get.json'):
+        path = root / 'msteams/teams_admin_api/configuration_diagnostics/testdata' / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return path
+
+    def test_exports_only_changed_allowlisted_sanitized_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            existing = self.fixture(root, 'existing.json')
+            existing.write_text('{}')
+            before = ci.ext_fixture_state(root)
+            current = self.fixture(root)
+            current.write_text('{"Identity":"Tag:fixture-policy","Enabled":false,"Items":[],"Future":null}')
+            receipt = self.fixture(root, 'integration_create_201.body')
+            receipt.write_bytes(b'')
+            private = root / 'private/journals'
+            private.mkdir(parents=True)
+            (private / 'owned.json').write_text('{"secret":"private-journal"}')
+            reports = root / 'reports'
+            ci.capture_ext_fixtures(root, reports, before, 'a' * 40)
+            manifest = json.loads((reports / 'response-fixtures.json').read_text())
+            self.assertEqual(manifest['revision'], 'a' * 40)
+            self.assertEqual(len(manifest['files']), 2)
+            for entry in manifest['files']:
+                payload = (reports / entry['artifact']).read_bytes()
+                self.assertEqual(entry['sha256'], ci.hashlib.sha256(payload).hexdigest())
+            self.assertEqual(len(list((reports / 'response-fixtures').rglob('*.*'))), 2)
+            self.assertNotIn('private-journal', ''.join(p.read_text() for p in reports.rglob('*') if p.is_file()))
+
+    def test_rejects_unexpected_outputs_and_nonempty_raw_receipts(self):
+        for name, body in [('recovery.json', b'{}'), ('integration_create_201.body', b'private-body'), ('integration_generic_get.txt', b'{}')]:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory).resolve()
+                self.fixture(root, name).write_bytes(body)
+                with self.assertRaises(ci.AcceptanceFailure):
+                    ci.capture_ext_fixtures(root, root / 'reports', {}, 'a' * 40)
+                self.assertFalse((root / 'reports').exists())
+
+    def test_rejects_unsanitized_or_malformed_json_before_export(self):
+        bodies = ['not-json', '"scalar"', '{"id":"11111111-1111-4111-8111-111111111111"}',
+                  '{"contact":"private-user@private.example"}', '{"value":"eyJprivate.payload.signature"}',
+                  '{"client_secret":"private-value"}']
+        for body in bodies:
+            with self.subTest(body=body), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory).resolve()
+                self.fixture(root).write_text(body)
+                with self.assertRaises(ci.AcceptanceFailure):
+                    ci.capture_ext_fixtures(root, root / 'reports', {}, 'a' * 40)
+                self.assertFalse((root / 'reports').exists())
+
+    def test_rejects_file_bound_and_symlink_or_escape_paths(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            path = self.fixture(root)
+            path.write_bytes(b' ' * (ci.EXT_FIXTURE_LIMIT + 1))
+            with self.assertRaises(ci.AcceptanceFailure):
+                ci.ext_fixture_state(root)
+            path.write_text('{}')
+            # Exercise the same filesystem observations on platforms that do
+            # not permit an unprivileged test process to create real symlinks.
+            original = Path.is_symlink
+            with patch.object(Path, 'is_symlink', lambda value: value == path or original(value)):
+                with self.assertRaises(ci.AcceptanceFailure):
+                    ci.ext_fixture_state(root)
+            reports = root / 'reports'
+            with patch.object(Path, 'is_symlink', lambda value: value == reports or original(value)):
+                with self.assertRaises(ci.AcceptanceFailure):
+                    ci.capture_ext_fixtures(root, reports, {}, 'a' * 40)
+            source_directory = path.parent
+            original_resolve = Path.resolve
+            def resolve(value, *args, **kwargs):
+                return root / 'outside' if value == source_directory else original_resolve(value, *args, **kwargs)
+            with patch.object(Path, 'resolve', resolve):
+                with self.assertRaises(ci.AcceptanceFailure):
+                    ci.ext_fixture_state(root)
+
+    def test_writer_opt_in_is_scoped_to_ext_integration(self):
+        for service in ['svc', 'ext_integration']:
+            with self.subTest(service=service), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory).resolve()
+                private = root / 'private'
+                private.mkdir()
+                (root / 'suites.json').write_text(json.dumps(registry({'id':'reads','tests':['TestAccRead']}, service=service)))
+                environments = []
+                def process(command, **kwargs):
+                    if command[0] == 'git':
+                        return subprocess.CompletedProcess(command, 0, stdout='a' * 40)
+                    environments.append(kwargs['env'])
+                    kwargs['stdout'].write(json.dumps({'Test':'TestAccRead','Action':'pass'}) + '\n')
+                    return subprocess.CompletedProcess(command, 0)
+                args = argparse.Namespace(auth=False,service=service,step=None,report_directory=root/'reports')
+                with patch.object(ci,'ROOT',root), patch.object(ci,'HERE',root), patch.dict(os.environ,{'MSTEAMS_LAB_PRIVATE_DIRECTORY':str(private),'MSTEAMS_UPDATE_TESTDATA':'1'},clear=True), patch.object(ci.subprocess,'run',side_effect=process), contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(ci.run(args), 0)
+                self.assertEqual(environments[0].get('MSTEAMS_UPDATE_TESTDATA'), '1' if service=='ext_integration' else None)
 
 if __name__ == '__main__':
     unittest.main()

@@ -379,13 +379,9 @@ func TestUnitTypedGPARequestHelper(t *testing.T) {
 			test := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: mapping(f.Operation), Steps: []contracttest.Exchange{wire(f.Operation, c.Method, strings.TrimPrefix(c.Url, base), input, f.Status, f.Response)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				return invoke(ctx, sdk, f.Operation, f.Allow)
 			}}
-			switch f.Name {
-			case "read-denied", "create-denied":
-				test.Want.Error = auth.ErrForbidden
-			case "read-malformed", "read-empty", "list-envelope":
-				test.Want.Error = client.ErrDecode
-			default:
-				test.Want.JSON = json.RawMessage(f.Response)
+			// Success/decode contracts have separate source-authored vectors.
+			if f.Status != 400 || f.Response != "" {
+				t.Fatal("rejected-wire vector unexpectedly contains a response contract")
 			}
 			test.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			run(t, test)
@@ -410,12 +406,6 @@ func TestUnitGPAEncodesSegmentsAndThresholdSeparately(t *testing.T) {
 	}
 	run(t, contracttest.Case{Name: "opaque-job-id", Mappings: mapping("read"), Steps: []contracttest.Exchange{wire("read", "GET", "directAssignmentsMigration/tag%3AFixture%20%2F%20Job%3F%23", nil, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		v, r, e := sdk.TeamsAdminAPI.AssignmentMigrations.GetByID(ctx, "tag:Fixture / Job?#")
-		if e == nil {
-			state, ok := v.State.Text()
-			if !ok || state != "Future" || string(v.RawFields["Future"]) != "false" {
-				e = errors.New("open state or future data lost")
-			}
-		}
 		return contracttest.Observation{Value: v, Response: r, Err: e}
 	}, Want: contracttest.Expected{APIError: &client.
 		APIError{Backend: client.TeamsAdmin,

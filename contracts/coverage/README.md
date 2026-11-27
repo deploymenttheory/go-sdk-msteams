@@ -73,9 +73,8 @@ python tools/coverage/ledger.py --require-complete
 
 Output is machine-readable JSON; failures exit nonzero. Normal CI checks integrity while
 allowing incomplete work. The release mode rejects unresolved scope and any non-excluded
-entry without complete implementation and contract evidence. `complete` includes the
-single approved exclusion; `implemented`, `contract_tested` and `excluded` are reported
-separately. Implementation, contract and live counts are reported from the current ledger.
+entry without complete implementation and contract evidence. `complete` includes approved exclusions;
+`implemented`, `contract_tested` and `excluded` are reported separately. Implementation, contract and live counts are reported from the current ledger.
 Existing service code and passing individual scenarios do not by themselves prove
 complete command/parameter-set qualification. The publication preview remains historical; it is not regenerated for each
 implementation change.

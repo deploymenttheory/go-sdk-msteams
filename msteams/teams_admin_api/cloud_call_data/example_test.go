@@ -6,6 +6,7 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
+	cloud "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/cloud_call_data"
 )
 
 // This example compiles a real SDK workflow. It performs no network operation
@@ -27,7 +28,7 @@ func ExampleService_Get() {
 	_ = token
 }
 
-// Create sets up the tenant's connection once; the module cannot remove it.
+// Create invokes the action once; returned models are not presumed newly owned.
 func ExampleService_Create() {
 	connect := func(ctx context.Context, sdk *msteams.Client) (*string, error) {
 		connection, _, err := sdk.TeamsAdminAPI.CloudCallData.Create(ctx)
@@ -37,4 +38,20 @@ func ExampleService_Create() {
 		return connection.Token, nil
 	}
 	_ = connect
+}
+
+func ExampleService_List() {
+	read := func(ctx context.Context, sdk *msteams.Client) ([]*cloud.Connection, error) {
+		values, _, err := sdk.TeamsAdminAPI.CloudCallData.List(ctx)
+		return values, err // Preserve every returned model; never print its token.
+	}
+	_ = read
+}
+
+func ExampleService_CreateWithResult() {
+	create := func(ctx context.Context, sdk *msteams.Client) (*cloud.CreateResult, error) {
+		result, _, err := sdk.TeamsAdminAPI.CloudCallData.CreateWithResult(ctx)
+		return result, err // Retain even accepted/uncertain results; do not replay blindly.
+	}
+	_ = create // Compiles without creating a connection.
 }
