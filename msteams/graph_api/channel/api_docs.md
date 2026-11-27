@@ -17,6 +17,16 @@ the root client's tenant, selected Graph cloud and Graph audience.
 | `ResolveByDisplayName`, `UpdateByDisplayName`, `DeleteByDisplayName` | Complete unique hosted-name lookup and optional ID-based mutation |
 | `ResumeOperation` | Local reopening of a validated beta team-operation location |
 
+`CreateWithOwner` retains `OwnerResolution` and its last `OwnerResponse` alongside
+the creation result. If a later local owner guard or cancellation prevents the
+POST, `Response` retains that preparation response. When POST returns an HTTP
+response, `Response` describes creation while `OwnerResponse` remains independently
+available, including on denial or accepted malformed output. A directory read
+does not establish creation eligibility. Primitive `Create` has no resolution
+metadata; no retry or compensation is added by the composition.
+If creation produces no HTTP response, the fallback is a lookup receipt; it does
+not establish the creation outcome.
+
 IDs remain opaque channel strings and are escaped as individual segments. Team
 and owner directory IDs must be UUIDs. Creation defaults to `standard`; only
 standard/private/shared are writable membership types. Owner input is allowed

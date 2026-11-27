@@ -16,11 +16,17 @@ import (
 )
 
 // CreateResult distinguishes a completed standard/private channel from an
-// accepted shared-channel operation. Response survives extraction failures.
+// accepted shared-channel operation. Response survives extraction failures and
+// retains the last preparation response if creation produces no HTTP response.
 type CreateResult struct {
 	Channel   *Channel
 	Operation *client.Operation
 	Response  *resty.Response
+
+	// CreateWithOwner retains the resolver result and its last HTTP response
+	// independently of the POST result. Primitive Create leaves these nil.
+	OwnerResolution *directoryuser.Resolution
+	OwnerResponse   *resty.Response
 }
 
 func (CreateResult) String() string     { return "channel creation result (redacted)" }
@@ -133,10 +139,15 @@ func (s *Service) CreateWithOwner(ctx context.Context, teamID string, value Crea
 	}
 	resolved, response, err := directoryuser.NewResolver(s.scope).Resolve(ctx, owner, options)
 	if err != nil {
-		return CreateResult{Response: response}, err
+		return CreateResult{Response: response, OwnerResolution: &resolved, OwnerResponse: response}, err
 	}
 	value.OwnerUserID = &resolved.ID
-	return s.Create(ctx, teamID, value)
+	result, err := s.Create(ctx, teamID, value)
+	result.OwnerResolution, result.OwnerResponse = &resolved, response
+	if result.Response == nil {
+		result.Response = response
+	}
+	return result, err
 }
 
 var (
