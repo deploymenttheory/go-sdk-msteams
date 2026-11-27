@@ -58,3 +58,16 @@ closure remains separate from common TRPS implementation evidence; no universal
 Modern selection, retired legacy transport or public-parameter behavior is
 inferred from the descriptor alone. No Get-CsTenant flags or live state change
 in this foundation.
+
+## Executed foundation checks
+
+At source checkpoint `863d41c`, the five selected SDK/root/lab packages passed
+131 test/subtest events with no test failures or skips; the administration
+composition package has no test files. The same package selection passed
+configured lint with zero issues using Go 1.27.4. The root review independently
+reproduced the exact nine-case wire-profile packet and checked all fourteen
+embedded foundation/supplement producer hashes and two shared handoff references.
+See the [revision-bound execution record](../../../contracts/coverage/evidence/ext90-tenant-wire-execution.json).
+
+This validates the bounded wire foundation. Public projection, dispatch and
+full-command qualification retain the separate limitations above.
