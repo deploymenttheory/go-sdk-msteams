@@ -122,12 +122,11 @@ func (s *Service) Update(ctx context.Context, value UpdateRequest) (*resty.Respo
 	return response, nil
 }
 
-// SetSideloadedAppsInteraction is Set-CsTeamsSettingsCustomApp: it reads the
-// current settings, then PUTs the six boolean switches and
-// appAccessRequestConfig from that read with isSideloadedAppsInteractionEnabled
-// replaced and an empty appSettingsList. The Lob* branding strings are not
-// sent, matching the module, whose case-sensitive deserializer never reads the
-// service's camelCase lob* names. The two requests are not atomic.
+// SetSideloadedAppsInteraction is the existing enhanced read/modify/write
+// convenience. It uses strict full-document decoding, preserves nested unknown
+// config properties and omits branding. For the pinned source projection, use
+// PrepareSideloadedAppsInteraction and UpdateSideloadedAppsInteraction. The read
+// and write are not atomic, and PUT is never automatically replayed.
 func (s *Service) SetSideloadedAppsInteraction(ctx context.Context, enabled bool) (*resty.Response, error) {
 	if err := s.check(ctx); err != nil {
 		return nil, err

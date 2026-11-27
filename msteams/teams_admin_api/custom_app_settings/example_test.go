@@ -37,3 +37,20 @@ func ExampleService_GetSideloadedAppsInteraction() {
 	}
 	_ = read // Compiles without selecting credentials or reading a tenant.
 }
+
+// Inspect the source projection before applying its frozen body. These are
+// separate requests; the caller must account for concurrent settings changes.
+func ExampleService_PrepareSideloadedAppsInteraction() {
+	update := func(ctx context.Context, sdk *msteams.Client) error {
+		service := sdk.TeamsAdminAPI.CustomAppSettings
+		prepared, _, err := service.PrepareSideloadedAppsInteraction(ctx, false)
+		if err != nil {
+			return err
+		}
+		projection := prepared.Projection()
+		_ = projection.OmittedPaths // Inspect explicitly; default formatting is redacted.
+		_, _, err = service.UpdateSideloadedAppsInteraction(ctx, prepared)
+		return err // Preserve receipts in applications that may need reconciliation.
+	}
+	_ = update // Compiles without selecting credentials or mutating a tenant.
+}

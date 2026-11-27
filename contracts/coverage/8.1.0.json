@@ -42204,26 +42204,30 @@
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/622/parameter_sets/0",
           "symbols": [
             {
-              "file": "msteams/teams_admin_api/custom_app_settings/service.go",
-              "name": "Service.SetSideloadedAppsInteraction"
+              "file": "msteams/teams_admin_api/custom_app_settings/projection.go",
+              "name": "Service.PrepareSideloadedAppsInteraction"
             },
             {
-              "file": "msteams/teams_admin_api/custom_app_settings/service.go",
-              "name": "Service.Update"
+              "file": "msteams/teams_admin_api/custom_app_settings/projection.go",
+              "name": "Service.UpdateSideloadedAppsInteraction"
+            },
+            {
+              "file": "msteams/teams_admin_api/custom_app_settings/projection.go",
+              "name": "ProjectSideloadedAppsInteraction"
             }
           ],
           "contract_tests": [
             {
-              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
-              "name": "TestUnitCustomAppSettingsSetUsesTheModuleReadReplaceFlow"
+              "file": "msteams/teams_admin_api/custom_app_settings/projection_test.go",
+              "name": "TestUnitSourceSetProjection"
             },
             {
-              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
-              "name": "TestUnitCustomAppSettingsUpdateSendsTheGivenDocument"
+              "file": "msteams/teams_admin_api/custom_app_settings/projection_test.go",
+              "name": "TestUnitPreparedSourceSet"
             },
             {
-              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
-              "name": "TestUnitCustomAppSettingsFailuresStayTyped"
+              "file": "msteams/teams_admin_api/custom_app_settings/projection_test.go",
+              "name": "TestUnitSourceSetPrepareFailure"
             }
           ],
           "live_tests": [
@@ -42245,6 +42249,18 @@
           {
             "file": "msteams/teams_admin_api/custom_app_settings/service.go",
             "name": "Service.Update"
+          },
+          {
+            "file": "msteams/teams_admin_api/custom_app_settings/projection.go",
+            "name": "Service.PrepareSideloadedAppsInteraction"
+          },
+          {
+            "file": "msteams/teams_admin_api/custom_app_settings/projection.go",
+            "name": "Service.UpdateSideloadedAppsInteraction"
+          },
+          {
+            "file": "msteams/teams_admin_api/custom_app_settings/projection.go",
+            "name": "ProjectSideloadedAppsInteraction"
           }
         ]
       },
@@ -42252,7 +42268,9 @@
         "status": "metadata-only",
         "evidence": [
           "docs/implementation/ext/app-catalog-contract-notes.md",
-          "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json"
+          "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json",
+          "docs/implementation/ext/evidence/custom-app-set-header-source.json",
+          "docs/implementation/ext/evidence/custom-app-set-projection-source.json"
         ]
       },
       "live": {

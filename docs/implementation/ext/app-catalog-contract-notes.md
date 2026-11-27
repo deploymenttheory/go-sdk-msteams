@@ -189,3 +189,24 @@ including both malformed scalar observations, while errors remain errors.
 This independently reviewed Get is implemented/contract-passed in the ledger.
 Set and live states remain unchanged. A replayed real read body is evidence of
 this revision's parsing, not a newly executed tenant operation or authorization test.
+
+
+## Source-compatible custom Set preparation
+
+The new pure projection and explicit prepare/apply API close the known nested
+config and PascalCase branding differences without changing the existing enhanced
+convenience or its authorized lab selection. Twelve pinned pure DTO/serializer
+observations are replayed from `testdata/pinned-set-projection.json`; their replies
+are controlled source vectors, not tenant observations. The exact child Get header
+is source-traced, not an intercepted live request. See
+[evidence](evidence/custom-app-set-header-source.json) and
+[projection distinctions](evidence/custom-app-set-projection-source.json).
+
+Prepared requests bind to their exact service and own frozen body/snapshot copies.
+Tests cover forbidden/malformed preparation, foreign-service rejection, cancellation
+before the PUT, retained independent receipts, source 204 success, unsupported 200
+acceptance and 403 failure. Session 90802 passed the full custom-app package's
+TestUnit/Example selection after explicit expected-status fields were corrected in
+the new harness cases. This is offline execution, not proof of tenant persistence.
+The Set ledger state remains unchanged pending individual full-source/set review
+and revision-bound execution evidence.
