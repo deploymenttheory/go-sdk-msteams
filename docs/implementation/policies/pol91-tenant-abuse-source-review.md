@@ -1,3 +1,5 @@
+> Historical qualification statements below are superseded by the [read-contract withdrawal](pol91-completion-audit.md#qualification-withdrawal-and-finite-repair-queue). Own decoder corrections and requalification are pending; historical execution scopes remain valid.
+
 # POL91 TenantAbuse nullable-list boundary
 
 Scope: the two direct compiled Get/Set-CsTeamsTenantAbuseConfiguration commands,

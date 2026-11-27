@@ -1,3 +1,5 @@
+> Historical qualification statements below are superseded by the [read-contract withdrawal](pol91-completion-audit.md#qualification-withdrawal-and-finite-repair-queue). Own decoder corrections and requalification are pending; historical execution scopes remain valid.
+
 # POL91 first six compiled command contracts
 
 Review scope: Get/Set for Teams client, privacy and online voicemail validation, six commands / nine sets. This is the source and execution basis for individual decisions; the wider POL91 scope remains 39 commands / 59 sets. No decision is inferred merely from a symbol or test mapping.
