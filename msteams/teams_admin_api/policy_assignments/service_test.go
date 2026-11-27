@@ -76,9 +76,6 @@ func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.
 	s := sdk.TeamsAdminAPI.PolicyAssignments
 	var o contracttest.Observation
 	groupID, policyType := "fixture/group:@", "Fixture/Policy:@"
-	if name == "group-get-null" || name == "group-get-malformed" || name == "group-forbidden" || name == "group-create-malformed" {
-		groupID, policyType = "fixture/group", "Fixture"
-	}
 	switch {
 	case name == "batch-list" || name == "batch-list-null":
 		o.Value, o.Response, o.Err = s.ListBatches(ctx, "")
@@ -96,15 +93,8 @@ func invoke(name string, ctx context.Context, sdk *msteams.Client) contracttest.
 		o.Value, o.Response, o.Err = s.GetUser(ctx, "fixture/user:@", "Fixture /?&:@")
 	case name == "user-effective-all":
 		o.Value, o.Response, o.Err = s.GetUser(ctx, "fixture/user:@", "")
-	case strings.HasPrefix(name, "group-create"):
-		settings := resource.GroupSettings{}
-		if name == "group-create" {
-			settings.PolicyName, settings.Priority = policy.Set("Fixture"), policy.Set(int32(0))
-		}
-		if name == "group-create-empty-name-negative-rank" || name == "group-create-malformed" {
-			settings.PolicyName, settings.Priority = policy.Set(""), policy.Set(int32(-1))
-		}
-		o.Value, o.Response, o.Err = s.CreateGroup(ctx, groupID, policyType, settings)
+	case name == "group-create":
+		o.Value, o.Response, o.Err = s.CreateGroup(ctx, groupID, policyType, resource.GroupSettings{PolicyName: policy.Set("Fixture"), Priority: policy.Set(int32(0))})
 	case strings.HasPrefix(name, "group-update"):
 		settings := resource.GroupSettings{}
 		if name == "group-update" {
@@ -162,8 +152,6 @@ func TestUnitAssignmentRequestVectors(t *testing.T) {
 		{name: "user-effective", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.User/users/fixture%2Fuser%3A%40/policies?policyType=Fixture%20%2F%3F%26%3A%40", body: nil},
 		{name: "user-effective-all", method: "GET", url: "https://api.interfaces.records.teams.microsoft.com/Skype.User/users/fixture%2Fuser%3A%40/policies", body: nil},
 		{name: "group-create", method: "PUT", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: json.RawMessage("{\"policyName\":\"Fixture\",\"priority\":0}")},
-		{name: "group-create-empty", method: "PUT", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: json.RawMessage("{}")},
-		{name: "group-create-empty-name-negative-rank", method: "PUT", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: json.RawMessage("{\"policyName\":\"\",\"priority\":-1}")},
 		{name: "group-delete", method: "DELETE", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: nil},
 		{name: "group-delete-no-content", method: "DELETE", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: nil},
 		{name: "group-update", method: "PATCH", url: "https://api.interfaces.records.teams.microsoft.com/Skype.Policy/groupPolicyAssignments/fixture%2Fgroup%3A%40/policyTypes/Fixture%2FPolicy%3A%40", body: json.RawMessage("{\"policyName\":\"UpdatedFixture\",\"priority\":0}")},

@@ -24,7 +24,7 @@ func TestUnitAssignmentInputAndContextBeforeCredentials(t *testing.T) {
 			if _, _, e := s.GetGroup(ctx, id, "Fixture"); !errors.Is(e, resource.ErrInput) {
 				return contracttest.Observation{Err: errors.New("invalid group identity accepted")}
 			}
-			if _, _, e := s.CreateGroup(ctx, "fixture-group", id, resource.GroupSettings{}); !errors.Is(e, resource.ErrInput) {
+			if _, _, e := s.CreateGroup(ctx, "fixture-group", id, resource.GroupSettings{PolicyName: policy.Set("Fixture")}); !errors.Is(e, resource.ErrInput) {
 				return contracttest.Observation{Err: errors.New("invalid policy type accepted")}
 			}
 			if _, _, e := s.GetBatch(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -73,6 +73,8 @@ func TestUnitAssignmentWritesKeepDenialAndNeverReplay(t *testing.T) {
 		for _, status := range []int{401, 403, 429, 500, 503} {
 			method, command, path, body := "PUT", "New-CsGroupPolicyAssignment", "/Skype.Policy/groupPolicyAssignments/fixture-group/policyTypes/Fixture", json.RawMessage(`{}`)
 			switch operation {
+			case "create":
+				body = json.RawMessage(`{"policyName":"Fixture"}`)
 			case "update":
 				method, command = "PATCH", "Set-CsGroupPolicyAssignment"
 			case "delete":
@@ -85,7 +87,7 @@ func TestUnitAssignmentWritesKeepDenialAndNeverReplay(t *testing.T) {
 				var o contracttest.Observation
 				switch operation {
 				case "create":
-					o.Value, o.Response, o.Err = s.CreateGroup(ctx, "fixture-group", "Fixture", resource.GroupSettings{})
+					o.Value, o.Response, o.Err = s.CreateGroup(ctx, "fixture-group", "Fixture", resource.GroupSettings{PolicyName: policy.Set("Fixture")})
 				case "update":
 					o.Value, o.Response, o.Err = s.UpdateGroup(ctx, "fixture-group", "Fixture", resource.GroupSettings{})
 				case "delete":

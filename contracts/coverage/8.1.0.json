@@ -24297,6 +24297,14 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/group_response_test.go",
               "name": "TestUnitGroupWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/group_mutation_protocol_test.go",
+              "name": "TestUnitGroupMutationHandlesPreserveAcceptanceWithoutPolling"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/group_mutation_protocol_test.go",
+              "name": "TestUnitGroupCreateRequiresPolicyNameBeforeCredentials"
             }
           ],
           "live_tests": []
@@ -30826,6 +30834,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/group_response_test.go",
               "name": "TestUnitGroupWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/group_mutation_protocol_test.go",
+              "name": "TestUnitGroupMutationHandlesPreserveAcceptanceWithoutPolling"
             }
           ],
           "live_tests": []
