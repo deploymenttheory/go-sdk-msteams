@@ -11,8 +11,9 @@ positional string. Both commands are public proxy `Function`s whose
 `CmdletType: Remoting`, `AutoRestModuleName: Microsoft.Teams.ConfigAPI.Cmdlets`,
 `DefaultAutoRestParameters.ConfigType: TeamsGuestCallingConfiguration` and
 `ModernCmdlet: Get-CsConfigurationModern` / `Set-CsConfigurationModern`. This is
-the same dispatch already qualified for TeamsMigrationConfiguration and
-TeamsShiftsAppPolicy, so the generated ConfigAPI routes apply:
+a session-flight-dependent dispatch with an explicit modern candidate. The
+observed native/module acceptance below covers these modern routes; mapping
+alone does not qualify the legacy server contract:
 
 - GET `/Skype.Policy/configurations/TeamsGuestCallingConfiguration` (bare list)
 - GET `/Skype.Policy/configurations/TeamsGuestCallingConfiguration/configuration/{Identity}`

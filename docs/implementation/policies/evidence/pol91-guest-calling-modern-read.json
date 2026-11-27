@@ -1,0 +1,301 @@
+{
+  "scope": "Pure own GuestCalling modern received-JSON/presentation stages only; no Broadcast-only exposure selector. Not whole-command, generated response parser, flight dispatch, legacy or tenant execution.",
+  "helper_source_sha256": "03dbc3a85e12c98dd1807d604782c6a90d0656569541cd9540738825a7fcb255",
+  "reproducer_sha256": "844813ee8bb49f9f90d9c3371be6549021858eab4d6d07a05f904231c8fa20f3",
+  "powershell_version": "7.6.6",
+  "extracted_functions": [
+    {
+      "name": "Custom-ToString",
+      "start_line": 421,
+      "end_line": 435
+    },
+    {
+      "name": "Convert-PsCustomObjectToPsObject",
+      "start_line": 437,
+      "end_line": 461
+    },
+    {
+      "name": "Get-FormatsForConfig",
+      "start_line": 463,
+      "end_line": 576
+    },
+    {
+      "name": "Set-FormatOnConfigObject",
+      "start_line": 578,
+      "end_line": 615
+    },
+    {
+      "name": "Sort-GlobalFirst",
+      "start_line": 411,
+      "end_line": 418
+    }
+  ],
+  "observations": [
+    {
+      "input_json": "{}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{}]",
+      "error": null
+    },
+    {
+      "input_json": "null",
+      "expose": false,
+      "stage": "format",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "input_json": "[]",
+      "expose": false,
+      "stage": "format",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "input_json": "[null]",
+      "expose": false,
+      "stage": "format",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.Management.Automation.ParameterBindingValidationException"
+    },
+    {
+      "input_json": "true",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[true]",
+      "error": null
+    },
+    {
+      "input_json": "37",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[37]",
+      "error": null
+    },
+    {
+      "input_json": "\"text\"",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[\"text\"]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"Global\",\"Future\":{\"x\":1}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"Global\",\"Future\":{\"x\":1}}]",
+      "error": null
+    },
+    {
+      "input_json": "[{\"Identity\":\"other\"},{\"Identity\":\"global\"},{\"Identity\":\"Global\"},{\"Identity\":\"Tag:x\"}]",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 4,
+      "projected_json": "[{\"Identity\":\"global\"},{\"Identity\":\"Global\"},{\"Identity\":\"other\"},{\"Identity\":\"Tag:x\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"identity\":\"second\"}",
+      "expose": false,
+      "stage": "json-and-psserializer",
+      "output_count": null,
+      "projected_json": null,
+      "error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"Identity\":\"second\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"second\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"Identity\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 0,
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":null}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":null}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":true}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":true}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":false}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":false}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":0}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":0}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":1}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":1}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":9007199254740993}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":9007199254740993}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":1.20}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":1.2}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":\"\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":\"\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":\"text\"}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":\"text\"}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":{}}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":{}}]",
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowPrivateCalling\":[]}",
+      "expose": false,
+      "stage": "complete",
+      "output_count": 1,
+      "projected_json": "[{\"AllowPrivateCalling\":[]}]",
+      "error": null
+    }
+  ],
+  "management_lifecycle_invoked": false,
+  "authentication_or_http": false
+}
