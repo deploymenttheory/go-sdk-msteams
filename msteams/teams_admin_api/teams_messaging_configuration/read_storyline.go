@@ -61,6 +61,6 @@ func (v *readStoryline) UnmarshalJSON(raw []byte) error {
 	if e != nil {
 		return client.ErrDecode
 	}
-	v.Value = new(Storyline(int32(value)))
+	v.Value = new(Storyline(int32(value))) //nolint:gosec // G115: pinned Enum.ToObject wraps Int64 tokens to Int32; own boundary vectors assert the intentional narrowing.
 	return nil
 }
