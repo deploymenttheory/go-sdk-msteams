@@ -34,7 +34,7 @@ func TestUnitReadsRetainAuthorizationAndDecodeFailures(t *testing.T) {
 				}})
 			}
 		}
-		for index, body := range []string{`{"Description":false}`, `[]`, `{`} {
+		for index, body := range []string{`{"Description":{}}`, `[]`, `{`} {
 			run(t, contracttest.Case{Name: fmt.Sprintf("read-decode-%s-%d", mode, index), Mode: mode, Steps: []contracttest.Exchange{compiledWire("GET", "/Skype.Policy/configurations/TeamsMeetingTemplateConfiguration/configuration/Global", "Get-CsTeamsMeetingTemplateConfiguration", nil, 200, body)}, Want: contracttest.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				_, r, e := sdk.TeamsAdminAPI.TeamsMeetingTemplateConfigurations.GetByIdentity(ctx, "Global")
 				return contracttest.Observation{Response: r, Err: e}
