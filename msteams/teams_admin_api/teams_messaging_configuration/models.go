@@ -102,6 +102,12 @@ func (v *Configuration) UnmarshalJSON(raw []byte) error {
 	}
 	fields, err := object(raw, func(key string, body json.RawMessage) error {
 		if strings.EqualFold(key, "FileTypeBlockList") && !bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
+			// JsonConvert ignores scalar assignments to this getter-only list. Objects
+			// still reject, while arrays populate the existing collection in wire order.
+			token := bytes.TrimSpace(body)
+			if len(token) > 0 && token[0] != '[' && token[0] != '{' {
+				return nil
+			}
 			var items []policyrp.ReadString
 			if json.Unmarshal(body, &items) != nil {
 				return client.ErrDecode
