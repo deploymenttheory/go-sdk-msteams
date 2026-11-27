@@ -70,3 +70,29 @@ The independent [13-row field-binding artifact](evidence/pol91-field-binding.jso
 All four client optional String null arguments remain null in bound parameters and actual DTO/resolver output; RestrictedSenderList uses an explicit literal-null invocation and the other three use compiled hashtable splatting. Empty and literal-space strings remain unchanged. Validation URI literal null remains null and serializes null; explicit empty reaches the actual URI setter's PropertyArgumentException, while HTTPS input succeeds. Client Nullable<Boolean> literal-null/literal-false and validation compiled-splat null/false remain null/false. The artifact records each binding_form; 13 final rows match the initial compiled-splat results after excluding that invocation-form annotation. This closes the public-binder versus nullable DTO distinction for these six commands rather than assuming model serialization alone settles argument conversion. Native early path safety and caller-controlled error/confirmation boundaries remain separately documented.
 
 The 13-row artifact directly covers **client and validation**, not direct Privacy binder invocations. Privacy's own four Nullable<Boolean> effective parameter/model metadata (independent metadata check `37828`) and its actual DTO/resolver null/false/omission probe above form its direct source basis. The compiled Nullable<Boolean> binder rows are shared supporting behavior only. No direct Privacy literal-argument invocation is claimed by that artifact.
+
+## Next finite review: Education accepted responses
+
+The pinned `SetTeamsEducationConfigurationCmdlet` is another direct compiled
+PolicyRp command. Fresh effective metadata resolves exactly three setting
+parameters and Core DTO properties as `System.String`:
+ParentGuardianPreferredContactMethod, EduGenerativeAIEnhancements and
+UpdateParentInformation. Each has only ParameterAttribute; no extra enum,
+nonempty or transformation attribute is present. Their actual DTO setters are
+plain stores at IL2 followed by return7. The concrete AreParametersSpecified
+checks BoundParameters.ContainsKey at IL16/39/62, so selected null and empty are
+settings while omission is not. This uses the same verified Core/PolicyRp
+hashes and portable metadata/IL reproduction above; it is not a server-value
+eligibility claim or a substitute for literal public binder execution.
+
+The existing retained selected/list read fixtures already reach typed Get
+success. Controlled 400 request probes remain correctly labeled rejections;
+prepared Update previously reached only read/patch failures. New
+`TestUnitEducationSparsePatchAndPreparedUpdateAcceptedResponses` authors a
+sparse typed PATCH200 reply and malformed string-property200, asserting distinct
+route/body identity, null/empty/omitted fields, future/raw retention and
+ErrDecode with the raw HTTP receipt. It separately replays the permanent Global
+read before authored empty PATCH204 and checks Before/read receipt versus
+HTTPAccepted, with no After or persistence claim. No tenant request, fixture
+capture or ledger status promotion accompanies this added branch. Execution
+will be bound to its committed source checkpoint before qualification decisions.
