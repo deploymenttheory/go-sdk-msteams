@@ -158,3 +158,11 @@ not a test failure or a successful Go check. Existing remote PR CI supplies the
 next execution evidence; Find-CsGroup remains unqualified until that evidence
 and final review are complete. The 13 previously approved EXT contracts and all
 live records remain unchanged.
+
+
+The [final one-command decision](find-group-decision-review.md) supersedes the
+publication-time pending status with actual remote execution: head 3ab0f62 at
+CI merge 0b87d927 passed build/vet/offline-unit/race on all three platforms.
+Independent review approved Find-CsGroup's implementation and sole ordinary
+set contract only. All other tenant-family qualifications and all live states
+remain unchanged; no local Go execution is inferred from that CI evidence.

@@ -1093,11 +1093,11 @@ Contract and live limitations: [tenant-identity-contract-notes.md](tenant-identi
 
 ### Find-CsGroup
 
-Owner: `EXT-29`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-29`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
-| `__AllParameterSets` | [`Service.SearchGroups`](../../../msteams/teams_admin_api/tenant_identity/service.go) | [`TestUnitTenantIdentityReadsUseAcceptanceResponses`](../../../msteams/teams_admin_api/tenant_identity/service_test.go)<br>[`TestUnitTenantIdentityDenialsUseAcceptanceResponses`](../../../msteams/teams_admin_api/tenant_identity/service_test.go)<br>[`TestUnitTenantIdentitySuccessShapesPreserveFields`](../../../msteams/teams_admin_api/tenant_identity/service_test.go)<br>[`TestUnitTenantIdentityRejectsInputBeforeIO`](../../../msteams/teams_admin_api/tenant_identity/service_test.go)<br>[`ExampleService_SearchGroups`](../../../msteams/teams_admin_api/tenant_identity/example_test.go) | [`TestAccTenantIdentityReads`](../../../tests/integration/lab/tenant_identity/tenant_identity_test.go) |
+| `__AllParameterSets` | [`Service.SearchGroups`](../../../msteams/teams_admin_api/tenant_identity/service.go) | [`TestUnitTenantIdentityReadsUseAcceptanceResponses`](../../../msteams/teams_admin_api/tenant_identity/service_test.go)<br>[`TestUnitTenantIdentityDenialsUseAcceptanceResponses`](../../../msteams/teams_admin_api/tenant_identity/service_test.go)<br>[`TestUnitTenantIdentitySuccessShapesPreserveFields`](../../../msteams/teams_admin_api/tenant_identity/service_test.go)<br>[`TestUnitTenantIdentityRejectsInputBeforeIO`](../../../msteams/teams_admin_api/tenant_identity/service_test.go)<br>[`ExampleService_SearchGroups`](../../../msteams/teams_admin_api/tenant_identity/example_test.go)<br>[`TestUnitFindGroupPublicProjectionUsesPinnedModelAndGUIDRules`](../../../msteams/teams_admin_api/tenant_identity/group_projection_test.go)<br>[`TestUnitFindGroupRootClientProjectionRetainsEveryReceipt`](../../../msteams/teams_admin_api/tenant_identity/group_projection_test.go)<br>[`TestUnitFindGroupSourceQueryBindingAndExactStatus`](../../../msteams/teams_admin_api/tenant_identity/group_projection_test.go) | [`TestAccTenantIdentityReads`](../../../tests/integration/lab/tenant_identity/tenant_identity_test.go) |
 
 Recorded live limitation: Client-secret lab run searched the owned acceptance group (exact match, unmatched and short-query rejection) with pinned PowerShell parity. Qualification across delegated callers has not run.
 

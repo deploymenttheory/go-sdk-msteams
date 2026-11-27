@@ -809,6 +809,18 @@
             {
               "file": "msteams/teams_admin_api/tenant_identity/example_test.go",
               "name": "ExampleService_SearchGroups"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/group_projection_test.go",
+              "name": "TestUnitFindGroupPublicProjectionUsesPinnedModelAndGUIDRules"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/group_projection_test.go",
+              "name": "TestUnitFindGroupRootClientProjectionRetainsEveryReceipt"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/group_projection_test.go",
+              "name": "TestUnitFindGroupSourceQueryBindingAndExactStatus"
             }
           ],
           "live_tests": [
@@ -820,7 +832,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -830,8 +842,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "docs/implementation/ext/evidence/find-group-3ab0f62-contract.json"
+        ]
       },
       "live": {
         "status": "not-run",
