@@ -1,6 +1,7 @@
 """Run TestAcc tests and print their results."""
 import argparse
 import functools
+import hashlib
 import importlib.util
 import io
 import json
@@ -102,6 +103,12 @@ AUTO_ATTENDANT_MARKERS = [
 ]
 AUTO_ATTENDANT_ORACLE = 'PowerShell 8.1.0 / Go auto attendant parity: passed'
 PROOFS = {
+    'ext-agent-template': (['EXT agent-template create/read-back: passed', 'EXT agent-template update/read-back: passed',
+                            'EXT agent-template independent cleanup: passed'],
+                           'PowerShell 8.1.0 / Go EXT agent-template parity: passed', 2),
+    'ext-integration': (['integrated EXT generic-to-typed read: passed', 'integrated EXT typed-to-generic update: passed',
+                         'integrated EXT generic replacement/read-back: passed', 'integrated EXT independent cleanup: passed'],
+                        'PowerShell 8.1.0 / Go integrated EXT parity: passed', 3),
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
     'owned-template-permission-populated-crud': (PROOF_MARKERS + ['policy hidden-list edit/read-back: passed','policy hidden-list clear/read-back: passed'], ORACLE_MARKER, 4),
@@ -228,7 +235,7 @@ def write_private(path, value):
 SERVICE_ROOT = 'msteams/teams_admin_api'
 # Partitions that are not teams_admin_api services: tenant/platform checks and
 # Microsoft Graph team resources.
-EXTRA_SERVICES = {'platform', 'graph'}
+EXTRA_SERVICES = {'platform', 'graph', 'ext_integration'}
 SERVICE_AUTH_METHOD = 'client-secret'
 # Each service partition's tests live in their own Go package here.
 LAB_ROOT = Path('tests/integration/lab')
@@ -640,6 +647,10 @@ def changed_services(registry, files, base_registry, references=None):
         sdk = re.compile(r'^msteams/[^/]+/' + re.escape(name) + '/')
         if (entry != base_services.get(name)
                 or any(path.startswith(package) or sdk.search(path) for path in files)
+                or (name == 'ext_integration' and any(
+                    path.startswith(prefix + dependency + '/')
+                    for path in files for prefix in ('msteams/teams_admin_api/', 'tests/integration/lab/')
+                    for dependency in ('configuration_diagnostics', 'teams_feedback_policy', 'ai_agents', 'call_templates')))
                 or oracles & set(references.get(name, ()))):
             selected.append(name)
     return selected
@@ -695,6 +706,99 @@ def plan(args):
     return 0
 
 
+
+EXT_FIXTURE_LABELS = {
+    'configuration_diagnostics': {'integration_create_201', 'integration_generic_get'},
+    'teams_feedback_policy': {'integration_typed_get', 'integration_replaced_get'},
+    'call_templates': {'ext_integration_create', 'ext_integration_create_201'},
+    'ai_agents': {'ext_integration_create', 'ext_integration_create_201', 'ext_integration_read'},
+}
+EXT_FIXTURE_LIMIT = 1 << 20
+
+
+def ext_fixture_state(root):
+    """Observe only four public testdata directories, never private lab data."""
+    root = root.resolve()
+    state = {}
+    total = 0
+    for service in EXT_FIXTURE_LABELS:
+        directory = root / 'msteams' / 'teams_admin_api' / service / 'testdata'
+        if directory.is_symlink() or directory.resolve() != directory:
+            raise AcceptanceFailure('EXT fixture source must not traverse symlinks')
+        if not directory.exists():
+            continue
+        for path in directory.iterdir():
+            if path.is_symlink() or not path.is_file() or path.stat().st_size > EXT_FIXTURE_LIMIT:
+                raise AcceptanceFailure('EXT fixture source must be bounded regular files')
+            with path.open('rb') as stream:
+                body = stream.read(EXT_FIXTURE_LIMIT + 1)
+            if len(body) > EXT_FIXTURE_LIMIT:
+                raise AcceptanceFailure('EXT fixture source exceeds file bound')
+            total += len(body)
+            if total > 16 * EXT_FIXTURE_LIMIT:
+                raise AcceptanceFailure('EXT fixture source exceeds aggregate bound')
+            state[path.relative_to(root).as_posix()] = body
+    return state
+
+
+def check_ext_fixture_json(body):
+    try:
+        value = json.loads(body)
+    except (ValueError, UnicodeError, RecursionError):
+        raise AcceptanceFailure('EXT response fixture is not valid JSON') from None
+    if not isinstance(value, (dict, list)):
+        raise AcceptanceFailure('EXT response fixture must be an object or collection')
+    guid = re.compile(r'(?i)[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}')
+    email = re.compile(r'[\w.+-]+@[\w.-]+\.[a-zA-Z]{2,}')
+    def check(node, key=''):
+        if isinstance(node, dict):
+            for name, child in node.items():
+                check(child, name)
+        elif isinstance(node, list):
+            for child in node:
+                check(child, key)
+        elif isinstance(node, str):
+            normalized = re.sub(r'[^a-z]', '', key.lower())
+            if any(part in normalized for part in ('password', 'secret', 'token', 'apikey', 'privatekey')) and node not in ('', 'fixture-secret', 'fixture-token'):
+                raise AcceptanceFailure('EXT response fixture contains an unsanitized credential field')
+            if any(not match.group().lower().startswith('00000000-0000-4000-8000-') for match in guid.finditer(node)) or any(not match.group().endswith('@example.invalid') for match in email.finditer(node)) or (node.startswith('eyJ') and node.count('.') == 2):
+                raise AcceptanceFailure('EXT response fixture contains unsanitized private data')
+    check(value)
+
+
+def capture_ext_fixtures(root, report_directory, before, revision):
+    """Export only changed, existing-writer sanitized JSON or empty receipts."""
+    after = ext_fixture_state(root)
+    changed = {name for name in set(before) | set(after) if before.get(name) != after.get(name)}
+    outputs = []
+    for name in sorted(changed):
+        path = Path(name)
+        service = path.parts[2]
+        if name not in after or path.stem not in EXT_FIXTURE_LABELS[service] or path.suffix not in ('.json', '.body'):
+            raise AcceptanceFailure('Unexpected EXT response fixture output')
+        body = after[name]
+        if path.suffix == '.body':
+            if body:
+                raise AcceptanceFailure('EXT non-JSON receipt must be empty')
+        else:
+            check_ext_fixture_json(body)
+        outputs.append((path, body))
+    if report_directory.is_symlink():
+        raise AcceptanceFailure('EXT fixture report directory must not be a symlink')
+    directory = report_directory.resolve() / 'response-fixtures'
+    if directory.is_symlink():
+        raise AcceptanceFailure('EXT fixture output must not traverse symlinks')
+    directory.mkdir(parents=True, exist_ok=True)
+    records = []
+    for path, body in outputs:
+        destination = directory / path.parts[2] / path.name
+        if destination.parent.is_symlink() or destination.is_symlink() or destination.parent.resolve() != directory / path.parts[2]:
+            raise AcceptanceFailure('EXT fixture output must not traverse symlinks')
+        destination.parent.mkdir(exist_ok=True)
+        destination.write_bytes(body)
+        records.append({'source': path.as_posix(), 'artifact': destination.relative_to(report_directory.resolve()).as_posix(), 'sha256': hashlib.sha256(body).hexdigest(), 'bytes': len(body)})
+    write_json(report_directory / 'response-fixtures.json', {'schema_version': 1, 'revision': revision, 'sanitizer': 'labkit.WriteResponseFixture', 'files': records})
+
 def run(args):
     private = Path(os.environ['MSTEAMS_LAB_PRIVATE_DIRECTORY']).resolve()
     registry = load_registry()
@@ -718,6 +822,7 @@ def run(args):
         # Certificate support is proven once by the auth partition; services
         # do not repeat it for every resource.
         raise AcceptanceFailure('Service partitions run with client-secret authentication only.')
+    fixture_before = ext_fixture_state(ROOT) if service == 'ext_integration' else None
     reports = []
     blocked = False
     for unit in units:
@@ -736,6 +841,8 @@ def run(args):
             'MSTEAMS_LAB_POWERSHELL_ORACLE': '1', 'MSTEAMS_LAB_AUTH_METHOD': mode,
             'MSTEAMS_LAB_ACCESS_PROFILE': 'teams-administrator', 'MSTEAMS_LIVE_ACCESS': '1',
         })
+        if service == 'ext_integration':
+            env['MSTEAMS_UPDATE_TESTDATA'] = '1'
         if (private / 'shared-calling-fixture.json').is_file():
             env['MSTEAMS_LAB_SHARED_CALLING_FIXTURE_FILE'] = str(private / 'shared-calling-fixture.json')
         pattern = '^(' + '|'.join(re.escape(test) for test in active) + ')$'
@@ -788,6 +895,8 @@ def run(args):
                'passed_tests': sum(test['outcome'] == 'pass' for report in reports for test in report['tests']),
                'skipped_tests': sum(test['outcome'] == 'skip' for report in reports for test in report['tests']),
                'suites': [{'name': r['suite'], 'outcome': r['outcome']} for r in reports], 'coverage_claim': False}
+    if fixture_before is not None:
+        capture_ext_fixtures(ROOT, args.report_directory, fixture_before, revision)
     write_json(args.report_directory / 'summary.json', summary)
     write_summary(reports)
     return 0 if summary['outcome'] in {'passed', 'skipped'} else 1

@@ -1,0 +1,22 @@
+{
+  "IvrTagsTemplate": {
+    "Name": "Fixture name",
+    "Id": "00000000-0000-4000-8000-000000000001",
+    "Description": "Fixture description",
+    "Tags": [
+      {
+        "TagName": "support",
+        "TagDetails": {
+          "Id": "fixture-record-de709232",
+          "Type": "ExternalPstn",
+          "DisplayName": null,
+          "EnableTranscription": false,
+          "EnableSharedVoicemailSystemPromptSuppression": false,
+          "ConfigurationEndpointType": null,
+          "SharedVoicemailHistoryTemplateId": null
+        }
+      }
+    ]
+  },
+  "Diagnostics": []
+}

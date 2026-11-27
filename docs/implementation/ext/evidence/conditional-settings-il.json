@@ -1,0 +1,1556 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "observation": "Read-only IL inspection. No command invocation, token or tenant operation. Exact method references and offsets support the resource-name, endpoint and model constraints.",
+  "sources": [
+    {
+      "base": "System.Object",
+      "methods": [
+        {
+          "method": "GetNormalizedNameForPolicyRP",
+          "references": [
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.Helpers.ConfigurationNameNormalization`1[TPolicy].TPolicy",
+              "kind": "InlineTok",
+              "offset": 1
+            },
+            {
+              "value": "type.System.Type GetTypeFromHandle(System.RuntimeTypeHandle)",
+              "kind": "InlineMethod",
+              "offset": 6
+            },
+            {
+              "value": "System.Reflection.MemberInfo.System.String get_Name()",
+              "kind": "InlineMethod",
+              "offset": 11
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.Helpers.ConfigurationNameNormalization`1[TPolicy].System.Collections.Generic.List`1[System.String] PolicyTypesNeedsNormalization",
+              "kind": "InlineField",
+              "offset": 17
+            },
+            {
+              "value": "System.Collections.Generic.List[string].Boolean Contains(System.String)",
+              "kind": "InlineMethod",
+              "offset": 23
+            },
+            {
+              "value": "brfalse.s",
+              "kind": "opcode",
+              "offset": 30
+            },
+            {
+              "value": "NetworkSiteType",
+              "kind": "string",
+              "offset": 34
+            },
+            {
+              "value": "string.Boolean op_Equality(System.String, System.String)",
+              "kind": "InlineMethod",
+              "offset": 39
+            },
+            {
+              "value": "brfalse.s",
+              "kind": "opcode",
+              "offset": 46
+            },
+            {
+              "value": "TenantNetworkSite",
+              "kind": "string",
+              "offset": 49
+            },
+            {
+              "value": "Teams",
+              "kind": "string",
+              "offset": 57
+            },
+            {
+              "value": "string.System.String Concat(System.String, System.String)",
+              "kind": "InlineMethod",
+              "offset": 63
+            }
+          ]
+        },
+        {
+          "method": ".cctor",
+          "references": [
+            {
+              "value": "ComplianceRecordingApplication",
+              "kind": "string",
+              "offset": 6
+            },
+            {
+              "value": "ComplianceRecordingPairedApplication",
+              "kind": "string",
+              "offset": 18
+            },
+            {
+              "value": "NetworkSiteType",
+              "kind": "string",
+              "offset": 30
+            }
+          ]
+        }
+      ],
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.Helpers.ConfigurationNameNormalization`1"
+    },
+    {
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2",
+      "base": "System.Object",
+      "methods": [
+        {
+          "method": "MoveNext",
+          "references": [
+            {
+              "offset": 1,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].Int32 <>1__state",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 8,
+              "value": "brfalse.s",
+              "kind": "opcode"
+            },
+            {
+              "offset": 19,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.Helpers.ConfigurationNameNormalization[TPolicy].System.String GetNormalizedNameForPolicyRP()",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 24,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.String <policyName>5__1",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 30,
+              "value": "System.Net.Http.HttpMethod.System.Net.Http.HttpMethod get_Get()",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 35,
+              "value": "ldc.i4.7",
+              "opcode": "ldc.i4.7",
+              "kind": "integer"
+            },
+            {
+              "offset": 36,
+              "value": ".string",
+              "kind": "InlineType"
+            },
+            {
+              "offset": 42,
+              "value": "ldc.i4.0",
+              "opcode": "ldc.i4.0",
+              "kind": "integer"
+            },
+            {
+              "offset": 43,
+              "value": "https://",
+              "kind": "string"
+            },
+            {
+              "offset": 50,
+              "value": "ldc.i4.1",
+              "opcode": "ldc.i4.1",
+              "kind": "integer"
+            },
+            {
+              "offset": 52,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.String baseUrl",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 59,
+              "value": "ldc.i4.2",
+              "opcode": "ldc.i4.2",
+              "kind": "integer"
+            },
+            {
+              "offset": 60,
+              "value": "/Skype.Policy/configurations/",
+              "kind": "string"
+            },
+            {
+              "offset": 67,
+              "value": "ldc.i4.3",
+              "opcode": "ldc.i4.3",
+              "kind": "integer"
+            },
+            {
+              "offset": 69,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.String <policyName>5__1",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 76,
+              "value": "ldc.i4.4",
+              "opcode": "ldc.i4.4",
+              "kind": "integer"
+            },
+            {
+              "offset": 77,
+              "value": "/configuration/",
+              "kind": "string"
+            },
+            {
+              "offset": 84,
+              "value": "ldc.i4.5",
+              "opcode": "ldc.i4.5",
+              "kind": "integer"
+            },
+            {
+              "offset": 86,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.String identity",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 91,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper[TPolicy].System.String EscapeIdentityForUri(System.String)",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 98,
+              "value": "ldc.i4.6",
+              "opcode": "ldc.i4.6",
+              "kind": "integer"
+            },
+            {
+              "offset": 100,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.String queryParameters",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 106,
+              "value": "string.System.String Concat(System.String[])",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 111,
+              "value": "uri.Void .ctor(System.String)",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 116,
+              "value": "System.Net.Http.HttpRequestMessage.Void .ctor(System.Net.Http.HttpMethod, System.Uri)",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 121,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Net.Http.HttpRequestMessage <request>5__2",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 127,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Net.Http.HttpRequestMessage <request>5__2",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 133,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Management.Automation.InvocationInfo invocationInfo",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 138,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper[TPolicy].Void AddAdditionalHeaders(System.Net.Http.HttpRequestMessage, System.Management.Automation.InvocationInfo)",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 145,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Net.Http.HttpRequestMessage <request>5__2",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 151,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.String accessToken",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 156,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpClientHelper.System.Threading.Tasks.Task`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] SendAsync[TPolicy](System.Net.Http.HttpRequestMessage, System.String)",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 161,
+              "value": "System.Threading.Tasks.Task[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] GetAwaiter()",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 169,
+              "value": "System.Runtime.CompilerServices.TaskAwaiter[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Boolean get_IsCompleted()",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 174,
+              "value": "brtrue.s",
+              "kind": "opcode"
+            },
+            {
+              "offset": 177,
+              "value": "ldc.i4.0",
+              "opcode": "ldc.i4.0",
+              "kind": "integer"
+            },
+            {
+              "offset": 180,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].Int32 <>1__state",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 187,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>u__1",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 195,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>t__builder",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 204,
+              "value": "System.Runtime.CompilerServices.AsyncTaskMethodBuilder[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Void AwaitUnsafeOnCompleted[TaskAwaiter`1,<GetAsync>d__2](System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] ByRef, <GetAsync>d__2 ByRef)",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 213,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>u__1",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 220,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>u__1",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 225,
+              "value": ".System.Runtime.CompilerServices.TaskAwaiter[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse]",
+              "kind": "InlineType"
+            },
+            {
+              "offset": 232,
+              "value": "ldc.i4.m1",
+              "opcode": "ldc.i4.m1",
+              "kind": "integer"
+            },
+            {
+              "offset": 235,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].Int32 <>1__state",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 243,
+              "value": "System.Runtime.CompilerServices.TaskAwaiter[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse GetResult()",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 248,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse <>s__3",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 254,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse <>s__3",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 265,
+              "value": 254,
+              "opcode": "ldc.i4.s",
+              "kind": "integer"
+            },
+            {
+              "offset": 267,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].Int32 <>1__state",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 274,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.String <policyName>5__1",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 281,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Net.Http.HttpRequestMessage <request>5__2",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 287,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>t__builder",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 294,
+              "value": "System.Runtime.CompilerServices.AsyncTaskMethodBuilder[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Void SetException(System.Exception)",
+              "kind": "InlineMethod"
+            },
+            {
+              "offset": 303,
+              "value": 254,
+              "opcode": "ldc.i4.s",
+              "kind": "integer"
+            },
+            {
+              "offset": 305,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].Int32 <>1__state",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 312,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.String <policyName>5__1",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 319,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Net.Http.HttpRequestMessage <request>5__2",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 325,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<GetAsync>d__2[TPolicy].System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>t__builder",
+              "kind": "InlineField"
+            },
+            {
+              "offset": 331,
+              "value": "System.Runtime.CompilerServices.AsyncTaskMethodBuilder[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Void SetResult(Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse)",
+              "kind": "InlineMethod"
+            }
+          ]
+        },
+        {
+          "method": "SetStateMachine",
+          "references": []
+        },
+        {
+          "method": ".ctor",
+          "references": []
+        }
+      ]
+    },
+    {
+      "methods": [
+        {
+          "references": [
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Int32 <>1__state",
+              "offset": 1,
+              "kind": "InlineField"
+            },
+            {
+              "value": "brfalse.s",
+              "offset": 8,
+              "kind": "opcode"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.Helpers.ConfigurationNameNormalization[TPolicy].System.String GetNormalizedNameForPolicyRP()",
+              "offset": 19,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.String <policyName>5__1",
+              "offset": 24,
+              "kind": "InlineField"
+            },
+            {
+              "opcode": "ldc.i4.7",
+              "offset": 30,
+              "kind": "integer",
+              "value": "ldc.i4.7"
+            },
+            {
+              "value": ".string",
+              "offset": 31,
+              "kind": "InlineType"
+            },
+            {
+              "opcode": "ldc.i4.0",
+              "offset": 37,
+              "kind": "integer",
+              "value": "ldc.i4.0"
+            },
+            {
+              "value": "https://",
+              "offset": 38,
+              "kind": "string"
+            },
+            {
+              "opcode": "ldc.i4.1",
+              "offset": 45,
+              "kind": "integer",
+              "value": "ldc.i4.1"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.String baseUrl",
+              "offset": 47,
+              "kind": "InlineField"
+            },
+            {
+              "opcode": "ldc.i4.2",
+              "offset": 54,
+              "kind": "integer",
+              "value": "ldc.i4.2"
+            },
+            {
+              "value": "/Skype.Policy/configurations/",
+              "offset": 55,
+              "kind": "string"
+            },
+            {
+              "opcode": "ldc.i4.3",
+              "offset": 62,
+              "kind": "integer",
+              "value": "ldc.i4.3"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.String <policyName>5__1",
+              "offset": 64,
+              "kind": "InlineField"
+            },
+            {
+              "opcode": "ldc.i4.4",
+              "offset": 71,
+              "kind": "integer",
+              "value": "ldc.i4.4"
+            },
+            {
+              "value": "/configuration/",
+              "offset": 72,
+              "kind": "string"
+            },
+            {
+              "opcode": "ldc.i4.5",
+              "offset": 79,
+              "kind": "integer",
+              "value": "ldc.i4.5"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.String identity",
+              "offset": 81,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper[TPolicy].System.String EscapeIdentityForUri(System.String)",
+              "offset": 86,
+              "kind": "InlineMethod"
+            },
+            {
+              "opcode": "ldc.i4.6",
+              "offset": 93,
+              "kind": "integer",
+              "value": "ldc.i4.6"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.String queryParameters",
+              "offset": 95,
+              "kind": "InlineField"
+            },
+            {
+              "value": "string.System.String Concat(System.String[])",
+              "offset": 101,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "uri.Void .ctor(System.String)",
+              "offset": 106,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Uri <requestUri>5__2",
+              "offset": 111,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Management.Automation.InvocationInfo invocationInfo",
+              "offset": 118,
+              "kind": "InlineField"
+            },
+            {
+              "value": "System.Management.Automation.InvocationInfo.System.Collections.Generic.Dictionary`2[System.String,System.Object] get_BoundParameters()",
+              "offset": 123,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Collections.Generic.Dictionary`2[System.String,System.Object] <boundParameters>5__3",
+              "offset": 128,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Collections.Generic.Dictionary`2[System.String,System.Object] <boundParameters>5__3",
+              "offset": 135,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].TPolicy",
+              "offset": 140,
+              "kind": "InlineTok"
+            },
+            {
+              "value": "type.System.Type GetTypeFromHandle(System.RuntimeTypeHandle)",
+              "offset": 145,
+              "kind": "InlineMethod"
+            },
+            {
+              "opcode": "ldc.i4.0",
+              "offset": 150,
+              "kind": "integer",
+              "value": "ldc.i4.0"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper[TPolicy].System.Collections.Generic.Dictionary`2[System.String,System.Object] GetNestedBoundParameters(System.Collections.Generic.Dictionary`2[System.String,System.Object], System.Type, Boolean)",
+              "offset": 151,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Collections.Generic.Dictionary`2[System.String,System.Object] <boundParameters>5__3",
+              "offset": 156,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].TPolicy policy",
+              "offset": 163,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].TPolicy",
+              "offset": 168,
+              "kind": "InlineType"
+            },
+            {
+              "value": "Newtonsoft.Json.JsonSerializerSettings.Void .ctor()",
+              "offset": 173,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Collections.Generic.Dictionary`2[System.String,System.Object] <boundParameters>5__3",
+              "offset": 180,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.Helpers.BoundParametersContractResolver, Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null.Void .ctor(System.Collections.Generic.IDictionary`2[System.String,System.Object])",
+              "offset": 185,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Newtonsoft.Json.JsonSerializerSettings.Void set_ContractResolver(Newtonsoft.Json.Serialization.IContractResolver)",
+              "offset": 190,
+              "kind": "InlineMethod"
+            },
+            {
+              "opcode": "ldc.i4",
+              "offset": 197,
+              "kind": "integer",
+              "value": 128
+            },
+            {
+              "value": "System.Nullable[int].Void .ctor(Int32)",
+              "offset": 202,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Newtonsoft.Json.JsonSerializerSettings.Void set_MaxDepth(System.Nullable`1[System.Int32])",
+              "offset": 207,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Newtonsoft.Json.JsonConvert.System.String SerializeObject(System.Object, Newtonsoft.Json.JsonSerializerSettings)",
+              "offset": 213,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Newtonsoft.Json.Linq.JObject.Newtonsoft.Json.Linq.JObject Parse(System.String)",
+              "offset": 218,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Newtonsoft.Json.Linq.JObject <jObject>5__4",
+              "offset": 223,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Management.Automation.InvocationInfo invocationInfo",
+              "offset": 229,
+              "kind": "InlineField"
+            },
+            {
+              "value": "System.Management.Automation.InvocationInfo.System.Collections.Generic.Dictionary`2[System.String,System.Object] get_BoundParameters()",
+              "offset": 234,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Newtonsoft.Json.Linq.JObject <jObject>5__4",
+              "offset": 240,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper[TPolicy].Void AddAdditionalBodyContent(System.Collections.Generic.Dictionary`2[System.String,System.Object], Newtonsoft.Json.Linq.JObject)",
+              "offset": 245,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Newtonsoft.Json.Linq.JObject <jObject>5__4",
+              "offset": 253,
+              "kind": "InlineField"
+            },
+            {
+              "value": "System.Object.System.String ToString()",
+              "offset": 258,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "System.Text.Encoding.System.Text.Encoding get_UTF8()",
+              "offset": 263,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "application/json",
+              "offset": 268,
+              "kind": "string"
+            },
+            {
+              "value": "System.Net.Http.StringContent.Void .ctor(System.String, System.Text.Encoding, System.String)",
+              "offset": 273,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Net.Http.StringContent <httpContent>5__5",
+              "offset": 278,
+              "kind": "InlineField"
+            },
+            {
+              "value": "PATCH",
+              "offset": 284,
+              "kind": "string"
+            },
+            {
+              "value": "System.Net.Http.HttpMethod.Void .ctor(System.String)",
+              "offset": 289,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Uri <requestUri>5__2",
+              "offset": 295,
+              "kind": "InlineField"
+            },
+            {
+              "value": "System.Net.Http.HttpRequestMessage.Void .ctor(System.Net.Http.HttpMethod, System.Uri)",
+              "offset": 300,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Net.Http.StringContent <httpContent>5__5",
+              "offset": 307,
+              "kind": "InlineField"
+            },
+            {
+              "value": "System.Net.Http.HttpRequestMessage.Void set_Content(System.Net.Http.HttpContent)",
+              "offset": 312,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Net.Http.HttpRequestMessage <request>5__6",
+              "offset": 318,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Net.Http.HttpRequestMessage <request>5__6",
+              "offset": 324,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Management.Automation.InvocationInfo invocationInfo",
+              "offset": 330,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper[TPolicy].Void AddAdditionalHeaders(System.Net.Http.HttpRequestMessage, System.Management.Automation.InvocationInfo)",
+              "offset": 335,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Net.Http.HttpRequestMessage <request>5__6",
+              "offset": 342,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.String accessToken",
+              "offset": 348,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpClientHelper.System.Threading.Tasks.Task`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] SendAsync[TPolicy](System.Net.Http.HttpRequestMessage, System.String)",
+              "offset": 353,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "System.Threading.Tasks.Task[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] GetAwaiter()",
+              "offset": 358,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "System.Runtime.CompilerServices.TaskAwaiter[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Boolean get_IsCompleted()",
+              "offset": 366,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "brtrue.s",
+              "offset": 371,
+              "kind": "opcode"
+            },
+            {
+              "opcode": "ldc.i4.0",
+              "offset": 374,
+              "kind": "integer",
+              "value": "ldc.i4.0"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Int32 <>1__state",
+              "offset": 377,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>u__1",
+              "offset": 384,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>t__builder",
+              "offset": 392,
+              "kind": "InlineField"
+            },
+            {
+              "value": "System.Runtime.CompilerServices.AsyncTaskMethodBuilder[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Void AwaitUnsafeOnCompleted[TaskAwaiter`1,<SetAsync>d__6](System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] ByRef, <SetAsync>d__6 ByRef)",
+              "offset": 401,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>u__1",
+              "offset": 413,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Runtime.CompilerServices.TaskAwaiter`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>u__1",
+              "offset": 420,
+              "kind": "InlineField"
+            },
+            {
+              "value": ".System.Runtime.CompilerServices.TaskAwaiter[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse]",
+              "offset": 425,
+              "kind": "InlineType"
+            },
+            {
+              "opcode": "ldc.i4.m1",
+              "offset": 432,
+              "kind": "integer",
+              "value": "ldc.i4.m1"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Int32 <>1__state",
+              "offset": 435,
+              "kind": "InlineField"
+            },
+            {
+              "value": "System.Runtime.CompilerServices.TaskAwaiter[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse GetResult()",
+              "offset": 443,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse <>s__7",
+              "offset": 448,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse <>s__7",
+              "offset": 454,
+              "kind": "InlineField"
+            },
+            {
+              "opcode": "ldc.i4.s",
+              "offset": 465,
+              "kind": "integer",
+              "value": 254
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Int32 <>1__state",
+              "offset": 467,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.String <policyName>5__1",
+              "offset": 474,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Uri <requestUri>5__2",
+              "offset": 481,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Collections.Generic.Dictionary`2[System.String,System.Object] <boundParameters>5__3",
+              "offset": 488,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Newtonsoft.Json.Linq.JObject <jObject>5__4",
+              "offset": 495,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Net.Http.StringContent <httpContent>5__5",
+              "offset": 502,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Net.Http.HttpRequestMessage <request>5__6",
+              "offset": 509,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>t__builder",
+              "offset": 515,
+              "kind": "InlineField"
+            },
+            {
+              "value": "System.Runtime.CompilerServices.AsyncTaskMethodBuilder[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Void SetException(System.Exception)",
+              "offset": 522,
+              "kind": "InlineMethod"
+            },
+            {
+              "opcode": "ldc.i4.s",
+              "offset": 531,
+              "kind": "integer",
+              "value": 254
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Int32 <>1__state",
+              "offset": 533,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.String <policyName>5__1",
+              "offset": 540,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Uri <requestUri>5__2",
+              "offset": 547,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Collections.Generic.Dictionary`2[System.String,System.Object] <boundParameters>5__3",
+              "offset": 554,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].Newtonsoft.Json.Linq.JObject <jObject>5__4",
+              "offset": 561,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Net.Http.StringContent <httpContent>5__5",
+              "offset": 568,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Net.Http.HttpRequestMessage <request>5__6",
+              "offset": 575,
+              "kind": "InlineField"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6[TPolicy].System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse] <>t__builder",
+              "offset": 581,
+              "kind": "InlineField"
+            },
+            {
+              "value": "System.Runtime.CompilerServices.AsyncTaskMethodBuilder[Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse].Void SetResult(Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyResponse)",
+              "offset": 587,
+              "kind": "InlineMethod"
+            }
+          ],
+          "method": "MoveNext"
+        },
+        {
+          "references": [],
+          "method": "SetStateMachine"
+        },
+        {
+          "references": [],
+          "method": ".ctor"
+        }
+      ],
+      "base": "System.Object",
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1+<SetAsync>d__6"
+    },
+    {
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TenantConfiguration",
+      "methods": [
+        {
+          "method": "set_MaxAllowedDomains",
+          "references": [
+            {
+              "opcode": "ldc.i4.1",
+              "offset": 2,
+              "kind": "integer",
+              "value": "ldc.i4.1"
+            },
+            {
+              "value": "System.Nullable[uint].UInt32 GetValueOrDefault()",
+              "offset": 6,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "System.Nullable[uint].Boolean get_HasValue()",
+              "offset": 16,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "brfalse.s",
+              "offset": 22,
+              "kind": "opcode"
+            },
+            {
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 24,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "MaxAllowedDomains",
+              "offset": 29,
+              "kind": "string"
+            },
+            {
+              "opcode": "ldc.i4.1",
+              "offset": 34,
+              "kind": "integer",
+              "value": "ldc.i4.1"
+            },
+            {
+              "value": ".int",
+              "offset": 35,
+              "kind": "InlineType"
+            },
+            {
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String ErrorArgumentMustBeGreaterThanOrEqualTo(System.Object, System.Object)",
+              "offset": 40,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 45,
+              "kind": "InlineMethod"
+            },
+            {
+              "opcode": "ldc.i4.1",
+              "offset": 50,
+              "kind": "integer",
+              "value": "ldc.i4.1"
+            },
+            {
+              "value": ".int",
+              "offset": 51,
+              "kind": "InlineType"
+            },
+            {
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String ErrorArgumentMustBeGreaterThanOrEqualToNoProperty(System.Object)",
+              "offset": 56,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "MaxAllowedDomains",
+              "offset": 61,
+              "kind": "string"
+            },
+            {
+              "value": "XsdClassGenerator.PropertyArgumentOutOfRangeException.Void .ctor(System.String, System.String, System.String)",
+              "offset": 66,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TenantConfiguration.System.Nullable`1[System.UInt32] _MaxAllowedDomains",
+              "offset": 74,
+              "kind": "InlineField"
+            }
+          ]
+        },
+        {
+          "method": "set_MaxBlockedDomains",
+          "references": [
+            {
+              "opcode": "ldc.i4.1",
+              "offset": 2,
+              "kind": "integer",
+              "value": "ldc.i4.1"
+            },
+            {
+              "value": "System.Nullable[uint].UInt32 GetValueOrDefault()",
+              "offset": 6,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "System.Nullable[uint].Boolean get_HasValue()",
+              "offset": 16,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "brfalse.s",
+              "offset": 22,
+              "kind": "opcode"
+            },
+            {
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 24,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "MaxBlockedDomains",
+              "offset": 29,
+              "kind": "string"
+            },
+            {
+              "opcode": "ldc.i4.1",
+              "offset": 34,
+              "kind": "integer",
+              "value": "ldc.i4.1"
+            },
+            {
+              "value": ".int",
+              "offset": 35,
+              "kind": "InlineType"
+            },
+            {
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String ErrorArgumentMustBeGreaterThanOrEqualTo(System.Object, System.Object)",
+              "offset": 40,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 45,
+              "kind": "InlineMethod"
+            },
+            {
+              "opcode": "ldc.i4.1",
+              "offset": 50,
+              "kind": "integer",
+              "value": "ldc.i4.1"
+            },
+            {
+              "value": ".int",
+              "offset": 51,
+              "kind": "InlineType"
+            },
+            {
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String ErrorArgumentMustBeGreaterThanOrEqualToNoProperty(System.Object)",
+              "offset": 56,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "MaxBlockedDomains",
+              "offset": 61,
+              "kind": "string"
+            },
+            {
+              "value": "XsdClassGenerator.PropertyArgumentOutOfRangeException.Void .ctor(System.String, System.String, System.String)",
+              "offset": 66,
+              "kind": "InlineMethod"
+            },
+            {
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TenantConfiguration.System.Nullable`1[System.UInt32] _MaxBlockedDomains",
+              "offset": 74,
+              "kind": "InlineField"
+            }
+          ]
+        }
+      ],
+      "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BasePolicy"
+    },
+    {
+      "methods": [
+        {
+          "references": [
+            {
+              "kind": "InlineField",
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppPolicyConfiguration.System.String <Identity>k__BackingField",
+              "offset": 2
+            }
+          ],
+          "method": "set_Identity"
+        },
+        {
+          "references": [
+            {
+              "kind": "opcode",
+              "value": "brfalse.s",
+              "offset": 1
+            },
+            {
+              "kind": "InlineField",
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppPolicyConfiguration.System.Text.RegularExpressions.Regex _rxAppCatalogUri0",
+              "offset": 3
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "System.Object.System.String ToString()",
+              "offset": 9
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "regex.Boolean IsMatch(System.String)",
+              "offset": 14
+            },
+            {
+              "kind": "opcode",
+              "value": "brtrue.s",
+              "offset": 19
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 21
+            },
+            {
+              "kind": "string",
+              "value": "AppCatalogUri",
+              "offset": 26
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 31
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String get_InvalidHttpsUrl()",
+              "offset": 36
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String ErrorInvalidValueForWithDetail(System.Object, System.Object)",
+              "offset": 41
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 46
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String get_InvalidHttpsUrl()",
+              "offset": 51
+            },
+            {
+              "kind": "string",
+              "value": "AppCatalogUri",
+              "offset": 56
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.PropertyArgumentException.Void .ctor(System.String, System.String, System.String)",
+              "offset": 61
+            },
+            {
+              "kind": "InlineField",
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppPolicyConfiguration.System.String _AppCatalogUri",
+              "offset": 69
+            }
+          ],
+          "method": "set_AppCatalogUri"
+        },
+        {
+          "references": [
+            {
+              "kind": "opcode",
+              "value": "brfalse.s",
+              "offset": 1
+            },
+            {
+              "kind": "InlineField",
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppPolicyConfiguration.System.Text.RegularExpressions.Regex _rxResourceUri0",
+              "offset": 3
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "System.Object.System.String ToString()",
+              "offset": 9
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "regex.Boolean IsMatch(System.String)",
+              "offset": 14
+            },
+            {
+              "kind": "opcode",
+              "value": "brtrue.s",
+              "offset": 19
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 21
+            },
+            {
+              "kind": "string",
+              "value": "ResourceUri",
+              "offset": 26
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 31
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String get_InvalidHttpsUrl()",
+              "offset": 36
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String ErrorInvalidValueForWithDetail(System.Object, System.Object)",
+              "offset": 41
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResourcesCache.XsdClassGenerator.XsdClassGeneratorStringsResources Get()",
+              "offset": 46
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.XsdClassGeneratorStringsResources.System.String get_InvalidHttpsUrl()",
+              "offset": 51
+            },
+            {
+              "kind": "string",
+              "value": "ResourceUri",
+              "offset": 56
+            },
+            {
+              "kind": "InlineMethod",
+              "value": "XsdClassGenerator.PropertyArgumentException.Void .ctor(System.String, System.String, System.String)",
+              "offset": 61
+            },
+            {
+              "kind": "InlineField",
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppPolicyConfiguration.System.String _ResourceUri",
+              "offset": 69
+            }
+          ],
+          "method": "set_ResourceUri"
+        }
+      ],
+      "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BasePolicy",
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAppPolicyConfiguration"
+    },
+    {
+      "methods": [
+        {
+          "references": [
+            {
+              "kind": "InlineMethod",
+              "offset": 1,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmSetCmdlet[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TenantConfiguration].Void ProcessRecord()"
+            }
+          ],
+          "method": "ProcessRecord"
+        },
+        {
+          "references": [
+            {
+              "kind": "InlineMethod",
+              "offset": 1,
+              "value": "System.Management.Automation.PSCmdlet.System.Management.Automation.InvocationInfo get_MyInvocation()"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 6,
+              "value": "System.Management.Automation.InvocationInfo.System.Collections.Generic.Dictionary`2[System.String,System.Object] get_BoundParameters()"
+            },
+            {
+              "kind": "string",
+              "offset": 11,
+              "value": "MaxAllowedDomains"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 16,
+              "value": "System.Collections.Generic.Dictionary[string,System.Object].Boolean ContainsKey(System.String)"
+            },
+            {
+              "kind": "opcode",
+              "offset": 21,
+              "value": "brtrue.s"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 24,
+              "value": "System.Management.Automation.PSCmdlet.System.Management.Automation.InvocationInfo get_MyInvocation()"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 29,
+              "value": "System.Management.Automation.InvocationInfo.System.Collections.Generic.Dictionary`2[System.String,System.Object] get_BoundParameters()"
+            },
+            {
+              "kind": "string",
+              "offset": 34,
+              "value": "MaxBlockedDomains"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 39,
+              "value": "System.Collections.Generic.Dictionary[string,System.Object].Boolean ContainsKey(System.String)"
+            },
+            {
+              "kind": "opcode",
+              "offset": 44,
+              "value": "brfalse.s"
+            },
+            {
+              "opcode": "ldc.i4.1",
+              "kind": "integer",
+              "offset": 46,
+              "value": "ldc.i4.1"
+            },
+            {
+              "opcode": "ldc.i4.0",
+              "kind": "integer",
+              "offset": 48,
+              "value": "ldc.i4.0"
+            }
+          ],
+          "method": "AreParametersSpecified"
+        },
+        {
+          "references": [
+            {
+              "kind": "InlineMethod",
+              "offset": 1,
+              "value": "System.Management.Automation.PSCmdlet.System.Management.Automation.InvocationInfo get_MyInvocation()"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 6,
+              "value": "System.Management.Automation.InvocationInfo.System.Collections.Generic.Dictionary`2[System.String,System.Object] get_BoundParameters()"
+            },
+            {
+              "kind": "string",
+              "offset": 11,
+              "value": "MaxAllowedDomains"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 16,
+              "value": "System.Collections.Generic.Dictionary[string,System.Object].Boolean ContainsKey(System.String)"
+            },
+            {
+              "kind": "opcode",
+              "offset": 21,
+              "value": "brfalse.s"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 25,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTenantConfigurationCmdlet.System.Nullable`1[System.UInt32] get_MaxAllowedDomains()"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 30,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TenantConfiguration.Void set_MaxAllowedDomains(System.Nullable`1[System.UInt32])"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 36,
+              "value": "System.Management.Automation.PSCmdlet.System.Management.Automation.InvocationInfo get_MyInvocation()"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 41,
+              "value": "System.Management.Automation.InvocationInfo.System.Collections.Generic.Dictionary`2[System.String,System.Object] get_BoundParameters()"
+            },
+            {
+              "kind": "string",
+              "offset": 46,
+              "value": "MaxBlockedDomains"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 51,
+              "value": "System.Collections.Generic.Dictionary[string,System.Object].Boolean ContainsKey(System.String)"
+            },
+            {
+              "kind": "opcode",
+              "offset": 56,
+              "value": "brfalse.s"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 60,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTenantConfigurationCmdlet.System.Nullable`1[System.UInt32] get_MaxBlockedDomains()"
+            },
+            {
+              "kind": "InlineMethod",
+              "offset": 65,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TenantConfiguration.Void set_MaxBlockedDomains(System.Nullable`1[System.UInt32])"
+            }
+          ],
+          "method": "UpdateProperties"
+        },
+        {
+          "references": [
+            {
+              "kind": "InlineField",
+              "offset": 1,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTenantConfigurationCmdlet.System.Nullable`1[System.UInt32] <MaxAllowedDomains>k__BackingField"
+            }
+          ],
+          "method": "get_MaxAllowedDomains"
+        },
+        {
+          "references": [
+            {
+              "kind": "InlineField",
+              "offset": 2,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTenantConfigurationCmdlet.System.Nullable`1[System.UInt32] <MaxAllowedDomains>k__BackingField"
+            }
+          ],
+          "method": "set_MaxAllowedDomains"
+        },
+        {
+          "references": [
+            {
+              "kind": "InlineField",
+              "offset": 1,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTenantConfigurationCmdlet.System.Nullable`1[System.UInt32] <MaxBlockedDomains>k__BackingField"
+            }
+          ],
+          "method": "get_MaxBlockedDomains"
+        },
+        {
+          "references": [
+            {
+              "kind": "InlineField",
+              "offset": 2,
+              "value": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTenantConfigurationCmdlet.System.Nullable`1[System.UInt32] <MaxBlockedDomains>k__BackingField"
+            }
+          ],
+          "method": "set_MaxBlockedDomains"
+        },
+        {
+          "references": [],
+          "method": ".ctor"
+        }
+      ],
+      "type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTenantConfigurationCmdlet",
+      "base": "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.BaseTpmSetCmdlet`1[[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TenantConfiguration, Microsoft.Teams.Policy.Administration.Cmdlets.Core, Version=40.2610.19888.1, Culture=neutral, PublicKeyToken=null]]"
+    }
+  ],
+  "model_assembly_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+  "provider_assembly_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+  "uri_regular_expressions": [
+    {
+      "field": "_rxAppCatalogUri0",
+      "options": "CultureInvariant",
+      "pattern": "^(h|H)(t|T)(t|T)(p|P)(s|S)://.+$"
+    },
+    {
+      "field": "_rxResourceUri0",
+      "options": "CultureInvariant",
+      "pattern": "^(h|H)(t|T)(t|T)(p|P)(s|S)://.+$"
+    }
+  ]
+}
