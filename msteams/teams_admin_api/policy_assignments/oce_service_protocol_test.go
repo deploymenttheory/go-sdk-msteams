@@ -182,3 +182,47 @@ func TestUnitOCEGenericSuccessRangePreservesTypedAndDecodeResults(t *testing.T) 
 		})
 	}
 }
+
+// GPA actions decode nullable String; batch reprocess constructs a Guid after
+// its exact202 check. An object is deliberately adversarial for all three
+// contracts, not a fabricated upstream success sample or business outcome.
+func TestUnitOCEActionDecodeFailuresPreserveAcceptedResponse(t *testing.T) {
+	t.Parallel()
+	for _, operation := range []string{"group-refresh", "group-reprocess", "batch-reprocess"} {
+		t.Run(operation, func(t *testing.T) {
+			var vector oceRequestVector
+			for _, candidate := range oceRequestVectors() {
+				if candidate.name == operation {
+					vector = candidate
+				}
+			}
+			status := 200
+			if operation == "batch-reprocess" {
+				status = 202
+			}
+			c := contracttest.Case{Name: "decode-" + operation, Family: "policy_assignments", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go", Mappings: oceMapping(operation), Steps: []contracttest.Exchange{oceWire(vector.method, vector.url, status, `{}`)}, Want: contracttest.Expected{Status: status, Body: []byte(`{}`), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				observed := invokeOCE(operation, ctx, sdk)
+				if !errors.Is(observed.Err, client.ErrDecode) || observed.Response == nil || observed.Response.StatusCode() != status || string(observed.Response.Body()) != `{}` {
+					t.Fatal("accepted malformed action lost decode error or response")
+				}
+				switch value := observed.Value.(type) {
+				case *resource.OCEActionResult:
+					if value == nil || !value.HTTPAccepted || value.Value != nil {
+						t.Fatal("malformed scalar erased acceptance or fabricated a result")
+					}
+				case *resource.OCEBatchReprocessResult:
+					if value == nil || !value.HTTPAccepted || value.OperationID != nil {
+						t.Fatal("malformed batch handle erased acceptance or fabricated an operation ID")
+					}
+				default:
+					t.Fatal("action returned an unexpected result type")
+				}
+				return observed
+			}}
+			result, err := contracttest.Run(t.Context(), c)
+			if err != nil || !result.Passed() {
+				t.Fatalf("action protocol failure differs: %v %+v", err, result.Differences())
+			}
+		})
+	}
+}
