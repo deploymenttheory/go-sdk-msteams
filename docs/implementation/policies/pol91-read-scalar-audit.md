@@ -35,7 +35,10 @@ The initial full check passed the new vectors/root-client scenarios but exposed
 older negative test inputs that the source actually accepts. Those inputs now use
 source-rejected shapes. The lab oracle keeps a separate strict schema for its
 already-projected PowerShell output; SDK wire coercion does not loosen that
-producer validation. A corrected full frozen check is pending; these
+producer validation. The [corrected full check](evidence/pol91-client-privacy-education-read-execution.json)
+passed at `2f0b323`: 619 test events, zero failures/skips, root-client and affected
+SDK/lab package suites passing; the shared internal package compiled without its
+own tests. The post-execution scoped diff was zero. These
 changes do not restore qualification or establish tenant behavior.
 
 The remaining six families need their own opt-in corrections. The packet also
