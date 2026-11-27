@@ -69,17 +69,8 @@ type AssignedPlan struct {
 	IsInGracePeriod   *bool                      `json:"isInGracePeriod"`
 	ServicePlanID     *string                    `json:"servicePlanId"`
 	SubscribedPlanID  *string                    `json:"subscribedPlanId"`
+	ServiceInstance   *string                    `json:"serviceInstance"`
 	RawFields         map[string]json.RawMessage `json:"-"`
-}
-
-func (v *AssignedPlan) UnmarshalJSON(raw []byte) error {
-	type plain AssignedPlan
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
-		return err
-	}
-	*v = AssignedPlan(value)
-	return nil
 }
 
 // ProvisionedPlan is one provisioned tenant service.
@@ -90,16 +81,6 @@ type ProvisionedPlan struct {
 	RawFields          map[string]json.RawMessage `json:"-"`
 }
 
-func (v *ProvisionedPlan) UnmarshalJSON(raw []byte) error {
-	type plain ProvisionedPlan
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
-		return err
-	}
-	*v = ProvisionedPlan(value)
-	return nil
-}
-
 // VerifiedDomain is a tenant domain and its verification status.
 type VerifiedDomain struct {
 	Name      *string                    `json:"name"`
@@ -107,17 +88,28 @@ type VerifiedDomain struct {
 	RawFields map[string]json.RawMessage `json:"-"`
 }
 
-func (v *VerifiedDomain) UnmarshalJSON(raw []byte) error {
-	type plain VerifiedDomain
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
-		return err
-	}
-	*v = VerifiedDomain(value)
-	return nil
+// CompanyPartnership is the pinned tenant partnership object.
+type CompanyPartnership struct {
+	LoggingEnabled   *bool                      `json:"loggingEnabled"`
+	PartnerContextID *string                    `json:"partnerContextId"`
+	PartnerType      *string                    `json:"partnerType"`
+	SupportPartner   *bool                      `json:"supportPartner"`
+	RawFields        map[string]json.RawMessage `json:"-"`
 }
 
-// Tenant is the Get-CsTenant extended tenant record. Timestamps keep their
+// SyncInLyncADInfo keeps known settings and original associative properties.
+// Timestamp strings remain the wire view, not CLR DateTime projections.
+type SyncInLyncADInfo struct {
+	IsSyncDisabledAtTenantCreation  *bool                      `json:"isSyncDisabledAtTenantCreation"`
+	IsUserSyncDisabled              *bool                      `json:"isUserSyncDisabled"`
+	IsUserSyncStateChanging         *bool                      `json:"isUserSyncStateChanging"`
+	StopSyncRevertCompleteTimestamp *string                    `json:"stopSyncRevertCompleteTimestamp"`
+	StopSyncRevertTimestamp         *string                    `json:"stopSyncRevertTimestamp"`
+	StopSyncTimestamp               *string                    `json:"stopSyncTimestamp"`
+	RawFields                       map[string]json.RawMessage `json:"-"`
+}
+
+// Tenant is the native full-wire view of the extended tenant record. Timestamps keep their
 // service text; LastProvisionTimeStamps and LastPublishTimeStamps are keyed by
 // processor name. RawFields keeps every service property, including ones the
 // PowerShell projection renames or drops.
@@ -137,24 +129,28 @@ type Tenant struct {
 	AssignedPlans                    []*AssignedPlan            `json:"assignedPlans"`
 	ProvisionedPlans                 []*ProvisionedPlan         `json:"provisionedPlans"`
 	VerifiedDomains                  []*VerifiedDomain          `json:"verifiedDomains"`
-	SIPDomains                       []string                   `json:"sipDomains"`
+	SIPDomains                       []*string                  `json:"sipDomains"`
 	TeamsUpgradeEffectiveMode        *string                    `json:"teamsUpgradeEffectiveMode"`
 	TeamsUpgradeNotificationsEnabled *bool                      `json:"teamsUpgradeNotificationsEnabled"`
 	TeamsUpgradeOverridePolicy       *string                    `json:"teamsUpgradeOverridePolicy"`
 	TeamsUpgradePolicyIsReadOnly     *string                    `json:"teamsUpgradePolicyIsReadOnly"`
-	LastProvisionTimeStamps          map[string]string          `json:"lastProvisionTimeStamps"`
-	LastPublishTimeStamps            map[string]string          `json:"lastPublishTimeStamps"`
+	LastProvisionTimeStamps          map[string]json.RawMessage `json:"lastProvisionTimeStamps"`
+	LastPublishTimeStamps            map[string]json.RawMessage `json:"lastPublishTimeStamps"`
+	AnnouncementsDisabled            *bool                      `json:"announcementsDisabled"`
+	CompanyPartnerships              []*CompanyPartnership      `json:"companyPartnership"`
+	CompanyTags                      []*string                  `json:"companyTags"`
+	Country                          *string                    `json:"country"`
+	DefaultPoolFQDN                  *string                    `json:"defaultPoolFqdn"`
+	DirSyncEnabled                   *bool                      `json:"dirSyncEnabled"`
+	NameRecordingDisabled            *bool                      `json:"nameRecordingDisabled"`
+	Pools                            []*string                  `json:"pools"`
+	ServiceNumberCount               *int32                     `json:"serviceNumberCount"`
+	State                            *string                    `json:"state"`
+	SubscriberNumberCount            *int32                     `json:"subscriberNumberCount"`
+	SyncInLyncADInfo                 *SyncInLyncADInfo          `json:"syncInLyncADInfo"`
+	TNMAccountID                     *string                    `json:"tnmAccountId"`
+	WhenChanged                      *string                    `json:"whenChanged"`
 	RawFields                        map[string]json.RawMessage `json:"-"`
-}
-
-func (v *Tenant) UnmarshalJSON(raw []byte) error {
-	type plain Tenant
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
-		return err
-	}
-	*v = Tenant(value)
-	return nil
 }
 
 // DirectoryObject is a directory tenant or user record returned by the

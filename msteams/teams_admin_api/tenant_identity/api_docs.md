@@ -107,3 +107,33 @@ is no more supported."
 It changes licensing state and cannot be undone. `GracePeriodRemoval.Action` is
 sent as `action` when non-nil. `Capabilities` is sent as `capabilities` when
 non-nil; an empty non-nil slice sends `[]`.
+
+## Full tenant wire view (unreleased model correction)
+
+`Tenant` types all 35 pinned wire fields plus the existing native enrichments.
+`CompanyPartnerships` and `SyncInLyncADInfo` have typed known fields and original
+`RawFields`. `SIPDomains`, `CompanyTags` and `Pools` contain nullable string
+entries. `LastProvisionTimeStamps` and `LastPublishTimeStamps` now use
+`map[string]json.RawMessage`, preserving arbitrary JSON values and numeric
+lexemes; this changes the earlier string-only map API. Existing consumers must
+decode individual values according to their actual type.
+
+The wire view keeps timestamp text and original map entries. It does not claim
+the public helper's CLR date conversion, null omission or numeric/object
+conversion. Its own [source and remaining projection work](../../../docs/implementation/ext/tenant-model-foundation.md)
+remain separate from Get-CsTenant qualification. Public TRPS/legacy selection
+is not assumed resolved, and no live status changes.
+
+## Default Modern tenant request identity
+
+`GetTenant` sends `X-MS-CmdletName: Get-CsTenantObou_Get` for the Extended
+ConfigAPI read. The public wrapper selects Get-CsTenantPoint for its default
+Modern route; that helper invokes the internal proxy, whose private cmdlet name
+passes through its invocation information to the final header writer. This
+header is source evidence, independently of historical response captures.
+See the [own handoff packet](../../../docs/implementation/ext/evidence/tenant-modern-handoff-source.json).
+The SDK keeps its own user-agent and shared audience/routing controls.
+
+This correction does not claim universal Modern flight selection, legacy
+transport or the public CLR date/dictionary projection. The returned native
+wire view and actual HTTP receipt remain available separately.
