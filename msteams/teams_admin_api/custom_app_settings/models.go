@@ -42,14 +42,18 @@ func (v *Settings) SideloadedAppsInteractionEnabled() bool {
 		return false
 	}
 	if v.RawFields != nil {
-		raw, exists := v.RawFields["isSideloadedAppsInteractionEnabled"]
-		if !exists {
-			return false
-		}
-		var flag *bool
-		return json.Unmarshal(raw, &flag) == nil && flag != nil && *flag
+		return projectSideloadedFlag(v.RawFields)
 	}
 	return v.IsSideloadedAppsInteractionEnabled != nil && *v.IsSideloadedAppsInteractionEnabled
+}
+
+func projectSideloadedFlag(fields map[string]json.RawMessage) bool {
+	raw, exists := fields["isSideloadedAppsInteractionEnabled"]
+	if !exists {
+		return false
+	}
+	var flag *bool
+	return json.Unmarshal(raw, &flag) == nil && flag != nil && *flag
 }
 
 func (v *Settings) UnmarshalJSON(raw []byte) error {

@@ -242,3 +242,67 @@ func TestUnitCustomAppSettingsNilContextAndServiceAreRejected(t *testing.T) {
 		t.Fatal("canceled context accepted")
 	}
 }
+
+func TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding(t *testing.T) {
+	t.Parallel()
+	for _, c := range []struct {
+		name, body string
+		want       bool
+	}{
+		{"true", `{"isSideloadedAppsInteractionEnabled":true}`, true},
+		{"false", `{"isSideloadedAppsInteractionEnabled":false}`, false},
+		{"null", `{"isSideloadedAppsInteractionEnabled":null}`, false},
+		{"absent", `{}`, false},
+		{"canonical-malformed", `{"isSideloadedAppsInteractionEnabled":"unexpected"}`, false},
+		{"wrong-case-malformed", `{"IsSideloadedAppsInteractionEnabled":"unexpected"}`, false},
+		{"wrong-case-number", `{"IsSideloadedAppsInteractionEnabled":7}`, false},
+		{"unrelated-extension-fields", `{"isSideloadedAppsInteractionEnabled":true,"appSettingsList":[null],"isAppsEnabled":"unexpected"}`, true},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			expected := json.RawMessage(`false`)
+			if c.want {
+				expected = json.RawMessage(`true`)
+			}
+			run(t, contracttest.Case{Name: "public-projection-" + c.name, Mappings: mapping(getCommand), Steps: []contracttest.Exchange{discovery(t), wire("GET", getCommand, nil, 200, []byte(c.body))}, Want: contracttest.Expected{Status: 200, JSON: expected}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				value, response, e := sdk.TeamsAdminAPI.CustomAppSettings.GetSideloadedAppsInteraction(ctx)
+				return contracttest.Observation{Value: value, Response: response, Err: e}
+			}})
+		})
+	}
+	body := readFile(t, "testdata/get.json")
+	run(t, contracttest.Case{Name: "public-projection-captured-read", Source: fixture, Mappings: mapping(getCommand), Steps: []contracttest.Exchange{discovery(t), wire("GET", getCommand, nil, 200, body)}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`true`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		value, response, e := sdk.TeamsAdminAPI.CustomAppSettings.GetSideloadedAppsInteraction(ctx)
+		return contracttest.Observation{Value: value, Response: response, Err: e}
+	}})
+}
+func TestUnitCustomAppPublicProjectionPreservesFailuresInsteadOfReturningDisabled(t *testing.T) {
+	t.Parallel()
+	for _, c := range []struct {
+		name, body string
+		status     int
+		want       error
+	}{
+		{"denied", `{"code":"Forbidden"}`, 403, auth.ErrForbidden},
+		{"null-root", `null`, 200, client.ErrDecode},
+		{"array-root", `[]`, 200, client.ErrDecode},
+		{"invalid-json", `broken`, 200, client.ErrDecode},
+		{"undeclared-status", `{"isSideloadedAppsInteractionEnabled":true}`, 201, cas.ErrResponse},
+	} {
+		run(t, contracttest.Case{Name: "projection-error-" + c.name, Mappings: mapping(getCommand), Steps: []contracttest.Exchange{discovery(t), wire("GET", getCommand, nil, c.status, []byte(c.body))}, Want: contracttest.Expected{Status: c.status, Error: c.want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			value, response, e := sdk.TeamsAdminAPI.CustomAppSettings.GetSideloadedAppsInteraction(ctx)
+			if value || !errors.Is(e, c.want) {
+				t.Fatal("failed read was converted into a successful flag observation")
+			}
+			return contracttest.Observation{Response: response, Err: e}
+		}})
+	}
+	run(t, contracttest.Case{Name: "projection-canceled", Scope: "local", Want: contracttest.Expected{Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		canceled, cancel := context.WithCancel(ctx)
+		cancel()
+		_, response, e := sdk.TeamsAdminAPI.CustomAppSettings.GetSideloadedAppsInteraction(canceled)
+		if response != nil {
+			t.Fatal("canceled projection acquired a read response")
+		}
+		return contracttest.Observation{Err: e}
+	}})
+}

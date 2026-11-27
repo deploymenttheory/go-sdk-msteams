@@ -28,3 +28,12 @@ func ExampleService_SetSideloadedAppsInteraction() {
 	}
 	_ = disable
 }
+
+// Read the public cmdlet's flag projection without strict full-document decoding.
+func ExampleService_GetSideloadedAppsInteraction() {
+	read := func(ctx context.Context, sdk *msteams.Client) (bool, error) {
+		enabled, _, err := sdk.TeamsAdminAPI.CustomAppSettings.GetSideloadedAppsInteraction(ctx)
+		return enabled, err // A false value with an error is not a disabled observation.
+	}
+	_ = read // Compiles without selecting credentials or reading a tenant.
+}

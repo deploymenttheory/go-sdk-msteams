@@ -155,3 +155,23 @@ remain open: nested unknown appAccessRequestConfig properties are dropped by the
 source and empty nested objects are suppressed; PascalCase Lob* response values
 are copied while camelCase branding is ignored. Those behaviors are not claimed
 fixed by this read/status checkpoint or by the existing enhanced native document.
+
+
+### Direct public flag projection
+
+The [two scalar observations](evidence/custom-app-get-scalar-projection.json) and
+[bounded pure reproducer](../../../scripts/discovery/inspect-custom-app-get-projection.ps1)
+confirm both wrong-case and canonical string-valued flag fields parse successfully
+in the pinned model, leave its nullable flag unset, and project false. The complete
+native document deliberately retains stricter extension-field decoding, so its
+snapshot accessor alone cannot cover every public-command output.
+
+`GetSideloadedAppsInteraction` is the mapped direct projection primitive over the
+same no-body GET, ConfigAPI metadata and HTTP 200 status. It requires a non-null
+object, then projects only the exact flag key, independent of unrelated full-model
+fields. True/false/null/missing and both scalar observations reach this public path;
+unsupported statuses, malformed roots and authorization/cancellation errors retain
+their responses/errors rather than become successful disabled-setting observations.
+Enhanced Get remains unchanged. The new path is replayed against the existing
+actual sanitized read fixture as well as explicitly authored source vectors.
+Set body/persistence and live states remain separate from this ordinary Get review.

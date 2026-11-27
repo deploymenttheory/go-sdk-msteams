@@ -11254,8 +11254,8 @@
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/152/parameter_sets/0",
           "symbols": [
             {
-              "file": "msteams/teams_admin_api/custom_app_settings/service.go",
-              "name": "Service.Get"
+              "name": "Service.GetSideloadedAppsInteraction",
+              "file": "msteams/teams_admin_api/custom_app_settings/service.go"
             }
           ],
           "contract_tests": [
@@ -11270,6 +11270,14 @@
             {
               "file": "msteams/teams_admin_api/custom_app_settings/service_test.go",
               "name": "TestUnitCustomAppSettingsFailuresStayTyped"
+            },
+            {
+              "name": "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding",
+              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go"
+            },
+            {
+              "name": "TestUnitCustomAppPublicProjectionPreservesFailuresInsteadOfReturningDisabled",
+              "file": "msteams/teams_admin_api/custom_app_settings/service_test.go"
             }
           ],
           "live_tests": [
@@ -11287,6 +11295,10 @@
           {
             "file": "msteams/teams_admin_api/custom_app_settings/service.go",
             "name": "Service.Get"
+          },
+          {
+            "name": "Service.GetSideloadedAppsInteraction",
+            "file": "msteams/teams_admin_api/custom_app_settings/service.go"
           }
         ]
       },
@@ -11294,7 +11306,8 @@
         "status": "metadata-only",
         "evidence": [
           "docs/implementation/ext/app-catalog-contract-notes.md",
-          "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json"
+          "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json",
+          "docs/implementation/ext/evidence/custom-app-get-scalar-projection.json"
         ]
       },
       "live": {

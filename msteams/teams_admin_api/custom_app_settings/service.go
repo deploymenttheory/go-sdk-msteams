@@ -42,15 +42,22 @@ func request(method, command string) client.Request {
 		Header: http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}}}
 }
 
-func (s *Service) get(ctx context.Context, command string) (*Settings, *resty.Response, error) {
+func (s *Service) read(ctx context.Context, command string) (*resty.Response, error) {
 	req := request(http.MethodGet, command)
 	req.Replay = client.ReplaySafe
 	response, err := s.client.Do(ctx, req, nil)
 	if err != nil {
-		return nil, response, err
+		return response, err
 	}
 	if response == nil || response.StatusCode() != http.StatusOK {
-		return nil, response, ErrResponse
+		return response, ErrResponse
+	}
+	return response, nil
+}
+func (s *Service) get(ctx context.Context, command string) (*Settings, *resty.Response, error) {
+	response, err := s.read(ctx, command)
+	if err != nil {
+		return nil, response, err
 	}
 	var value Settings
 	if json.Unmarshal(response.Body(), &value) != nil {
@@ -59,9 +66,28 @@ func (s *Service) get(ctx context.Context, command string) (*Settings, *resty.Re
 	return &value, response, nil
 }
 
-// Get reads the complete settings document (Get-CsTeamsSettingsCustomApp).
-// The cmdlet projects only isSideloadedAppsInteractionEnabled, reporting null
-// as false; Settings.SideloadedAppsInteractionEnabled gives that projection.
+// GetSideloadedAppsInteraction reads the pinned public command's one-property
+// output. It uses the exact raw key and nullable bool projection, independent of
+// the enhanced full document's stricter extension-field decoding. A false value
+// with an error is not a successful disabled-setting observation.
+func (s *Service) GetSideloadedAppsInteraction(ctx context.Context) (bool, *resty.Response, error) {
+	if err := s.check(ctx); err != nil {
+		return false, nil, err
+	}
+	response, err := s.read(ctx, getCommand)
+	if err != nil {
+		return false, response, err
+	}
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(response.Body(), &fields) != nil || fields == nil {
+		return false, response, client.ErrDecode
+	}
+	return projectSideloadedFlag(fields), response, nil
+}
+
+// Get reads the enhanced complete settings document with strict typed decoding.
+// For every pinned public flag outcome, including malformed nullable scalars,
+// use GetSideloadedAppsInteraction. The snapshot getter projects valid documents.
 func (s *Service) Get(ctx context.Context) (*Settings, *resty.Response, error) {
 	if err := s.check(ctx); err != nil {
 		return nil, nil, err
