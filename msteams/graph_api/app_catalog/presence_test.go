@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -89,7 +90,7 @@ func TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads(t *testing.T) {
 			}
 			exchange := upload(method, target, 202, nil)
 			exchange.Request.Binary = []byte{}
-			run(t, contracttest.Case{Name: "source-empty-package-" + method, Mappings: mapping(command), Steps: []contracttest.Exchange{exchange}, Want: contracttest.Expected{Status: 202}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: "source-empty-package-" + strings.ToLower(method), Mappings: mapping(command), Steps: []contracttest.Exchange{exchange}, Want: contracttest.Expected{Status: 202}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				if method == http.MethodPost {
 					app, response, err := sdk.GraphAPI.AppCatalog.Create(ctx, ac.CreateRequest{DistributionMethod: ac.OrganizationDistribution, Package: []byte{}})
 					if app != nil {
