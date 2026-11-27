@@ -1,0 +1,141 @@
+{
+  "scope": "Four individually reviewed nullable configuration commands / six sets; contract only",
+  "commands": [
+    {
+      "name": "Get-CsTeamsMessagingConfiguration",
+      "outcome": "passed",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "revision": "2b08f5705220980c3beed222e8942d39dd3a4b47",
+      "execution": {
+        "session": "67230",
+        "package": "./msteams/teams_admin_api/teams_messaging_configuration",
+        "selection": "TestUnit|Example",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol91-messaging-source-review.md",
+      "nullable_binding_evidence": "docs/implementation/policies/evidence/pol91-messaging-nullable-list.json",
+      "limits": [
+        "Contract only; all live statuses unchanged",
+        "Canonical nullable field type correction is explicit; old nonnull helper signatures remain",
+        "Source-authored null-member replies/HTTP acceptance and explicit recovery do not establish tenant persistence, permissions or effect",
+        "Native typed/path/error/presentation boundaries differ from PowerShell host/raw argument conversion; no conditional remoting branch is claimed"
+      ],
+      "supplemental_execution": {
+        "revision": "7a902647bec038eccdba651cee717dac2fa910c2",
+        "session": "39584",
+        "selection": "^TestUnitMessagingNullableListPreparedEditRetainsSnapshotAndExplicitReadback$",
+        "scope": "Only changed default omitted-Identity collection + nullable edit/readback workflow; prior full-package execution remains separate"
+      },
+      "enum_binding_evidence": "docs/implementation/policies/evidence/pol91-storyline-binding.json"
+    },
+    {
+      "name": "Get-CsTeamsTenantAbuseConfiguration",
+      "outcome": "passed",
+      "parameter_sets": [
+        "Filter",
+        "Identity"
+      ],
+      "revision": "4cb4ca15c6adccadb98d95208358b1bb2adcf2dd",
+      "execution": {
+        "session": "52681",
+        "package": "./msteams/teams_admin_api/teams_tenant_abuse_configuration",
+        "selection": "TestUnit|Example",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol91-tenant-abuse-source-review.md",
+      "nullable_binding_evidence": "docs/implementation/policies/evidence/pol91-tenant-abuse-list.json",
+      "limits": [
+        "Contract only; all live statuses unchanged",
+        "Canonical nullable field type correction is explicit; old nonnull helper signatures remain",
+        "Source-authored null-member replies/HTTP acceptance and explicit recovery do not establish tenant persistence, permissions or effect",
+        "Native typed/path/error/presentation boundaries differ from PowerShell host/raw argument conversion; no conditional remoting branch is claimed"
+      ],
+      "shared_helper_execution": {
+        "revision": "4cb4ca15c6adccadb98d95208358b1bb2adcf2dd",
+        "session": "52681",
+        "package": "./msteams/teams_admin_api/policy",
+        "selection": "TestUnit|Example"
+      }
+    },
+    {
+      "name": "Set-CsTeamsMessagingConfiguration",
+      "outcome": "passed",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "revision": "2b08f5705220980c3beed222e8942d39dd3a4b47",
+      "execution": {
+        "session": "67230",
+        "package": "./msteams/teams_admin_api/teams_messaging_configuration",
+        "selection": "TestUnit|Example",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol91-messaging-source-review.md",
+      "nullable_binding_evidence": "docs/implementation/policies/evidence/pol91-messaging-nullable-list.json",
+      "limits": [
+        "Contract only; all live statuses unchanged",
+        "Canonical nullable field type correction is explicit; old nonnull helper signatures remain",
+        "Source-authored null-member replies/HTTP acceptance and explicit recovery do not establish tenant persistence, permissions or effect",
+        "Native typed/path/error/presentation boundaries differ from PowerShell host/raw argument conversion; no conditional remoting branch is claimed"
+      ],
+      "supplemental_execution": {
+        "revision": "7a902647bec038eccdba651cee717dac2fa910c2",
+        "session": "39584",
+        "selection": "^TestUnitMessagingNullableListPreparedEditRetainsSnapshotAndExplicitReadback$",
+        "scope": "Only changed default omitted-Identity collection + nullable edit/readback workflow; prior full-package execution remains separate"
+      },
+      "enum_binding_evidence": "docs/implementation/policies/evidence/pol91-storyline-binding.json"
+    },
+    {
+      "name": "Set-CsTeamsTenantAbuseConfiguration",
+      "outcome": "passed",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "revision": "4cb4ca15c6adccadb98d95208358b1bb2adcf2dd",
+      "execution": {
+        "session": "52681",
+        "package": "./msteams/teams_admin_api/teams_tenant_abuse_configuration",
+        "selection": "TestUnit|Example",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol91-tenant-abuse-source-review.md",
+      "nullable_binding_evidence": "docs/implementation/policies/evidence/pol91-tenant-abuse-list.json",
+      "limits": [
+        "Contract only; all live statuses unchanged",
+        "Canonical nullable field type correction is explicit; old nonnull helper signatures remain",
+        "Source-authored null-member replies/HTTP acceptance and explicit recovery do not establish tenant persistence, permissions or effect",
+        "Native typed/path/error/presentation boundaries differ from PowerShell host/raw argument conversion; no conditional remoting branch is claimed"
+      ],
+      "shared_helper_execution": {
+        "revision": "4cb4ca15c6adccadb98d95208358b1bb2adcf2dd",
+        "session": "52681",
+        "package": "./msteams/teams_admin_api/policy",
+        "selection": "TestUnit|Example"
+      }
+    }
+  ]
+}

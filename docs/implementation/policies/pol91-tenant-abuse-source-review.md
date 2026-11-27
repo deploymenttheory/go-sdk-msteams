@@ -1,8 +1,9 @@
 # POL91 TenantAbuse nullable-list boundary
 
 Scope: the two direct compiled Get/Set-CsTeamsTenantAbuseConfiguration commands,
-Get Identity/Filter and Set Identity. This is source review and a concrete gap;
-no qualification or tenant mutation is claimed.
+Get Identity/Filter and Set Identity. The initial review found a concrete gap;
+the final source/execution decision below separates contract proof from live
+qualification. No tenant mutation is claimed.
 
 The pinned Core DTO has seven Nullable<UInt64> scalar fields (LowSeatLimit,
 CreateThreadThresholdPerSeat, AddMemberThresholdPerSeat,
@@ -143,3 +144,8 @@ linked by the Messaging review on the concrete TenantAbuse overrides. Both
 primary probes verify exact pinned assembly hashes. Live authorization,
 nondefault threshold/blocked-tenant changes, authoritative oracle and safe
 restoration/effective abuse control remain unqualified.
+
+Own Get Identity/Filter and Set Identity are individually implemented/contract-
+passed after complete source/execution review; [versioned records](../../../contracts/coverage/evidence/pol91-nullable-config-commands.json)
+keep full and supplemental execution separate. Every live state stays unchanged;
+full #185 qualification remains open.

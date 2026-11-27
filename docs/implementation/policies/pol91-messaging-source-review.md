@@ -36,7 +36,7 @@ owned scratch removed and post-run selected/shared input diffs zero. No race ran
 The earlier 4cb4ca1 / 52681 existing Messaging list-edit result covered only
 nonnull compatibility before this field correction, not this new capability.
 
-The wider command still requires finite review of all twelve public settings:
+The complete command review below covers all twelve public settings:
 three Nullable<Boolean>, seven String, one nullable Int32 Storyline enum and this
 list modifier. Existing retained get/list/nondefault/readback/restore models,
 source-authorable bindings and model errors remain distinct. No command status
@@ -108,5 +108,13 @@ Finite review found that earlier success tests invoked selected Get and Filter
 but not the Identity-omitted List wrapper. The nullable-list test now adds one
 direct source-authored bare-collection read and asserts typed identity/null
 entries/raw receipt before its existing prepared edit/readback. This supplemental
-default-set execution is pending at its new frozen checkpoint; full 2b08f57
-proof continues to cover the other unchanged cases.
+default-set workflow passed at clean `7a902647bec038eccdba651cee717dac2fa910c2`,
+session `39584`, selecting only its exact function (31.32 GiB admission,
+Go 1.27.4 / GOMAXPROCS 2 / `-p 1 -count=1`, owned scratch removed,
+14 GiB floor). Full 2b08f57 proof continues to cover the unchanged cases; this
+is not mislabeled a second full-package run.
+
+Own Get Identity/Filter and Set Identity are individually implemented/contract-
+passed after complete source/execution review; [versioned records](../../../contracts/coverage/evidence/pol91-nullable-config-commands.json)
+keep full and supplemental execution separate. Every live state stays unchanged;
+full #185 qualification remains open.
