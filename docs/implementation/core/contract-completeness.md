@@ -473,4 +473,3 @@ Each entry is pinned to its function definition. B/D/I/L/F refer to the runner d
 ### T78
 
 [TestUnitServiceUpdateByID](https://github.com/deploymenttheory/go-sdk-msteams/blob/22f01edc43d70cdbeffdf5ea850d38b2a2337952/msteams/teams_admin_api/team_template/service_test.go#L226) — D plus L inputs: both body/expanded definition paths and identity carriers for four update sets; discovery200 then PUT403 only, no result receipt.
-
