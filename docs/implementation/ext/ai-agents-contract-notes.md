@@ -163,3 +163,10 @@ replay/context controls, commercial-only MCPS mapping and raw-field enrichment
 are explicitly distinct boundaries. No seven-command ledger or live status is
 promoted by this first repair batch. Actual Go execution is recorded separately
 when the frozen affected packages have completed.
+
+The first frozen repair revision `b838d0f` completed the full affected SDK,
+AI lab and EXT integration `TestUnit|Example` selection: all three package
+terminals passed with 158 test-pass events and no failures/skips. No TestAcc
+executed. The [bounded execution record](evidence/ai-agents-b838d0f-check.json)
+contains the exact command, file hashes and raw Go JSON SHA. This is an
+implementation check, not a seven-command closure decision or a live claim.
