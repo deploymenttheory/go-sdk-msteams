@@ -1,0 +1,433 @@
+{
+  "schema": "finite-command-review-packet",
+  "review": "pending; all seven implementation/contract/live states unchanged",
+  "revision": "a310c8e4493a73c46e1aecdd06be370d0521d0d3",
+  "commands": [
+    {
+      "name": "Get-AIGeneratedKnowledgeContainer",
+      "ledger_pointer": "contracts/coverage/8.1.0.json#/records/18",
+      "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/18",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/14/parameter_sets/0",
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.ListKnowledgeContainers"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIGeneratedKnowledgeUsesMCPSProfile"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
+        }
+      ],
+      "source_packet_command_pointer": "docs/implementation/ext/evidence/ai-agents-source/primary.json#/commands/5",
+      "additional_executed_tests": [],
+      "state": "review-pending; no ledger change",
+      "current_live": {
+        "status": "not-run",
+        "reason": "MCPS rejects app-only tokens with HTTP 401 (the pinned module fails before sending in app-only sessions); only fabricated-thread rejection probes ran, so successful knowledge requests need delegated credentials and are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
+      }
+    },
+    {
+      "name": "Get-CsAgent",
+      "ledger_pointer": "contracts/coverage/8.1.0.json#/records/23",
+      "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/23",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/17/parameter_sets/0",
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.List"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.GetByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentListOptionsAndCatalogFilters"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentReads"
+            },
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentLifecycle"
+            }
+          ]
+        }
+      ],
+      "source_packet_command_pointer": "docs/implementation/ext/evidence/ai-agents-source/primary.json#/commands/0",
+      "additional_executed_tests": [
+        "TestUnitAIAgentSourcePresenceAndQueryConstruction",
+        "TestUnitAIAgentMalformedResponsesFailDecode"
+      ],
+      "state": "review-pending; no ledger change",
+      "current_live": {
+        "status": "not-run",
+        "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
+      }
+    },
+    {
+      "name": "Get-CsAiAgents",
+      "ledger_pointer": "contracts/coverage/8.1.0.json#/records/24",
+      "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/24",
+      "parameter_sets": [
+        {
+          "name": "Get",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/18/parameter_sets/0",
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.QueryPlatformAgents"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentReadsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentListOptionsAndCatalogFilters"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentReads"
+            }
+          ]
+        }
+      ],
+      "source_packet_command_pointer": "docs/implementation/ext/evidence/ai-agents-source/primary.json#/commands/4",
+      "additional_executed_tests": [
+        "TestUnitAIAgentSourcePresenceAndQueryConstruction",
+        "TestUnitAIAgentMalformedResponsesFailDecode"
+      ],
+      "state": "review-pending; no ledger change",
+      "current_live": {
+        "status": "not-run",
+        "reason": "Client-secret lab run proved the catalog route through an empty unknown-provider page and a non-GUID 400 with PowerShell count parity; no published catalog entries exist in the lab, so populated pages are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
+      }
+    },
+    {
+      "name": "New-CsAgent",
+      "ledger_pointer": "contracts/coverage/8.1.0.json#/records/323",
+      "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/323",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/278/parameter_sets/0",
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.Create"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentRejectedWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
+        }
+      ],
+      "source_packet_command_pointer": "docs/implementation/ext/evidence/ai-agents-source/primary.json#/commands/1",
+      "additional_executed_tests": [
+        "TestUnitAIAgentSourcePresenceAndQueryConstruction",
+        "TestUnitAIAgentSourceSuccessStatusesAreExact"
+      ],
+      "state": "review-pending; no ledger change",
+      "current_live": {
+        "status": "not-run",
+        "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
+      }
+    },
+    {
+      "name": "Remove-AIGeneratedKnowledge",
+      "ledger_pointer": "contracts/coverage/8.1.0.json#/records/459",
+      "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/459",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/410/parameter_sets/0",
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.DeleteKnowledge"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIGeneratedKnowledgeUsesMCPSProfile"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
+        }
+      ],
+      "source_packet_command_pointer": "docs/implementation/ext/evidence/ai-agents-source/primary.json#/commands/6",
+      "additional_executed_tests": [],
+      "state": "review-pending; no ledger change",
+      "current_live": {
+        "status": "not-run",
+        "reason": "MCPS rejects app-only tokens with HTTP 401 (the pinned module fails before sending in app-only sessions); only fabricated-thread rejection probes ran, so successful knowledge requests need delegated credentials and are unqualified.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
+      }
+    },
+    {
+      "name": "Remove-CsAgent",
+      "ledger_pointer": "contracts/coverage/8.1.0.json#/records/460",
+      "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/460",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/411/parameter_sets/0",
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.DeleteByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentRejectedWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
+        }
+      ],
+      "source_packet_command_pointer": "docs/implementation/ext/evidence/ai-agents-source/primary.json#/commands/3",
+      "additional_executed_tests": [
+        "TestUnitAIAgentSourceSuccessStatusesAreExact",
+        "TestUnitAIAgentRemoveNullResultsRetainReceiptAndNeverReplay"
+      ],
+      "state": "review-pending; no ledger change",
+      "current_live": {
+        "status": "not-run",
+        "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
+      }
+    },
+    {
+      "name": "Set-CsAgent",
+      "ledger_pointer": "contracts/coverage/8.1.0.json#/records/574",
+      "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/574",
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/522/parameter_sets/0",
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service.go",
+              "name": "Service.UpdateByID"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentLifecycleUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentRejectedWritesUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/ai_agents/ai_agents_test.go",
+              "name": "TestAccAIAgentRejectedWrites"
+            }
+          ]
+        }
+      ],
+      "source_packet_command_pointer": "docs/implementation/ext/evidence/ai-agents-source/primary.json#/commands/2",
+      "additional_executed_tests": [
+        "TestUnitAIAgentSourcePresenceAndQueryConstruction"
+      ],
+      "state": "review-pending; no ledger change",
+      "current_live": {
+        "status": "not-run",
+        "reason": "Client-secret lab run created, read, listed, renamed and deleted one owned journaled agent configuration with pinned PowerShell parity, and proved rejections for unknown types, tag templates and configurations.",
+        "evidence": [
+          "docs/implementation/ext/ai-agents-contract-notes.md"
+        ]
+      }
+    }
+  ],
+  "execution": {
+    "handle": 53229,
+    "exit_code": 0,
+    "raw_path": "/private/tmp/ext90-ai-ordering-final-tests.json",
+    "raw_sha256": "d84098d03385d5129c00c902c6354e5a825bf453f0560c104bed161957169579",
+    "test_pass_events": 162,
+    "package_terminals": [
+      {
+        "package": "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/ai_agents",
+        "action": "pass"
+      },
+      {
+        "package": "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/ai_agents",
+        "action": "pass"
+      },
+      {
+        "package": "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/ext_integration",
+        "action": "pass"
+      }
+    ],
+    "fail_events": 0,
+    "skip_events": 0,
+    "TestAcc_executed": false,
+    "command": "TMPDIR=/private/tmp/msteams-ext90-go-tmp GOMAXPROCS=2 python3 /private/tmp/msteams-disk-guard.py go test -json -p 1 -count=1 -run 'TestUnit|Example' ./msteams/teams_admin_api/ai_agents ./tests/integration/lab/ai_agents ./tests/integration/lab/ext_integration"
+  },
+  "failed_test_only_predecessor": {
+    "revision": "07e7df2",
+    "handle": 99544,
+    "raw_path": "/private/tmp/ext90-ai-07e7df2-tests.json",
+    "raw_sha256": "9b32d24a97a42d9fa96fcbc2c457519439baf3672609f1774afe52bd631350f0",
+    "cause": "Comparing JSON text made nested RawMessage source property order significant. Corrected expected-snapshot semantic canonicalization with UseNumber; source data and production code unchanged. All three Remove null-result method cases passed in predecessor."
+  },
+  "files": [
+    {
+      "path": "msteams/teams_admin_api/ai_agents/service.go",
+      "sha256": "1722c4783376f224f8b9d54b425783ff790b53196a3e31a49dc3140d3f592d86"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/models.go",
+      "sha256": "c4ddca974a172bf603eb11a6541a1411ddcc2d704c17c4bc4033ac3784e753db"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/generated.go",
+      "sha256": "5e562f9cfdea3c09bc42ace5b8c09f066e9f672d70f17a6c29a4bc342bfcfced"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/service_test.go",
+      "sha256": "9b2b61ff05f26fb8296f32b85631c94a7cedc1321d2d491f0cfbde586b7d40d3"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/generated_test.go",
+      "sha256": "7e3f2a9601eb6a78111f0b3e9ef327978adefc3c5c43561aa0b44974f997e279"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/example_test.go",
+      "sha256": "5805642a67b81abc13b96d7f7853a8a49a921515601e08d1c70a295976830ebc"
+    },
+    {
+      "path": "tests/integration/lab/ai_agents/recovery.go",
+      "sha256": "4c525a3c2f7c29744c328accfe378b53f03dc10d684cccd4df9e4a398766e88e"
+    },
+    {
+      "path": "tests/integration/lab/ai_agents/ai_agents_test.go",
+      "sha256": "e21b1b2ab436a9c8fb820644037cfd407cd0b9367920afed0c3d5f25383bc714"
+    },
+    {
+      "path": "tests/integration/lab/ext_integration/contracts_test.go",
+      "sha256": "3f63901073967ececb7b76435d54a77003329a55ba0f3e5b71ec9d87cb51e755"
+    },
+    {
+      "path": "contracts/powershell/8.1.0/runtime.json",
+      "sha256": "7acfc9d635da928a2cf3deb4ff6f660f239edb218581613708a27a74f48aa1d8"
+    },
+    {
+      "path": "contracts/powershell/8.1.0/reconciliation.json",
+      "sha256": "57da3f9882d56a46b539dd807f97ed3f47cf9d6922d2608ffee22657a0f70326"
+    },
+    {
+      "path": "docs/implementation/ext/evidence/ai-agents-source/manifest.json",
+      "sha256": "3b2881a32d6d5399dc028c63be3f300bbc814093dd1c28af827203e840b6192b"
+    }
+  ],
+  "controls_source_supplement": {
+    "path": "docs/implementation/ext/evidence/ai-agents-source/controls-supplement.json",
+    "sha256": "523d405df4f9c693fc7295841755ec9f455e2c545ebf672e05ac990191d7f73a",
+    "scope": "Two exact private ProcessRecord method bodies; ShouldProcess false skips remote ProcessRecordAsync; static source only, not executed management WhatIf."
+  }
+}

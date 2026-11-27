@@ -1,0 +1,80 @@
+{
+  "schema": "bounded-offline-implementation-check",
+  "revision": "b838d0fa760e1b49fe17c510fbe43daf0a648354",
+  "scope": "AI-agent first source-backed repair batch; not seven-command contract closure or live qualification. Synthetic credential transport replays and inert pinned model/binder observations remain distinct from historic tenant response captures.",
+  "command": "TMPDIR=/private/tmp/msteams-ext90-go-tmp GOMAXPROCS=2 python3 /private/tmp/msteams-disk-guard.py go test -json -p 1 -count=1 -run 'TestUnit|Example' ./msteams/teams_admin_api/ai_agents ./tests/integration/lab/ai_agents ./tests/integration/lab/ext_integration",
+  "execution": {
+    "handle": 76267,
+    "exit_code": 0,
+    "artifact_path": "/private/tmp/ext90-ai-b838d0f-execution-tests.json",
+    "artifact_sha256": "c7d79d8725c6163196213e87b8ee6c8eec8b16f5f586be8930b97ff35e54292c",
+    "test_pass_events": 158,
+    "fail_events": 0,
+    "skip_events": 0,
+    "tenant_tests_executed": false,
+    "package_terminals": [
+      {
+        "package": "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/ai_agents",
+        "action": "pass"
+      },
+      {
+        "package": "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/ai_agents",
+        "action": "pass"
+      },
+      {
+        "package": "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/ext_integration",
+        "action": "pass"
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "msteams/teams_admin_api/ai_agents/models.go",
+      "sha256": "c4ddca974a172bf603eb11a6541a1411ddcc2d704c17c4bc4033ac3784e753db"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/service.go",
+      "sha256": "1722c4783376f224f8b9d54b425783ff790b53196a3e31a49dc3140d3f592d86"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/generated.go",
+      "sha256": "5e562f9cfdea3c09bc42ace5b8c09f066e9f672d70f17a6c29a4bc342bfcfced"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/generated_test.go",
+      "sha256": "b7b45d9e0000574830bd38f65fd81eefa34651af1be2867f401e376a8c2de2c3"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/service_test.go",
+      "sha256": "49e092ef1f9201c1b2aaec7015d8692e34741c2a54fdcd60211ee9c86afbaea3"
+    },
+    {
+      "path": "msteams/teams_admin_api/ai_agents/example_test.go",
+      "sha256": "5805642a67b81abc13b96d7f7853a8a49a921515601e08d1c70a295976830ebc"
+    },
+    {
+      "path": "tests/integration/lab/ai_agents/ai_agents_test.go",
+      "sha256": "e21b1b2ab436a9c8fb820644037cfd407cd0b9367920afed0c3d5f25383bc714"
+    },
+    {
+      "path": "tests/integration/lab/ai_agents/recovery.go",
+      "sha256": "4c525a3c2f7c29744c328accfe378b53f03dc10d684cccd4df9e4a398766e88e"
+    },
+    {
+      "path": "tests/integration/lab/ext_integration/contracts_test.go",
+      "sha256": "3f63901073967ececb7b76435d54a77003329a55ba0f3e5b71ec9d87cb51e755"
+    },
+    {
+      "path": "docs/implementation/ext/evidence/ai-agents-source/manifest.json",
+      "sha256": "3b2881a32d6d5399dc028c63be3f300bbc814093dd1c28af827203e840b6192b"
+    }
+  ],
+  "unchanged_limits": [
+    "All seven AI command implementation/contract/live ledger states remain unchanged.",
+    "Historical response captures are not proof of corrected private request headers.",
+    "No real knowledge deletion, installation, grant, role or consent change.",
+    "MCPS app-only denial/pre-request certificate failure remains unavailable evidence.",
+    "Native raw fields/list, context/replay, mutation path safety and commercial-only audience boundaries are explicit."
+  ],
+  "initial_setup_attempt": "Separate /private/tmp/ext90-ai-b838d0f-tests.json records sandbox cache-access setup failures before tests. The authorized execution above completed; the setup artifact is retained, not relabeled as a code failure."
+}

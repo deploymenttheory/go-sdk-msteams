@@ -809,6 +809,18 @@
             {
               "file": "msteams/teams_admin_api/tenant_identity/example_test.go",
               "name": "ExampleService_SearchGroups"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/group_projection_test.go",
+              "name": "TestUnitFindGroupPublicProjectionUsesPinnedModelAndGUIDRules"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/group_projection_test.go",
+              "name": "TestUnitFindGroupRootClientProjectionRetainsEveryReceipt"
+            },
+            {
+              "file": "msteams/teams_admin_api/tenant_identity/group_projection_test.go",
+              "name": "TestUnitFindGroupSourceQueryBindingAndExactStatus"
             }
           ],
           "live_tests": [
@@ -820,7 +832,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -830,8 +842,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "docs/implementation/ext/evidence/find-group-3ab0f62-contract.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -925,6 +939,18 @@
             {
               "file": "msteams/teams_admin_api/ai_agents/service_test.go",
               "name": "TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentNilContextAndServiceAreRejected"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct"
             }
           ],
           "live_tests": [
@@ -936,7 +962,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -946,8 +972,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "docs/implementation/ext/evidence/ai-agents-b8540c1-review.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -1191,6 +1219,38 @@
             {
               "file": "msteams/teams_admin_api/ai_agents/service_test.go",
               "name": "TestUnitAIAgentListOptionsAndCatalogFilters"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentSourcePresenceAndQueryConstruction"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentMalformedResponsesFailDecode"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentNilContextAndServiceAreRejected"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedExactDuplicateAndCaseOrdering"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNumericLexemesAndRanges"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedProjectionDefaultsAndRemoveMinimum"
             }
           ],
           "live_tests": [
@@ -1206,7 +1266,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -1220,8 +1280,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "docs/implementation/ext/evidence/ai-agents-b8540c1-review.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -1257,6 +1319,46 @@
             {
               "file": "msteams/teams_admin_api/ai_agents/service_test.go",
               "name": "TestUnitAIAgentListOptionsAndCatalogFilters"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentSourcePresenceAndQueryConstruction"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentMalformedResponsesFailDecode"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentCatalogProjectsCompletePinnedDescription"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentNilContextAndServiceAreRejected"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedExactDuplicateAndCaseOrdering"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNumericLexemesAndRanges"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedProjectionDefaultsAndRemoveMinimum"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedAllKnownDescriptionFieldsUseExactSourceProjection"
             }
           ],
           "live_tests": [
@@ -1268,7 +1370,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -1278,8 +1380,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "docs/implementation/ext/evidence/ai-agents-b8540c1-review.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -23520,6 +23624,38 @@
             {
               "file": "msteams/teams_admin_api/ai_agents/service_test.go",
               "name": "TestUnitAIAgentRejectedWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentSourcePresenceAndQueryConstruction"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentSourceSuccessStatusesAreExact"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentNilContextAndServiceAreRejected"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedExactDuplicateAndCaseOrdering"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNumericLexemesAndRanges"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedProjectionDefaultsAndRemoveMinimum"
             }
           ],
           "live_tests": [
@@ -23535,7 +23671,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -23545,8 +23681,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "docs/implementation/ext/evidence/ai-agents-b8540c1-review.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -31172,6 +31310,14 @@
             {
               "file": "msteams/teams_admin_api/ai_agents/service_test.go",
               "name": "TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentNilContextAndServiceAreRejected"
             }
           ],
           "live_tests": [
@@ -31183,7 +31329,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -31193,8 +31339,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "docs/implementation/ext/evidence/ai-agents-b8540c1-review.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -31230,6 +31378,38 @@
             {
               "file": "msteams/teams_admin_api/ai_agents/service_test.go",
               "name": "TestUnitAIAgentRejectedWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentSourceSuccessStatusesAreExact"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentRemoveNullResultsRetainReceiptAndNeverReplay"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentNilContextAndServiceAreRejected"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedExactDuplicateAndCaseOrdering"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNumericLexemesAndRanges"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedProjectionDefaultsAndRemoveMinimum"
             }
           ],
           "live_tests": [
@@ -31245,7 +31425,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -31255,8 +31435,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "docs/implementation/ext/evidence/ai-agents-b8540c1-review.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -37121,6 +37303,34 @@
             {
               "file": "msteams/teams_admin_api/ai_agents/service_test.go",
               "name": "TestUnitAIAgentRejectedWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentSourcePresenceAndQueryConstruction"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/service_test.go",
+              "name": "TestUnitAIAgentNilContextAndServiceAreRejected"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedExactDuplicateAndCaseOrdering"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNumericLexemesAndRanges"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedNullableArraysAndLegacyKnowledgeAreDistinct"
+            },
+            {
+              "file": "msteams/teams_admin_api/ai_agents/generated_test.go",
+              "name": "TestUnitGeneratedProjectionDefaultsAndRemoveMinimum"
             }
           ],
           "live_tests": [
@@ -37136,7 +37346,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -37146,8 +37356,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "docs/implementation/ext/evidence/ai-agents-b8540c1-review.json"
+        ]
       },
       "live": {
         "status": "not-run",

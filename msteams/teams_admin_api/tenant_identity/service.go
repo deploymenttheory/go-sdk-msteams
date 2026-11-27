@@ -7,6 +7,7 @@
 package tenantidentity
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -80,12 +81,14 @@ func (s *Service) getObject(ctx context.Context, command string, path []string, 
 
 // SearchGroups is Find-CsGroup: GET Teams.VoiceApps/groups. The response
 // Diagnostics array is not returned (the module writes it to its diagnostic
-// stream); a missing or null Groups array is an empty result.
+// stream). A missing/null/wrong-type Groups property is an empty result; a
+// null generated root returns nil with the response. IDs follow the source
+// public GUID projection while original properties remain in RawFields.
 func (s *Service) SearchGroups(ctx context.Context, request GroupSearchRequest) ([]*Group, *resty.Response, error) {
 	if err := s.ready(ctx); err != nil {
 		return nil, nil, err
 	}
-	if !validText(request.SearchQuery) {
+	if request.SearchQuery == "" || request.MaxResults != nil && *request.MaxResults > 1<<31-1 {
 		return nil, nil, ErrInput
 	}
 	query := url.Values{"SearchQuery": {request.SearchQuery}}
@@ -98,17 +101,21 @@ func (s *Service) SearchGroups(ctx context.Context, request GroupSearchRequest) 
 	if request.MailEnabledOnly != nil {
 		query.Set("MailEnabledOnly", dotnetBool(*request.MailEnabledOnly))
 	}
-	var raw json.RawMessage
-	response, err := s.do(ctx, "Find-CsGroup", client.Request{Method: http.MethodGet, Path: []string{"Teams.VoiceApps", "groups"}, Query: query, Replay: client.ReplaySafe}, http.StatusOK, &raw)
+	response, err := s.do(ctx, "Find-CsGroup_Find", client.Request{Method: http.MethodGet, Path: []string{"Teams.VoiceApps", "groups"}, Query: query, Replay: client.ReplaySafe}, http.StatusOK, nil)
 	if err != nil {
+		return nil, response, err
+	}
+	fields, err := groupNode(response.Body())
+	if err != nil || fields == nil {
 		return nil, response, err
 	}
 	var envelope struct {
 		Groups []*Group `json:"Groups"`
 	}
-	var fields map[string]json.RawMessage
-	if json.Unmarshal(raw, &fields) != nil || fields == nil || json.Unmarshal(raw, &envelope) != nil {
-		return nil, response, client.ErrDecode
+	if raw := bytes.TrimSpace(fields["Groups"]); len(raw) > 0 && raw[0] == '[' {
+		if json.Unmarshal(raw, &envelope.Groups) != nil {
+			return nil, response, client.ErrDecode
+		}
 	}
 	groups := make([]*Group, 0, len(envelope.Groups))
 	for _, group := range envelope.Groups {

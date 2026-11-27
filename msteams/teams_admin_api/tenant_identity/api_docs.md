@@ -47,8 +47,40 @@ so the SDK has no equivalent.
 `GroupSearchRequest.SearchQuery` is required; the service rejects queries
 shorter than three characters with HTTP 400. Nil options are omitted. Booleans
 are sent as `True`/`False`, the module's spelling. The response's `Diagnostics`
-array goes to the module's diagnostic stream and is not returned. A missing or
-null `Groups` array is an empty result.
+array is not mixed into the native group slice; the original HTTP response is
+retained for inspection. PowerShell emits Info/default diagnostic text on the
+success stream and Warning/Verbose separately; diagnostics can precede a
+later group-projection failure. Missing, null or wrong-type
+`Groups` in an object yields an empty slice; an empty/whitespace/array generated
+root yields a nil slice with its receipt. A null/nonmodel row or failed public
+ID projection fails the buffered result and retains that receipt.
+
+The source path is public wrapper → internal proxy → private
+`Find-CsGroup_Find`; the request header uses that private default name. `Force`
+is removed by the wrapper, with no native option. There is no WhatIf/Confirm
+surface for this read. Query whitespace/control characters are accepted and
+encoded. Only an empty required query is rejected locally; the three-character
+minimum is the server's observed validation, not an invented client limit.
+
+`MaxResults` remains `*uint32` like the public parameter, but a value above
+MaxInt32 fails its actual forwarded Int32 binder. The SDK reports this as an
+early `ErrInput` before I/O. Nil means omitted. The actual internal script proxy
+converts an explicitly
+bound PowerShell null to bound zero before reaching the compiled cmdlet; use a
+non-nil zero pointer for that wire result. Direct compiled Int32 binding has a
+different null outcome and is not substituted for the script path. Explicit
+zero and false options are sent.
+
+`Group.ID` stays `*string` for API compatibility, containing the public
+GroupModel's canonical D-format GUID text. The actual `Guid.Parse` projection
+accepts N/D/B/P/X forms, canonicalizes them, and rejects missing/null/invalid IDs.
+The bounded source packet pins the actual runtime parser, including X numeric
+component quirks. `DisplayName` uses exact generated case/type semantics;
+wrong-type values project nil. Exact duplicate JSON keys fail recursively.
+`RawFields` retains the original wire values independently, including the
+original ID spelling, without changing the typed projected value. This changes
+only the group model/search path, not other tenant/support DTOs. Standard JSON
+and native context/replay/error handling remain explicit SDK boundaries.
 
 ## Configurations
 

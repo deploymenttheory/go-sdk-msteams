@@ -90,7 +90,7 @@ func TestAccAIAgentReads(t *testing.T) {
 	defer cancel()
 
 	listed, _, err := service.List(ctx, nil)
-	if err != nil || listed == nil || listed.AgentCount == nil || int(*listed.AgentCount) < len(listed.Agents) {
+	if err != nil || listed == nil || listed.AgentCount == nil || *listed.AgentCount < int64(len(listed.Agents)) {
 		t.Fatal("AI agent list failed")
 	}
 	first, exclude := int32(1), true
