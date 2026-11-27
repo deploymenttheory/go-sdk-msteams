@@ -16,7 +16,8 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_client_configuration"
 )
 
-func TestUnitClientConfigurationTypedCompiledCRUD(t *testing.T) {
+// These controlled 400 request probes establish wire bytes, not successful decoding.
+func TestUnitClientConfigurationRejectedCompiledRequests(t *testing.T) {
 	t.Parallel()
 
 	for _, f := range requestInputs(t) {
@@ -27,19 +28,10 @@ func TestUnitClientConfigurationTypedCompiledCRUD(t *testing.T) {
 				body = json.RawMessage(x.Body)
 			}
 			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: x.CmdletName, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
-			if x.FailureType != nil {
-				c.Want.Error = client.ErrDecode
-				if f.Status == 403 {
-					c.Want.Error = auth.ErrForbidden
-				}
-			} else if f.Response != "" {
-				c.Want.JSON = json.RawMessage(f.Response)
-			} else if f.Operation == "read" {
-				c.Want.JSON = json.RawMessage("null")
+			if f.Status != 400 {
+				t.Fatal("rejected request probe unexpectedly contains a success contract")
 			}
-			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			}
+			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.TeamsClientConfigurations
 				controls := policy.Controls{}

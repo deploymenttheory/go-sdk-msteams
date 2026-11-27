@@ -14,7 +14,8 @@ import (
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_education_configuration"
 )
 
-func TestUnitEducationConfigurationTypedProviderRequests(t *testing.T) {
+// These controlled 400 request probes establish wire bytes, not successful decoding.
+func TestUnitEducationConfigurationRejectedProviderRequests(t *testing.T) {
 	t.Parallel()
 
 	for _, f := range requestInputs(t) {
@@ -29,17 +30,10 @@ func TestUnitEducationConfigurationTypedProviderRequests(t *testing.T) {
 				c.Steps = nil
 				c.Mappings = []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}
 				c.Want.Error = resource.ErrInput
-			} else if x.FailureType != nil {
-				c.Want.Error = client.ErrDecode
-				if f.Status == 403 {
-					c.Want.Error = auth.ErrForbidden
+			} else {
+				if f.Status != 400 {
+					t.Fatal("rejected request probe unexpectedly contains a success contract")
 				}
-			} else if f.Response != "" {
-				c.Want.JSON = json.RawMessage(f.Response)
-			} else if f.Operation == "read" {
-				c.Want.JSON = json.RawMessage("null")
-			}
-			if len(c.Steps) != 0 {
 				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
