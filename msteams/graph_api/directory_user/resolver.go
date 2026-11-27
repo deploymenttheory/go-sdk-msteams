@@ -40,7 +40,7 @@ type User struct {
 func (u *User) UnmarshalJSON(data []byte) error {
 	type snapshot User
 	var value snapshot
-	if json.Unmarshal(data, &value) != nil || !directoryID.MatchString(value.ID) || json.Unmarshal(data, &value.RawFields) != nil {
+	if decodeUser(data, &value.ID, &value.DisplayName, &value.UserPrincipalName, &value.UserType, &value.Mail, &value.RawFields) != nil {
 		return client.ErrDecode
 	}
 	*u = User(value)
@@ -213,7 +213,8 @@ func (r *Resolver) Resolve(ctx context.Context, selector string, options Resolve
 		if err != nil {
 			return Resolution{Source: Current, User: user}, response, err
 		}
-		return resolution(Current, user), response, err
+		resolved, resolveErr := resolution(Current, user)
+		return resolved, response, resolveErr
 	}
 	if !validSelector(selector) {
 		return Resolution{}, nil, client.ErrRequest
@@ -223,7 +224,8 @@ func (r *Resolver) Resolve(ctx context.Context, selector string, options Resolve
 	}
 	user, response, err := r.Get(ctx, selector, ReadOptions{Select: []string{"id"}})
 	if err == nil {
-		return resolution(Direct, user), response, nil
+		resolved, resolveErr := resolution(Direct, user)
+		return resolved, response, resolveErr
 	}
 	if errors.Is(err, ErrPending) {
 		return Resolution{Source: Direct, User: user}, response, err
@@ -239,12 +241,15 @@ func (r *Resolver) Resolve(ctx context.Context, selector string, options Resolve
 	return result, fallbackResponse, fallbackErr
 }
 
-func resolution(source Source, user *User) Resolution {
+func resolution(source Source, user *User) (Resolution, error) {
 	result := Resolution{Source: source, User: user}
 	if user != nil {
 		result.ID = user.ID
 	}
-	return result
+	if result.ID == "" {
+		return result, client.ErrDecode
+	}
+	return result, nil
 }
 
 func (r *Resolver) byMail(ctx context.Context, selector string, maxPages int) (Resolution, *resty.Response, error) {
@@ -273,12 +278,17 @@ func (r *Resolver) byMail(ctx context.Context, selector string, maxPages int) (R
 			break
 		}
 		for _, user := range page.Items {
+			if user.ID == "" {
+				return Resolution{}, response, client.ErrDecode
+			}
 			if selected == nil {
 				copy := user
 				selected = &copy
 				continue
 			}
-			if !strings.EqualFold(selected.ID, user.ID) {
+			// UUID text has case-insensitive spelling; opaque IDs have no
+			// evidenced normalization rule and must match exactly.
+			if selected.ID != user.ID && !(directoryID.MatchString(selected.ID) && directoryID.MatchString(user.ID) && strings.EqualFold(selected.ID, user.ID)) {
 				return Resolution{}, response, ErrAmbiguous
 			}
 		}
@@ -286,5 +296,6 @@ func (r *Resolver) byMail(ctx context.Context, selector string, maxPages int) (R
 	if selected == nil {
 		return Resolution{}, response, ErrNotFound
 	}
-	return resolution(Mail, selected), response, nil
+	resolved, resolveErr := resolution(Mail, selected)
+	return resolved, response, resolveErr
 }

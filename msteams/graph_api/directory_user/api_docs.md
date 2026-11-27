@@ -8,7 +8,19 @@ read uses the root Graph session and caller context.
 escaped segments; a leading-$ UPN uses the documented OData key form, with quote
 escaping. `Current` reads `/v1.0/me` only in configured delegated mode. Application
 callers supply an explicit identity. Reads retain nullable/future fields and the
-complete object in `RawFields`. A directory UUID is required in a returned user.
+complete object in `RawFields`. The five typed string fields follow the pinned
+AadUser JsonConvert string reader: strings are retained, Boolean/number tokens
+become their original text, null/missing optional fields stay nil, and arrays or
+objects in those fields fail decoding. A response ID is not required to be a
+UUID. Missing/null IDs use the existing empty Go string representation in a
+read snapshot; completed resolution rejects empty IDs with `ErrDecode` and
+retains its snapshot/receipt without mail fallback. Downstream reference, owner,
+team and membership validators retain their independent constraints.
+
+The [portable source packet](../../../docs/implementation/core/evidence/directory-user-read-source.json)
+contains 70 pure actual-model observations, not captured Graph responses or
+live permission evidence. Numeric ID acceptance is a read-model contract and
+does not establish a remotely valid mutation target.
 
 `Resolve` accepts a UUID unchanged without network or existence/type/authority
 verification. Non-UUID selectors first use direct lookup with `$select=id`.
@@ -18,7 +30,9 @@ pinned `myorganization` alias or silently choose its first result. Authenticatio
 authorization, malformed responses and other failures do not trigger fallback.
 
 Fallback follows every page until completion, a second distinct identity, or a
-shared traversal error. Duplicate observations of the same ID are deduplicated.
+shared traversal error. Duplicate observations of the same ID are deduplicated. UUID spellings retain
+case-insensitive comparison; opaque IDs require exact equality and are never
+case-folded to establish uniqueness.
 The default bound is 16 pages; callers may set a positive MaxPages. No match
 returns `ErrNotFound`; distinct matches return `ErrAmbiguous`. A limit, forbidden
 continuation, malformed page or local cancellation cannot establish absence or
