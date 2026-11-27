@@ -43,15 +43,15 @@ T references name exact existing functions, not full semantic completion. Review
 | Get-CsTeamsMeetingTemplateConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T57 |
 | Get-CsTeamsMeetingTemplateConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T58 |
 | Get-CsTeamsMessagingConfiguration | `Filter` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T59 |
-| Get-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Independently source-proven nullable-list correction; complete command review pending | T59, T95 |
+| Get-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Independent nullable-list correction passes full 2b08f57 / 67230; complete command review remains pending | T59, T95 |
 | Get-CsTeamsMigrationConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T61 |
 | Get-CsTeamsMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T61 |
 | Get-CsTeamsMultiTenantOrganizationConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T64, T82 |
 | Get-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T63, T82 |
 | Get-CsTeamsSipDevicesConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T67, T83 |
 | Get-CsTeamsSipDevicesConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T66, T83 |
-| Get-CsTeamsTenantAbuseConfiguration | `Filter` | Direct compiled PolicyRp | Source-backed nullable-list correction and authored typed/partial/recovery tests present; frozen execution and command decision pending | T69, T91, T92 |
-| Get-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Source-backed nullable-list correction and authored typed/partial/recovery tests present; frozen execution and command decision pending | T69, T91, T92 |
+| Get-CsTeamsTenantAbuseConfiguration | `Filter` | Direct compiled PolicyRp | Nullable-list correction with typed/partial/recovery execution at 4cb4ca1 / 52681; full command decision remains under review | T69, T91, T92 |
+| Get-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Nullable-list correction with typed/partial/recovery execution at 4cb4ca1 / 52681; full command decision remains under review | T69, T91, T92 |
 | Get-CsTeamsUpgradeConfiguration | `Filter` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T71, T84 |
 | Get-CsTeamsUpgradeConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T72, T84 |
 | Get-CsTenantMigrationConfiguration | `Filter` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T74 |
@@ -68,11 +68,11 @@ T references name exact existing functions, not full semantic completion. Review
 | Set-CsTeamsGuestMessagingConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T45 |
 | Set-CsTeamsMeetingBroadcastConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T49, T46 |
 | Set-CsTeamsMeetingConfiguration | `Identity` | Direct compiled PolicyRp | Native methods/tests exist; exact property/default/model/control/success assertions remain under finite review | T55, T53, T52, T56 |
-| Set-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Independently source-proven nullable-list correction; complete command review pending | T60, T95 |
+| Set-CsTeamsMessagingConfiguration | `Identity` | Direct compiled PolicyRp | Independent nullable-list correction passes full 2b08f57 / 67230; complete command review remains pending | T60, T95 |
 | Set-CsTeamsMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T62 |
 | Set-CsTeamsMultiTenantOrganizationConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T65, T85, T86 |
 | Set-CsTeamsSipDevicesConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T68, T87, T88 |
-| Set-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Source-backed nullable-list correction and authored typed/partial/recovery tests present; frozen execution and command decision pending | T70, T91, T93, T94 |
+| Set-CsTeamsTenantAbuseConfiguration | `Identity` | Direct compiled PolicyRp | Nullable-list correction with typed/partial/recovery execution at 4cb4ca1 / 52681; full command decision remains under review | T70, T91, T93, T94 |
 | Set-CsTeamsUpgradeConfiguration | `Identity` | Direct compiled PolicyRp | Individually reviewed complete scalar inventory, concrete binding/control, successful read/filter or accepted sparse write and error/receipt behavior; versioned follow-up decision below | T73, T89, T90 |
 | Set-CsTenantMigrationConfiguration | `Identity` | Conditional Remoting / modern candidate | Modern native primitive exists; branch/model/source and live boundaries need explicit review, not automatic exclusion | T75 |
 
@@ -217,3 +217,14 @@ templates, guest meeting, meeting, meeting-template Get, messaging, tenant abuse
 and **12 conditional commands / 18 sets**. These remaining groups have distinct
 model/update/source branches; none is assumed tenant-blocked or complete. Every
 live state remains unchanged and full #185 qualification remains open.
+
+## Nullable-list implementation checkpoint
+
+TenantAbuse BlockedTenants and Messaging FileTypeBlockList now preserve null
+entries in their canonical `[]*string` fields. Shared list constructors/edit
+application add nullable operations with deep ownership while existing nonnull
+public signatures and behavior remain intact. Own pinned source/probe evidence
+for each field precedes the correction. [TenantAbuse source and clean execution](pol91-tenant-abuse-source-review.md)
+and [Messaging source and clean execution](pol91-messaging-source-review.md)
+keep 4cb4ca1 / 52681 and 2b08f57 / 67230 separate. No command contract or live
+status changes in this checkpoint; the reviewed total remains 14 / 21.

@@ -28,7 +28,11 @@ false and typed enum projection, a complete replacement body, Before/raw receipt
 ownership and empty204 acceptance without an invented After. A separately
 caller-issued authored readback preserves null entries and the earlier snapshot.
 It is not a captured null-member write/readback or a claim about server-approved
-file extensions. Full package execution is pending at its frozen checkpoint.
+file extensions. Full Messaging SDK TestUnit/Example passed at clean
+`2b08f5705220980c3beed222e8942d39dd3a4b47`, session `67230`. The corresponding
+lab package compiled with no matching offline tests; no TestAcc ran. Go 1.27.4 /
+GOMAXPROCS 2 / `-p 1 -count=1`, 34.28 GiB admission and 14 GiB runtime guard;
+owned scratch removed and post-run selected/shared input diffs zero. No race ran.
 The earlier 4cb4ca1 / 52681 existing Messaging list-edit result covered only
 nonnull compatibility before this field correction, not this new capability.
 
