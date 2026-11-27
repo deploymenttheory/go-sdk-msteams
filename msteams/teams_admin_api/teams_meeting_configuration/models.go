@@ -133,12 +133,12 @@ func (v *Configuration) UnmarshalJSON(raw []byte) error {
 		EnableAttributedTranscripts            policyrp.ReadBool   `json:"EnableAttributedTranscripts"`
 		EnableGraphTranscriptAccess            policyrp.ReadBool   `json:"EnableGraphTranscriptAccess"`
 		EnableWorkIQTranscriptAccess           policyrp.ReadBool   `json:"EnableWorkIQTranscriptAccess"`
-		ClientAudioPort                        policyrp.ReadUint32 `json:"ClientAudioPort"`
-		ClientAudioPortRange                   policyrp.ReadUint32 `json:"ClientAudioPortRange"`
-		ClientVideoPort                        policyrp.ReadUint32 `json:"ClientVideoPort"`
-		ClientVideoPortRange                   policyrp.ReadUint32 `json:"ClientVideoPortRange"`
-		ClientAppSharingPort                   policyrp.ReadUint32 `json:"ClientAppSharingPort"`
-		ClientAppSharingPortRange              policyrp.ReadUint32 `json:"ClientAppSharingPortRange"`
+		ClientAudioPort                        readMeetingPort     `json:"ClientAudioPort"`
+		ClientAudioPortRange                   readMeetingPort     `json:"ClientAudioPortRange"`
+		ClientVideoPort                        readMeetingPort     `json:"ClientVideoPort"`
+		ClientVideoPortRange                   readMeetingPort     `json:"ClientVideoPortRange"`
+		ClientAppSharingPort                   readMeetingPort     `json:"ClientAppSharingPort"`
+		ClientAppSharingPortRange              readMeetingPort     `json:"ClientAppSharingPortRange"`
 		ClientMediaPortRangeEnabled            policyrp.ReadBool   `json:"ClientMediaPortRangeEnabled"`
 		LimitPresenterRolePermissions          policyrp.ReadBool   `json:"LimitPresenterRolePermissions"`
 		FeedbackSurveyForAnonymousUsers        policyrp.ReadString `json:"FeedbackSurveyForAnonymousUsers"`
@@ -233,4 +233,18 @@ func readObject(raw []byte, visit func(string, json.RawMessage) error) (map[stri
 		}
 	}
 	return fields, nil
+}
+
+// readMeetingPort applies the own DTO's positiveInteger restriction after the
+// nullable UInt32 conversion. The full nonzero UInt32 range is valid; this is
+// not a networking port limit and introduces no cross-field/range constraint.
+type readMeetingPort struct{ Value *uint32 }
+
+func (v *readMeetingPort) UnmarshalJSON(raw []byte) error {
+	var value policyrp.ReadUint32
+	if json.Unmarshal(raw, &value) != nil || value.Value != nil && *value.Value == 0 {
+		return client.ErrDecode
+	}
+	v.Value = value.Value
+	return nil
 }
