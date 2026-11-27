@@ -118,7 +118,7 @@ func TestUnitPromptsNullRemovalFromEmptyListRetainsReadWithoutPatch(t *testing.T
 	t.Parallel()
 	const empty = `{"Identity":"Global","Prompts":[],"Packages":[]}`
 	for _, packages := range []bool{false, true} {
-		run(t, contracttest.Case{Name: "null-remove-empty", Source: "scripts/discovery/observe-pol91-prompts-models.ps1", Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire("GET", item, setCommand, nil, 200, empty)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: "null-remove-empty", Source: "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go", Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire("GET", item, setCommand, nil, 200, empty)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			input := resource.UpdateRequest{Prompts: resource.ChangePrompts(nil, []*resource.Prompt{nil})}
 			if packages {
 				input = resource.UpdateRequest{Packages: resource.ChangePackages(nil, []*resource.PromptPackage{nil})}
