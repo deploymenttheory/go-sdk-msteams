@@ -1973,7 +1973,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -1983,8 +1983,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-oce-commands.json#/commands/0"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -2090,13 +2092,17 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
               "name": "TestUnitOCEAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEGenericSuccessRangePreservesTypedAndDecodeResults"
             }
           ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -2110,8 +2116,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-oce-commands.json#/commands/1"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -3042,6 +3050,10 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
               "name": "TestUnitOCEAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEGenericSuccessRangePreservesTypedAndDecodeResults"
             }
           ],
           "live_tests": []
@@ -3090,7 +3102,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -3112,8 +3124,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-oce-commands.json#/commands/2"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -14764,7 +14778,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -14774,8 +14788,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-oce-commands.json#/commands/3"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -14815,7 +14831,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -14825,8 +14841,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-oce-commands.json#/commands/4"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -22190,13 +22208,17 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
               "name": "TestUnitOCEAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEActionDecodeFailuresPreserveAcceptedResponse"
             }
           ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -22206,8 +22228,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-oce-commands.json#/commands/5"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -22272,13 +22296,17 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
               "name": "TestUnitOCEAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEActionDecodeFailuresPreserveAcceptedResponse"
             }
           ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -22288,8 +22316,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-oce-commands.json#/commands/6"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -22323,13 +22353,17 @@
             {
               "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
               "name": "TestUnitOCEAuthoredTypedResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go",
+              "name": "TestUnitOCEActionDecodeFailuresPreserveAcceptedResponse"
             }
           ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -22339,8 +22373,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-oce-commands.json#/commands/7"
+        ]
       },
       "live": {
         "status": "not-run",
