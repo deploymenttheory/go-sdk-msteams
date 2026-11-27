@@ -5790,11 +5790,11 @@
           "contract_tests": [
             {
               "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
-              "name": "TestUnitPrivacyListFilteringAndGlobalOrderFromRealResponses"
+              "name": "TestUnitPrivacyRejectedFilterRequests"
             },
             {
               "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
-              "name": "TestUnitPrivacyWhitespaceFilterRemainsLiteralFromRealResponses"
+              "name": "TestUnitPrivacyAuthoredListAndLiteralFilterResponses"
             }
           ],
           "live_tests": [
@@ -5837,6 +5837,10 @@
             {
               "file": "tests/contract/policies/configuration_cancellation_test.go",
               "name": "TestUnitConfigurationCanceledReadRetainsReceiptAndAllowsIndependentRead"
+            },
+            {
+              "file": "msteams/teams_admin_api/privacy_configuration/composition_test.go",
+              "name": "TestUnitPrivacyAuthoredListAndLiteralFilterResponses"
             }
           ],
           "live_tests": [
@@ -37299,6 +37303,10 @@
             {
               "file": "tests/contract/policies/configuration_decode_recovery_test.go",
               "name": "TestUnitConfigurationAcceptedMalformedPreparationRetainsEarlierSuccessAndCallerRecovery"
+            },
+            {
+              "file": "msteams/teams_admin_api/online_voicemail_validation_configuration/provider_success_test.go",
+              "name": "TestUnitValidationSparsePatchAndPreparedUpdateReachAcceptedBranches"
             }
           ],
           "live_tests": []
@@ -38827,6 +38835,10 @@
             {
               "file": "tests/contract/policies/configuration_cancellation_test.go",
               "name": "TestUnitConfigurationCanceledReadRetainsReceiptAndAllowsIndependentRead"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_client_configuration/provider_success_test.go",
+              "name": "TestUnitClientConfigurationPatchRetainsTypedSuccessAndMalformedReceipt"
             }
           ],
           "live_tests": []
