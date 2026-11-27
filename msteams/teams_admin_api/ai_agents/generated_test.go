@@ -113,7 +113,14 @@ func TestUnitGeneratedExactDuplicateAndCaseOrdering(t *testing.T) {
 				t.Fatal("case-distinct source object rejected")
 			}
 			got, marshalErr := json.Marshal(generatedSnapshot(value))
-			want, sourceErr := json.Marshal(item.Properties)
+			source, sourceErr := json.Marshal(item.Properties)
+			var sourceValue any
+			if sourceErr != nil || json.Unmarshal(source, &sourceValue) != nil {
+				t.Fatal("source getter snapshot unavailable")
+			}
+			// Canonicalize nested source objects too: RawMessage preserves their
+			// original property order, which has no semantic significance here.
+			want, sourceErr := json.Marshal(sourceValue)
 			if marshalErr != nil || sourceErr != nil || string(got) != string(want) {
 				t.Fatalf("source getter projection differs for %s", item.Model)
 			}
