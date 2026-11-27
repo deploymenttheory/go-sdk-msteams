@@ -1,0 +1,104 @@
+{
+  "scope": "Own Meeting Set helper, comparator, nested expansion and typed serializer. No management lifecycle/authentication/HTTP.",
+  "hashes": {
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+    "Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49"
+  },
+  "reproducer_sha256": "d96458b308878c6728828a2bb5e1e2d8ee3d1f00616343b9e98c9b8be1b7c1aa",
+  "public_set_type": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.SetTeamsMeetingConfigurationCmdlet",
+  "normalized_resource": "TeamsMeetingConfiguration",
+  "observations": [
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "empty-clears-populated",
+      "remaining": 0,
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[]}"
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "null-modifier-empty",
+      "remaining": 0,
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[]}"
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "null-modifier-populated",
+      "remaining": 0,
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[]}"
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "null-remove-empty",
+      "remaining": 0,
+      "stage": "helper",
+      "error": "System.NullReferenceException",
+      "serialized": null
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "null-remove-populated",
+      "remaining": 1,
+      "stage": "helper",
+      "error": "System.ArgumentNullException",
+      "serialized": null
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "null-add",
+      "remaining": 1,
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[null]}"
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "null-replace",
+      "remaining": 1,
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[null]}"
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "replace-entry",
+      "remaining": 1,
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[{\"Identity\":null,\"Id\":\"c1\",\"PublishedName\":null,\"PublishedDescription\":null,\"EntraName\":null,\"EntraDescription\":null,\"Published\":null}]}"
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "compare-remove-empty",
+      "remaining": 0,
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[]}"
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "compare-remove-populated",
+      "remaining": 1,
+      "stage": "helper",
+      "error": "System.ArgumentNullException",
+      "serialized": null
+    },
+    {
+      "field": "PublishedEntraAuthenticationContexts",
+      "case": "default-element-null-id",
+      "remaining": 1,
+      "stage": "complete",
+      "error": null,
+      "serialized": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[{\"Identity\":null,\"Id\":null,\"PublishedName\":null,\"PublishedDescription\":null,\"EntraName\":null,\"EntraDescription\":null,\"Published\":null}]}"
+    }
+  ],
+  "received_json": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[{\"Id\":\"c1\",\"PublishedName\":37,\"Published\":1,\"Future\":true}]}",
+  "typed_write_json": "{\"Identity\":\"Global\",\"PublishedEntraAuthenticationContexts\":[{\"Identity\":null,\"Id\":\"c1\",\"PublishedName\":\"37\",\"PublishedDescription\":null,\"EntraName\":null,\"EntraDescription\":null,\"Published\":true}]}",
+  "management_lifecycle_invoked": false,
+  "authentication_or_http": false
+}

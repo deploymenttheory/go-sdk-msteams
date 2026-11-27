@@ -1,0 +1,105 @@
+[CmdletBinding()]
+param([Parameter(Mandatory)][string]$ModulePath)
+$ErrorActionPreference = 'Stop'
+$hashes = @{
+    'Microsoft.Teams.Policy.Administration.Cmdlets.Core.dll' = '68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49'
+    'Microsoft.Teams.Policy.Administration.Cmdlets.Providers.PolicyRp.dll' = 'a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51'
+}
+foreach ($name in $hashes.Keys) {
+    if ((Get-FileHash (Join-Path $ModulePath "netcoreapp3.1/$name")).Hash.ToLowerInvariant() -ne $hashes[$name]) { throw 'Pinned source differs' }
+}
+Import-Module (Join-Path $ModulePath 'MicrosoftTeams.psd1') -Force -WarningAction SilentlyContinue
+$public = Get-Command Set-CsTeamsMeetingConfiguration
+$model = $public.ImplementingType.BaseType.GetGenericArguments()[0]
+$get = Get-Command Get-CsTeamsMeetingConfiguration
+$normalizer = [AppDomain]::CurrentDomain.GetAssemblies() | ForEach-Object {
+    $_.GetType('Microsoft.Teams.Policy.Administration.Cmdlets.Providers.Helpers.ConfigurationNameNormalization`1', $false)
+} | Where-Object { $null -ne $_ } | Select-Object -First 1
+$normalized = $normalizer.MakeGenericType($model).GetMethod('GetNormalizedNameForPolicyRP',[Reflection.BindingFlags]'Public,NonPublic,Static').Invoke($null,@())
+$helper = $model.Assembly.GetType('Microsoft.Teams.Policy.Administration.Cmdlets.Core.PSListModifierHelper')
+$apply = $helper.GetMethods([Reflection.BindingFlags]'Public,NonPublic,Static') | Where-Object { $_.Name -eq 'ApplyTo' -and $_.IsGenericMethodDefinition -and $_.GetParameters().Count -eq 3 } | Select-Object -First 1
+$closure = $public.ImplementingType.GetNestedType('<>c', [Reflection.BindingFlags]'NonPublic')
+$singleton = $closure.GetField('<>9', [Reflection.BindingFlags]'Public,NonPublic,Static').GetValue($null)
+$resolver = [AppDomain]::CurrentDomain.GetAssemblies() | ForEach-Object {
+    $_.GetType('Microsoft.Teams.Policy.Administration.Cmdlets.Providers.Helpers.BoundParametersContractResolver', $false)
+} | Where-Object { $null -ne $_ } | Select-Object -First 1
+$requestHelperType = [AppDomain]::CurrentDomain.GetAssemblies() | ForEach-Object {
+    $_.GetType('Microsoft.Teams.Policy.Administration.Cmdlets.Providers.HttpRequestHelper`1', $false)
+} | Where-Object { $null -ne $_ } | Select-Object -First 1
+$nested = $requestHelperType.MakeGenericType($model).GetMethod('GetNestedBoundParameters',[Reflection.BindingFlags]'Public,NonPublic,Static')
+$observations = foreach ($field in @('PublishedEntraAuthenticationContexts')) {
+    $modifierType = $public.Parameters[$field].ParameterType
+    if (@($public.Parameters[$field].Attributes | Where-Object { $_ -isnot [System.Management.Automation.ParameterAttribute] }).Count -ne 0) { throw 'Additional field attributes need review' }
+    $itemType = $modifierType.GetGenericArguments()[0]
+    $method = $closure.GetMethod('<UpdateProperties>b__2_0', [Reflection.BindingFlags]'Public,NonPublic,Instance')
+    $funcType = [Func[object,object,bool]].GetGenericTypeDefinition().MakeGenericType([Type[]]@($itemType,$itemType,[bool]))
+    $predicate = $method.CreateDelegate($funcType,$singleton)
+    $closed = $apply.MakeGenericMethod($itemType)
+    $ctor = $modifierType.GetConstructor([Type[]]@([hashtable]))
+    foreach ($case in @('empty-clears-populated','null-modifier-empty','null-modifier-populated','null-remove-empty','null-remove-populated','null-add','null-replace','replace-entry','compare-remove-empty','compare-remove-populated')) {
+        $dto = [Activator]::CreateInstance($model)
+        $model.GetProperty('Identity').SetValue($dto,'Global')
+        $model.GetProperty('CustomFooterText').SetValue($dto,'retained footer')
+        $list = $model.GetProperty($field).GetValue($dto)
+        $entry = [Activator]::CreateInstance($itemType)
+        $itemType.GetProperty('Id').SetValue($entry,'c1')
+        if ($case -in @('empty-clears-populated','null-modifier-populated','null-remove-populated','compare-remove-populated')) { $list.Add($entry) }
+        $modifier = switch ($case) {
+            { $_ -in @('null-modifier-empty','null-modifier-populated') } { $null }
+            { $_ -in @('null-remove-empty','null-remove-populated') } { $ctor.Invoke([object[]]@(@{Remove=@($null)})) }
+            'null-add' { $ctor.Invoke([object[]]@(@{Add=@($null)})) }
+            'null-replace' { $ctor.Invoke([object[]]@(@{Replace=@($null)})) }
+            'replace-entry' { $ctor.Invoke([object[]]@(@{Replace=@($entry)})) }
+            { $_ -in @('compare-remove-empty','compare-remove-populated') } { $ctor.Invoke([object[]]@(@{Remove=@($entry)})) }
+            default { [Activator]::CreateInstance($modifierType) }
+        }
+        $failure = $null
+        $body = $null
+        $stage = 'helper'
+        try {
+            $null = $closed.Invoke($null,[object[]]@($modifier,$list,$predicate))
+            $stage = 'serializer'
+            $bound = [Collections.Generic.Dictionary[string,object]]::new()
+            $bound.Add('Identity','Global'); $bound.Add($field,$modifier)
+            $bound = $nested.Invoke($null,[object[]]@($bound,$model,$false))
+            $settings = [Newtonsoft.Json.JsonSerializerSettings]::new()
+            $settings.ContractResolver = [Activator]::CreateInstance($resolver,[object[]]@($bound))
+            $body = [Newtonsoft.Json.JsonConvert]::SerializeObject($dto,$settings)
+            $stage = 'complete'
+        } catch { $failure = $_.Exception.GetBaseException().GetType().FullName }
+        [pscustomobject]@{field=$field;case=$case;remaining=$list.Count;stage=$stage;error=$failure;serialized=$body}
+    }
+}
+
+
+# A default typed element has no Id assignment; writing its null getter is not
+# the same operation as assigning explicit null through the rejecting setter.
+$dto=[Activator]::CreateInstance($model);$model.GetProperty('Identity').SetValue($dto,'Global')
+$list=$model.GetProperty('PublishedEntraAuthenticationContexts').GetValue($dto)
+$zero=[Activator]::CreateInstance($itemType)
+$modifier=$ctor.Invoke([object[]]@(@{Add=@($zero)}))
+$null=$closed.Invoke($null,[object[]]@($modifier,$list,$predicate))
+$bound=[Collections.Generic.Dictionary[string,object]]::new();$bound.Add('Identity','Global');$bound.Add('PublishedEntraAuthenticationContexts',$modifier)
+$bound=$nested.Invoke($null,[object[]]@($bound,$model,$false))
+$settings=[Newtonsoft.Json.JsonSerializerSettings]::new();$settings.ContractResolver=[Activator]::CreateInstance($resolver,[object[]]@($bound))
+$observations+= [pscustomobject]@{field='PublishedEntraAuthenticationContexts';case='default-element-null-id';remaining=$list.Count;stage='complete';error=$null;serialized=[Newtonsoft.Json.JsonConvert]::SerializeObject($dto,$settings)}
+# Read-mode raw JSON is deliberately not the source write projection.
+$inputJson='{"Identity":"Global","PublishedEntraAuthenticationContexts":[{"Id":"c1","PublishedName":37,"Published":1,"Future":true}]}'
+$dto=[Newtonsoft.Json.JsonConvert]::DeserializeObject($inputJson,$model)
+$modifier=[Activator]::CreateInstance($modifierType)
+$bound=[Collections.Generic.Dictionary[string,object]]::new();$bound.Add('Identity','Global');$bound.Add('PublishedEntraAuthenticationContexts',$modifier)
+$bound=$nested.Invoke($null,[object[]]@($bound,$model,$false))
+$settings=[Newtonsoft.Json.JsonSerializerSettings]::new();$settings.ContractResolver=[Activator]::CreateInstance($resolver,[object[]]@($bound))
+$typedBody=[Newtonsoft.Json.JsonConvert]::SerializeObject($dto,$settings)
+[pscustomobject]@{
+ scope='Own Meeting Set helper, comparator, nested expansion and typed serializer. No management lifecycle/authentication/HTTP.'
+ hashes=$hashes
+ reproducer_sha256=(Get-FileHash $PSCommandPath).Hash.ToLowerInvariant()
+ public_set_type=$public.ImplementingType.FullName
+ normalized_resource=$normalized
+ observations=@($observations)
+ received_json=$inputJson
+ typed_write_json=$typedBody
+ management_lifecycle_invoked=$false
+ authentication_or_http=$false
+}|ConvertTo-Json -Depth 8

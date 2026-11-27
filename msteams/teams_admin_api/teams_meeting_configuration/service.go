@@ -69,14 +69,7 @@ func (s *Service) PatchByIdentity(ctx context.Context, id string, input PatchReq
 	if err := s.ready(ctx); err != nil {
 		return nil, nil, err
 	}
-	if contexts, ok := input.PublishedEntraAuthenticationContexts.Value(); ok {
-		for _, item := range contexts {
-			if err := item.Validate(); err != nil {
-				return nil, nil, err
-			}
-		}
-	}
-	fields, err := policyrp.Fields(input.Settings)
+	fields, err := meetingFields(input.Settings)
 	if err != nil {
 		return nil, nil, err
 	}
