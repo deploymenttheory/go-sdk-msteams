@@ -34,7 +34,7 @@ func (v *readStoryline) UnmarshalJSON(raw []byte) error {
 			return nil
 		}
 		text = strings.TrimSpace(text)
-		if n, e := strconv.ParseInt(text, 10, 32); e == nil {
+		if n, e := strconv.ParseInt(strings.TrimRight(text, "\x00"), 10, 32); e == nil {
 			v.Value = new(Storyline(n))
 			return nil
 		}

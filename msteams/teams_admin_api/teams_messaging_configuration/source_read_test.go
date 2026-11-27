@@ -101,3 +101,22 @@ func TestUnitConfigurationPinnedScalarReadVectors(t *testing.T) {
 		t.Fatal("pinned own DTO cases disappeared")
 	}
 }
+
+func TestUnitReceivedStorylineNumericNulDoesNotRelaxNamedValues(t *testing.T) {
+	t.Parallel()
+	for _, body := range []string{`{"Storyline":"1\u0000"}`, `{"Storyline":"37\u0000"}`} {
+		var value resource.Configuration
+		if e := json.Unmarshal([]byte(body), &value); e != nil || value.Storyline == nil {
+			t.Fatal("source numeric-string trailing NUL rejected")
+		}
+		if *value.Storyline != 1 && *value.Storyline != 37 {
+			t.Fatal("numeric-string value changed")
+		}
+	}
+	for _, body := range []string{`{"Storyline":"Enabled\u0000"}`, `{"Storyline":"\u0000Enabled"}`, `{"Storyline":"2147483648\u0000"}`} {
+		var value resource.Configuration
+		if !errors.Is(json.Unmarshal([]byte(body), &value), client.ErrDecode) {
+			t.Fatal("named NUL or checked numeric overflow accepted")
+		}
+	}
+}
