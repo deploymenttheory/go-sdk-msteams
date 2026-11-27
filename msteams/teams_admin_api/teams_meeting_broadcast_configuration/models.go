@@ -4,6 +4,7 @@ package teamsmeetingbroadcastconfiguration
 import (
 	"encoding/json"
 	"errors"
+	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
@@ -24,6 +25,8 @@ type ReadOptions struct {
 // runtime blob SdnRuntimeconfiguration. SdnAPIToken is a provider credential:
 // String/GoString never print it, and RawFields/RawJSON hold the complete
 // response, so callers must not log those either.
+// Typed fields are convenience views of matching JSON kinds. Other value kinds
+// remain available in RawFields/RawJSON without scalar coercion or a read error.
 type Configuration struct {
 	Identity                            *string                    `json:"Identity"`
 	SupportURL                          *string                    `json:"SupportURL"`
@@ -40,13 +43,36 @@ type Configuration struct {
 }
 
 func (v *Configuration) UnmarshalJSON(raw []byte) error {
-	type plain Configuration
-	var value plain
-	if json.Unmarshal(raw, &value) != nil || json.Unmarshal(raw, &value.RawFields) != nil || value.RawFields == nil {
+	var value Configuration
+	if !validReadKeys(raw) || json.Unmarshal(raw, &value.RawFields) != nil || value.RawFields == nil {
 		return client.ErrDecode
 	}
+	for name, token := range value.RawFields {
+		switch strings.ToLower(name) {
+		case "identity":
+			value.Identity = readValue[string](token)
+		case "supporturl":
+			value.SupportURL = readValue[string](token)
+		case "allowsdnproviderforbroadcastmeeting":
+			value.AllowSdnProviderForBroadcastMeeting = readValue[bool](token)
+		case "sdnname":
+			value.SdnName = readValue[string](token)
+		case "sdnlicenseid":
+			value.SdnLicenseID = readValue[string](token)
+		case "sdnazuresubscriptionid":
+			value.SdnAzureSubscriptionID = readValue[string](token)
+		case "sdnapitemplateurl":
+			value.SdnAPITemplateURL = readValue[string](token)
+		case "sdnapitoken":
+			value.SdnAPIToken = readValue[string](token)
+		case "sdnruntimeconfiguration":
+			value.SdnRuntimeConfiguration = readValue[string](token)
+		case "sdnattendeefallbackcount":
+			value.SdnAttendeeFallbackCount = readValue[int64](token)
+		}
+	}
 	value.RawJSON = append(json.RawMessage(nil), raw...)
-	*v = Configuration(value)
+	*v = value
 	return nil
 }
 func (v Configuration) MarshalJSON() ([]byte, error) {

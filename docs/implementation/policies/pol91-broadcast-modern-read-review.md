@@ -49,7 +49,7 @@ projection. Existing properties retain their value kinds. The raw HTTP body is a
 separate object from that PowerShell presentation result.
 
 Exact repeated property names are last-wins; case-distinct colliding names raise
-InvalidOperationException at the JSON/PSSerializer stage. The existing Go decoder
+InvalidOperationException at the JSON/PSSerializer stage. The pre-repair Go decoder
 accepts case-insensitive aliases through encoding/json, while rejecting the
 nonmatching known-field token kinds above before callers receive RawJSON. That
 is an unresolved behavior difference, not a source-proven malformed response.
@@ -107,6 +107,23 @@ An independent reader reran the final producer (session 21056, exit zero),
 verified exact parsed equality and both producer/input-evidence hashes, and
 reviewed the selected method bodies. The finite generated-model findings passed
 that review; the remaining callback/status and dispatch closure is still open.
+
+The subsequent repair extends that same producer to run the actual pure
+ConvertFrom-Json stage on each nonnull BeforeJson. Its 125 parse outcomes remain
+unchanged. Two otherwise parsed objects fail this later conversion: the root
+Identity/identity collision and the unknown nested X/x collision. This separates
+earlier exact-key rejection from later case-collision rejection. It still invokes
+no HTTP response callback, cmdlet lifecycle or tenant operation.
+
+The native object decoder now retains every dynamic value in the owned raw view
+and exposes typed convenience pointers only for matching JSON kinds. This is an
+explicit native typed-view mapping, not a claim that PowerShell supplies typed
+DTO fields or converts mismatching values. Raw response data remains distinct
+from the exposed ten-property host presentation. The decoder rejects exact and
+case-colliding keys before materializing maps, including inside unknown nested
+objects. Failed decoding leaves an existing destination value unchanged.
+Nonobject root acceptance, service status requirements and write behavior are
+unchanged by this object-view repair, pending their separate source closure.
 
 The modern Get helper forwards ConfigName only for a non-whitespace Identity,
 applies non-whitespace Filter locally with Identity/Tag wildcard matching, and
