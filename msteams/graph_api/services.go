@@ -6,6 +6,7 @@ import (
 	appcatalog "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/app_catalog"
 	appinstallation "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/app_installation"
 	associatedteam "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/associated_team"
+	licensereport "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/change_notification_license_report"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel"
 	channelmember "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_member"
 	channelusermanagement "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/channel_user_management"
@@ -25,25 +26,26 @@ import (
 // Services is the typed Graph service collection. Resource fields are added with
 // their evidenced implementations; no placeholder management methods are exposed.
 type Services struct {
-	scope                   *client.Scope
-	Teams                   *team.Service
-	Channels                *channel.Service
-	Groups                  *group.Service
-	TeamMembers             *teammember.Service
-	TeamOperations          *teamoperation.Service
-	ChannelMembers          *channelmember.Service
-	ChannelUserManagement   *channelusermanagement.Service
-	ChannelShares           *sharedchannel.Service
-	AssociatedTeams         *associatedteam.Service
-	SharedChannelManagement *sharedchannelmanagement.Service
-	GroupMembers            *grouprelationship.MemberService
-	GroupOwners             *grouprelationship.OwnerService
-	UserResolver            *directoryuser.Resolver
-	TeamUserManagement      *teamusermanagement.Service
-	TeamManagement          *teammanagement.Service
-	AppCatalog              *appcatalog.Service
-	AppInstallations        *appinstallation.Service
-	TeamsArtifacts          *teamsartifact.Service
+	scope                            *client.Scope
+	Teams                            *team.Service
+	Channels                         *channel.Service
+	Groups                           *group.Service
+	TeamMembers                      *teammember.Service
+	TeamOperations                   *teamoperation.Service
+	ChannelMembers                   *channelmember.Service
+	ChannelUserManagement            *channelusermanagement.Service
+	ChannelShares                    *sharedchannel.Service
+	AssociatedTeams                  *associatedteam.Service
+	SharedChannelManagement          *sharedchannelmanagement.Service
+	GroupMembers                     *grouprelationship.MemberService
+	GroupOwners                      *grouprelationship.OwnerService
+	UserResolver                     *directoryuser.Resolver
+	ChangeNotificationLicenseReports *licensereport.Service
+	TeamUserManagement               *teamusermanagement.Service
+	TeamManagement                   *teammanagement.Service
+	AppCatalog                       *appcatalog.Service
+	AppInstallations                 *appinstallation.Service
+	TeamsArtifacts                   *teamsartifact.Service
 }
 
 // NewServices binds the collection to its client's session.
@@ -61,11 +63,12 @@ func NewServices(session *client.Session) (*Services, error) {
 		SharedChannelManagement: sharedchannelmanagement.NewService(scope),
 		TeamMembers:             teammember.NewService(scope), GroupMembers: grouprelationship.NewMemberService(scope),
 		GroupOwners: grouprelationship.NewOwnerService(scope), UserResolver: directoryuser.NewResolver(scope),
-		TeamUserManagement: teamusermanagement.NewService(scope),
-		TeamManagement:     teammanagement.NewService(scope),
-		AppCatalog:         appcatalog.NewService(scope),
-		AppInstallations:   appinstallation.NewService(scope),
-		TeamsArtifacts:     teamsartifact.NewService(scope),
+		TeamUserManagement:               teamusermanagement.NewService(scope),
+		TeamManagement:                   teammanagement.NewService(scope),
+		ChangeNotificationLicenseReports: licensereport.NewService(scope),
+		AppCatalog:                       appcatalog.NewService(scope),
+		AppInstallations:                 appinstallation.NewService(scope),
+		TeamsArtifacts:                   teamsartifact.NewService(scope),
 	}, nil
 }
 

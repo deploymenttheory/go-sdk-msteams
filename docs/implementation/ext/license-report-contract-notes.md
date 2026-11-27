@@ -1,6 +1,6 @@
 # Conditional license report contract notes
 
-Research date: 2026-11-26. Scope: credential-free static inspection of pinned public 8.1.0 plus Microsoft Graph documentation. No module invocation, sign-in, tenant request, or Go build. This supports an implementable composition design; it does not qualify the command as a default-session export or a tenant-tested operation.
+Research date: 2026-11-26. Scope: credential-free static inspection of pinned public 8.1.0 plus Microsoft Graph documentation. No report cmdlet invocation, sign-in or tenant request. Pure-data observations and offline Go tests are distinguished below. This supports an implementable composition design; it does not qualify the command as a default-session export or a tenant-tested operation.
 
 ## Evidence identity
 
@@ -21,6 +21,11 @@ those declarations are not operation qualification.
 3. `GenerateDlpUserLicenseReports` iterates the activity report, joins directory users and license results by UPN, and constructs `DlpUserLicenseReport` with `UserPrincipalName`, `DisplayName` (fallback `Not Found`), `NumberOfMessagesSent` (`Int64`, derived from private-chat and team-chat counts), and `HasRequiredLicensePlan` (string). Lambda predicates test whether **any** license contains **any** service plan whose `ServicePlanId` equals `6dc145d6-95dd-4191-b9c3-185575ee6f6b`. No provisioning-status, SKU-name, or assignment-state predicate appears in that predicate. Full IL establishes a critical distinction: a missing license dictionary key **skips the row** (offset 147 branches to loop advancement 313). For a present key, non-null license collections yield exact strings `True`/`False`; a present null collection yields the empty string through `Nullable<bool>.ToString()`. The null-coalescing `Not Found` license fallback does not replace that empty string. Missing directory users or null display names yield `Not Found`; empty display names remain empty. Counts use unchecked **Int32 addition then Int64 conversion** (offsets 212–214), so overflow wraps before widening. These source behaviors are mechanically implementable; they must not be replaced with a false verdict for missing data.
 4. Cross-batch license dictionaries are grouped by UPN and retain the first value, rather than merging every duplicate license collection. Directory `ToDictionary` uses the UPN selector with no explicit comparer shown. Do not introduce case-folding, duplicate tolerance, or normalization as source parity without further evidence.
 
+
+### Nested null/default behavior (pure-data observations)
+
+The [bounded reproducer](../../../scripts/discovery/inspect-license-report-nulls.ps1) (SHA-256 `1c3518823b9795a7df5ee8e75ced0ba0c0ef5bc789fdf70336324e32fd60b1bb`) and [observations](evidence/license-report-nulls.json) (SHA-256 `f5f167aca7bd31ac3c12876b3d223bd028a763b44675271fce48baab1f564977`) deserialize synthetic JSON into actual pinned models and invoke only the previously IL-audited pure predicates, never the report command. Constructor IL confirms no initializers: `LicenseDetails.ServicePlans` is nullable `IEnumerable<ServicePlanInfo>` defaulting to null; `ServicePlanInfo.ServicePlanId` is **string**, default null, not a CLR Guid. Missing or explicit null `servicePlans` throws `ArgumentNullException(source)` in the nested `Any`; `[]` returns false. Null license items or null plan items throw `NullReferenceException`. Missing/null/empty/all-zero/nonmatching `servicePlanId` returns false; the exact lowercase target string returns true and uppercase spelling returns false. Both nested and outer `Any` short-circuit: a matching item before a null item succeeds, while null before match throws. Thus malformed nested data must not silently become an unlicensed verdict in native composition. A pinned projection can reproduce these exact throws/defaults while retaining a separate unknown/error outcome in native output. Outer null license collection remains the projector's explicit nullable-Boolean bypass (empty string), while outer `[]` returns `False`; this differs from a non-null license object with null servicePlans, which throws. The observation JSON hashes every input and the reproducer, records the pinned assembly hash, and retains source assembly identity. The [license model IL](evidence/license-details-model-il.json) and [plan model IL](evidence/license-plan-model-il.json) establish the field defaults; these are source observations, not tenant replies.
+
 ## Pagination and partial failures
 
 Full `GetAll<T>` IL repeatedly GETs `PageResponse<T>`, appends `value`, and follows `@odata.nextLink` until null/empty/whitespace (offsets 6–52). It constructs the next URI directly and uses the same HttpClient. There is no local origin validation, cycle detection, page cap, partial-result return, or per-page recovery. `Get<T>` throws `ApiException` for non-success HTTP responses, preserving status and parsed Graph error or raw response content; empty successful content returns default(T), which `GetAll` then dereferences. An SDK may apply its existing same-origin continuation guard as an explicit safety constraint; it must not claim the PowerShell source supplied that guard. No licenseDetails subresponse pagination traversal exists: only `body.value` is consumed.
@@ -38,3 +43,54 @@ The [beta activity report documentation](https://learn.microsoft.com/en-us/graph
 The [v1.0 licenseDetails documentation](https://learn.microsoft.com/en-us/graph/api/user-list-licensedetails?view=graph-rest-1.0) documents GET `/users/{id}/licenseDetails`, a collection response, and `$select`. Its permission table explicitly says **application permissions are not supported**. For work/school delegated access the least privilege is `LicenseAssignment.Read.All`, with a supported Entra role or suitable custom role. Therefore report application permission does **not** establish application support for the full composition. The command's `Reports.Read.All` authorization call does not prove it acquires all downstream permissions; directory-user permission requirements also need separate verification. The source's parenthesized UPN batch syntax is observed source evidence, not independently confirmed by the documented path form.
 
 The composition, numeric constants, page traversal, batch serialization, row inclusion/fallbacks, arithmetic, partial diagnostics and bounded retry rules are now source-backed and implementable with synthetic fixtures; they do not justify blanket unavailability. An SDK representation should retain typed rows and per-user diagnostics explicitly, while documenting any deliberate differences from mixed PowerShell success-stream output and malformed-response exceptions. Remaining external gaps: supported application authentication for the full composition, downstream delegated/directory-user authorization, parenthesized UPN syntax acceptance, the `top`/`$top` discrepancy, and tenant behavior. Preserve conditional/default-session qualification until independent evidence changes it.
+
+
+## Native implementation and offline validation
+
+`GraphAPI.ChangeNotificationLicenseReports` exposes separate bounded JSON activity,
+directory-user and directory-ID license-detail reads, plus `Get` composition.
+The native activity request uses documented `$top=2000`, not the source's literal
+`top=10000`. Native license requests use the documented `/users/{id}/licenseDetails`
+path only after complete directory resolution. Reported user ID, reported UPN and
+resolved directory ID remain distinct. A usable report GUID is authoritative:
+missing ID resolution cannot retarget a reused UPN. UPN-only rows require one exact
+ordinal match; duplicate/missing identities produce a partial result.
+
+Native batching uses documented unique string IDs, at most twenty subrequests, and
+correlates reordered replies. Each stage retains receipts, partial items and errors;
+a failed outer envelope stops later batches, while individual failures remain
+explicit. Continuations are same-cloud HTTPS, same resource and same license
+subject, with finite page/item/user limits and cycle checks. Context cancellation
+propagates through the existing client; no reauthorization or identity fallback is
+added. Read-only primitives remain available separately when full composition's
+license mode cannot be used. The full `Get` and license primitive reject application
+mode locally because the current first-party licenseDetails table explicitly does
+not support application permission; this is a documented native constraint, not
+proof that a pinned app attempt succeeded or that a delegated role is configured.
+
+Activity count values remain precision-preserving `json.Number`. The API examples
+and [commercial Graph CSDL observation](evidence/license-report-graph-metadata.json)
+do not declare a JSON count width (the function returns `Edm.Stream`), so native
+counts do not inherit the pinned Int32 cap. Derived totals accept JSON-grammar
+integer-valued decimal/exponent numbers with bounded computation (4,096 characters
+and absolute decimal exponent); arbitrary wire values remain in the raw snapshot
+when a derived total cannot be computed. `ProjectPinnedRows` separately requires
+Int32 representability and reproduces unchecked addition followed by widening.
+
+Missing/null/empty license collections, servicePlans and plan IDs remain distinct.
+Native unknown, denied, unparseable or partial data never yields a negative match;
+only a complete empty or valid nonmatching collection yields false. A known match
+with other malformed plan data retains true with an error and incomplete plan-data
+status. The fixed plan test is solely the source's ordinal presence predicate,
+not current subscription entitlement, billing or effective authorization.
+
+Focused offline `TestUnit|Example` checks passed in sessions 36483 and 98712 (including compiled examples) on 2026-11-27,
+including all four periods, twenty-plus-one batching with reversed response order,
+subject-bound continuations and page budgets, partial directory/denied license
+outcomes, identity handoff and reused UPN rejection, arbitrary-precision totals,
+JSON-number grammar, source Int32 wrap and actual nested source defaults. Replies
+are authored primary-contract vectors, not captured tenant responses. This work
+owns the remaining conditional command/set without promoting implementation,
+contract or live qualification. Downstream delegated credentials/roles and actual
+successful read evidence remain external prerequisites; no new license, role or
+subscription has been created.

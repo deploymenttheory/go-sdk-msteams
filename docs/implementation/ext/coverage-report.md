@@ -2,8 +2,8 @@
 
 Owner: EXT-90 (#191). Baseline: MicrosoftTeams 8.1.0.
 
-The ledger assigns 110 commands, 108 default-session observed sets and 26 separately declared conditional sets to 16 EXT families.
-An additional 1 unowned nested candidates retain EXT research ownership.
+The ledger assigns 111 commands, 108 default-session observed sets and 27 separately declared conditional sets to 17 EXT families.
+Unowned nested candidates retaining EXT research ownership: 0.
 Regenerate with `python3 tools/coverage/ext_report.py`; `--check` rejects stale output.
 
 ## Evidence boundaries
@@ -43,10 +43,10 @@ surrogates; they do not reconstruct private requests or qualify unobserved insta
 - Device success needs real device inventory and delegated gateway access.
 - Support/provisioning success needs support credentials; irreversible tenant moves, licensing
   changes and service-wide actions are not made safe by a synthetic success fixture.
-- The remaining nested candidates below are real compiled classes but not normal root exports.
-  They remain research scope, not approved exclusions or delivered Go services.
+- Conditional nested declarations are not normal root exports. Implementation ownership
+  does not establish public availability, tenant success or approved exclusion.
 
-## Unowned nested candidates
+## Conditional nested declarations
 
 Read-only reflection against the verified pinned package found a compiled type for every one
 of the fifteen audited nested candidates and none exported by a normal macOS root-module import. The
@@ -55,24 +55,22 @@ are source observations only; they do not settle public/support entitlement or w
 The hashed manifest declarations make the conditional boundary explicit: five installation/license
 commands are commented `#preview` in the root manifest; four conversation-role commands
 are exported by preview/OCE manifests, and six remaining settings commands by OCE only.
-Fourteen commands now have in-progress implementation ownership across app_installation,
-tenant/app configuration and conversation roles/settings. Separate [compiled declaration metadata](evidence/conditional-command-metadata.json)
+All fifteen commands now have in-progress implementation ownership across app_installation,
+tenant/app configuration, conversation roles/settings and the license report. Separate [compiled declaration metadata](evidence/conditional-command-metadata.json)
 now captures all fifteen types and twenty-seven declared sets without invoking them; eight
 TeamScope/UserScope sets map to the installer, six sets to tenant/app settings, and twelve to
-conversation reads and explicit inspectable compatibility projections. Full permission writes
+conversation reads and explicit inspectable compatibility projections, plus one Period set
+for bounded native license composition and a separate pinned projection. Full permission writes
 remain unresolved: actual local builders retain flags, while the observed management projection
 drops them. No guessed positive flag-persistence contract is added. This does not establish
 root-export availability or a live pass, and does not authorize
-excluding the remaining candidates or assuming the ordinary lab identity can exercise them.
+excluding declarations or assuming the ordinary lab identity can exercise them.
 Three additional [compiled local permission-builder declarations](evidence/conversation-builder-metadata.json)
 each have one supplemental Identity set; they are absent from root/OCE/preview cmdlet export
 lists and root discovery. They remain separately classified scope candidates, not silently
 counted as accepted exports, owned commands, supported public cmdlets or approved exclusions.
-The remaining license-report source composition is documented in [research notes](license-report-contract-notes.md).
+The license-report composition and documented delegated-only license stage are detailed in [research notes](license-report-contract-notes.md).
 
-| Candidate | Research owner | Current disposition |
-| --- | --- | --- |
-| `Get-LicenseReportForChangeNotificationSubscription` | `EXT-01` | Unowned; not implemented or qualified |
 
 ## ai_agents
 
@@ -269,6 +267,20 @@ Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live:
 | `UserScope` (compiled declaration) | [`Service.UpgradeByID`](../../../msteams/graph_api/app_installation/service.go)<br>[`Service.UpgradeByCatalogID`](../../../msteams/graph_api/app_installation/service.go) | [`TestUnitTeamAndUserInstallationLifecycle`](../../../msteams/graph_api/app_installation/service_test.go)<br>[`TestUnitCatalogResolutionRequiresCompleteUniqueInstallation`](../../../msteams/graph_api/app_installation/service_test.go) | None recorded |
 
 Recorded live limitation: Compiled declarations expose TeamScope/UserScope, separately from the immutable default-session snapshot. No live installation attempted: requires an approved owned catalog app and authorized team/user scope. Native consent live acceptance and legacy cmdlet permission equivalence remain unqualified; fresh catalog read was HTTP 403.
+
+## change_notification_license_report
+
+Contract and live limitations: [license-report-contract-notes.md](license-report-contract-notes.md).
+
+### Get-LicenseReportForChangeNotificationSubscription
+
+Owner: `EXT-90`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+
+| Parameter set | Go symbols | Contract test mappings | Live test mappings |
+| --- | --- | --- | --- |
+| `__AllParameterSets` (compiled declaration) | [`Service.Get`](../../../msteams/graph_api/change_notification_license_report/report.go)<br>[`ProjectPinnedRows`](../../../msteams/graph_api/change_notification_license_report/pinned.go) | [`TestUnitNativeCountRequiresJSONGrammarAndBoundsOnlyComputation`](../../../msteams/graph_api/change_notification_license_report/models_internal_test.go)<br>[`TestUnitNativePlanUnknownIsNeverNegative`](../../../msteams/graph_api/change_notification_license_report/models_internal_test.go)<br>[`TestUnitNativeModelRetainsNumberWidthAndNestedPresence`](../../../msteams/graph_api/change_notification_license_report/models_internal_test.go)<br>[`TestUnitPinnedRowsKeepSourceWrapMissingNullAndDisplayFallback`](../../../msteams/graph_api/change_notification_license_report/pinned_test.go)<br>[`TestUnitPinnedNestedActualDefaultsAndOrdinalShortCircuit`](../../../msteams/graph_api/change_notification_license_report/pinned_test.go)<br>[`TestUnitPinnedCountRepresentabilityDoesNotConstrainNativeDTO`](../../../msteams/graph_api/change_notification_license_report/pinned_test.go)<br>[`TestUnitLicenseReportNativeIDCompositionAndUnboundedWireCount`](../../../msteams/graph_api/change_notification_license_report/service_test.go)<br>[`TestUnitLicenseReportAllPeriodValuesUseDocumentedJSONRoute`](../../../msteams/graph_api/change_notification_license_report/service_test.go)<br>[`TestUnitLicenseReportUnsafeContinuationAndPartialReadNeverStartsJoin`](../../../msteams/graph_api/change_notification_license_report/service_test.go)<br>[`TestUnitLicenseReportDeniedLicenseIsUnknownAndRetainsReceipt`](../../../msteams/graph_api/change_notification_license_report/service_test.go)<br>[`TestUnitLicenseReportDeclaredIDCannotFallBackToDifferentUPNOwner`](../../../msteams/graph_api/change_notification_license_report/service_test.go)<br>[`TestUnitLicenseReportModeAndInputBoundariesDoNotAcquireCredentials`](../../../msteams/graph_api/change_notification_license_report/service_test.go)<br>[`TestUnitLicenseReportTwentyItemBatchesCorrelateReorderedReplies`](../../../msteams/graph_api/change_notification_license_report/service_test.go)<br>[`TestUnitLicenseReportLicenseContinuationIsSubjectBoundAndPageBounded`](../../../msteams/graph_api/change_notification_license_report/service_test.go)<br>[`TestUnitLicenseReportPartialDirectoryCannotEstablishResolution`](../../../msteams/graph_api/change_notification_license_report/service_test.go) | None recorded |
+
+Recorded live limitation: Conditional preview declaration; native documented reads and separate pinned local projection have offline tests only. Full composition needs delegated license/directory permissions and role; application licenseDetails is documented unsupported. No tenant success, current entitlement or default-session export is claimed.
 
 ## cloud_call_data
 

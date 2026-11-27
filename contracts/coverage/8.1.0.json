@@ -15102,23 +15102,115 @@
     {
       "name": "Get-LicenseReportForChangeNotificationSubscription",
       "kind": "research-candidate",
-      "resource": "unassigned-nested-exports",
-      "implementation_owner": null,
+      "resource": "change_notification_license_report",
+      "implementation_owner": "EXT-90",
       "research_owner": "EXT-01",
       "metadata_ref": "contracts/powershell/8.1.0/reconciliation.json#/records/232",
-      "parameter_sets": [],
+      "parameter_sets": [
+        {
+          "name": "__AllParameterSets",
+          "metadata_ref": "docs/implementation/ext/evidence/conditional-command-metadata.json#/records/5/parameter_sets/0",
+          "symbols": [
+            {
+              "name": "Service.Get",
+              "file": "msteams/graph_api/change_notification_license_report/report.go"
+            },
+            {
+              "name": "ProjectPinnedRows",
+              "file": "msteams/graph_api/change_notification_license_report/pinned.go"
+            }
+          ],
+          "contract_tests": [
+            {
+              "name": "TestUnitNativeCountRequiresJSONGrammarAndBoundsOnlyComputation",
+              "file": "msteams/graph_api/change_notification_license_report/models_internal_test.go"
+            },
+            {
+              "name": "TestUnitNativePlanUnknownIsNeverNegative",
+              "file": "msteams/graph_api/change_notification_license_report/models_internal_test.go"
+            },
+            {
+              "name": "TestUnitNativeModelRetainsNumberWidthAndNestedPresence",
+              "file": "msteams/graph_api/change_notification_license_report/models_internal_test.go"
+            },
+            {
+              "name": "TestUnitPinnedRowsKeepSourceWrapMissingNullAndDisplayFallback",
+              "file": "msteams/graph_api/change_notification_license_report/pinned_test.go"
+            },
+            {
+              "name": "TestUnitPinnedNestedActualDefaultsAndOrdinalShortCircuit",
+              "file": "msteams/graph_api/change_notification_license_report/pinned_test.go"
+            },
+            {
+              "name": "TestUnitPinnedCountRepresentabilityDoesNotConstrainNativeDTO",
+              "file": "msteams/graph_api/change_notification_license_report/pinned_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportNativeIDCompositionAndUnboundedWireCount",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportAllPeriodValuesUseDocumentedJSONRoute",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportUnsafeContinuationAndPartialReadNeverStartsJoin",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportDeniedLicenseIsUnknownAndRetainsReceipt",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportDeclaredIDCannotFallBackToDifferentUPNOwner",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportModeAndInputBoundariesDoNotAcquireCredentials",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportTwentyItemBatchesCorrelateReorderedReplies",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportLicenseContinuationIsSubjectBoundAndPageBounded",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            },
+            {
+              "name": "TestUnitLicenseReportPartialDirectoryCannotEstablishResolution",
+              "file": "msteams/graph_api/change_notification_license_report/service_test.go"
+            }
+          ],
+          "live_tests": []
+        }
+      ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "name": "Service.Get",
+            "file": "msteams/graph_api/change_notification_license_report/report.go"
+          },
+          {
+            "name": "ProjectPinnedRows",
+            "file": "msteams/graph_api/change_notification_license_report/pinned.go"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/license-report-contract-notes.md",
+          "docs/implementation/ext/evidence/license-report-il.json",
+          "docs/implementation/ext/evidence/license-report-nulls.json",
+          "docs/implementation/ext/evidence/license-report-graph-metadata.json"
+        ]
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
+        "reason": "Conditional preview declaration; native documented reads and separate pinned local projection have offline tests only. Full composition needs delegated license/directory permissions and role; application licenseDetails is documented unsupported. No tenant success, current entitlement or default-session export is claimed.",
         "evidence": []
       },
       "exclusion": null

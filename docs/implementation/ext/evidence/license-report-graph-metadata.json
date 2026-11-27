@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-11-26",
+  "url": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/schemas/beta-Prod.csdl",
+  "bytes": 9010108,
+  "sha256": "044eaaf001dd3d330be8af991d4eb779085f17ac303cd82d96738a94eb8c10b7",
+  "observations": [
+    {
+      "function": "getTeamsUserActivityUserDetail",
+      "return": {
+        "Type": "Edm.Stream",
+        "Nullable": "false"
+      }
+    },
+    {
+      "function": "getTeamsUserActivityUserDetail",
+      "return": {
+        "Type": "Edm.Stream",
+        "Nullable": "false"
+      }
+    }
+  ],
+  "limitations": "CSDL stream signatures do not declare widths for JSON report row counts; API JSON examples do not establish an Int32 or Int64 maximum."
+}
