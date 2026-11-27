@@ -127,3 +127,11 @@ method from the verified package. No management lifecycle/authentication/HTTP ra
 Cloud public flighting, explicit mocks/config overrides, legacy transport and live
 success remain outside this source-only selected-Modern proof. No cloud
 qualification flag or live selection is promoted or changed.
+
+The complete affected cloud SDK TestUnit/Example suite and corresponding lab
+package compile passed at clean frozen revision `5ded640` (session 15595). The
+[execution record](evidence/cloud-call-data-5ded640-offline.json) retains exact
+code/source hashes and the raw Go result digest. The lab had no matching tests;
+no TestAcc or tenant lifecycle ran. The portable setter-call scan was independently
+rerun and exactly matched the source packet's 449,218 resolved operands and zero
+unresolved references. All cloud qualification/live states remain unchanged.

@@ -2514,7 +2514,9 @@
         "evidence": [
           "docs/implementation/ext/cloud-call-data-contract-notes.md",
           "docs/implementation/ext/evidence/cloud-call-data-modern-contract.json",
-          "docs/implementation/ext/evidence/cloud-call-data-parser.json"
+          "docs/implementation/ext/evidence/cloud-call-data-parser.json",
+          "docs/implementation/ext/evidence/cloud-call-data-header-handoff.json",
+          "docs/implementation/ext/evidence/cloud-call-data-5ded640-offline.json"
         ]
       },
       "live": {
@@ -23963,7 +23965,9 @@
         "evidence": [
           "docs/implementation/ext/cloud-call-data-contract-notes.md",
           "docs/implementation/ext/evidence/cloud-call-data-modern-contract.json",
-          "docs/implementation/ext/evidence/cloud-call-data-parser.json"
+          "docs/implementation/ext/evidence/cloud-call-data-parser.json",
+          "docs/implementation/ext/evidence/cloud-call-data-header-handoff.json",
+          "docs/implementation/ext/evidence/cloud-call-data-5ded640-offline.json"
         ]
       },
       "live": {
