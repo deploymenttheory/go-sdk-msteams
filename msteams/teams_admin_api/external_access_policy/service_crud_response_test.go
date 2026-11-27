@@ -4,11 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/external_access_policy"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -90,4 +92,41 @@ func TestUnitOwnedCRUDUsesAcceptanceResponses(t *testing.T) {
 			}
 			return contracttest.Observation{Response: response, Err: err}
 		}, Want: contracttest.Expected{Status: 404, Body: missing, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{envelope.Code}, ServiceErrorCodes: []int{envelope.ErrorCode}}}})
+}
+
+// Reuse retained primitive GET/empty Create201 bytes. This comparison/create
+// sequence and blank 403 are authored offline, not a captured compound run.
+// BaseTpmNewCmdlet compares Global but continues creation after comparison
+// failure; its bound-parameter serializer never clones the Global defaults.
+func TestUnitCreateComparisonRetainsSuccessfulIndependentSubmission(t *testing.T) {
+	t.Parallel()
+	before := readResponseFixture(t, "get_global.json")
+	accepted := readResponseFixture(t, "create_201.body")
+	var snapshot map[string]json.RawMessage
+	if json.Unmarshal(before, &snapshot) != nil {
+		t.Fatal("invalid retained Global snapshot")
+	}
+	for _, status := range []int{200, 403} {
+		reply := before
+		if status == 403 {
+			reply = nil
+		}
+		run(t, contracttest.Case{Name: "comparison-accepted", Source: "msteams/teams_admin_api/external_access_policy/service_crud_response_test.go", Mappings: []contracttest.Mapping{{Command: "New-CsExternalAccessPolicy", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{
+			wire("GET", "/Skype.Policy/configurations/ExternalAccessPolicy/configuration/Global", "New-CsExternalAccessPolicy", nil, status, string(reply)),
+			wire("POST", "/Skype.Policy/configurations/ExternalAccessPolicy", "New-CsExternalAccessPolicy", json.RawMessage(`{"Identity":"fixture-policy","Description":"SDK lab non-default initial description","EnableFederationAccess":false}`), 201, string(accepted)),
+		}, Want: contracttest.Expected{Body: accepted}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			value, response, err := sdk.TeamsAdminAPI.ExternalAccessPolicies.CreateWithGlobalComparison(ctx, resource.CreateRequest{Identity: "fixture-policy", Settings: resource.Settings{Fields: resource.Fields{Description: policy.Set("SDK lab non-default initial description"), EnableFederationAccess: policy.Set(false)}}})
+			if err != nil || response == nil || response.StatusCode() != 201 || value == nil || !value.CreateInvoked || !value.HTTPAccepted || value.Created != nil || value.ComparisonResponse == nil || value.ComparisonResponse.StatusCode() != status {
+				t.Fatal("successful sparse creation lost independent comparison or acceptance stages")
+			}
+			if status == 200 {
+				if value.ComparisonError != nil || value.Comparison == nil || !reflect.DeepEqual(value.Comparison.RawFields, snapshot) {
+					t.Fatal("successful comparison lost or mutated its Global snapshot")
+				}
+			} else if value.Comparison != nil || !errors.Is(value.ComparisonError, auth.ErrForbidden) {
+				t.Fatal("comparison denial was swallowed or blocked successful independent creation")
+			}
+			return contracttest.Observation{Response: response, Err: err}
+		}})
+	}
 }

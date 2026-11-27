@@ -22,7 +22,7 @@ func TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion(t *testing.T) {
 	t.Parallel()
 	for _, tc := range []struct{ name, method, path, body, set string }{
 		{"user", "PATCH", "/Skype.Policy/users/user%2Ffixture/policies/TeamsMeetingBrandingPolicy", `{"policyName":null,"additionalParameters":null}`, "GrantToUser"},
-		{"identity", "PATCH", "/Skype.Policy/users/user%2Ffixture/policies/TeamsMeetingBrandingPolicy", `{"policyName":null,"additionalParameters":null}`, "Identity"},
+		{"explicit-user-union", "PATCH", "/Skype.Policy/users/user%2Ffixture/policies/TeamsMeetingBrandingPolicy", `{"policyName":null,"additionalParameters":null}`, "GrantToUser"},
 		{"tenant", "PATCH", "/Skype.Policy/tenants/policies/TeamsMeetingBrandingPolicy", `{"PolicyName":"","additionalParameters":null,"forceSwitchPresent":false}`, "GrantToTenant"},
 		{"group", "POST", "/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsMeetingBrandingPolicy", `{"policyName":null,"priority":0}`, "GrantToGroup"},
 	} {
@@ -37,10 +37,10 @@ func TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion(t *testing.T) {
 							t.Fatal("blank user receipt fabricated policy data")
 						}
 						return contracttest.Observation{Response: response, Err: err}
-					case "identity":
+					case "explicit-user-union":
 						value, response, err := s.Assign(ctx, policy.Assignment{User: &policy.UserAssignment{Identity: "user/fixture"}})
 						if value != nil {
-							t.Fatal("valid Identity scope union fabricated policy data")
+							t.Fatal("valid native user scope union fabricated policy data")
 						}
 						return contracttest.Observation{Response: response, Err: err}
 					case "tenant":
@@ -78,5 +78,23 @@ func TestUnitGrantRejectsOpaqueNonPolicySuccessBody(t *testing.T) {
 	}})
 	if err != nil || !result.Passed() {
 		t.Fatalf("opaque Grant protocol failure differs: %v %+v", err, result.Differences())
+	}
+}
+
+// Pinned default Identity is a parameterless fallback, not a fourth assignment
+// operation. ExecuteGrant recognizes only GrantToUser/Group/Tenant and reports
+// Cannot determine which grant to execute otherwise. Native Go rejects that
+// absent scope before credentials; PowerShell error presentation stays separate.
+func TestUnitGrantDefaultIdentitySetRejectsAbsentScope(t *testing.T) {
+	t.Parallel()
+	result, err := contracttest.Run(t.Context(), contracttest.Case{Name: "grant-default-no-scope", Family: "meeting_branding", Scope: "local", Source: "msteams/teams_admin_api/meeting_branding/assignment_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsMeetingBrandingPolicy", ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: policy.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		value, response, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.Assign(ctx, policy.Assignment{})
+		if value != nil || response != nil {
+			t.Fatal("absent assignment scope fabricated a policy or resource request")
+		}
+		return contracttest.Observation{Response: response, Err: err}
+	}})
+	if err != nil || !result.Passed() {
+		t.Fatalf("default Grant scope rejection differs: %v %+v", err, result.Differences())
 	}
 }

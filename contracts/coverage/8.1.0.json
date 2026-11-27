@@ -16613,7 +16613,7 @@
             },
             {
               "file": "msteams/teams_admin_api/external_access_policy/assignment_protocol_test.go",
-              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
+              "name": "TestUnitGrantDefaultIdentitySetRejectsAbsentScope"
             }
           ],
           "live_tests": []
@@ -19439,7 +19439,7 @@
             },
             {
               "file": "msteams/teams_admin_api/meeting_branding/assignment_protocol_test.go",
-              "name": "TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion"
+              "name": "TestUnitGrantDefaultIdentitySetRejectsAbsentScope"
             }
           ],
           "live_tests": []
@@ -24223,6 +24223,10 @@
             {
               "file": "msteams/teams_admin_api/external_access_policy/service_crud_response_test.go",
               "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/external_access_policy/service_crud_response_test.go",
+              "name": "TestUnitCreateComparisonRetainsSuccessfulIndependentSubmission"
             }
           ],
           "live_tests": [
