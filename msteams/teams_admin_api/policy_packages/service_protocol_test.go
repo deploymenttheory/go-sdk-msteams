@@ -279,3 +279,56 @@ func TestUnitPackageReadDecodeFailureRetainsHTTPResponse(t *testing.T) {
 		})
 	}
 }
+
+// The public custom wrappers require nonempty String[] PolicyList; their
+// internal generated typed PolicyList parameters explicitly AllowEmptyCollection.
+// Keep that public builder boundary separate from the lower-level DTO extension.
+func TestUnitPackagePublicPolicyListBuilderAndTypedEmptyExtension(t *testing.T) {
+	t.Parallel()
+	for _, entries := range [][]string{nil, {}} {
+		if _, err := resource.ParsePolicyList(entries); !errors.Is(err, resource.ErrInput) {
+			t.Fatal("public mandatory PolicyList accepted an unbound or empty collection")
+		}
+	}
+	for _, update := range []bool{false, true} {
+		for _, emptyDTO := range []bool{false, true} {
+			name, method, command := "create", "POST", "New-CsCustomPolicyPackage"
+			if update {
+				name, method, command = "update", "PUT", "Update-CsCustomPolicyPackage"
+			}
+			policies, err := resource.ParsePolicyList([]string{"TeamsMeetingPolicy,FixtureMeeting"})
+			if err != nil || len(policies) != 1 || policies[0].PolicyType == nil || *policies[0].PolicyType != "TeamsMeetingPolicy" || policies[0].PolicyName == nil || *policies[0].PolicyName != "FixtureMeeting" {
+				t.Fatal("public PolicyList builder lost the source pair")
+			}
+			policyJSON := `[{"PolicyType":"TeamsMeetingPolicy","PolicyName":"FixtureMeeting"}]`
+			mappings := mapping(name)
+			if emptyDTO {
+				policies, policyJSON, mappings = []resource.PolicyPair{}, `[]`, nil
+				name += "-native-empty-dto"
+			}
+			f := requestCase{Method: method, URL: origin + "/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage(`{"PackageName":"FixturePackage","PolicyList":` + policyJSON + `}`), Status: 403}
+			run(t, contracttest.Case{Name: name, Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mappings, Steps: []contracttest.Exchange{discovery(t), wire(f, command)}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				input := resource.CustomPackageRequest{Name: new("FixturePackage"), Policies: policies}
+				var observed contracttest.Observation
+				if update {
+					observed.Value, observed.Response, observed.Err = sdk.TeamsAdminAPI.PolicyPackages.Update(ctx, input)
+				} else {
+					observed.Value, observed.Response, observed.Err = sdk.TeamsAdminAPI.PolicyPackages.Create(ctx, input)
+				}
+				return observed
+			}})
+		}
+	}
+}
+
+// Pinned custom GroupId has no whitespace validator. Generated set_GroupId
+// forwards at IL7; the concrete request setter only stores the string (IL2).
+// A rejected response proves bytes preserved, not server validity.
+func TestUnitPackageGroupBodyPreservesBoundWhitespace(t *testing.T) {
+	t.Parallel()
+	f := requestCase{Method: "POST", URL: origin + "/Teams.VerticalPackaging/package/group", Body: json.RawMessage(`{"GroupId":" ","PolicyRankings":[]}`), Status: 403}
+	run(t, contracttest.Case{Name: "group-bound-whitespace", Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mapping("group-assign"), Steps: []contracttest.Exchange{discovery(t), wire(f, "Grant-CsGroupPolicyPackageAssignment")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		value, response, err := sdk.TeamsAdminAPI.PolicyPackages.AssignGroup(ctx, resource.GroupAssignmentRequest{GroupID: " "})
+		return contracttest.Observation{Value: value, Response: response, Err: err}
+	}})
+}
