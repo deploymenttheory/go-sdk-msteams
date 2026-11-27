@@ -41,3 +41,72 @@ three Nullable<Boolean>, seven String, one nullable Int32 Storyline enum and thi
 list modifier. Existing retained get/list/nondefault/readback/restore models,
 source-authorable bindings and model errors remain distinct. No command status
 or live promotion follows from this one field correction.
+
+## Complete concrete setting and control inventory
+
+| All twelve public settings | Own effective parameter and DTO type |
+|---|---|
+| EnableVideoMessageCaptions, EnableInOrganizationChatControl, CustomEmojis | Nullable<Boolean> |
+| Communities, MessagingNotes, FileTypeCheck, UrlReputationCheck, ContentBasedPhishingCheck, ReportIncorrectSecurityDetections, FileTypeCustomizationSetting | String |
+| Storyline | Nullable<Core.Storyline>, Int32 enum |
+| FileTypeBlockList | PSListModifier<String> / getter-only List<String> |
+
+All eleven scalar parameters have only ParameterAttribute and every actual
+scalar DTO setter is plain stfld at IL2 followed by ret7. No per-field enum or
+range rule is invented from names of the seven opaque strings. The concrete
+AreParametersSpecified has only BoundParameters.ContainsKey calls: setting name
+loads at IL11/37/63/89/115/141/167/190/213/236/259/282. It tests bound presence,
+not HasValue/current truth or string content. Selected null/false/empty are
+settings; Force alone is not. Existing local Update no-settings and shared
+source guard evidence are separate from received DTO decoding.
+
+The [actual-type compiled enum binder probe](evidence/pol91-storyline-binding.json)
+with [portable reproduction](../../../scripts/discovery/observe-pol91-storyline-binding.ps1)
+closes the enum distinction. Source members are exactly Disabled=0 and Enabled=1.
+Null and the names bind and the actual DTO/resolver emit null/0/1. Raw unknown
+numeric37 and string '-7' are rejected by the PowerShell binder; an already typed
+actual Core.Storyline enum37 is accepted and emits37. The inert probe closes a
+generic PSCmdlet over the actual enum, avoiding a different enum definition or
+Core-reference compiler-warning suppression. It never invokes management code,
+authentication or HTTP. Native typed Storyline(37) and received future numeric
+values remain representable; native JSON convenience decoding is not mislabeled
+identical to raw PowerShell numeric-argument binding. Existing enum/model tests
+prove Int32 bounds, known names/case, numeric preservation and invalid shapes.
+
+The actual closed ConfigurationNameNormalization helper returns
+TeamsMessagingConfiguration. Own Get has optional Identity and bound nonempty
+Filter; Set has mandatory Identity. The same exact shared compiled
+[route, audience, result, filter, control and resolver source](pol91-compiled-config-source-review.md#shared-endpoint-audience-response-and-control-evidence)
+applies, including bare collections, stable exact Global-first order, local
+wildcards/literal whitespace, broad 2xx versus typed decoding, empty acceptance,
+no-settings error and ReplayNever. Native encoded-path guards, early errors,
+caller confirmation and typed/raw response presentation are explicit Go
+boundaries rather than equivalent PowerShell host pipeline behavior.
+
+The full `2b08f57` / `67230` suite executes retained selected/list/filter and all
+thirteen response projections (Identity plus twelve settings), selected scalar
+null/value serialization, source enum conversion, prepared sparse204, list
+clear/remove/replacement, owned raw snapshots, model errors/no later PATCH,
+a retained real Privacy403 envelope reused in an authored Messaging request,
+non-replay/context/destination guards and the new nullable-entry
+prepared edit/readback. HTTP acceptance remains distinct from effective state;
+actual captured readback and authored null-entry responses are not conflated.
+No new generic-helper permutations are needed solely to repeat established
+common source behavior for each scalar name.
+
+To reproduce the independent metadata/control checks, Get-Command the concrete
+Get/Set pair, inspect Parameters/ParameterSets and the closed model from
+ImplementingType.BaseType.GetGenericArguments()[0]. For each writable declared
+model property inspect its actual setter; use the
+[portable owning-context IL reader](pol04-primary-source-audit.md#portable-reproduction)
+on Core.SetTeamsMessagingConfigurationCmdlet.AreParametersSpecified and
+UpdateProperties. Source hashes are verified by the portable probes. This does
+not depend on a transient host file, symbol-count inference or server permission
+assumptions.
+
+Finite review found that earlier success tests invoked selected Get and Filter
+but not the Identity-omitted List wrapper. The nullable-list test now adds one
+direct source-authored bare-collection read and asserts typed identity/null
+entries/raw receipt before its existing prepared edit/readback. This supplemental
+default-set execution is pending at its new frozen checkpoint; full 2b08f57
+proof continues to cover the other unchanged cases.

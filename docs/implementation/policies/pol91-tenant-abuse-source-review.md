@@ -104,3 +104,42 @@ Their existing public builder/Apply signatures and nonnull wire behavior are
 preserved. TenantAbuse and the independently source-proven Messaging field receive
 canonical corrections. [Messaging source and execution boundaries](pol91-messaging-source-review.md)
 remain separate; no other canonical field changes merely because it uses this helper.
+
+## Complete command review boundary
+
+Fresh own effective metadata and all nine actual scalar setters were checked:
+seven Nullable<UInt64> and two String parameters/properties, only
+ParameterAttribute, each setter plain stfld2/ret7. There is no HasValue/range/
+nonempty branch hidden in those concrete setters. AreParametersSpecified checks
+all ten selected setting keys, not their current values. The actual closed
+ConfigurationNameNormalization helper returns TeamsTenantAbuseConfiguration.
+Own Get Identity/Filter and Set mandatory Identity bindings are the direct
+compiled source shapes; inherited nonempty Filter is independently recorded in
+the initial sweep. Native path safety and early typed errors remain distinct
+from public argument/host ordering. Explicit ReplaceNullableStrings() provides
+the source bound-null/empty modifier clear; a nil edit remains omission.
+
+The [shared compiled route/audience/status/list/filter/control/resolver source](pol91-compiled-config-source-review.md#shared-endpoint-audience-response-and-control-evidence)
+is the same exact base/helper implementation. Successful raw/type decoding,
+empty PATCH acceptance, source no-settings error and non-replay error receipts
+are independent of tenant authority. No alternate endpoint, nested discovery,
+minimum role, assignment action or paging envelope is invented.
+
+Full `4cb4ca1` / `52681` includes the complete ten-setting runtime comparison,
+all nine scalar value/null/full-width controlled503 wire proofs, actual403
+error-envelope preservation, typed source-authored selected/list/Global-only
+filter success for all getters, explicit zero/null/empty distinctions, nullable
+list edits, later403 and caller restoration/readback, overflow200 with raw
+receipt and no PATCH, and no-settings/Force/context/destination zero-request
+checks. The old denied vectors are not relabeled success; the new successful
+replies are clearly authored. Shared list ownership/order/clear/null behavior
+also executes in the full policy package, with a legacy nonnull consumer proof
+separately scoped. These are contract proofs, not live writes or a claim that
+any opaque string/threshold/null-list mutation succeeds in a tenant.
+
+For reproduction, use the own Get/Set Parameters/ParameterSets, closed Core
+model property types/setter bodies and the portable owning-context IL reader
+linked by the Messaging review on the concrete TenantAbuse overrides. Both
+primary probes verify exact pinned assembly hashes. Live authorization,
+nondefault threshold/blocked-tenant changes, authoritative oracle and safe
+restoration/effective abuse control remain unqualified.
