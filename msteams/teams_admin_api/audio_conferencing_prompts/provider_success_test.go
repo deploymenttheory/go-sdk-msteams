@@ -48,7 +48,7 @@ func TestUnitPromptsAuthoredTypedReadListAndFilters(t *testing.T) {
 		if op == "read" {
 			path, body = item, string(raw)
 		}
-		run(t, contracttest.Case{Name: op, Source: authoredSource, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: "Identity"}, {Command: getCommand, ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{wire("GET", path, getCommand, nil, 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, contracttest.Case{Name: map[string]string{"read": "read", "list": "list", "Glo?al": "wildcard-filter", " ": "whitespace-filter"}[op], Source: authoredSource, Mappings: []contracttest.Mapping{{Command: getCommand, ParameterSet: "Identity"}, {Command: getCommand, ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{wire("GET", path, getCommand, nil, 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			s := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts
 			if op == "read" {
 				v, r, e := s.GetByIdentity(ctx, "Global")
