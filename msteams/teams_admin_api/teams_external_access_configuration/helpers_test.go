@@ -9,7 +9,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "msteams/teams_admin_api/teams_external_access_configuration/testdata/get_global.json"
+const source = "msteams/teams_admin_api/teams_external_access_configuration/helpers_test.go"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const scoped = "scope /Fixture / Child"
 
@@ -465,7 +465,9 @@ func exchange(c requestCase) contracttest.Exchange {
 func run(t *testing.T, c contracttest.Case) contracttest.Result {
 	t.Helper()
 	c.Family = "teams_external_access_configuration"
-	c.Source = source
+	if c.Source == "" {
+		c.Source = source
+	}
 	if len(c.Steps) > 0 {
 		c.Want.Status = c.Steps[len(c.Steps)-1].Reply.Status
 	} else {

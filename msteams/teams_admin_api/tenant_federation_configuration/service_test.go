@@ -36,16 +36,10 @@ func TestUnitTenantFederationTypedDispatch(t *testing.T) {
 				switch f.Name {
 				case "tenant-federation-list":
 					v, r, e := s.List(ctx)
-					if e == nil && (v == nil || len(v) != 0) {
-						e = errors.New("empty list changed")
-					}
-					return contracttest.Observation{Response: r, Err: e}
+					return contracttest.Observation{Value: v, Response: r, Err: e}
 				case "tenant-federation-read":
 					v, r, e := s.GetByIdentity(ctx, "Global")
-					if e == nil && (v.AllowFederatedUsers == nil || *v.AllowFederatedUsers || string(v.AllowedDomains) != "null") {
-						e = errors.New("false/null read changed")
-					}
-					return contracttest.Observation{Response: r, Err: e}
+					return contracttest.Observation{Value: v, Response: r, Err: e}
 				case "tenant-federation-update":
 					no := false
 					r, e := s.UpdateGlobal(ctx, configuration.UpdateRequest{Settings: configuration.Settings{AllowFederatedUsers: &no}, AllowedDomains: configuration.NewAllowList("fixture.example.invalid")})

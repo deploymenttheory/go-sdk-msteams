@@ -179,7 +179,7 @@ func (s *Service) customWrite(ctx context.Context, method, command string, input
 	if err := s.ready(ctx); err != nil {
 		return nil, nil, err
 	}
-	if input.Name == nil || !policyrp.ValidIdentity(*input.Name) || input.Policies == nil {
+	if input.Name == nil || *input.Name == "" || input.Policies == nil {
 		return nil, nil, ErrInput
 	}
 	body, err := json.Marshal(input)
@@ -263,7 +263,7 @@ func (s *Service) AssignGroup(ctx context.Context, input GroupAssignmentRequest)
 	if err := s.ready(ctx); err != nil {
 		return nil, nil, err
 	}
-	if strings.TrimSpace(input.GroupID) == "" {
+	if input.GroupID == "" {
 		return nil, nil, ErrInput
 	}
 	// The exported custom wrapper always binds an empty ranking list when no

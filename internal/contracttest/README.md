@@ -28,6 +28,10 @@ Each case provides:
   synthetic response. `WireRequest.JSON` and `WireRequest.Binary` are mutually
   exclusive. Both nil require no body; a non-nil empty binary slice requires zero
   bytes. Binary assertions preserve all bytes and never parse or normalize JSON.
+- Optional `Reply.OnBodyClose` runs synchronously once when the real SDK closes
+  the synthetic response body. It is excluded from JSON metadata. Use it for
+  deterministic cancellation events; body close does not guarantee completion
+  of typed decoding. A nil hook preserves the original transport behavior.
 - An `Invoke(context.Context, *msteams.Client) Observation` callback adapting the
   actual service value, Resty response and error.
 - An `Expected` result selecting JSON value, raw response bytes, status, headers,

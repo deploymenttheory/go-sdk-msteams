@@ -82,7 +82,12 @@ func (c *oceCall) do(ctx context.Context, method string, path []string, query ur
 		return r, err
 	}
 	if len(statuses) == 0 {
-		statuses = []int{http.StatusOK, http.StatusCreated, http.StatusAccepted, http.StatusNoContent}
+		// GPA's generic source helper uses IsSuccessStatusCode. LROS and
+		// NgtProv callers provide their separate exact status lists below.
+		if r != nil && r.StatusCode() >= http.StatusOK && r.StatusCode() < http.StatusMultipleChoices {
+			return r, nil
+		}
+		return r, ErrResponse
 	}
 	for _, status := range statuses {
 		if r != nil && r.StatusCode() == status {

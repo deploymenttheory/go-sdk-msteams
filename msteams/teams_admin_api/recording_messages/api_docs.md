@@ -74,3 +74,9 @@ Synthetic application/delegated modes establish routing, not successful tenant
 authorization. Exact role, cloud, write/read-back/cleanup, shell coercion and
 effective behavior qualification remain open under #103. See [unit tests](service_test.go)
 and the [lab acceptance plan](../../../docs/implementation/policies/recording-messages-lab-acceptance.md).
+
+The source null localization **modifier** clears the existing collection. Use
+`ClearLocalizations` for that operation; nil `UpdateRequest.Localizations` means
+omission. This differs from a null list in a raw model/Settings field, which fails
+the model rule. Source no-settings Set returns an error; Force alone is not a
+setting. Native Go reports that validation error before acquiring credentials.

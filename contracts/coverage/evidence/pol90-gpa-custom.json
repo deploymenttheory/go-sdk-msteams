@@ -1,0 +1,173 @@
+{
+  "scope": "six direct compiled custom GPA commands/six exact sets, contract execution only",
+  "commands": [
+    {
+      "name": "Get-DirectToGroupAssignmentsMigrationStatus",
+      "outcome": "passed",
+      "revision": "63a7577053a66e73a3abea536078b977c612d8e3",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "execution": {
+        "session": "61320",
+        "packages": [
+          "./msteams/teams_admin_api/assignment_migration",
+          "./tests/contract/policies"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol90-current-test-audit.md#gpa-custom-command-completion-review-2026-11-27",
+      "limits": [
+        "No live migration/consequential Clear/outcome or minimum-role claim",
+        "Native raw/text/pointer/future-state preservation is distinct from CLR defaults",
+        "No automatic polling, compensation, convergence or job deletion"
+      ]
+    },
+    {
+      "name": "Get-GroupAssignmentRecommendationsPerPolicyName",
+      "outcome": "passed",
+      "revision": "63a7577053a66e73a3abea536078b977c612d8e3",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "execution": {
+        "session": "61320",
+        "packages": [
+          "./msteams/teams_admin_api/assignment_migration",
+          "./tests/contract/policies"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol90-current-test-audit.md#gpa-custom-command-completion-review-2026-11-27",
+      "limits": [
+        "No live migration/consequential Clear/outcome or minimum-role claim",
+        "Native raw/text/pointer/future-state preservation is distinct from CLR defaults",
+        "No automatic polling, compensation, convergence or job deletion"
+      ]
+    },
+    {
+      "name": "Get-GroupAssignmentRecommendationsPerPolicyType",
+      "outcome": "passed",
+      "revision": "63a7577053a66e73a3abea536078b977c612d8e3",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "execution": {
+        "session": "61320",
+        "packages": [
+          "./msteams/teams_admin_api/assignment_migration",
+          "./tests/contract/policies"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol90-current-test-audit.md#gpa-custom-command-completion-review-2026-11-27",
+      "limits": [
+        "No live migration/consequential Clear/outcome or minimum-role claim",
+        "Native raw/text/pointer/future-state preservation is distinct from CLR defaults",
+        "No automatic polling, compensation, convergence or job deletion"
+      ]
+    },
+    {
+      "name": "Get-GroupPolicyAssignmentConflict",
+      "outcome": "passed",
+      "revision": "63a7577053a66e73a3abea536078b977c612d8e3",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "execution": {
+        "session": "61320",
+        "packages": [
+          "./msteams/teams_admin_api/assignment_migration",
+          "./tests/contract/policies"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol90-current-test-audit.md#gpa-custom-command-completion-review-2026-11-27",
+      "limits": [
+        "No live migration/consequential Clear/outcome or minimum-role claim",
+        "Native raw/text/pointer/future-state preservation is distinct from CLR defaults",
+        "No automatic polling, compensation, convergence or job deletion"
+      ]
+    },
+    {
+      "name": "Invoke-ClearDirectToGroupAssignmentMigration",
+      "outcome": "passed",
+      "revision": "63a7577053a66e73a3abea536078b977c612d8e3",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "execution": {
+        "session": "61320",
+        "packages": [
+          "./msteams/teams_admin_api/assignment_migration",
+          "./tests/contract/policies"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol90-current-test-audit.md#gpa-custom-command-completion-review-2026-11-27",
+      "limits": [
+        "No live migration/consequential Clear/outcome or minimum-role claim",
+        "Native raw/text/pointer/future-state preservation is distinct from CLR defaults",
+        "No automatic polling, compensation, convergence or job deletion"
+      ]
+    },
+    {
+      "name": "Invoke-StartDirectToGroupAssignmentMigration",
+      "outcome": "passed",
+      "revision": "63a7577053a66e73a3abea536078b977c612d8e3",
+      "parameter_sets": [
+        "__AllParameterSets"
+      ],
+      "execution": {
+        "session": "61320",
+        "packages": [
+          "./msteams/teams_admin_api/assignment_migration",
+          "./tests/contract/policies"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol90-current-test-audit.md#gpa-custom-command-completion-review-2026-11-27",
+      "limits": [
+        "No live migration/consequential Clear/outcome or minimum-role claim",
+        "Native raw/text/pointer/future-state preservation is distinct from CLR defaults",
+        "No automatic polling, compensation, convergence or job deletion"
+      ]
+    }
+  ]
+}

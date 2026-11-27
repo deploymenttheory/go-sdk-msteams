@@ -71,7 +71,7 @@ func TestUnitPackageInputContextAndBackendBeforeCredentials(t *testing.T) {
 		}
 		canceled, cancel := context.WithCancel(ctx)
 		cancel()
-		if _, _, e := s.Create(canceled, customInput(false)); !errors.Is(e, context.Canceled) {
+		if _, _, e := s.Create(canceled, customInput()); !errors.Is(e, context.Canceled) {
 			return contracttest.Observation{Err: errors.New("cancellation lost")}
 		}
 		return contracttest.Observation{}

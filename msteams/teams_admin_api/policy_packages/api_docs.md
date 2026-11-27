@@ -29,14 +29,21 @@ application mode. Unknown documentation profiles remain unqualified, without a
 support claim or an inferred restriction. Delegated eligibility still needs tenant
 qualification; acquiring a token does not grant service access.
 
-Custom create/update requests require a bound valid Name and non-nil policy list.
-An explicit empty list remains `[]`. Update is PUT to the custom-package collection
+Custom create/update requests require a bound exactly nonempty Name and non-nil policy list.
+Body PackageName preserves literal whitespace; Get/Remove still enforce their
+independent path-name safety checks. No body value is claimed server-valid.
+An explicit empty typed list remains `[]` as a lower-level generated DTO capability.
+The exported PowerShell New/Update wrappers require a nonempty PolicyList; use
+ParsePolicyList to validate/build that public string-list boundary before Create or
+Update. Direct typed requests do not reproduce shell binding or numeric coercion.
+Update is PUT to the custom-package collection
 with PackageName in the body, not a sparse PATCH. Pointer fields follow generated
 DTO behavior: nil omits a key, while a pointer to an empty string remains present.
 PolicyPair is typed; ParsePolicyList is an optional local wrapper-compatible builder
 that splits only the first delimiter and preserves empty pieces/order/duplicates.
 
-Group rankings are typed int32 values. Rank always serializes, including zero;
+GroupId is a required body string: exact empty is invalid, while bound whitespace
+is preserved without asserting that the server accepts it. Group rankings are typed int32 values. Rank always serializes, including zero;
 absent Rankings defaults to the exported wrapper's empty list. The SDK does not
 silently emulate the shell's numeric string casts. Group PackageName nil and empty
 have different request bodies; no additional unassignment operation is inferred.

@@ -17,7 +17,9 @@ func (v UserIdentity) GoString() string { return v.String() }
 
 // GroupSettings follows the generated DTO: unset and null keys are omitted;
 // bound empty names and zero/negative priorities remain explicit wire values.
-// Create and Update share these settings but use distinct HTTP methods/statuses.
+// Create requires a bound nonempty PolicyName; Update is an additional native
+// operation with separate partial-setting semantics. DTO omission/null behavior
+// alone does not make an omitted name a valid public New invocation.
 type GroupSettings struct {
 	PolicyName policy.Field[string]
 	Priority   policy.Field[int32]
