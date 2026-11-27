@@ -210,3 +210,9 @@ TestUnit/Example selection after explicit expected-status fields were corrected 
 the new harness cases. This is offline execution, not proof of tenant persistence.
 The Set ledger state remains unchanged pending individual full-source/set review
 and revision-bound execution evidence.
+
+The complete affected package passed again at clean frozen revision `4e7df9d`
+(including the new ambiguous-action receipt cases and compiled example). The
+[revision-bound result](evidence/custom-app-set-4e7df9d-offline.json) records exact
+source hashes, raw Go JSON digest and every passing test event. Set/live statuses
+remain unchanged; this is a reviewable implementation checkpoint.
