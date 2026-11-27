@@ -424,5 +424,10 @@
       "path": "docs/implementation/ext/evidence/ai-agents-source/manifest.json",
       "sha256": "3b2881a32d6d5399dc028c63be3f300bbc814093dd1c28af827203e840b6192b"
     }
-  ]
+  ],
+  "controls_source_supplement": {
+    "path": "docs/implementation/ext/evidence/ai-agents-source/controls-supplement.json",
+    "sha256": "523d405df4f9c693fc7295841755ec9f455e2c545ebf672e05ac990191d7f73a",
+    "scope": "Two exact private ProcessRecord method bodies; ShouldProcess false skips remote ProcessRecordAsync; static source only, not executed management WhatIf."
+  }
 }

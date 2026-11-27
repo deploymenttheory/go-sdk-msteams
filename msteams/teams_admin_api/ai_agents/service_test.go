@@ -560,3 +560,33 @@ func TestUnitAIAgentRemoveNullResultsRetainReceiptAndNeverReplay(t *testing.T) {
 		})
 	}
 }
+
+func TestUnitAIAgentCatalogProjectsCompletePinnedDescription(t *testing.T) {
+	// The fixture stores input_json as a JSON string, not an embedded object.
+	var captured struct {
+		Cases []struct {
+			JSON string `json:"input_json"`
+		}
+	}
+	if json.Unmarshal(readFile(t, "testdata/pinned-description-fields.json"), &captured) != nil || len(captured.Cases) != 2 {
+		t.Fatal("source description observation unavailable")
+	}
+	description := captured.Cases[0].JSON
+	reply := []byte(`{"agents":[{"description":` + description + `}],"agentCount":1}`)
+	run(t, contracttest.Case{Name: "catalog-complete-description", Source: "msteams/teams_admin_api/ai_agents/testdata/pinned-description-fields.json", Mappings: mapping("Get", "Get-CsAiAgents"),
+		Steps: []contracttest.Exchange{discovery(t), wire("GET", catalog+"?providerId="+provider, "Get-CsAiAgents", nil, 200, reply)},
+		Want:  contracttest.Expected{Status: 200, Body: reply},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			value, response, err := sdk.TeamsAdminAPI.AIAgents.QueryPlatformAgents(ctx, aiagents.QueryRequest{ProviderID: provider})
+			if err == nil {
+				if value == nil || len(value.Agents) != 1 || value.Agents[0] == nil || value.Agents[0].Description == nil {
+					t.Fatal("catalog description missing")
+				}
+				d := value.Agents[0].Description
+				if d.UserTileExtraLargeURL == nil || *d.UserTileExtraLargeURL != "UserTileExtraLargeUrl" || d.DeveloperPrivacyStatement == nil || *d.DeveloperPrivacyStatement != "DeveloperPrivacyStatement" || len(d.Disclosures) != 6 || d.Disclosures[0] != nil || d.Disclosures[1] == nil || *d.Disclosures[1] != "a" || len(d.SupportedLocales) != 6 || d.SupportedLocales[2] != nil {
+					t.Fatal("known catalog fields were lost or coerced")
+				}
+			}
+			return contracttest.Observation{Response: response, Err: err}
+		}})
+}

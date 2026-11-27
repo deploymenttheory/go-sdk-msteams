@@ -193,24 +193,35 @@ func (v *PlatformAgent) UnmarshalJSON(raw []byte) error {
 }
 
 // PlatformAgentDescription is the catalog description of a platform AI agent.
-// Less common catalog fields (tiles, terms, disclosures, locales) stay in
-// RawFields.
+// All 25 pinned description fields are typed; unknown original fields remain
+// separately available in RawFields.
 type PlatformAgentDescription struct {
-	DisplayName      *string                    `json:"displayName"`
-	SkypeDisplayName *string                    `json:"skypeDisplayName"`
-	Description      *string                    `json:"description"`
-	AgentID          *string                    `json:"agentId"`
-	AgentType        *string                    `json:"agentType"`
-	DeveloperName    *string                    `json:"developerName"`
-	PublisherEmail   *string                    `json:"publisherEmail"`
-	PublisherCountry *string                    `json:"publisherCountry"`
-	IsTrusted        *bool                      `json:"isTrusted"`
-	Capabilities     []*string                  `json:"capabilities"`
-	Categories       []*string                  `json:"categories"`
-	Keywords         []*string                  `json:"keywords"`
-	StarRating       *float64                   `json:"starRating"`
-	ETag             *string                    `json:"eTag"`
-	RawFields        map[string]json.RawMessage `json:"-"`
+	DisplayName               *string                    `json:"displayName"`
+	SkypeDisplayName          *string                    `json:"skypeDisplayName"`
+	Description               *string                    `json:"description"`
+	AgentID                   *string                    `json:"agentId"`
+	AgentType                 *string                    `json:"agentType"`
+	DeveloperName             *string                    `json:"developerName"`
+	PublisherEmail            *string                    `json:"publisherEmail"`
+	PublisherCountry          *string                    `json:"publisherCountry"`
+	IsTrusted                 *bool                      `json:"isTrusted"`
+	Capabilities              []*string                  `json:"capabilities"`
+	Categories                []*string                  `json:"categories"`
+	Keywords                  []*string                  `json:"keywords"`
+	StarRating                *float64                   `json:"starRating"`
+	ETag                      *string                    `json:"eTag"`
+	DeveloperPrivacyStatement *string                    `json:"developerPrivacyStatement"`
+	DeveloperTermsOfService   *string                    `json:"developerTermsOfService"`
+	Disclosures               []*string                  `json:"disclosures"`
+	Extra                     *string                    `json:"extra"`
+	SupportedLocales          []*string                  `json:"supportedLocales"`
+	UserTileSmallURL          *string                    `json:"userTileSmallUrl"`
+	UserTileMediumURL         *string                    `json:"userTileMediumUrl"`
+	UserTileLargeURL          *string                    `json:"userTileLargeUrl"`
+	UserTileExtraLargeURL     *string                    `json:"userTileExtraLargeUrl"`
+	UserTileStaticURL         *string                    `json:"userTileStaticUrl"`
+	Webpage                   *string                    `json:"webpage"`
+	RawFields                 map[string]json.RawMessage `json:"-"`
 }
 
 func (v *PlatformAgentDescription) UnmarshalJSON(raw []byte) error {
@@ -230,11 +241,20 @@ func (v *PlatformAgentDescription) UnmarshalJSON(raw []byte) error {
 	if err != nil {
 		return err
 	}
+	disclosures, err := generatedStrings(fields["disclosures"])
+	if err != nil {
+		return err
+	}
+	supportedLocales, err := generatedStrings(fields["supportedLocales"])
+	if err != nil {
+		return err
+	}
+
 	rating, err := generatedDouble(fields["starRating"])
 	if err != nil {
 		return err
 	}
-	*v = PlatformAgentDescription{DisplayName: generatedString(fields["displayName"]), SkypeDisplayName: generatedString(fields["skypeDisplayName"]), Description: generatedString(fields["description"]), AgentID: generatedString(fields["agentId"]), AgentType: generatedString(fields["agentType"]), DeveloperName: generatedString(fields["developerName"]), PublisherEmail: generatedString(fields["publisherEmail"]), PublisherCountry: generatedString(fields["publisherCountry"]), IsTrusted: generatedBool(fields["isTrusted"]), Capabilities: capabilities, Categories: categories, Keywords: keywords, StarRating: rating, ETag: generatedString(fields["eTag"]), RawFields: fields}
+	*v = PlatformAgentDescription{DisplayName: generatedString(fields["displayName"]), SkypeDisplayName: generatedString(fields["skypeDisplayName"]), Description: generatedString(fields["description"]), AgentID: generatedString(fields["agentId"]), AgentType: generatedString(fields["agentType"]), DeveloperName: generatedString(fields["developerName"]), PublisherEmail: generatedString(fields["publisherEmail"]), PublisherCountry: generatedString(fields["publisherCountry"]), IsTrusted: generatedBool(fields["isTrusted"]), Capabilities: capabilities, Categories: categories, Keywords: keywords, StarRating: rating, ETag: generatedString(fields["eTag"]), DeveloperPrivacyStatement: generatedString(fields["developerPrivacyStatement"]), DeveloperTermsOfService: generatedString(fields["developerTermsOfService"]), Disclosures: disclosures, Extra: generatedString(fields["extra"]), SupportedLocales: supportedLocales, UserTileSmallURL: generatedString(fields["userTileSmallUrl"]), UserTileMediumURL: generatedString(fields["userTileMediumUrl"]), UserTileLargeURL: generatedString(fields["userTileLargeUrl"]), UserTileExtraLargeURL: generatedString(fields["userTileExtraLargeUrl"]), UserTileStaticURL: generatedString(fields["userTileStaticUrl"]), Webpage: generatedString(fields["webpage"]), RawFields: fields}
 	return nil
 }
 

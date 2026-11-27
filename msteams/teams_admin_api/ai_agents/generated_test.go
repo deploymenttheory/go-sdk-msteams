@@ -299,3 +299,43 @@ func TestUnitGeneratedProjectionDefaultsAndRemoveMinimum(t *testing.T) {
 		}
 	}
 }
+
+func TestUnitGeneratedAllKnownDescriptionFieldsUseExactSourceProjection(t *testing.T) {
+	var fixture struct {
+		Cases []struct {
+			JSON       string `json:"input_json"`
+			Properties map[string]json.RawMessage
+		}
+	}
+	generatedFixture(t, "pinned-description-fields.json", &fixture)
+	if len(fixture.Cases) != 2 {
+		t.Fatal("bounded pinned description observations missing")
+	}
+	for index, item := range fixture.Cases {
+		t.Run(fmt.Sprint(index), func(t *testing.T) {
+			var value PlatformAgentDescription
+			if json.Unmarshal([]byte(item.JSON), &value) != nil {
+				t.Fatal("source description rejected")
+			}
+			got := map[string]any{
+				"DeveloperPrivacyStatement": value.DeveloperPrivacyStatement,
+				"DeveloperTermsOfService":   value.DeveloperTermsOfService,
+				"Disclosure":                value.Disclosures,
+				"Extra":                     value.Extra,
+				"SupportedLocale":           value.SupportedLocales,
+				"UserTileSmallUrl":          value.UserTileSmallURL,
+				"UserTileMediumUrl":         value.UserTileMediumURL,
+				"UserTileLargeUrl":          value.UserTileLargeURL,
+				"UserTileExtraLargeUrl":     value.UserTileExtraLargeURL,
+				"UserTileStaticUrl":         value.UserTileStaticURL,
+				"Webpage":                   value.Webpage,
+			}
+			for key, actual := range got {
+				raw, err := json.Marshal(actual)
+				if err != nil || string(raw) != string(item.Properties[key]) {
+					t.Fatalf("source property %s changed", key)
+				}
+			}
+		})
+	}
+}

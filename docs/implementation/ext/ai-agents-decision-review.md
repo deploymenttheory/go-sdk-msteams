@@ -57,9 +57,11 @@ native typed errors, context and write replay controls remain deliberate.
 Source metadata exposes WhatIf/Confirm for Set and Remove-CsAgent; their custom
 and internal wrappers forward common parameters. Native callers withhold the
 mutation call when choosing not to act; there is no invented Go WhatIf flag or
-interactive approval. Exact internal ShouldProcess/event-handler gating is not
-separately captured by this first packet, so declaration/forwarding evidence
-must not be described as executed PowerShell WhatIf behavior. Other five public
+interactive approval. The [bounded source gate supplement](evidence/ai-agents-source/controls-supplement.json)
+resolves each actual ProcessRecord: ShouldProcess at IL50, false branch at IL57
+skips the ProcessRecordAsync call at IL76. It withholds the remote action path;
+start signals/BeginProcessing/session or telemetry hooks are not asserted
+absent. This is exact static source proof, not executed PowerShell WhatIf. Other five public
 commands have no WhatIf/Confirm declaration. Get's Force is removed. Shared
 PowerShell stream/session controls map to the repository's native client/auth,
 context, transport and error conventions, not extra resource fields.
@@ -95,6 +97,19 @@ it pass. All three real Remove null-result service cases passed in both runs.
 
 The two peer-review gaps are now covered. Final per-command approval still
 requires review of this source/control/auth/native-boundary packet, including
-whether the uncaptured ShouldProcess gate requires a bounded source supplement
-for Set/Remove. No automatic seven-command promotion follows from aggregate
+the bounded static ShouldProcess gate supplement for Set/Remove. No automatic seven-command promotion follows from aggregate
 passes. Live states for all 745 records remain unchanged, and #191 remains open.
+
+
+## Catalog model follow-up under review
+
+The first frozen repair left eleven known AiAgentDescription properties only in
+RawFields. That was insufficient for full catalog qualification. The additive
+follow-up types all 25 pinned properties, including developer privacy/terms,
+extra, disclosures, supported locales, five tile URLs and webpage. The
+[bounded actual description supplement](evidence/ai-agents-source/description-fields-supplement.json)
+contains two real inert parser/getter observations: all eleven positive fields
+(including both additional nullable arrays), and wrong-type/exact-case handling.
+The original primary/five-packet manifest and a310c8e execution remain immutable.
+New full affected execution is required before this follow-up can be approved;
+Get-CsAiAgents and all six other command records remain unchanged meanwhile.

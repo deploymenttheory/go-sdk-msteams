@@ -87,7 +87,7 @@ JSON captures prove response bytes, not these corrected request headers.
 
 This unreleased API corrects configuration `AgentList.AgentCount` to `*int64`;
 catalog `QueryResult.AgentCount` remains `*int32`. `Channels`, `Capabilities`,
-`Categories` and `Keywords` now contain `*string` entries. Generated parsing is
+`Categories`, `Keywords`, `Disclosures` and `SupportedLocales` contain `*string` entries. All 25 pinned catalog description properties are typed, including developer privacy/terms, extra, five tile URLs and webpage. Generated parsing is
 case-sensitive, ignores wrong-type fields, preserves nullable array positions,
 and rejects exact duplicate keys recursively. It does not use the legacy
 PolicyRp/Newtonsoft coercion rules. Catalog descriptions lazily default to an
