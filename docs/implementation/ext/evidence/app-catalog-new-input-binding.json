@@ -1,0 +1,441 @@
+{
+  "scope": "Pinned source metadata and constructor/setter IL, fake-only mandatory binding; no actual management lifecycle or pinned cmdlet construction, auth/network. CLR string backing-field zero initialization plus absence of constructor writes proves null default.",
+  "declaration": {
+    "attributes": [
+      "[System.Management.Automation.CmdletAttribute(\"New\", \"TeamsApp\")]"
+    ],
+    "declared_properties": [
+      {
+        "type": "System.String",
+        "attributes": [],
+        "name": "CmdletName"
+      },
+      {
+        "type": "System.String",
+        "attributes": [
+          "[System.Management.Automation.ParameterAttribute(Mandatory = True)]"
+        ],
+        "name": "DistributionMethod"
+      },
+      {
+        "type": "System.String",
+        "attributes": [
+          "[System.Management.Automation.ParameterAttribute(Mandatory = True)]"
+        ],
+        "name": "Path"
+      }
+    ],
+    "root_command_type": "Cmdlet",
+    "command": "New-TeamsApp",
+    "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.NewTeamsApp, Microsoft.Teams.PowerShell.TeamsCmdlets, Version=1.6.8.0, Culture=neutral, PublicKeyToken=null",
+    "parameter_sets": [
+      "__AllParameterSets"
+    ]
+  },
+  "selected_new_type": {
+    "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.NewTeamsApp",
+    "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+    "fields": [
+      {
+        "name": "<CmdletName>k__BackingField",
+        "constant": null,
+        "type": "string",
+        "literal": false
+      },
+      {
+        "name": "<DistributionMethod>k__BackingField",
+        "constant": null,
+        "type": "string",
+        "literal": false
+      },
+      {
+        "name": "<Path>k__BackingField",
+        "constant": null,
+        "type": "string",
+        "literal": false
+      }
+    ],
+    "methods": [
+      {
+        "il_sha256": "a90c3ac3666f0803dfbbacc2dc3fa98ba49dd8336356f0791f0c5d1fe2d874fa",
+        "instructions": [
+          {
+            "op": "ldarg.0",
+            "offset": 0,
+            "operand": null
+          },
+          {
+            "op": "ldfld",
+            "offset": 1,
+            "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.NewTeamsApp.System.String <DistributionMethod>k__BackingField"
+          },
+          {
+            "op": "ret",
+            "offset": 6,
+            "operand": null
+          }
+        ],
+        "method": "System.String get_DistributionMethod()",
+        "exceptions": [],
+        "locals": []
+      },
+      {
+        "il_sha256": "3a63ef9dc3d810fba550cdbf9b228a17e213f2bbaca8aefc636c8f7121d07e29",
+        "instructions": [
+          {
+            "op": "ldarg.0",
+            "offset": 0,
+            "operand": null
+          },
+          {
+            "op": "ldarg.1",
+            "offset": 1,
+            "operand": null
+          },
+          {
+            "op": "stfld",
+            "offset": 2,
+            "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.NewTeamsApp.System.String <DistributionMethod>k__BackingField"
+          },
+          {
+            "op": "ret",
+            "offset": 7,
+            "operand": null
+          }
+        ],
+        "method": "Void set_DistributionMethod(System.String)",
+        "exceptions": [],
+        "locals": []
+      },
+      {
+        "il_sha256": "6094e9d19df0bb2abf9499847a93c0fb7e4ac471268a6f2647ca89cdfe837d52",
+        "instructions": [
+          {
+            "op": "ldarg.0",
+            "offset": 0,
+            "operand": null
+          },
+          {
+            "op": "call",
+            "offset": 1,
+            "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.TeamsCmdlet.Void .ctor()"
+          },
+          {
+            "op": "ret",
+            "offset": 6,
+            "operand": null
+          }
+        ],
+        "method": "Void .ctor()",
+        "exceptions": [],
+        "locals": []
+      },
+      {
+        "il_sha256": "9a25ee503072d6d7338e8e3e358ea70e344286f078c625c2176063776e0d5329",
+        "instructions": [
+          {
+            "op": "ldarg.0",
+            "offset": 0,
+            "operand": null
+          },
+          {
+            "op": "call",
+            "offset": 1,
+            "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.TeamsCmdlet.Void .ctor()"
+          },
+          {
+            "op": "ldarg.0",
+            "offset": 6,
+            "operand": null
+          },
+          {
+            "op": "ldarg.1",
+            "offset": 7,
+            "operand": null
+          },
+          {
+            "op": "call",
+            "offset": 8,
+            "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.TeamsCmdlet.Void set_HttpClientFactory(Microsoft.TeamsCmdlets.Powershell.Connect.Common.IHttpClientFactory)"
+          },
+          {
+            "op": "ret",
+            "offset": 13,
+            "operand": null
+          }
+        ],
+        "method": "Void .ctor(Microsoft.TeamsCmdlets.Powershell.Connect.Common.IHttpClientFactory)",
+        "exceptions": [],
+        "locals": []
+      }
+    ]
+  },
+  "base_ctor": {
+    "methods": [
+      {
+        "il_sha256": "4c7d81fad53c813f86b9297fb7943abdb2417971cff009c3cfcb7307b1fa3359",
+        "method": "Void .ctor()",
+        "instructions": [
+          {
+            "offset": 0,
+            "op": "ldarg.0",
+            "operand": null
+          },
+          {
+            "offset": 1,
+            "op": "call",
+            "operand": "System.Management.Automation.Cmdlet.Void .ctor()"
+          },
+          {
+            "offset": 6,
+            "op": "ret",
+            "operand": null
+          }
+        ],
+        "exceptions": [],
+        "locals": []
+      }
+    ],
+    "assembly_sha256": "3f9f5bfe36beb0b3d378f606db58c55183221eb5c1465889b106444423086d24",
+    "fields": [
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<GraphResource>k__BackingField",
+        "type": "string"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<SubstrateResource>k__BackingField",
+        "type": "string"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<TeamsTargetingResource>k__BackingField",
+        "type": "string"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<TeamsHierarchyResource>k__BackingField",
+        "type": "string"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<TeamsMigrationResource>k__BackingField",
+        "type": "string"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<TeamsAndChannelsResource>k__BackingField",
+        "type": "string"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<McpsResource>k__BackingField",
+        "type": "string"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<Authorization>k__BackingField",
+        "type": "string"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<TenantId>k__BackingField",
+        "type": "string"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "<HttpClientFactory>k__BackingField",
+        "type": "Microsoft.TeamsCmdlets.Powershell.Connect.Common.IHttpClientFactory"
+      },
+      {
+        "constant": null,
+        "literal": false,
+        "name": "CancelKeyPress",
+        "type": "bool"
+      }
+    ],
+    "type": "Microsoft.Teams.PowerShell.TeamsCmdlets.TeamsCmdlet"
+  },
+  "source_processrecord_distribution_gate": {
+    "method_sha256": "42b0699bbfd17d5f6026b595d8c592f325178ee005deef16fae93d61775ac815",
+    "instructions": [
+      {
+        "op": "ldarg.0",
+        "offset": 250,
+        "operand": null
+      },
+      {
+        "op": "call",
+        "offset": 251,
+        "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.NewTeamsApp.System.String get_DistributionMethod()"
+      },
+      {
+        "op": "ldstr",
+        "offset": 256,
+        "operand": "organization"
+      },
+      {
+        "op": "ldc.i4.5",
+        "offset": 261,
+        "operand": null
+      },
+      {
+        "op": "call",
+        "offset": 262,
+        "operand": "string.Boolean Equals(System.String, System.String, System.StringComparison)"
+      },
+      {
+        "op": "brtrue.s",
+        "offset": 267,
+        "operand": 285
+      },
+      {
+        "op": "ldc.i4",
+        "offset": 269,
+        "operand": 403
+      },
+      {
+        "op": "ldstr",
+        "offset": 274,
+        "operand": "Operation not allowed.This call only supports DistributionMethod: Organization\n"
+      },
+      {
+        "op": "newobj",
+        "offset": 279,
+        "operand": "Microsoft.Teams.PowerShell.TeamsCmdlets.ErrorHandling.ApiException.Void .ctor(Int32, System.String)"
+      },
+      {
+        "op": "throw",
+        "offset": 284,
+        "operand": null
+      }
+    ]
+  },
+  "inert_binding": {
+    "cases": [
+      {
+        "exception": "System.Management.Automation.MethodInvocationException: Exception calling \"Invoke\" with \"0\" argument(s): \"Cannot process command because of one or more missing mandatory parameters: DistributionMethod.\"\n ---> System.Management.Automation.ParameterBindingException: Cannot process command because of one or more missing mandatory parameters: DistributionMethod.\n   at System.Management.Automation.Runspaces.PipelineBase.Invoke(IEnumerable input) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/pipelinebase.cs:line 411\n   at System.Management.Automation.Runspaces.Pipeline.Invoke() in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/Pipeline.cs:line 528\n   at System.Management.Automation.PowerShell.Worker.ConstructPipelineAndDoWork(Runspace rs, Boolean performSyncInvoke) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5591\n   at System.Management.Automation.PowerShell.Worker.CreateRunspaceIfNeededAndDoWork(Runspace rsToUse, Boolean isSync) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5438\n   at System.Management.Automation.PowerShell.CoreInvokeHelper[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4569\n   at System.Management.Automation.PowerShell.CoreInvoke[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4761\n   at System.Management.Automation.PowerShell.CoreInvoke[TOutput](IEnumerable input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4509\n   at CallSite.Target(Closure, CallSite, Object)\n   --- End of inner exception stack trace ---\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/runtime/Operations/MiscOps.cs:line 1755\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/CallInstruction.Generated.cs:line 504\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 389\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 355",
+        "process_calls": 0,
+        "output": [],
+        "case": "omitted",
+        "errors": [],
+        "command": "Test-Ext90NewBinding"
+      },
+      {
+        "exception": "System.Management.Automation.MethodInvocationException: Exception calling \"Invoke\" with \"0\" argument(s): \"Cannot bind argument to parameter 'DistributionMethod' because it is null.\"\n ---> System.Management.Automation.ParameterBindingValidationException: Cannot bind argument to parameter 'DistributionMethod' because it is null.\n   at System.Management.Automation.Runspaces.PipelineBase.Invoke(IEnumerable input) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/pipelinebase.cs:line 411\n   at System.Management.Automation.Runspaces.Pipeline.Invoke() in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/Pipeline.cs:line 528\n   at System.Management.Automation.PowerShell.Worker.ConstructPipelineAndDoWork(Runspace rs, Boolean performSyncInvoke) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5591\n   at System.Management.Automation.PowerShell.Worker.CreateRunspaceIfNeededAndDoWork(Runspace rsToUse, Boolean isSync) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5438\n   at System.Management.Automation.PowerShell.CoreInvokeHelper[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4569\n   at System.Management.Automation.PowerShell.CoreInvoke[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4761\n   at System.Management.Automation.PowerShell.CoreInvoke[TOutput](IEnumerable input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4509\n   at CallSite.Target(Closure, CallSite, Object)\n   --- End of inner exception stack trace ---\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/runtime/Operations/MiscOps.cs:line 1755\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/CallInstruction.Generated.cs:line 504\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 389\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 355",
+        "process_calls": 0,
+        "output": [],
+        "case": "null",
+        "errors": [],
+        "command": "Test-Ext90NewBinding"
+      },
+      {
+        "exception": "System.Management.Automation.MethodInvocationException: Exception calling \"Invoke\" with \"0\" argument(s): \"Cannot bind argument to parameter 'DistributionMethod' because it is an empty string.\"\n ---> System.Management.Automation.ParameterBindingValidationException: Cannot bind argument to parameter 'DistributionMethod' because it is an empty string.\n   at System.Management.Automation.Runspaces.PipelineBase.Invoke(IEnumerable input) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/pipelinebase.cs:line 411\n   at System.Management.Automation.Runspaces.Pipeline.Invoke() in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/Pipeline.cs:line 528\n   at System.Management.Automation.PowerShell.Worker.ConstructPipelineAndDoWork(Runspace rs, Boolean performSyncInvoke) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5591\n   at System.Management.Automation.PowerShell.Worker.CreateRunspaceIfNeededAndDoWork(Runspace rsToUse, Boolean isSync) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5438\n   at System.Management.Automation.PowerShell.CoreInvokeHelper[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4569\n   at System.Management.Automation.PowerShell.CoreInvoke[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4761\n   at System.Management.Automation.PowerShell.CoreInvoke[TOutput](IEnumerable input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4509\n   at CallSite.Target(Closure, CallSite, Object)\n   --- End of inner exception stack trace ---\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/runtime/Operations/MiscOps.cs:line 1755\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/CallInstruction.Generated.cs:line 504\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 389\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 355",
+        "process_calls": 0,
+        "output": [],
+        "case": "empty",
+        "errors": [],
+        "command": "Test-Ext90NewBinding"
+      },
+      {
+        "exception": null,
+        "process_calls": 1,
+        "output": [
+          "organization"
+        ],
+        "case": "organization",
+        "errors": [],
+        "command": "Test-Ext90NewBinding"
+      },
+      {
+        "exception": null,
+        "process_calls": 1,
+        "output": [
+          "Organization"
+        ],
+        "case": "Organization",
+        "errors": [],
+        "command": "Test-Ext90NewBinding"
+      },
+      {
+        "exception": null,
+        "process_calls": 1,
+        "output": [
+          "invalid"
+        ],
+        "case": "invalid",
+        "errors": [],
+        "command": "Test-Ext90NewBinding"
+      },
+      {
+        "exception": "System.Management.Automation.MethodInvocationException: Exception calling \"Invoke\" with \"0\" argument(s): \"Cannot process command because of one or more missing mandatory parameters: DistributionMethod.\"\n ---> System.Management.Automation.ParameterBindingException: Cannot process command because of one or more missing mandatory parameters: DistributionMethod.\n   at System.Management.Automation.Runspaces.PipelineBase.Invoke(IEnumerable input) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/pipelinebase.cs:line 411\n   at System.Management.Automation.Runspaces.Pipeline.Invoke() in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/Pipeline.cs:line 528\n   at System.Management.Automation.PowerShell.Worker.ConstructPipelineAndDoWork(Runspace rs, Boolean performSyncInvoke) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5591\n   at System.Management.Automation.PowerShell.Worker.CreateRunspaceIfNeededAndDoWork(Runspace rsToUse, Boolean isSync) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5438\n   at System.Management.Automation.PowerShell.CoreInvokeHelper[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4569\n   at System.Management.Automation.PowerShell.CoreInvoke[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4761\n   at System.Management.Automation.PowerShell.CoreInvoke[TOutput](IEnumerable input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4509\n   at CallSite.Target(Closure, CallSite, Object)\n   --- End of inner exception stack trace ---\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/runtime/Operations/MiscOps.cs:line 1755\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/CallInstruction.Generated.cs:line 504\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 389\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 355",
+        "process_calls": 0,
+        "output": [],
+        "case": "omitted",
+        "errors": [],
+        "command": "Test-Ext90InitializedBinding"
+      },
+      {
+        "exception": "System.Management.Automation.MethodInvocationException: Exception calling \"Invoke\" with \"0\" argument(s): \"Cannot bind argument to parameter 'DistributionMethod' because it is null.\"\n ---> System.Management.Automation.ParameterBindingValidationException: Cannot bind argument to parameter 'DistributionMethod' because it is null.\n   at System.Management.Automation.Runspaces.PipelineBase.Invoke(IEnumerable input) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/pipelinebase.cs:line 411\n   at System.Management.Automation.Runspaces.Pipeline.Invoke() in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/Pipeline.cs:line 528\n   at System.Management.Automation.PowerShell.Worker.ConstructPipelineAndDoWork(Runspace rs, Boolean performSyncInvoke) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5591\n   at System.Management.Automation.PowerShell.Worker.CreateRunspaceIfNeededAndDoWork(Runspace rsToUse, Boolean isSync) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5438\n   at System.Management.Automation.PowerShell.CoreInvokeHelper[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4569\n   at System.Management.Automation.PowerShell.CoreInvoke[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4761\n   at System.Management.Automation.PowerShell.CoreInvoke[TOutput](IEnumerable input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4509\n   at CallSite.Target(Closure, CallSite, Object)\n   --- End of inner exception stack trace ---\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/runtime/Operations/MiscOps.cs:line 1755\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/CallInstruction.Generated.cs:line 504\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 389\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 355",
+        "process_calls": 0,
+        "output": [],
+        "case": "null",
+        "errors": [],
+        "command": "Test-Ext90InitializedBinding"
+      },
+      {
+        "exception": "System.Management.Automation.MethodInvocationException: Exception calling \"Invoke\" with \"0\" argument(s): \"Cannot bind argument to parameter 'DistributionMethod' because it is an empty string.\"\n ---> System.Management.Automation.ParameterBindingValidationException: Cannot bind argument to parameter 'DistributionMethod' because it is an empty string.\n   at System.Management.Automation.Runspaces.PipelineBase.Invoke(IEnumerable input) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/pipelinebase.cs:line 411\n   at System.Management.Automation.Runspaces.Pipeline.Invoke() in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/Pipeline.cs:line 528\n   at System.Management.Automation.PowerShell.Worker.ConstructPipelineAndDoWork(Runspace rs, Boolean performSyncInvoke) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5591\n   at System.Management.Automation.PowerShell.Worker.CreateRunspaceIfNeededAndDoWork(Runspace rsToUse, Boolean isSync) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 5438\n   at System.Management.Automation.PowerShell.CoreInvokeHelper[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4569\n   at System.Management.Automation.PowerShell.CoreInvoke[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4761\n   at System.Management.Automation.PowerShell.CoreInvoke[TOutput](IEnumerable input, PSDataCollection`1 output, PSInvocationSettings settings) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/hostifaces/PowerShell.cs:line 4509\n   at CallSite.Target(Closure, CallSite, Object)\n   --- End of inner exception stack trace ---\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/runtime/Operations/MiscOps.cs:line 1755\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/CallInstruction.Generated.cs:line 504\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 389\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame) in /private/tmp/s-CqbErsi9/powershell-20260917-48517-9cpqpb/src/System.Management.Automation/engine/interpreter/ControlFlowInstructions.cs:line 355",
+        "process_calls": 0,
+        "output": [],
+        "case": "empty",
+        "errors": [],
+        "command": "Test-Ext90InitializedBinding"
+      },
+      {
+        "exception": null,
+        "process_calls": 1,
+        "output": [
+          "organization"
+        ],
+        "case": "organization",
+        "errors": [],
+        "command": "Test-Ext90InitializedBinding"
+      },
+      {
+        "exception": null,
+        "process_calls": 1,
+        "output": [
+          "Organization"
+        ],
+        "case": "Organization",
+        "errors": [],
+        "command": "Test-Ext90InitializedBinding"
+      },
+      {
+        "exception": null,
+        "process_calls": 1,
+        "output": [
+          "invalid"
+        ],
+        "case": "invalid",
+        "errors": [],
+        "command": "Test-Ext90InitializedBinding"
+      }
+    ],
+    "reproducer_sha256": "511d42dbcc8bce5f79ad4e4a5d67940c7cfdf24f4240e96ec00d4d11b43d9993",
+    "fake_source": "using System.Management.Automation;\nnamespace Ext90NewBinding {\n[Cmdlet(\"Test\",\"Ext90NewBinding\")]\npublic class Writer : PSCmdlet {\n [Parameter(Mandatory=true)] public string DistributionMethod {get;set;}\n [Parameter(Mandatory=true)] public string Path {get;set;}\n public static int Calls;\n protected override void ProcessRecord(){Calls++;WriteObject(DistributionMethod);}\n}\n[Cmdlet(\"Test\",\"Ext90InitializedBinding\")]\npublic class Initialized : PSCmdlet {\n [Parameter(Mandatory=true)] public string DistributionMethod {get;set;} = \"organization\";\n [Parameter(Mandatory=true)] public string Path {get;set;}\n public static int Calls;\n protected override void ProcessRecord(){Calls++;WriteObject(DistributionMethod);}\n}\n}",
+    "scope": "Fake-only inert binder. Neither pinned constructors nor management lifecycle/auth/network invoked."
+  },
+  "reproducer_source": "# Fake-only parameter binding, no pinned management type instantiation or lifecycle.\n$ErrorActionPreference='Stop'\n$source=@'\nusing System.Management.Automation;\nnamespace Ext90NewBinding {\n[Cmdlet(\"Test\",\"Ext90NewBinding\")]\npublic class Writer : PSCmdlet {\n [Parameter(Mandatory=true)] public string DistributionMethod {get;set;}\n [Parameter(Mandatory=true)] public string Path {get;set;}\n public static int Calls;\n protected override void ProcessRecord(){Calls++;WriteObject(DistributionMethod);}\n}\n[Cmdlet(\"Test\",\"Ext90InitializedBinding\")]\npublic class Initialized : PSCmdlet {\n [Parameter(Mandatory=true)] public string DistributionMethod {get;set;} = \"organization\";\n [Parameter(Mandatory=true)] public string Path {get;set;}\n public static int Calls;\n protected override void ProcessRecord(){Calls++;WriteObject(DistributionMethod);}\n}\n}\n'@\n$refs=@(Get-ChildItem (Join-Path $PSHOME 'ref') -Filter '*.dll'|ForEach-Object{$_.FullName})+@([Management.Automation.PSCmdlet].Assembly.Location)\nAdd-Type -TypeDefinition $source -ReferencedAssemblies $refs\n$iss=[Management.Automation.Runspaces.InitialSessionState]::Create()\n$iss.Commands.Add([Management.Automation.Runspaces.SessionStateCmdletEntry]::new('Test-Ext90NewBinding',[Ext90NewBinding.Writer],$null))\n$iss.Commands.Add([Management.Automation.Runspaces.SessionStateCmdletEntry]::new('Test-Ext90InitializedBinding',[Ext90NewBinding.Initialized],$null))\n$rs=[Management.Automation.Runspaces.RunspaceFactory]::CreateRunspace($iss);$rs.Open();$rows=@()\ntry {foreach($command in @('Test-Ext90NewBinding','Test-Ext90InitializedBinding')){foreach($case in @('omitted','null','empty','organization','Organization','invalid')){\n $p=[Management.Automation.PowerShell]::Create();$p.Runspace=$rs;$before=[Ext90NewBinding.Writer]::Calls+[Ext90NewBinding.Initialized]::Calls;$exception=$null;$output=@()\n try{$null=$p.AddCommand($command).AddParameter('Path','synthetic.zip');if($case -ne 'omitted'){$value=switch($case){'null'{$null};'empty'{''};default{$case}};$null=$p.AddParameter('DistributionMethod',$value)};$output=$p.Invoke()}catch{$exception=$_.Exception.ToString()}\n $rows+=@{command=$command;case=$case;process_calls=([Ext90NewBinding.Writer]::Calls+[Ext90NewBinding.Initialized]::Calls-$before);output=@($output|ForEach-Object{$_});errors=@($p.Streams.Error|ForEach-Object{@{fully_qualified_id=$_.FullyQualifiedErrorId;message=$_.ToString()}});exception=$exception};$p.Dispose()\n}}}finally{$rs.Dispose()}\n@{scope='Fake-only inert binder. Neither pinned constructors nor management lifecycle/auth/network invoked.';reproducer_sha256=(Get-FileHash $PSCommandPath).Hash.ToLowerInvariant();fake_source=$source;cases=$rows}|ConvertTo-Json -Depth 7 -Compress\n"
+}

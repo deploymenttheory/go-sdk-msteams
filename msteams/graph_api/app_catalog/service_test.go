@@ -93,8 +93,8 @@ func TestUnitAppCatalogListBuildsTheModuleFilterAndFollowsPages(t *testing.T) {
 		Want:  contracttest.Expected{Status: 200, Body: second},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			result, err := sdk.GraphAPI.AppCatalog.List(ctx, ac.ListOptions{ID: "a", ExternalID: "b", DisplayName: "o'brien", DistributionMethod: "organization"})
-			if err != nil || len(result.Items) != 2 || result.Pages != 2 || *result.Items[0].DisplayName != "Fixture App" || result.Items[0].RawFields["future"] == nil ||
-				result.Items[1].ID != "com.microsoft.teamspace.tab.fixture" || result.Items[1].ExternalID != nil {
+			if err != nil || len(result.Items) != 2 || result.Pages != 2 || result.Items[0] == nil || result.Items[1] == nil || result.Items[0].DisplayName == nil || *result.Items[0].DisplayName != "Fixture App" || result.Items[0].RawFields["future"] == nil ||
+				result.Items[1].ID == nil || *result.Items[1].ID != "com.microsoft.teamspace.tab.fixture" || result.Items[1].ExternalID != nil {
 				t.Fatal("catalog pages were not collected")
 			}
 			return contracttest.Observation{Response: result.Response, Err: err}
@@ -142,12 +142,12 @@ func TestUnitAppCatalogPackageWrites(t *testing.T) {
 		Want:  contracttest.Expected{Status: 201, Body: []byte(created)},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			app, response, err := sdk.GraphAPI.AppCatalog.Create(ctx, ac.CreateRequest{DistributionMethod: "Organization", Package: pkg})
-			if err != nil || app.ID != appID || *app.ExternalID != "00000000-0000-4000-8000-000000000002" {
+			if err != nil || app == nil || app.ID == nil || *app.ID != appID || app.ExternalID == nil || *app.ExternalID != "00000000-0000-4000-8000-000000000002" {
 				t.Fatal("created app was not decoded")
 			}
 			return contracttest.Observation{Response: response, Err: err}
 		}})
-	for _, status := range []int{200, 201, 204} {
+	for _, status := range []int{200, 201, 202, 204, 206, 299} {
 		run(t, contracttest.Case{Name: "update-" + strconv.Itoa(status), Mappings: mapping("Set-TeamsApp"),
 			Steps: []contracttest.Exchange{upload(http.MethodPut, route+"/"+appID, status, nil)},
 			Want:  contracttest.Expected{Status: status},
@@ -167,52 +167,32 @@ func TestUnitAppCatalogPackageWrites(t *testing.T) {
 
 func TestUnitAppCatalogFailuresStayTyped(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "create-without-id", Mappings: mapping("New-TeamsApp"),
-		Steps: []contracttest.Exchange{upload(http.MethodPost, route, 201, []byte(`{"displayName":"x"}`))},
-		Want:  contracttest.Expected{Status: 201, Error: client.ErrDecode},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			app, response, err := sdk.GraphAPI.AppCatalog.Create(ctx, ac.CreateRequest{DistributionMethod: "organization", Package: pkg})
-			if app != nil {
-				t.Fatal("undecodable app returned")
-			}
-			return contracttest.Observation{Response: response, Err: err}
-		}})
-	run(t, contracttest.Case{Name: "create-undeclared", Mappings: mapping("New-TeamsApp"),
-		Steps: []contracttest.Exchange{upload(http.MethodPost, route, 202, nil)},
-		Want:  contracttest.Expected{Status: 202, Error: ac.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			_, response, err := sdk.GraphAPI.AppCatalog.Create(ctx, ac.CreateRequest{DistributionMethod: "organization", Package: pkg})
-			return contracttest.Observation{Response: response, Err: err}
-		}})
-	run(t, contracttest.Case{Name: "delete-undeclared", Mappings: mapping("Remove-TeamsApp"),
-		Steps: []contracttest.Exchange{{Request: contracttest.WireRequest{Method: http.MethodDelete, URL: route + "/" + appID, Audience: auth.GraphAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: reply(200, []byte(`{}`))}},
-		Want:  contracttest.Expected{Status: 200, Error: ac.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-			response, err := sdk.GraphAPI.AppCatalog.DeleteByID(ctx, appID)
-			return contracttest.Observation{Response: response, Err: err}
-		}})
-	for name, invoke := range map[string]func(context.Context, *ac.Service) error{
-		"create-store": func(ctx context.Context, s *ac.Service) error {
+	run(t, contracttest.Case{Name: "create-accepted-malformed-field", Mappings: mapping("New-TeamsApp"), Steps: []contracttest.Exchange{upload(http.MethodPost, route, 201, []byte(`{"id":{}}`))}, Want: contracttest.Expected{Status: 201, Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		app, response, err := sdk.GraphAPI.AppCatalog.Create(ctx, ac.CreateRequest{DistributionMethod: ac.OrganizationDistribution, Package: pkg})
+		if app != nil || response == nil {
+			t.Fatal("accepted parse failure lost receipt")
+		}
+		return contracttest.Observation{Response: response, Err: err}
+	}})
+	for _, item := range []struct {
+		name, command string
+		invoke        func(context.Context, *ac.Service) error
+	}{
+		{"create-store", "New-TeamsApp", func(ctx context.Context, s *ac.Service) error {
 			_, _, err := s.Create(ctx, ac.CreateRequest{DistributionMethod: "store", Package: pkg})
 			return err
-		},
-		"create-empty": func(ctx context.Context, s *ac.Service) error {
+		}},
+		{"create-omitted-package", "New-TeamsApp", func(ctx context.Context, s *ac.Service) error {
 			_, _, err := s.Create(ctx, ac.CreateRequest{DistributionMethod: "organization"})
 			return err
-		},
-		"update-slash": func(ctx context.Context, s *ac.Service) error { _, err := s.UpdateByID(ctx, "a/b", pkg); return err },
-		"update-empty": func(ctx context.Context, s *ac.Service) error { _, err := s.UpdateByID(ctx, appID, nil); return err },
-		"delete-blank": func(ctx context.Context, s *ac.Service) error { _, err := s.DeleteByID(ctx, " "); return err },
-		"list-control": func(ctx context.Context, s *ac.Service) error {
-			_, err := s.List(ctx, ac.ListOptions{DisplayName: "a\nb"})
-			return err
-		},
+		}},
+		{"update-slash", "Set-TeamsApp", func(ctx context.Context, s *ac.Service) error { _, err := s.UpdateByID(ctx, "a/b", pkg); return err }},
+		{"update-omitted-package", "Set-TeamsApp", func(ctx context.Context, s *ac.Service) error { _, err := s.UpdateByID(ctx, appID, nil); return err }},
+		{"delete-blank", "Remove-TeamsApp", func(ctx context.Context, s *ac.Service) error { _, err := s.DeleteByID(ctx, " "); return err }},
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local", Mappings: mapping("Get-TeamsApp"), Steps: []contracttest.Exchange{},
-			Want: contracttest.Expected{Error: ac.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: invoke(ctx, sdk.GraphAPI.AppCatalog)}
-			}})
+		run(t, contracttest.Case{Name: item.name, Scope: "local", Mappings: mapping(item.command), Want: contracttest.Expected{Error: ac.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			return contracttest.Observation{Err: item.invoke(ctx, sdk.GraphAPI.AppCatalog)}
+		}})
 	}
 }
 

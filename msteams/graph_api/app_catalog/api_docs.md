@@ -1,33 +1,69 @@
 # App catalog
 
-Use `sdk.GraphAPI.AppCatalog` to list, publish, update and remove apps in the
-tenant's Teams app catalog through Graph `/v1.0/appCatalogs/teamsApps`, as the
-MicrosoftTeams module's compiled TeamsApp cmdlets do. Constructing the root
-client or this service performs no network I/O.
+Use `sdk.GraphAPI.AppCatalog` to list, publish, update and remove apps through
+Graph `/v1.0/appCatalogs/teamsApps`, following the pinned compiled TeamsApp
+commands. Constructors perform no authentication or network I/O.
 
-| Resource method | PowerShell command | Wire operation | Declared successful statuses |
+| Method | Public source command | HTTP operation | Source status predicate |
 | --- | --- | --- | --- |
-| `List(ctx, ListOptions)` / `NewPager` | `Get-TeamsApp` | GET `/v1.0/appCatalogs/teamsApps[?$filter=…]`, following `@odata.nextLink` | 200 |
-| `Create(ctx, CreateRequest)` | `New-TeamsApp` | POST `/v1.0/appCatalogs/teamsApps`, `application/zip` body | 201, 200 |
-| `UpdateByID(ctx, id, pkg)` | `Set-TeamsApp` | PUT `/v1.0/appCatalogs/teamsApps/{id}`, `application/zip` body | 200, 201, 204 |
-| `DeleteByID(ctx, id)` | `Remove-TeamsApp` | DELETE `/v1.0/appCatalogs/teamsApps/{id}` | 204 |
+| `List` / `NewPager` | `Get-TeamsApp` | GET collection and trusted continuation | Any 2xx, then decode collection |
+| `Create` | `New-TeamsApp` | POST collection, application/zip bytes | Any 2xx, then decode nullable app |
+| `UpdateByID` | `Set-TeamsApp` | PUT app ID path, application/zip bytes | Any 2xx, no model decode |
+| `DeleteByID` | `Remove-TeamsApp` | DELETE app ID path | Any 2xx, no model decode |
 
-Graph requires `AppCatalog.Read.All` (list) or `AppCatalog.ReadWrite.All`
-(writes); without them every call returns HTTP 403 `Forbidden`, which
-`errors.Is(err, auth.ErrForbidden)` reports.
+These are HTTP acceptance rules, not proof of publishing completion, persistent
+state or deletion. A malformed accepted response retains its receipt and reports
+`client.ErrDecode`. An empty/null Create response returns a nil model with its
+HTTP response and no fabricated identity. Never replay an accepted/uncertain
+write blindly, including after a decoding failure. Uploads and deletion are never
+replayed automatically. Reads use the native shared replay-safe policy.
 
-## Filters
+## Nullable response shape
 
-`ListOptions` mirrors Get-TeamsApp's `-Id`, `-ExternalId`, `-DisplayName` and
-`-DistributionMethod`. Each non-blank value adds `<property> eq '<value>'`, and
-clauses are joined with ` and ` in that order. The SDK doubles single quotes;
-the module sends them unescaped, which Graph rejects with HTTP 400.
+This unreleased API corrects `TeamsApp.ID` from `string` to `*string`, and
+`NewPager`/`List` entries from `TeamsApp` to `*TeamsApp`. A null row remains nil;
+a nonnull model can have nil, empty or whitespace ID. Consumers must check both
+the row and ID before reading or using an identity. Required safe mutation-ID
+validation remains separate and unchanged.
 
-## Packages
+All four source string fields preserve nullability and source primitive coercion.
+Numbers become their exact JSON lexemes, including large opaque identifiers,
+fractions and exponents; no float64 conversion occurs. Booleans become lowercase
+text. Case aliases are accepted; scalar duplicates use the last wire value.
+`RawFields` preserves the original document as a native extension, separately
+from these projected fields; it never selects which case alias wins.
 
-`Create` and `UpdateByID` take the app package bytes and send them unchanged as
-`application/zip`. `Create` accepts only the `organization` distribution method
-(any letter case) and fails locally with `ErrInput` otherwise, as the module
-does. Uploads are never retried; after a lost response, find the app with
-`List` before trying again. `UpdateByID` and `DeleteByID` reject a blank ID or
-one containing `/` or `\`.
+The resource-local page decoder follows case-insensitive `value` and
+`@odata.nextLink` matching. Repeated collection aliases append arrays in wire
+order; null resets the collection and a later array starts a new one. Missing/null
+collections fail rather than reporting empty success. Whitespace-only continuation
+text ends traversal; all other continuation values pass the existing trusted
+operation/origin, cycle and paging bounds. Native partial items and the last
+response remain available on failure; the source buffers every page before
+emitting any output. An explicit native `Paging.ExpectedStatus` can narrow the
+otherwise any-2xx read rule.
+
+## Filters and packages
+
+The four filters retain the source order: id, externalId, displayName,
+distributionMethod. Whitespace-only values are omitted, including whitespace-only
+control strings. Mixed controls remain data encoded by the query builder. The
+SDK doubles literal OData quotes; source leaves them undoubled. Neither behavior
+relaxes mutation path or continuation trust checks.
+
+`CreateRequest.DistributionMethod` is required and must be organization in any
+letter case. Source metadata is mandatory, its CLR default is null, and no
+organization default is inferred. Omission, null and empty fail source binding;
+other nonempty values bind but the processing body rejects them. The SDK rejects
+unsupported values locally before authentication.
+
+The source's required Path maps to caller-owned file I/O and `Package` bytes;
+compiled examples retain that boundary. A nil package means omitted input and
+fails locally. An explicit nonnil empty slice represents a loaded zero-length
+file and is sent unchanged as application/zip, as the source permits. This does
+not establish that Graph accepts an empty package. Required mutation IDs still
+reject blank/control/path-navigation inputs. Permissions and role prerequisites
+remain the caller's responsibility; the dedicated lab's historical 403 results
+are denials, not successful lifecycle qualification.
+
+See [source and change notes](../../../docs/implementation/ext/app-catalog-native-contract-notes.md).
