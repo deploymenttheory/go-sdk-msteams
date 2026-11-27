@@ -290,3 +290,7 @@ The finite queue now distinguishes eighteen commands / twenty-seven sets needing
 own-profile decoder correction and requalification, nine other compiled commands
 / fourteen sets still undergoing full review, and twelve conditional commands /
 eighteen sets whose remote contracts remain separate. Full #185 remains open.
+
+Audio own scalar/list read vectors and frozen full execution now pass at
+8afc4ae /99815; [scope and exact source](pol91-prompts-source-review.md) remain
+separate from the current withdrawn qualifications. No status promotion yet.

@@ -85,3 +85,12 @@ Canonical full SDK/lab offline selection passed at fixture-corrected clean
 provenance path. The separate decoder correction and own SDK GET golden-vector
 check require their own frozen execution. No Audio command qualification follows
 from the older canonical result or this source probe.
+
+Full affected SDK/lab offline TestUnit/Example passed at frozen
+`8afc4aec0123d92138a4ebe6359143c0c5dd152b`, session 99815: 103 passing
+test/subtest events, zero fail/skip. Raw runner JSON was captured directly and
+its hash/command are in [the execution record](../../../contracts/coverage/evidence/pol91-audio-read-execution.json).
+Admission 30.36 GiB, 14 GiB runtime floor, Go 1.27.4 / GOMAXPROCS 2 / -p 1,
+owned scratch removed; post-run selected/shared input diffs were zero before
+root began its separate nine-family corrections. No Audio qualification or live
+status changes follow from this execution checkpoint.
