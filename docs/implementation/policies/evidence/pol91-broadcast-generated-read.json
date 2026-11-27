@@ -1,0 +1,886 @@
+{
+  "scope": "Actual generated XdsConfiguration.FromJsonString and BeforeJson/Identity data getters only. No response callback, cmdlet lifecycle, flight, legacy, authentication or HTTP.",
+  "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
+  "powershell_version": "7.6.6",
+  "reproducer_sha256": "d60b4c05b24f57420403150f54a4ea3c23edfde82fa7a8eb03228fea7c67b13b",
+  "input_evidence_sha256": "3e9a971acb9720717706a99090d3e308030bf6b161e2ab051b5b54366c990624",
+  "observations": [
+    {
+      "input_json": "{}",
+      "model_present": true,
+      "before_json": "{\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "null",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.ParserException"
+    },
+    {
+      "input_json": "[]",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "[null]",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "true",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.ParserException"
+    },
+    {
+      "input_json": "37",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.ParserException"
+    },
+    {
+      "input_json": "\"text\"",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": "Microsoft.Teams.ConfigAPI.Cmdlets.Generated.Runtime.Json.ParserException"
+    },
+    {
+      "input_json": "{\"Identity\":\"Global\",\"Future\":{\"x\":1}}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": \"Global\",\n  \"Future\": {\n    \"x\": 1\n  }\n}",
+      "typed_identity": "Global",
+      "error": null
+    },
+    {
+      "input_json": "[{\"Identity\":\"other\"},{\"Identity\":\"global\"},{\"Identity\":\"Global\"},{\"Identity\":\"Tag:x\"}]",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"identity\":\"second\"}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": \"first\",\n  \"identity\": \"second\"\n}",
+      "typed_identity": "first",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"first\",\"Identity\":\"second\"}",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "input_json": "{\"Identity\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": \"\"\n}",
+      "typed_identity": "",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": \"text\"\n}",
+      "typed_identity": "text",
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Identity\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"Identity\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": \"\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": \"text\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SupportURL\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"SupportURL\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": \"\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": \"text\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"AllowSdnProviderForBroadcastMeeting\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"AllowSdnProviderForBroadcastMeeting\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": \"\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": \"text\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnName\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnName\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": \"\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": \"text\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnLicenseId\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnLicenseId\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": \"\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": \"text\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAzureSubscriptionId\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAzureSubscriptionId\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": \"\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": \"text\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiTemplateUrl\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiTemplateUrl\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": \"\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": \"text\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnApiToken\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToken\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": \"\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": \"text\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnRuntimeconfiguration\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnRuntimeconfiguration\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":null}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": null\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":true}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": true\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":false}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": false\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":0}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": 0\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":1}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": 1\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":9007199254740993}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": 9007199254740993\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":1.20}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": 1.20\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":\"\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": \"\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":\"text\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": \"text\"\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":{}}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": {\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"SdnAttendeeFallbackCount\":[]}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnAttendeeFallbackCount\": [ ]\n}",
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": " ",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"x\":1,\"x\":2}}",
+      "model_present": false,
+      "before_json": null,
+      "typed_identity": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "input_json": "{\"Future\":{\"X\":1,\"x\":2}}",
+      "model_present": true,
+      "before_json": "{\n  \"Future\": {\n    \"X\": 1,\n    \"x\": 2\n  }\n}",
+      "typed_identity": null,
+      "error": null
+    }
+  ],
+  "management_lifecycle_invoked": false,
+  "authentication_or_http": false
+}

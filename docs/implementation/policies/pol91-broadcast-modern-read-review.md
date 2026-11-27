@@ -71,6 +71,43 @@ settle PowerShell comparison/filter semantics for dynamic nonstring identities.
 
 ## Remaining contract work
 
+A subsequent [125-row generated-model observer](evidence/pol91-broadcast-generated-read.json)
+now tests actual XdsConfiguration.FromJsonString and BeforeJson/Identity getters.
+Its [portable producer](../../../scripts/discovery/observe-pol91-broadcast-generated-read.ps1)
+pins the generated assembly, reuses the original inert inputs and adds empty,
+whitespace and nested duplicate-key cases. Of 125 outcomes, 119 return normally
+(including null models), four raise ParserException for primitive/literal-null
+roots, and two reject exact duplicate keys with ArgumentException. Case-distinct
+keys survive this parser but can fail the downstream ConvertFrom-Json stage.
+Therefore downstream last-wins behavior does **not** establish an accepted
+whole-service duplicate-key contract: the preceding parser rejects exact repeats,
+including repeats nested in unknown fields.
+
+This model does retain true/object SupportURL and true Identity in BeforeJson;
+its typed Identity getter is null for the Boolean value. The observed dynamic
+token mismatch therefore survives the actual generated model parser. A
+[read-only method record](evidence/pol91-broadcast-generated-read-il.json)
+connects FromJsonString to FromJson, whose nonobject branch returns null;
+BeforeFromJson stores the received object's string representation in BeforeJson.
+Selected Get's overrideOnOk reads that BeforeJson and writes it as host output,
+after its warning handling. No callback was invoked by this investigation.
+Array/empty-input null models still need their complete response callback/status
+closure before choosing service behavior. The earlier isolated primitive-root
+presentation results are unreachable through this model parser for literal
+null/Boolean/number/string bodies.
+
+The first private generated observer run mistakenly passed PSObject-wrapped
+fixture strings to reflection, causing ArgumentException before source parsing.
+The producer now passes an explicit System.String. That private failed harness
+result is not included as a source observation; the versioned 125 outcomes come
+from the corrected producer's zero-exit run (session 91062). The final producer
+adds PowerShell 7.6.6 metadata; its rerun (session 96809, exit zero) reproduces all
+125 observation rows exactly and matches the final producer hash.
+An independent reader reran the final producer (session 21056, exit zero),
+verified exact parsed equality and both producer/input-evidence hashes, and
+reviewed the selected method bodies. The finite generated-model findings passed
+that review; the remaining callback/status and dispatch closure is still open.
+
 The modern Get helper forwards ConfigName only for a non-whitespace Identity,
 applies non-whitespace Filter locally with Identity/Tag wildcard matching, and
 adds the exposure query through its pipeline prepend. The Set helper inserts
