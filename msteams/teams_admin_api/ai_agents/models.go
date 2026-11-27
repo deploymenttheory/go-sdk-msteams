@@ -18,15 +18,6 @@ var ErrInput = errors.New("AI agent input is invalid")
 // ErrResponse identifies an undeclared successful HTTP status.
 var ErrResponse = errors.New("unexpected AI agent response")
 
-// decodeFields unmarshals raw into value (a pointer to a plain alias type) and
-// keeps every service field in fields, so unknown properties survive.
-func decodeFields(raw []byte, value any, fields *map[string]json.RawMessage) error {
-	if json.Unmarshal(raw, value) != nil || json.Unmarshal(raw, fields) != nil || *fields == nil {
-		return client.ErrDecode
-	}
-	return nil
-}
-
 // Agent is an AI agent configuration in the voice apps service
 // (Get/New/Set-CsAgent). The module renames ConfigurationId to Id and prefixes
 // the agent fields with AI; the wire names are kept here. Absent and null
@@ -41,12 +32,11 @@ type Agent struct {
 }
 
 func (v *Agent) UnmarshalJSON(raw []byte) error {
-	type plain Agent
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
+	fields, err := generatedObject(raw)
+	if err != nil {
 		return err
 	}
-	*v = Agent(value)
+	*v = Agent{ConfigurationID: generatedString(fields["ConfigurationId"]), Name: generatedString(fields["Name"]), AgentID: generatedString(fields["AgentId"]), AgentType: generatedString(fields["AgentType"]), AgentTargetTagTemplateID: generatedString(fields["AgentTargetTagTemplateId"]), RawFields: fields}
 	return nil
 }
 
@@ -54,25 +44,32 @@ func (v *Agent) UnmarshalJSON(raw []byte) error {
 // service's total, which can exceed len(Agents) when First limits the page.
 type AgentList struct {
 	Agents     []*Agent                   `json:"AIAgents"`
-	AgentCount *int32                     `json:"AgentCount"`
+	AgentCount *int64                     `json:"AgentCount"`
 	RawFields  map[string]json.RawMessage `json:"-"`
 }
 
 func (v *AgentList) UnmarshalJSON(raw []byte) error {
-	type plain AgentList
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
+	fields, err := generatedObject(raw)
+	if err != nil {
 		return err
 	}
-	if value.Agents == nil {
-		return client.ErrDecode
+	count, err := generatedInt64(fields["AgentCount"])
+	if err != nil {
+		return err
 	}
-	for _, agent := range value.Agents {
-		if agent == nil {
+	items, err := generatedArray(fields["AIAgents"])
+	if err != nil {
+		return err
+	}
+	agents := make([]*Agent, 0, len(items))
+	for _, item := range items {
+		var agent *Agent
+		if json.Unmarshal(item, &agent) != nil || agent == nil {
 			return client.ErrDecode
 		}
+		agents = append(agents, agent)
 	}
-	*v = AgentList(value)
+	*v = AgentList{Agents: agents, AgentCount: count, RawFields: fields}
 	return nil
 }
 
@@ -89,8 +86,9 @@ type ListOptions struct {
 	Descending     *bool
 }
 
-// AgentRequest is the body of New-CsAgent and Set-CsAgent. Name, AgentID and
-// AgentType are required. A non-nil AgentTargetTagTemplateID must name an
+// AgentRequest is the body of New-CsAgent and Set-CsAgent. Create requires
+// nonempty Name, AgentID and AgentType; UpdateByID sends all four strings,
+// using an empty target for nil. A non-nil AgentTargetTagTemplateID must name an
 // existing tag template; the service rejects unknown IDs with HTTP 400.
 type AgentRequest struct {
 	Name                     string
@@ -125,20 +123,31 @@ type QueryResult struct {
 }
 
 func (v *QueryResult) UnmarshalJSON(raw []byte) error {
-	type plain QueryResult
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
+	fields, err := generatedObject(raw)
+	if err != nil {
 		return err
 	}
-	if value.Agents == nil {
-		return client.ErrDecode
+	count, err := generatedInt32(fields["agentCount"])
+	if err != nil {
+		return err
 	}
-	for _, agent := range value.Agents {
-		if agent == nil {
-			return client.ErrDecode
+	items, err := generatedArray(fields["agents"])
+	if err != nil {
+		return err
+	}
+	var agents []*PlatformAgent
+	if items != nil {
+		agents = make([]*PlatformAgent, len(items))
+		for index, item := range items {
+			if firstGeneratedByte(item) != '{' {
+				continue
+			}
+			if json.Unmarshal(item, &agents[index]) != nil {
+				return client.ErrDecode
+			}
 		}
 	}
-	*v = QueryResult(value)
+	*v = QueryResult{Agents: agents, ContinuationToken: generatedString(fields["continuationToken"]), AgentCount: count, RawFields: fields}
 	return nil
 }
 
@@ -154,19 +163,32 @@ type PlatformAgent struct {
 	CID                 *int64                     `json:"cid"`
 	CallingAPIVersion   *string                    `json:"callingApiVersion"`
 	MessagingAPIVersion *string                    `json:"messagingApiVersion"`
-	Channels            []string                   `json:"channels"`
+	Channels            []*string                  `json:"channels"`
 	IsTeamsVoiceEnabled *bool                      `json:"isTeamsVoiceEnabled"`
 	Description         *PlatformAgentDescription  `json:"description"`
 	RawFields           map[string]json.RawMessage `json:"-"`
 }
 
 func (v *PlatformAgent) UnmarshalJSON(raw []byte) error {
-	type plain PlatformAgent
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
+	fields, err := generatedObject(raw)
+	if err != nil {
 		return err
 	}
-	*v = PlatformAgent(value)
+	cid, err := generatedInt64(fields["cid"])
+	if err != nil {
+		return err
+	}
+	channels, err := generatedStrings(fields["channels"])
+	if err != nil {
+		return err
+	}
+	description := &PlatformAgentDescription{RawFields: map[string]json.RawMessage{}}
+	if firstGeneratedByte(fields["description"]) == '{' {
+		if json.Unmarshal(fields["description"], description) != nil {
+			return client.ErrDecode
+		}
+	}
+	*v = PlatformAgent{MsaAppID: generatedString(fields["msaAppId"]), MsaAppTenantID: generatedString(fields["msaAppTenantId"]), BotHandle: generatedString(fields["botHandle"]), IsTeamsIvrEnabled: generatedBool(fields["isTeamsIvrEnabled"]), ProviderID: generatedString(fields["providerId"]), PublishState: generatedString(fields["publishState"]), CID: cid, CallingAPIVersion: generatedString(fields["callingApiVersion"]), MessagingAPIVersion: generatedString(fields["messagingApiVersion"]), Channels: channels, IsTeamsVoiceEnabled: generatedBool(fields["isTeamsVoiceEnabled"]), Description: description, RawFields: fields}
 	return nil
 }
 
@@ -183,21 +205,36 @@ type PlatformAgentDescription struct {
 	PublisherEmail   *string                    `json:"publisherEmail"`
 	PublisherCountry *string                    `json:"publisherCountry"`
 	IsTrusted        *bool                      `json:"isTrusted"`
-	Capabilities     []string                   `json:"capabilities"`
-	Categories       []string                   `json:"categories"`
-	Keywords         []string                   `json:"keywords"`
+	Capabilities     []*string                  `json:"capabilities"`
+	Categories       []*string                  `json:"categories"`
+	Keywords         []*string                  `json:"keywords"`
 	StarRating       *float64                   `json:"starRating"`
 	ETag             *string                    `json:"eTag"`
 	RawFields        map[string]json.RawMessage `json:"-"`
 }
 
 func (v *PlatformAgentDescription) UnmarshalJSON(raw []byte) error {
-	type plain PlatformAgentDescription
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
+	fields, err := generatedObject(raw)
+	if err != nil {
 		return err
 	}
-	*v = PlatformAgentDescription(value)
+	capabilities, err := generatedStrings(fields["capabilities"])
+	if err != nil {
+		return err
+	}
+	categories, err := generatedStrings(fields["categories"])
+	if err != nil {
+		return err
+	}
+	keywords, err := generatedStrings(fields["keywords"])
+	if err != nil {
+		return err
+	}
+	rating, err := generatedDouble(fields["starRating"])
+	if err != nil {
+		return err
+	}
+	*v = PlatformAgentDescription{DisplayName: generatedString(fields["displayName"]), SkypeDisplayName: generatedString(fields["skypeDisplayName"]), Description: generatedString(fields["description"]), AgentID: generatedString(fields["agentId"]), AgentType: generatedString(fields["agentType"]), DeveloperName: generatedString(fields["developerName"]), PublisherEmail: generatedString(fields["publisherEmail"]), PublisherCountry: generatedString(fields["publisherCountry"]), IsTrusted: generatedBool(fields["isTrusted"]), Capabilities: capabilities, Categories: categories, Keywords: keywords, StarRating: rating, ETag: generatedString(fields["eTag"]), RawFields: fields}
 	return nil
 }
 

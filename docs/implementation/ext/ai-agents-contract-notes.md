@@ -122,3 +122,44 @@ Sanitized responses from these runs feed the unit contract tests.
   real data.
 - Associating an agent with a resource account (resource accounts cannot be
   created with app-only credentials; see CALL-27).
+
+## EXT-90 continuation: superseding source review
+
+The portable [primary packet](evidence/ai-agents-source/primary.json) and
+[SHA manifest](evidence/ai-agents-source/manifest.json) bind the actual pinned
+8.1.0 assemblies, fully qualified types/method bodies, inert observations and
+embedded reproducers. They are source/data evidence, not a management lifecycle
+or tenant result. The primary packet remains immutable. Its initial prose
+requiring an object for Remove is superseded by the
+[ordering supplement](evidence/ai-agents-source/ordering-supplement.json):
+empty/whitespace/array roots yield a null generated result; literal null and
+numeric scalars fail. Remove still declares exactly 200.
+
+The same supplement records 81 ordering cases (56 exact duplicate exceptions,
+25 case-distinct projections), lazy default/null-row distinctions, own private
+command headers and safe query formatting. The
+[array supplement](evidence/ai-agents-source/final-arrays-supplement.json)
+separates four generated nullable string arrays from the MCPS JsonConvert
+string reader. The [numeric supplement](evidence/ai-agents-source/numeric-supplement.json)
+binds Int64 configuration counts, Int32 catalog counts and raw integer lexeme
+parsing; [Double edges](evidence/ai-agents-source/double-edge-supplement.json)
+record source overflow to infinity and underflow to zero.
+
+The unreleased canonical API corrections are configuration count `*int64`,
+nullable generated string-array entries, and raw MCPS `[]*string`. Public
+configuration projection fails on null/nonmodel rows; it must not inherit the
+catalog's nullable row behavior. Generated DTOs have exact-case/type semantics,
+recursive exact-duplicate rejection and lazy description defaults. They do not
+share PolicyRp coercion. New omits an unbound target, whereas the actual Set
+wrapper binder sends all four strings and converts null instance fields to
+empty strings. Source-success statuses are New 201, Get/Set/catalog/Remove 200;
+MCPS helpers accept any 2xx before their independent parse/presentation path.
+
+The source-generated config headers are private default names, resolved through
+each own proxy/wrapper/pipeline chain; MCPS uses a different factory and public
+names. Existing captured tenant JSON remains response-only evidence for the
+corrected requests. Source diagnostic/output formatting, trusted paths, native
+replay/context controls, commercial-only MCPS mapping and raw-field enrichment
+are explicitly distinct boundaries. No seven-command ledger or live status is
+promoted by this first repair batch. Actual Go execution is recorded separately
+when the frozen affected packages have completed.

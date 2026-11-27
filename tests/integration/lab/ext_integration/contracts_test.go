@@ -42,6 +42,22 @@ func discovery(t *testing.T) contracttest.Exchange {
 }
 
 func exchange(compiled bool, method, path, command, body string, status int, reply string) contracttest.Exchange {
+	// AI response fixtures remain observed bytes; these request headers follow
+	// the independently traced current generated helper defaults.
+	switch command {
+	case "New-CsAgent":
+		command = "New-CsAgent_New"
+	case "Get-CsAgent":
+		if strings.Contains(path, "/aiagents/") {
+			command = "Get-CsAgent_Get1"
+		} else {
+			command = "Get-CsAgent_Get"
+		}
+	case "Set-CsAgent":
+		command = "Set-CsAgent_SetExpanded"
+	case "Remove-CsAgent":
+		command = "Remove-CsAgent_Remove"
+	}
 	headers := http.Header{"X-MS-CmdletName": {command}}
 	if compiled {
 		headers.Set("MPACmdlet", "true")

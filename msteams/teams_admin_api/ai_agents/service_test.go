@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
@@ -58,7 +59,34 @@ func discovery(t *testing.T) contracttest.Exchange {
 		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
+// Captured bytes remain response-only evidence. Private request metadata and
+// Set's bound target are source-authored, not claims about capture-time requests.
 func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+	switch command {
+	case "Get-CsAgent":
+		if strings.HasPrefix(path, agents+"/") {
+			command = "Get-CsAgent_Get1"
+		} else {
+			command = "Get-CsAgent_Get"
+		}
+	case "New-CsAgent":
+		command = "New-CsAgent_New"
+	case "Set-CsAgent":
+		command = "Set-CsAgent_SetExpanded"
+		if body != nil {
+			var fields map[string]json.RawMessage
+			if json.Unmarshal(body, &fields) == nil {
+				if _, ok := fields["AgentTargetTagTemplateId"]; !ok {
+					fields["AgentTargetTagTemplateId"] = json.RawMessage(`""`)
+					body, _ = json.Marshal(fields)
+				}
+			}
+		}
+	case "Remove-CsAgent":
+		command = "Remove-CsAgent_Remove"
+	case "Get-CsAiAgents":
+		command = "Get-CsAiAgents_Get"
+	}
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
@@ -77,7 +105,7 @@ func knowledgeWire(method, path string, status int, reply []byte) contracttest.E
 		contentType = ""
 	}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: mcpsOrigin + path, Audience: mcpsAudience,
-		Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil, "X-MS-CmdletName": nil}},
+		Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil, "X-MS-CmdletName": {map[string]string{"GET": "Get-AIGeneratedKnowledgeContainer", "DELETE": "Remove-AIGeneratedKnowledge"}[method]}}},
 		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
@@ -244,8 +272,8 @@ func TestUnitAIAgentListOptionsAndCatalogFilters(t *testing.T) {
 			if err == nil {
 				agent := value.Agents[0]
 				if *value.ContinuationToken != "next" || *value.AgentCount != 7 || *agent.MsaAppID != "a" || !*agent.IsTeamsIvrEnabled || *agent.CID != 9007199254740993 ||
-					agent.Channels[0] != "msteamsphone" || string(agent.RawFields["future"]) != "1" || *agent.Description.DisplayName != "Bot" ||
-					*agent.Description.StarRating != 4.5 || agent.Description.Capabilities[0] != "voice" || string(agent.Description.RawFields["userTileSmallUrl"]) != `"u"` {
+					agent.Channels[0] == nil || *agent.Channels[0] != "msteamsphone" || string(agent.RawFields["future"]) != "1" || *agent.Description.DisplayName != "Bot" ||
+					*agent.Description.StarRating != 4.5 || agent.Description.Capabilities[0] == nil || *agent.Description.Capabilities[0] != "voice" || string(agent.Description.RawFields["userTileSmallUrl"]) != `"u"` {
 					t.Fatal("catalog page was changed")
 				}
 			}
@@ -310,7 +338,7 @@ func TestUnitAIGeneratedKnowledgeUsesMCPSProfile(t *testing.T) {
 			Want:  contracttest.Expected{Status: 200, Body: urls},
 			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				value, response, err := sdk.TeamsAdminAPI.AIAgents.ListKnowledgeContainers(ctx, aiagents.KnowledgeRequest{ThreadID: thread, CallID: ptr("call/1")})
-				if err == nil && (len(value) != 2 || value[1] != "https://a.example.invalid/c2") {
+				if err == nil && (len(value) != 2 || value[1] == nil || *value[1] != "https://a.example.invalid/c2") {
 					t.Fatal("container URLs were changed")
 				}
 				return contracttest.Observation{Response: response, Err: err}
@@ -323,7 +351,7 @@ func TestUnitAIGeneratedKnowledgeUsesMCPSProfile(t *testing.T) {
 			response, err := sdk.TeamsAdminAPI.AIAgents.DeleteKnowledge(ctx, aiagents.KnowledgeRequest{ThreadID: thread})
 			return contracttest.Observation{Response: response, Err: err}
 		}})
-	for _, body := range []string{`null`, `{}`, `[1]`} {
+	for _, body := range []string{`null`, `{}`, `[{}]`} {
 		run(t, contracttest.Case{Name: "malformed-containers", Mappings: mapping("__AllParameterSets", "Get-AIGeneratedKnowledgeContainer"),
 			Steps: []contracttest.Exchange{knowledgeWire("GET", "/mkb/crux/container-urls?"+threadQuery, 200, []byte(body))},
 			Want:  contracttest.Expected{Status: 200, Error: client.ErrDecode},
@@ -358,40 +386,30 @@ func TestUnitAIGeneratedKnowledgeFailsLocallyOffProfile(t *testing.T) {
 
 func TestUnitAIAgentMalformedResponsesFailDecode(t *testing.T) {
 	t.Parallel()
-	for _, body := range []string{`null`, `{}`, `{"AIAgent":null}`, `{"AIAgent":[]}`, `{"AIAgent":{"Name":1}}`} {
-		run(t, contracttest.Case{Name: "malformed-agent", Mappings: mapping("__AllParameterSets", "Get-CsAgent"),
-			Steps: []contracttest.Exchange{discovery(t), wire("GET", agents+"/"+configuration, "Get-CsAgent", nil, 200, []byte(body))},
-			Want:  contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				value, response, err := sdk.TeamsAdminAPI.AIAgents.GetByID(ctx, configuration)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
-			}})
+	for _, body := range []string{`null`, `1`, `{"AIAgent":{"Name":"a","Name":"b"}}`} {
+		run(t, contracttest.Case{Name: "malformed-agent", Mappings: mapping("__AllParameterSets", "Get-CsAgent"), Steps: []contracttest.Exchange{discovery(t), wire("GET", agents+"/"+configuration, "Get-CsAgent", nil, 200, []byte(body))}, Want: contracttest.Expected{Status: 200, Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			value, response, err := sdk.TeamsAdminAPI.AIAgents.GetByID(ctx, configuration)
+			return contracttest.Observation{Value: value, Response: response, Err: err}
+		}})
 	}
-	for _, body := range []string{`[]`, `{}`, `{"AIAgents":null}`, `{"AIAgents":[null]}`, `{"AIAgents":[],"AgentCount":"1"}`} {
-		run(t, contracttest.Case{Name: "malformed-list", Mappings: mapping("__AllParameterSets", "Get-CsAgent"),
-			Steps: []contracttest.Exchange{discovery(t), wire("GET", agents, "Get-CsAgent", nil, 200, []byte(body))},
-			Want:  contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				value, response, err := sdk.TeamsAdminAPI.AIAgents.List(ctx, nil)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
-			}})
+	for _, body := range []string{`{"AIAgents":[null]}`, `{"AgentCount":1.5}`, `{"AgentCount":9223372036854775808}`} {
+		run(t, contracttest.Case{Name: "malformed-list", Mappings: mapping("__AllParameterSets", "Get-CsAgent"), Steps: []contracttest.Exchange{discovery(t), wire("GET", agents, "Get-CsAgent", nil, 200, []byte(body))}, Want: contracttest.Expected{Status: 200, Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			value, response, err := sdk.TeamsAdminAPI.AIAgents.List(ctx, nil)
+			return contracttest.Observation{Value: value, Response: response, Err: err}
+		}})
 	}
-	for _, body := range []string{`{}`, `{"agents":null}`, `{"agents":[null]}`, `{"agents":[{"channels":"x"}]}`} {
-		run(t, contracttest.Case{Name: "malformed-catalog", Mappings: mapping("Get", "Get-CsAiAgents"),
-			Steps: []contracttest.Exchange{discovery(t), wire("GET", catalog+"?providerId="+provider, "Get-CsAiAgents", nil, 200, []byte(body))},
-			Want:  contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				value, response, err := sdk.TeamsAdminAPI.AIAgents.QueryPlatformAgents(ctx, aiagents.QueryRequest{ProviderID: provider})
-				return contracttest.Observation{Value: value, Response: response, Err: err}
-			}})
+	for _, body := range []string{`{"agentCount":2147483648}`, `{"agents":[],"agents":[]}`} {
+		run(t, contracttest.Case{Name: "malformed-catalog", Mappings: mapping("Get", "Get-CsAiAgents"), Steps: []contracttest.Exchange{discovery(t), wire("GET", catalog+"?providerId="+provider, "Get-CsAiAgents", nil, 200, []byte(body))}, Want: contracttest.Expected{Status: 200, Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			value, response, err := sdk.TeamsAdminAPI.AIAgents.QueryPlatformAgents(ctx, aiagents.QueryRequest{ProviderID: provider})
+			return contracttest.Observation{Value: value, Response: response, Err: err}
+		}})
 	}
-	run(t, contracttest.Case{Name: "undeclared-status", Mappings: mapping("__AllParameterSets", "Remove-CsAgent"),
-		Steps: []contracttest.Exchange{discovery(t), wire("DELETE", agents+"/"+configuration, "Remove-CsAgent", nil, 202, nil)},
-		Want:  contracttest.Expected{Status: 202, Error: aiagents.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	for _, status := range []int{202, 204} {
+		run(t, contracttest.Case{Name: "undeclared-status", Mappings: mapping("__AllParameterSets", "Remove-CsAgent"), Steps: []contracttest.Exchange{discovery(t), wire("DELETE", agents+"/"+configuration, "Remove-CsAgent", nil, status, nil)}, Want: contracttest.Expected{Status: status, Error: aiagents.ErrResponse}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			response, err := sdk.TeamsAdminAPI.AIAgents.DeleteByID(ctx, configuration)
 			return contracttest.Observation{Response: response, Err: err}
 		}})
+	}
 }
 
 func TestUnitAIAgentInvalidInputFailsBeforeIO(t *testing.T) {
@@ -413,38 +431,14 @@ func TestUnitAIAgentInvalidInputFailsBeforeIO(t *testing.T) {
 			_, _, e := s.Create(ctx, aiagents.AgentRequest{Name: "n", AgentID: "a"})
 			return e
 		},
-		"create-blank-tag": func(ctx context.Context, s *aiagents.Service) error {
-			request := valid
-			request.AgentTargetTagTemplateID = ptr(" ")
-			_, _, e := s.Create(ctx, request)
-			return e
-		},
-		"list-negative-first": func(ctx context.Context, s *aiagents.Service) error {
-			_, _, e := s.List(ctx, &aiagents.ListOptions{First: ptr(int32(-1))})
-			return e
-		},
-		"list-control-filter": func(ctx context.Context, s *aiagents.Service) error {
-			_, _, e := s.List(ctx, &aiagents.ListOptions{NameFilter: ptr("a\nb")})
-			return e
-		},
+
 		"query-no-provider": func(ctx context.Context, s *aiagents.Service) error {
 			_, _, e := s.QueryPlatformAgents(ctx, aiagents.QueryRequest{})
 			return e
 		},
-		"query-negative-max": func(ctx context.Context, s *aiagents.Service) error {
-			_, _, e := s.QueryPlatformAgents(ctx, aiagents.QueryRequest{ProviderID: provider, MaxResults: ptr(int32(-1))})
-			return e
-		},
-		"query-blank-channel": func(ctx context.Context, s *aiagents.Service) error {
-			_, _, e := s.QueryPlatformAgents(ctx, aiagents.QueryRequest{ProviderID: provider, Channel: ptr("")})
-			return e
-		},
+
 		"knowledge-no-thread": func(ctx context.Context, s *aiagents.Service) error {
 			_, _, e := s.ListKnowledgeContainers(ctx, aiagents.KnowledgeRequest{})
-			return e
-		},
-		"knowledge-blank-call": func(ctx context.Context, s *aiagents.Service) error {
-			_, e := s.DeleteKnowledge(ctx, aiagents.KnowledgeRequest{ThreadID: thread, CallID: ptr(" ")})
 			return e
 		},
 	} {
@@ -469,5 +463,76 @@ func TestUnitAIAgentNilContextAndServiceAreRejected(t *testing.T) {
 	cancel()
 	if _, err := aiagents.NewService(nil, nil).DeleteByID(ctx, configuration); !errors.Is(err, context.Canceled) {
 		t.Fatal("canceled context accepted")
+	}
+}
+
+// Reply bodies below are authored vectors; request metadata follows the pinned
+// source packet, independently of the historical live response fixtures.
+func TestUnitAIAgentSourcePresenceAndQueryConstruction(t *testing.T) {
+	for _, item := range []struct {
+		name, method, path, command string
+		body                        json.RawMessage
+		status                      int
+		invoke                      func(context.Context, *aiagents.Service) (*resty.Response, error)
+	}{
+		{"create-omits-target", "POST", agents, "New-CsAgent", json.RawMessage(`{"Name":" ","AgentId":"a","AgentType":"custom"}`), 201, func(ctx context.Context, s *aiagents.Service) (*resty.Response, error) {
+			_, r, e := s.Create(ctx, aiagents.AgentRequest{Name: " ", AgentID: "a", AgentType: "custom"})
+			return r, e
+		}},
+		{"replacement-binds-empty-strings", "PUT", agents + "/" + configuration, "Set-CsAgent", json.RawMessage(`{"Name":"","AgentId":"","AgentType":"","AgentTargetTagTemplateId":""}`), 200, func(ctx context.Context, s *aiagents.Service) (*resty.Response, error) {
+			_, r, e := s.UpdateByID(ctx, configuration, aiagents.AgentRequest{})
+			return r, e
+		}},
+		{"list-negative-and-escaped-query", "GET", agents + "?Descending=False&First=-1&NameFilter=+%01x", "Get-CsAgent", nil, 200, func(ctx context.Context, s *aiagents.Service) (*resty.Response, error) {
+			_, r, e := s.List(ctx, &aiagents.ListOptions{First: ptr(int32(-1)), Descending: ptr(false), NameFilter: ptr(" \x01x"), TypeFilter: ptr("")})
+			return r, e
+		}},
+		{"catalog-negative-and-escaped-query", "GET", catalog + "?displayNameContains=+%01x&maxResults=-1&providerId=" + provider + "&showCount=False", "Get-CsAiAgents", nil, 200, func(ctx context.Context, s *aiagents.Service) (*resty.Response, error) {
+			_, r, e := s.QueryPlatformAgents(ctx, aiagents.QueryRequest{ProviderID: provider, DisplayNameContains: ptr(" \x01x"), Channel: ptr(""), MaxResults: ptr(int32(-1)), ShowCount: ptr(false)})
+			return r, e
+		}},
+	} {
+		t.Run(item.name, func(t *testing.T) {
+			set := "__AllParameterSets"
+			if item.command == "Get-CsAiAgents" {
+				set = "Get"
+			}
+			reply := []byte(`{}`)
+			run(t, contracttest.Case{Name: item.name, Mappings: mapping(set, item.command), Steps: []contracttest.Exchange{discovery(t), wire(item.method, item.path, item.command, item.body, item.status, reply)}, Want: contracttest.Expected{Status: item.status, Body: reply}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				r, e := item.invoke(ctx, sdk.TeamsAdminAPI.AIAgents)
+				return contracttest.Observation{Response: r, Err: e}
+			}})
+		})
+	}
+}
+
+func TestUnitAIAgentSourceSuccessStatusesAreExact(t *testing.T) {
+	for _, item := range []struct {
+		name, method, command string
+		status                int
+	}{
+		{"create-rejects-200", "POST", "New-CsAgent", 200},
+		{"create-rejects-204", "POST", "New-CsAgent", 204},
+		{"remove-rejects-204", "DELETE", "Remove-CsAgent", 204},
+	} {
+		t.Run(item.name, func(t *testing.T) {
+			path := agents
+			var body json.RawMessage
+			if item.method == "POST" {
+				body = agentBody("name", nil)
+			} else {
+				path += "/" + configuration
+			}
+			run(t, contracttest.Case{Name: item.name, Mappings: mapping("__AllParameterSets", item.command), Steps: []contracttest.Exchange{discovery(t), wire(item.method, path, item.command, body, item.status, nil)}, Want: contracttest.Expected{Status: item.status, Error: aiagents.ErrResponse}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				var r *resty.Response
+				var e error
+				if item.method == "POST" {
+					_, r, e = sdk.TeamsAdminAPI.AIAgents.Create(ctx, aiagents.AgentRequest{Name: "name", AgentID: agentID, AgentType: aiagents.AgentTypeMicrosoftCopilotStudio})
+				} else {
+					r, e = sdk.TeamsAdminAPI.AIAgents.DeleteByID(ctx, configuration)
+				}
+				return contracttest.Observation{Response: r, Err: e}
+			}})
+		})
 	}
 }
