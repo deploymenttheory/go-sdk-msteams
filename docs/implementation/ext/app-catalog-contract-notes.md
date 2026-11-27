@@ -253,3 +253,21 @@ requests false; the emitted target is present false. The final portable repro an
 Go pure replay include it, and the apply harness exercises requested false with
 a true read snapshot. The original fourteen-case capture remains separately
 preserved as `pinned-set-binding-projection-14.json`.
+
+The final complete affected package passed at clean frozen revision `b3166ee`: 44
+passing test events and no fail/skip, including the requested-false case and
+corrected private-header replays. [The result](evidence/custom-app-b3166ee-offline.json)
+records exact source/fixture hashes and raw Go JSON digest. Both command states
+remain unqualified; this result alone does not restore the withdrawn decision.
+
+The [bounded header closure](evidence/custom-app-header-closure.json) now retains
+44 complete resolved method bodies across 20 fully qualified types, exact wrapper
+script bodies, the sole command-header literal writer, invocation adapter, default
+execution-ID handler/forwarder, terminal send and clone behavior. The complete
+private-assembly literal scan resolved 57,736 string operands across 70,462 method
+bodies with zero unresolved strings. Nine actual inert private-name/alias/proxy
+observations exercise the real pinned PSInvocationInfo adapter: InvocationName can
+change, while MyCommand.Name remains the selected private command and supplies
+the header. The parameterized `scripts/discovery/inspect-custom-app-header-closure.ps1`
+reproduces this bounded source-plus-inert evidence. No actual management lifecycle,
+authentication, HTTP request or wire header capture is claimed.

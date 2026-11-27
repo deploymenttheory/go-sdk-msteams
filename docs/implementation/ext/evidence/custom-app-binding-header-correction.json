@@ -73,5 +73,24 @@
       "msteams/teams_admin_api/custom_app_settings/testdata/pinned-set-binding-projection-14.json": "e698192d57b222ae00b3406e4506f5fa2f5b4811af8b47a5c52e13fa310f22de",
       "/private/tmp/ext90-customapp-repro-binding-15.json": "c9a812c79933d42857de551eeb03a51700039243db8c84fdac4b82df70eb78ed"
     }
+  },
+  "header_closure": {
+    "evidence": "docs/implementation/ext/evidence/custom-app-header-closure.json",
+    "reproducer": "scripts/discovery/inspect-custom-app-header-closure.ps1",
+    "qualification": "Full relevant resolved source/IL plus inert private-name/alias/steppable probe, not actual management request capture.",
+    "selected_method_bodies": 44,
+    "selected_types": 20,
+    "resolved_metadata_operands_unresolved": 0,
+    "whole_private_scan": {
+      "types": 10301,
+      "method_bodies": 70462,
+      "resolved_string_operands": 57736,
+      "unresolved_string_operands": 0,
+      "command_header_literal_writer_methods": 1
+    },
+    "sha256": {
+      "docs/implementation/ext/evidence/custom-app-header-closure.json": "5f91dc517f7ae991bd1b963647252bfe80bf9abe1d06663d679580945ef8d668",
+      "scripts/discovery/inspect-custom-app-header-closure.ps1": "9796bcf495b22403a47e33c571ebb42f42655bb43df877cd0c29a26519c224b3"
+    }
   }
 }
