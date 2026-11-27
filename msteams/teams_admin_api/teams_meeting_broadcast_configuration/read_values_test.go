@@ -3,6 +3,7 @@ package teamsmeetingbroadcastconfiguration_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 	"strconv"
 	"strings"
