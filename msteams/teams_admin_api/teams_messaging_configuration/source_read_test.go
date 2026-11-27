@@ -57,6 +57,15 @@ func TestUnitConfigurationPinnedScalarReadVectors(t *testing.T) {
 		t.Fatal("source supplement unavailable")
 	}
 	packet.Rows = append(packet.Rows, extra.Rows...)
+	edges, err := root.ReadFile("docs/implementation/policies/evidence/pol91-enum-string-edges.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	extra.Rows = nil
+	if json.Unmarshal(edges, &extra) != nil {
+		t.Fatal("enum edge source unavailable")
+	}
+	packet.Rows = append(packet.Rows, extra.Rows...)
 	count := 0
 	for _, row := range packet.Rows {
 		if row.Command != "Get-CsTeamsMessagingConfiguration" {
@@ -97,7 +106,7 @@ func TestUnitConfigurationPinnedScalarReadVectors(t *testing.T) {
 			}
 		})
 	}
-	if count != 195 {
+	if count != 205 {
 		t.Fatal("pinned own DTO cases disappeared")
 	}
 }
