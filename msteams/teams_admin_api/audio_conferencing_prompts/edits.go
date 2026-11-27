@@ -15,7 +15,9 @@ func NewPromptPackage(id, defaultLocale string) (*PromptPackage, error) {
 	if !validID(id) {
 		return nil, ErrInput
 	}
-	return &PromptPackage{ID: new(id), DefaultLocale: new(defaultLocale)}, nil
+	value := emptyPackage()
+	value.ID, value.DefaultLocale = new(id), new(defaultLocale)
+	return &value, nil
 }
 
 func cloneString(v *string) *string {

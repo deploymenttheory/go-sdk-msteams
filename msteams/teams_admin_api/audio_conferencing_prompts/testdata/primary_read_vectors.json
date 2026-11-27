@@ -1,0 +1,445 @@
+{
+  "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+  "provider_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+  "reproducer_sha256": "1c74f541f58c14eb58396da2a0fd0e0ec3a5aedeab5ccea472993f2bb4e676d5",
+  "source_model": "Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsAudioConferencingCustomPromptsConfiguration",
+  "deserializer": "Providers.HttpClientHelper.SendAsync<TPolicy> -> JsonConvert.DeserializeObject<TPolicy> at IL452",
+  "observations": [
+    {
+      "name": "name-0",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":9007199254740993}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"9007199254740993\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-0",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[9007199254740993]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"9007199254740993\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "name-1",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":184467440737095516151234567890}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"184467440737095516151234567890\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-1",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[184467440737095516151234567890]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"184467440737095516151234567890\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "name-2",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":1e+03}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"1e+03\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-2",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[1e+03]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"1e+03\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "name-3",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":1E-03}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"1E-03\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-3",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[1E-03]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"1E-03\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "name-4",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":1.2300}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"1.2300\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-4",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[1.2300]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"1.2300\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "name-5",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":-0}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"-0\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-5",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[-0]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"-0\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "name-6",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":-0.00}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"-0.00\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-6",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[-0.00]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"-0.00\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "name-7",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":0.0}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"0.0\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-7",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[0.0]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"0.0\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "name-8",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":true}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"true\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-8",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[true]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"true\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "name-9",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Type\":\"FutureType\",\"Locale\":\"xx\",\"Name\":false}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":\"false\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":\"FutureType\",\"Locale\":\"xx\"}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "reference-9",
+      "input": "{\"Packages\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\",\"DefaultLocale\":\"xx\",\"InboundStartRecordingPrompt\":[false]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"false\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":\"00000000-0000-0000-0000-000000000001\",\"Name\":null,\"DefaultLocale\":\"xx\"}]}",
+      "error": null
+    },
+    {
+      "name": "null-id",
+      "input": "{\"Prompts\":[{\"Id\":null}]}",
+      "accepted": false,
+      "expected": null,
+      "error": "System.ArgumentNullException"
+    },
+    {
+      "name": "null-type",
+      "input": "{\"Prompts\":[{\"Type\":null}]}",
+      "accepted": false,
+      "expected": null,
+      "error": "System.ArgumentNullException"
+    },
+    {
+      "name": "null-locale",
+      "input": "{\"Prompts\":[{\"Locale\":null}]}",
+      "accepted": false,
+      "expected": null,
+      "error": "System.ArgumentNullException"
+    },
+    {
+      "name": "null-name",
+      "input": "{\"Prompts\":[{\"Name\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":null,\"Name\":null,\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":null,\"Locale\":null}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "package-defaultlocale-null",
+      "input": "{\"Packages\":[{\"DefaultLocale\":null}]}",
+      "accepted": false,
+      "expected": null,
+      "error": "System.ArgumentNullException"
+    },
+    {
+      "name": "numeric-id",
+      "input": "{\"Prompts\":[{\"Id\":37}]}",
+      "accepted": false,
+      "expected": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "name": "name-object",
+      "input": "{\"Prompts\":[{\"Name\":{}}]}",
+      "accepted": false,
+      "expected": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "name": "reference-object",
+      "input": "{\"Packages\":[{\"InboundStartRecordingPrompt\":[{}]}]}",
+      "accepted": false,
+      "expected": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "name": "duplicate-reference",
+      "input": "{\"Packages\":[{\"InboundStartRecordingPrompt\":[\"a\",null],\"InboundStartRecordingPrompt\":[7,false]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"a\",null,\"7\",\"false\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "reference-null-after-array",
+      "input": "{\"Packages\":[{\"InboundStartRecordingPrompt\":[\"a\"],\"InboundStartRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"a\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "root-null-collections",
+      "input": "{\"Prompts\":null,\"Packages\":null}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "duplicate-prompts",
+      "input": "{\"Prompts\":[null],\"Prompts\":[{\"Name\":\"x\"}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[null,{\"Identity\":null,\"Id\":null,\"Name\":\"x\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":null,\"Locale\":null}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "id-final-lf",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\\n\"}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[{\"Identity\":null,\"Id\":\"00000000-0000-0000-0000-000000000001\\n\",\"Name\":null,\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":null,\"Locale\":null}],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "id-crlf",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\\r\\n\"}]}",
+      "accepted": false,
+      "expected": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "name": "id-double-lf",
+      "input": "{\"Prompts\":[{\"Id\":\"00000000-0000-0000-0000-000000000001\\n\\n\"}]}",
+      "accepted": false,
+      "expected": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "name": "missing-inboundstartrecordingprompt",
+      "input": "{\"Packages\":[{}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "null-inboundstartrecordingprompt",
+      "input": "{\"Packages\":[{\"InboundStartRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "empty-inboundstartrecordingprompt",
+      "input": "{\"Packages\":[{\"InboundStartRecordingPrompt\":[]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "alias-inboundstartrecordingprompt",
+      "input": "{\"Packages\":[{\"InboundStartRecordingPrompt\":[\"a\",null],\"inboundstartrecordingprompt\":[7,false],\"InboundStartRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[\"a\",null,\"7\",\"false\"],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "missing-inboundendrecordingprompt",
+      "input": "{\"Packages\":[{}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "null-inboundendrecordingprompt",
+      "input": "{\"Packages\":[{\"InboundEndRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "empty-inboundendrecordingprompt",
+      "input": "{\"Packages\":[{\"InboundEndRecordingPrompt\":[]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "alias-inboundendrecordingprompt",
+      "input": "{\"Packages\":[{\"InboundEndRecordingPrompt\":[\"a\",null],\"inboundendrecordingprompt\":[7,false],\"InboundEndRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[\"a\",null,\"7\",\"false\"],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "missing-outboundstartrecordingprompt",
+      "input": "{\"Packages\":[{}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "null-outboundstartrecordingprompt",
+      "input": "{\"Packages\":[{\"OutboundStartRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "empty-outboundstartrecordingprompt",
+      "input": "{\"Packages\":[{\"OutboundStartRecordingPrompt\":[]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "alias-outboundstartrecordingprompt",
+      "input": "{\"Packages\":[{\"OutboundStartRecordingPrompt\":[\"a\",null],\"outboundstartrecordingprompt\":[7,false],\"OutboundStartRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[\"a\",null,\"7\",\"false\"],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "missing-outboundendrecordingprompt",
+      "input": "{\"Packages\":[{}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "null-outboundendrecordingprompt",
+      "input": "{\"Packages\":[{\"OutboundEndRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "empty-outboundendrecordingprompt",
+      "input": "{\"Packages\":[{\"OutboundEndRecordingPrompt\":[]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "alias-outboundendrecordingprompt",
+      "input": "{\"Packages\":[{\"OutboundEndRecordingPrompt\":[\"a\",null],\"outboundendrecordingprompt\":[7,false],\"OutboundEndRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[\"a\",null,\"7\",\"false\"],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "missing-meetingstartrecordingprompt",
+      "input": "{\"Packages\":[{}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "null-meetingstartrecordingprompt",
+      "input": "{\"Packages\":[{\"MeetingStartRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "empty-meetingstartrecordingprompt",
+      "input": "{\"Packages\":[{\"MeetingStartRecordingPrompt\":[]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "alias-meetingstartrecordingprompt",
+      "input": "{\"Packages\":[{\"MeetingStartRecordingPrompt\":[\"a\",null],\"meetingstartrecordingprompt\":[7,false],\"MeetingStartRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[\"a\",null,\"7\",\"false\"],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "missing-meetingendrecordingprompt",
+      "input": "{\"Packages\":[{}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "null-meetingendrecordingprompt",
+      "input": "{\"Packages\":[{\"MeetingEndRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "empty-meetingendrecordingprompt",
+      "input": "{\"Packages\":[{\"MeetingEndRecordingPrompt\":[]}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "alias-meetingendrecordingprompt",
+      "input": "{\"Packages\":[{\"MeetingEndRecordingPrompt\":[\"a\",null],\"meetingendrecordingprompt\":[7,false],\"MeetingEndRecordingPrompt\":null}]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[\"a\",null,\"7\",\"false\"],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    },
+    {
+      "name": "root-missing-collections",
+      "input": "{}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "root-empty-collections",
+      "input": "{\"Prompts\":[],\"Packages\":[]}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[],\"Packages\":[]}",
+      "error": null
+    },
+    {
+      "name": "root-alias-collections",
+      "input": "{\"Prompts\":[null],\"prompts\":[{\"Name\":\"x\"}],\"Prompts\":null,\"Packages\":[null],\"packages\":[{}],\"Packages\":null}",
+      "accepted": true,
+      "expected": "{\"Identity\":null,\"Prompts\":[null,{\"Identity\":null,\"Id\":null,\"Name\":\"x\",\"AudioPrompt\":null,\"TextPrompt\":null,\"Type\":null,\"Locale\":null}],\"Packages\":[null,{\"Identity\":null,\"InboundStartRecordingPrompt\":[],\"InboundEndRecordingPrompt\":[],\"OutboundStartRecordingPrompt\":[],\"OutboundEndRecordingPrompt\":[],\"MeetingStartRecordingPrompt\":[],\"MeetingEndRecordingPrompt\":[],\"Id\":null,\"Name\":null,\"DefaultLocale\":null}]}",
+      "error": null
+    }
+  ],
+  "management_lifecycle_invoked": false,
+  "authentication_or_http": false
+}

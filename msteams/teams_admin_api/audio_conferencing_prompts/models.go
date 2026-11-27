@@ -52,6 +52,17 @@ type PromptPackage struct {
 	RawJSON                      json.RawMessage            `json:"-"`
 }
 
+func emptyPackage() PromptPackage {
+	return PromptPackage{
+		InboundStartRecordingPrompt:  []*string{},
+		InboundEndRecordingPrompt:    []*string{},
+		OutboundStartRecordingPrompt: []*string{},
+		OutboundEndRecordingPrompt:   []*string{},
+		MeetingStartRecordingPrompt:  []*string{},
+		MeetingEndRecordingPrompt:    []*string{},
+	}
+}
+
 var modelID = regexp.MustCompile(`^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`)
 
 // The pinned .NET dollar anchor permits one final LF, but not CRLF.
@@ -84,8 +95,39 @@ func object(raw []byte, visit func(string, json.RawMessage) error) (map[string]j
 	return fields, nil
 }
 func text(body json.RawMessage, out **string, required, id bool) error {
-	if json.Unmarshal(body, out) != nil || required && *out == nil || id && *out != nil && !validID(**out) {
+	if json.Unmarshal(body, out) != nil {
+		raw := bytes.TrimSpace(body)
+		var number json.Number
+		if bytes.Equal(raw, []byte("true")) || bytes.Equal(raw, []byte("false")) {
+			*out = new(string(raw))
+		} else if json.Unmarshal(raw, &number) == nil {
+			// The pinned ReadAsString path preserves the numeric token, including
+			// exponent spelling, trailing zeroes and values beyond floating precision.
+			*out = new(number.String())
+		} else {
+			return client.ErrDecode
+		}
+	}
+	if required && *out == nil || id && *out != nil && !validID(**out) {
 		return client.ErrDecode
+	}
+	return nil
+}
+
+func appendTextList(body json.RawMessage, list *[]*string) error {
+	if isNull(body) {
+		return nil
+	}
+	var items []json.RawMessage
+	if json.Unmarshal(body, &items) != nil {
+		return client.ErrDecode
+	}
+	for _, raw := range items {
+		var value *string
+		if text(raw, &value, false, false) != nil {
+			return client.ErrDecode
+		}
+		*list = append(*list, value)
 	}
 	return nil
 }
@@ -151,7 +193,7 @@ func (v *Prompt) UnmarshalJSON(raw []byte) error {
 	return nil
 }
 func (v *PromptPackage) UnmarshalJSON(raw []byte) error {
-	x := PromptPackage{}
+	x := emptyPackage()
 	fields, e := object(raw, func(key string, body json.RawMessage) error {
 		switch key {
 		case "identity":
@@ -163,17 +205,17 @@ func (v *PromptPackage) UnmarshalJSON(raw []byte) error {
 		case "defaultlocale":
 			return text(body, &x.DefaultLocale, true, false)
 		case "inboundstartrecordingprompt":
-			return appendList(body, &x.InboundStartRecordingPrompt)
+			return appendTextList(body, &x.InboundStartRecordingPrompt)
 		case "inboundendrecordingprompt":
-			return appendList(body, &x.InboundEndRecordingPrompt)
+			return appendTextList(body, &x.InboundEndRecordingPrompt)
 		case "outboundstartrecordingprompt":
-			return appendList(body, &x.OutboundStartRecordingPrompt)
+			return appendTextList(body, &x.OutboundStartRecordingPrompt)
 		case "outboundendrecordingprompt":
-			return appendList(body, &x.OutboundEndRecordingPrompt)
+			return appendTextList(body, &x.OutboundEndRecordingPrompt)
 		case "meetingstartrecordingprompt":
-			return appendList(body, &x.MeetingStartRecordingPrompt)
+			return appendTextList(body, &x.MeetingStartRecordingPrompt)
 		case "meetingendrecordingprompt":
-			return appendList(body, &x.MeetingEndRecordingPrompt)
+			return appendTextList(body, &x.MeetingEndRecordingPrompt)
 		}
 		return nil
 	})

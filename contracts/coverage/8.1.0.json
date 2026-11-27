@@ -6695,6 +6695,10 @@
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
               "name": "TestUnitPromptsAuthoredTypedReadListAndFilters"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/read_coercion_test.go",
+              "name": "TestUnitPromptsReadMatchesPinnedScalarAndCollectionSemantics"
             }
           ],
           "live_tests": [
@@ -6725,6 +6729,10 @@
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
               "name": "TestUnitPromptsAuthoredTypedReadListAndFilters"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/read_coercion_test.go",
+              "name": "TestUnitPromptsReadMatchesPinnedScalarAndCollectionSemantics"
             }
           ],
           "live_tests": [
@@ -38447,6 +38455,10 @@
             {
               "file": "msteams/teams_admin_api/audio_conferencing_prompts/provider_success_test.go",
               "name": "TestUnitPromptsPatchTypedAndMalformedAcceptedReplies"
+            },
+            {
+              "file": "msteams/teams_admin_api/audio_conferencing_prompts/read_coercion_test.go",
+              "name": "TestUnitPromptsReadMatchesPinnedScalarAndCollectionSemantics"
             }
           ],
           "live_tests": []
