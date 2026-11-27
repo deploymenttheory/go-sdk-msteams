@@ -23,6 +23,9 @@ lab packages: 416 passing events, zero failures/skips, five package terminals.
 The [execution record](../../../contracts/coverage/evidence/pol91-template-read-execution.json)
 retains exact source scope, raw-result hash, portable replay and admission detail.
 Scoped source diff was zero and owned scratch was removed. No live test ran.
-The existing prepared 204/readback and denial tests remain separately scoped;
-a later prepared-write failure and explicit recovery assertion is the next
-bounded gap before proposing FirstParty Set qualification.
+The existing prepared 204/readback and denial tests remain separately scoped.
+The later prepared-write failure/accepted-malformed and explicit recovery gap
+then passed at `c3408096e986c3c4bcb5dd6f367d2e3b6047820c`, session 66609:
+204 passing events, no failures/skips across FirstParty SDK/lab and root policy
+contracts. See the [separate execution record](../../../contracts/coverage/evidence/pol91-firstparty-composition-execution.json)
+and [pending command decisions](pol91-template-contract-decisions.md).
