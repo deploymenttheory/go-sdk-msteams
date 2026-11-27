@@ -51,6 +51,11 @@ func discovery(t *testing.T) contracttest.Exchange {
 }
 
 func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+	// Historic fixtures capture response bytes. This private header follows the
+	// independently audited Find wrapper/proxy path, not capture-time metadata.
+	if command == "Find-CsGroup" {
+		command = "Find-CsGroup_Find"
+	}
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
@@ -294,8 +299,11 @@ func TestUnitTenantIdentityRejectsInputBeforeIO(t *testing.T) {
 	s := ti.NewService(base)
 	ctx := t.Context()
 	for name, call := range map[string]func() error{
-		"blank-search":      func() error { _, _, err := s.SearchGroups(ctx, ti.GroupSearchRequest{SearchQuery: " "}); return err },
-		"control-search":    func() error { _, _, err := s.SearchGroups(ctx, ti.GroupSearchRequest{SearchQuery: "a\nb"}); return err },
+		"empty-search": func() error { _, _, err := s.SearchGroups(ctx, ti.GroupSearchRequest{}); return err },
+		"overflow-search": func() error {
+			_, _, err := s.SearchGroups(ctx, ti.GroupSearchRequest{SearchQuery: "abc", MaxResults: ptr(uint32(2147483648))})
+			return err
+		},
 		"blank-aad-user":    func() error { _, _, err := s.GetAadUser(ctx, ""); return err },
 		"dot-aad-user":      func() error { _, _, err := s.GetAadUser(ctx, ".."); return err },
 		"blank-cloud-user":  func() error { _, _, err := s.GetCloudUser(ctx, "\t"); return err },

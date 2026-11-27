@@ -25,7 +25,8 @@ func decodeFields(raw []byte, value any, fields *map[string]json.RawMessage) err
 	return nil
 }
 
-// Group is one Find-CsGroup match.
+// Group is one source-projected Find-CsGroup match. ID uses canonical D-format
+// GUID text; RawFields retains the original wire properties independently.
 type Group struct {
 	ID          *string                    `json:"Id"`
 	DisplayName *string                    `json:"DisplayName"`
@@ -33,18 +34,26 @@ type Group struct {
 }
 
 func (v *Group) UnmarshalJSON(raw []byte) error {
-	type plain Group
-	var value plain
-	if err := decodeFields(raw, &value, &value.RawFields); err != nil {
-		return err
+	fields, err := groupNode(raw)
+	if err != nil || fields == nil {
+		return client.ErrDecode
 	}
-	*v = Group(value)
+	id := groupString(fields["Id"])
+	if id == nil {
+		return client.ErrDecode
+	}
+	canonical, ok := groupGUID(*id)
+	if !ok {
+		return client.ErrDecode
+	}
+	*v = Group{ID: &canonical, DisplayName: groupString(fields["DisplayName"]), RawFields: fields}
 	return nil
 }
 
 // GroupSearchRequest is Find-CsGroup. SearchQuery is required; the service
-// rejects queries shorter than three characters. Nil options are omitted and a
-// non-nil boolean is sent explicitly as True or False.
+// rejects queries shorter than three characters. MaxResults above MaxInt32
+// cannot bind to the forwarded Int32 parameter and fails locally. Nil options
+// are omitted; non-nil zero/false values are sent explicitly.
 type GroupSearchRequest struct {
 	SearchQuery     string
 	MaxResults      *uint32

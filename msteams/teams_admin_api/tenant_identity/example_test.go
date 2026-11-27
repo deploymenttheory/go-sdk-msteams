@@ -41,7 +41,7 @@ func ExampleService_SearchGroups() {
 		if err != nil {
 			return "", err
 		}
-		if len(groups) != 1 || groups[0].ID == nil {
+		if len(groups) != 1 || groups[0] == nil || groups[0].ID == nil {
 			return "", errors.New("group not found or ambiguous")
 		}
 		return *groups[0].ID, nil

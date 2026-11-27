@@ -123,7 +123,7 @@ func TestAccTenantIdentityReads(t *testing.T) {
 	}
 	labkit.WriteResponseFixture(t, fixtureService, "search_groups", response, replacements)
 	none, response, err := service.SearchGroups(ctx, ti.GroupSearchRequest{SearchQuery: "msteams-sdk-no-such-group-zz"})
-	if err != nil || len(none) != 0 {
+	if err != nil || none == nil || len(none) != 0 {
 		t.Fatal("unmatched group search was not empty")
 	}
 	labkit.WriteResponseFixture(t, fixtureService, "search_groups_empty", response, replacements)
