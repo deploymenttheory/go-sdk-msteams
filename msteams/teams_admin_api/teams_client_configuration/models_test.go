@@ -691,12 +691,12 @@ func TestUnitClientConfigurationPreservesOwnedRawSnapshot(t *testing.T) {
 	}
 }
 
-func TestUnitClientConfigurationRequiresNativeJSONTypes(t *testing.T) {
+func TestUnitClientConfigurationRejectsUnsupportedSourceShapes(t *testing.T) {
 	t.Parallel()
-	for _, raw := range []string{`{"AllowEmailIntoChannel":"false"}`, `{"RestrictedSenderList":false}`, `{"ContentPin":{}}`, `null`, `[]`} {
+	for _, raw := range []string{`{"AllowEmailIntoChannel":"yes"}`, `{"RestrictedSenderList":[]}`, `{"ContentPin":{}}`, `null`, `[]`} {
 		var value resource.Configuration
 		if !errors.Is(json.Unmarshal([]byte(raw), &value), client.ErrDecode) {
-			t.Fatal("non-native JSON type accepted")
+			t.Fatal("source-rejected JSON shape accepted")
 		}
 	}
 }

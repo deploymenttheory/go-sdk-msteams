@@ -123,3 +123,163 @@ Unqualified, because they need permissions the lab identity lacks:
 - Artifact discovery in real drives (`Sites.Read.All`, `Files.Read.All`).
 - Changing the sideloading flag to a different value. Same-value writes only,
   to avoid changing tenant behaviour.
+
+
+## Custom-app Get and status checkpoint (2026-11-27)
+
+The [pinned source observation](evidence/custom-app-settings-get-status-source.json)
+records the exact public/custom/internal script definitions and file/definition
+hashes, generated method identities and selected full status/parser IL bodies.
+Get is direct AutoRest, exported to TeamsGA/TeamsPreview/SelfHost, with one
+`__AllParameterSets` surface. It performs a no-body GET of
+`/Teams.MiddletierService/tenantWideAppsSettingsGlobal`, expects HTTP 200 and an
+object, and uses ConfigAPI resource `48ac35b8-9aa8-4d74-927d-1f4a14a0b239`.
+Unlike cloud-call-data's TRPS path, no legacy-flight branch is needed for this Get.
+The custom wrapper projects only the exact `isSideloadedAppsInteractionEnabled`
+property, replacing missing/null with false. The compatibility getter now uses
+that exact raw key, including uppercase-only and mixed-case regression cases.
+Native full-document branding, app list and raw retention are explicit extensions;
+Go typed JSON matching and stricter malformed-type errors are not described as
+byte-for-byte generated parser equivalence.
+
+Generated Set dispatch declares only HTTP 204. The prior authored 200 success
+vector is corrected to 204 and a separate 200 error case retains its receipt.
+The existing real same-value update observation was 204 and remains unchanged.
+This checkpoint changes no live selection, authorization or tenant configuration.
+
+Get's complete ordinary set/source, successful fixture, null/absent/false output,
+malformed shapes/statuses and typed failures are reviewed separately from Set.
+No implementation, contract or live ledger state is promoted without its own
+revision-backed execution evidence. Further source-confirmed Set differences
+remain open: nested unknown appAccessRequestConfig properties are dropped by the
+source and empty nested objects are suppressed; PascalCase Lob* response values
+are copied while camelCase branding is ignored. Those behaviors are not claimed
+fixed by this read/status checkpoint or by the existing enhanced native document.
+
+
+### Direct public flag projection
+
+The [two scalar observations](evidence/custom-app-get-scalar-projection.json) and
+[bounded pure reproducer](../../../scripts/discovery/inspect-custom-app-get-projection.ps1)
+confirm both wrong-case and canonical string-valued flag fields parse successfully
+in the pinned model, leave its nullable flag unset, and project false. The complete
+native document deliberately retains stricter extension-field decoding, so its
+snapshot accessor alone cannot cover every public-command output.
+
+`GetSideloadedAppsInteraction` is the mapped direct projection primitive over the
+same no-body GET, ConfigAPI metadata and HTTP 200 status. It requires a non-null
+object, then projects only the exact flag key, independent of unrelated full-model
+fields. True/false/null/missing and both scalar observations reach this public path;
+unsupported statuses, malformed roots and authorization/cancellation errors retain
+their responses/errors rather than become successful disabled-setting observations.
+Enhanced Get remains unchanged. The new path is replayed against the existing
+actual sanitized read fixture as well as explicitly authored source vectors.
+Set body/persistence and live states remain separate from this ordinary Get review.
+
+
+### Ordinary Get decision at revision 4338e4b
+
+[The versioned contract result](evidence/custom-app-get-4338e4b-contract.json)
+records the full custom-app package TestUnit execution and example compilation at
+`4338e4b452341441d133d91a30d90f297eece0d2`, source/control/set review and file hashes.
+All required tests passed with no failures/skips. Its single ordinary set maps to
+`GetSideloadedAppsInteraction`; strict enhanced Get is recorded separately. Every
+source-accepted flag outcome under review can reach the raw public projection,
+including both malformed scalar observations, while errors remain errors.
+This independently reviewed Get is implemented/contract-passed in the ledger.
+Set and live states remain unchanged. A replayed real read body is evidence of
+this revision's parsing, not a newly executed tenant operation or authorization test.
+
+
+## Source-compatible custom Set preparation
+
+The new pure projection and explicit prepare/apply API close the known nested
+config and PascalCase branding differences without changing the existing enhanced
+convenience or its authorized lab selection. Twelve pinned pure DTO/serializer
+observations are replayed from `testdata/pinned-set-projection.json`; their replies
+are controlled source vectors, not tenant observations. The exact child Get header
+is source-traced, not an intercepted live request. See
+[evidence](evidence/custom-app-set-header-source.json) and
+[projection distinctions](evidence/custom-app-set-projection-source.json).
+
+Prepared requests bind to their exact service and own frozen body/snapshot copies.
+Tests cover forbidden/malformed preparation, foreign-service rejection, cancellation
+before the PUT, retained independent receipts, source 204 success, unsupported 200
+acceptance and 403 failure. Session 90802 passed the full custom-app package's
+TestUnit/Example selection after explicit expected-status fields were corrected in
+the new harness cases. This is offline execution, not proof of tenant persistence.
+The Set ledger state remains unchanged pending individual full-source/set review
+and revision-bound execution evidence.
+
+The complete affected package passed again at clean frozen revision `4e7df9d`
+(including the new ambiguous-action receipt cases and compiled example). The
+[revision-bound result](evidence/custom-app-set-4e7df9d-offline.json) records exact
+source hashes, raw Go JSON digest and every passing test event. Set/live statuses
+remain unchanged; this is a reviewable implementation checkpoint.
+
+
+## Binding and header correction after the DTO-only checkpoint
+
+Actual inert parameter binding followed by the real pinned SetExpanded setters
+and serializer supersedes the earlier DTO-only Set parity assumption. Fourteen
+observations (the original twelve plus malformed/casing boolean cases) show that
+all five copied nullable booleans bind as present false when missing/null/invalid,
+and all four copied null Lob strings bind as present empty strings. Nested typed
+config omission remains a separate generated-model rule. Historical DTO captures
+and the `4e7df9d` execution record remain unchanged, with their narrower phase
+explicitly preserved; they do not establish whole-wrapper Set parity.
+
+The exact shared header trace also corrects the earlier public Get metadata
+assumption: public Get and Set's preliminary Get use private child
+`Get-CsTeamsSettingsCustomApp_Get`; the source write uses
+`Set-CsTeamsSettingsCustomApp_SetExpanded`. Default ProcessArgs hooks signal
+execution identity and do not overwrite command headers. The earlier individual
+Get qualification at `4338e4b` is withdrawn pending corrected exact-header replay
+and a replacement reviewed decision; its historical evidence is not rewritten.
+Enhanced native full-document Get/direct Update keep their documented public-name
+convention separately. See [correction evidence](evidence/custom-app-binding-header-correction.json).
+
+The parameterized repository repro `scripts/discovery/observe-custom-app-bindings.ps1`
+was also executed against the verified package: all fourteen real bodies matched
+the preserved binding capture, without errors. Its inert C# command captures
+converted parameter values; actual pinned constructor/setters/serializer produce
+the separately recorded real body. Bounded [setter IL](evidence/custom-app-binding-setters-source.json)
+and exact repro/capture hashes are retained in the correction evidence. Full
+corrected custom-app TestUnit/Example execution passed session 64518; both Get
+and Set remain unqualified through this source-review checkpoint.
+
+A separate fifteenth real binder/setter observation reads a true target and
+requests false; the emitted target is present false. The final portable repro and
+Go pure replay include it, and the apply harness exercises requested false with
+a true read snapshot. The original fourteen-case capture remains separately
+preserved as `pinned-set-binding-projection-14.json`.
+
+The final complete affected package passed at clean frozen revision `b3166ee`: 44
+passing test events and no fail/skip, including the requested-false case and
+corrected private-header replays. [The result](evidence/custom-app-b3166ee-offline.json)
+records exact source/fixture hashes and raw Go JSON digest. Both command states
+remain unqualified; this result alone does not restore the withdrawn decision.
+
+The [bounded header closure](evidence/custom-app-header-closure.json) now retains
+44 complete resolved method bodies across 20 fully qualified types, exact wrapper
+script bodies, the sole command-header literal writer, invocation adapter, default
+execution-ID handler/forwarder, terminal send and clone behavior. The complete
+private-assembly literal scan resolved 57,736 string operands across 70,462 method
+bodies with zero unresolved strings. Nine actual inert private-name/alias/proxy
+observations exercise the real pinned PSInvocationInfo adapter: InvocationName can
+change, while MyCommand.Name remains the selected private command and supplies
+the header. The parameterized `scripts/discovery/inspect-custom-app-header-closure.ps1`
+reproduces this bounded source-plus-inert evidence. No actual management lifecycle,
+authentication, HTTP request or wire header capture is claimed.
+
+## Reviewed replacement decision at b3166ee
+
+Independent review approved exactly Get and Set's accepted public
+`__AllParameterSets` implementation and offline contract decisions after checking
+the corrected source chain, real binder/setter observations, nine exact code/fixture
+hashes and the complete 44-pass execution result. The
+[replacement decision](evidence/custom-app-b3166ee-contract.json) records those
+bounds. Source Set WhatIf still performs the unhooked preliminary GET and withholds
+the PUT; a native caller can Prepare then withhold Apply. Earlier withdrawn/wrong-phase
+evidence remains unchanged. All live flags and the remaining EXT command states
+remain unchanged; this does not establish tenant persistence or finish EXT-90.

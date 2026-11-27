@@ -221,6 +221,25 @@
         }
       ]
     },
+    "ext_integration": {
+      "package": "./tests/integration/lab/ext_integration",
+      "steps": [
+        {
+          "id": "generic-typed-configuration",
+          "mutation": true,
+          "proof": "ext-integration",
+          "journal_entries_per_test": 1,
+          "tests": ["TestAccGenericTypedConfigurationComposition"]
+        },
+        {
+          "id": "agent-target-template",
+          "mutation": true,
+          "proof": "ext-agent-template",
+          "journal_entries_per_test": 2,
+          "tests": ["TestAccAgentTargetTemplateComposition"]
+        }
+      ]
+    },
     "configuration_diagnostics": {
       "package": "./tests/integration/lab/configuration_diagnostics",
       "steps": [
@@ -760,6 +779,27 @@
         }
       ]
     },
+    "teams_guest_meeting_configuration": {
+      "package": "./tests/integration/lab/teams_guest_meeting_configuration",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccGuestMeetingConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccGuestMeetingConfigurationUpdateRestore"
+          ]
+        }
+      ]
+    },
     "teams_ip_phone_policy": {
       "package": "./tests/integration/lab/teams_ip_phone_policy",
       "steps": [
@@ -796,6 +836,27 @@
           "journal_entries_per_test": 1,
           "tests": [
             "TestAccMeetingPolicyCRUD"
+          ]
+        }
+      ]
+    },
+    "teams_meeting_configuration": {
+      "package": "./tests/integration/lab/teams_meeting_configuration",
+      "steps": [
+        {
+          "id": "global-reads",
+          "serial": true,
+          "tests": [
+            "TestAccMeetingConfigurationReadOnly"
+          ]
+        },
+        {
+          "id": "update-restore",
+          "mutation": true,
+          "proof": "configuration-update",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMeetingConfigurationUpdateRestore"
           ]
         }
       ]

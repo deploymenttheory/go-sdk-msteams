@@ -1,0 +1,89 @@
+{
+  "scope": "three direct ordinary assignment commands/three exact sets; no OCE or migration promotion",
+  "commands": [
+    {
+      "name": "New-CsGroupPolicyAssignment",
+      "outcome": "passed",
+      "revision": "af3910bc744656d899c6dd8287a013b941e9740c",
+      "parameter_sets": [
+        "NewExpanded"
+      ],
+      "execution": {
+        "session": "76664",
+        "packages": [
+          "./msteams/teams_admin_api/policy_assignments",
+          "./tests/contract/policies"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol90-current-test-audit.md#ordinary-generated-assignment-mutation-review-2026-11-27",
+      "limitations": [
+        "No minimum-role or new live acceptance claim",
+        "No automatic propagation, rollback or assumed common polling route",
+        "Native receipt preserves acceptance independently of PowerShell PassThru output"
+      ]
+    },
+    {
+      "name": "Remove-CsGroupPolicyAssignment",
+      "outcome": "passed",
+      "revision": "af3910bc744656d899c6dd8287a013b941e9740c",
+      "parameter_sets": [
+        "Remove"
+      ],
+      "execution": {
+        "session": "76664",
+        "packages": [
+          "./msteams/teams_admin_api/policy_assignments",
+          "./tests/contract/policies"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol90-current-test-audit.md#ordinary-generated-assignment-mutation-review-2026-11-27",
+      "limitations": [
+        "No minimum-role or new live acceptance claim",
+        "No automatic propagation, rollback or assumed common polling route",
+        "Native receipt preserves acceptance independently of PowerShell PassThru output"
+      ]
+    },
+    {
+      "name": "New-CsBatchPolicyAssignmentOperation",
+      "outcome": "passed",
+      "revision": "af3910bc744656d899c6dd8287a013b941e9740c",
+      "parameter_sets": [
+        "NewExpanded"
+      ],
+      "execution": {
+        "session": "76664",
+        "packages": [
+          "./msteams/teams_admin_api/policy_assignments",
+          "./tests/contract/policies"
+        ],
+        "selection": "^(TestUnit|Example)",
+        "arguments": [
+          "-p",
+          "1",
+          "-count=1"
+        ],
+        "runtime_disk_floor_gib": 14
+      },
+      "source_review": "docs/implementation/policies/pol90-current-test-audit.md#ordinary-generated-assignment-mutation-review-2026-11-27",
+      "limitations": [
+        "No minimum-role or new live acceptance claim",
+        "No automatic propagation, rollback or assumed common polling route",
+        "Native receipt preserves acceptance independently of PowerShell PassThru output"
+      ]
+    }
+  ]
+}

@@ -20,6 +20,113 @@ import (
 
 func TestUnitBrandingAssetInputsUseRealPreparationOnDeniedPatch(t *testing.T) {
 	t.Parallel()
+	runBrandingPreparedAssetPatch(t, 403)
+}
+
+func TestUnitBrandingAssetInputsUsePreparedSuccessfulPatch(t *testing.T) {
+	t.Parallel()
+	// Authored blank204 acceptance follows the pinned generic Set policy
+	// parser's empty-success branch. The GET bytes are retained evidence;
+	// no nonempty asset response or server persistence is invented.
+	runBrandingPreparedAssetPatch(t, 204)
+}
+
+func TestUnitBrandingBodyCloseCancellationRetainsOnlyReceivedPreparation(t *testing.T) {
+	t.Parallel()
+	before := readResponseFixture(t, "get_global.json")
+	var stop context.CancelFunc
+	step := wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, 200, string(before))
+	step.Reply.OnBodyClose = func() { stop() }
+	run(t, contracttest.Case{Name: "branding-body-close-cancel", Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsMeetingBrandingPolicy", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{step}, Want: contracttest.Expected{Body: before, Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		operation, cancel := context.WithCancel(ctx)
+		defer cancel()
+		stop = cancel
+		value, response, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.UpdateByIdentity(operation, "Global", resource.UpdateRequest{Fields: resource.Fields{EnableMeetingBackgroundImages: policy.Set(false)}})
+		if !errors.Is(err, context.Canceled) || !errors.Is(operation.Err(), context.Canceled) || value == nil || value.Before != nil || value.After != nil || value.PatchInvoked || value.HTTPAccepted || value.ReadResponse == nil || value.ReadResponse.StatusCode() != 200 || response != value.ReadResponse {
+			t.Fatal("body-close cancellation invented typed preparation or a branding patch attempt")
+		}
+		return contracttest.Observation{Response: response, Err: err}
+	}})
+}
+
+func TestUnitBrandingComposedReplacementCoversAllAssetBranches(t *testing.T) {
+	t.Parallel()
+	before := readResponseFixture(t, "get_global.json")
+	var snapshot map[string]json.RawMessage
+	if json.Unmarshal(before, &snapshot) != nil {
+		t.Fatal("invalid retained branding preparation")
+	}
+	// Reuse the authored pinned-property request literal, never a marshal of
+	// the SDK input under test. Add the separately evidenced reaction fields.
+	var expected map[string]json.RawMessage
+	for _, vector := range requestInputs(t) {
+		if vector.Name == "patch-nested" && json.Unmarshal([]byte(vector.Request.Body), &expected) != nil {
+			t.Fatal("invalid authored nested request literal")
+		}
+	}
+	if expected == nil {
+		t.Fatal("missing nested request contract")
+	}
+	expected["Identity"] = json.RawMessage(`"Global"`)
+	var themes []map[string]json.RawMessage
+	if json.Unmarshal(expected["MeetingBrandingThemes"], &themes) != nil || len(themes) != 1 {
+		t.Fatal("invalid authored theme projection")
+	}
+	themes[0]["MeetingReactions"] = json.RawMessage(`[{"Identity":null,"Id":"fixture-reaction","ReactionImageUrl":"https://example.invalid/reaction.png","ReactionSpriteImageUrl":null,"ReactionType":"Like","BrandedDisplayName":"fixture reaction"}]`)
+	var err error
+	expected["MeetingBrandingThemes"], err = json.Marshal(themes)
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, err := json.Marshal(expected)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Only local DTO composition and an authored empty Set receipt are proved.
+	// There is no nonempty Create success, upload, fetch or tenant persistence.
+	run(t, contracttest.Case{Name: "all-assets-prepared-replacement", Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsMeetingBrandingPolicy", ParameterSet: "Identity"}, {Command: "New-CsTeamsMeetingBackgroundImage", ParameterSet: "Identity"}, {Command: "New-CsTeamsMeetingBrandingTheme", ParameterSet: "Identity"}, {Command: "New-CsTeamsNdiAssuranceSlate", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, 200, string(before)), wire("PATCH", item, "Set-CsTeamsMeetingBrandingPolicy", body, 204, "")}, Want: contracttest.Expected{Body: []byte{}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		image, err := resource.NewBackgroundImage("fixture-image", 0, "Fixture", "https://example.invalid/background.png", resource.BackgroundImageOptions{IsRequired: new(false)})
+		if err != nil {
+			t.Fatal(err)
+		}
+		slate, err := resource.NewAssuranceSlate("fixture-slate", "Fixture", "https://example.invalid/slate.png", resource.AssuranceSlateOptions{IsDefault: new(false)})
+		if err != nil {
+			t.Fatal(err)
+		}
+		reaction, err := resource.NewReaction("fixture-reaction", "https://example.invalid/reaction.png", "Like", resource.ReactionOptions{BrandedDisplayName: new("fixture reaction")})
+		if err != nil {
+			t.Fatal(err)
+		}
+		reactions, err := resource.ReplaceAssets(reaction)
+		if err != nil {
+			t.Fatal(err)
+		}
+		theme, err := resource.NewBrandingTheme("fixture-theme", resource.ThemeOptions{ThemeFields: resource.ThemeFields{Enabled: new(false)}, MeetingReactions: reactions})
+		if err != nil {
+			t.Fatal(err)
+		}
+		images, err := resource.ReplaceAssets(image)
+		if err != nil {
+			t.Fatal(err)
+		}
+		slates, err := resource.ReplaceAssets(slate)
+		if err != nil {
+			t.Fatal(err)
+		}
+		themeList, err := resource.ReplaceAssets(theme)
+		if err != nil {
+			t.Fatal(err)
+		}
+		value, response, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Fields: settings(t, false).Fields, MeetingBackgroundImages: images, NDIAssuranceSlateImages: slates, MeetingBrandingThemes: themeList})
+		if err == nil && (value == nil || value.Before == nil || !reflect.DeepEqual(value.Before.RawFields, snapshot) || len(value.Before.MeetingBackgroundImages) != 0 || len(value.Before.NDIAssuranceSlateImages) != 0 || len(value.Before.MeetingBrandingThemes) != 0 || !value.PatchInvoked || !value.HTTPAccepted || value.After != nil || value.ReadResponse == nil || value.ReadResponse.StatusCode() != 200) {
+			t.Fatal("composed asset replacement mutated preparation or invented readback")
+		}
+		return contracttest.Observation{Response: response, Err: err}
+	}})
+}
+
+func runBrandingPreparedAssetPatch(t *testing.T, status int) {
+	t.Helper()
 	before := readResponseFixture(t, "get_global.json")
 	var expected map[string]json.RawMessage
 	if json.Unmarshal(before, &expected) != nil {
@@ -33,7 +140,11 @@ func TestUnitBrandingAssetInputsUseRealPreparationOnDeniedPatch(t *testing.T) {
 		}
 		t.Run(label, func(t *testing.T) {
 			body := json.RawMessage(`{"Identity":"Global","DefaultTheme":null,"MeetingBackgroundImages":` + images + `}`)
-			run(t, contracttest.Case{Name: label, Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, 200, string(before)), wire("PATCH", item, "Set-CsTeamsMeetingBrandingPolicy", body, 403, "")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			want := contracttest.Expected{}
+			if status == 403 {
+				want.Error = auth.ErrForbidden
+			}
+			run(t, contracttest.Case{Name: label, Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, 200, string(before)), wire("PATCH", item, "Set-CsTeamsMeetingBrandingPolicy", body, status, "")}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				var add []*resource.BackgroundImage
 				if appendImage {
 					image, err := resource.NewBackgroundImage("a", 0, "Fixture", "https://example.invalid/a", resource.BackgroundImageOptions{})
@@ -47,8 +158,8 @@ func TestUnitBrandingAssetInputsUseRealPreparationOnDeniedPatch(t *testing.T) {
 					t.Fatal(err)
 				}
 				v, r, e := sdk.TeamsAdminAPI.MeetingBrandingPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Fields: resource.Fields{DefaultTheme: policy.Null[string]()}, MeetingBackgroundImages: edit})
-				if v == nil || v.Before == nil || !v.PatchInvoked || v.HTTPAccepted || !reflect.DeepEqual(v.Before.RawFields, expected) {
-					t.Error("denied asset update lost or modified real preparation")
+				if v == nil || v.Before == nil || !v.PatchInvoked || v.HTTPAccepted != (status == 204) || v.After != nil || !reflect.DeepEqual(v.Before.RawFields, expected) {
+					t.Error("asset update lost acceptance or modified preparation")
 				}
 				return contracttest.Observation{Response: r, Err: e}
 			}})
@@ -134,6 +245,39 @@ func TestUnitBrandingCreateComparisonIsExplicitAndDoesNotCloneDefaultsOnDeniedSu
 					t.Error("comparison and denied submission outcomes were conflated")
 				}
 				return contracttest.Observation{Response: r}
+			}})
+		})
+	}
+}
+
+func TestUnitBrandingCreateComparisonPreservesAcceptedSubmission(t *testing.T) {
+	t.Parallel()
+	before := readResponseFixture(t, "get_global.json")
+	accepted := readResponseFixture(t, "create_201.body")
+	var expected map[string]json.RawMessage
+	if json.Unmarshal(before, &expected) != nil {
+		t.Fatal("invalid retained Global comparison")
+	}
+	// Offline composition of retained primitive replies. A denied comparison
+	// remains a separate observation even when the later create is accepted.
+	for _, status := range []int{200, 403} {
+		t.Run(strconv.Itoa(status), func(t *testing.T) {
+			read := before
+			if status == 403 {
+				read = nil
+			}
+			run(t, contracttest.Case{Name: "accepted-comparison-" + strconv.Itoa(status), Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "New-CsTeamsMeetingBrandingPolicy", nil, status, string(read)), wire("POST", collection, "New-CsTeamsMeetingBrandingPolicy", json.RawMessage(`{"Identity":"fixture-policy","EnableMeetingOptionsThemeOverride":false,"RequireBackgroundEffect":false}`), 201, string(accepted))}, Want: contracttest.Expected{Body: accepted}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				value, response, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.CreateWithGlobalComparison(ctx, resource.CreateRequest{Identity: "fixture-policy", Settings: resource.Settings{Fields: resource.Fields{EnableMeetingOptionsThemeOverride: policy.Set(false), RequireBackgroundEffect: policy.Set(false)}}})
+				if value == nil || !value.CreateInvoked || !value.HTTPAccepted || value.Created != nil || value.ComparisonResponse == nil || value.ComparisonResponse.StatusCode() != status {
+					t.Fatal("accepted create lost independent comparison and receipt stages")
+				}
+				if status == 200 && (value.ComparisonError != nil || value.Comparison == nil || value.Comparison.Identity == nil || *value.Comparison.Identity != "Global" || !reflect.DeepEqual(value.Comparison.RawFields, expected)) {
+					t.Fatal("accepted create lost the typed Global comparison")
+				}
+				if status == 403 && (value.Comparison != nil || !errors.Is(value.ComparisonError, auth.ErrForbidden)) {
+					t.Fatal("successful create erased the failed comparison")
+				}
+				return contracttest.Observation{Response: response, Err: err}
 			}})
 		})
 	}

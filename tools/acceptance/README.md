@@ -52,6 +52,15 @@ own. **Run workflow** also accepts `services` (comma-separated partition names) 
 run only those services after the auth job. The aggregate `TestAcc result` job
 then expects reports from those services only.
 
+The `ext_integration` partition also enables the existing response-fixture
+sanitizer for its two owned compositions. It exports only changed JSON or empty
+HTTP receipts from four fixed service/testdata label lists, with a per-file
+1 MiB bound, symlink/path checks and an additional private-data guard. The
+`response-fixtures.json` manifest binds each file digest to the exact CI revision;
+files live under `response-fixtures/` in that service artifact. Other partitions
+never enable this writer. These files contain no plaintext journals or private
+lab directory contents and do not establish coverage beyond the run's assertions.
+
 Selected tests and child cases must pass unless explicitly excluded as described
 below. The aggregate requires exactly one report per auth step (`all`) and per
 selected service step (`client-secret`). It rejects missing, duplicate or
@@ -284,6 +293,15 @@ Recovery selects `TestAccRecoverOwnedPolicies` with the bound private journal;
 Null or missing originals refuse mutation. This step temporarily changes Global
 in the dedicated lab; it does not qualify user/client propagation.
 
+Meeting configuration Global reads and the CustomFooterText/HelpURL update and
+restoration run as that service's serialized `global-reads` and `update-restore`
+steps. Its dedicated read-only oracle, `read-meeting-configuration.ps1`, compares
+all 21 pinned getters, including the authentication context list, before the
+update, after it and after restoration. CI requires those three comparisons,
+preservation of the 19 omitted getters, and one cleaned `meeting-configuration`
+restore entry. The handler restores only the journaled Global string pair,
+sending an explicit null for a null original, and refuses other targets.
+
 BYOD and desks policy runs Global read/list/filter as its `reads` step and owned
 CRUD as its `crud` step, using the dedicated `read-byod-and-desks-policy.ps1`
 oracle. CRUD creates `DeviceDataCollection=Disabled` (Global is `Enabled`),
@@ -316,6 +334,15 @@ restores only the journaled CopilotFromHomeTenant string on Global. The recovery
 handler accepts only the documented Enabled/Disabled baseline used by the test.
 CI reports fixed parity, persistence and restoration failure reasons without
 publishing raw responses or resource names.
+
+Guest meeting configuration Global reads and the AllowMeetNow update and
+restoration run as that service's serialized `global-reads` and `update-restore`
+steps. Its dedicated read-only oracle, `read-guest-meeting-configuration.ps1`,
+compares all eight pinned getters before the update, after it and after
+restoration. CI requires those three comparisons, preservation of the seven
+omitted getters, and one cleaned `guest-meeting-configuration` restore entry. The
+handler restores only the journaled Global Boolean and refuses null originals or
+other targets.
 
 
 Work location detection policy runs Global read/list/filter as its `reads` step
@@ -510,3 +537,23 @@ MSTEAMS_LAB_AUTH_METHOD=all python3 tools/acceptance/ci.py run --auth --step pri
 The ordinary private migration service step still requires a successful bound-tenant
 native read; HTTP 401 is a failure. Backend parity is reported in the separate
 selected auth step and never inferred from token acquisition.
+
+## Integrated EXT acceptance
+
+The `ext_integration` partition creates one SDK-owned, unassigned feedback policy
+through the generic configuration API, reads and sparsely updates it through the
+typed feedback service, then replaces it through the generic API and verifies the
+typed result. It requires three pinned PowerShell comparisons and one independently
+cleaned journal entry. No Global configuration, user/group assignment, licensing
+state or service-wide cache is changed. Changes to either participating adapter
+select this partition.
+
+The [EXT inventory](../../docs/implementation/ext/coverage-report.md) records all
+owned command/parameter-set mappings, current live limitations and the fifteen
+unowned nested research candidates. Mappings and expected denials do not establish
+full qualification or successful tenant operations.
+
+The same partition's `agent-target-template` step creates an owned IVR tag
+template and an owned agent configuration referencing it, verifies the linkage
+after rename with two pinned comparisons, and requires two independently cleaned
+entries. No resource account or call flow is attached to the agent.

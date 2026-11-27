@@ -8,6 +8,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_multi_tenant_organization_configuration"
 )
 
@@ -45,6 +46,16 @@ func TestUnitConfigurationInputAndContextRejectBeforeHTTP(t *testing.T) {
 		}
 		if _, _, err := resource.NewService(graph).List(ctx); !errors.Is(err, client.ErrDestination) {
 			t.Fatal("wrong backend acquired credentials")
+		}
+		// The concrete source guard counts only setting keys, including null/false,
+		// and emits an error before token acquisition when only Force is bound.
+		for _, force := range []*bool{nil, new(false), new(true)} {
+			if value, response, err := service.PatchByIdentity(ctx, "Global", resource.PatchRequest{Controls: policy.Controls{Force: force}}); !errors.Is(err, resource.ErrInput) || value != nil || response != nil {
+				t.Fatal("no-settings PATCH or Force-only acquired credentials or invented a receipt")
+			}
+			if value, response, err := service.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Controls: policy.Controls{Force: force}}); !errors.Is(err, resource.ErrInput) || value != nil || response != nil {
+				t.Fatal("no-settings Update or Force-only acquired credentials or invented preparation")
+			}
 		}
 		return contracttest.Observation{}
 	}})

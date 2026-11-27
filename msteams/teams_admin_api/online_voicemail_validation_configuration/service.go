@@ -53,6 +53,9 @@ func (s *Service) ListFiltered(ctx context.Context, pattern string) ([]*Configur
 	if err := s.ready(ctx); err != nil {
 		return nil, nil, err
 	}
+	if pattern == "" {
+		return nil, nil, ErrInput
+	}
 	return s.resource.ListFiltered(ctx, pattern, "Get-CsOnlineVoicemailValidationConfiguration")
 }
 

@@ -1,0 +1,43 @@
+{
+  "outcome": "passed",
+  "revision": "2f0b32339f242b76d5fe189171bd844a979daacf",
+  "baseline": "MicrosoftTeams 8.1.0",
+  "scope": "Bounded read-scalar implementation correction; no command qualification restored and no tenant operation executed.",
+  "packages": [
+    "./msteams",
+    "./msteams/teams_admin_api/internal/policyrp",
+    "./msteams/teams_admin_api/privacy_configuration",
+    "./msteams/teams_admin_api/teams_client_configuration",
+    "./msteams/teams_admin_api/teams_education_configuration",
+    "./tests/integration/lab/privacy_configuration",
+    "./tests/integration/lab/teams_client_configuration",
+    "./tests/integration/lab/teams_education_configuration"
+  ],
+  "command": "go test -json -p 1 -count=1 -run '^(TestUnit|Example)' <packages>",
+  "execution_environment": {
+    "GOMAXPROCS": 2,
+    "owned_temporary_directory": true,
+    "disk_guard_GiB": 14
+  },
+  "passing_test_events": 619,
+  "failed_test_events": 0,
+  "skipped_test_events": 0,
+  "compile_only_packages": [
+    "./msteams/teams_admin_api/internal/policyrp"
+  ],
+  "raw_runner_sha256": "b974abe75d1e89668ee561ac4ebff1cbef19239f15fa1f99016b428625ad24aa",
+  "source_vectors": "docs/implementation/policies/evidence/pol91-qualified-read-scalars.json",
+  "own_source_vector_count": 436,
+  "actual_root_client_scenarios": 3,
+  "post_execution_scoped_diff": "zero",
+  "initial_execution": {
+    "revision": "78f9c830d28a37ac44a4113ab854b794c4382464",
+    "outcome": "failed",
+    "failing_tests": 5,
+    "reason": "Older negative tests rejected source-accepted inputs; two lab producer validators depended on the SDK decoder for strict canonical types. Corrected to source-rejected shapes and a separate strict oracle DTO alias.",
+    "production_conversion_changed_after_initial_execution": false
+  },
+  "remaining_work": "Six other configuration families need opt-in coercion fixes and their complete source/implementation review. Qualification remains withdrawn; historical runs are bounded evidence only.",
+  "tenant_operations": 0,
+  "live_states_changed": false
+}

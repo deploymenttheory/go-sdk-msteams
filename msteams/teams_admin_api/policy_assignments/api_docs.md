@@ -92,8 +92,9 @@ and per-attempt errors; the returned error joins failures. A malformed successfu
 response stops processing. Native Region annotations identify the actual request,
 while RawFields retains the original wire object separately.
 
-OCE GPA reads/actions accept the sender's 200/201/202/204 set. HTTP 206 is rejected
-before the command layer's broader success check. GPA reference responses can be
+OCE GPA reads/actions accept every successful 2xx status, matching the pinned
+generic helper's IsSuccessStatusCode check. This does not establish which statuses
+the service actually emits. GPA reference responses can be
 empty or JSON null; regional snapshots/lists require a decoded object/array.
 Regional status/definition reads require 200. Reprocessing requires 202 and a Guid
 string, with acceptance retained if decoding fails; it does not use a generated
@@ -140,3 +141,5 @@ Rank 1 and the policy-name update are verified. Member propagation, effective
 user precedence, cross-group rank changes, tenant-default grants and batch/OCE
 operations remain separately qualified. A successful write or HTTP204 does not
 imply effective-user convergence or an asynchronous operation identifier.
+
+CreateGroup requires a bound nonempty PolicyName before credentials or discovery, matching the public New binding. Whitespace is preserved. Priority omission differs from bound zero; UpdateGroup and raw GroupSettings DTO omission/null projection remain separate native behavior.

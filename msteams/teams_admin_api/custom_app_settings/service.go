@@ -14,8 +14,10 @@ import (
 )
 
 const (
-	getCommand = "Get-CsTeamsSettingsCustomApp"
-	setCommand = "Set-CsTeamsSettingsCustomApp"
+	getCommand       = "Get-CsTeamsSettingsCustomApp"
+	setCommand       = "Set-CsTeamsSettingsCustomApp"
+	sourceGetCommand = "Get-CsTeamsSettingsCustomApp_Get"
+	sourceSetCommand = "Set-CsTeamsSettingsCustomApp_SetExpanded"
 )
 
 // Service composes the bound ConfigAPI backend with lazy forest discovery.
@@ -42,15 +44,22 @@ func request(method, command string) client.Request {
 		Header: http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}}}
 }
 
-func (s *Service) get(ctx context.Context, command string) (*Settings, *resty.Response, error) {
+func (s *Service) read(ctx context.Context, command string) (*resty.Response, error) {
 	req := request(http.MethodGet, command)
 	req.Replay = client.ReplaySafe
 	response, err := s.client.Do(ctx, req, nil)
 	if err != nil {
-		return nil, response, err
+		return response, err
 	}
 	if response == nil || response.StatusCode() != http.StatusOK {
-		return nil, response, ErrResponse
+		return response, ErrResponse
+	}
+	return response, nil
+}
+func (s *Service) get(ctx context.Context, command string) (*Settings, *resty.Response, error) {
+	response, err := s.read(ctx, command)
+	if err != nil {
+		return nil, response, err
 	}
 	var value Settings
 	if json.Unmarshal(response.Body(), &value) != nil {
@@ -59,9 +68,28 @@ func (s *Service) get(ctx context.Context, command string) (*Settings, *resty.Re
 	return &value, response, nil
 }
 
-// Get reads the complete settings document (Get-CsTeamsSettingsCustomApp).
-// The cmdlet projects only isSideloadedAppsInteractionEnabled, reporting null
-// as false; Settings.SideloadedAppsInteractionEnabled gives that projection.
+// GetSideloadedAppsInteraction reads the pinned public command's one-property
+// output. It uses the exact raw key and nullable bool projection, independent of
+// the enhanced full document's stricter extension-field decoding. A false value
+// with an error is not a successful disabled-setting observation.
+func (s *Service) GetSideloadedAppsInteraction(ctx context.Context) (bool, *resty.Response, error) {
+	if err := s.check(ctx); err != nil {
+		return false, nil, err
+	}
+	response, err := s.read(ctx, sourceGetCommand)
+	if err != nil {
+		return false, response, err
+	}
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(response.Body(), &fields) != nil || fields == nil {
+		return false, response, client.ErrDecode
+	}
+	return projectSideloadedFlag(fields), response, nil
+}
+
+// Get reads the enhanced complete settings document with strict typed decoding.
+// For every pinned public flag outcome, including malformed nullable scalars,
+// use GetSideloadedAppsInteraction. The snapshot getter projects valid documents.
 func (s *Service) Get(ctx context.Context) (*Settings, *resty.Response, error) {
 	if err := s.check(ctx); err != nil {
 		return nil, nil, err
@@ -71,7 +99,7 @@ func (s *Service) Get(ctx context.Context) (*Settings, *resty.Response, error) {
 
 // Update replaces the settings document with one PUT. A nil AppSettingsList is
 // sent as an empty list, as the module does. It is never replayed
-// automatically. Declared successes are 204 and 200.
+// automatically. The source declares only 204 as successful.
 func (s *Service) Update(ctx context.Context, value UpdateRequest) (*resty.Response, error) {
 	if err := s.check(ctx); err != nil {
 		return nil, err
@@ -90,18 +118,17 @@ func (s *Service) Update(ctx context.Context, value UpdateRequest) (*resty.Respo
 	if err != nil {
 		return response, err
 	}
-	if response == nil || (response.StatusCode() != http.StatusNoContent && response.StatusCode() != http.StatusOK) {
+	if response == nil || response.StatusCode() != http.StatusNoContent {
 		return response, ErrResponse
 	}
 	return response, nil
 }
 
-// SetSideloadedAppsInteraction is Set-CsTeamsSettingsCustomApp: it reads the
-// current settings, then PUTs the six boolean switches and
-// appAccessRequestConfig from that read with isSideloadedAppsInteractionEnabled
-// replaced and an empty appSettingsList. The Lob* branding strings are not
-// sent, matching the module, whose case-sensitive deserializer never reads the
-// service's camelCase lob* names. The two requests are not atomic.
+// SetSideloadedAppsInteraction is the existing enhanced read/modify/write
+// convenience. It uses strict full-document decoding, preserves nested unknown
+// config properties and omits branding. For the pinned source projection, use
+// PrepareSideloadedAppsInteraction and UpdateSideloadedAppsInteraction. The read
+// and write are not atomic, and PUT is never automatically replayed.
 func (s *Service) SetSideloadedAppsInteraction(ctx context.Context, enabled bool) (*resty.Response, error) {
 	if err := s.check(ctx); err != nil {
 		return nil, err

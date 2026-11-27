@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "scope": "Bounded static selected-Modern handoff proof, not live header capture.",
+  "original_scanner_sha256": "9867fb06704274bbc8f89f97e242a0996f983d781fdb8677a2462bd40fbdb95f",
+  "portable_scanner": "scripts/discovery/inspect-cloud-invocation-setters.ps1",
+  "sha256": {
+    "docs/implementation/ext/evidence/cloud-call-data-header-handoff.json": "0095845aacabdad18a01a7dd9fa041cf542abe4f25665402348641e7a50d29ed",
+    "scripts/discovery/inspect-cloud-invocation-setters.ps1": "4efee8ca844bc557e2c00cc5e28a40db26495259020465de144530831bac2315"
+  },
+  "portable_execution": {
+    "raw_result": "/private/tmp/ext90-cloud-portable-invocation-scan.json",
+    "raw_sha256": "a3876d9c7de43c691f5f7ff19139c36abca446d990fba5b8c892f5b9839ca900",
+    "exactly_matches_preserved_source_scan": true,
+    "method_operands_resolved": 449218,
+    "unresolved": 0
+  }
+}

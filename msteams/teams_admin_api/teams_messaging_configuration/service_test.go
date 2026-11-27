@@ -69,8 +69,8 @@ func TestUnitListEditsUseTheActualBlockList(t *testing.T) {
 	for _, tc := range []struct {
 		name string
 		edit *policy.ListEdit
-		want []string
-	}{{"clear", policy.ReplaceStrings(), []string{}}, {"remove", policy.ChangeStrings(nil, original.FileTypeBlockList[:1]), original.FileTypeBlockList[1:]}, {"replace", policy.ReplaceStrings(original.FileTypeBlockList[:1]...), original.FileTypeBlockList[:1]}} {
+		want []*string
+	}{{"clear", policy.ReplaceStrings(), []*string{}}, {"remove", policy.ChangeNullableStrings(nil, original.FileTypeBlockList[:1]), original.FileTypeBlockList[1:]}, {"replace", policy.ReplaceNullableStrings(original.FileTypeBlockList[:1]...), original.FileTypeBlockList[:1]}} {
 		t.Run(tc.name, func(t *testing.T) {
 			body, err := json.Marshal(map[string]any{"Identity": "Global", "FileTypeBlockList": tc.want})
 			if err != nil {

@@ -187,9 +187,16 @@ func (s *Service) groupWrite(ctx context.Context, method, command, groupID, poli
 	return result, r, err
 }
 
-// CreateGroup uses the evidenced PUT protocol. A 201 may carry an operation ID;
-// 204 has no operation body. No read-back or propagation wait runs implicitly.
+// CreateGroup requires a bound nonempty PolicyName and preserves whitespace.
+// It submits the evidenced PUT once. A 201 may carry an operation ID; a 204
+// has no operation body. No read-back or propagation wait runs implicitly.
 func (s *Service) CreateGroup(ctx context.Context, groupID, policyType string, settings GroupSettings) (*OperationResult, *resty.Response, error) {
+	if err := s.ready(ctx); err != nil {
+		return nil, nil, err
+	}
+	if name, set := settings.PolicyName.Value(); !set || name == "" {
+		return nil, nil, ErrInput
+	}
 	return s.groupWrite(ctx, http.MethodPut, "New-CsGroupPolicyAssignment", groupID, policyType, &settings, http.StatusCreated)
 }
 

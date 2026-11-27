@@ -1,0 +1,57 @@
+{
+  "outcome": "passed",
+  "revision": "1d329448cd61c0204dff58c10a616ae246e8b279",
+  "execution": "local guarded offline Go test",
+  "session": "28417",
+  "selection": "^(TestUnit|Example)",
+  "arguments": [
+    "-p",
+    "1",
+    "-count=1"
+  ],
+  "packages": [
+    "./internal/contracttest",
+    "./msteams/teams_admin_api/meeting_branding",
+    "./msteams/teams_admin_api/policy_assignments",
+    "./msteams/teams_admin_api/policy_packages",
+    "./msteams/teams_admin_api/recording_messages",
+    "./msteams/teams_admin_api/teams_custom_banner_text",
+    "./tests/contract/policies"
+  ],
+  "commands": [
+    {
+      "name": "New-CsTeamsMeetingBackgroundImage",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "scope": "pure local constructor; no service or live qualification"
+    },
+    {
+      "name": "New-CsTeamsMeetingBrandingTheme",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "scope": "pure local constructor; no service or live qualification"
+    },
+    {
+      "name": "New-CsTeamsNdiAssuranceSlate",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "scope": "pure local constructor; no service or live qualification"
+    },
+    {
+      "name": "New-CsTeamsRecordingAndTranscriptionLocalizationCustomMessage",
+      "parameter_sets": [
+        "Identity"
+      ],
+      "scope": "pure local constructor; no service or live qualification"
+    }
+  ],
+  "source_audit": "docs/implementation/policies/pol90-current-test-audit.md#direct-compiled-model-and-local-builder-attribution-correction-2026-11-26",
+  "limitations": [
+    "No tenant requests or credentials",
+    "No live rendering, policy persistence, upload, assignment or convergence evidence",
+    "No other command is promoted by this execution record"
+  ]
+}

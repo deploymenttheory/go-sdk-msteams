@@ -23,3 +23,5 @@ jobs:
         run: python -m unittest discover -s tools/coverage/tests -v
       - name: Validate all capability evidence and ownership
         run: python tools/coverage/ledger.py
+      - name: Verify EXT command, parameter-set and nested candidate inventory
+        run: python tools/coverage/ext_report.py --check

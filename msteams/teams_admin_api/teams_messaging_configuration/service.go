@@ -105,7 +105,7 @@ func (s *Service) UpdateByIdentity(ctx context.Context, id string, input UpdateR
 	}
 	settings := Settings{ScalarSettings: input.ScalarSettings}
 	if input.FileTypeBlockList != nil {
-		settings.FileTypeBlockList, err = input.FileTypeBlockList.Apply(before.FileTypeBlockList)
+		settings.FileTypeBlockList, err = input.FileTypeBlockList.ApplyNullable(before.FileTypeBlockList)
 		if err != nil {
 			return result, read, err
 		}

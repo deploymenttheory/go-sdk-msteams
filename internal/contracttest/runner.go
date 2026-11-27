@@ -81,6 +81,10 @@ type Reply struct {
 	// or retained as live/captured evidence. Resource tests can admit reviewed
 	// vectors explicitly while preserving their unreviewed request boundaries.
 	ProtocolSources []string
+
+	// OnBodyClose is an optional synchronous test event, not a promise that
+	// typed decoding finished. It fires once and is excluded from JSON reports.
+	OnBodyClose func() `json:"-"`
 }
 
 // Exchange describes one ordered HTTP attempt, including discovery or read-back.
@@ -379,8 +383,27 @@ func (h *harness) RoundTrip(request *http.Request) (*http.Response, error) {
 	step := h.steps[index]
 	prefix := "request[" + strconv.Itoa(index) + "]"
 	h.differences = append(h.differences, compareRequest(step.Request, request, prefix)...)
+	body := io.NopCloser(strings.NewReader(string(step.Reply.Body)))
+	if step.Reply.OnBodyClose != nil {
+		body = &closeHookBody{ReadCloser: body, onClose: step.Reply.OnBodyClose}
+	}
 	return &http.Response{StatusCode: step.Reply.Status, Header: step.Reply.Headers.Clone(),
-		Body: io.NopCloser(strings.NewReader(string(step.Reply.Body))), Request: request}, nil
+		Body: body, Request: request}, nil
+}
+
+type closeHookBody struct {
+	io.ReadCloser
+	once    sync.Once
+	onClose func()
+	err     error
+}
+
+func (b *closeHookBody) Close() error {
+	b.once.Do(func() {
+		b.err = b.ReadCloser.Close()
+		b.onClose()
+	})
+	return b.err
 }
 
 func compareRequest(want WireRequest, got *http.Request, prefix string) []Difference {

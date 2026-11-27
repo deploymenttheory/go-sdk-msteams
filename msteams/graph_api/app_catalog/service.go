@@ -68,25 +68,56 @@ func (o ListOptions) Filter() string {
 	return strings.Join(clauses, " and ")
 }
 
-func decode(data []byte) (client.PageContent[TeamsApp], error) {
-	return client.DecodeCollection[TeamsApp](data, "value", "@odata.nextLink")
+// appCollection reproduces JsonConvert's collection reuse for repeated value
+// aliases: append arrays in wire order, null resets, a later array starts anew.
+type appCollection struct{ items []*TeamsApp }
+
+func (v *appCollection) UnmarshalJSON(raw []byte) error {
+	raw = bytes.TrimSpace(raw)
+	if bytes.Equal(raw, []byte("null")) {
+		v.items = nil
+		return nil
+	}
+	var items []*TeamsApp
+	if len(raw) == 0 || raw[0] != '[' || json.Unmarshal(raw, &items) != nil {
+		return client.ErrDecode
+	}
+	if v.items == nil {
+		v.items = make([]*TeamsApp, 0, len(items))
+	}
+	v.items = append(v.items, items...)
+	return nil
+}
+
+func decode(data []byte) (client.PageContent[*TeamsApp], error) {
+	var envelope struct {
+		Items appCollection `json:"value"`
+		Next  coercedString `json:"@odata.nextLink"`
+	}
+	var result client.PageContent[*TeamsApp]
+	if json.Unmarshal(data, &envelope) != nil {
+		return result, client.ErrDecode
+	}
+	if envelope.Items.items == nil {
+		return result, client.ErrDecode
+	}
+	result.Items = envelope.Items.items
+	if envelope.Next.value != nil && strings.TrimSpace(*envelope.Next.value) != "" {
+		result.Next = *envelope.Next.value
+	}
+	return result, nil
 }
 
 // NewPager builds a lazy Get-TeamsApp traversal following @odata.nextLink.
-func (s *Service) NewPager(options ListOptions) (*client.Pager[TeamsApp], error) {
+func (s *Service) NewPager(options ListOptions) (*client.Pager[*TeamsApp], error) {
 	if err := s.local(); err != nil {
 		return nil, err
 	}
-	for _, value := range []string{options.ID, options.ExternalID, options.DisplayName, options.DistributionMethod} {
-		if strings.ContainsFunc(value, unicode.IsControl) {
-			return nil, ErrInput
-		}
-	}
 	bounds := options.Paging
-	if bounds.Style != 0 && bounds.Style != client.LinkPaging || bounds.Parameter != "" || bounds.ExpectedStatus != 0 && bounds.ExpectedStatus != http.StatusOK {
+	if bounds.Style != 0 && bounds.Style != client.LinkPaging || bounds.Parameter != "" {
 		return nil, client.ErrPagination
 	}
-	bounds.Style, bounds.ExpectedStatus = client.LinkPaging, http.StatusOK
+	bounds.Style = client.LinkPaging
 	req := client.Request{Method: http.MethodGet, Path: path(), Replay: client.ReplaySafe, Header: headers()}
 	if filter := options.Filter(); filter != "" {
 		req.Query = url.Values{"$filter": {filter}}
@@ -96,36 +127,29 @@ func (s *Service) NewPager(options ListOptions) (*client.Pager[TeamsApp], error)
 
 // List is Get-TeamsApp: every page of the filtered catalog. The result keeps
 // partial items and the last response when traversal fails.
-func (s *Service) List(ctx context.Context, options ListOptions) (client.ListResult[TeamsApp], error) {
+func (s *Service) List(ctx context.Context, options ListOptions) (client.ListResult[*TeamsApp], error) {
 	if err := s.ready(ctx); err != nil {
-		return client.ListResult[TeamsApp]{}, err
+		return client.ListResult[*TeamsApp]{}, err
 	}
 	pager, err := s.NewPager(options)
 	if err != nil {
-		return client.ListResult[TeamsApp]{}, err
+		return client.ListResult[*TeamsApp]{}, err
 	}
 	return pager.Collect(ctx)
 }
 
-func (s *Service) upload(ctx context.Context, method string, segments []string, pkg []byte, statuses ...int) (*resty.Response, error) {
-	if len(pkg) == 0 {
+func (s *Service) upload(ctx context.Context, method string, segments []string, pkg []byte) (*resty.Response, error) {
+	if pkg == nil {
 		return nil, ErrInput
 	}
 	req := client.Request{Method: method, Path: path(segments...), Header: headers(), Replay: client.ReplayNever}
-	response, err := s.scope.Upload(ctx, req, io.NopCloser(bytes.NewReader(pkg)), zipType, int64(len(pkg)), nil)
-	if err != nil {
-		return response, err
-	}
-	for _, status := range statuses {
-		if response.StatusCode() == status {
-			return response, nil
-		}
-	}
-	return response, ErrResponse
+	return s.scope.Upload(ctx, req, io.NopCloser(bytes.NewReader(pkg)), zipType, int64(max(1, len(pkg))), nil)
 }
 
 // Create is New-TeamsApp: it uploads an app package to the organization
-// catalog and returns the created teamsApp (201). DistributionMethod must be
+// catalog and returns the nullable source teamsApp from any 2xx. An accepted
+// empty/null response retains the receipt without inventing an identity.
+// DistributionMethod must be
 // "organization" in any letter case; other values fail locally, as in the
 // module. Uploads are never retried; reconcile a lost response with List.
 func (s *Service) Create(ctx context.Context, value CreateRequest) (*TeamsApp, *resty.Response, error) {
@@ -135,20 +159,23 @@ func (s *Service) Create(ctx context.Context, value CreateRequest) (*TeamsApp, *
 	if !strings.EqualFold(value.DistributionMethod, OrganizationDistribution) {
 		return nil, nil, ErrInput
 	}
-	response, err := s.upload(ctx, http.MethodPost, nil, value.Package, http.StatusCreated, http.StatusOK)
+	response, err := s.upload(ctx, http.MethodPost, nil, value.Package)
 	if err != nil {
 		return nil, response, err
 	}
-	var app TeamsApp
+	if len(bytes.TrimSpace(response.Body())) == 0 {
+		return nil, response, nil
+	}
+	var app *TeamsApp
 	if json.Unmarshal(response.Body(), &app) != nil {
 		return nil, response, client.ErrDecode
 	}
-	return &app, response, nil
+	return app, response, nil
 }
 
 // UpdateByID is Set-TeamsApp: it PUTs a new app package to
 // /appCatalogs/teamsApps/{id}. The module accepts any 2xx and reads no body;
-// declared successes are 200, 201 and 204. Never retried.
+// every 2xx is accepted. Never retried.
 func (s *Service) UpdateByID(ctx context.Context, id string, pkg []byte) (*resty.Response, error) {
 	if err := s.ready(ctx); err != nil {
 		return nil, err
@@ -156,10 +183,10 @@ func (s *Service) UpdateByID(ctx context.Context, id string, pkg []byte) (*resty
 	if !validID(id) {
 		return nil, ErrInput
 	}
-	return s.upload(ctx, http.MethodPut, []string{id}, pkg, http.StatusOK, http.StatusCreated, http.StatusNoContent)
+	return s.upload(ctx, http.MethodPut, []string{id}, pkg)
 }
 
-// DeleteByID is Remove-TeamsApp (204). It is not replayed automatically.
+// DeleteByID is Remove-TeamsApp: any 2xx succeeds. It is not replayed automatically.
 func (s *Service) DeleteByID(ctx context.Context, id string) (*resty.Response, error) {
 	if err := s.ready(ctx); err != nil {
 		return nil, err
@@ -170,9 +197,6 @@ func (s *Service) DeleteByID(ctx context.Context, id string) (*resty.Response, e
 	response, err := s.scope.Do(ctx, client.Request{Method: http.MethodDelete, Path: path(id), Header: headers()}, nil)
 	if err != nil {
 		return response, err
-	}
-	if response.StatusCode() != http.StatusNoContent {
-		return response, ErrResponse
 	}
 	return response, nil
 }

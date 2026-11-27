@@ -40,7 +40,7 @@ func TestUnitGPARejectsInvalidInputBeforeCredentialAcquisition(t *testing.T) {
 			case "authority":
 				input.Authority = ""
 			case "type":
-				input.PolicyType = " "
+				input.PolicyType = ""
 			case "name":
 				input.PolicyName = ""
 			case "group":

@@ -47,7 +47,7 @@ func powerShellOutcome(t *testing.T, ctx context.Context, action string) string 
 }
 
 // TestAccCloudCallDataConnectionAuthorizationDenied reads the tenant's cloud
-// call data connection. App-only Teams Administrator credentials are denied;
+// returned cloud call data connections. App-only Teams Administrator credentials are denied;
 // a successful read (which returns a secret token) needs separate
 // qualification. It never creates a connection.
 func TestAccCloudCallDataConnectionAuthorizationDenied(t *testing.T) {
@@ -55,9 +55,9 @@ func TestAccCloudCallDataConnectionAuthorizationDenied(t *testing.T) {
 	sdk, _, _ := labkit.SDKClient(t)
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
-	value, response, err := sdk.TeamsAdminAPI.CloudCallData.Get(ctx)
+	values, response, err := sdk.TeamsAdminAPI.CloudCallData.List(ctx)
 	labkit.LogAccessResponse(t, response, err)
-	if value != nil || response == nil || response.StatusCode() != 403 || !errors.Is(err, auth.ErrForbidden) {
+	if values != nil || response == nil || response.StatusCode() != 403 || !errors.Is(err, auth.ErrForbidden) {
 		t.Fatal("expected cloud call data authorization denial changed; successful reads need separate qualification")
 	}
 	labkit.WriteResponseFixture(t, "cloud_call_data", "get", response, nil)
@@ -73,18 +73,18 @@ func TestAccCloudCallDataConnectionAuthorizationDenied(t *testing.T) {
 // TestAccCloudCallDataConnectionCreateOutcome sends the tenant singleton
 // create (New-CsCloudCallDataConnection), approved for the lab even though
 // the connection cannot be removed. App-only Teams Administrator credentials
-// are denied with HTTP 403 and the tenant is unchanged. The test is
-// idempotent: if the lab identity ever gains the right, a create that returns
-// the connection token is also accepted, and later runs observe the same.
+// are denied with HTTP 403 and the tenant is unchanged. The test
+// records the authorized denial or token-bearing returned models. Client source does
+// not establish server idempotence, ownership or safe replay after ambiguity.
 func TestAccCloudCallDataConnectionCreateOutcome(t *testing.T) {
 	cfg := labkit.ReadOnlyEnabled(t)
 	sdk, _, _ := labkit.SDKClient(t)
 	ctx, cancel := context.WithTimeout(t.Context(), cfg.Timeout)
 	defer cancel()
-	value, response, err := sdk.TeamsAdminAPI.CloudCallData.Create(ctx)
+	result, response, err := sdk.TeamsAdminAPI.CloudCallData.CreateWithResult(ctx)
 	labkit.LogAccessResponse(t, response, err)
 	switch {
-	case response != nil && response.StatusCode() == 403 && value == nil && errors.Is(err, auth.ErrForbidden):
+	case response != nil && response.StatusCode() == 403 && result != nil && result.Returned == nil && errors.Is(err, auth.ErrForbidden):
 		labkit.WriteResponseFixture(t, "cloud_call_data", "create", response, nil)
 		if labkit.OracleEnabled(t) {
 			if powerShellOutcome(t, ctx, "new") != "forbidden" {
@@ -93,8 +93,17 @@ func TestAccCloudCallDataConnectionCreateOutcome(t *testing.T) {
 			t.Log("PowerShell 8.1.0 / Go cloud call data create parity: passed")
 		}
 		t.Log("confirmed create authorization denial: HTTP 403 Forbidden")
-	case err == nil && value != nil && value.Token != nil && *value.Token != "":
-		t.Log("cloud call data connection create returned a token; the tenant singleton exists")
+	case err == nil && response != nil && response.StatusCode() == 200 && result != nil:
+		tokenBearing := 0
+		for _, value := range result.Returned {
+			if value != nil && value.Token != nil && *value.Token != "" {
+				tokenBearing++
+			}
+		}
+		if tokenBearing == 0 {
+			t.Fatal("accepted create returned no token-bearing model; investigate the retained receipt before replay")
+		}
+		t.Logf("modern create returned %d rows (%d token-bearing); ownership, persistence and idempotence remain unqualified", len(result.Returned), tokenBearing)
 	default:
 		t.Fatal("cloud call data create outcome changed; neither the observed denial nor a token-bearing connection")
 	}

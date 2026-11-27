@@ -47,16 +47,11 @@ func TestUnitExternalAccessTypedProviderDispatch(t *testing.T) {
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
 			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{exchange(f)}}
-			if f.Request.FailureType != nil {
-				if f.Status == 403 {
-					c.Want.Error = auth.ErrForbidden
-				} else {
-					c.Want.Error = client.ErrDecode
-				}
+			// Retained rejected-wire vectors do not exercise result decoding.
+			if f.Status != 400 || f.Response != "" {
+				t.Fatal("rejected-wire vector unexpectedly contains a response contract")
 			}
-			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			}
+			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				s := sdk.TeamsAdminAPI.ExternalAccessPolicies
 				if f.Name == "list" || f.Name == "list-envelope" {

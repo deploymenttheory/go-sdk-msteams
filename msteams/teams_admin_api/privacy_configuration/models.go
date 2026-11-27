@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policyrp"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	"github.com/go-resty/resty/v2"
 )
@@ -22,12 +23,29 @@ type Configuration struct {
 }
 
 func (v *Configuration) UnmarshalJSON(raw []byte) error {
-	type plain Configuration
-	var value plain
-	if json.Unmarshal(raw, &value) != nil || json.Unmarshal(raw, &value.RawFields) != nil || value.RawFields == nil {
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(raw, &fields) != nil || fields == nil {
 		return client.ErrDecode
 	}
-	*v = Configuration(value)
+	var wire struct {
+		Identity                     policyrp.ReadString `json:"Identity"`
+		EnablePrivacyMode            policyrp.ReadBool   `json:"EnablePrivacyMode"`
+		AutoInitiateContacts         policyrp.ReadBool   `json:"AutoInitiateContacts"`
+		PublishLocationDataDefault   policyrp.ReadBool   `json:"PublishLocationDataDefault"`
+		DisplayPublishedPhotoDefault policyrp.ReadBool   `json:"DisplayPublishedPhotoDefault"`
+	}
+	if json.Unmarshal(raw, &wire) != nil {
+		return client.ErrDecode
+	}
+	next := Configuration{
+		Identity:                     wire.Identity.Value,
+		EnablePrivacyMode:            wire.EnablePrivacyMode.Value,
+		AutoInitiateContacts:         wire.AutoInitiateContacts.Value,
+		PublishLocationDataDefault:   wire.PublishLocationDataDefault.Value,
+		DisplayPublishedPhotoDefault: wire.DisplayPublishedPhotoDefault.Value,
+		RawFields:                    fields,
+	}
+	*v = next
 	return nil
 }
 func (v Configuration) MarshalJSON() ([]byte, error) {

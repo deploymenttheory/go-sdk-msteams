@@ -38,10 +38,10 @@ func TestUnitPrivacyConfigurationRetainsAllNullableSettingsAndFutureFields(t *te
 	if json.Unmarshal([]byte(`{"Identity":"Global"}`), &missing) != nil || len(missing.RawFields) != 1 {
 		t.Fatal("missing Boolean fields were materialized")
 	}
-	for _, raw := range []string{`[]`, `"Global"`, `{"EnablePrivacyMode":0}`, `{"AutoInitiateContacts":{}}`} {
+	for _, raw := range []string{`[]`, `"Global"`, `{"EnablePrivacyMode":"yes"}`, `{"AutoInitiateContacts":{}}`} {
 		var got resource.Configuration
 		if json.Unmarshal([]byte(raw), &got) == nil {
-			t.Fatal("non-Boolean/object model accepted")
+			t.Fatal("source-rejected scalar/object model accepted")
 		}
 	}
 }

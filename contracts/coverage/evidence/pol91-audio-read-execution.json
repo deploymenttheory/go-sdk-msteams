@@ -1,0 +1,34 @@
+{
+  "scope": "Audio resource-local guard, canonical positive branches and own read coercion/defaults; execution only",
+  "qualification": "pending full source review",
+  "revision": "8afc4aec0123d92138a4ebe6359143c0c5dd152b",
+  "session": "99815",
+  "packages": [
+    "./msteams/teams_admin_api/audio_conferencing_prompts",
+    "./tests/integration/lab/audio_conferencing_prompts"
+  ],
+  "selection": "TestUnit|Example",
+  "arguments": [
+    "-json",
+    "-p",
+    "1",
+    "-count=1"
+  ],
+  "go_version": "1.27.4",
+  "gomaxprocs": 2,
+  "admission_free_gib": 30.36,
+  "runtime_floor_gib": 14,
+  "outcome": "passed",
+  "pass_events": 103,
+  "failure_events": 0,
+  "skip_events": 0,
+  "raw_runner_sha256": "1f099a1ad812ef4e173706f6fb8360bfc325577256ba7e675d8b3bb483cd6521",
+  "source_vectors": "msteams/teams_admin_api/audio_conferencing_prompts/testdata/primary_read_vectors.json",
+  "limits": [
+    "No TestAcc or live mutation",
+    "No race/full-module sweep",
+    "Canonical earlier20189 at e62c819 is separate;51183 fixture provenance failure remains recorded",
+    "Only non-Go root probe files were outside frozen snapshot; selected/shared input diff verified before releasing hold",
+    "All qualification/live states unchanged"
+  ]
+}

@@ -62,7 +62,8 @@ func (v Configuration) GoString() string { return v.String() }
 // UpdateRequest maps Set-CsTeamsMeetingBroadcastConfiguration. Every field is
 // optional: nil omits the property, a non-nil value (including false or "")
 // binds it. Public 8.1.0 declares a non-nullable Boolean and plain strings, so
-// no JSON null is sent. SdnAPIToken is write-only and never printed.
+// no JSON null is sent. SdnAPIToken is a provider credential that may also appear
+// in exposed sensitive reads; String/GoString never print it.
 type UpdateRequest struct {
 	AllowSdnProviderForBroadcastMeeting *bool
 	SupportURL                          *string

@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "outcome": "passed",
+  "revision": "4338e4b452341441d133d91a30d90f297eece0d2",
+  "command": "Get-CsTeamsSettingsCustomApp",
+  "parameter_sets": [
+    "__AllParameterSets"
+  ],
+  "scope": "Native direct AutoRest ConfigAPI public flag projection with shared native context/auth/transport/control mappings. Full-document Get is a separately documented enhancement; Set and tenant/live qualification are not promoted.",
+  "source_review": {
+    "parameter_set_metadata": "contracts/powershell/8.1.0/runtime.json#/commands/152/parameter_sets/0",
+    "source_evidence": [
+      "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json",
+      "docs/implementation/ext/evidence/custom-app-get-scalar-projection.json",
+      "docs/implementation/ext/app-catalog-contract-notes.md"
+    ],
+    "dispatch": "Direct public/custom/internal AutoRest mapping, no legacy flighting; configured TeamsGA/TeamsPreview/SelfHost exports.",
+    "request": "No-body GET /Teams.MiddletierService/tenantWideAppsSettingsGlobal, ConfigAPI audience 48ac35b8-9aa8-4d74-927d-1f4a14a0b239, source Get cmdlet metadata, expected 200.",
+    "output": "Exact-key nullable boolean public projection; false for missing/null/canonical malformed and ignored wrong-case values. Source-compatible public path cannot be blocked by enhanced document decoding.",
+    "errors": "Retained response and typed failure for 403, unsupported statuses, malformed/non-object roots; cancellation prevents credential acquisition. A false value with an error is not a disabled-setting success.",
+    "common_controls": {
+      "HttpPipelinePrepend": "Native client HTTP transport/middleware injection, exercised with the synthetic bound transport; no PowerShell hook execution.",
+      "WhatIf/Confirm": "Caller owns whether to invoke the read; no extra approval flag or request.",
+      "logging_output_error_preferences": "Native client logging, Go return values/errors and caller handling; immutable common ledger mappings retained."
+    },
+    "native_enhancements": "Strict complete-document Get, service camelCase branding/appSettingsList/raw fields and typed errors remain separate from the public projection; no automatic document mutation."
+  },
+  "execution": {
+    "kind": "offline full package execution",
+    "argv": [
+      "go",
+      "test",
+      "-json",
+      "-p",
+      "1",
+      "-count=1",
+      "./msteams/teams_admin_api/custom_app_settings",
+      "-run",
+      "TestUnit|Example"
+    ],
+    "go_version": "go1.27.4 darwin/arm64",
+    "started_at": "2026-11-27T01:48:47.022766Z",
+    "completed_at": "2026-11-27T01:48:47.346371Z",
+    "exit_code": 0,
+    "package": "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/custom_app_settings",
+    "tests_passed": [
+      "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding",
+      "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding/absent",
+      "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding/canonical-malformed",
+      "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding/false",
+      "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding/null",
+      "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding/true",
+      "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding/unrelated-extension-fields",
+      "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding/wrong-case-malformed",
+      "TestUnitCustomAppPublicProjectionIsIndependentOfEnhancedDocumentDecoding/wrong-case-number",
+      "TestUnitCustomAppPublicProjectionPreservesFailuresInsteadOfReturningDisabled",
+      "TestUnitCustomAppSettingsFailuresStayTyped",
+      "TestUnitCustomAppSettingsGetDecodesTheLabShape",
+      "TestUnitCustomAppSettingsNilContextAndServiceAreRejected",
+      "TestUnitCustomAppSettingsProjectionReportsNullAsFalse",
+      "TestUnitCustomAppSettingsSetUsesTheModuleReadReplaceFlow",
+      "TestUnitCustomAppSettingsUpdateSendsTheGivenDocument"
+    ],
+    "tests_failed": [],
+    "tests_skipped": [],
+    "examples": "Compiled only; no example invokes a workflow during go test.",
+    "raw_go_json_sha256": "a2abf0e34db6883ef7a5ff64087ff3bfcf3af9bb98555bebce4fbd86f08aba15",
+    "fixture": "Existing sanitized real read body is replayed in enhanced Get and direct public projection; additional scalar/error replies are authored primary-source vectors, not tenant results."
+  },
+  "file_sha256": {
+    "contracts/powershell/8.1.0/runtime.json": "7acfc9d635da928a2cf3deb4ff6f660f239edb218581613708a27a74f48aa1d8",
+    "docs/implementation/ext/evidence/custom-app-get-scalar-projection.json": "21d2af13005ee40ef2d9ef1ea485cd0e3a7d9e8772fa4f20b156550ba641b9fa",
+    "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json": "50252961cfeb7da3096d53da382ccd47fcb7e80b33cb7c495b1cf46dd5795120",
+    "msteams/teams_admin_api/custom_app_settings/example_test.go": "0e3e0fda47bf7676c9a2c8d27e65ffb80a75f82d2299fb3b36d78cf3382cab5f",
+    "msteams/teams_admin_api/custom_app_settings/models.go": "c6cb99fb4580f735770a2f17bf6273fa1bfd9066ef43985ae45d0b1cbcc7b1e0",
+    "msteams/teams_admin_api/custom_app_settings/service.go": "aa9c24de2c9fdbba38ac76f0763cfb8d57df9e543260b855cba99a0b158e87f9",
+    "msteams/teams_admin_api/custom_app_settings/service_test.go": "8f8cc08996041a01bae2e3640d5026bb9e9af5d0de5feb4e10b34e9e85b5ab90",
+    "msteams/teams_admin_api/custom_app_settings/testdata/get.json": "07966182e056f5c297b1a3e884be8263bce19c81d98a6384414e5c42a7b5a02e"
+  },
+  "limits": [
+    "No new tenant or pinned management operation ran.",
+    "No Set body/persistence/live/authorization claim is derived from these tests.",
+    "Configured source profiles and inherited native authentication are not a claim of every cloud/credential combination being exercised."
+  ]
+}
