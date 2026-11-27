@@ -8,7 +8,7 @@ import (
 
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
@@ -16,37 +16,30 @@ const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/TenantFederationSettings"
 const getCommand = "Get-CsTenantFederationConfiguration"
 const setCommand = "Set-CsTenantFederationConfiguration"
-const source = "msteams/teams_admin_api/tenant_federation_configuration/testdata/get_global.json"
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	raw, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply string) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {"https://admin.example.invalid/"}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
 }
-func run(t *testing.T, c contracttest.Case) contracttest.Result {
+func run(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
 	if len(c.Steps) > 0 {
 		c.Want.Status = c.Steps[len(c.Steps)-1].Reply.Status
-	} else {
-		c.Scope = "local"
 	}
-	c.Family = "tenant_federation_configuration"
-	c.Source = source
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	r, err := contracttest.Run(t.Context(), c)
+
+	r, err := testutil.Run(t.Context(), c)
 	if err != nil || !r.Passed() {
 		t.Fatalf("configuration differs: %v %+v", err, r.Differences())
 	}

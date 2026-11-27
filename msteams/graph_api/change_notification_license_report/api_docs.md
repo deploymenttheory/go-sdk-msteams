@@ -51,7 +51,7 @@ operation and does not replace native rows with source diagnostic strings.
 The conditional compiled cmdlet has one Period set; it is commented preview in the
 root manifest. Native primitives and pure projection do not establish default-session
 export, supported app license access or successful tenant qualification. See the
-[primary/source evidence](../../../docs/implementation/ext/license-report-contract-notes.md).
+[unit tests](service_test.go).
 
 
 Graph [user](https://learn.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0)

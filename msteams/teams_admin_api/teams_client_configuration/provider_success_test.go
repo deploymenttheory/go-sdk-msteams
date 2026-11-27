@@ -7,7 +7,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -29,13 +29,13 @@ func TestUnitClientConfigurationPatchRetainsTypedSuccessAndMalformedReceipt(t *t
 		{name: "malformed-success", body: []byte(`{"Identity":"Global","AllowEmailIntoChannel":"invalid"}`), want: client.ErrDecode},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{
-				Name: tc.name, Source: "msteams/teams_admin_api/teams_client_configuration/provider_success_test.go",
-				Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}},
-				Steps: []contracttest.Exchange{compiledWire("PATCH", item, setCommand,
+			run(t, testutil.Case{
+				Name: tc.name,
+
+				Steps: []testutil.Exchange{compiledWire("PATCH", item, setCommand,
 					json.RawMessage(`{"Identity":"request-body-identity","AllowEmailIntoChannel":false,"RestrictedSenderList":null}`), 200, string(tc.body))},
-				Want: contracttest.Expected{Status: 200, Body: tc.body, Error: tc.want},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				Want: testutil.Expected{Status: 200, Body: tc.body, Error: tc.want},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					value, response, err := sdk.TeamsAdminAPI.TeamsClientConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{
 						Settings:     resource.Settings{AllowEmailIntoChannel: policy.Set(false), RestrictedSenderList: policy.Null[string]()},
 						BodyIdentity: policy.Set("request-body-identity"),
@@ -63,7 +63,7 @@ func TestUnitClientConfigurationPatchRetainsTypedSuccessAndMalformedReceipt(t *t
 							t.Fatal("typed response lost its complete received snapshot")
 						}
 					}
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				},
 			})
 		})

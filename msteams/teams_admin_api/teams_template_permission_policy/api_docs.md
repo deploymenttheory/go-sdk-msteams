@@ -44,4 +44,4 @@ filtering and other clouds remain separate qualification. Sources: pinned Core
 TeamsTemplatePermissionPolicy/HiddenTemplate/HiddenTemplates, Get/New/Set/Remove,
 PSListModifierHelper, BaseTpm, provider and nested bound-parameter resolver.
 [Microsoft reference](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/new-csteamstemplatepermissionpolicy?view=teams-ps)
-requires existing template IDs. See [qualification](../../../docs/implementation/policies/sip-template-lab-acceptance.md).
+requires existing template IDs. See [qualification](../../../docs/acceptance/sip-template-lab-acceptance.md).

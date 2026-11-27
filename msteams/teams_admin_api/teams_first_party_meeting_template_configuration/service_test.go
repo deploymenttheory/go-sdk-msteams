@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -22,32 +22,32 @@ const set = "Set-CsTeamsFirstPartyMeetingTemplateConfiguration"
 func TestUnitReadAndFiltersUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	raw := readResponseFixture(t, "get_global.json")
-	run(t, contracttest.Case{Name: "read", Mappings: []contracttest.Mapping{{Command: get, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", selected, get, nil, 200, string(raw))}, Want: contracttest.Expected{JSON: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "read", Steps: []testutil.Exchange{compiledWire("GET", selected, get, nil, 200, string(raw))}, Want: testutil.Expected{JSON: raw}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.GetByIdentity(ctx, "Global")
 		if e == nil && (v == nil || v.Identity == nil || *v.Identity != "Global" || len(v.TeamsMeetingTemplates) == 0) {
 			t.Fatal("typed first-party templates lost from the real response")
 		}
-		return contracttest.Observation{Value: v, Response: r, Err: e}
+		return testutil.Observation{Value: v, Response: r, Err: e}
 	}})
 	list := readResponseFixture(t, "list.json")
-	run(t, contracttest.Case{Name: "list", Mappings: []contracttest.Mapping{{Command: get, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, get, nil, 200, string(list))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "list", Steps: []testutil.Exchange{compiledWire("GET", collection, get, nil, 200, string(list))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.List(ctx)
 		if e == nil && (len(v) != 1 || v[0] == nil || v[0].Identity == nil || *v[0].Identity != "Global") {
 			t.Fatal("bare collection selection differs")
 		}
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 	for _, tc := range []struct {
 		name, pattern string
 		count         int
 	}{{"all", "*", 1}, {"identity", "Glo?al", 1}, {"case", "[gG]lobal", 1}, {"tag", "Glob*", 1}, {"missing", "missing", 0}} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: get, ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, get, nil, 200, string(list))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{compiledWire("GET", collection, get, nil, 200, string(list))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.ListFiltered(ctx, tc.pattern)
 				if e == nil && len(v) != tc.count {
 					t.Fatal("local filter selection differs")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -58,18 +58,18 @@ func TestUnitUpdateUsesAcceptancePreparationAndSparsePatch(t *testing.T) {
 	before := readResponseFixture(t, "get_global.json")
 	accepted := readResponseFixture(t, "update_204.body")
 	const updated = "SDK lab non-default updated description"
-	run(t, contracttest.Case{Name: "update", Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "update", Steps: []testutil.Exchange{
 		compiledWire("GET", selected, set, nil, 200, string(before)),
 		compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","Description":"`+updated+`"}`), 204, string(accepted)),
-	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{Description: policy.Set(updated)}})
 		if e == nil && (v == nil || v.Before == nil || v.Before.Description != nil || len(v.Before.TeamsMeetingTemplates) == 0 || v.ReadResponse == nil || v.ReadResponse.StatusCode() != 200 || !v.PatchInvoked || !v.HTTPAccepted) {
 			t.Fatal("update preparation and acceptance receipts lost")
 		}
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 	readback := readResponseFixture(t, "update_readback.json")
-	run(t, contracttest.Case{Name: "update-readback", Source: "msteams/teams_admin_api/teams_first_party_meeting_template_configuration/testdata/update_readback.json", Steps: []contracttest.Exchange{compiledWire("GET", selected, get, nil, 200, string(readback))}, Want: contracttest.Expected{JSON: readback}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "update-readback", Steps: []testutil.Exchange{compiledWire("GET", selected, get, nil, 200, string(readback))}, Want: testutil.Expected{JSON: readback}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.GetByIdentity(ctx, "Global")
 		var original resource.Configuration
 		if json.Unmarshal(before, &original) != nil {
@@ -78,7 +78,7 @@ func TestUnitUpdateUsesAcceptancePreparationAndSparsePatch(t *testing.T) {
 		if e == nil && (v == nil || v.Description == nil || *v.Description != updated || !jsonEqual(mustMarshal(t, v.TeamsMeetingTemplates), mustMarshal(t, original.TeamsMeetingTemplates))) {
 			t.Fatal("persisted Description or omitted template list differs")
 		}
-		return contracttest.Observation{Value: v, Response: r, Err: e}
+		return testutil.Observation{Value: v, Response: r, Err: e}
 	}})
 }
 
@@ -134,9 +134,9 @@ func TestUnitTemplateEditsUseTheActualTemplateList(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", selected, set, nil, 200, string(before)), compiledWire("PATCH", selected, set, body, 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{compiledWire("GET", selected, set, nil, 200, string(before)), compiledWire("PATCH", selected, set, body, 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{TeamsMeetingTemplates: tc.edit})
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -145,22 +145,22 @@ func TestUnitTemplateEditsUseTheActualTemplateList(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		run(t, contracttest.Case{Name: "bound-description", Steps: []contracttest.Exchange{compiledWire("GET", selected, set, nil, 200, string(before)), compiledWire("PATCH", selected, set, body, 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "bound-description", Steps: []testutil.Exchange{compiledWire("GET", selected, set, nil, 200, string(before)), compiledWire("PATCH", selected, set, body, 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{Description: policy.Set("")}, TeamsMeetingTemplates: resource.ClearTemplates()})
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
 	})
 }
 
 func TestUnitNullableSettingsAndControlsStayBound(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "nullable", Steps: []contracttest.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","Description":null,"Force":"False"}`), 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "nullable", Steps: []testutil.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","Description":null,"Force":"False"}`), 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{ScalarSettings: resource.ScalarSettings{Description: policy.Null[string]()}}, Controls: policy.Controls{Force: new(false)}})
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
-	run(t, contracttest.Case{Name: "patch-templates", Steps: []contracttest.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","TeamsMeetingTemplates":[],"Force":"True"}`), 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "patch-templates", Steps: []testutil.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","TeamsMeetingTemplates":[],"Force":"True"}`), 204, string(readResponseFixture(t, "update_204.body")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{TeamsMeetingTemplates: policy.Set[[]*resource.Template](nil)}, Controls: policy.Controls{Force: new(true)}})
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }
 
@@ -168,12 +168,12 @@ func TestUnitMalformedReadDoesNotSendAnUpdate(t *testing.T) {
 	t.Parallel()
 	for _, invalid := range []string{`null`, `[]`, `{"Description":{}}`, `{"TeamsMeetingTemplates":{}}`, `{"TeamsMeetingTemplates":[{"Name":null}]}`, `{"TeamsMeetingTemplates":[{"Name":"a","TeamsMeetingOptions":[{"Name":null}]}]}`} {
 		t.Run(fmt.Sprintf("shape-%x", invalid), func(t *testing.T) {
-			run(t, contracttest.Case{Name: "bad-read", Steps: []contracttest.Exchange{compiledWire("GET", selected, set, nil, 200, invalid)}, Want: contracttest.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "bad-read", Steps: []testutil.Exchange{compiledWire("GET", selected, set, nil, 200, invalid)}, Want: testutil.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{Description: policy.Set("x")}})
 				if v != nil && (v.PatchInvoked || v.HTTPAccepted) {
 					t.Fatal("malformed read triggered mutation")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -181,7 +181,7 @@ func TestUnitMalformedReadDoesNotSendAnUpdate(t *testing.T) {
 
 func TestUnitValidationAndCancellationMakeNoRequests(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsFirstPartyMeetingTemplateConfigurations
 		for _, id := range []string{"", " ", "scope/", "/missing", ".", "..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -224,7 +224,7 @@ func TestUnitValidationAndCancellationMakeNoRequests(t *testing.T) {
 				t.Fatal("uninitialized service accepted")
 			}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }
 

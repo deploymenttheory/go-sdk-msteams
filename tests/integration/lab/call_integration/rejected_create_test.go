@@ -8,8 +8,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	aa "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/auto_attendants"
@@ -94,14 +94,14 @@ func TestUnitRejectedCreateNeedsDeclaredFailureAndIndependentAbsence(t *testing.
 				}
 				listed = string(raw)
 			}
-			steps := []contracttest.Exchange{discovery(t),
+			steps := []testutil.Exchange{discovery(t),
 				exchange("POST", "/Teams.VoiceApps/auto-attendants", "New-CsAutoAttendant", `{"Name":"`+name+`","LanguageId":"en-US","TimeZoneId":"UTC","DefaultCallFlow":{"Id":"`+flowID+`"}}`, 400, `{"code":"100001","errorDetails":[]}`),
 				exchange("GET", path, "Get-CsAutoAttendant", "", 200, listed),
 			}
 			if scenario == "full-page-then-empty" {
 				steps = append(steps, exchange("GET", "/Teams.VoiceApps/auto-attendants?ExcludeContent=True&First=25&Skip=25&NameFilter="+name, "Get-CsAutoAttendant", "", 200, `{"AutoAttendants":[]}`))
 			}
-			result, err := contracttest.Run(t.Context(), contracttest.Case{Name: scenario, Family: "call_integration", Scope: "service", Source: "tests/integration/lab/call_integration/rejected_create_test.go", Steps: steps, Want: contracttest.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			result, err := testutil.Run(t.Context(), testutil.Case{Name: scenario, Steps: steps, Want: testutil.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.AutoAttendants
 				_, response, operationErr := service.Create(ctx, aa.Settings{Name: ptr(name), LanguageID: ptr("en-US"), TimeZoneID: ptr("UTC"), DefaultCallFlow: &aa.CallFlow{ID: ptr(flowID)}})
 				rejected := confirmedCreateRejection(response, operationErr)
@@ -113,7 +113,7 @@ func TestUnitRejectedCreateNeedsDeclaredFailureAndIndependentAbsence(t *testing.
 				if id != "" {
 					t.Fatal("rejected or ambiguous creation must not resolve an invented receipt")
 				}
-				return contracttest.Observation{Err: err}
+				return testutil.Observation{Err: err}
 			}})
 			if err != nil || !result.Passed() {
 				t.Fatalf("rejected-create cleanup differed: %v %+v", err, result.Differences())

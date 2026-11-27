@@ -48,7 +48,7 @@ resource error. Injected empty authorization/throttling/server errors separately
 check request contracts and replay safety for application/delegated sessions.
 They do not claim live delegated or assignment qualification.
 
-See [qualification details](../../../docs/implementation/policies/meeting-policy-lab-acceptance.md).
+See [qualification details](../../../docs/acceptance/meeting-policy-lab-acceptance.md).
 Issue #130 remains open: grant/clear persistence, effective behavior, remaining
 parameter scenarios, delegated authentication and other clouds still require
 qualification. No tenant-wide defaults or existing user/group assignments were

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	cas "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/custom_app_settings"
@@ -76,7 +76,7 @@ func TestUnitPreparedSourceSet(t *testing.T) {
 				before = []byte(`{"LobLogo":"private-logo","isAppsEnabled":false,"appAccessRequestConfig":{"future":"drop"},"isSideloadedAppsInteractionEnabled":true}`)
 				body = json.RawMessage(strings.Replace(string(body), `"isSideloadedAppsInteractionEnabled":true`, `"isSideloadedAppsInteractionEnabled":false`, 1))
 			}
-			run(t, contracttest.Case{Name: "prepared-source-set-" + item.name, Mappings: mapping(setCommand), Want: contracttest.Expected{Status: status}, Steps: []contracttest.Exchange{discovery(t), wire("GET", "Get-CsTeamsSettingsCustomApp_Get", nil, 200, before), wire("PUT", "Set-CsTeamsSettingsCustomApp_SetExpanded", body, status, nil)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "prepared-source-set-" + item.name, Want: testutil.Expected{Status: status}, Steps: []testutil.Exchange{discovery(t), wire("GET", "Get-CsTeamsSettingsCustomApp_Get", nil, 200, before), wire("PUT", "Set-CsTeamsSettingsCustomApp_SetExpanded", body, status, nil)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.CustomAppSettings
 				prepared, read, err := service.PrepareSideloadedAppsInteraction(ctx, item.enabled)
 				if err != nil || prepared == nil || read == nil {
@@ -112,7 +112,7 @@ func TestUnitPreparedSourceSet(t *testing.T) {
 				if strings.Contains(fmt.Sprintf("%v %#v", result, result), "private-logo") {
 					t.Fatal("result formatting exposes data")
 				}
-				return contracttest.Observation{Response: response}
+				return testutil.Observation{Response: response}
 			}})
 		})
 	}
@@ -125,12 +125,12 @@ func TestUnitSourceSetPrepareFailure(t *testing.T) {
 		body   string
 	}{{"denied", 403, `{}`}, {"null", 200, `null`}, {"array", 200, `[]`}} {
 		t.Run(item.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "prepare-failure-" + item.name, Mappings: mapping(setCommand), Want: contracttest.Expected{Status: item.status}, Steps: []contracttest.Exchange{discovery(t), wire("GET", "Get-CsTeamsSettingsCustomApp_Get", nil, item.status, []byte(item.body))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "prepare-failure-" + item.name, Want: testutil.Expected{Status: item.status}, Steps: []testutil.Exchange{discovery(t), wire("GET", "Get-CsTeamsSettingsCustomApp_Get", nil, item.status, []byte(item.body))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				prepared, response, err := sdk.TeamsAdminAPI.CustomAppSettings.PrepareSideloadedAppsInteraction(ctx, true)
 				if prepared != nil || response == nil || err == nil {
 					t.Fatal("failed prepare produced request or lost receipt")
 				}
-				return contracttest.Observation{Response: response}
+				return testutil.Observation{Response: response}
 			}})
 		})
 	}

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	ti "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_identity"
@@ -121,7 +121,7 @@ func TestUnitTenantWireReadRetainsMixedMapsAndMalformedReceipt(t *testing.T) {
 		{"duplicate", []byte(`{"displayName":"a","displayName":"b"}`), client.ErrDecode},
 	} {
 		t.Run(item.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "tenant-wire-" + item.name, Source: "msteams/teams_admin_api/tenant_identity/testdata/pinned-tenant-wire.json", Mappings: mapping("Get-CsTenant", "Identity"), Steps: []contracttest.Exchange{discovery(t), wire("GET", "/Teams.Tenant/tenants?defaultpropertyset=Extended", "Get-CsTenantObou_Get", nil, 200, item.reply)}, Want: contracttest.Expected{Status: 200, Body: item.reply, Error: item.want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "tenant-wire-" + item.name, Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.Tenant/tenants?defaultpropertyset=Extended", "Get-CsTenantObou_Get", nil, 200, item.reply)}, Want: testutil.Expected{Status: 200, Body: item.reply, Error: item.want}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.TenantIdentity.GetTenant(ctx)
 				if response == nil || string(response.Body()) != string(item.reply) {
 					t.Fatal("accepted receipt lost")
@@ -132,7 +132,7 @@ func TestUnitTenantWireReadRetainsMixedMapsAndMalformedReceipt(t *testing.T) {
 				if err != nil && value != nil {
 					t.Fatal("decode failure leaked a partial model")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 		})
 	}
@@ -142,18 +142,17 @@ func TestUnitTenantModernHeaderRetainsDenialReceipt(t *testing.T) {
 	// Source-authored transport control, not a new tenant capture. The expected
 	// private header comes from tenant-modern-handoff-source.json.
 	body := []byte(`{"error":{"code":"Unauthorized"}}`)
-	run(t, contracttest.Case{
-		Name:     "tenant-modern-denial",
-		Source:   "msteams/teams_admin_api/tenant_identity/tenant_wire_test.go",
-		Mappings: mapping("Get-CsTenant", "Identity"),
-		Steps:    []contracttest.Exchange{discovery(t), wire("GET", "/Teams.Tenant/tenants?defaultpropertyset=Extended", "Get-CsTenantObou_Get", nil, 401, body)},
-		Want:     contracttest.Expected{Status: 401, Body: body, APIError: apiError(401, body)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{
+		Name: "tenant-modern-denial",
+
+		Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.Tenant/tenants?defaultpropertyset=Extended", "Get-CsTenantObou_Get", nil, 401, body)},
+		Want:  testutil.Expected{Status: 401, Body: body, APIError: apiError(401, body)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.TenantIdentity.GetTenant(ctx)
 			if value != nil || response == nil || string(response.Body()) != string(body) {
 				t.Fatal("denied Modern tenant read lost its receipt or invented a model")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		},
 	})
 }

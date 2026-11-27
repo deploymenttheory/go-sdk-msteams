@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -33,9 +33,9 @@ func TestUnitAuthorizationFailureRetainsRealEnvelopeWithoutReplay(t *testing.T) 
 	if envelope.Code != "" {
 		codes = []string{envelope.Code}
 	}
-	c := contracttest.Case{Name: "denied", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json", Steps: []contracttest.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","CustomFooterText":null}`), 403, string(raw))}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	c := testutil.Case{Name: "denied", Steps: []testutil.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","CustomFooterText":null}`), 403, string(raw))}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, r, e := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{ScalarSettings: resource.ScalarSettings{CustomFooterText: policy.Null[string]()}}})
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}}
 	run(t, c)
 }
@@ -45,20 +45,20 @@ func TestUnitAuthorizationFailureRetainsRealEnvelopeWithoutReplay(t *testing.T) 
 func TestUnitMalformedResponsesFailDecoding(t *testing.T) {
 	t.Parallel()
 	for _, reply := range []string{`{`, `[]`, `{"PublishedEntraAuthenticationContexts":{}}`, `{"ClientVideoPort":"x"}`} {
-		run(t, contracttest.Case{Name: "malformed-get", Source: "msteams/teams_admin_api/teams_meeting_configuration/errors_test.go", Steps: []contracttest.Exchange{compiledWire("GET", selected, get, nil, 200, reply)}, Want: contracttest.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "malformed-get", Steps: []testutil.Exchange{compiledWire("GET", selected, get, nil, 200, reply)}, Want: testutil.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, r, e := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.GetByIdentity(ctx, "Global")
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
-		run(t, contracttest.Case{Name: "malformed-preparation", Source: "msteams/teams_admin_api/teams_meeting_configuration/errors_test.go", Steps: []contracttest.Exchange{compiledWire("GET", selected, set, nil, 200, reply)}, Want: contracttest.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "malformed-preparation", Steps: []testutil.Exchange{compiledWire("GET", selected, set, nil, 200, reply)}, Want: testutil.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, e := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{EnableQoS: policy.Set(true)}})
 			if v == nil || v.PatchInvoked || v.HTTPAccepted {
 				t.Fatal("failed preparation reached the mutation")
 			}
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
 	}
-	run(t, contracttest.Case{Name: "malformed-list", Source: "msteams/teams_admin_api/teams_meeting_configuration/errors_test.go", Steps: []contracttest.Exchange{compiledWire("GET", collection, get, nil, 200, `{}`)}, Want: contracttest.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "malformed-list", Steps: []testutil.Exchange{compiledWire("GET", collection, get, nil, 200, `{}`)}, Want: testutil.Expected{Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, r, e := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.List(ctx)
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }

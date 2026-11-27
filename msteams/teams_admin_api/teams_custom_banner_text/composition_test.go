@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -27,11 +27,11 @@ func TestUnitBannerUpdatePreparationFailures(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", item, "Set-CsTeamsCustomBannerText", nil, tc.read, tc.body)}
+			steps := []testutil.Exchange{wire("GET", item, "Set-CsTeamsCustomBannerText", nil, tc.read, tc.body)}
 			if tc.patch != 0 {
 				steps = append(steps, wire("PATCH", item, "Set-CsTeamsCustomBannerText", json.RawMessage(`{}`), tc.patch, ""))
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/teams_custom_banner_text/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.UpdateByID(ctx, relative, resource.UpdateRequest{Settings: resource.Settings{Description: policy.Null[string]()}})
 				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
 					t.Error("failed update lost preparation state or invented acceptance")
@@ -46,7 +46,7 @@ func TestUnitBannerUpdatePreparationFailures(t *testing.T) {
 						t.Error("failure lost its HTTP status")
 					}
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}
@@ -54,11 +54,11 @@ func TestUnitBannerUpdatePreparationFailures(t *testing.T) {
 
 func TestUnitBannerTextStopsOnPreparationDenial(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "preparation-denial", Source: "msteams/teams_admin_api/teams_custom_banner_text/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "Set-CsTeamsCustomBannerText", nil, 403, "")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "preparation-denial", Steps: []testutil.Exchange{wire("GET", item, "Set-CsTeamsCustomBannerText", nil, 403, "")}, Want: testutil.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.UpdateByID(ctx, relative, resource.UpdateRequest{Settings: resource.Settings{Text: policy.Set("")}})
 		if v == nil || v.ReadResponse == nil || v.Before != nil || v.PatchInvoked || v.HTTPAccepted {
 			t.Error("failed preparation invented a snapshot, patch or acceptance")
 		}
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }

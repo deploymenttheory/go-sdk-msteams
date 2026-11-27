@@ -1,0 +1,356 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationEnabled",
+      "kind": "boolean",
+      "input_json": "{\"AudioFileValidationEnabled\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":true}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":false}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":0}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":37}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":9007199254740993}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":1.20}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":1E+03}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":-0}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":\"\"}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":\"text\"}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "string",
+      "input_json": "{\"AudioFileValidationUri\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

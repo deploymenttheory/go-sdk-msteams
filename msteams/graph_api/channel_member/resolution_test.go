@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -36,18 +36,18 @@ func TestUnitResolveByUserRequiresCompleteUnambiguousReturnedIdentity(t *testing
 		{name: "incomplete-match", body: `{"value":[` + first + `],"@odata.nextLink":"` + next + `"}`, limits: client.PagingOptions{MaxPages: 1}, err: client.ErrPageLimit},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", auth.GraphAudience, path, "", 200, tc.body)}
+			steps := []testutil.Exchange{wire("GET", auth.GraphAudience, path, "", 200, tc.body)}
 			if tc.second {
 				steps = append(steps, wire("GET", auth.GraphAudience, path+"?$skiptoken=next", "", 200, `{"value":[`+second+`]}`))
 			}
-			nativeCase(t, contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			nativeCase(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.GraphAPI.ChannelMembers.ResolveByUser(ctx, teamID, channelID, userID, tc.tenant, tc.limits)
 				var result any
 				if v != nil {
 					result = map[string]string{"id": string(v.ID)}
 				}
-				return contracttest.Observation{Value: result, Response: r, Err: e}
-			}, Want: contracttest.Expected{Status: 200, Error: tc.err, JSON: tc.json}})
+				return testutil.Observation{Value: result, Response: r, Err: e}
+			}, Want: testutil.Expected{Status: 200, Error: tc.err, JSON: tc.json}})
 		})
 	}
 }

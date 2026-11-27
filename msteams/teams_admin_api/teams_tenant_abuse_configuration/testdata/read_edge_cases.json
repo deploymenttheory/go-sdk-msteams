@@ -1,0 +1,276 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":0.5}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":2.5}",
+      "projected_json": "2",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":3.5}",
+      "projected_json": "4",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":-0.5}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":-0.1}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":-0.5001}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":1e-400}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":1e400}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":18446744073709551615}",
+      "projected_json": "18446744073709551615",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":18446744073709551616}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":9007199254740993}",
+      "projected_json": "9007199254740993",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":18446744073709551615.0}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":false}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\" 1 \"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"+1\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"-0\"}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"0.0\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"1e3\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\" \"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"++1\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"+-0\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"1\\u0000\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"\\u00001\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "LowSeatLimit",
+      "kind": "uint64-boundaries",
+      "input_json": "{\"LowSeatLimit\":\"\\u00a01\"}",
+      "projected_json": null,
+      "error": "System.FormatException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":null}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[]}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[null,7,false,9007199254740993,1.20,1E+03,-0]}",
+      "projected_json": "[null,\"7\",\"false\",\"9007199254740993\",\"1.20\",\"1E+03\",\"-0\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[{}]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[[]]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":true}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":\"entry\"}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[\"a\"],\"blockedtenants\":null}",
+      "projected_json": "[\"a\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsTenantAbuseConfiguration",
+      "field": "BlockedTenants",
+      "kind": "nullable-string-list",
+      "input_json": "{\"BlockedTenants\":[\"a\"],\"blockedtenants\":[null,7,false]}",
+      "projected_json": "[\"a\",null,\"7\",\"false\"]",
+      "error": null
+    }
+  ]
+}

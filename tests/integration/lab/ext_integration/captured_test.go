@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	agents "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/ai_agents"
 	templates "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/call_templates"
@@ -16,9 +16,7 @@ import (
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 )
 
-// Exact response provenance: docs/implementation/ext/evidence/response-fixtures-25ad385.json.
-// The harness source is the mixed-response test vector; each body is loaded unchanged.
-const captureSource = "tests/integration/lab/ext_integration/captured_test.go"
+// Each body is loaded unchanged from the captured response fixture.
 
 func captured(t *testing.T, service, name string) []byte {
 	t.Helper()
@@ -34,9 +32,9 @@ func captured(t *testing.T, service, name string) []byte {
 	return raw
 }
 
-func runCaptured(t *testing.T, name string, steps []contracttest.Exchange, invoke func(context.Context, *msteams.Client) contracttest.Observation) {
+func runCaptured(t *testing.T, name string, steps []testutil.Exchange, invoke func(context.Context, *msteams.Client) testutil.Observation) {
 	t.Helper()
-	result, err := contracttest.Run(t.Context(), contracttest.Case{Name: name, Family: "ext_integration", Source: captureSource, Scope: "service", Steps: append([]contracttest.Exchange{discovery(t)}, steps...), Invoke: invoke})
+	result, err := testutil.Run(t.Context(), testutil.Case{Name: name, Steps: append([]testutil.Exchange{discovery(t)}, steps...), Invoke: invoke})
 	if err != nil || !result.Passed() {
 		t.Fatalf("captured EXT response replay differed: %v %+v", err, result.Differences())
 	}
@@ -56,19 +54,19 @@ func TestUnitCapturedGenericConfigurationPreservesIdentityAndSettings(t *testing
 	if len(receipt) != 0 {
 		t.Fatal("captured creation receipt was not empty")
 	}
-	runCaptured(t, "captured-generic-create-read", []contracttest.Exchange{
+	runCaptured(t, "captured-generic-create-read", []testutil.Exchange{
 		exchange(false, "POST", configPath, "New-CsConfiguration", `{"Identity":"`+identity+`","UserInitiatedMode":"Disabled","AllowLogCollection":false}`, 201, string(receipt)),
 		exchange(false, "GET", configPath+"/configuration/"+identity, "Get-CsConfiguration", "", 200, string(raw)),
-	}, func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		generic := sdk.TeamsAdminAPI.ConfigurationDiagnostics
 		if _, err := generic.CreateConfiguration(ctx, configType, cd.ConfigurationRequest{Identity: identity, Settings: map[string]any{"UserInitiatedMode": "Disabled", "AllowLogCollection": false}}, nil); err != nil {
-			return contracttest.Observation{Err: err}
+			return testutil.Observation{Err: err}
 		}
 		value, _, err := generic.GetConfiguration(ctx, configType, identity, nil)
 		if err == nil && (value == nil || value.Identity == nil || *value.Identity != identity || value.ConfigID == nil || observed.ConfigID == nil || *value.ConfigID != *observed.ConfigID || string(value.RawFields["AllowLogCollection"]) != "false" || value.RawFields["Key"] == nil || value.RawFields["ConfigMetadata"] == nil) {
 			t.Fatal("captured generic result lost identity, false or metadata")
 		}
-		return contracttest.Observation{Err: err}
+		return testutil.Observation{Err: err}
 	})
 }
 
@@ -85,10 +83,10 @@ func TestUnitCapturedTypedFeedbackPreservesFullResponseSnapshots(t *testing.T) {
 				t.Fatal("captured typed identity missing")
 			}
 			// Direct compiled PolicyRP needs no generated-client discovery.
-			result, err := contracttest.Run(t.Context(), contracttest.Case{Name: "captured-feedback-" + strings.ToLower(fixture.mode), Family: "ext_integration", Scope: "service", Source: captureSource, Steps: []contracttest.Exchange{exchange(true, "GET", configPath+"/configuration/"+body.Identity, "Get-CsTeamsFeedbackPolicy", "", 200, string(raw))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			result, err := testutil.Run(t.Context(), testutil.Case{Name: "captured-feedback-" + strings.ToLower(fixture.mode), Steps: []testutil.Exchange{exchange(true, "GET", configPath+"/configuration/"+body.Identity, "Get-CsTeamsFeedbackPolicy", "", 200, string(raw))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, _, err := sdk.TeamsAdminAPI.TeamsFeedbackPolicies.GetByIdentity(ctx, body.Identity)
 				if err != nil {
-					return contracttest.Observation{Err: err}
+					return testutil.Observation{Err: err}
 				}
 				if value == nil || value.Identity == nil || *value.Identity != body.Identity || value.UserInitiatedMode == nil || *value.UserInitiatedMode != fixture.mode || value.AllowLogCollection == nil || *value.AllowLogCollection != fixture.logs || value.EnableFeatureSuggestions == nil || *value.EnableFeatureSuggestions || value.RawFields["Key"] == nil || value.RawFields["ConfigId"] == nil {
 					t.Fatal("captured typed setting/presence projection changed")
@@ -98,7 +96,7 @@ func TestUnitCapturedTypedFeedbackPreservesFullResponseSnapshots(t *testing.T) {
 				if err != nil || json.Unmarshal(encoded, &roundTrip) != nil || json.Unmarshal(raw, &original) != nil || !reflect.DeepEqual(roundTrip, original) {
 					t.Fatal("captured typed response snapshot lost metadata")
 				}
-				return contracttest.Observation{}
+				return testutil.Observation{}
 			}})
 			if err != nil || !result.Passed() {
 				t.Fatalf("captured typed feedback replay differed: %v %+v", err, result.Differences())
@@ -115,14 +113,14 @@ func TestUnitCapturedTemplateAgentHandoffPreservesNestedDefaults(t *testing.T) {
 	const templateID = "00000000-0000-4000-8000-000000000001"
 	const agentID = "00000000-0000-4000-8000-000000000002"
 	const providerID = "00000000-0000-4000-8000-000000000003"
-	runCaptured(t, "captured-template-agent-handoff", []contracttest.Exchange{
+	runCaptured(t, "captured-template-agent-handoff", []testutil.Exchange{
 		exchange(false, "POST", "/Teams.VoiceApps/ivr-tags-template", "New-CsTagsTemplate", `{"Name":"Fixture name","Description":"Fixture description","Tags":[{"TagName":"support","TagDetails":{"Id":"tel:+15550001111","Type":"ExternalPstn"}}]}`, 201, string(tags)),
 		exchange(false, "POST", "/Teams.VoiceApps/aiagents", "New-CsAgent", `{"Name":"Fixture name","AgentId":"`+providerID+`","AgentType":"MicrosoftCopilotStudio","AgentTargetTagTemplateId":"`+templateID+`"}`, 201, string(create)),
 		exchange(false, "GET", "/Teams.VoiceApps/aiagents/"+agentID, "Get-CsAgent", "", 200, string(read)),
-	}, func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, _, err := sdk.TeamsAdminAPI.CallTemplates.Tags.Create(ctx, &templates.TagsTemplate{Name: ptr("Fixture name"), Description: ptr("Fixture description"), Tags: []templates.Tag{{TagName: ptr("support"), TagDetails: &templates.TagTarget{ID: ptr("tel:+15550001111"), Type: ptr("ExternalPstn")}}}})
 		if err != nil {
-			return contracttest.Observation{Err: err}
+			return testutil.Observation{Err: err}
 		}
 		if value == nil || value.ID == nil || *value.ID != templateID || len(value.Tags) != 1 || value.Tags[0].TagDetails == nil {
 			t.Fatal("captured template identity or nested target missing")
@@ -133,7 +131,7 @@ func TestUnitCapturedTemplateAgentHandoffPreservesNestedDefaults(t *testing.T) {
 		}
 		agent, _, err := sdk.TeamsAdminAPI.AIAgents.Create(ctx, agents.AgentRequest{Name: "Fixture name", AgentID: providerID, AgentType: agents.AgentTypeMicrosoftCopilotStudio, AgentTargetTagTemplateID: value.ID})
 		if err != nil {
-			return contracttest.Observation{Err: err}
+			return testutil.Observation{Err: err}
 		}
 		if agent == nil || agent.ConfigurationID == nil || *agent.ConfigurationID != agentID || agent.AgentTargetTagTemplateID == nil || *agent.AgentTargetTagTemplateID != *value.ID {
 			t.Fatal("captured agent lost created template reference")
@@ -142,6 +140,6 @@ func TestUnitCapturedTemplateAgentHandoffPreservesNestedDefaults(t *testing.T) {
 		if err == nil && (observed == nil || observed.AgentTargetTagTemplateID == nil || *observed.AgentTargetTagTemplateID != *value.ID || observed.AgentID == nil || *observed.AgentID != providerID) {
 			t.Fatal("captured agent read lost provider or template identity")
 		}
-		return contracttest.Observation{Err: err}
+		return testutil.Observation{Err: err}
 	})
 }

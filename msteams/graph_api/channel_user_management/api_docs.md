@@ -65,4 +65,4 @@ consent. No permission is granted by the SDK or examples.
 
 See [unit tests](service_test.go),
 [unit tests](service_test.go)
-and [gated lab procedure](../../../docs/implementation/core/channel-membership-lab-acceptance.md).
+and [gated lab procedure](../../../docs/acceptance/channel-membership-lab-acceptance.md).

@@ -36,4 +36,4 @@ persistence, cross-tenant Copilot use, delegated modes and other clouds remain
 separately unqualified.
 
 [Microsoft's management guide](https://learn.microsoft.com/en-us/microsoftteams/copilot-mto)
-shows the Enabled/Disabled commands. See [qualification](../../../docs/implementation/policies/mobility-multi-tenant-lab-acceptance.md).
+shows the Enabled/Disabled commands. See [qualification](../../../docs/acceptance/mobility-multi-tenant-lab-acceptance.md).

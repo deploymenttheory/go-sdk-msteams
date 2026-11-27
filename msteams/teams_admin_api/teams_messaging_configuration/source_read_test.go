@@ -22,7 +22,7 @@ func TestUnitConfigurationPinnedScalarReadVectors(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = root.Close() }()
-	raw, err := root.ReadFile("docs/implementation/policies/evidence/pol91-qualified-read-scalars.json")
+	raw, err := root.ReadFile("msteams/teams_admin_api/teams_messaging_configuration/testdata/read_scalar_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,7 +40,7 @@ func TestUnitConfigurationPinnedScalarReadVectors(t *testing.T) {
 	}
 	// Supplemental observations retain their own source provenance and cover
 	// numeric boundaries, URI setters and ordered nullable list members.
-	supplement, err := root.ReadFile("docs/implementation/policies/evidence/pol91-qualified-read-supplement.json")
+	supplement, err := root.ReadFile("msteams/teams_admin_api/teams_messaging_configuration/testdata/read_edge_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -57,7 +57,7 @@ func TestUnitConfigurationPinnedScalarReadVectors(t *testing.T) {
 		t.Fatal("source supplement unavailable")
 	}
 	packet.Rows = append(packet.Rows, extra.Rows...)
-	edges, err := root.ReadFile("docs/implementation/policies/evidence/pol91-enum-string-edges.json")
+	edges, err := root.ReadFile("msteams/teams_admin_api/teams_messaging_configuration/testdata/enum_read_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -58,7 +58,7 @@ modern configuration mappings also exist. Captures verify the actual exports;
 modern mapping presence does not select modern dispatch.
 
 See [unit tests](service_test.go)
-and [lab acceptance](../../../docs/implementation/policies/events-policy-lab-acceptance.md).
+and [lab acceptance](../../../docs/acceptance/events-policy-lab-acceptance.md).
 All five commands/nine sets are mapped. Issue #118 remains open for full command
 and tenant qualification.
 

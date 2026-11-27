@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -37,7 +37,7 @@ func TestUnitBrandingBodyCloseCancellationRetainsOnlyReceivedPreparation(t *test
 	var stop context.CancelFunc
 	step := wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, 200, string(before))
 	step.Reply.OnBodyClose = func() { stop() }
-	run(t, contracttest.Case{Name: "branding-body-close-cancel", Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsMeetingBrandingPolicy", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{step}, Want: contracttest.Expected{Body: before, Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "branding-body-close-cancel", Steps: []testutil.Exchange{step}, Want: testutil.Expected{Body: before, Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		operation, cancel := context.WithCancel(ctx)
 		defer cancel()
 		stop = cancel
@@ -45,7 +45,7 @@ func TestUnitBrandingBodyCloseCancellationRetainsOnlyReceivedPreparation(t *test
 		if !errors.Is(err, context.Canceled) || !errors.Is(operation.Err(), context.Canceled) || value == nil || value.Before != nil || value.After != nil || value.PatchInvoked || value.HTTPAccepted || value.ReadResponse == nil || value.ReadResponse.StatusCode() != 200 || response != value.ReadResponse {
 			t.Fatal("body-close cancellation invented typed preparation or a branding patch attempt")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }
 
@@ -84,7 +84,7 @@ func TestUnitBrandingComposedReplacementCoversAllAssetBranches(t *testing.T) {
 	}
 	// Only local DTO composition and an authored empty Set receipt are proved.
 	// There is no nonempty Create success, upload, fetch or tenant persistence.
-	run(t, contracttest.Case{Name: "all-assets-prepared-replacement", Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Mappings: []contracttest.Mapping{{Command: "Set-CsTeamsMeetingBrandingPolicy", ParameterSet: "Identity"}, {Command: "New-CsTeamsMeetingBackgroundImage", ParameterSet: "Identity"}, {Command: "New-CsTeamsMeetingBrandingTheme", ParameterSet: "Identity"}, {Command: "New-CsTeamsNdiAssuranceSlate", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, 200, string(before)), wire("PATCH", item, "Set-CsTeamsMeetingBrandingPolicy", body, 204, "")}, Want: contracttest.Expected{Body: []byte{}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "all-assets-prepared-replacement", Steps: []testutil.Exchange{wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, 200, string(before)), wire("PATCH", item, "Set-CsTeamsMeetingBrandingPolicy", body, 204, "")}, Want: testutil.Expected{Body: []byte{}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		image, err := resource.NewBackgroundImage("fixture-image", 0, "Fixture", "https://example.invalid/background.png", resource.BackgroundImageOptions{IsRequired: new(false)})
 		if err != nil {
 			t.Fatal(err)
@@ -121,7 +121,7 @@ func TestUnitBrandingComposedReplacementCoversAllAssetBranches(t *testing.T) {
 		if err == nil && (value == nil || value.Before == nil || !reflect.DeepEqual(value.Before.RawFields, snapshot) || len(value.Before.MeetingBackgroundImages) != 0 || len(value.Before.NDIAssuranceSlateImages) != 0 || len(value.Before.MeetingBrandingThemes) != 0 || !value.PatchInvoked || !value.HTTPAccepted || value.After != nil || value.ReadResponse == nil || value.ReadResponse.StatusCode() != 200) {
 			t.Fatal("composed asset replacement mutated preparation or invented readback")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }
 
@@ -140,11 +140,11 @@ func runBrandingPreparedAssetPatch(t *testing.T, status int) {
 		}
 		t.Run(label, func(t *testing.T) {
 			body := json.RawMessage(`{"Identity":"Global","DefaultTheme":null,"MeetingBackgroundImages":` + images + `}`)
-			want := contracttest.Expected{}
+			want := testutil.Expected{}
 			if status == 403 {
 				want.Error = auth.ErrForbidden
 			}
-			run(t, contracttest.Case{Name: label, Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, 200, string(before)), wire("PATCH", item, "Set-CsTeamsMeetingBrandingPolicy", body, status, "")}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: label, Steps: []testutil.Exchange{wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, 200, string(before)), wire("PATCH", item, "Set-CsTeamsMeetingBrandingPolicy", body, status, "")}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				var add []*resource.BackgroundImage
 				if appendImage {
 					image, err := resource.NewBackgroundImage("a", 0, "Fixture", "https://example.invalid/a", resource.BackgroundImageOptions{})
@@ -161,7 +161,7 @@ func runBrandingPreparedAssetPatch(t *testing.T, status int) {
 				if v == nil || v.Before == nil || !v.PatchInvoked || v.HTTPAccepted != (status == 204) || v.After != nil || !reflect.DeepEqual(v.Before.RawFields, expected) {
 					t.Error("asset update lost acceptance or modified preparation")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -202,11 +202,11 @@ func TestUnitBrandingUpdatePreparationFailures(t *testing.T) {
 	)
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, tc.read, tc.body)}
+			steps := []testutil.Exchange{wire("GET", item, "Set-CsTeamsMeetingBrandingPolicy", nil, tc.read, tc.body)}
 			if tc.patch != 0 {
 				steps = append(steps, wire("PATCH", item, "Set-CsTeamsMeetingBrandingPolicy", json.RawMessage(`{"Identity":"Global","DefaultTheme":""}`), tc.patch, ""))
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.MeetingBrandingPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Fields: resource.Fields{DefaultTheme: policy.Set("")}})
 				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
 					t.Error("failed update lost preparation state or invented acceptance")
@@ -224,7 +224,7 @@ func TestUnitBrandingUpdatePreparationFailures(t *testing.T) {
 						t.Error("failure lost its HTTP status")
 					}
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}
@@ -238,13 +238,13 @@ func TestUnitBrandingCreateComparisonIsExplicitAndDoesNotCloneDefaultsOnDeniedSu
 			if readStatus != 200 {
 				readBody = ""
 			}
-			run(t, contracttest.Case{Name: "comparison-denial", Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "New-CsTeamsMeetingBrandingPolicy", nil, readStatus, readBody), wire("POST", collection, "New-CsTeamsMeetingBrandingPolicy", json.RawMessage(`{"Identity":"Fixture","EnableMeetingBackgroundImages":false}`), 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "comparison-denial", Steps: []testutil.Exchange{wire("GET", item, "New-CsTeamsMeetingBrandingPolicy", nil, readStatus, readBody), wire("POST", collection, "New-CsTeamsMeetingBrandingPolicy", json.RawMessage(`{"Identity":"Fixture","EnableMeetingBackgroundImages":false}`), 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.MeetingBrandingPolicies.CreateWithGlobalComparison(ctx, resource.CreateRequest{Identity: "Fixture", Settings: resource.Settings{Fields: resource.Fields{EnableMeetingBackgroundImages: policy.Set(false)}}})
 				var apiError *client.APIError
 				if !errors.As(e, &apiError) || apiError.StatusCode != 403 || v == nil || !v.CreateInvoked || v.HTTPAccepted || v.Created != nil || (v.ComparisonError != nil) != (readStatus != 200) {
 					t.Error("comparison and denied submission outcomes were conflated")
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}
@@ -266,7 +266,7 @@ func TestUnitBrandingCreateComparisonPreservesAcceptedSubmission(t *testing.T) {
 			if status == 403 {
 				read = nil
 			}
-			run(t, contracttest.Case{Name: "accepted-comparison-" + strconv.Itoa(status), Source: "msteams/teams_admin_api/meeting_branding/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "New-CsTeamsMeetingBrandingPolicy", nil, status, string(read)), wire("POST", collection, "New-CsTeamsMeetingBrandingPolicy", json.RawMessage(`{"Identity":"fixture-policy","EnableMeetingOptionsThemeOverride":false,"RequireBackgroundEffect":false}`), 201, string(accepted))}, Want: contracttest.Expected{Body: accepted}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "accepted-comparison-" + strconv.Itoa(status), Steps: []testutil.Exchange{wire("GET", item, "New-CsTeamsMeetingBrandingPolicy", nil, status, string(read)), wire("POST", collection, "New-CsTeamsMeetingBrandingPolicy", json.RawMessage(`{"Identity":"fixture-policy","EnableMeetingOptionsThemeOverride":false,"RequireBackgroundEffect":false}`), 201, string(accepted))}, Want: testutil.Expected{Body: accepted}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.MeetingBrandingPolicies.CreateWithGlobalComparison(ctx, resource.CreateRequest{Identity: "fixture-policy", Settings: resource.Settings{Fields: resource.Fields{EnableMeetingOptionsThemeOverride: policy.Set(false), RequireBackgroundEffect: policy.Set(false)}}})
 				if value == nil || !value.CreateInvoked || !value.HTTPAccepted || value.Created != nil || value.ComparisonResponse == nil || value.ComparisonResponse.StatusCode() != status {
 					t.Fatal("accepted create lost independent comparison and receipt stages")
@@ -277,7 +277,7 @@ func TestUnitBrandingCreateComparisonPreservesAcceptedSubmission(t *testing.T) {
 				if status == 403 && (value.Comparison != nil || !errors.Is(value.ComparisonError, auth.ErrForbidden)) {
 					t.Fatal("successful create erased the failed comparison")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 		})
 	}
@@ -338,17 +338,17 @@ func TestUnitBrandingListFilteringPreservesExactGlobalOrderingFromRealResponses(
 		if err != nil {
 			t.Fatal(err)
 		}
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "real-filter-" + tc.Name, Family: "meeting_branding", Scope: "service", Source: "msteams/teams_admin_api/meeting_branding/testdata/list.json",
-			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsMeetingBrandingPolicy", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "real-filter-" + tc.Name,
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsMeetingBrandingPolicy", 200, raw), Want: testutil.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.MeetingBrandingPolicies
 				if tc.Pattern == "" {
 					value, response, err := service.List(ctx)
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				}
 				value, response, err := service.ListFiltered(ctx, tc.Pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {

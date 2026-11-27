@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -45,19 +45,17 @@ func TestUnitBannerAuthoredSelectorResponses(t *testing.T) {
 		{"remove-id", "remove", "id", "DELETE", deleteCommand, item, json.RawMessage(`{"Id":"` + relative + `"}`), 204},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			set, reply := "Identity", ""
-			if tc.selector == "id" {
-				set = "ParentAndRelativeKey"
-			}
-			want := contracttest.Expected{Body: []byte{}}
+			reply := ""
+
+			want := testutil.Expected{Body: []byte{}}
 			if tc.operation == "get" {
 				reply = authoredBanner
-				want = contracttest.Expected{JSON: json.RawMessage(reply), Body: []byte(reply)}
+				want = testutil.Expected{JSON: json.RawMessage(reply), Body: []byte(reply)}
 			}
-			run(t, contracttest.Case{Name: "typed-" + tc.name, Source: "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(tc.method, tc.path, tc.command, tc.body, tc.status, reply)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "typed-" + tc.name, Steps: []testutil.Exchange{wire(tc.method, tc.path, tc.command, tc.body, tc.status, reply)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.TeamsCustomBannerTexts
 				var value *resource.Banner
-				var observed contracttest.Observation
+				var observed testutil.Observation
 				switch tc.operation {
 				case "get":
 					if tc.selector == "id" {
@@ -107,7 +105,7 @@ func TestUnitBannerAuthoredNonemptyFilterPreservesTypedItem(t *testing.T) {
 	other := strings.ReplaceAll(authoredBanner, relative, "01234567-89ab-cdef-0123-456789abcdee")
 	reply := "[" + other + "," + authoredBanner + "]"
 	want := "[" + authoredBanner + "]"
-	run(t, contracttest.Case{Name: "nonempty-banner-filter", Source: "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsCustomBannerText", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{wire("GET", collection, "Get-CsTeamsCustomBannerText", nil, 200, reply)}, Want: contracttest.Expected{JSON: json.RawMessage(want), Body: []byte(reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "nonempty-banner-filter", Steps: []testutil.Exchange{wire("GET", collection, "Get-CsTeamsCustomBannerText", nil, 200, reply)}, Want: testutil.Expected{JSON: json.RawMessage(want), Body: []byte(reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		values, response, err := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.ListFiltered(ctx, "*"+relative)
 		if err == nil {
 			if len(values) != 1 {
@@ -115,7 +113,7 @@ func TestUnitBannerAuthoredNonemptyFilterPreservesTypedItem(t *testing.T) {
 			}
 			verifyAuthoredBanner(t, values[0])
 		}
-		return contracttest.Observation{Value: values, Response: response, Err: err}
+		return testutil.Observation{Value: values, Response: response, Err: err}
 	}})
 }
 
@@ -126,12 +124,12 @@ func TestUnitBannerAuthoredMalformed200RetainsResponse(t *testing.T) {
 		{"null-text", `{"Text":null}`},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsCustomBannerText", ParameterSet: "ParentAndRelativeKey"}}, Steps: []contracttest.Exchange{wire("GET", item, "Get-CsTeamsCustomBannerText", nil, 200, tc.reply)}, Want: contracttest.Expected{Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{wire("GET", item, "Get-CsTeamsCustomBannerText", nil, 200, tc.reply)}, Want: testutil.Expected{Body: []byte(tc.reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.TeamsCustomBannerTexts.GetByID(ctx, relative)
 				if value != nil {
 					t.Fatal("malformed banner reply exposed a fabricated result")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 		})
 	}
@@ -140,14 +138,14 @@ func TestUnitBannerAuthoredMalformed200RetainsResponse(t *testing.T) {
 func TestUnitBannerAuthoredComposedUpdatePreservesBeforeAndExplicitReadback(t *testing.T) {
 	t.Parallel()
 	const updated = `{"Identity":"` + authoredBannerIdentity + `","Id":"` + relative + `","Text":"updated text","Description":null,"Future":false}`
-	steps := []contracttest.Exchange{
+	steps := []testutil.Exchange{
 		wire("GET", item, setCommand, nil, 200, authoredBanner),
 		wire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"`+authoredBannerIdentity+`","Text":"updated text","Description":null}`), 204, ""),
 		wire("GET", item, "Get-CsTeamsCustomBannerText", nil, 200, updated),
 	}
 	// Authored receipt/readback checks SDK composition and owned snapshots;
 	// these replies do not establish actual server persistence or bot display.
-	run(t, contracttest.Case{Name: "composed-banner-update", Source: "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}, {Command: "Get-CsTeamsCustomBannerText", ParameterSet: "ParentAndRelativeKey"}}, Steps: steps, Want: contracttest.Expected{JSON: json.RawMessage(updated), Body: []byte(updated)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "composed-banner-update", Steps: steps, Want: testutil.Expected{JSON: json.RawMessage(updated), Body: []byte(updated)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCustomBannerTexts
 		result, response, err := s.UpdateByIdentity(ctx, authoredBannerIdentity, resource.UpdateRequest{Settings: resource.Settings{Text: policy.Set("updated text"), Description: policy.Null[string]()}})
 		if err != nil || response == nil || response.StatusCode() != 204 || result == nil || !result.PatchInvoked || !result.HTTPAccepted || result.After != nil || result.ReadResponse == nil || result.ReadResponse.StatusCode() != 200 {
@@ -159,7 +157,7 @@ func TestUnitBannerAuthoredComposedUpdatePreservesBeforeAndExplicitReadback(t *t
 			t.Fatal("authored banner readback lost identity, updated text or explicit null")
 		}
 		verifyAuthoredBanner(t, result.Before)
-		return contracttest.Observation{Value: value, Response: response, Err: err}
+		return testutil.Observation{Value: value, Response: response, Err: err}
 	}})
 }
 
@@ -168,7 +166,7 @@ func TestUnitBannerBodyCloseCancellationStopsPreparationBeforePatch(t *testing.T
 	var stop context.CancelFunc
 	step := wire("GET", item, setCommand, nil, 200, authoredBanner)
 	step.Reply.OnBodyClose = func() { stop() }
-	run(t, contracttest.Case{Name: "banner-body-close-cancel", Source: "msteams/teams_admin_api/teams_custom_banner_text/service_protocol_test.go", Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{step}, Want: contracttest.Expected{Body: []byte(authoredBanner), Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "banner-body-close-cancel", Steps: []testutil.Exchange{step}, Want: testutil.Expected{Body: []byte(authoredBanner), Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		operation, cancel := context.WithCancel(ctx)
 		defer cancel()
 		stop = cancel
@@ -176,6 +174,6 @@ func TestUnitBannerBodyCloseCancellationStopsPreparationBeforePatch(t *testing.T
 		if !errors.Is(err, context.Canceled) || !errors.Is(operation.Err(), context.Canceled) || value == nil || value.Before != nil || value.After != nil || value.PatchInvoked || value.HTTPAccepted || value.ReadResponse == nil || value.ReadResponse.StatusCode() != 200 || response != value.ReadResponse {
 			t.Fatal("body-close cancellation fabricated banner preparation or lost its read receipt")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }

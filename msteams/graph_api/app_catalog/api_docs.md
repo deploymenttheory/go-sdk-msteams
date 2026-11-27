@@ -65,7 +65,7 @@ not establish that Graph accepts an empty package. Required mutation IDs still
 reject blank/control/path-navigation inputs. The dedicated lab's historical 403 results
 are denials, not successful lifecycle qualification.
 
-See [source and change notes](../../../docs/implementation/ext/app-catalog-native-contract-notes.md).
+See [unit tests](service_test.go).
 
 ## Authorization and current protocol
 
@@ -74,6 +74,6 @@ publish/delete/update documentation instead requires delegated prerequisites
 and marks application access unsupported. The pinned Set PUT is a separate
 legacy source operation from the currently documented appDefinitions POST;
 that newer permission table does not prove the legacy PUT's current auth support.
-See the [sourced permission and protocol table](../../../docs/implementation/ext/app-catalog-auth-and-current-api.md)
+See the [sourced permission and protocol table](../../../docs/guides/app-catalog-permissions.md)
 for operation-specific guidance. The SDK acquires no new consent/role and does
 not switch identity or protocol automatically.

@@ -34,4 +34,4 @@ models redact `String`/`GoString` because they carry account names.
 Tagging and transfer are exported only to Microsoft support environments
 (`Torus`, `SelfHost`). The lab's app-only Teams Administrator gets 403 for every
 gateway operation, so success shapes are proven from the module's serializers
-only. See the [contract notes](../../../docs/implementation/ext/devices-contract-notes.md).
+only. See the [unit tests](service_test.go).

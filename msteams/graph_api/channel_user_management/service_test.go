@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -31,49 +31,46 @@ const (
 func membersPath() string { return channelsPath + "/" + url.PathEscape(channelID) + "/members" }
 func memberPath() string  { return membersPath() + "/" + url.PathEscape(memberID) }
 
-func wire(method, path, body string, status int, response string, sources ...string) contracttest.Exchange {
+func wire(method, path, body string, status int, response string) testutil.Exchange {
 	headers := http.Header{"Accept": {"application/json"}}
 	var data json.RawMessage
 	if body != "" {
 		data = json.RawMessage(body)
 		headers.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: headers, JSON: data},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response), ProtocolSources: sources}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: headers, JSON: data},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
 }
 
-func channelRead(kind string) contracttest.Exchange {
-	return wire("GET", channelsPath, "", 200, `{"value":[{"id":"`+channelID+`","displayName":"FIXTURE","membershipType":"`+kind+`"}]}`, "https://learn.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-beta")
+func channelRead(kind string) testutil.Exchange {
+	return wire("GET", channelsPath, "", 200, `{"value":[{"id":"`+channelID+`","displayName":"FIXTURE","membershipType":"`+kind+`"}]}`)
 }
 
 func nativeMember(roles string) string {
 	return `{"id":"` + memberID + `","userId":"` + userID + `","email":"external@fixture.invalid","tenantId":"` + tenantID + `","roles":` + roles + `}`
 }
 
-func roster() contracttest.Exchange {
-	return wire("GET", membersPath(), "", 200, `{"value":[`+nativeMember(`[]`)+`]}`, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta")
+func roster() testutil.Exchange {
+	return wire("GET", membersPath(), "", 200, `{"value":[`+nativeMember(`[]`)+`]}`)
 }
 
-func run(t *testing.T, c contracttest.Case) contracttest.Result {
+func run(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family, c.Source = "channel_user_management", "msteams/graph_api/channel_user_management/service_test.go"
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil || !result.Passed() {
 		t.Fatalf("channel-user contract differs: setup=%v differences=%+v", err, result.Differences())
 	}
 	return result
 }
 
-func changed(value management.ChangeResult, err error) contracttest.Observation {
+func changed(value management.ChangeResult, err error) testutil.Observation {
 	actions, states := []management.Action{}, []management.State{}
 	for _, stage := range value.Stages {
 		actions = append(actions, stage.Action)
 		states = append(states, stage.State)
 	}
-	return contracttest.Observation{Value: map[string]any{"channel": value.ChannelID, "user": value.UserID, "membership": value.MembershipID, "actions": actions, "states": states}, Response: value.Response, Err: err}
+	return testutil.Observation{Value: map[string]any{"channel": value.ChannelID, "user": value.UserID, "membership": value.MembershipID, "actions": actions, "states": states}, Response: value.Response, Err: err}
 }
 
 func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
@@ -95,11 +92,11 @@ func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
 		{name: "delete-shared-id", command: "Remove-TeamChannelUser", kind: "shared", user: userID, method: "DELETE"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{channelRead(tc.kind)}
+			steps := []testutil.Exchange{channelRead(tc.kind)}
 			actions := []string{"resolve-channel"}
 			if tc.method == "POST" || tc.kind == "private" {
 				if tc.lookup {
-					steps = append(steps, wire("GET", "/v1.0/users/member@fixture.invalid?$select=id", "", 200, `{"id":"`+userID+`"}`, "https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0"))
+					steps = append(steps, wire("GET", "/v1.0/users/member@fixture.invalid?$select=id", "", 200, `{"id":"`+userID+`"}`))
 				}
 				actions = append(actions, "resolve-user")
 			}
@@ -126,7 +123,7 @@ func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
 					actions = append(actions, "delete-member")
 				}
 			}
-			steps = append(steps, wire(tc.method, path, body, status, response, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-post-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-update-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete-members?view=graph-rest-beta"))
+			steps = append(steps, wire(tc.method, path, body, status, response))
 			states := make([]string, len(actions))
 			for i := range states {
 				states[i] = "succeeded"
@@ -135,13 +132,13 @@ func TestUnitAddRemoveAndOwnerCompositions(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: tc.command, ParameterSet: "__AllParameterSets"}}, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				options := management.ChangeOptions{Role: management.Role(tc.role), TenantID: tc.tenant}
 				if tc.add {
 					return changed(sdk.GraphAPI.ChannelUserManagement.Add(ctx, teamID, "fixture", tc.user, options))
 				}
 				return changed(sdk.GraphAPI.ChannelUserManagement.Remove(ctx, teamID, "fixture", tc.user, options))
-			}, Want: contracttest.Expected{Status: status, JSON: want}})
+			}, Want: testutil.Expected{Status: status, JSON: want}})
 		})
 	}
 }
@@ -154,7 +151,7 @@ func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 	for _, action := range []string{"create", "promote", "demote", "delete"} {
 		for _, status := range []int{403, 429, 503} {
 			t.Run(action+"-"+strconv.Itoa(status), func(t *testing.T) {
-				steps := []contracttest.Exchange{channelRead("private")}
+				steps := []testutil.Exchange{channelRead("private")}
 				method, path, body := "POST", membersPath(), `{"@odata.type":"#microsoft.graph.aadUserConversationMember","roles":[],"user@odata.bind":"https://graph.microsoft.com/beta/users('`+userID+`')"}`
 				role := management.Role("")
 				if action != "create" {
@@ -170,8 +167,8 @@ func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 						method, body, role = "DELETE", "", ""
 					}
 				}
-				steps = append(steps, wire(method, path, body, status, `{"error":{"code":"FixtureDenied","message":"private"}}`, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-post-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-update-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete-members?view=graph-rest-beta"))
-				run(t, contracttest.Case{Name: action + "-" + strconv.Itoa(status), Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				steps = append(steps, wire(method, path, body, status, `{"error":{"code":"FixtureDenied","message":"private"}}`))
+				run(t, testutil.Case{Name: action + "-" + strconv.Itoa(status), Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					options := management.ChangeOptions{Role: role}
 					var value management.ChangeResult
 					var err error
@@ -196,7 +193,7 @@ func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 						}
 					}
 					return changed(value, err)
-				}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureDenied"}}}})
+				}, Want: testutil.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureDenied"}}}})
 			})
 		}
 	}
@@ -215,9 +212,9 @@ func TestUnitFailuresStopBeforeFurtherChanges(t *testing.T) {
 					limits.MaxPages = 1
 					expected = client.ErrPageLimit
 				}
-				run(t, contracttest.Case{Name: kind + "-" + problem, Steps: []contracttest.Exchange{channelRead(kind), wire("GET", membersPath(), "", 200, body, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-post-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-update-members?view=graph-rest-beta", "https://learn.microsoft.com/en-us/graph/api/channel-delete-members?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: kind + "-" + problem, Steps: []testutil.Exchange{channelRead(kind), wire("GET", membersPath(), "", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					return changed(sdk.GraphAPI.ChannelUserManagement.Remove(ctx, teamID, "fixture", userID, management.ChangeOptions{Traversal: limits}))
-				}, Want: contracttest.Expected{Status: 200, Error: expected}})
+				}, Want: testutil.Expected{Status: 200, Error: expected}})
 			})
 		}
 	}
@@ -227,12 +224,12 @@ func TestUnitLocalValidationAndStandardGuard(t *testing.T) {
 	t.Parallel()
 	for _, action := range []string{"add", "remove"} {
 		t.Run(action+"-standard", func(t *testing.T) {
-			run(t, contracttest.Case{Name: action + "-standard", Steps: []contracttest.Exchange{channelRead("standard")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: action + "-standard", Steps: []testutil.Exchange{channelRead("standard")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				if action == "add" {
 					return changed(sdk.GraphAPI.ChannelUserManagement.Add(ctx, teamID, "fixture", userID, management.ChangeOptions{}))
 				}
 				return changed(sdk.GraphAPI.ChannelUserManagement.Remove(ctx, teamID, "fixture", userID, management.ChangeOptions{}))
-			}, Want: contracttest.Expected{Status: 200, Error: management.ErrStandardChannel}})
+			}, Want: testutil.Expected{Status: 200, Error: management.ErrStandardChannel}})
 		})
 	}
 	for _, tc := range []struct {
@@ -242,22 +239,22 @@ func TestUnitLocalValidationAndStandardGuard(t *testing.T) {
 		{"empty-user", "", management.ChangeOptions{}}, {"wrong-role", userID, management.ChangeOptions{Role: management.Member}}, {"unknown-role", userID, management.ChangeOptions{Role: "future"}}, {"bad-tenant", userID, management.ChangeOptions{TenantID: stringPointer("")}}, {"external-upn", "member@fixture.invalid", management.ChangeOptions{TenantID: stringPointer(tenantID)}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: tc.name, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return changed(sdk.GraphAPI.ChannelUserManagement.Add(ctx, teamID, "fixture", tc.user, tc.options))
-			}, Want: contracttest.Expected{Error: client.ErrRequest}})
+			}, Want: testutil.Expected{Error: client.ErrRequest}})
 		})
 	}
-	run(t, contracttest.Case{Name: "cancelled", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "cancelled", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		cancelled, cancel := context.WithCancel(ctx)
 		cancel()
 		return changed(sdk.GraphAPI.ChannelUserManagement.Add(cancelled, teamID, "fixture", userID, management.ChangeOptions{}))
-	}, Want: contracttest.Expected{Error: context.Canceled}})
-	run(t, contracttest.Case{Name: "redaction", Scope: "local", Invoke: func(_ context.Context, _ *msteams.Client) contracttest.Observation {
+	}, Want: testutil.Expected{Error: context.Canceled}})
+	run(t, testutil.Case{Name: "redaction", Invoke: func(_ context.Context, _ *msteams.Client) testutil.Observation {
 		value := management.ChangeResult{ChannelID: channelID, MembershipID: memberID}
 		text := fmt.Sprintf("%+v %#v", value, value)
 		if strings.Contains(text, channelID) || strings.Contains(text, memberID) {
 			t.Error("formatting disclosed native identities")
 		}
-		return contracttest.Observation{}
-	}, Want: contracttest.Expected{}})
+		return testutil.Observation{}
+	}, Want: testutil.Expected{}})
 }

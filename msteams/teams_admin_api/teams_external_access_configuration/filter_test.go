@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_external_access_configuration"
@@ -70,17 +70,17 @@ func TestUnitProviderFilteringIsLocalAndGlobalOrderIsExactFromRealResponses(t *t
 		if err != nil {
 			t.Fatal(err)
 		}
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "real-filter-" + tc.Name, Family: "teams_external_access_configuration", Scope: "service", Source: "msteams/teams_admin_api/teams_external_access_configuration/testdata/list.json",
-			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsExternalAccessConfiguration", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "real-filter-" + tc.Name,
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsExternalAccessConfiguration", 200, raw), Want: testutil.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.TeamsExternalAccessConfigurations
 				if tc.Pattern == "" {
 					value, response, err := service.List(ctx)
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				}
 				value, response, err := service.ListFiltered(ctx, tc.Pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {
@@ -91,18 +91,18 @@ func TestUnitProviderFilteringIsLocalAndGlobalOrderIsExactFromRealResponses(t *t
 }
 func TestUnitWrongBackendAndNilServiceRejectLocally(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "wrong-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "wrong-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		graph, e := client.NewScope(client.Graph, sdk.TeamsAdminAPI.Scope().Session())
 		if e != nil {
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}
 		if _, _, e := resource.NewService(graph).GetByIdentity(ctx, "Global"); !errors.Is(e, client.ErrDestination) {
-			return contracttest.Observation{Err: errors.New("wrong backend accepted")}
+			return testutil.Observation{Err: errors.New("wrong backend accepted")}
 		}
 		var missing *resource.Service
 		if _, _, e := missing.List(ctx); !errors.Is(e, client.ErrClosed) {
-			return contracttest.Observation{Err: errors.New("nil service accepted")}
+			return testutil.Observation{Err: errors.New("nil service accepted")}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

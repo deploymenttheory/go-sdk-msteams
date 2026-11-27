@@ -9,7 +9,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -20,13 +20,13 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/schedules/service_test.go"
-	jsonType     = "application/json; charset=utf-8"
-	weeklyID     = "00000000-0000-4000-8000-14ff58a505f4"
-	fixedID      = "00000000-0000-4000-8000-2705eaabb01b"
-	probe        = "00000000-0000-4000-8000-000000000001"
-	collection   = "/Teams.VoiceApps/schedules"
-	holidays     = "/Teams.VoiceApps/auto-attendants/" + probe + "/holidays"
+
+	jsonType   = "application/json; charset=utf-8"
+	weeklyID   = "00000000-0000-4000-8000-14ff58a505f4"
+	fixedID    = "00000000-0000-4000-8000-2705eaabb01b"
+	probe      = "00000000-0000-4000-8000-000000000001"
+	collection = "/Teams.VoiceApps/schedules"
+	holidays   = "/Teams.VoiceApps/auto-attendants/" + probe + "/holidays"
 )
 
 func readFile(t *testing.T, path string) []byte {
@@ -43,17 +43,17 @@ func readFile(t *testing.T, path string) []byte {
 	return raw
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
@@ -62,38 +62,20 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if reply == nil {
 		contentType = ""
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "schedules"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !result.Passed() {
 		t.Fatalf("schedule contract %s differed: %+v", c.Name, result.Differences())
 	}
-}
-
-func mapping(commands ...string) []contracttest.Mapping {
-	out := make([]contracttest.Mapping, 0, len(commands))
-	for _, command := range commands {
-		set := "__AllParameterSets"
-		if command == "New-CsOnlineSchedule" {
-			set = "WeeklyRecurrentScheduleParamSet"
-		}
-		out = append(out, contracttest.Mapping{Command: command, ParameterSet: set})
-	}
-	return out
 }
 
 // apiError is the normalized error for a fixture with a top-level code.
@@ -116,18 +98,17 @@ func TestUnitScheduleLifecycleUsesAcceptanceResponses(t *testing.T) {
 	fixedBody := json.RawMessage(`{"Name":"Fixture name","FixedSchedule":{"DateTimeRanges":[{"Start":"2027-01-01T10:00:00","End":"2027-01-03T00:00:00"}]}}`)
 	updateBody := json.RawMessage(`{"Name":"Fixture name","Type":"WeeklyRecurrence","WeeklyRecurrentSchedule":{"MondayHours":[{"Start":"09:00:00","End":"17:30:00"}],` +
 		`"FridayHours":[{"Start":"08:00:00","End":"12:00:00"}],"IsComplemented":false}}`)
-	run(t, contracttest.Case{Name: "actual-lifecycle", Source: "msteams/teams_admin_api/schedules/testdata/create_weekly_201.json",
-		Mappings: append(mapping("Get-CsOnlineSchedule", "Set-CsOnlineSchedule", "Remove-CsOnlineSchedule", "New-CsOnlineSchedule"),
-			contracttest.Mapping{Command: "New-CsOnlineSchedule", ParameterSet: "FixedScheduleParamSet"}),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-lifecycle",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", collection, "New-CsOnlineSchedule", weeklyBody, 201, createdWeekly),
 			wire("POST", collection, "New-CsOnlineSchedule", fixedBody, 201, createdFixed),
 			wire("GET", collection+"/"+weeklyID, "Get-CsOnlineSchedule", nil, 200, got),
 			wire("PUT", collection+"/"+weeklyID, "Set-CsOnlineSchedule", updateBody, 200, updated),
 			wire("DELETE", collection+"/"+weeklyID, "Remove-CsOnlineSchedule", nil, 200, deleted),
 			wire("DELETE", collection+"/"+weeklyID, "Remove-CsOnlineSchedule", nil, 404, missing)},
-		Want: contracttest.Expected{Status: 404, Body: missing, APIError: apiError(404, missing)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 404, Body: missing, APIError: apiError(404, missing)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.Schedules
 			value, response, err := s.Create(ctx, sched.CreateRequest{Name: "Fixture name", WeeklyRecurrentSchedule: &sched.WeeklyRecurrentSchedule{
 				MondayHours: []sched.TimeRange{{Start: "09:00:00", End: "17:30:00"}}, IsComplemented: ptr(true)}})
@@ -154,22 +135,22 @@ func TestUnitScheduleLifecycleUsesAcceptanceResponses(t *testing.T) {
 				t.Fatal("actual delete reply was changed")
 			}
 			response, err = s.DeleteByID(ctx, weeklyID)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
 func TestUnitScheduleRangeDraftsUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	timeRange, dateRange, invalid := readFile(t, "testdata/time_range.json"), readFile(t, "testdata/date_time_range.json"), readFile(t, "testdata/time_range_invalid_400.json")
-	run(t, contracttest.Case{Name: "actual-drafts", Source: "msteams/teams_admin_api/schedules/testdata/time_range.json",
-		Mappings: mapping("New-CsOnlineTimeRange", "New-CsOnlineDateTimeRange"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-drafts",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", collection+"/schedules/time-ranges/draft", "New-CsOnlineTimeRange", json.RawMessage(`{"Start":"9:00","End":"17:30"}`), 200, timeRange),
 			wire("POST", collection+"/schedules/date-time-ranges/draft", "New-CsOnlineDateTimeRange", json.RawMessage(`{"Start":"1/1/2027 10:00","End":"3/1/2027"}`), 200, dateRange),
 			wire("POST", collection+"/schedules/date-time-ranges/draft", "New-CsOnlineDateTimeRange", json.RawMessage(`{"Start":"1/1/2027"}`), 200, dateRange),
 			wire("POST", collection+"/schedules/time-ranges/draft", "New-CsOnlineTimeRange", json.RawMessage(`{"Start":"9:00","End":"25:00"}`), 400, invalid)},
-		Want: contracttest.Expected{Status: 400, Body: invalid, APIError: apiError(400, invalid)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 400, Body: invalid, APIError: apiError(400, invalid)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.Schedules
 			value, _, err := s.NewTimeRange(ctx, "9:00", "17:30")
 			if err != nil || *value != (sched.TimeRange{Start: "09:00:00", End: "17:30:00"}) {
@@ -186,7 +167,7 @@ func TestUnitScheduleRangeDraftsUseAcceptanceResponses(t *testing.T) {
 			if value != nil {
 				t.Fatal("rejected draft returned a value")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -201,21 +182,21 @@ func TestUnitScheduleHolidaysUseAcceptanceAndModelResponses(t *testing.T) {
 	records := []byte(`{"HolidayVisualizationRecords":[{"CallFlow":{"Id":"x"},"Year":2027,"Name":"New Year","DateTimeRanges":[{"Start":"2027-01-01T00:00:00","End":"2027-01-02T00:00:00"}],"Extra":1}],"Diagnostics":[]}`)
 	exported := []byte(`{"ExportHolidaysResult":{"SerializedHolidayRecords":` + string(encoded) + `},"Diagnostics":[]}`)
 	imported := []byte(`{"ImportAutoAttendantHolidaysResult":{"ImportHolidayStatusRecords":[{"Name":"New Year","DataTimeRanges":[{"Start":"2027-01-01T00:00:00","End":"2027-01-02T00:00:00"}],"Succeeded":true,"FailureReason":null}],"AutoAttendant":null},"Diagnostics":[]}`)
-	run(t, contracttest.Case{Name: "actual-holidays-missing", Source: "msteams/teams_admin_api/schedules/testdata/holidays_missing_404.json", Mappings: mapping("Get-CsAutoAttendantHolidays"),
-		Steps: []contracttest.Exchange{discovery(t), wire("GET", holidays+"?ResponseType=0&Years=2027", "Get-CsAutoAttendantHolidays", nil, 404, missing)},
-		Want:  contracttest.Expected{Status: 404, Body: missing, APIError: apiError(404, missing)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "actual-holidays-missing",
+		Steps: []testutil.Exchange{discovery(t), wire("GET", holidays+"?ResponseType=0&Years=2027", "Get-CsAutoAttendantHolidays", nil, 404, missing)},
+		Want:  testutil.Expected{Status: 404, Body: missing, APIError: apiError(404, missing)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			values, response, err := sdk.TeamsAdminAPI.Schedules.ListHolidays(ctx, probe, &sched.HolidayOptions{Years: []string{"2027"}})
-			return contracttest.Observation{Value: values, Response: response, Err: err}
+			return testutil.Observation{Value: values, Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "holiday-shapes", Mappings: mapping("Get-CsAutoAttendantHolidays", "Export-CsAutoAttendantHolidays", "Import-CsAutoAttendantHolidays"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "holiday-shapes",
+		Steps: []testutil.Exchange{discovery(t),
 			// The module escapes later array items before escaping the whole value.
 			wire("GET", holidays+"?Names=a+b%2Cc%252Cd&ResponseType=0&Years=2026%2C2027", "Get-CsAutoAttendantHolidays", nil, 200, records),
 			wire("GET", holidays+"?ResponseType=1", "Export-CsAutoAttendantHolidays", nil, 200, exported),
 			wire("PUT", holidays, "Import-CsAutoAttendantHolidays", json.RawMessage(`{"SerializedHolidayRecords":`+string(encoded)+`}`), 200, imported)},
-		Want: contracttest.Expected{Status: 200, Body: imported},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: imported},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.Schedules
 			values, _, err := s.ListHolidays(ctx, probe, &sched.HolidayOptions{Years: []string{"2026", "2027"}, Names: []string{"a b", "c,d"}})
 			if err != nil || len(values) != 1 || *values[0].Year != 2027 || len(values[0].DateTimeRanges) != 1 || string(values[0].CallFlow) != `{"Id":"x"}` || values[0].RawFields["Extra"] == nil {
@@ -229,19 +210,18 @@ func TestUnitScheduleHolidaysUseAcceptanceAndModelResponses(t *testing.T) {
 			if err != nil || len(result.Statuses) != 1 || !*result.Statuses[0].Succeeded || result.Statuses[0].FailureReason != nil || len(result.Statuses[0].DateTimeRanges) != 1 {
 				t.Fatal("import statuses were not decoded")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
-// Response provenance: docs/implementation/calls/evidence/schedule-attendant-00c34b.json.
 // The request uses a controlled selector; the sanitized response bytes are unchanged.
 func TestUnitSchedulePopulatedHolidaysUseCapturedResponse(t *testing.T) {
 	t.Parallel()
 	raw := readFile(t, "testdata/integration_holidays.json")
-	run(t, contracttest.Case{Name: "captured-populated-holidays", Source: "msteams/teams_admin_api/schedules/testdata/integration_holidays.json", Mappings: mapping("Get-CsAutoAttendantHolidays"),
-		Steps: []contracttest.Exchange{discovery(t), wire("GET", holidays+"?ResponseType=0&Years=2027", "Get-CsAutoAttendantHolidays", nil, 200, raw)},
-		Want:  contracttest.Expected{Status: 200, Body: raw},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "captured-populated-holidays",
+		Steps: []testutil.Exchange{discovery(t), wire("GET", holidays+"?ResponseType=0&Years=2027", "Get-CsAutoAttendantHolidays", nil, 200, raw)},
+		Want:  testutil.Expected{Status: 200, Body: raw},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			values, response, err := sdk.TeamsAdminAPI.Schedules.ListHolidays(ctx, probe, &sched.HolidayOptions{Years: []string{"2027"}})
 			if err != nil || len(values) != 1 || values[0] == nil {
 				t.Fatal("captured populated holiday was not decoded")
@@ -258,7 +238,7 @@ func TestUnitSchedulePopulatedHolidaysUseCapturedResponse(t *testing.T) {
 			if json.Unmarshal(value.CallFlow, &flow) != nil || flow.ID != "00000000-0000-4000-8000-000000000006" || flow.ForceListenMenuEnabled == nil || *flow.ForceListenMenuEnabled || flow.RingResourceDelegates == nil || *flow.RingResourceDelegates {
 				t.Fatal("captured holiday lost its nested call-flow identity or explicit false values")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -268,14 +248,14 @@ func TestUnitScheduleListAndBodyOptions(t *testing.T) {
 	created := readFile(t, "testdata/create_fixed_201.json")
 	recurrence := json.RawMessage(`{"Name":"n","Type":"WeeklyRecurrence","WeeklyRecurrentSchedule":{"SundayHours":[{"Start":"00:00:00","End":"1.00:00:00"}],` +
 		`"RecurrenceRange":{"Type":"EndDate","Start":"2027-01-01T00:00:00","End":"2027-12-31T00:00:00"}}}`)
-	run(t, contracttest.Case{Name: "list-and-bodies", Mappings: mapping("Get-CsOnlineSchedule", "Set-CsOnlineSchedule"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "list-and-bodies",
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", collection, "Get-CsOnlineSchedule", nil, 200, list),
 			wire("GET", collection+"?Descending=False&ExcludeContent=True&First=5&NameFilter=msteams+sdk&Skip=0", "Get-CsOnlineSchedule", nil, 200, list),
 			wire("POST", collection, "New-CsOnlineSchedule", json.RawMessage(`{"Name":"n","FixedSchedule":{"DateTimeRanges":[]}}`), 201, created),
 			wire("PUT", collection+"/a", "Set-CsOnlineSchedule", recurrence, 200, created)},
-		Want: contracttest.Expected{Status: 200, Body: created},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: created},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.Schedules
 			values, _, err := s.List(ctx, nil)
 			if err != nil || len(values) != 1 || *values[0].Type != "Future" || values[0].WeeklyRecurrentSchedule != nil || values[0].RawFields["Unknown"] == nil {
@@ -294,7 +274,7 @@ func TestUnitScheduleListAndBodyOptions(t *testing.T) {
 			if err != nil || value == nil {
 				t.Fatal("update with recurrence range failed")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -326,18 +306,18 @@ func TestUnitScheduleMalformedResponsesFailDecode(t *testing.T) {
 			return s.GetHolidaysContent(ctx, probe)
 		}},
 	} {
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{discovery(t), wire("GET", c.path, c.command, nil, 200, []byte(c.body))},
-			Want: contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire("GET", c.path, c.command, nil, 200, []byte(c.body))},
+			Want: testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.Schedules)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
-	run(t, contracttest.Case{Name: "undeclared-status", Steps: []contracttest.Exchange{discovery(t), wire("DELETE", collection+"/a", "Remove-CsOnlineSchedule", nil, 202, nil)},
-		Want: contracttest.Expected{Status: 202, Error: sched.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "undeclared-status", Steps: []testutil.Exchange{discovery(t), wire("DELETE", collection+"/a", "Remove-CsOnlineSchedule", nil, 202, nil)},
+		Want: testutil.Expected{Status: 202, Error: sched.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.Schedules.DeleteByID(ctx, "a")
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -395,9 +375,9 @@ func TestUnitScheduleInvalidInputFailsBeforeIO(t *testing.T) {
 			return e
 		},
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local", Want: contracttest.Expected{Error: sched.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.Schedules)}
+		run(t, testutil.Case{Name: name, Want: testutil.Expected{Error: sched.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.Schedules)}
 			}})
 	}
 }

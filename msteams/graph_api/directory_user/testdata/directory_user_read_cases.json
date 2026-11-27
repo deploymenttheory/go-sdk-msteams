@@ -1,0 +1,541 @@
+{
+  "observations": [
+    {
+      "field": "id",
+      "input_json": "{\"id\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "id",
+      "input_json": "{\"id\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "displayName",
+      "input_json": "{\"displayName\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "userPrincipalName",
+      "input_json": "{\"userPrincipalName\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "userType",
+      "input_json": "{\"userType\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":null}",
+      "value": null,
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":\"\"}",
+      "value": "",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":\"opaque-user\"}",
+      "value": "opaque-user",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":\" \\u00e9 \"}",
+      "value": " é ",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":true}",
+      "value": "true",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":false}",
+      "value": "false",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":37}",
+      "value": "37",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":9007199254740993}",
+      "value": "9007199254740993",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":1.5}",
+      "value": "1.5",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":1e2}",
+      "value": "1e2",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":1e400}",
+      "value": "1e400",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":-0}",
+      "value": "-0",
+      "exception": null
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":[]}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "field": "mail",
+      "input_json": "{\"mail\":{}}",
+      "value": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    }
+  ],
+  "property_controls": [
+    {
+      "input_json": "{\"diſplayName\":\"foreign\",\"uſerPrincipalName\":\"foreign\"}",
+      "projection": {
+        "id": null,
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"diſplayName\":{},\"uſerPrincipalName\":[]}",
+      "projection": {
+        "id": null,
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"displayName\":\"first\",\"DISPLAYNAME\":\"last\"}",
+      "projection": {
+        "id": null,
+        "displayName": "last",
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"displayName\":\"first\",\"DISPLAYNAME\":null}",
+      "projection": {
+        "id": null,
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"id\":\"first\",\"ID\":null}",
+      "projection": {
+        "id": null,
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"ID\":null,\"id\":\"last\"}",
+      "projection": {
+        "id": "last",
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"id\":\"first\",\"id\":\"last\"}",
+      "projection": {
+        "id": "last",
+        "displayName": null,
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"id\":{},\"ID\":\"later\"}",
+      "projection": null,
+      "exception": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "input_json": "{\"DISPLAYNAME\":37,\"USERPRINCIPALNAME\":false,\"USERTYPE\":true,\"MAIL\":1e2}",
+      "projection": {
+        "id": null,
+        "displayName": "37",
+        "userPrincipalName": "false",
+        "userType": "true",
+        "mail": "1e2"
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"displayName\":\"known\",\"diſplayName\":{}}",
+      "projection": {
+        "id": null,
+        "displayName": "known",
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    },
+    {
+      "input_json": "{\"diſplayName\":{},\"displayName\":\"known\"}",
+      "projection": {
+        "id": null,
+        "displayName": "known",
+        "userPrincipalName": null,
+        "userType": null,
+        "mail": null
+      },
+      "exception": null
+    }
+  ]
+}

@@ -1,0 +1,684 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "AutoInitiateContacts",
+      "kind": "boolean",
+      "input_json": "{\"AutoInitiateContacts\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "DisplayPublishedPhotoDefault",
+      "kind": "boolean",
+      "input_json": "{\"DisplayPublishedPhotoDefault\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "EnablePrivacyMode",
+      "kind": "boolean",
+      "input_json": "{\"EnablePrivacyMode\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsPrivacyConfiguration",
+      "field": "PublishLocationDataDefault",
+      "kind": "boolean",
+      "input_json": "{\"PublishLocationDataDefault\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

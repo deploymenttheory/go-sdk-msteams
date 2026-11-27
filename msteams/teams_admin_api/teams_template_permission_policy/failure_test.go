@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -17,7 +17,7 @@ import (
 
 func TestUnitInputAndCancellationMakeNoRequests(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsTemplatePermissionPolicies
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
@@ -47,7 +47,7 @@ func TestUnitInputAndCancellationMakeNoRequests(t *testing.T) {
 		if _, _, e := resource.NewService(graph).List(ctx); !errors.Is(e, client.ErrDestination) {
 			t.Fatal("wrong destination acquired credentials")
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }
 
@@ -64,18 +64,18 @@ func TestUnitMutationsRetainStatusAndNeverReplay(t *testing.T) {
 				if operation == "delete" {
 					method, command, path = "DELETE", "Remove-CsTeamsTemplatePermissionPolicy", collection+"/configuration/Global"
 				}
-				run(t, contracttest.Case{Name: fmt.Sprintf("%s-%s-%d", mode, operation, status), Mode: mode, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire(method, path, command, json.RawMessage(body), status, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: fmt.Sprintf("%s-%s-%d", mode, operation, status), Mode: mode, Steps: []testutil.Exchange{compiledWire(method, path, command, json.RawMessage(body), status, "")}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					s := sdk.TeamsAdminAPI.TeamsTemplatePermissionPolicies
 					if operation == "create" {
 						_, r, e := s.CreateByIdentity(ctx, "Global", resource.CreateRequest{})
-						return contracttest.Observation{Response: r, Err: e}
+						return testutil.Observation{Response: r, Err: e}
 					}
 					if operation == "patch" {
 						_, r, e := s.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{ScalarSettings: resource.ScalarSettings{Description: policy.Null[string]()}}})
-						return contracttest.Observation{Response: r, Err: e}
+						return testutil.Observation{Response: r, Err: e}
 					}
 					_, r, e := s.DeleteByIdentity(ctx, "Global", policy.Controls{})
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				}})
 			}
 		}

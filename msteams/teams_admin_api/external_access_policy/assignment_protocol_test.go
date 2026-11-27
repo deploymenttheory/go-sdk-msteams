@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -28,7 +28,7 @@ func TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-				result, err := contracttest.Run(t.Context(), contracttest.Case{Name: "grant-" + tc.name + "-" + string(mode), Family: "external_access_policy", Scope: "service", Mode: mode, Source: "msteams/teams_admin_api/external_access_policy/assignment_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Grant-CsExternalAccessPolicy", ParameterSet: tc.set}}, Steps: []contracttest.Exchange{wire(tc.method, tc.path, "Grant-CsExternalAccessPolicy", json.RawMessage(tc.body), 204, "")}, Want: contracttest.Expected{Status: 204, Body: []byte{}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				result, err := testutil.Run(t.Context(), testutil.Case{Name: "grant-" + tc.name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{wire(tc.method, tc.path, "Grant-CsExternalAccessPolicy", json.RawMessage(tc.body), 204, "")}, Want: testutil.Expected{Status: 204, Body: []byte{}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					s := sdk.TeamsAdminAPI.ExternalAccessPolicies
 					switch tc.name {
 					case "user":
@@ -36,25 +36,25 @@ func TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion(t *testing.T) {
 						if value != nil {
 							t.Fatal("blank user receipt fabricated policy data")
 						}
-						return contracttest.Observation{Response: response, Err: err}
+						return testutil.Observation{Response: response, Err: err}
 					case "explicit-user-union":
 						value, response, err := s.Assign(ctx, policy.Assignment{User: &policy.UserAssignment{Identity: "user/fixture"}})
 						if value != nil {
 							t.Fatal("valid native user scope union fabricated policy data")
 						}
-						return contracttest.Observation{Response: response, Err: err}
+						return testutil.Observation{Response: response, Err: err}
 					case "tenant":
 						value, response, err := s.AssignTenantDefault(ctx, new(""), false)
 						if value != nil {
 							t.Fatal("blank tenant receipt fabricated policy data")
 						}
-						return contracttest.Observation{Response: response, Err: err}
+						return testutil.Observation{Response: response, Err: err}
 					default:
 						value, response, err := s.AssignGroup(ctx, "group/fixture", nil, 0)
 						if value != nil {
 							t.Fatal("blank group receipt fabricated a policy or job")
 						}
-						return contracttest.Observation{Response: response, Err: err}
+						return testutil.Observation{Response: response, Err: err}
 					}
 				}})
 				if err != nil || !result.Passed() {
@@ -69,12 +69,12 @@ func TestUnitGrantAuthoredEmptyAcceptanceAndValidScopeUnion(t *testing.T) {
 // the pinned typed decoder. This is not a captured service job/handle response.
 func TestUnitGrantRejectsOpaqueNonPolicySuccessBody(t *testing.T) {
 	t.Parallel()
-	result, err := contracttest.Run(t.Context(), contracttest.Case{Name: "grant-opaque-nonpolicy", Family: "external_access_policy", Scope: "service", Source: "msteams/teams_admin_api/external_access_policy/assignment_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Grant-CsExternalAccessPolicy", ParameterSet: "GrantToGroup"}}, Steps: []contracttest.Exchange{wire("POST", "/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/ExternalAccessPolicy", "Grant-CsExternalAccessPolicy", json.RawMessage(`{"policyName":null,"priority":0}`), 202, `"opaque-job"`)}, Want: contracttest.Expected{Status: 202, Body: []byte(`"opaque-job"`), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	result, err := testutil.Run(t.Context(), testutil.Case{Name: "grant-opaque-nonpolicy", Steps: []testutil.Exchange{wire("POST", "/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/ExternalAccessPolicy", "Grant-CsExternalAccessPolicy", json.RawMessage(`{"policyName":null,"priority":0}`), 202, `"opaque-job"`)}, Want: testutil.Expected{Status: 202, Body: []byte(`"opaque-job"`), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, response, err := sdk.TeamsAdminAPI.ExternalAccessPolicies.AssignGroup(ctx, "group/fixture", nil, 0)
 		if value != nil {
 			t.Fatal("opaque string became a fabricated policy")
 		}
-		return contracttest.Observation{Value: value, Response: response, Err: err}
+		return testutil.Observation{Value: value, Response: response, Err: err}
 	}})
 	if err != nil || !result.Passed() {
 		t.Fatalf("opaque Grant protocol failure differs: %v %+v", err, result.Differences())
@@ -87,12 +87,12 @@ func TestUnitGrantRejectsOpaqueNonPolicySuccessBody(t *testing.T) {
 // absent scope before credentials; PowerShell error presentation stays separate.
 func TestUnitGrantDefaultIdentitySetRejectsAbsentScope(t *testing.T) {
 	t.Parallel()
-	result, err := contracttest.Run(t.Context(), contracttest.Case{Name: "grant-default-no-scope", Family: "external_access_policy", Scope: "local", Source: "msteams/teams_admin_api/external_access_policy/assignment_protocol_test.go", Mappings: []contracttest.Mapping{{Command: "Grant-CsExternalAccessPolicy", ParameterSet: "Identity"}}, Want: contracttest.Expected{Error: policy.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	result, err := testutil.Run(t.Context(), testutil.Case{Name: "grant-default-no-scope", Want: testutil.Expected{Error: policy.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, response, err := sdk.TeamsAdminAPI.ExternalAccessPolicies.Assign(ctx, policy.Assignment{})
 		if value != nil || response != nil {
 			t.Fatal("absent assignment scope fabricated a policy or resource request")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 	if err != nil || !result.Passed() {
 		t.Fatalf("default Grant scope rejection differs: %v %+v", err, result.Differences())

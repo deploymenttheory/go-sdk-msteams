@@ -60,7 +60,7 @@ returned response. A denial is not qualification of successful installation.
 The pinned root module comments these four cmdlets as preview exports. Separate
 compiled-type declaration evidence captures real `TeamScope` and `UserScope`
 sets; it does not replace the immutable default-session discovery snapshot.
-See [source and qualification limits](../../../docs/implementation/ext/app-installation-contract-notes.md).
+See [unit tests](service_test.go).
 Live installation, current acceptance of the legacy permission body and independent
 installation cleanup remain unqualified; no live install runs in CI without an
 explicitly approved owned catalog app and target.

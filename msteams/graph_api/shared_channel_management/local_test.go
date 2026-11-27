@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	associated "github.com/deploymenttheory/go-sdk-msteams/msteams/graph_api/associated_team"
@@ -25,10 +25,10 @@ func TestUnitResourceBoundariesAreLocal(t *testing.T) {
 					want = client.ErrNilContext
 				}
 				//nolint:contextcheck // The nil-context case deliberately replaces the inherited context to verify local rejection.
-				run(t, contracttest.Case{Name: resource + "-" + state, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: resource + "-" + state, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					if state == "closed" {
 						if err := sdk.Close(); err != nil {
-							return contracttest.Observation{Err: err}
+							return testutil.Observation{Err: err}
 						}
 					}
 					if state == "nil-context" {
@@ -44,7 +44,7 @@ func TestUnitResourceBoundariesAreLocal(t *testing.T) {
 							s = share.NewService(sdk.TeamsAdminAPI.Scope())
 						}
 						v, r, err := s.GetByID(ctx, hostID, channelID, targetID)
-						return contracttest.Observation{Value: v, Response: r, Err: err}
+						return testutil.Observation{Value: v, Response: r, Err: err}
 					case "associated":
 						s := sdk.GraphAPI.AssociatedTeams
 						if state == "nil-service" {
@@ -54,7 +54,7 @@ func TestUnitResourceBoundariesAreLocal(t *testing.T) {
 							s = associated.NewService(sdk.TeamsAdminAPI.Scope())
 						}
 						v, err := s.ListForUser(ctx, userID, client.PagingOptions{})
-						return contracttest.Observation{Response: v.Response, Err: err}
+						return testutil.Observation{Response: v.Response, Err: err}
 					default:
 						s := sdk.GraphAPI.SharedChannelManagement
 						if state == "nil-service" {
@@ -64,9 +64,9 @@ func TestUnitResourceBoundariesAreLocal(t *testing.T) {
 							s = management.NewService(sdk.TeamsAdminAPI.Scope())
 						}
 						r, err := s.UnshareWithTeam(ctx, hostID, channelID, targetID)
-						return contracttest.Observation{Response: r, Err: err}
+						return testutil.Observation{Response: r, Err: err}
 					}
-				}, Want: contracttest.Expected{Error: want}})
+				}, Want: testutil.Expected{Error: want}})
 			})
 		}
 	}

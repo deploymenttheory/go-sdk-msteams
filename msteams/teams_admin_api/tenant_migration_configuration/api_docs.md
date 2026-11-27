@@ -48,4 +48,4 @@ share the tenant lock. Permanent sanitized acceptance responses provide unit
 decoding and request fixtures. These checks do not establish effective meeting
 migration behavior, delegated authentication or other clouds.
 
-See [qualification](../../../docs/implementation/policies/tenant-migration-configuration-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/tenant-migration-configuration-lab-acceptance.md).

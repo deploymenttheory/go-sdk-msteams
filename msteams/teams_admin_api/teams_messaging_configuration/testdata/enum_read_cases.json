@@ -1,0 +1,84 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"1\\u0000\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"37\\u0000\"}",
+      "projected_json": "37",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"\\u00a01\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"1\\u00a0\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"Enabled\\u0000\"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"\\u0000Enabled\"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"Enabled, Disabled\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"Enabled,0\"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"1,Enabled\"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-string-edges",
+      "input_json": "{\"Storyline\":\"37,Disabled\"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    }
+  ]
+}

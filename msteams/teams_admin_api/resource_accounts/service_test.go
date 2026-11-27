@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -17,9 +17,9 @@ import (
 )
 
 const (
-	configOrigin  = "https://api.interfaces.records.teams.microsoft.com"
-	targetForest  = "https://admin.example.invalid/"
-	source        = "msteams/teams_admin_api/resource_accounts/service_test.go"
+	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
+	targetForest = "https://admin.example.invalid/"
+
 	probe         = "00000000-0000-4000-8000-000000000001"
 	configuration = "00000000-0000-4000-8000-000000000002"
 	jsonType      = "application/json; charset=utf-8"
@@ -42,17 +42,17 @@ func readFile(t *testing.T, path string) []byte {
 	return raw
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
@@ -61,34 +61,20 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if reply == nil {
 		contentType = ""
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "resource_accounts"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !result.Passed() {
 		t.Fatalf("resource account contract %s differed: %+v", c.Name, result.Differences())
 	}
-}
-
-func mapping(commands ...string) []contracttest.Mapping {
-	out := make([]contracttest.Mapping, 0, len(commands))
-	for _, command := range commands {
-		out = append(out, contracttest.Mapping{Command: command, ParameterSet: "__AllParameterSets"})
-	}
-	return out
 }
 
 // apiError is the normalized error for a fixture: ConfigAPI reports the code
@@ -116,14 +102,14 @@ func TestUnitResourceAccountReadsUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	list, search, status := readFile(t, "testdata/list.json"), readFile(t, "testdata/search.json"), readFile(t, "testdata/association_status.json")
 	missing, noAssociation := readFile(t, "testdata/get_missing_404.json"), readFile(t, "testdata/association_missing_404.json")
-	run(t, contracttest.Case{Name: "actual-reads", Source: "msteams/teams_admin_api/resource_accounts/testdata/list.json",
-		Mappings: mapping("Get-CsOnlineApplicationInstance", "Find-CsOnlineApplicationInstance", "Get-CsOnlineApplicationInstanceAssociationStatus"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-reads",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", legacy+"?resultSize=100", "Get-CsOnlineApplicationInstance", nil, 200, list),
 			wire("GET", "/Teams.VoiceApps/applicationinstances?MaxResults=100&SearchQuery=msteams-sdk", "Find-CsOnlineApplicationInstance", nil, 200, search),
 			wire("GET", associations+"/"+probe+"/status", "Get-CsOnlineApplicationInstanceAssociationStatus", nil, 200, status)},
-		Want: contracttest.Expected{Status: 200, Body: status},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: status},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.ResourceAccounts
 			values, _, err := s.List(ctx, &ra.ListOptions{ResultSize: ptr(int32(100))})
 			if err != nil || values == nil || len(values) != 0 {
@@ -138,21 +124,21 @@ func TestUnitResourceAccountReadsUseAcceptanceResponses(t *testing.T) {
 				*record.Status != 0 || string(record.AuxiliaryData) != "null" || len(record.RawFields) != 6 {
 				t.Fatal("actual status record was changed")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "actual-get-missing", Mappings: mapping("Get-CsOnlineApplicationInstance"),
-		Steps: []contracttest.Exchange{discovery(t), wire("GET", legacy+"?identity="+probe, "Get-CsOnlineApplicationInstance", nil, 404, missing)},
-		Want:  contracttest.Expected{Status: 404, Body: missing, APIError: apiError(404, missing)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "actual-get-missing",
+		Steps: []testutil.Exchange{discovery(t), wire("GET", legacy+"?identity="+probe, "Get-CsOnlineApplicationInstance", nil, 404, missing)},
+		Want:  testutil.Expected{Status: 404, Body: missing, APIError: apiError(404, missing)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.ResourceAccounts.GetByID(ctx, probe)
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "actual-association-missing", Mappings: mapping("Get-CsOnlineApplicationInstanceAssociation"),
-		Steps: []contracttest.Exchange{discovery(t), wire("GET", associations+"/"+probe, "Get-CsOnlineApplicationInstanceAssociation", nil, 404, noAssociation)},
-		Want:  contracttest.Expected{Status: 404, Body: noAssociation, APIError: apiError(404, noAssociation)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "actual-association-missing",
+		Steps: []testutil.Exchange{discovery(t), wire("GET", associations+"/"+probe, "Get-CsOnlineApplicationInstanceAssociation", nil, 404, noAssociation)},
+		Want:  testutil.Expected{Status: 404, Body: noAssociation, APIError: apiError(404, noAssociation)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.ResourceAccounts.GetAssociationByID(ctx, probe)
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
 }
 
@@ -197,15 +183,15 @@ func TestUnitResourceAccountRejectedWritesUseAcceptanceResponses(t *testing.T) {
 		if c.body != "" {
 			body = json.RawMessage(c.body)
 		}
-		run(t, contracttest.Case{Name: "actual-" + c.name, Source: "msteams/teams_admin_api/resource_accounts/testdata/" + c.fixture, Mappings: mapping(c.command),
-			Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, body, 400, reply)},
-			Want:  contracttest.Expected{Status: 400, Body: reply, APIError: apiError(400, reply)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "actual-" + c.name,
+			Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, body, 400, reply)},
+			Want:  testutil.Expected{Status: 400, Body: reply, APIError: apiError(400, reply)},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.ResourceAccounts)
 				if v, ok := value.(*ra.ApplicationInstance); ok && v != nil {
 					t.Fatal("rejected write returned a value")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -214,14 +200,14 @@ func TestUnitResourceAccountAssociationWritesUseAcceptanceResponses(t *testing.T
 	t.Parallel()
 	associated, unassociated := readFile(t, "testdata/associate_missing.json"), readFile(t, "testdata/unassociate_missing.json")
 	body := json.RawMessage(`{"CallPriority":3,"ConfigurationId":"` + configuration + `","ConfigurationType":"CallQueue","EndpointsIds":["` + probe + `"]}`)
-	run(t, contracttest.Case{Name: "actual-association-writes", Source: "msteams/teams_admin_api/resource_accounts/testdata/associate_missing.json",
-		Mappings: mapping("New-CsOnlineApplicationInstanceAssociation", "Remove-CsOnlineApplicationInstanceAssociation", "Sync-CsOnlineApplicationInstance"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-association-writes",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", instances+"/"+probe+"/sync?applicationId="+ra.CallQueueApplicationID, "Sync-CsOnlineApplicationInstance", nil, 204, nil),
 			wire("POST", associations, "New-CsOnlineApplicationInstanceAssociation", body, 200, associated),
 			wire("DELETE", associations+"/"+probe, "Remove-CsOnlineApplicationInstanceAssociation", nil, 200, unassociated)},
-		Want: contracttest.Expected{Status: 200, Body: unassociated},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: unassociated},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.ResourceAccounts
 			if response, err := s.SyncByID(ctx, probe, ra.SyncRequest{ApplicationID: ptr(ra.CallQueueApplicationID)}); err != nil || response.StatusCode() != 204 {
 				t.Fatal("sync was not accepted")
@@ -236,7 +222,7 @@ func TestUnitResourceAccountAssociationWritesUseAcceptanceResponses(t *testing.T
 			if err != nil || len(results) != 1 || *results[0].Status.ErrorCode != "RemoveApplicationInstanceAssociation_AssociationNotFound" {
 				t.Fatal("per-account removal failure was not preserved")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -250,9 +236,9 @@ func TestUnitResourceAccountSuccessShapesPreserveFields(t *testing.T) {
 	found := []byte(`{"ApplicationInstances":[{"Id":"` + probe + `","DisplayName":"Front desk","SipUri":"sip:ra@example.invalid","ApplicationId":null,"IsOnPrem":false,"Extra":true}],"Diagnostics":[]}`)
 	association := []byte(`{"ApplicationInstanceAssociation":{"Id":"` + probe + `","ApplicationConfigurationType":"CallQueue","ConfigurationId":"` + configuration + `","CallPriority":2}}`)
 	createBody := json.RawMessage(`{"userPrincipalName":"ra@example.invalid"}`)
-	run(t, contracttest.Case{Name: "success-shapes", Mappings: mapping("Get-CsOnlineApplicationInstance", "New-CsOnlineApplicationInstance", "Set-CsOnlineApplicationInstance",
-		"Find-CsOnlineApplicationInstance", "Get-CsOnlineApplicationInstanceAssociation"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "success-shapes",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", legacy+"?skip=0", "Get-CsOnlineApplicationInstance", nil, 200, list),
 			wire("GET", legacy+"?identity=ra%40example.invalid", "Get-CsOnlineApplicationInstance", nil, 200, list),
 			wire("GET", legacy+"?identity="+probe, "Get-CsOnlineApplicationInstance", nil, 200, single),
@@ -260,8 +246,8 @@ func TestUnitResourceAccountSuccessShapesPreserveFields(t *testing.T) {
 			wire("PATCH", instances+"/ra@example.invalid", "Set-CsOnlineApplicationInstance", json.RawMessage(`{"acsResourceId":"`+configuration+`","applicationId":"`+probe+`"}`), 204, nil),
 			wire("GET", "/Teams.VoiceApps/applicationinstances?AssociatedOnly=False&ExactMatchOnly=True&SearchQuery=front+desk", "Find-CsOnlineApplicationInstance", nil, 200, found),
 			wire("GET", associations+"/ra@example%5BDOT%5Dinvalid", "Get-CsOnlineApplicationInstanceAssociation", nil, 200, association)},
-		Want: contracttest.Expected{Status: 200, Body: association},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: association},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.ResourceAccounts
 			values, _, err := s.List(ctx, &ra.ListOptions{Skip: ptr(int32(0))})
 			if err != nil || len(values) != 1 || values[0].TenantID != nil || *values[0].DisplayName != "Front desk" || values[0].RawFields["future"] == nil || len(values[0].RawFields) != 8 {
@@ -291,7 +277,7 @@ func TestUnitResourceAccountSuccessShapesPreserveFields(t *testing.T) {
 			if err != nil || *got.ApplicationConfigurationType != "CallQueue" || *got.CallPriority != 2 {
 				t.Fatal("association was not decoded")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -315,25 +301,25 @@ func TestUnitResourceAccountMalformedResponsesFailDecode(t *testing.T) {
 			return s.GetAssociationStatusByID(ctx, "x")
 		}},
 	} {
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{discovery(t), wire("GET", c.path, c.command, nil, 200, []byte(c.body))},
-			Want: contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire("GET", c.path, c.command, nil, 200, []byte(c.body))},
+			Want: testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.ResourceAccounts)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 	results := []byte(`{"AssociationOperationResults":null}`)
-	run(t, contracttest.Case{Name: "results-null", Steps: []contracttest.Exchange{discovery(t), wire("DELETE", associations+"/x", "Remove-CsOnlineApplicationInstanceAssociation", nil, 200, results)},
-		Want: contracttest.Expected{Status: 200, Error: client.ErrDecode},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "results-null", Steps: []testutil.Exchange{discovery(t), wire("DELETE", associations+"/x", "Remove-CsOnlineApplicationInstanceAssociation", nil, 200, results)},
+		Want: testutil.Expected{Status: 200, Error: client.ErrDecode},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, response, err := sdk.TeamsAdminAPI.ResourceAccounts.DeleteAssociationByID(ctx, "x")
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "undeclared-status", Steps: []contracttest.Exchange{discovery(t), wire("POST", instances+"/"+probe+"/sync?acsResourceId="+probe, "Sync-CsOnlineApplicationInstance", nil, 202, nil)},
-		Want: contracttest.Expected{Status: 202, Error: ra.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "undeclared-status", Steps: []testutil.Exchange{discovery(t), wire("POST", instances+"/"+probe+"/sync?acsResourceId="+probe, "Sync-CsOnlineApplicationInstance", nil, 202, nil)},
+		Want: testutil.Expected{Status: 202, Error: ra.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.ResourceAccounts.SyncByID(ctx, probe, ra.SyncRequest{AcsResourceID: ptr(probe)})
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -396,9 +382,9 @@ func TestUnitResourceAccountInvalidInputFailsBeforeIO(t *testing.T) {
 		},
 		"unassociate-dot": func(ctx context.Context, s *ra.Service) error { _, _, e := s.DeleteAssociationByID(ctx, "."); return e },
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local", Want: contracttest.Expected{Error: ra.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.ResourceAccounts)}
+		run(t, testutil.Case{Name: name, Want: testutil.Expected{Error: ra.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.ResourceAccounts)}
 			}})
 	}
 }

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_media_logging_policy"
@@ -23,21 +23,21 @@ func TestUnitActualModernReadAndCollection(t *testing.T) {
 		{"list.json", collection, ""},
 	} {
 		raw := readResponseFixture(t, tc.file)
-		run(t, contracttest.Case{Name: strings.TrimSuffix(tc.file, ".json"), Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsMediaLoggingPolicy", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", tc.path, "Get-CsTeamsMediaLoggingPolicy", nil, 200, string(raw))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: strings.TrimSuffix(tc.file, ".json"), Steps: []testutil.Exchange{compiledWire("GET", tc.path, "Get-CsTeamsMediaLoggingPolicy", nil, 200, string(raw))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TeamsMediaLoggingPolicies
 			if tc.identity != "" {
 				v, r, e := s.GetByIdentity(ctx, tc.identity)
 				if e == nil && (v.Identity != tc.identity || v.AllowMediaLogging == nil || *v.AllowMediaLogging != (tc.identity != "Global")) {
 					t.Fatal("actual getter projection lost")
 				}
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}
 			values, r, e := s.List(ctx)
 			var expected []map[string]json.RawMessage
 			if json.Unmarshal(raw, &expected) != nil || len(values) != len(expected) || len(values) < 2 || values[0].Identity != "Global" {
 				t.Fatal("actual collection or Global ordering lost")
 			}
-			return contracttest.Observation{Value: values, Response: r, Err: e}
+			return testutil.Observation{Value: values, Response: r, Err: e}
 		}})
 	}
 }
@@ -52,12 +52,12 @@ func TestUnitModernFiltersUseActualCollection(t *testing.T) {
 		pattern string
 		count   int
 	}{{"Global", 1}, {"Glo?al", 1}, {"Enabled", 1}, {"Tag:Enabled", 1}, {"*", len(values)}, {"missing", 0}, {" ", len(values)}, {"", len(values)}} {
-		run(t, contracttest.Case{Name: "filter", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsMediaLoggingPolicy", ParameterSet: "Filter"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection, "Get-CsTeamsMediaLoggingPolicy", nil, 200, string(readResponseFixture(t, "list.json")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "filter", Steps: []testutil.Exchange{compiledWire("GET", collection, "Get-CsTeamsMediaLoggingPolicy", nil, 200, string(readResponseFixture(t, "list.json")))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			values, r, e := sdk.TeamsAdminAPI.TeamsMediaLoggingPolicies.ListFiltered(ctx, tc.pattern)
 			if e == nil && len(values) != tc.count {
 				t.Fatalf("modern filter %q differs", tc.pattern)
 			}
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
 	}
 }
@@ -76,26 +76,26 @@ func TestUnitReadFailuresRetainResponses(t *testing.T) {
 		name   string
 		status int
 		body   string
-		want   contracttest.Expected
+		want   testutil.Expected
 	}{
-		{"missing", 404, string(missing), contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{envelope.Code}, ServiceErrorCodes: []int{envelope.ErrorCode}}}},
-		{"denied", 403, "", contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403}}},
-		{"malformed", 200, `[`, contracttest.Expected{Error: client.ErrDecode}},
-		{"wrong-shape", 200, `"text"`, contracttest.Expected{Error: client.ErrDecode}},
+		{"missing", 404, string(missing), testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404, Codes: []string{envelope.Code}, ServiceErrorCodes: []int{envelope.ErrorCode}}}},
+		{"denied", 403, "", testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403}}},
+		{"malformed", 200, `[`, testutil.Expected{Error: client.ErrDecode}},
+		{"wrong-shape", 200, `"text"`, testutil.Expected{Error: client.ErrDecode}},
 	} {
-		run(t, contracttest.Case{Name: tc.name, Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsMediaLoggingPolicy", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection+"/configuration/Global", "Get-CsTeamsMediaLoggingPolicy", nil, tc.status, tc.body)}, Want: tc.want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{compiledWire("GET", collection+"/configuration/Global", "Get-CsTeamsMediaLoggingPolicy", nil, tc.status, tc.body)}, Want: tc.want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, e := sdk.TeamsAdminAPI.TeamsMediaLoggingPolicies.GetByIdentity(ctx, "Global")
 			if e == nil || v != nil {
 				t.Fatal("read failure returned a value")
 			}
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
 	}
 }
 
 func TestUnitGrantScopeIdentityAndCancellationRejectBeforeHTTP(t *testing.T) {
 	t.Parallel()
-	runExplicit(t, contracttest.Case{Name: "local-validation", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	runExplicit(t, testutil.Case{Name: "local-validation", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsMediaLoggingPolicies
 		for _, input := range []resource.Assignment{{}, {User: &resource.UserAssignment{Identity: "fixture"}, Tenant: &resource.TenantAssignment{}}, {Tenant: &resource.TenantAssignment{}, Group: &resource.GroupGrant{ID: "group"}}} {
 			if _, _, e := s.Assign(ctx, input); !errors.Is(e, resource.ErrInput) {
@@ -132,6 +132,6 @@ func TestUnitGrantScopeIdentityAndCancellationRejectBeforeHTTP(t *testing.T) {
 				t.Fatal("nil backend reached HTTP")
 			}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

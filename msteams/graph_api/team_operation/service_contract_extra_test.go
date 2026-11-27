@@ -6,7 +6,7 @@ import (
 	"testing/synctest"
 	"time"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -22,16 +22,14 @@ func TestUnitConfiguredGraphCloudAndModeOwnTheBetaRequest(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				step := wire(200, "")
+				step := wire(200, body("succeeded"))
 				step.Request.URL = env.Endpoints.Graph + path()
 				step.Request.Audience = env.Endpoints.Graph
-				run(t, contracttest.Case{Name: "configured-cloud", Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: "configured-cloud", Cloud: cloud, Mode: mode, Steps: []testutil.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					v, r, e := sdk.GraphAPI.TeamOperations.GetByID(ctx, teamID, operationID)
-					if e != nil && isRequestBoundary(ctx) {
-						return contracttest.Observation{Response: r, Err: e}
-					}
-					return contracttest.Observation{Value: v, Response: r, Err: e}
-				}, Want: contracttest.Expected{Status: 200}})
+
+					return testutil.Observation{Value: v, Response: r, Err: e}
+				}, Want: testutil.Expected{Status: 200}})
 			})
 		}
 	}
@@ -48,13 +46,13 @@ func TestUnitClosedWrongBackendAndInvalidTeamAreLocal(t *testing.T) {
 			if name == "invalid-team" {
 				expected = client.ErrRequest
 			}
-			run(t, contracttest.Case{Name: name, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: name, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.GraphAPI.TeamOperations
 				id := teamID
 				switch name {
 				case "closed":
 					if e := sdk.Close(); e != nil {
-						return contracttest.Observation{Err: e}
+						return testutil.Observation{Err: e}
 					}
 				case "wrong-backend":
 					s = operation.NewService(sdk.TeamsAdminAPI.Scope())
@@ -64,8 +62,8 @@ func TestUnitClosedWrongBackendAndInvalidTeamAreLocal(t *testing.T) {
 					id = "../team"
 				}
 				v, r, e := s.GetByID(ctx, id, operationID)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
-			}, Want: contracttest.Expected{Error: expected}})
+				return testutil.Observation{Value: v, Response: r, Err: e}
+			}, Want: testutil.Expected{Error: expected}})
 		})
 	}
 }
@@ -81,16 +79,14 @@ func TestUnitPollingRejectsIdentityChangeAndContradictoryAcceptance(t *testing.T
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			synctest.Test(t, func(t *testing.T) {
-				run(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{wire(tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{wire(tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					v, e := sdk.GraphAPI.TeamOperations.WaitByID(ctx, teamID, operationID, client.WaitOptions{MaxPolls: 1, Timeout: time.Minute})
-					if e != nil && isRequestBoundary(ctx) {
-						return contracttest.Observation{Response: v.Response, Err: e}
-					}
+
 					if v.Status.State == client.OperationSucceeded {
 						t.Error("invalid response established success")
 					}
-					return contracttest.Observation{Response: v.Response, Err: e}
-				}, Want: contracttest.Expected{Status: tc.status, Error: client.ErrOperationState}})
+					return testutil.Observation{Response: v.Response, Err: e}
+				}, Want: testutil.Expected{Status: tc.status, Error: client.ErrOperationState}})
 			})
 		})
 	}

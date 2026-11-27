@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	ti "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/tenant_identity"
@@ -67,14 +67,14 @@ func TestUnitFindGroupPublicProjectionUsesPinnedModelAndGUIDRules(t *testing.T) 
 func TestUnitFindGroupRootClientProjectionRetainsEveryReceipt(t *testing.T) {
 	for index, item := range groupObservations(t).Envelopes {
 		t.Run(fmt.Sprint(index), func(t *testing.T) {
-			want := contracttest.Expected{Status: 200, Body: []byte(item.JSON), JSON: item.Projected}
+			want := testutil.Expected{Status: 200, Body: []byte(item.JSON), JSON: item.Projected}
 			if string(item.Exception) != "null" {
 				want.Error = client.ErrDecode
 				want.JSON = nil
 			}
-			run(t, contracttest.Case{Name: fmt.Sprintf("find-projection-%d", index), Source: "msteams/teams_admin_api/tenant_identity/testdata/pinned-find-group.json", Mappings: mapping("Find-CsGroup"),
-				Steps: []contracttest.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/groups?SearchQuery=abc", "Find-CsGroup", nil, 200, []byte(item.JSON))}, Want: want,
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: fmt.Sprintf("find-projection-%d", index),
+				Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/groups?SearchQuery=abc", "Find-CsGroup", nil, 200, []byte(item.JSON))}, Want: want,
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					value, response, err := sdk.TeamsAdminAPI.TenantIdentity.SearchGroups(ctx, ti.GroupSearchRequest{SearchQuery: "abc"})
 					if response == nil || response.StatusCode() != 200 || string(response.Body()) != item.JSON {
 						t.Fatal("projection lost accepted receipt")
@@ -82,7 +82,7 @@ func TestUnitFindGroupRootClientProjectionRetainsEveryReceipt(t *testing.T) {
 					if err != nil && value != nil {
 						t.Fatal("buffered source failure leaked partial group results")
 					}
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				}})
 		})
 	}
@@ -100,25 +100,25 @@ func TestUnitFindGroupSourceQueryBindingAndExactStatus(t *testing.T) {
 	} {
 		t.Run(item.name, func(t *testing.T) {
 			reply := []byte(`{"Groups":[]}`)
-			run(t, contracttest.Case{Name: "find-query-" + item.name, Mappings: mapping("Find-CsGroup"), Steps: []contracttest.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/groups?"+item.query, "Find-CsGroup", nil, 200, reply)}, Want: contracttest.Expected{Status: 200, Body: reply, JSON: json.RawMessage(`[]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "find-query-" + item.name, Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/groups?"+item.query, "Find-CsGroup", nil, 200, reply)}, Want: testutil.Expected{Status: 200, Body: reply, JSON: json.RawMessage(`[]`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TenantIdentity.SearchGroups(ctx, item.request)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}})
 		})
 	}
 	for _, status := range []int{201, 204} {
 		t.Run(fmt.Sprint(status), func(t *testing.T) {
-			run(t, contracttest.Case{Name: fmt.Sprintf("find-undeclared-%d", status), Mappings: mapping("Find-CsGroup"), Steps: []contracttest.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/groups?SearchQuery=abc", "Find-CsGroup", nil, status, nil)}, Want: contracttest.Expected{Status: status, Error: ti.ErrResponse}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: fmt.Sprintf("find-undeclared-%d", status), Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/groups?SearchQuery=abc", "Find-CsGroup", nil, status, nil)}, Want: testutil.Expected{Status: status, Error: ti.ErrResponse}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TenantIdentity.SearchGroups(ctx, ti.GroupSearchRequest{SearchQuery: "abc"})
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}})
 		})
 	}
 	// Exact duplicates fail even in unprojected nested diagnostic/unknown data.
 	for _, reply := range []string{`{"Groups":[],"Groups":null}`, `{"future":{"x":1,"x":2}}`, `{"Groups":[{"Id":"00000000-0000-0000-0000-000000000000","DisplayName":1,"DisplayName":"x"}]}`} {
-		run(t, contracttest.Case{Name: "find-exact-duplicate", Mappings: mapping("Find-CsGroup"), Steps: []contracttest.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/groups?SearchQuery=abc", "Find-CsGroup", nil, 200, []byte(reply))}, Want: contracttest.Expected{Status: 200, Body: []byte(reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "find-exact-duplicate", Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.VoiceApps/groups?SearchQuery=abc", "Find-CsGroup", nil, 200, []byte(reply))}, Want: testutil.Expected{Status: 200, Body: []byte(reply), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, e := sdk.TeamsAdminAPI.TenantIdentity.SearchGroups(ctx, ti.GroupSearchRequest{SearchQuery: "abc"})
-			return contracttest.Observation{Value: v, Response: r, Err: e}
+			return testutil.Observation{Value: v, Response: r, Err: e}
 		}})
 	}
 }

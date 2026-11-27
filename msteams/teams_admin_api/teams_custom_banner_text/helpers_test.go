@@ -5,17 +5,15 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
-const source = "msteams/teams_admin_api/teams_custom_banner_text/testdata/list.json"
 const origin = "https://api.interfaces.records.teams.microsoft.com"
 const collection = "/Skype.Policy/configurations/CustomBannerText"
 const relative = "01234567-89ab-cdef-0123-456789abcdef"
 const item = collection + "/configuration/Global/" + relative
 
-const binderSource = "msteams/teams_admin_api/teams_custom_banner_text/testdata/list.json"
 const newCommand = "New-CsTeamsCustomBannerText"
 const setCommand = "Set-CsTeamsCustomBannerText"
 const deleteCommand = "Remove-CsTeamsCustomBannerText"
@@ -751,7 +749,7 @@ func requestInputs(t *testing.T) []inputVectors {
 	return fixture.Cases
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply string) testutil.Exchange {
 	h := http.Header{}
 	h.Set("MPACmdlet", "true")
 	h.Set("X-MS-CmdletName", command)
@@ -759,21 +757,18 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if body != nil {
 		h.Set("Content-Type", "application/json; charset=utf-8")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"text/plain; charset=utf-8"}}, Body: []byte(reply)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"text/plain; charset=utf-8"}}, Body: []byte(reply)}}
 }
-func run(t *testing.T, c contracttest.Case) contracttest.Result {
+func run(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family = "teams_custom_banner_text"
-	if c.Source == "" {
-		c.Source = source
-	}
+
 	if len(c.Steps) == 0 {
-		c.Scope = "local"
+
 	} else {
-		c.Scope = "service"
+
 		c.Want.Status = c.Steps[len(c.Steps)-1].Reply.Status
 	}
-	r, e := contracttest.Run(t.Context(), c)
+	r, e := testutil.Run(t.Context(), c)
 	if e != nil || !r.Passed() {
 		t.Fatalf("banner contract %s differs: %v %+v", c.Name, e, r.Differences())
 	}

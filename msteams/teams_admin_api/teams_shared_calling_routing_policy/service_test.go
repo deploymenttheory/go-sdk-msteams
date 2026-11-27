@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -23,15 +23,15 @@ func TestUnitEmergencyEditsSendReplacementArraysWithoutInventedOperators(t *test
 		t.Run(tc.name, func(t *testing.T) {
 			// The preparation response is real. Hypothetical phone bindings end
 			// with a controlled failure and do not claim tenant number acceptance.
-			run(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{
+			run(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{
 				compiledWire("GET", item, "Set-CsTeamsSharedCallingRoutingPolicy", nil, 200, string(readResponseFixture(t, "get_global.json"))),
 				compiledWire("PATCH", item, "Set-CsTeamsSharedCallingRoutingPolicy", json.RawMessage(tc.body), 503, ""),
-			}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				result, r, e := sdk.TeamsAdminAPI.TeamsSharedCallingRoutingPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{EmergencyNumbers: tc.edit})
 				if result == nil || result.Before == nil || !result.PatchInvoked || result.HTTPAccepted {
 					t.Fatal("preparation, mutation invocation or failure state lost")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -39,11 +39,11 @@ func TestUnitEmergencyEditsSendReplacementArraysWithoutInventedOperators(t *test
 
 func TestUnitScalarNullEmptyAndForceDoNotBindTheList(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "scalar-bindings", Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "scalar-bindings", Steps: []testutil.Exchange{
 		compiledWire("PATCH", item, "Set-CsTeamsSharedCallingRoutingPolicy", json.RawMessage(`{"Identity":"Global","Description":"","ResourceAccount":null,"Force":"False"}`), 503, ""),
-	}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, r, e := sdk.TeamsAdminAPI.TeamsSharedCallingRoutingPolicies.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{ScalarSettings: resource.ScalarSettings{Description: policy.Set(""), ResourceAccount: policy.Null[string]()}}, Controls: policy.Controls{Force: new(false)}})
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }
 

@@ -7,27 +7,24 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	migration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/private_channel_migration"
 )
 
-func run(t *testing.T, c contracttest.Case) contracttest.Result {
+func run(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family, c.Source = "private_channel_migration", "msteams/teams_admin_api/private_channel_migration/service_test.go"
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	r, err := contracttest.Run(t.Context(), c)
+
+	r, err := testutil.Run(t.Context(), c)
 	if err != nil || !r.Passed() {
 		t.Fatalf("migration %s differs: setup=%v differences=%+v", c.Name, err, r.Differences())
 	}
 	return r
 }
-func wire(origin, prefix, audience string, status int, body string) contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + prefix + "/channels/privateChannelMigrationStatus", Audience: audience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil, "X-MS-CmdletName": {"Get-TenantPrivateChannelMigrationStatus"}}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
+func wire(origin, prefix, audience string, status int, body string) testutil.Exchange {
+	return testutil.Exchange{Request: testutil.WireRequest{Method: "GET", URL: origin + prefix + "/channels/privateChannelMigrationStatus", Audience: audience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-Target-Uri": nil, "X-MS-CmdletName": {"Get-TenantPrivateChannelMigrationStatus"}}}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
 }
 
 func TestUnitMigrationCloudRequestPrefixesAndAudiences(t *testing.T) {
@@ -41,7 +38,7 @@ func TestUnitMigrationCloudRequestPrefixesAndAudiences(t *testing.T) {
 		{"china", "https://teams.microsoftonline.cn", "/fabric/templates/api", "https://templates.teams.microsoftonline.cn"},
 	} {
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			run(t, contracttest.Case{Name: tc.cloud + "-" + string(mode), Cloud: tc.cloud, Mode: mode, Mappings: []contracttest.Mapping{{Command: "Get-TenantPrivateChannelMigrationStatus", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{wire(tc.origin, tc.prefix, tc.audience, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.cloud + "-" + string(mode), Cloud: tc.cloud, Mode: mode, Steps: []testutil.Exchange{wire(tc.origin, tc.prefix, tc.audience, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
 				var value any
 				if v != nil {
@@ -51,8 +48,8 @@ func TestUnitMigrationCloudRequestPrefixesAndAudiences(t *testing.T) {
 					}
 					value = map[string]any{"tenant": v.TenantID, "status": v.MigrationStatus, "checked": v.LastChecked, "start": v.MigrationStartTimestamp, "details": details, "future": v.RawFields["future"]}
 				}
-				return contracttest.Observation{Value: value, Response: r, Err: err}
-			}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
+				return testutil.Observation{Value: value, Response: r, Err: err}
+			}, Want: testutil.Expected{Status: 403, Error: auth.ErrForbidden}})
 		}
 	}
 }
@@ -60,22 +57,22 @@ func TestUnitMigrationCloudRequestPrefixesAndAudiences(t *testing.T) {
 func TestUnitMigrationProfilesDoNotFallbackAndWrongBackendIsLocal(t *testing.T) {
 	t.Parallel()
 	for _, cloud := range []string{"france", "germany"} {
-		run(t, contracttest.Case{Name: cloud, Cloud: cloud, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: cloud, Cloud: cloud, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
-			return contracttest.Observation{Value: v, Response: r, Err: err}
-		}, Want: contracttest.Expected{Error: client.ErrDestination}})
+			return testutil.Observation{Value: v, Response: r, Err: err}
+		}, Want: testutil.Expected{Error: client.ErrDestination}})
 	}
-	run(t, contracttest.Case{Name: "wrong-backend", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "wrong-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := migration.NewService(sdk.TeamsAdminAPI.Scope())
 		v, r, err := s.Get(ctx)
-		return contracttest.Observation{Value: v, Response: r, Err: err}
-	}, Want: contracttest.Expected{Error: client.ErrDestination}})
-	run(t, contracttest.Case{Name: "cancelled", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		return testutil.Observation{Value: v, Response: r, Err: err}
+	}, Want: testutil.Expected{Error: client.ErrDestination}})
+	run(t, testutil.Case{Name: "cancelled", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		ctx, stop := context.WithCancel(ctx)
 		stop()
 		v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
-		return contracttest.Observation{Value: v, Response: r, Err: err}
-	}, Want: contracttest.Expected{Error: context.Canceled}})
+		return testutil.Observation{Value: v, Response: r, Err: err}
+	}, Want: testutil.Expected{Error: context.Canceled}})
 }
 
 func TestUnitMigrationMalformedDetailsRemainExplicitCallerData(t *testing.T) {
@@ -88,26 +85,26 @@ func TestUnitMigrationMalformedDetailsRemainExplicitCallerData(t *testing.T) {
 		t.Fatal("malformed detail text accepted")
 	}
 	for _, body := range []string{`null`, `[]`, `{"Details":{}}`, `{"LastChecked":17}`} {
-		run(t, contracttest.Case{Name: "malformed-status", Steps: []contracttest.Exchange{wire("https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "malformed-status", Steps: []testutil.Exchange{wire("https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com", 200, body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
-			return contracttest.Observation{Value: v, Response: r, Err: err}
-		}, Want: contracttest.Expected{Status: 200, Error: client.ErrDecode}})
+			return testutil.Observation{Value: v, Response: r, Err: err}
+		}, Want: testutil.Expected{Status: 200, Error: client.ErrDecode}})
 	}
-	run(t, contracttest.Case{Name: "forbidden", Steps: []contracttest.Exchange{wire("https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com", 403, `{"error":{"code":"Denied"}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "forbidden", Steps: []testutil.Exchange{wire("https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com", 403, `{"error":{"code":"Denied"}}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
-		return contracttest.Observation{Value: v, Response: r, Err: err}
-	}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
+		return testutil.Observation{Value: v, Response: r, Err: err}
+	}, Want: testutil.Expected{Status: 403, Error: auth.ErrForbidden}})
 }
 
-// Authored from the pinned 8.1.0 PrivateChannelMigrationStatusResponse model;
-// see docs/implementation/core/authored-protocol-sources.md. This is not a capture.
+// These authored HTTP fixtures exercise request and result behavior.
+// Captured service responses are loaded separately from testdata.
 func TestUnitMigrationSuccessfulNativeSnapshotAndExplicitDetailDecode(t *testing.T) {
 	t.Parallel()
 	for _, details := range []string{`{"pending":2}`, `not-json`} {
 		body, _ := json.Marshal(map[string]any{"TenantId": "offline-tenant", "MigrationStatus": "RequiresAdminAttention", "Details": details, "LastChecked": "2026-11-20T12:00:00Z", "MigrationStartTimeStamp": nil, "MigrationCompletionTimeStamp": nil, "future": false})
 		step := wire("https://teams.microsoft.com", "/fabric/templates/api", "https://templates.teams.microsoft.com", 200, string(body))
-		step.Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0"}
-		run(t, contracttest.Case{Name: "native-success", Mappings: []contracttest.Mapping{{Command: "Get-TenantPrivateChannelMigrationStatus", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+
+		run(t, testutil.Case{Name: "native-success", Steps: []testutil.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, err := sdk.TeamsAdminAPI.PrivateChannelMigration.Get(ctx)
 			if err == nil {
 				if v == nil || v.TenantID == nil || *v.TenantID != "offline-tenant" || v.MigrationStatus == nil || *v.MigrationStatus != "RequiresAdminAttention" || v.LastChecked == nil || *v.LastChecked != "2026-11-20T12:00:00Z" || v.Details == nil || *v.Details != details || v.MigrationStartTimestamp != nil || v.MigrationCompletionTimestamp != nil || string(v.RawFields["future"]) != "false" {
@@ -122,7 +119,7 @@ func TestUnitMigrationSuccessfulNativeSnapshotAndExplicitDetailDecode(t *testing
 					t.Fatal("explicit detail decoding failed")
 				}
 			}
-			return contracttest.Observation{Response: r, Err: err}
-		}, Want: contracttest.Expected{Status: 200, Body: body}})
+			return testutil.Observation{Response: r, Err: err}
+		}, Want: testutil.Expected{Status: 200, Body: body}})
 	}
 }

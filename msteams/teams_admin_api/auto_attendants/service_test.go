@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -17,9 +17,9 @@ import (
 )
 
 const (
-	configOrigin  = "https://api.interfaces.records.teams.microsoft.com"
-	targetForest  = "https://admin.example.invalid/"
-	source        = "msteams/teams_admin_api/auto_attendants/service_test.go"
+	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
+	targetForest = "https://admin.example.invalid/"
+
 	probe         = "00000000-0000-4000-8000-000000000001"
 	attendantID   = "00000000-0000-4000-8000-000000000003"
 	defaultFlowID = "00000000-0000-4000-8000-000000000004"
@@ -49,17 +49,17 @@ func readFile(t *testing.T, path string) []byte {
 	return raw
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
@@ -68,34 +68,20 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if reply == nil {
 		contentType = ""
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "auto_attendants"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !result.Passed() {
 		t.Fatalf("auto attendant contract %s differed: %+v", c.Name, result.Differences())
 	}
-}
-
-func mapping(commands ...string) []contracttest.Mapping {
-	out := make([]contracttest.Mapping, 0, len(commands))
-	for _, command := range commands {
-		out = append(out, contracttest.Mapping{Command: command, ParameterSet: "__AllParameterSets"})
-	}
-	return out
 }
 
 // apiError is the normalized error for a fixture: ConfigAPI reports the code
@@ -159,9 +145,9 @@ func TestUnitAutoAttendantLifecycleUsesAcceptanceResponses(t *testing.T) {
 		return s
 	}
 	updateBody := marshal(t, change(read.AutoAttendant.Settings()))
-	run(t, contracttest.Case{Name: "actual-lifecycle", Source: "msteams/teams_admin_api/auto_attendants/testdata/get.json",
-		Mappings: mapping("New-CsAutoAttendant", "Get-CsAutoAttendant", "Get-CsAutoAttendantStatus", "Set-CsAutoAttendant", "Update-CsAutoAttendant", "Remove-CsAutoAttendant"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-lifecycle",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", attendants, "New-CsAutoAttendant", marshal(t, settings), 201, created),
 			wire("GET", attendants+"/"+attendantID, "Get-CsAutoAttendant", nil, 200, got),
 			wire("GET", attendants+"/status/"+attendantID, "Get-CsAutoAttendantStatus", nil, 200, status),
@@ -169,8 +155,8 @@ func TestUnitAutoAttendantLifecycleUsesAcceptanceResponses(t *testing.T) {
 			wire("PUT", attendants+"/"+attendantID, "Set-CsAutoAttendant", updateBody, 200, updated),
 			wire("POST", attendants+"/"+attendantID+"/refresh", "Update-CsAutoAttendant", nil, 200, refreshed),
 			wire("DELETE", attendants+"/"+attendantID, "Remove-CsAutoAttendant", nil, 200, deleted)},
-		Want: contracttest.Expected{Status: 200, Body: deleted},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: deleted},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.AutoAttendants
 			value, response, err := s.Create(ctx, settings)
 			if err != nil || response.StatusCode() != 201 || *value.ID != attendantID || *value.DefaultCallFlow.ID != defaultFlowID ||
@@ -198,23 +184,23 @@ func TestUnitAutoAttendantLifecycleUsesAcceptanceResponses(t *testing.T) {
 				t.Fatal("refresh reply was not decoded")
 			}
 			response, err = s.DeleteByID(ctx, attendantID)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
 func TestUnitAutoAttendantReadsUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	info, language, zone := readFile(t, "testdata/information.json"), readFile(t, "testdata/language.json"), readFile(t, "testdata/time_zone.json")
-	run(t, contracttest.Case{Name: "actual-reads", Source: "msteams/teams_admin_api/auto_attendants/testdata/information.json",
-		Mappings: mapping("Get-CsAutoAttendantTenantInformation", "Get-CsAutoAttendantSupportedLanguage", "Get-CsAutoAttendantSupportedTimeZone"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-reads",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", information, "Get-CsAutoAttendantTenantInformation", nil, 200, info),
 			wire("GET", information, "Get-CsAutoAttendantTenantInformation", nil, 200, info),
 			wire("GET", information, "Get-CsAutoAttendantTenantInformation", nil, 200, info),
 			wire("GET", languagesRoute+"en-US", "Get-CsAutoAttendantSupportedLanguage", nil, 200, language),
 			wire("GET", timeZonesRoute+"UTC", "Get-CsAutoAttendantSupportedTimeZone", nil, 200, zone)},
-		Want: contracttest.Expected{Status: 200, Body: zone},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: zone},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.AutoAttendants
 			value, _, err := s.GetTenantInformation(ctx)
 			if err != nil || *value.DefaultLanguage != "en-US" || *value.DefaultTimeZone != "UTC" || len(value.SupportedLanguages) != 54 ||
@@ -231,7 +217,7 @@ func TestUnitAutoAttendantReadsUseAcceptanceResponses(t *testing.T) {
 				t.Fatal("supported language was not decoded")
 			}
 			result, response, err := s.GetSupportedTimeZoneByID(ctx, "UTC")
-			return contracttest.Observation{Value: result, Response: response, Err: err}
+			return testutil.Observation{Value: result, Response: response, Err: err}
 		}})
 }
 
@@ -254,10 +240,9 @@ func TestUnitAutoAttendantDraftsUseAcceptanceResponses(t *testing.T) {
 	menuValue := aa.Menu{Name: ptr("Default menu"), Prompts: []aa.Prompt{decoded.Prompt}, MenuOptions: []aa.MenuOption{decoded.MenuOption},
 		DirectorySearchMethod: ptr(aa.SearchNone)}
 	flowValue := aa.CallFlow{Name: ptr("Default call flow"), Greetings: []aa.Prompt{decoded.Prompt}, Menu: &decoded.Menu}
-	run(t, contracttest.Case{Name: "actual-drafts", Source: "msteams/teams_admin_api/auto_attendants/testdata/draft_call_flow.json",
-		Mappings: mapping("New-CsAutoAttendantPrompt", "New-CsAutoAttendantCallableEntity", "New-CsAutoAttendantMenuOption", "New-CsAutoAttendantMenu",
-			"New-CsAutoAttendantCallFlow", "New-CsAutoAttendantCallHandlingAssociation"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-drafts",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", attendants+"/prompts/draft", "New-CsAutoAttendantPrompt", marshal(t, greeting("Welcome to the SDK probe")), 200, prompt),
 			wire("POST", attendants+"/callable-entities/draft", "New-CsAutoAttendantCallableEntity", json.RawMessage(`{"Id":"`+pstn+`","Type":"ExternalPstn"}`), 200, entity),
 			wire("POST", attendants+"/menus/menu-options/draft", "New-CsAutoAttendantMenuOption", marshal(t, optionValue), 200, option),
@@ -265,8 +250,8 @@ func TestUnitAutoAttendantDraftsUseAcceptanceResponses(t *testing.T) {
 			wire("POST", attendants+"/call-flows/draft", "New-CsAutoAttendantCallFlow", marshal(t, flowValue), 200, flow),
 			wire("POST", attendants+"/call-handling-associations/draft", "New-CsAutoAttendantCallHandlingAssociation",
 				json.RawMessage(`{"Type":"AfterHours","ScheduleId":"`+probe+`","CallFlowId":"`+defaultFlowID+`","Enabled":true}`), 200, association)},
-		Want: contracttest.Expected{Status: 200, Body: association},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: association},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.AutoAttendants
 			if value, _, err := s.DraftPrompt(ctx, greeting("Welcome to the SDK probe")); err != nil || *value.ActiveType != aa.PromptTextToSpeech {
 				t.Fatal("prompt draft was not decoded")
@@ -288,7 +273,7 @@ func TestUnitAutoAttendantDraftsUseAcceptanceResponses(t *testing.T) {
 			if err == nil && (*value.Priority != 1 || !*value.Enabled) {
 				t.Fatal("association draft was not decoded")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -339,12 +324,12 @@ func TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses(t *testing.T) 
 			}},
 	} {
 		reply := readFile(t, "testdata/"+c.fixture)
-		run(t, contracttest.Case{Name: "actual-" + name, Source: "msteams/teams_admin_api/auto_attendants/testdata/" + c.fixture, Mappings: mapping(c.command),
-			Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, c.body, c.status, reply)},
-			Want:  contracttest.Expected{Status: c.status, Body: reply, APIError: apiError(c.status, reply)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "actual-" + name,
+			Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, c.body, c.status, reply)},
+			Want:  testutil.Expected{Status: c.status, Body: reply, APIError: apiError(c.status, reply)},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := c.invoke(ctx, sdk.TeamsAdminAPI.AutoAttendants)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -358,15 +343,15 @@ func TestUnitAutoAttendantOptionalQueriesAndNormalization(t *testing.T) {
 	// Enabling the mainline attendant turns voice response on, as New-CsAutoAttendant does.
 	createBody := json.RawMessage(`{"Name":"a","LanguageId":"en-US","TimeZoneId":"UTC","DefaultCallFlow":{"Name":"f","Menu":{"Name":"m"}},` +
 		`"VoiceResponseEnabled":true,"MainlineAttendantEnabled":true,"AutoRecordingTemplateId":"tpl","AuthorizedUsers":[]}`)
-	run(t, contracttest.Case{Name: "queries-and-normalization", Mappings: mapping("Get-CsAutoAttendant", "Get-CsAutoAttendantStatus", "New-CsAutoAttendant", "Set-CsAutoAttendant"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "queries-and-normalization",
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", attendants+"?Descending=True&ExcludeContent=True&First=1&IncludeStatus=False&NameFilter=a+b&Skip=2&SortBy=Name", "Get-CsAutoAttendant", nil, 200, empty),
 			wire("GET", attendants, "Get-CsAutoAttendant", nil, 200, empty),
 			wire("GET", attendants+"/status/"+attendantID+"?includeResources=AudioFile%2CDialByNameVoiceResponses", "Get-CsAutoAttendantStatus", nil, 200, records),
 			wire("POST", attendants, "New-CsAutoAttendant", createBody, 200, attendant),
 			wire("PUT", attendants+"/"+attendantID, "Set-CsAutoAttendant", json.RawMessage(`{"Name":"a"}`), 204, nil)},
-		Want: contracttest.Expected{Status: 204},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 204},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.AutoAttendants
 			values, _, err := s.List(ctx, &aa.ListOptions{First: ptr(int32(1)), Skip: ptr(int32(2)), ExcludeContent: ptr(true), NameFilter: ptr("a b"),
 				SortBy: ptr("Name"), Descending: ptr(true), IncludeStatus: ptr(false)})
@@ -390,7 +375,7 @@ func TestUnitAutoAttendantOptionalQueriesAndNormalization(t *testing.T) {
 			if result != nil {
 				t.Fatal("empty update reply produced a value")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -441,18 +426,18 @@ func TestUnitAutoAttendantMalformedResponsesFailDecode(t *testing.T) {
 		if c.method == "PUT" {
 			body = json.RawMessage(`{"Name":"a"}`)
 		}
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, body, c.status, []byte(c.body))},
-			Want: contracttest.Expected{Status: c.status, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, body, c.status, []byte(c.body))},
+			Want: testutil.Expected{Status: c.status, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := c.invoke(ctx, sdk.TeamsAdminAPI.AutoAttendants)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
-	run(t, contracttest.Case{Name: "undeclared-status", Steps: []contracttest.Exchange{discovery(t), wire("DELETE", attendants+"/x", "Remove-CsAutoAttendant", nil, 202, nil)},
-		Want: contracttest.Expected{Status: 202, Error: aa.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "undeclared-status", Steps: []testutil.Exchange{discovery(t), wire("DELETE", attendants+"/x", "Remove-CsAutoAttendant", nil, 202, nil)},
+		Want: testutil.Expected{Status: 202, Error: aa.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.AutoAttendants.DeleteByID(ctx, "x")
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -529,9 +514,9 @@ func TestUnitAutoAttendantInvalidInputFailsBeforeIO(t *testing.T) {
 			return e
 		},
 	} {
-		run(t, contracttest.Case{Name: label, Scope: "local", Want: contracttest.Expected{Error: aa.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.AutoAttendants)}
+		run(t, testutil.Case{Name: label, Want: testutil.Expected{Error: aa.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.AutoAttendants)}
 			}})
 	}
 }

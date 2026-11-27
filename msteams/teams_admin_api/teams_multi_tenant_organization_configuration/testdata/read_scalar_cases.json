@@ -1,0 +1,212 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "CopilotFromHomeTenant",
+      "kind": "string",
+      "input_json": "{\"CopilotFromHomeTenant\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMultiTenantOrganizationConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

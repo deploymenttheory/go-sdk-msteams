@@ -29,7 +29,7 @@ does not prove persistence or effect; the caller must independently read back.
 for complete snapshot round trips. Known invalid model values fail decoding;
 unknown fields and their null/empty presence remain intact.
 
-See [pinned contract evidence](../../../docs/implementation/ext/conditional-settings-contract-notes.md)
+See [unit tests](service_test.go)
 for exact assembly hashes, model-setter/serializer observations and the separate
 compiled declaration sets. No live tenant mutation is configured for this
 resource; Global settings require explicit caller authorization.

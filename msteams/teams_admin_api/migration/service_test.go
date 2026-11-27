@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -20,10 +20,10 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/migration/service_test.go"
-	probe        = "00000000-0000-4000-8000-000000000001"
-	partition    = probe + "_msteams-sdk-probe"
-	jsonType     = "application/json; charset=utf-8"
+
+	probe     = "00000000-0000-4000-8000-000000000001"
+	partition = probe + "_msteams-sdk-probe"
+	jsonType  = "application/json; charset=utf-8"
 )
 
 func readFile(t *testing.T, path string) []byte {
@@ -40,17 +40,17 @@ func readFile(t *testing.T, path string) []byte {
 	return raw
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
@@ -59,30 +59,20 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if len(reply) == 0 {
 		contentType, reply = "", nil
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "migration"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !result.Passed() {
 		t.Fatalf("migration contract %s differed: %+v", c.Name, result.Differences())
 	}
-}
-
-func mapping(command, set string) []contracttest.Mapping {
-	return []contracttest.Mapping{{Command: command, ParameterSet: set}}
 }
 
 // apiError is the normalized error for a fixture: ConfigAPI reports the code
@@ -116,31 +106,31 @@ func TestUnitMigrationDeniedOperationsUseAcceptanceResponses(t *testing.T) {
 	avsBody := `{"BasePartitionKey":"` + probe + `","ContainerName":"msteams-sdk-probe","NumberOfDocuments":0,"SourcePartitionKey":"` + partition +
 		`-source","TargetPartitionKey":"` + partition + `-target","Workload":"msteams-sdk-probe"}`
 	for _, c := range []struct {
-		name, method, path, command, set, fixture, body string
-		status                                          int
-		invoke                                          invocation
+		name, method, path, command, fixture, body string
+		status                                     int
+		invoke                                     invocation
 	}{
-		{"status", "GET", "/Teams.Mms/GetMeetingMigrationStatus", "Get-CsMeetingMigrationStatus", "__AllParameterSets", "status_401.body", "", 401,
+		{"status", "GET", "/Teams.Mms/GetMeetingMigrationStatus", "Get-CsMeetingMigrationStatus", "status_401.body", "", 401,
 			func(ctx context.Context, s *migration.Service) (any, *resty.Response, error) {
 				return s.ListMeetingMigrationStatuses(ctx, nil)
 			}},
-		{"summary", "GET", "/Teams.Mms/GetMeetingMigrationStatusSummary", "Get-CsMeetingMigrationStatus", "__AllParameterSets", "summary_401.body", "", 401,
+		{"summary", "GET", "/Teams.Mms/GetMeetingMigrationStatusSummary", "Get-CsMeetingMigrationStatus", "summary_401.body", "", 401,
 			func(ctx context.Context, s *migration.Service) (any, *resty.Response, error) {
 				return s.GetMeetingMigrationStatusSummary(ctx, nil)
 			}},
-		{"history", "GET", "/Teams.Mms/GetMeetingMigrationTransactionHistory?userIdentity=" + probe, "Get-CsMeetingMigrationTransactionHistory", "__AllParameterSets", "history_403.json", "", 403,
+		{"history", "GET", "/Teams.Mms/GetMeetingMigrationTransactionHistory?userIdentity=" + probe, "Get-CsMeetingMigrationTransactionHistory", "history_403.json", "", 403,
 			func(ctx context.Context, s *migration.Service) (any, *resty.Response, error) {
 				return s.ListMeetingMigrationTransactionHistory(ctx, probe, nil)
 			}},
-		{"task-status", "GET", "/Teams.Tenant/TenantMigrationDetail", "Get-CsMoveTenantServiceInstanceTaskStatus", "__AllParameterSets", "task_status_403.json", "", 403,
+		{"task-status", "GET", "/Teams.Tenant/TenantMigrationDetail", "Get-CsMoveTenantServiceInstanceTaskStatus", "task_status_403.json", "", 403,
 			func(ctx context.Context, s *migration.Service) (any, *resty.Response, error) {
 				return s.ListTenantMoveTaskStatuses(ctx)
 			}},
-		{"start", "POST", "/Teams.Mms/StartMeetingMigration", "Start-CsExMeetingMigration", "UserId", "start_meeting_migration_401.body", `{"Identity":"` + probe + `"}`, 401,
+		{"start", "POST", "/Teams.Mms/StartMeetingMigration", "Start-CsExMeetingMigration", "start_meeting_migration_401.body", `{"Identity":"` + probe + `"}`, 401,
 			func(ctx context.Context, s *migration.Service) (any, *resty.Response, error) {
 				return s.StartMeetingMigration(ctx, migration.StartMeetingMigrationRequest{Identity: probe})
 			}},
-		{"avs-move", "POST", "/Teams.AVS/MovePartition", "Move-CsAvsTenantPartition", "MoveExpanded", "move_avs_partition_403.json", avsBody, 403,
+		{"avs-move", "POST", "/Teams.AVS/MovePartition", "Move-CsAvsTenantPartition", "move_avs_partition_403.json", avsBody, 403,
 			func(ctx context.Context, s *migration.Service) (any, *resty.Response, error) {
 				return s.MoveAVSTenantPartition(ctx, migration.PartitionMoveRequest{SourcePartitionKey: partition + "-source", TargetPartitionKey: partition + "-target",
 					Workload: ptr("msteams-sdk-probe"), ContainerName: ptr("msteams-sdk-probe"), BasePartitionKey: ptr(probe), NumberOfDocuments: ptr(int64(0))})
@@ -151,19 +141,16 @@ func TestUnitMigrationDeniedOperationsUseAcceptanceResponses(t *testing.T) {
 		if c.body != "" {
 			body = json.RawMessage(c.body)
 		}
-		want := contracttest.Expected{Status: c.status, APIError: apiError(c.status, reply)}
+		want := testutil.Expected{Status: c.status, APIError: apiError(c.status, reply)}
 		if len(reply) != 0 {
 			want.Body = reply
 		}
 		// Empty-body fixtures (.body) cannot be a contract source; the test is.
-		fixtureSource := source
-		if len(reply) != 0 {
-			fixtureSource = "msteams/teams_admin_api/migration/testdata/" + c.fixture
-		}
-		run(t, contracttest.Case{Name: "actual-" + c.name, Source: fixtureSource, Mappings: mapping(c.command, c.set),
-			Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, body, c.status, reply)},
+
+		run(t, testutil.Case{Name: "actual-" + c.name,
+			Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, body, c.status, reply)},
 			Want:  want,
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.Migration)
 				wantClass := auth.ErrForbidden
 				if c.status == 401 {
@@ -172,7 +159,7 @@ func TestUnitMigrationDeniedOperationsUseAcceptanceResponses(t *testing.T) {
 				if !errors.Is(err, wantClass) {
 					t.Fatal("denial was not classified")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -190,14 +177,9 @@ func TestUnitMigrationSuccessShapesPreserveFields(t *testing.T) {
 		`{"documentId":"d2","isSuccessful":true,"exception":null}]`)
 	start := time.Date(2026, 11, 1, 10, 0, 0, 0, time.UTC)
 	end := time.Date(2026, 11, 20, 9, 5, 7, 0, time.UTC)
-	run(t, contracttest.Case{Name: "success-shapes", Mappings: append(mapping("Get-CsMeetingMigrationStatus", "__AllParameterSets"),
-		contracttest.Mapping{Command: "Get-CsMeetingMigrationTransactionHistory", ParameterSet: "__AllParameterSets"},
-		contracttest.Mapping{Command: "Start-CsExMeetingMigration", ParameterSet: "UserId"},
-		contracttest.Mapping{Command: "Get-CsMoveTenantServiceInstanceTaskStatus", ParameterSet: "__AllParameterSets"},
-		contracttest.Mapping{Command: "Move-CsTenantCrossRegion", ParameterSet: "__AllParameterSets"},
-		contracttest.Mapping{Command: "Move-CsTenantServiceInstance", ParameterSet: "__AllParameterSets"},
-		contracttest.Mapping{Command: "Move-CsAvsTenantPartition", ParameterSet: "MoveExpanded"}),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "success-shapes",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", "/Teams.Mms/GetMeetingMigrationStatus?endTime=11%2F20%2F2026+09%3A05%3A07&identity=user%40example.invalid&migrationType=AllToTeams&startTime=11%2F01%2F2026+10%3A00%3A00&state=Failed",
 				"Get-CsMeetingMigrationStatus", nil, 200, statuses),
 			wire("GET", "/Teams.Mms/GetMeetingMigrationStatusSummary?state=Failed", "Get-CsMeetingMigrationStatus", nil, 200, summary),
@@ -213,8 +195,8 @@ func TestUnitMigrationSuccessShapesPreserveFields(t *testing.T) {
 				json.RawMessage(`{"MoveOption":"Finalize","TargetServiceInstance":"MicrosoftCommunicationsOnline/EMEA-01-01"}`), 200, moved),
 			wire("POST", "/Teams.AVS/MovePartition", "Move-CsAvsTenantPartition",
 				json.RawMessage(`{"BatchSize":10,"PercentageOfPartition":50,"SourcePartitionKey":"s","TargetPartitionKey":"t"}`), 207, avs)},
-		Want: contracttest.Expected{Status: 207, Body: avs},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 207, Body: avs},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.Migration
 			values, _, err := s.ListMeetingMigrationStatuses(ctx, &migration.StatusOptions{Identity: ptr("user@example.invalid"), State: ptr(migration.StateFailed),
 				MigrationType: ptr(migration.MigrationTypeAllToTeams), StartTime: &start, EndTime: &end})
@@ -257,7 +239,7 @@ func TestUnitMigrationSuccessShapesPreserveFields(t *testing.T) {
 			if err != nil || len(results) != 2 || *results[0].IsSuccessful || *results[0].Exception.ErrorID != 7 || results[1].Exception != nil || !*results[1].IsSuccessful {
 				t.Fatal("multi-status results were not decoded")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -309,20 +291,20 @@ func TestUnitMigrationMalformedResponsesFailDecode(t *testing.T) {
 		if c.body != "" {
 			body = json.RawMessage(c.body)
 		}
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, body, c.status, []byte(c.reply))},
-			Want: contracttest.Expected{Status: c.status, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, body, c.status, []byte(c.reply))},
+			Want: testutil.Expected{Status: c.status, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				_, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.Migration)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 	// The AVS move declares only HTTP 207; a plain 200 is undeclared.
-	run(t, contracttest.Case{Name: "avs-undeclared-status", Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "avs-undeclared-status", Steps: []testutil.Exchange{discovery(t),
 		wire("POST", "/Teams.AVS/MovePartition", "Move-CsAvsTenantPartition", json.RawMessage(`{"SourcePartitionKey":"s","TargetPartitionKey":"t"}`), 200, []byte(`[]`))},
-		Want: contracttest.Expected{Status: 200, Error: migration.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Error: migration.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, response, err := sdk.TeamsAdminAPI.Migration.MoveAVSTenantPartition(ctx, migration.PartitionMoveRequest{SourcePartitionKey: "s", TargetPartitionKey: "t"})
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -370,9 +352,9 @@ func TestUnitMigrationInvalidInputFailsBeforeIO(t *testing.T) {
 			return e
 		},
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local", Want: contracttest.Expected{Error: migration.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.Migration)}
+		run(t, testutil.Case{Name: name, Want: testutil.Expected{Error: migration.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.Migration)}
 			}})
 	}
 }

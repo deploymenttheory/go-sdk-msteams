@@ -12,7 +12,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -23,8 +23,8 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/audio_prompts/service_test.go"
-	fixtureID    = "fixture-record-3eb1bd43"
+
+	fixtureID = "fixture-record-3eb1bd43"
 )
 
 func readFile(t *testing.T, path string) []byte {
@@ -68,31 +68,25 @@ func discoveryBody(t *testing.T) []byte {
 	return body
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: discoveryBody(t)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: discoveryBody(t)}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, contentType string, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, contentType string, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "audio_prompts"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -112,18 +106,17 @@ func TestUnitAudioFileLifecycleUsesAcceptanceResponses(t *testing.T) {
 	}
 	item := "/Teams.MediaStorage/audiofile/TenantGlobal/" + fixtureID
 	const jsonType = "application/json; charset=utf-8"
-	run(t, contracttest.Case{Name: "actual-lifecycle", Source: "msteams/teams_admin_api/audio_prompts/testdata/import_201.json",
-		Mappings: []contracttest.Mapping{{Command: "Import-CsOnlineAudioFile", ParameterSet: "__AllParameterSets"}, {Command: "Get-CsOnlineAudioFile", ParameterSet: "__AllParameterSets"},
-			{Command: "Export-CsOnlineAudioFile", ParameterSet: "__AllParameterSets"}, {Command: "Remove-CsOnlineAudioFile", ParameterSet: "__AllParameterSets"}},
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-lifecycle",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", "/Teams.MediaStorage/audiofile", "Import-CsOnlineAudioFile", body, 201, jsonType, imported),
 			wire("GET", item, "Get-CsOnlineAudioFile", nil, 200, jsonType, got),
 			wire("GET", item+"/content", "Export-CsOnlineAudioFile", nil, 200, jsonType, exported),
 			wire("DELETE", item, "Remove-CsOnlineAudioFile", nil, 204, "", deleted),
 			wire("GET", item, "Get-CsOnlineAudioFile", nil, 200, jsonType, deletedRead),
 		},
-		Want: contracttest.Expected{Status: 200, Body: deletedRead},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: deletedRead},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.AudioFiles
 			created, response, err := s.Create(ctx, audio.ImportRequest{FileName: "fixture-audio.wav", Content: content})
 			if err != nil || response.StatusCode() != 201 || created.ID == nil || *created.ID != fixtureID || created.OriginalFilename == nil ||
@@ -145,7 +138,7 @@ func TestUnitAudioFileLifecycleUsesAcceptanceResponses(t *testing.T) {
 			if err != nil || !value.MarkedForDeletion() {
 				t.Fatal("soft-deleted file lost its deletion mark")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -153,29 +146,29 @@ func TestUnitAudioFileListNormalizesApplicationAndPreservesNulls(t *testing.T) {
 	t.Parallel()
 	list := []byte(`[{"Id":"a","ApplicationId":"HuntGroup","Content":null,"DeletionTimestampOffset":null,"Future":{"x":1}},{"Id":"b","Content":"","DeletionTimestampOffset":"2026-01-01T00:00:00+00:00"}]`)
 	for index, input := range []string{"huntgroup", "HuntGroup", "HUNTGROUP"} {
-		run(t, contracttest.Case{Name: fmt.Sprintf("list-case-%d", index), Mappings: []contracttest.Mapping{{Command: "Get-CsOnlineAudioFile", ParameterSet: "__AllParameterSets"}},
-			Steps: []contracttest.Exchange{discovery(t), wire("GET", "/Teams.MediaStorage/audiofile/HuntGroup", "Get-CsOnlineAudioFile", nil, 200, "application/json", list)},
-			Want:  contracttest.Expected{Status: 200, Body: list},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: fmt.Sprintf("list-case-%d", index),
+			Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.MediaStorage/audiofile/HuntGroup", "Get-CsOnlineAudioFile", nil, 200, "application/json", list)},
+			Want:  testutil.Expected{Status: 200, Body: list},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				values, response, err := sdk.TeamsAdminAPI.AudioFiles.List(ctx, input)
 				if err != nil || len(values) != 2 || values[0].Content != nil || values[1].Content == nil || values[0].MarkedForDeletion() || !values[1].MarkedForDeletion() || values[0].RawFields["Future"] == nil {
 					t.Fatal("list items lost null/empty/future distinctions")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 	empty := []byte(`[]`)
-	run(t, contracttest.Case{Name: "list-default-and-unknown", Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "list-default-and-unknown", Steps: []testutil.Exchange{discovery(t),
 		wire("GET", "/Teams.MediaStorage/audiofile/TenantGlobal", "Get-CsOnlineAudioFile", nil, 200, "application/json", empty),
 		wire("GET", "/Teams.MediaStorage/audiofile/FutureApp", "Get-CsOnlineAudioFile", nil, 200, "application/json", empty)},
-		Want: contracttest.Expected{Status: 200, Body: empty},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: empty},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			values, _, err := sdk.TeamsAdminAPI.AudioFiles.List(ctx, "")
 			if err != nil || values == nil || len(values) != 0 {
 				t.Fatal("empty list was not a non-nil empty slice")
 			}
 			values, response, err := sdk.TeamsAdminAPI.AudioFiles.List(ctx, "FutureApp")
-			return contracttest.Observation{Value: values, Response: response, Err: err}
+			return testutil.Observation{Value: values, Response: response, Err: err}
 		}})
 }
 
@@ -183,17 +176,17 @@ func TestUnitAudioFileGetSendsDurationOnlyWhenSet(t *testing.T) {
 	t.Parallel()
 	got := readFile(t, "testdata/get.json")
 	item := "/Teams.MediaStorage/audiofile/OrgAutoAttendant/" + fixtureID
-	run(t, contracttest.Case{Name: "duration", Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "duration", Steps: []testutil.Exchange{discovery(t),
 		wire("GET", item+"?durationInMins=0", "Get-CsOnlineAudioFile", nil, 200, "application/json", got),
 		wire("GET", item, "Get-CsOnlineAudioFile", nil, 200, "application/json", got)},
-		Want: contracttest.Expected{Status: 200, Body: got},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: got},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			zero := int32(0)
 			if _, _, err := sdk.TeamsAdminAPI.AudioFiles.GetByID(ctx, "orgautoattendant", fixtureID, &audio.GetOptions{DurationInMinutes: &zero}); err != nil {
 				t.Fatal("explicit zero duration was not sent")
 			}
 			value, response, err := sdk.TeamsAdminAPI.AudioFiles.GetByID(ctx, audio.OrgAutoAttendant, fixtureID, &audio.GetOptions{})
-			return contracttest.Observation{Value: value != nil, Response: response, Err: err}
+			return testutil.Observation{Value: value != nil, Response: response, Err: err}
 		}})
 }
 
@@ -201,24 +194,24 @@ func TestUnitAudioFileServiceFailuresStayTyped(t *testing.T) {
 	t.Parallel()
 	item := "/Teams.MediaStorage/audiofile/TenantGlobal/" + fixtureID
 	missing := []byte(`"Could not find requested media file.`)
-	run(t, contracttest.Case{Name: "missing", Steps: []contracttest.Exchange{discovery(t), wire("GET", item, "Get-CsOnlineAudioFile", nil, 404, "text/plain; charset=utf-8", missing)},
-		Want: contracttest.Expected{Status: 404, Body: missing, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404}},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "missing", Steps: []testutil.Exchange{discovery(t), wire("GET", item, "Get-CsOnlineAudioFile", nil, 404, "text/plain; charset=utf-8", missing)},
+		Want: testutil.Expected{Status: 404, Body: missing, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 404}},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.AudioFiles.GetByID(ctx, "", fixtureID, nil)
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
 	rejected := []byte(`Exception encountered while validating the audio file before upload.`)
-	run(t, contracttest.Case{Name: "repeat-delete", Steps: []contracttest.Exchange{discovery(t), wire("DELETE", item, "Remove-CsOnlineAudioFile", nil, 400, "text/plain; charset=utf-8", rejected)},
-		Want: contracttest.Expected{Status: 400, Body: rejected, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "repeat-delete", Steps: []testutil.Exchange{discovery(t), wire("DELETE", item, "Remove-CsOnlineAudioFile", nil, 400, "text/plain; charset=utf-8", rejected)},
+		Want: testutil.Expected{Status: 400, Body: rejected, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.AudioFiles.DeleteByID(ctx, fixtureID)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "undeclared-status", Steps: []contracttest.Exchange{discovery(t), wire("DELETE", item, "Remove-CsOnlineAudioFile", nil, 202, "", nil)},
-		Want: contracttest.Expected{Status: 202, Error: audio.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "undeclared-status", Steps: []testutil.Exchange{discovery(t), wire("DELETE", item, "Remove-CsOnlineAudioFile", nil, 202, "", nil)},
+		Want: testutil.Expected{Status: 202, Error: audio.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.AudioFiles.DeleteByID(ctx, fixtureID)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -259,14 +252,14 @@ func TestUnitAudioFileMalformedResponsesFailDecode(t *testing.T) {
 			return v, r, e
 		}},
 	} {
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{discovery(t), wire("GET", step.path, step.command, nil, 200, "application/json", []byte(step.body))},
-			Want: contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire("GET", step.path, step.command, nil, 200, "application/json", []byte(step.body))},
+			Want: testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := step.invoke(ctx, sdk.TeamsAdminAPI.AudioFiles)
 				if value != nil && !isNilValue(value) {
 					t.Fatal("malformed response returned a value")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -287,14 +280,14 @@ func TestUnitAudioFileExportAcceptsURLSafeUnpaddedBase64(t *testing.T) {
 	t.Parallel()
 	payload := []byte{0xfb, 0xff, 0xfe, 0x01}
 	body := []byte(`{"Content":"` + base64.RawURLEncoding.EncodeToString(payload) + `"}`)
-	run(t, contracttest.Case{Name: "url-safe", Steps: []contracttest.Exchange{discovery(t), wire("GET", "/Teams.MediaStorage/audiofile/HuntGroup/x/content", "Export-CsOnlineAudioFile", nil, 200, "application/json", body)},
-		Want: contracttest.Expected{Status: 200, Body: body},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "url-safe", Steps: []testutil.Exchange{discovery(t), wire("GET", "/Teams.MediaStorage/audiofile/HuntGroup/x/content", "Export-CsOnlineAudioFile", nil, 200, "application/json", body)},
+		Want: testutil.Expected{Status: 200, Body: body},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.AudioFiles.GetContentByID(ctx, "HuntGroup", "x")
 			if err != nil || !bytes.Equal(value, payload) {
 				t.Fatal("URL-safe content was not decoded")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -325,9 +318,9 @@ func TestUnitAudioFileInvalidInputFailsBeforeIO(t *testing.T) {
 			return e
 		},
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local", Want: contracttest.Expected{Error: audio.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.AudioFiles)}
+		run(t, testutil.Case{Name: name, Want: testutil.Expected{Error: audio.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.AudioFiles)}
 			}})
 	}
 }

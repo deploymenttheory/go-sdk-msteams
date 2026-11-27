@@ -7,19 +7,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy_assignments"
 )
 
-// Authored offline from pinned OCE.dll de6da2b13b4b675d7956a0c57af53fccc6cf457a3de2e8464273f95103e3dfc5,
-// Common.GPATorusCmdletBase::SubmitHTTPRequest<T> IL111/131 success + typed
-// deserialize, and the concrete GroupPolicyAssignment, GroupMembersResponse,
-// UserMembershipResponse and LROS models. LROS AddRegionAndWriteBatchQueryResponse
-// IL79/117/155 selects status object/definition object/status array. Reprocess
-// uses a GUID string, unlike GPA's nullable string actions. Full source owners
-// and status branches are recorded in pol90-current-test-audit.md.
+// These authored HTTP fixtures exercise request and result behavior.
+// Captured service responses are loaded separately from testdata.
 const authoredOCEGroup = `{"groupId":"` + oceGroup + `","priority":0,"policyType":"Fixture","policyName":"","createdBy":"fixture-creator","createdTime":"2026-01-01T12:00:00Z","Future":false}`
 const authoredOCESimpleStatus = `{"OperationId":"` + oceOperation + `","CreatedBy":"` + oceTenant + `","OperationName":"Fixture","OverallStatus":"InProgress","NotStartedCount":0,"InProgressCount":1,"CompletedCount":0,"ErrorCount":0,"Future":false}`
 const authoredOCEStatus = `{"OperationId":"` + oceOperation + `","CreatedBy":"` + oceTenant + `","OperationName":"Fixture","OverallStatus":"InProgress","NotStartedCount":0,"InProgressCount":1,"CompletedCount":0,"ErrorCount":0,"UserState":[{"Id":"fixture-user","AlternateId":null,"State":"InProgress","Result":""}],"Future":false}`
@@ -64,11 +59,11 @@ func TestUnitOCEAuthoredTypedResponses(t *testing.T) {
 			case "group-reprocess":
 				reply = `""`
 			}
-			want := contracttest.Expected{Status: status, Body: []byte(reply)}
+			want := testutil.Expected{Status: status, Body: []byte(reply)}
 			if (strings.HasPrefix(vector.name, "group-") && vector.name != "group-refresh" && vector.name != "group-reprocess") || vector.name == "user-membership" {
 				want.JSON = json.RawMessage(reply)
 			}
-			r, err := contracttest.Run(t.Context(), contracttest.Case{Name: "typed-" + vector.name, Family: "policy_assignments", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go", Mappings: oceMapping(vector.name), Steps: []contracttest.Exchange{oceWire(vector.method, vector.url, status, reply)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			r, err := testutil.Run(t.Context(), testutil.Case{Name: "typed-" + vector.name, Steps: []testutil.Exchange{oceWire(vector.method, vector.url, status, reply)}, Want: want, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				observed := invokeOCE(vector.name, ctx, sdk)
 				if observed.Err != nil {
 					return observed
@@ -156,7 +151,7 @@ func TestUnitOCEGenericSuccessRangePreservesTypedAndDecodeResults(t *testing.T) 
 					vector = candidate
 				}
 			}
-			c := contracttest.Case{Name: tc.name, Family: "policy_assignments", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go", Mappings: oceMapping(tc.operation), Steps: []contracttest.Exchange{oceWire(vector.method, vector.url, 206, tc.reply)}, Want: contracttest.Expected{Status: 206, Body: []byte(tc.reply), Error: tc.wantErr}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c := testutil.Case{Name: tc.name, Steps: []testutil.Exchange{oceWire(vector.method, vector.url, 206, tc.reply)}, Want: testutil.Expected{Status: 206, Body: []byte(tc.reply), Error: tc.wantErr}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				observed := invokeOCE(tc.operation, ctx, sdk)
 				if !errors.Is(observed.Err, tc.wantErr) || observed.Response == nil || observed.Response.StatusCode() != 206 || string(observed.Response.Body()) != tc.reply {
 					t.Fatal("source success/error branch lost its response or error")
@@ -175,7 +170,7 @@ func TestUnitOCEGenericSuccessRangePreservesTypedAndDecodeResults(t *testing.T) 
 				}
 				return observed
 			}}
-			result, err := contracttest.Run(t.Context(), c)
+			result, err := testutil.Run(t.Context(), c)
 			if err != nil || !result.Passed() {
 				t.Fatalf("source success range differs: %v %+v", err, result.Differences())
 			}
@@ -200,7 +195,7 @@ func TestUnitOCEActionDecodeFailuresPreserveAcceptedResponse(t *testing.T) {
 			if operation == "batch-reprocess" {
 				status = 202
 			}
-			c := contracttest.Case{Name: "decode-" + operation, Family: "policy_assignments", Scope: "service", Source: "msteams/teams_admin_api/policy_assignments/oce_service_protocol_test.go", Mappings: oceMapping(operation), Steps: []contracttest.Exchange{oceWire(vector.method, vector.url, status, `{}`)}, Want: contracttest.Expected{Status: status, Body: []byte(`{}`), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c := testutil.Case{Name: "decode-" + operation, Steps: []testutil.Exchange{oceWire(vector.method, vector.url, status, `{}`)}, Want: testutil.Expected{Status: status, Body: []byte(`{}`), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				observed := invokeOCE(operation, ctx, sdk)
 				if !errors.Is(observed.Err, client.ErrDecode) || observed.Response == nil || observed.Response.StatusCode() != status || string(observed.Response.Body()) != `{}` {
 					t.Fatal("accepted malformed action lost decode error or response")
@@ -219,7 +214,7 @@ func TestUnitOCEActionDecodeFailuresPreserveAcceptedResponse(t *testing.T) {
 				}
 				return observed
 			}}
-			result, err := contracttest.Run(t.Context(), c)
+			result, err := testutil.Run(t.Context(), c)
 			if err != nil || !result.Passed() {
 				t.Fatalf("action protocol failure differs: %v %+v", err, result.Differences())
 			}

@@ -59,7 +59,7 @@ not inferred from that seam.
 
 All mutations disable replay. There is no implicit polling, restoration, elevation,
 ETag or atomicity guarantee. See [unit tests](service_test.go)
-and [lab acceptance](../../../docs/implementation/policies/cortana-policy-lab-acceptance.md).
+and [lab acceptance](../../../docs/acceptance/cortana-policy-lab-acceptance.md).
 All five commands and eight exact parameter sets have native/test mappings;
 issue #113 and full qualification remain open.
 

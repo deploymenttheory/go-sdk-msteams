@@ -8,7 +8,7 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_enhanced_encryption_policy"
 )
@@ -271,7 +271,7 @@ func TestUnitEnhancedEncryptionRequestsMatchLayeredBinding(t *testing.T) {
 			t.Fatal("invalid source typed wire projection")
 		}
 		input := resource.Settings{Description: bound.Description, CallingEndToEndEncryptionEnabledType: bound.Calling, MeetingEndToEndEncryption: bound.Meeting}
-		c := contracttest.Case{Name: strings.ToLower(f.Command + "-" + f.Name), Source: modelSource, Mappings: []contracttest.Mapping{{Command: f.Command, ParameterSet: "Identity"}}}
+		c := testutil.Case{Name: strings.ToLower(f.Command + "-" + f.Name)}
 		if bound.Identity == "" {
 			kind := "empty"
 			if f.Name == "null-identity" {
@@ -286,19 +286,19 @@ func TestUnitEnhancedEncryptionRequestsMatchLayeredBinding(t *testing.T) {
 			if f.Command == newCommand {
 				method, path, status = "POST", collection, 400
 			}
-			c.Steps = []contracttest.Exchange{discovery(t), wire(method, path, f.Command, f.Wire, status, "")}
+			c.Steps = []testutil.Exchange{discovery(t), wire(method, path, f.Command, f.Wire, status, "")}
 		}
 		if len(c.Steps) != 0 {
-			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+			c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 		}
-		c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TeamsEnhancedEncryptionPolicies
 			if f.Command == newCommand {
 				r, e := s.CreateByIdentity(ctx, bound.Identity, input)
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}
 			r, e := s.UpdateByIdentity(ctx, bound.Identity, input)
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}
 		run(t, c)
 	}

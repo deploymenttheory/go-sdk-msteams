@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -16,24 +16,17 @@ import (
 )
 
 const (
-	groupID      = "11111111-1111-4111-8111-111111111111"
-	ownerID      = "00000000-0000-0000-0000-000000000001"
-	nativeSource = "msteams/graph_api/group/service_test.go"
+	groupID = "11111111-1111-4111-8111-111111111111"
+	ownerID = "00000000-0000-0000-0000-000000000001"
 )
 
-func runCase(t *testing.T, c contracttest.Case) contracttest.Result {
+func runCase(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
 	if c.Name == "" {
 		c.Name = "native-case"
 	}
-	c.Family = "backing_groups"
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	if c.Source == "" {
-		c.Source = nativeSource
-	}
-	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -43,7 +36,7 @@ func runCase(t *testing.T, c contracttest.Case) contracttest.Result {
 	return result
 }
 
-func wire(method, origin, path, body string, status int, response string) contracttest.Exchange {
+func wire(method, origin, path, body string, status int, response string) testutil.Exchange {
 	var payload json.RawMessage
 	if body != "" {
 		payload = json.RawMessage(body)
@@ -52,15 +45,15 @@ func wire(method, origin, path, body string, status int, response string) contra
 	if body != "" {
 		headers.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: origin, Headers: headers, JSON: payload}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: origin + path, Audience: origin, Headers: headers, JSON: payload}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(response)}}
 }
 
-func observed(value *group.Group, response *resty.Response, err error) contracttest.Observation {
+func observed(value *group.Group, response *resty.Response, err error) testutil.Observation {
 	var data any
 	if value != nil {
 		data = map[string]any{"id": value.ID, "display_name": value.DisplayName, "security_enabled": value.SecurityEnabled, "raw": value.RawFields}
 	}
-	return contracttest.Observation{Value: data, Response: response, Err: err}
+	return testutil.Observation{Value: data, Response: response, Err: err}
 }
 
 func requestJSON(t *testing.T, name string) json.RawMessage {
@@ -82,11 +75,11 @@ func TestUnitGroupCreateRequestPayload(t *testing.T) {
 	t.Parallel()
 	body := requestJSON(t, "ordinary-group-create")
 	response := `{"id":"` + groupID + `","displayName":"Fixture Team","securityEnabled":false,"future":{"value":7}}`
-	runCase(t, contracttest.Case{Name: "ordinary-create-request", Source: "msteams/graph_api/group/service_test.go", Steps: []contracttest.Exchange{wire("POST", auth.GraphAudience, "/v1.0/groups", string(body), 201, "")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	runCase(t, testutil.Case{Name: "ordinary-create-request", Steps: []testutil.Exchange{wire("POST", auth.GraphAudience, "/v1.0/groups", string(body), 201, response)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, err := group.NewMicrosoft365Group("Fixture Team", "fixture-team")
 			if err != nil {
-				return contracttest.Observation{Err: err}
+				return testutil.Observation{Err: err}
 			}
 			visibility := group.Private
 			value.Visibility = &visibility
@@ -95,17 +88,17 @@ func TestUnitGroupCreateRequestPayload(t *testing.T) {
 			flags := []string{"ExchangeProvisioningFlags:3552"}
 			value.CreationOptions = &flags
 			return observed(sdk.GraphAPI.Groups.Create(ctx, value))
-		}, Want: contracttest.Expected{Status: 201, JSON: json.RawMessage(`{"id":"` + groupID + `","display_name":"Fixture Team","security_enabled":false,"raw":` + response + `}`)}})
+		}, Want: testutil.Expected{Status: 201, JSON: json.RawMessage(`{"id":"` + groupID + `","display_name":"Fixture Team","security_enabled":false,"raw":` + response + `}`)}})
 }
 
 func TestUnitGroupNativeCRUDSparsePatchAndNoImplicitReads(t *testing.T) {
 	t.Parallel()
 	path := "/v1.0/groups/" + groupID
-	runCase(t, contracttest.Case{Name: "native-get", Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, path+"?$select=id%2CdisplayName%2CsecurityEnabled", "", 200, "")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	runCase(t, testutil.Case{Name: "native-get", Steps: []testutil.Exchange{wire("GET", auth.GraphAudience, path+"?$select=id%2CdisplayName%2CsecurityEnabled", "", 200, `{"id":"`+groupID+`","displayName":null,"securityEnabled":false}`)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			return observed(sdk.GraphAPI.Groups.GetByID(ctx, groupID, group.ReadOptions{Select: []string{"id", "displayName", "securityEnabled"}}))
 		},
-		Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + groupID + `","display_name":null,"security_enabled":false,"raw":{"id":"` + groupID + `","displayName":null,"securityEnabled":false}}`)}})
+		Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + groupID + `","display_name":null,"security_enabled":false,"raw":{"id":"` + groupID + `","displayName":null,"securityEnabled":false}}`)}})
 	for _, name := range []string{"group-patch-omitted", "group-patch-explicit-empty"} {
 		t.Run(name, func(t *testing.T) {
 			value := group.UpdateRequest{}
@@ -114,24 +107,20 @@ func TestUnitGroupNativeCRUDSparsePatchAndNoImplicitReads(t *testing.T) {
 				visibility := group.Visibility("")
 				value = group.UpdateRequest{DisplayName: &empty, Description: &empty, MailNickname: &empty, Classification: &empty, Visibility: &visibility}
 			}
-			runCase(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{wire("PATCH", auth.GraphAudience, path, string(requestJSON(t, name)), 204, "")},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, testutil.Case{Name: name, Steps: []testutil.Exchange{wire("PATCH", auth.GraphAudience, path, string(requestJSON(t, name)), 204, "")},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					response, err := sdk.GraphAPI.Groups.UpdateByID(ctx, groupID, value)
-					if err != nil && isRequestBoundary(ctx) {
-						return contracttest.Observation{Response: response, Err: err}
-					}
-					return contracttest.Observation{Response: response, Err: err}
-				}, Want: contracttest.Expected{Status: 204}})
+
+					return testutil.Observation{Response: response, Err: err}
+				}, Want: testutil.Expected{Status: 204}})
 		})
 	}
-	runCase(t, contracttest.Case{Name: "native-delete", Steps: []contracttest.Exchange{wire("DELETE", auth.GraphAudience, path, "", 204, "")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	runCase(t, testutil.Case{Name: "native-delete", Steps: []testutil.Exchange{wire("DELETE", auth.GraphAudience, path, "", 204, "")},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.GraphAPI.Groups.DeleteByID(ctx, groupID)
-			if err != nil && isRequestBoundary(ctx) {
-				return contracttest.Observation{Response: response, Err: err}
-			}
-			return contracttest.Observation{Response: response, Err: err}
-		}, Want: contracttest.Expected{Status: 204}})
+
+			return testutil.Observation{Response: response, Err: err}
+		}, Want: testutil.Expected{Status: 204}})
 }
 
 func TestUnitGroupCreateCloudBindingsAndExplicitEmptyReferences(t *testing.T) {
@@ -145,22 +134,20 @@ func TestUnitGroupCreateCloudBindingsAndExplicitEmptyReferences(t *testing.T) {
 				}
 				origin := env.Endpoints.Graph
 				body := `{"displayName":"fixture","mailNickname":"fixture","groupTypes":["Unified"],"mailEnabled":true,"securityEnabled":false,"owners@odata.bind":["` + origin + `/v1.0/users/` + ownerID + `"],"members@odata.bind":[],"creationOptions":[]}`
-				runCase(t, contracttest.Case{Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{wire("POST", origin, "/v1.0/groups", body, 201, "")},
-					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				runCase(t, testutil.Case{Cloud: cloud, Mode: mode, Steps: []testutil.Exchange{wire("POST", origin, "/v1.0/groups", body, 201, `{"id":"`+groupID+`"}`)},
+					Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 						value, err := group.NewMicrosoft365Group("fixture", "fixture")
 						if err != nil {
-							return contracttest.Observation{Err: err}
+							return testutil.Observation{Err: err}
 						}
 						value.OwnerIDs = []string{ownerID}
 						value.MemberIDs = []string{}
 						flags := []string{}
 						value.CreationOptions = &flags
 						_, response, err := sdk.GraphAPI.Groups.Create(ctx, value)
-						if err != nil && isRequestBoundary(ctx) {
-							return contracttest.Observation{Response: response, Err: err}
-						}
-						return contracttest.Observation{Response: response, Err: err}
-					}, Want: contracttest.Expected{Status: 201}})
+
+						return testutil.Observation{Response: response, Err: err}
+					}, Want: testutil.Expected{Status: 201}})
 			})
 		}
 	}
@@ -170,19 +157,17 @@ func TestUnitGroupCreateRetainsExplicitEducationExtension(t *testing.T) {
 	t.Parallel()
 	const extension = "extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType"
 	body := `{"displayName":"fixture","mailNickname":"fixture","groupTypes":["Unified"],"mailEnabled":true,"securityEnabled":false,"` + extension + `":"Section"}`
-	runCase(t, contracttest.Case{Name: "explicit-extension", Steps: []contracttest.Exchange{wire("POST", auth.GraphAudience, "/v1.0/groups", body, 201, "")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	runCase(t, testutil.Case{Name: "explicit-extension", Steps: []testutil.Exchange{wire("POST", auth.GraphAudience, "/v1.0/groups", body, 201, `{"id":"`+groupID+`"}`)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, err := group.NewMicrosoft365Group("fixture", "fixture")
 			if err != nil {
-				return contracttest.Observation{Err: err}
+				return testutil.Observation{Err: err}
 			}
 			value.Extensions = map[string]json.RawMessage{extension: json.RawMessage(`"Section"`)}
 			_, response, err := sdk.GraphAPI.Groups.Create(ctx, value)
-			if err != nil && isRequestBoundary(ctx) {
-				return contracttest.Observation{Response: response, Err: err}
-			}
-			return contracttest.Observation{Response: response, Err: err}
-		}, Want: contracttest.Expected{Status: 201}})
+
+			return testutil.Observation{Response: response, Err: err}
+		}, Want: testutil.Expected{Status: 201}})
 }
 
 func TestUnitGroupValidationIsLocal(t *testing.T) {
@@ -198,7 +183,7 @@ func TestUnitGroupValidationIsLocal(t *testing.T) {
 			case "cancelled":
 				want = context.Canceled
 			}
-			runCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, testutil.Case{Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, _ := group.NewMicrosoft365Group("fixture", "fixture")
 				var err error
 				switch action {
@@ -210,7 +195,7 @@ func TestUnitGroupValidationIsLocal(t *testing.T) {
 					_, _, err = group.NewService(sdk.TeamsAdminAPI.Scope()).GetByID(ctx, groupID, group.ReadOptions{})
 				case "closed":
 					if e := sdk.Close(); e != nil {
-						return contracttest.Observation{Err: e}
+						return testutil.Observation{Err: e}
 					}
 					_, _, err = sdk.GraphAPI.Groups.GetByID(ctx, groupID, group.ReadOptions{})
 				case "cancelled":
@@ -237,8 +222,8 @@ func TestUnitGroupValidationIsLocal(t *testing.T) {
 					}
 					_, _, err = sdk.GraphAPI.Groups.Create(ctx, value)
 				}
-				return contracttest.Observation{Err: err}
-			}, Want: contracttest.Expected{Error: want}})
+				return testutil.Observation{Err: err}
+			}, Want: testutil.Expected{Error: want}})
 		})
 	}
 }
@@ -259,8 +244,8 @@ func TestUnitGroupFailuresPreserveMetadataAndDoNotReplayMutations(t *testing.T) 
 				if method == "PATCH" {
 					body = `{}`
 				}
-				runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire(method, auth.GraphAudience, path, body, status, `{"error":{"code":"FixtureError","message":"private"}}`)},
-					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				runCase(t, testutil.Case{Steps: []testutil.Exchange{wire(method, auth.GraphAudience, path, body, status, `{"error":{"code":"FixtureError","message":"private"}}`)},
+					Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 						var response *resty.Response
 						var err error
 						switch method {
@@ -272,8 +257,8 @@ func TestUnitGroupFailuresPreserveMetadataAndDoNotReplayMutations(t *testing.T) 
 						case "DELETE":
 							response, err = sdk.GraphAPI.Groups.DeleteByID(ctx, groupID)
 						}
-						return contracttest.Observation{Response: response, Err: err}
-					}, Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureError"}}}})
+						return testutil.Observation{Response: response, Err: err}
+					}, Want: testutil.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureError"}}}})
 			})
 		}
 	}
@@ -283,10 +268,10 @@ func TestUnitGroupFailuresPreserveMetadataAndDoNotReplayMutations(t *testing.T) 
 		want       error
 	}{{"missing-id", `{}`, 200, client.ErrDecode}, {"malformed", `{"id":`, 200, client.ErrDecode}, {"unexpected-status", `{"id":"` + groupID + `"}`, 202, group.ErrUnexpectedStatus}} {
 		t.Run(tc.name, func(t *testing.T) {
-			runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire("GET", auth.GraphAudience, "/v1.0/groups/"+groupID, "", tc.status, tc.body)},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, testutil.Case{Steps: []testutil.Exchange{wire("GET", auth.GraphAudience, "/v1.0/groups/"+groupID, "", tc.status, tc.body)},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					return observed(sdk.GraphAPI.Groups.GetByID(ctx, groupID, group.ReadOptions{}))
-				}, Want: contracttest.Expected{Status: tc.status, Error: tc.want}})
+				}, Want: testutil.Expected{Status: tc.status, Error: tc.want}})
 		})
 	}
 }

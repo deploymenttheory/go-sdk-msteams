@@ -19,7 +19,7 @@ read snapshot; completed resolution rejects empty IDs with `ErrDecode` and
 retains its snapshot/receipt without mail fallback. Downstream reference, owner,
 team and membership validators retain their independent constraints.
 
-The [portable source packet](../../../docs/implementation/core/evidence/directory-user-read-source.json)
+The [unit tests](../../../docs/guides/testing.md)
 contains 70 pure actual-model observations, not captured Graph responses or
 live permission evidence. Numeric ID acceptance is a read-model contract and
 does not establish a remotely valid mutation target.
@@ -56,7 +56,7 @@ Primary sources reviewed on 2026-11-20:
 [user get](https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0),
 [user list](https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-1.0).
 Pinned/native differences are recorded in the
-[membership contract](../../../docs/implementation/core/membership-resource-contract.md).
+[unit tests](../../../docs/guides/testing.md).
 
 ## Batched principal-name reads
 

@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -49,11 +49,11 @@ func TestUnitEducationAssignmentsUpdatePreparationFailures(t *testing.T) {
 	)
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{compiledWire("GET", item, setCommand, nil, tc.read, tc.body)}
+			steps := []testutil.Exchange{compiledWire("GET", item, setCommand, nil, tc.read, tc.body)}
 			if tc.patch != 0 {
 				steps = append(steps, compiledWire("PATCH", item, setCommand, json.RawMessage(`{"Identity":"Global","TurnItInApiKey":null}`), tc.patch, ""))
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/teams_education_assignments_app_policy/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsEducationAssignmentsAppPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{TurnItInAPIKey: policy.Null[string]()}})
 				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
 					t.Error("failed update lost preparation state or invented acceptance")
@@ -71,7 +71,7 @@ func TestUnitEducationAssignmentsUpdatePreparationFailures(t *testing.T) {
 						t.Error("failure lost its HTTP status")
 					}
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}

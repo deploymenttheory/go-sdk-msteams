@@ -7,59 +7,54 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
 
 const origin = "https://api.interfaces.records.teams.microsoft.com"
-const source = "msteams/teams_admin_api/teams_work_load_policy/testdata/get_global.json"
 
-func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) contracttest.Exchange {
+func compiledWire(method, path, command string, body json.RawMessage, status int, reply string) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {"https://admin.example.invalid/"}, "MPACmdlet": nil}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: origin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(reply)}}
 }
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	raw, e := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if e != nil {
 		t.Fatal(e)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: raw}}
 }
-func run(t *testing.T, c contracttest.Case) contracttest.Result {
+func run(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family = "teams_work_load_policy"
-	if c.Source == "" {
-		c.Source = source
-	}
+
 	if len(c.Steps) == 0 {
-		c.Scope = "local"
+
 	} else {
-		c.Scope = "service"
-		c.Steps = append([]contracttest.Exchange{discovery(t)}, c.Steps...)
+
+		c.Steps = append([]testutil.Exchange{discovery(t)}, c.Steps...)
 		c.Want.Status = c.Steps[len(c.Steps)-1].Reply.Status
 	}
-	r, e := contracttest.Run(t.Context(), c)
+	r, e := testutil.Run(t.Context(), c)
 	if e != nil || !r.Passed() {
 		t.Fatalf("configuration contract %s differs: %v %+v", c.Name, e, r.Differences())
 	}
 	return r
 }
 
-func runExplicit(t *testing.T, c contracttest.Case) contracttest.Result {
+func runExplicit(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family = "teams_work_load_policy"
-	c.Source = source
+
 	if len(c.Steps) == 0 {
-		c.Scope = "local"
+
 	} else {
-		c.Scope = "service"
+
 		c.Want.Status = c.Steps[len(c.Steps)-1].Reply.Status
 	}
-	r, e := contracttest.Run(t.Context(), c)
+	r, e := testutil.Run(t.Context(), c)
 	if e != nil || !r.Passed() {
 		t.Fatalf("workload contract differs: %v %+v", e, r.Differences())
 	}

@@ -1,0 +1,5 @@
+{
+  "DisableAudioVideoInCallsAndMeetings": false,
+  "DisableCallsAndMeetings": false,
+  "VDI2Optimization": "future-value"
+}

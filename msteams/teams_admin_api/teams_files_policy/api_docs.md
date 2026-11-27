@@ -51,7 +51,7 @@ metadata remain available without inferred polling or effective assignments.
 Mutations never replay automatically.
 
 See [unit tests](service_test.go)
-and [lab acceptance](../../../docs/implementation/policies/files-policy-lab-acceptance.md).
+and [lab acceptance](../../../docs/acceptance/files-policy-lab-acceptance.md).
 All five commands/nine sets have native mappings. Issue #120 stays open for full
 command and successful tenant qualification.
 

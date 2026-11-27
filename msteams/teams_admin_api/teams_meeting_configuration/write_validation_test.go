@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_configuration"
@@ -19,7 +19,7 @@ func TestUnitWriteInputRejectsBeforeHTTP(t *testing.T) {
 	bad := func(id string) *resource.PublishedEntraAuthenticationContext {
 		return &resource.PublishedEntraAuthenticationContext{ID: &id}
 	}
-	run(t, contracttest.Case{Name: "local-write-input", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local-write-input", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		service := sdk.TeamsAdminAPI.TeamsMeetingConfigurations
 		if _, _, err := service.PatchByIdentity(ctx, "Global", resource.PatchRequest{}); !errors.Is(err, resource.ErrInput) {
 			t.Fatal("unbound patch accepted")
@@ -45,7 +45,7 @@ func TestUnitWriteInputRejectsBeforeHTTP(t *testing.T) {
 		if _, _, err := service.PatchByIdentity(ctx, "", resource.PatchRequest{Settings: resource.Settings{ScalarSettings: resource.ScalarSettings{EnableQoS: policy.Set(true)}}}); !errors.Is(err, resource.ErrInput) {
 			t.Fatal("empty Set identity accepted")
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }
 
@@ -72,15 +72,15 @@ func TestUnitContextIdFinalLFIsPreservedInRequest(t *testing.T) {
 	id := "c1\n"
 	item := &resource.PublishedEntraAuthenticationContext{ID: &id}
 	body := json.RawMessage(`{"Identity":"Global","PublishedEntraAuthenticationContexts":[{"Identity":null,"Id":"c1\n","PublishedName":null,"PublishedDescription":null,"EntraName":null,"EntraDescription":null,"Published":null}]}`)
-	run(t, contracttest.Case{Name: "context-id-final-lf", Source: "msteams/teams_admin_api/teams_meeting_configuration/write_validation_test.go", Mappings: []contracttest.Mapping{{Command: set, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{
+	run(t, testutil.Case{Name: "context-id-final-lf", Steps: []testutil.Exchange{
 		compiledWire("PATCH", selected, set, body, 204, ""),
-	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, response, err := sdk.TeamsAdminAPI.TeamsMeetingConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{
 			PublishedEntraAuthenticationContexts: policy.Set([]*resource.PublishedEntraAuthenticationContext{item}),
 		}})
 		if item.ID == nil || *item.ID != "c1\n" {
 			t.Fatal("request normalized the caller's Id")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }

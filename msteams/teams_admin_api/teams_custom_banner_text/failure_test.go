@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -40,41 +40,41 @@ func TestUnitBannerMutationsNeverReplayInEitherSelector(t *testing.T) {
 						body = `{"Id":"` + relative + `"}`
 					}
 				}
-				run(t, contracttest.Case{Name: fmt.Sprintf("%s-%s-%d", strings.ToLower(set), op, status), Mappings: []contracttest.Mapping{{Command: command, ParameterSet: set}}, Steps: []contracttest.Exchange{wire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				run(t, testutil.Case{Name: fmt.Sprintf("%s-%s-%d", strings.ToLower(set), op, status), Steps: []testutil.Exchange{wire(method, path, command, json.RawMessage(body), status, `{"Message":"fixture-private"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					s := sdk.TeamsAdminAPI.TeamsCustomBannerTexts
-					var o contracttest.Observation
+					var o testutil.Observation
 					switch op {
 					case "create":
 						input := resource.CreateRequest{Text: "fixture"}
 						if byID {
 							_, r, e := s.CreateByID(ctx, relative, input)
-							o = contracttest.Observation{Response: r, Err: e}
+							o = testutil.Observation{Response: r, Err: e}
 						} else {
 							_, r, e := s.CreateByIdentity(ctx, "Global/"+relative, input)
-							o = contracttest.Observation{Response: r, Err: e}
+							o = testutil.Observation{Response: r, Err: e}
 						}
 					case "patch":
 						input := resource.PatchRequest{Settings: resource.Settings{Description: policy.Null[string]()}}
 						if byID {
 							input.BodyID = policy.Null[string]()
 							_, r, e := s.PatchByID(ctx, relative, input)
-							o = contracttest.Observation{Response: r, Err: e}
+							o = testutil.Observation{Response: r, Err: e}
 						} else {
 							_, r, e := s.PatchByIdentity(ctx, "Global/"+relative, input)
-							o = contracttest.Observation{Response: r, Err: e}
+							o = testutil.Observation{Response: r, Err: e}
 						}
 					case "delete":
 						if byID {
 							_, r, e := s.DeleteByID(ctx, relative, policy.Controls{})
-							o = contracttest.Observation{Response: r, Err: e}
+							o = testutil.Observation{Response: r, Err: e}
 						} else {
 							_, r, e := s.DeleteByIdentity(ctx, "Global/"+relative, policy.Controls{})
-							o = contracttest.Observation{Response: r, Err: e}
+							o = testutil.Observation{Response: r, Err: e}
 						}
 					}
 					var api *client.APIError
 					if !errors.As(o.Err, &api) || api.StatusCode != status || strings.Contains(fmt.Sprint(o.Err), "fixture-private") {
-						return contracttest.Observation{Err: errors.New("mutation status/redaction changed")}
+						return testutil.Observation{Err: errors.New("mutation status/redaction changed")}
 					}
 					o.Err = nil
 					return o
@@ -85,53 +85,53 @@ func TestUnitBannerMutationsNeverReplayInEitherSelector(t *testing.T) {
 }
 func TestUnitBannerLocalInputContextAndBackendGuards(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local-input-context-backend", Source: binderSource, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local-input-context-backend", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsCustomBannerTexts
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, resource.ErrInput) {
-				return contracttest.Observation{Err: errors.New("invalid identity accepted")}
+				return testutil.Observation{Err: errors.New("invalid identity accepted")}
 			}
 		}
 		if _, _, e := s.ListFiltered(ctx, ""); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("empty Filter accepted")}
+			return testutil.Observation{Err: errors.New("empty Filter accepted")}
 		}
 		if _, _, e := s.Create(ctx, resource.CreateRequest{}); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("mandatory New text missing")}
+			return testutil.Observation{Err: errors.New("mandatory New text missing")}
 		}
 		settings := resource.Settings{Text: policy.Null[string]()}
 		if _, _, e := s.UpdateByID(ctx, relative, resource.UpdateRequest{Settings: settings}); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("null Text performed a read")}
+			return testutil.Observation{Err: errors.New("null Text performed a read")}
 		}
 		if _, _, e := s.UpdateByID(ctx, relative, resource.UpdateRequest{}); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("empty Set performed a read")}
+			return testutil.Observation{Err: errors.New("empty Set performed a read")}
 		}
 		valid := resource.Settings{Text: policy.Set("")}
 		if _, _, e := s.PatchByID(ctx, relative, resource.PatchRequest{Settings: valid}); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("missing read-model Id accepted")}
+			return testutil.Observation{Err: errors.New("missing read-model Id accepted")}
 		}
 		if _, _, e := s.PatchByID(ctx, relative, resource.PatchRequest{Settings: valid, BodyID: policy.Set("invalid")}); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("invalid model Id accepted")}
+			return testutil.Observation{Err: errors.New("invalid model Id accepted")}
 		}
 		if _, _, e := s.PatchByID(ctx, relative, resource.PatchRequest{Settings: valid, BodyID: policy.Null[string](), BodyIdentity: policy.Null[string]()}); !errors.Is(e, resource.ErrInput) {
-			return contracttest.Observation{Err: errors.New("mixed body identifiers accepted")}
+			return testutil.Observation{Err: errors.New("mixed body identifiers accepted")}
 		}
 		graph, e := client.NewScope(client.Graph, sdk.TeamsAdminAPI.Scope().Session())
 		if e != nil {
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}
 		if _, _, e := resource.NewService(graph).List(ctx); !errors.Is(e, client.ErrDestination) {
-			return contracttest.Observation{Err: errors.New("wrong backend accepted")}
+			return testutil.Observation{Err: errors.New("wrong backend accepted")}
 		}
 		for _, missing := range []*resource.Service{nil, {}, resource.NewService(nil)} {
 			if _, _, e := missing.List(ctx); !errors.Is(e, client.ErrClosed) {
-				return contracttest.Observation{Err: errors.New("missing service accepted")}
+				return testutil.Observation{Err: errors.New("missing service accepted")}
 			}
 		}
 		canceled, cancel := context.WithCancel(ctx)
 		cancel()
 		if _, _, e := s.Create(canceled, resource.CreateRequest{Text: "fixture"}); !errors.Is(e, context.Canceled) {
-			return contracttest.Observation{Err: errors.New("canceled create acquired credentials")}
+			return testutil.Observation{Err: errors.New("canceled create acquired credentials")}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

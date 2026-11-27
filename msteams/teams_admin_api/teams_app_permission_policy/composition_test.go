@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -50,11 +50,11 @@ func TestUnitAppPermissionUpdatePreparationFailures(t *testing.T) {
 	)
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", item, "Set-CsTeamsAppPermissionPolicy", nil, tc.read, tc.body)}
+			steps := []testutil.Exchange{wire("GET", item, "Set-CsTeamsAppPermissionPolicy", nil, tc.read, tc.body)}
 			if tc.patch != 0 {
 				steps = append(steps, wire("PATCH", item, "Set-CsTeamsAppPermissionPolicy", json.RawMessage(`{"Identity":"Global","Description":null}`), tc.patch, ""))
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/teams_app_permission_policy/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.TeamsAppPermissionPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{ScalarSettings: resource.ScalarSettings{Description: policy.Null[string]()}})
 				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
 					t.Error("failed update lost preparation state or invented acceptance")
@@ -72,7 +72,7 @@ func TestUnitAppPermissionUpdatePreparationFailures(t *testing.T) {
 						t.Error("failure lost its HTTP status")
 					}
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}
@@ -88,7 +88,7 @@ func TestUnitAppPermissionCatalogReplacementsUseRealPreparationOnDeniedPatch(t *
 	for _, field := range []string{"DefaultCatalogApps", "GlobalCatalogApps", "PrivateCatalogApps"} {
 		t.Run(field, func(t *testing.T) {
 			body := json.RawMessage(`{"Identity":"Global","` + field + `":[{"Identity":null,"Id":"unit-app"}]}`)
-			run(t, contracttest.Case{Name: "catalog-replacement", Source: "msteams/teams_admin_api/teams_app_permission_policy/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "Set-CsTeamsAppPermissionPolicy", nil, 200, string(before)), wire("PATCH", item, "Set-CsTeamsAppPermissionPolicy", body, 403, "")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "catalog-replacement", Steps: []testutil.Exchange{wire("GET", item, "Set-CsTeamsAppPermissionPolicy", nil, 200, string(before)), wire("PATCH", item, "Set-CsTeamsAppPermissionPolicy", body, 403, "")}, Want: testutil.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				edit := resource.ReplaceCatalogApps(resource.NewCatalogApp("unit-app"))
 				input := resource.UpdateRequest{}
 				switch field {
@@ -103,7 +103,7 @@ func TestUnitAppPermissionCatalogReplacementsUseRealPreparationOnDeniedPatch(t *
 				if v == nil || v.Before == nil || !v.PatchInvoked || v.HTTPAccepted || !reflect.DeepEqual(v.Before.RawFields, expected) {
 					t.Error("denied catalog update changed real preparation or invented acceptance")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		})
 	}
@@ -111,14 +111,14 @@ func TestUnitAppPermissionCatalogReplacementsUseRealPreparationOnDeniedPatch(t *
 
 func TestUnitAppPermissionCatalogBuildersHaveNoCredentialsOrHTTP(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local-catalog-builders", Source: sourceModels, Invoke: func(_ context.Context, _ *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local-catalog-builders", Invoke: func(_ context.Context, _ *msteams.Client) testutil.Observation {
 		for _, id := range []string{"", " ", "future-app"} {
 			v := resource.NewCatalogApp(id)
 			out, e := resource.ReplaceCatalogApps(v, v).Apply(nil)
 			if e != nil || len(out) != 2 || out[0].ID == nil || *out[0].ID != id {
-				return contracttest.Observation{Err: errors.New("local catalog construction changed")}
+				return testutil.Observation{Err: errors.New("local catalog construction changed")}
 			}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

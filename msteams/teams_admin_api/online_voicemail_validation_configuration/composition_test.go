@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/online_voicemail_validation_configuration"
@@ -51,11 +51,11 @@ func TestUnitValidationUpdatePreparationFailures(t *testing.T) {
 	)
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", item, "Set-CsOnlineVoicemailValidationConfiguration", nil, tc.read, tc.body)}
+			steps := []testutil.Exchange{wire("GET", item, "Set-CsOnlineVoicemailValidationConfiguration", nil, tc.read, tc.body)}
 			if tc.patch != 0 {
 				steps = append(steps, wire("PATCH", item, "Set-CsOnlineVoicemailValidationConfiguration", json.RawMessage(`{"Identity":"Global","AudioFileValidationEnabled":false}`), tc.patch, ""))
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/online_voicemail_validation_configuration/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{AudioFileValidationEnabled: policy.Set(false)}})
 				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
 					t.Error("failed update lost preparation state or invented acceptance")
@@ -73,7 +73,7 @@ func TestUnitValidationUpdatePreparationFailures(t *testing.T) {
 						t.Error("failure lost its HTTP status")
 					}
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}
@@ -134,17 +134,17 @@ func TestUnitValidationListFilteringAndGlobalOrderFromRealResponses(t *testing.T
 		if err != nil {
 			t.Fatal(err)
 		}
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "real-filter-" + tc.Name, Family: "online_voicemail_validation_configuration", Scope: "service", Source: "msteams/teams_admin_api/online_voicemail_validation_configuration/testdata/list.json",
-			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "real-filter-" + tc.Name,
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/OnlineVoicemailValidationConfiguration", 200, raw), Want: testutil.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.OnlineVoicemailValidationConfigurations
 				if tc.Pattern == "" {
 					value, response, err := service.List(ctx)
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				}
 				value, response, err := service.ListFiltered(ctx, tc.Pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {

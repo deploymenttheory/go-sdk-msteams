@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"reflect"
-	"slices"
+
 	"testing"
 	"time"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -43,73 +43,61 @@ func TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses(t *testing.T) 
 	mapped := readFile(t, "testdata/map_teams_403.json")
 	zone := "America/Los_Angeles"
 	start, end := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC), time.Date(2026, 1, 2, 0, 0, 0, 0, time.UTC)
+
 	cases := []struct {
-		name, method, path, command, body, fixture string
-		reply                                      []byte
-		mappings                                   []contracttest.Mapping
-		invoke                                     invocation
+		name, method, path, command, body string
+		reply                             []byte
+		invoke                            invocation
 	}{
-		{"error-reports", "GET", v2 + "/reports/errors", "Get-CsTeamsShiftsConnectionErrorReport", "", "list_error_reports_403", reports,
-			mapping("Get-CsTeamsShiftsConnectionErrorReport", "Get"),
+		{"error-reports", "GET", v2 + "/reports/errors", "Get-CsTeamsShiftsConnectionErrorReport", "", reports,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.ListErrorReports(ctx, nil)
 			}},
 		{"error-reports-filtered", "GET", v2 + "/reports/errors?activeness=Active&connectorInstanceId=" + probe + "&teamId=" + team,
-			"Get-CsTeamsShiftsConnectionErrorReport", "", "list_error_reports_403", reports, mapping("Get-CsTeamsShiftsConnectionErrorReport", "Get"),
-			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
+			"Get-CsTeamsShiftsConnectionErrorReport", "", reports, func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.ListErrorReports(ctx, &sc.ErrorReportListOptions{Activeness: ptr("Active"), ConnectorInstanceID: ptr(probe), TeamID: ptr(team)})
 			}},
-		{"error-report", "GET", v2 + "/reports/errors/" + probe, "Get-CsTeamsShiftsConnectionErrorReport", "", "list_error_reports_403", reports,
-			mapping("Get-CsTeamsShiftsConnectionErrorReport", "Get1", "GetViaIdentity"),
+		{"error-report", "GET", v2 + "/reports/errors/" + probe, "Get-CsTeamsShiftsConnectionErrorReport", "", reports,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.GetErrorReportByID(ctx, probe)
 			}},
-		{"operation", "GET", v1 + "/operations/" + probe, "Get-CsTeamsShiftsConnectionOperation", "", "list_error_reports_403", reports,
-			mapping("Get-CsTeamsShiftsConnectionOperation", "Get", "GetViaIdentity"),
+		{"operation", "GET", v1 + "/operations/" + probe, "Get-CsTeamsShiftsConnectionOperation", "", reports,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.GetOperationByID(ctx, probe)
 			}},
-		{"sync-result", "GET", v1 + "/connectorinstances/" + probe + "/usersync/" + team, "Get-CsTeamsShiftsConnectionSyncResult", "", "list_error_reports_403", reports,
-			mapping("Get-CsTeamsShiftsConnectionSyncResult", "Get", "GetViaIdentity"),
+		{"sync-result", "GET", v1 + "/connectorinstances/" + probe + "/usersync/" + team, "Get-CsTeamsShiftsConnectionSyncResult", "", reports,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.GetSyncResult(ctx, probe, team)
 			}},
-		{"team-maps", "GET", v1 + "/connectorinstances/" + probe + "/teamconnects", "Get-CsTeamsShiftsConnectionTeamMap", "", "list_team_maps_403", maps,
-			mapping("Get-CsTeamsShiftsConnectionTeamMap", "Get", "GetViaIdentity"),
+		{"team-maps", "GET", v1 + "/connectorinstances/" + probe + "/teamconnects", "Get-CsTeamsShiftsConnectionTeamMap", "", maps,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.ListTeamMaps(ctx, probe)
 			}},
-		{"instance-wfm-teams", "GET", v1 + "/connectorinstances/" + probe + "/wfmteams", "Get-CsTeamsShiftsConnectionWfmTeam", "", "list_team_maps_403", maps,
-			mapping("Get-CsTeamsShiftsConnectionWfmTeam", "Get", "GetViaIdentity"),
+		{"instance-wfm-teams", "GET", v1 + "/connectorinstances/" + probe + "/wfmteams", "Get-CsTeamsShiftsConnectionWfmTeam", "", maps,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.ListInstanceWfmTeams(ctx, probe)
 			}},
-		{"connection-wfm-teams", "GET", v2 + "/connections/" + probe + "/wfmteams", "Get-CsTeamsShiftsConnectionWfmTeam", "", "list_team_maps_403", maps,
-			mapping("Get-CsTeamsShiftsConnectionWfmTeam", "Get1", "GetViaIdentity1"),
+		{"connection-wfm-teams", "GET", v2 + "/connections/" + probe + "/wfmteams", "Get-CsTeamsShiftsConnectionWfmTeam", "", maps,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.ListConnectionWfmTeams(ctx, probe)
 			}},
-		{"wfm-users", "GET", v1 + "/connectorinstances/" + probe + "/wfmteams/msteams-sdk-probe", "Get-CsTeamsShiftsConnectionWfmUser", "", "list_team_maps_403", maps,
-			mapping("Get-CsTeamsShiftsConnectionWfmUser", "Get", "GetViaIdentity"),
+		{"wfm-users", "GET", v1 + "/connectorinstances/" + probe + "/wfmteams/msteams-sdk-probe", "Get-CsTeamsShiftsConnectionWfmUser", "", maps,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.ListWfmUsers(ctx, probe, "msteams-sdk-probe")
 			}},
 		{"map-teams", "PUT", v1 + "/connectorinstances/" + probe + "/teamconnects", "New-CsTeamsShiftsConnectionBatchTeamMap",
-			`{"teamMappings":[{"teamId":"` + team + `","wfmTeamId":"msteams-sdk-probe","timeZone":"America/Los_Angeles"}]}`, "map_teams_403", mapped,
-			mapping("New-CsTeamsShiftsConnectionBatchTeamMap", "Create", "CreateExpanded", "CreateViaIdentity", "CreateViaIdentityExpanded"),
+			`{"teamMappings":[{"teamId":"` + team + `","wfmTeamId":"msteams-sdk-probe","timeZone":"America/Los_Angeles"}]}`, mapped,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				return s.MapTeams(ctx, probe, []sc.TeamMapping{{TeamID: team, WfmTeamID: "msteams-sdk-probe", TimeZone: &zone}})
 			}},
-		{"delete-team-map", "DELETE", v1 + "/connectorinstances/" + probe + "/teamconnects/" + team, "Remove-CsTeamsShiftsConnectionTeamMap", "", "map_teams_403", mapped,
-			mapping("Remove-CsTeamsShiftsConnectionTeamMap", "Remove", "RemoveViaIdentity"),
+		{"delete-team-map", "DELETE", v1 + "/connectorinstances/" + probe + "/teamconnects/" + team, "Remove-CsTeamsShiftsConnectionTeamMap", "", mapped,
 			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				response, err := s.DeleteTeamMap(ctx, probe, team)
 				return nil, response, err
 			}},
 		{"clear-schedule", "POST", v1 + "/clearschedule/clear", "Remove-CsTeamsShiftsScheduleRecord",
 			`{"clearSchedulingGroup":false,"dateRange":{"endDate":"2026-01-02T00:00:00.0000000Z","startDate":"2026-01-01T00:00:00.0000000Z"},"entityTypes":["shift"],"teamId":"` + team + `","timeZone":"America/Los_Angeles"}`,
-			"map_teams_403", mapped, mapping("Remove-CsTeamsShiftsScheduleRecord", "Remove", "RemoveExpanded"),
-			func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
+			mapped, func(ctx context.Context, s *sc.Service) (any, *resty.Response, error) {
 				response, err := s.ClearSchedule(ctx, sc.ClearScheduleRequest{TeamID: team, EntityTypes: []string{"shift"}, StartDate: &start, EndDate: &end, TimeZone: &zone})
 				return nil, response, err
 			}},
@@ -119,15 +107,15 @@ func TestUnitShiftsSyncAuthorizationDenialUsesAcceptanceResponses(t *testing.T) 
 		if c.body != "" {
 			body = json.RawMessage(c.body)
 		}
-		run(t, contracttest.Case{Name: "actual-denied-" + c.name, Source: "msteams/teams_admin_api/shifts_connections/testdata/" + c.fixture + ".json", Mappings: c.mappings,
-			Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, "", body, 403, c.reply)},
-			Want:  contracttest.Expected{Status: 403, Body: c.reply, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: []string{"Forbidden"}}},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "actual-denied-" + c.name,
+			Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, "", body, 403, c.reply)},
+			Want:  testutil.Expected{Status: 403, Body: c.reply, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: []string{"Forbidden"}}},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.ShiftsConnections)
 				if !errors.Is(err, auth.ErrForbidden) || !noValue(value) {
 					t.Fatal("denial was not a typed forbidden error without a value")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -154,12 +142,9 @@ func TestUnitShiftsSyncSuccessShapesPreserveFields(t *testing.T) {
 	reports := []byte(`{"errorReports":[` + errorReportJSON + `]}`)
 	query := "?activeness=All&after=2026-01-01T00%3A00%3A00Z&before=2026-01-02T00%3A00%3A00Z&code=c&connectionId=" + probe +
 		"&connectorInstanceId=" + probe + "&operation=o&procedure=p&teamId=" + team
-	run(t, contracttest.Case{Name: "success-reads",
-		Mappings: slices.Concat(mapping("Get-CsTeamsShiftsConnectionErrorReport", "Get", "Get1"),
-			mapping("Get-CsTeamsShiftsConnectionOperation", "Get"), mapping("Get-CsTeamsShiftsConnectionSyncResult", "Get"),
-			mapping("Get-CsTeamsShiftsConnectionTeamMap", "Get"), mapping("Get-CsTeamsShiftsConnectionWfmTeam", "Get", "Get1"),
-			mapping("Get-CsTeamsShiftsConnectionWfmUser", "Get")),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "success-reads",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", v2+"/reports/errors"+query, "Get-CsTeamsShiftsConnectionErrorReport", "", nil, 200, reports),
 			wire("GET", v2+"/reports/errors/"+probe, "Get-CsTeamsShiftsConnectionErrorReport", "", nil, 200, []byte(errorReportJSON)),
 			wire("GET", v1+"/operations/"+probe, "Get-CsTeamsShiftsConnectionOperation", "", nil, 200, []byte(operationJSON)),
@@ -168,8 +153,8 @@ func TestUnitShiftsSyncSuccessShapesPreserveFields(t *testing.T) {
 			wire("GET", v1+"/connectorinstances/"+probe+"/wfmteams", "Get-CsTeamsShiftsConnectionWfmTeam", "", nil, 200, []byte(wfmTeamsJSON)),
 			wire("GET", v2+"/connections/"+probe+"/wfmteams", "Get-CsTeamsShiftsConnectionWfmTeam", "", nil, 200, []byte(connTeamsJSON)),
 			wire("GET", v1+"/connectorinstances/"+probe+"/wfmteams/w-team", "Get-CsTeamsShiftsConnectionWfmUser", "", nil, 200, []byte(wfmUsersJSON))},
-		Want: contracttest.Expected{Status: 200, Body: []byte(wfmUsersJSON)},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: []byte(wfmUsersJSON)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.ShiftsConnections
 			listed, _, err := s.ListErrorReports(ctx, &sc.ErrorReportListOptions{Activeness: ptr("All"), ConnectorInstanceID: ptr(probe), ConnectionID: ptr(probe),
 				TeamID: ptr(team), Operation: ptr("o"), Procedure: ptr("p"), Code: ptr("c"), Before: ptr("2026-01-02T00:00:00Z"), After: ptr("2026-01-01T00:00:00Z")})
@@ -204,22 +189,21 @@ func TestUnitShiftsSyncSuccessShapesPreserveFields(t *testing.T) {
 			if err != nil || len(users) != 1 || *users[0].Name != "WFM user" {
 				t.Fatal("WFM users were not decoded")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 
 	mapBody := json.RawMessage(`{"teamMappings":[{"teamId":"` + team + `","wfmTeamId":"w-team","timeZone":"UTC"},{"teamId":"` + probe + `","wfmTeamId":"w-team-2"}]}`)
 	clearBody := json.RawMessage(`{"teamId":"` + team + `","clearSchedulingGroup":true,"entityTypes":["openShift","timeOff"],"designatedActorId":"` + probe + `"}`)
 	startOnly := json.RawMessage(`{"teamId":"` + team + `","clearSchedulingGroup":false,"entityTypes":["shift"],"dateRange":{"startDate":"2026-01-01T08:30:00.0000000-08:00"}}`)
-	run(t, contracttest.Case{Name: "success-writes",
-		Mappings: slices.Concat(mapping("New-CsTeamsShiftsConnectionBatchTeamMap", "CreateExpanded"), mapping("Remove-CsTeamsShiftsConnectionTeamMap", "Remove"),
-			mapping("Remove-CsTeamsShiftsScheduleRecord", "RemoveExpanded")),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "success-writes",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("PUT", v1+"/connectorinstances/"+probe+"/teamconnects", "New-CsTeamsShiftsConnectionBatchTeamMap", "", mapBody, 202, []byte(teamMapOpJSON)),
 			wire("DELETE", v1+"/connectorinstances/"+probe+"/teamconnects/"+team, "Remove-CsTeamsShiftsConnectionTeamMap", "", nil, 202, nil),
 			wire("POST", v1+"/clearschedule/clear", "Remove-CsTeamsShiftsScheduleRecord", "", clearBody, 200, nil),
 			wire("POST", v1+"/clearschedule/clear", "Remove-CsTeamsShiftsScheduleRecord", "", startOnly, 200, nil)},
-		Want: contracttest.Expected{Status: 200},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.ShiftsConnections
 			operation, response, err := s.MapTeams(ctx, probe, []sc.TeamMapping{{TeamID: team, WfmTeamID: "w-team", TimeZone: ptr("UTC")}, {TeamID: probe, WfmTeamID: "w-team-2"}})
 			if err != nil || response.StatusCode() != 202 || *operation.OperationID != probe || *operation.Status != "NotStarted" || operation.LastActionDateTime != nil {
@@ -233,7 +217,7 @@ func TestUnitShiftsSyncSuccessShapesPreserveFields(t *testing.T) {
 			}
 			start := time.Date(2026, 1, 1, 8, 30, 0, 0, time.FixedZone("PST", -8*3600))
 			response, err = s.ClearSchedule(ctx, sc.ClearScheduleRequest{TeamID: team, EntityTypes: []string{"shift"}, StartDate: &start})
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -272,40 +256,40 @@ func TestUnitShiftsSyncMalformedResponsesFailDecode(t *testing.T) {
 				return s.GetSyncResult(ctx, "x", "t")
 			}},
 	} {
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{discovery(t), wire("GET", c.path, c.command, "", nil, 200, []byte(c.body))},
-			Want: contracttest.Expected{Status: 200, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire("GET", c.path, c.command, "", nil, 200, []byte(c.body))},
+			Want: testutil.Expected{Status: 200, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.ShiftsConnections)
 				if !noValue(value) {
 					t.Fatal("malformed response returned a value")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 	body := json.RawMessage(`{"teamMappings":[{"teamId":"t","wfmTeamId":"w"}]}`)
-	run(t, contracttest.Case{Name: "map-teams-ok-is-undeclared",
-		Steps: []contracttest.Exchange{discovery(t), wire("PUT", v1+"/connectorinstances/x/teamconnects", "New-CsTeamsShiftsConnectionBatchTeamMap", "", body, 200, []byte(teamMapOpJSON))},
-		Want:  contracttest.Expected{Status: 200, Error: sc.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "map-teams-ok-is-undeclared",
+		Steps: []testutil.Exchange{discovery(t), wire("PUT", v1+"/connectorinstances/x/teamconnects", "New-CsTeamsShiftsConnectionBatchTeamMap", "", body, 200, []byte(teamMapOpJSON))},
+		Want:  testutil.Expected{Status: 200, Error: sc.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.ShiftsConnections.MapTeams(ctx, "x", []sc.TeamMapping{{TeamID: "t", WfmTeamID: "w"}})
 			if value != nil {
 				t.Fatal("undeclared status returned a value")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "map-teams-empty-receipt",
-		Steps: []contracttest.Exchange{discovery(t), wire("PUT", v1+"/connectorinstances/x/teamconnects", "New-CsTeamsShiftsConnectionBatchTeamMap", "", body, 202, []byte(`null`))},
-		Want:  contracttest.Expected{Status: 202, Error: client.ErrDecode},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "map-teams-empty-receipt",
+		Steps: []testutil.Exchange{discovery(t), wire("PUT", v1+"/connectorinstances/x/teamconnects", "New-CsTeamsShiftsConnectionBatchTeamMap", "", body, 202, []byte(`null`))},
+		Want:  testutil.Expected{Status: 202, Error: client.ErrDecode},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, response, err := sdk.TeamsAdminAPI.ShiftsConnections.MapTeams(ctx, "x", []sc.TeamMapping{{TeamID: "t", WfmTeamID: "w"}})
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
-	run(t, contracttest.Case{Name: "delete-team-map-no-content-is-undeclared",
-		Steps: []contracttest.Exchange{discovery(t), wire("DELETE", v1+"/connectorinstances/x/teamconnects/t", "Remove-CsTeamsShiftsConnectionTeamMap", "", nil, 204, nil)},
-		Want:  contracttest.Expected{Status: 204, Error: sc.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "delete-team-map-no-content-is-undeclared",
+		Steps: []testutil.Exchange{discovery(t), wire("DELETE", v1+"/connectorinstances/x/teamconnects/t", "Remove-CsTeamsShiftsConnectionTeamMap", "", nil, 204, nil)},
+		Want:  testutil.Expected{Status: 204, Error: sc.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.ShiftsConnections.DeleteTeamMap(ctx, "x", "t")
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -353,9 +337,9 @@ func TestUnitShiftsSyncInvalidInputFailsBeforeIO(t *testing.T) {
 			return e
 		},
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local", Want: contracttest.Expected{Error: sc.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.ShiftsConnections)}
+		run(t, testutil.Case{Name: name, Want: testutil.Expected{Error: sc.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.ShiftsConnections)}
 			}})
 	}
 }

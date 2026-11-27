@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_first_party_meeting_template_configuration"
 )
@@ -21,7 +21,7 @@ func names(values []*resource.Template) []string {
 
 func TestUnitTemplateEditsAreLocalOrdinalAndOwned(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "template-edits", Invoke: func(context.Context, *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "template-edits", Invoke: func(context.Context, *msteams.Client) testutil.Observation {
 		a, b, upper := resource.NewTemplate("a"), resource.NewTemplate("b"), resource.NewTemplate("A")
 		a.TeamsMeetingOptions = append(a.TeamsMeetingOptions, resource.NewOption("AutoAdmittedUsers"))
 		values, err := resource.ChangeTemplates([]*resource.Template{upper}, []*resource.Template{resource.NewTemplate("a")}).Apply([]*resource.Template{a, a, b})
@@ -66,6 +66,6 @@ func TestUnitTemplateEditsAreLocalOrdinalAndOwned(t *testing.T) {
 		if err != nil || !jsonEqual(raw, []byte(`{"Identity":null,"Description":null,"Name":"x","Category":null,"TeamsMeetingOptions":[]}`)) {
 			t.Fatal("local constructor differs from the pinned name constructor")
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

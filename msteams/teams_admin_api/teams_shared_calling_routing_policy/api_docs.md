@@ -46,4 +46,4 @@ testdata. No phone numbers are allocated, assigned or purchased by these tests.
 [Microsoft's setup guide](https://learn.microsoft.com/en-us/microsoftteams/shared-calling-setup)
 and [parameter reference](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/set-csteamssharedcallingroutingpolicy?view=teams-ps)
 describe resource accounts and emergency callback-number requirements. See
-[qualification](../../../docs/implementation/policies/room-shared-calling-lab-acceptance.md).
+[qualification](../../../docs/acceptance/room-shared-calling-lab-acceptance.md).

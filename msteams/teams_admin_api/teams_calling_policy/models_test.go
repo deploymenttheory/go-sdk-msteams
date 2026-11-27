@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -1583,10 +1583,10 @@ func TestUnitCallingPolicyRequestsRetainTypedModelSettings(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		run(t, contracttest.Case{Name: fmt.Sprintf("typed-model-request-%03d", index), Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("PATCH", item, setCommand, body, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: fmt.Sprintf("typed-model-request-%03d", index), Steps: []testutil.Exchange{compiledWire("PATCH", item, setCommand, body, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, r, e := sdk.TeamsAdminAPI.TeamsCallingPolicies.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: settings, Controls: policy.Controls{}})
-			return contracttest.Observation{Response: r, Err: e}
-		}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.
+			return testutil.Observation{Response: r, Err: e}
+		}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.
 			TeamsAdmin, StatusCode: 400,
 		}},
 		})

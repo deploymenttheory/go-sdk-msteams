@@ -67,4 +67,4 @@ provide unit decoding and request fixtures. Enabling the SDN provider, writing S
 provider settings or tokens, effective live event behavior, delegated
 authentication and other clouds are not qualified.
 
-See [qualification](../../../docs/implementation/policies/meeting-broadcast-configuration-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/meeting-broadcast-configuration-lab-acceptance.md).

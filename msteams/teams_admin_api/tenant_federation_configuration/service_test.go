@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -31,21 +31,21 @@ func TestUnitTenantFederationTypedDispatch(t *testing.T) {
 			if string(body) == "null" {
 				body = nil
 			}
-			run(t, contracttest.Case{Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(t), wire(f.Method, strings.TrimPrefix(f.URL, origin), command, body, f.Status, f.Response)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: f.Name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{discovery(t), wire(f.Method, strings.TrimPrefix(f.URL, origin), command, body, f.Status, f.Response)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.TenantFederationConfigurations
 				switch f.Name {
 				case "tenant-federation-list":
 					v, r, e := s.List(ctx)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "tenant-federation-read":
 					v, r, e := s.GetByIdentity(ctx, "Global")
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "tenant-federation-update":
 					no := false
 					r, e := s.UpdateGlobal(ctx, configuration.UpdateRequest{Settings: configuration.Settings{AllowFederatedUsers: &no}, AllowedDomains: configuration.NewAllowList("fixture.example.invalid")})
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				default:
-					return contracttest.Observation{Err: errors.New("unknown pinned request")}
+					return testutil.Observation{Err: errors.New("unknown pinned request")}
 				}
 			}})
 		}
@@ -104,10 +104,10 @@ func TestUnitTenantUpdateMatchesTypedNormalization(t *testing.T) {
 			continue
 		}
 		input := inputFor(t, f.Name)
-		run(t, contracttest.Case{Name: f.Name, Mode: auth.Application, Mappings: []contracttest.Mapping{{Command: setCommand, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(t), wire("PUT", collection+"/configuration/Global", setCommand, f.Wire, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: f.Name, Mode: auth.Application, Steps: []testutil.Exchange{discovery(t), wire("PUT", collection+"/configuration/Global", setCommand, f.Wire, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			r, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.UpdateGlobal(ctx, input)
-			return contracttest.Observation{Response: r, Err: e}
-		}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.
+			return testutil.Observation{Response: r, Err: e}
+		}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.
 			TeamsAdmin, StatusCode: 400}},
 		})
 	}
@@ -171,17 +171,17 @@ func TestUnitTenantFiltersUseRealResponses(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "real-filter-" + tc.Name, Family: "tenant_federation_configuration", Scope: "service", Source: "msteams/teams_admin_api/tenant_federation_configuration/testdata/list.json",
-			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TenantFederationSettings", 200, raw), Want: contracttest.Expected{Status: 200, JSON: expected, Body: raw},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "real-filter-" + tc.Name,
+			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TenantFederationSettings", 200, raw), Want: testutil.Expected{Status: 200, JSON: expected, Body: raw},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				service := sdk.TeamsAdminAPI.TenantFederationConfigurations
 				if tc.Pattern == "" {
 					value, response, err := service.List(ctx)
-					return contracttest.Observation{Value: value, Response: response, Err: err}
+					return testutil.Observation{Value: value, Response: response, Err: err}
 				}
 				value, response, err := service.ListFiltered(ctx, tc.Pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {
@@ -199,52 +199,52 @@ func TestUnitTenantIdentityEscapingAndMutationErrors(t *testing.T) {
 		t.Fatal("local compatibility model input lost raw fields")
 	}
 	identity := "scope/Fixture / Config"
-	run(t, contracttest.Case{Name: "escaped", Mode: auth.Application, Steps: []contracttest.Exchange{discovery(t), wire("GET", collection+"/configuration/"+url.PathEscape(identity), getCommand, nil, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "escaped", Mode: auth.Application, Steps: []testutil.Exchange{discovery(t), wire("GET", collection+"/configuration/"+url.PathEscape(identity), getCommand, nil, 400, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.GetByIdentity(ctx, identity)
 		if e == nil && (v.Identity != identity || string(v.AllowedDomains) != `["Future"]`) {
 			e = errors.New("escaped read changed")
 		}
-		return contracttest.Observation{Response: r, Err: e}
-	}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.
+		return testutil.Observation{Response: r, Err: e}
+	}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.
 		TeamsAdmin, StatusCode: 400}},
 	})
 	for _, status := range []int{400, 403, 429, 503} {
-		run(t, contracttest.Case{Name: fmt.Sprint("denied-", status), Mode: auth.Application, Steps: []contracttest.Exchange{discovery(t), wire("PUT", collection+"/configuration/Global", setCommand, json.RawMessage(`{"Identity":"Global"}`), status, `{"Code":"FutureDenied","Message":"fixture private text"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: fmt.Sprint("denied-", status), Mode: auth.Application, Steps: []testutil.Exchange{discovery(t), wire("PUT", collection+"/configuration/Global", setCommand, json.RawMessage(`{"Identity":"Global"}`), status, `{"Code":"FutureDenied","Message":"fixture private text"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			r, e := sdk.TeamsAdminAPI.TenantFederationConfigurations.UpdateGlobal(ctx, configuration.UpdateRequest{})
 			var api *client.APIError
 			if !errors.As(e, &api) || api.StatusCode != status || r == nil || !strings.Contains(string(r.Body()), "fixture private text") || strings.Contains(fmt.Sprint(e), "fixture private text") {
-				return contracttest.Observation{Err: errors.New("error classification/metadata/redaction differs")}
+				return testutil.Observation{Err: errors.New("error classification/metadata/redaction differs")}
 			}
-			return contracttest.Observation{Response: r}
+			return testutil.Observation{Response: r}
 		}})
 	}
 }
 
 func TestUnitTenantInvalidInputsDoNotAcquireCredentials(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "invalid-local", Mode: auth.Application, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "invalid-local", Mode: auth.Application, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TenantFederationConfigurations
 		for _, id := range []string{"", " ", ".", "..", "bad\\id", "bad\nidentity"} {
 			if _, _, e := s.GetByIdentity(ctx, id); !errors.Is(e, configuration.ErrInput) {
-				return contracttest.Observation{Err: errors.New("invalid read identity accepted")}
+				return testutil.Observation{Err: errors.New("invalid read identity accepted")}
 			}
 			if _, e := s.UpdateByIdentity(ctx, id, configuration.UpdateRequest{}); !errors.Is(e, configuration.ErrInput) {
-				return contracttest.Observation{Err: errors.New("invalid update identity accepted")}
+				return testutil.Observation{Err: errors.New("invalid update identity accepted")}
 			}
 		}
 		for _, input := range []configuration.UpdateRequest{{AllowedDomains: configuration.NewAllowList(), AllowedDomainsAsAList: configuration.ReplaceDomains(nil)}, {AllowedDomains: &configuration.AllowedDomains{}}, {BlockedDomains: &configuration.ListChange{}}} {
 			if _, e := s.UpdateGlobal(ctx, input); !errors.Is(e, configuration.ErrInput) {
-				return contracttest.Observation{Err: errors.New("invalid domain input accepted")}
+				return testutil.Observation{Err: errors.New("invalid domain input accepted")}
 			}
 		}
 		if _, _, e := s.ListFiltered(ctx, "[broken"); !errors.Is(e, configuration.ErrInput) {
-			return contracttest.Observation{Err: errors.New("invalid filter accepted")}
+			return testutil.Observation{Err: errors.New("invalid filter accepted")}
 		}
 		c, cancel := context.WithCancel(ctx)
 		cancel()
 		if _, _, e := s.List(c); !errors.Is(e, context.Canceled) {
-			return contracttest.Observation{Err: errors.New("cancellation changed")}
+			return testutil.Observation{Err: errors.New("cancellation changed")}
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

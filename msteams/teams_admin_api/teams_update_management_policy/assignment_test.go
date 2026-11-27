@@ -9,7 +9,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -39,11 +39,11 @@ func TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules(t *testing.T) {
 			if tc.scope == 2 {
 				method = "POST"
 			}
-			steps := []contracttest.Exchange{
-				{Request: contracttest.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: discovery}},
-				{Request: contracttest.WireRequest{Method: method, URL: origin + tc.path, Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {"Grant-CsTeamsUpdateManagementPolicy"}, "X-MS-Target-Uri": {"https://admin.example.invalid/"}, "MPACmdlet": nil, "Content-Type": {"application/json"}}, JSON: json.RawMessage(tc.body)}, Reply: contracttest.Reply{Status: 503}},
+			steps := []testutil.Exchange{
+				{Request: testutil.WireRequest{Method: "GET", URL: origin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: discovery}},
+				{Request: testutil.WireRequest{Method: method, URL: origin + tc.path, Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {"Grant-CsTeamsUpdateManagementPolicy"}, "X-MS-Target-Uri": {"https://admin.example.invalid/"}, "MPACmdlet": nil, "Content-Type": {"application/json"}}, JSON: json.RawMessage(tc.body)}, Reply: testutil.Reply{Status: 503}},
 			}
-			run(t, contracttest.Case{Name: fmt.Sprintf("%s-%s", mode, tc.name), Mode: mode, Mappings: []contracttest.Mapping{{Command: "Grant-CsTeamsUpdateManagementPolicy", ParameterSet: tc.set}}, Steps: steps, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: fmt.Sprintf("%s-%s", mode, tc.name), Mode: mode, Steps: steps, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				input := resource.Assignment{}
 				switch tc.scope {
 				case 0:
@@ -54,14 +54,14 @@ func TestUnitModernGrantsUseSeparateDiscoveryAndWrapperRankRules(t *testing.T) {
 					input.Group = &resource.GroupGrant{ID: "group/fixture", Rank: tc.rank}
 				}
 				_, r, e := sdk.TeamsAdminAPI.TeamsUpdateManagementPolicies.Assign(ctx, input)
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		}
 	}
 }
 func TestUnitWeekdayAndMissingSettingsFailBeforeHTTP(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "local-source-validation", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "local-source-validation", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		s := sdk.TeamsAdminAPI.TeamsUpdateManagementPolicies
 		for _, day := range []int64{-1, 7, 9223372036854775807} {
 			settings := resource.ScalarSettings{UpdateDayOfWeek: policy.Set(day)}
@@ -88,6 +88,6 @@ func TestUnitWeekdayAndMissingSettingsFailBeforeHTTP(t *testing.T) {
 		if _, _, e := s.Assign(canceled, resource.Assignment{Tenant: &resource.TenantAssignment{}}); !errors.Is(e, context.Canceled) {
 			t.Fatal("grant cancellation lost")
 		}
-		return contracttest.Observation{}
+		return testutil.Observation{}
 	}})
 }

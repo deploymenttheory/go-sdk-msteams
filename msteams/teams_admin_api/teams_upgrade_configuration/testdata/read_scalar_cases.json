@@ -1,0 +1,500 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "BlockLegacyAuthorization",
+      "kind": "boolean",
+      "input_json": "{\"BlockLegacyAuthorization\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":true}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":false}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":0}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":-1}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":1.5}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":1e-400}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":1e400}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":\"\"}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":\"true\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":\" False \"}",
+      "projected_json": "false",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":\" \"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":\"\\u0000true\\u0000\"}",
+      "projected_json": "true",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":\"1\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":\"yes\"}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "DownloadTeams",
+      "kind": "boolean",
+      "input_json": "{\"DownloadTeams\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "Identity",
+      "kind": "string",
+      "input_json": "{\"Identity\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":null}",
+      "projected_json": "null",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":true}",
+      "projected_json": "\"true\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":false}",
+      "projected_json": "\"false\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":0}",
+      "projected_json": "\"0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":37}",
+      "projected_json": "\"37\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":9007199254740993}",
+      "projected_json": "\"9007199254740993\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":1.20}",
+      "projected_json": "\"1.20\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":1E+03}",
+      "projected_json": "\"1E+03\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":-0}",
+      "projected_json": "\"-0\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":\"\"}",
+      "projected_json": "\"\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":\"text\"}",
+      "projected_json": "\"text\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":{}}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsUpgradeConfiguration",
+      "field": "SfBMeetingJoinUx",
+      "kind": "string",
+      "input_json": "{\"SfBMeetingJoinUx\":[]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    }
+  ]
+}

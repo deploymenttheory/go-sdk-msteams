@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/internal/labkit"
 )
@@ -23,17 +23,17 @@ func TestUnitGroupRecoveryKeepsPoliciesUntilAssignmentIsAbsent(t *testing.T) {
 		t.Fatal(err)
 	}
 	const group = "00000000-0000-4000-8000-000000000020"
-	steps := []contracttest.Exchange{
+	steps := []testutil.Exchange{
 		labkit.CleanupExchange("GET", "/Teams.Tenant/serviceDiscovery", http.StatusOK, string(discovery)),
 		labkit.CleanupExchange("GET", "/Skype.Policy/groupPolicyAssignments/"+group+"/policyTypes/ApplicationAccessPolicy", http.StatusOK, string(assigned)),
 	}
-	result, err := contracttest.Run(t.Context(), contracttest.Case{
-		Name: "group-policy-cleanup-dependency", Family: "application_access_lab_cleanup", Scope: "service",
-		Source: "tests/integration/lab/application_access_policy/group_assignment_cleanup_test.go", Steps: steps,
-		Want: contracttest.Expected{Error: lab.ErrUnresolved},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	result, err := testutil.Run(t.Context(), testutil.Case{
+		Name:  "group-policy-cleanup-dependency",
+		Steps: steps,
+		Want:  testutil.Expected{Error: lab.ErrUnresolved},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			handler := groupOwnedPolicyCleanup{policyCleanup{sdk.TeamsAdminAPI.ApplicationAccessPolicies}, groupAssignmentCleanup{sdk, group}}
-			return contracttest.Observation{Err: handler.Delete(ctx, lab.Entry{Fixture: applicationCleanupFixture, ResourceID: applicationCleanupFixture})}
+			return testutil.Observation{Err: handler.Delete(ctx, lab.Entry{Fixture: applicationCleanupFixture, ResourceID: applicationCleanupFixture})}
 		},
 	})
 	if err != nil || !result.Passed() {

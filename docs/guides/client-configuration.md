@@ -33,7 +33,7 @@ client-secret, supplied-token, managed-identity or workload-identity configurati
 `WithTokenProvider(binding, provider)` selects an injected provider and replaces the
 complete authentication configuration, including environment token material.
 There is no implicit credential chain or fallback to browser login. Availability and
-operation-specific permissions remain provider/contract qualification concerns.
+operation-specific permissions remain provider and real-tenant testing concerns.
 
 Every method requires a tenant ID. Browser/device-code require a client ID and an explicit callback; password
 also requires username/password; certificate requires supplied certificate/private-key
@@ -121,8 +121,8 @@ credential snapshots.
 
 Verification covers explicit/environment precedence, malformed overrides, zero-request
 construction, borrowed-resource ownership, credential cloning, independent concurrent
-clients, cancellation and redacted diagnostics. Provider token acquisition and tenant
-conformance are deliberately separate qualification states in the capability ledger.
+clients, cancellation and redacted diagnostics. Provider token acquisition and actual tenant operation success are checked
+separately; one does not imply the other.
 
 ## Targeting and migration profiles
 
@@ -249,7 +249,7 @@ credential diagnostics are not exposed, including through unwrapping. Certificat
 `ErrInvalidCertificate`, `ErrCertificateExpired` or `ErrCertificateNotYetValid` in package auth.
 The standalone [provider example](../../msteams/auth/application_example_test.go) demonstrates
 ownership without authenticating. See [tests](../../msteams/auth)
-for app registration/consent, role categories, tested contracts and remaining live qualification.
+for app registration/consent, role categories, unit tests and remaining tenant testing.
 
 ## Reusing an Azure Identity credential
 
@@ -378,7 +378,7 @@ federation. It uses ephemeral OIDC assertions and a read-only Graph request. See
 `graphapi.NewPager[T](scope, request, options)` reads Graph `value` / `@odata.nextLink`
 collections. `teamsadminapi.NewTokenPager[T]` takes an explicit array/token/query-key
 mapping; `NewOffsetPager[T]` takes the array field and offset query key. Resource services
-must select the mapping from their evidenced contract. A Teams field named `@nextLink`
+must select the mapping from the actual API response. A Teams field named `@nextLink`
 can contain a query token, so it is never automatically treated as a Graph URL.
 
 Use `pager.Next(ctx)` for page-wise processing, or `pager.Collect(ctx)` for an aggregate.
@@ -413,4 +413,4 @@ response inspection remains available to callers. The SDK never shuts down borro
 logging/tracing dependencies or configures a global provider.
 
 See [tests](../../msteams/client) for the
-configuration ownership contract, redaction fields and executable test mapping.
+configuration ownership, redaction fields and unit test coverage.

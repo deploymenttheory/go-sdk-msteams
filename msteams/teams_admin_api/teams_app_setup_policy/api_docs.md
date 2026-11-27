@@ -69,7 +69,7 @@ model/edit/result formatting is redacted; raw data remains caller-owned sensitiv
 data. Application/delegated synthetic modes prove routing, not tenant roles,
 cloud/feature support, full shell/Newtonsoft coercion or effective layout.
 Qualification remains open under #105. See [unit tests](service_test.go)
-and the [lab plan](../../../docs/implementation/policies/teams-app-setup-policy-lab-acceptance.md).
+and the [lab plan](../../../docs/acceptance/teams-app-setup-policy-lab-acceptance.md).
 
 ### Executed owned policy CRUD
 

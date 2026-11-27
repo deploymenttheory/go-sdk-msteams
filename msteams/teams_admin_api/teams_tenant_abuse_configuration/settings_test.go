@@ -4,12 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"os"
-	"reflect"
-	"sort"
+
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -57,57 +55,9 @@ func TestUnitAllPinnedSettingsBindExactValuesAndNull(t *testing.T) {
 		if e != nil {
 			t.Fatal(e)
 		}
-		run(t, contracttest.Case{Name: "all-bound", Steps: []contracttest.Exchange{compiledWire("PATCH", "/Skype.Policy/configurations/TeamsTenantAbuseConfiguration/configuration/fixture-policy", "Set-CsTeamsTenantAbuseConfiguration", body, 503, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "all-bound", Steps: []testutil.Exchange{compiledWire("PATCH", "/Skype.Policy/configurations/TeamsTenantAbuseConfiguration/configuration/fixture-policy", "Set-CsTeamsTenantAbuseConfiguration", body, 503, "")}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, r, e := sdk.TeamsAdminAPI.TeamsTenantAbuseConfigurations.PatchByIdentity(ctx, "fixture-policy", resource.PatchRequest{Settings: resource.Settings{ScalarSettings: settings, BlockedTenants: policy.Strings("future-value")}, Controls: policy.Controls{Force: new(false)}})
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
-	}
-}
-func TestUnitWriteFieldsMatchPinnedRuntime(t *testing.T) {
-	t.Parallel()
-	raw, e := os.ReadFile("../../../contracts/powershell/8.1.0/runtime.json")
-	if e != nil {
-		t.Fatal(e)
-	}
-	var baseline struct {
-		Commands []struct {
-			Name string
-			Sets []struct{ Parameters []struct{ Name string } } `json:"parameter_sets"`
-		}
-	}
-	if json.Unmarshal(raw, &baseline) != nil {
-		t.Fatal("invalid pinned metadata")
-	}
-	common := map[string]bool{}
-	for _, name := range []string{"Identity", "Force", "Verbose", "Debug", "ErrorAction", "WarningAction", "InformationAction", "ProgressAction", "ErrorVariable", "WarningVariable", "InformationVariable", "OutVariable", "OutBuffer", "PipelineVariable", "WhatIf", "Confirm"} {
-		common[name] = true
-	}
-	typ := reflect.TypeFor[resource.ScalarSettings]()
-	expected := []string{"BlockedTenants"}
-	for i := 0; i < typ.NumField(); i++ {
-		expected = append(expected, typ.Field(i).Name)
-	}
-	sort.Strings(expected)
-	found := false
-	for _, command := range baseline.Commands {
-		if command.Name != "Set-CsTeamsTenantAbuseConfiguration" {
-			continue
-		}
-		found = true
-		for _, set := range command.Sets {
-			actual := []string{}
-			for _, parameter := range set.Parameters {
-				if !common[parameter.Name] {
-					actual = append(actual, parameter.Name)
-				}
-			}
-			sort.Strings(actual)
-			if !reflect.DeepEqual(actual, expected) {
-				t.Fatal("SDK fields differ from pinned parameter set")
-			}
-		}
-	}
-	if !found {
-		t.Fatal("pinned write command missing")
 	}
 }

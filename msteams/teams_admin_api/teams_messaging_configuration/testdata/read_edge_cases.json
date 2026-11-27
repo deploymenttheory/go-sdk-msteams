@@ -1,0 +1,196 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":1.0}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":1e3}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":-2147483649}",
+      "projected_json": "2147483647",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":4294967296}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":9223372036854775807}",
+      "projected_json": "-1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":18446744073709551615}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":18446744073709551616}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\"2147483648\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\"-2147483649\"}",
+      "projected_json": null,
+      "error": "System.OverflowException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":false}",
+      "projected_json": "0",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\" \"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\" enabled \"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\"1,0\"}",
+      "projected_json": null,
+      "error": "System.ArgumentException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "Storyline",
+      "kind": "enum-boundaries",
+      "input_json": "{\"Storyline\":\"Enabled,Disabled\"}",
+      "projected_json": "1",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":null}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[]}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[null,7,false,9007199254740993,1.20,1E+03,-0]}",
+      "projected_json": "[null,\"7\",\"false\",\"9007199254740993\",\"1.20\",\"1E+03\",\"-0\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[{}]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[[]]}",
+      "projected_json": null,
+      "error": "Newtonsoft.Json.JsonReaderException"
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":true}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":\"entry\"}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{}",
+      "projected_json": "[]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[\"a\"],\"filetypeblocklist\":null}",
+      "projected_json": "[\"a\"]",
+      "error": null
+    },
+    {
+      "command": "Get-CsTeamsMessagingConfiguration",
+      "field": "FileTypeBlockList",
+      "kind": "nullable-string-list",
+      "input_json": "{\"FileTypeBlockList\":[\"a\"],\"filetypeblocklist\":[null,7,false]}",
+      "projected_json": "[\"a\",null,\"7\",\"false\"]",
+      "error": null
+    }
+  ]
+}

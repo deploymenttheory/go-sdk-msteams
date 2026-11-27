@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_template_permission_policy"
@@ -37,7 +37,7 @@ func TestUnitHiddenTemplateEditsAreLocalAndOwned(t *testing.T) {
 }
 func TestUnitHiddenTemplateRequestValidationPrecedesHTTP(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "hidden-template-validation", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "hidden-template-validation", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		service := sdk.TeamsAdminAPI.TeamsTemplatePermissionPolicies
 		if _, _, err := service.CreateByIdentity(ctx, "fixture-policy", resource.CreateRequest{HiddenTemplates: &resource.HiddenTemplateEdit{}}); !errors.Is(err, resource.ErrInput) {
 			t.Fatal("invalid list edit acquired credentials")
@@ -46,6 +46,6 @@ func TestUnitHiddenTemplateRequestValidationPrecedesHTTP(t *testing.T) {
 		if !errors.Is(e, resource.ErrInput) {
 			t.Fatal("source DTO accepted a null array setting")
 		}
-		return contracttest.Observation{Response: r}
+		return testutil.Observation{Response: r}
 	}})
 }

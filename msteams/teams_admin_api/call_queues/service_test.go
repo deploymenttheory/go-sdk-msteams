@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -19,12 +19,12 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/call_queues/service_test.go"
-	probe        = "00000000-0000-4000-8000-000000000001"
-	queueID      = "00000000-0000-4000-8000-000000000003"
-	fixtureName  = "msteams-sdk-fixture-queue"
-	jsonType     = "application/json; charset=utf-8"
-	queues       = "/Teams.VoiceApps/callqueues"
+
+	probe       = "00000000-0000-4000-8000-000000000001"
+	queueID     = "00000000-0000-4000-8000-000000000003"
+	fixtureName = "msteams-sdk-fixture-queue"
+	jsonType    = "application/json; charset=utf-8"
+	queues      = "/Teams.VoiceApps/callqueues"
 )
 
 func readFile(t *testing.T, path string) []byte {
@@ -41,17 +41,17 @@ func readFile(t *testing.T, path string) []byte {
 	return raw
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	if body != nil {
 		h.Set("Content-Type", "application/json")
@@ -60,34 +60,20 @@ func wire(method, path, command string, body json.RawMessage, status int, reply 
 	if reply == nil {
 		contentType = ""
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {contentType}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "call_queues"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !result.Passed() {
 		t.Fatalf("call queue contract %s differed: %+v", c.Name, result.Differences())
 	}
-}
-
-func mapping(commands ...string) []contracttest.Mapping {
-	out := make([]contracttest.Mapping, 0, len(commands))
-	for _, command := range commands {
-		out = append(out, contracttest.Mapping{Command: command, ParameterSet: "__AllParameterSets"})
-	}
-	return out
 }
 
 // apiError is the normalized error for a fixture: ConfigAPI reports the code
@@ -121,16 +107,16 @@ func TestUnitCallQueueLifecycleUsesAcceptanceResponses(t *testing.T) {
 	updateBody := json.RawMessage(`{"Name":"Fixture name","UseDefaultMusicOnHold":true,"AgentAlertTime":45,"AllowOptOut":true,"ConferenceMode":true,` +
 		`"PresenceAwareRouting":false,"RoutingMethod":2,"LanguageId":"en-US","OverflowThreshold":50,"OverflowAction":0,"TimeoutThreshold":1200,` +
 		`"TimeoutAction":0,"NoAgentAction":0,"NoAgentApplyTo":0}`)
-	run(t, contracttest.Case{Name: "actual-lifecycle", Source: "msteams/teams_admin_api/call_queues/testdata/get.json",
-		Mappings: mapping("New-CsCallQueue", "Get-CsCallQueue", "Set-CsCallQueue", "Remove-CsCallQueue"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "actual-lifecycle",
+
+		Steps: []testutil.Exchange{discovery(t),
 			wire("POST", queues, "New-CsCallQueue", createBody, 201, created),
 			wire("GET", queues+"/"+queueID+"?FilterInvalidObos=False", "Get-CsCallQueue", nil, 200, got),
 			wire("GET", queues+"?FilterInvalidObos=False&First=10&NameFilter="+fixtureName, "Get-CsCallQueue", nil, 200, listed),
 			wire("PUT", queues+"/"+queueID, "Set-CsCallQueue", updateBody, 200, updated),
 			wire("DELETE", queues+"/"+queueID, "Remove-CsCallQueue", nil, 200, deleted)},
-		Want: contracttest.Expected{Status: 200, Body: deleted},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 200, Body: deleted},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.CallQueues
 			// LongestIdle forces PresenceAwareRouting off, as New-CsCallQueue does.
 			value, response, err := s.Create(ctx, cq.Settings{Name: ptr(fixtureName), RoutingMethod: ptr(cq.RoutingLongestIdle), AgentAlertTime: ptr(int32(30)),
@@ -154,7 +140,7 @@ func TestUnitCallQueueLifecycleUsesAcceptanceResponses(t *testing.T) {
 				t.Fatal("diagnostics-only update reply was not a nil value")
 			}
 			response, err = s.DeleteByID(ctx, queueID)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -176,12 +162,12 @@ func TestUnitCallQueueMissingIdentityIsHTTP400(t *testing.T) {
 			func(ctx context.Context, s *cq.Service) (*resty.Response, error) { return s.DeleteByID(ctx, queueID) }},
 	} {
 		reply := readFile(t, "testdata/"+c.fixture)
-		run(t, contracttest.Case{Name: "actual-" + name, Source: "msteams/teams_admin_api/call_queues/testdata/" + c.fixture, Mappings: mapping(c.command),
-			Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, nil, 400, reply)},
-			Want:  contracttest.Expected{Status: 400, Body: reply, APIError: apiError(400, reply)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "actual-" + name,
+			Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, nil, 400, reply)},
+			Want:  testutil.Expected{Status: 400, Body: reply, APIError: apiError(400, reply)},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := c.invoke(ctx, sdk.TeamsAdminAPI.CallQueues)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -193,14 +179,14 @@ func TestUnitCallQueueOptionalQueriesAndNormalization(t *testing.T) {
 	createBody := json.RawMessage(`{"Name":"q","ThreadId":"19:thread","OverflowAction":1,"OverflowActionCallPriority":5,"TimeoutAction":0,"TimeoutActionCallPriority":0,` +
 		`"ConferenceMode":true,"AutoRecordingTemplateId":"tpl","DistributionLists":[]}`)
 	updateBody := json.RawMessage(`{"Name":"q","NoAgentAction":2,"NoAgentActionCallPriority":1}`)
-	run(t, contracttest.Case{Name: "queries-and-normalization", Mappings: mapping("Get-CsCallQueue", "New-CsCallQueue", "Set-CsCallQueue"),
-		Steps: []contracttest.Exchange{discovery(t),
+	run(t, testutil.Case{Name: "queries-and-normalization",
+		Steps: []testutil.Exchange{discovery(t),
 			wire("GET", queues+"?Descending=True&ExcludeContent=True&FilterInvalidObos=False&First=1&NameFilter=a+b&Skip=2&SortBy=Name", "Get-CsCallQueue", nil, 200, empty),
 			wire("GET", queues+"?FilterInvalidObos=False", "Get-CsCallQueue", nil, 200, empty),
 			wire("POST", queues+"?channelUserObjectId="+probe, "New-CsCallQueue", createBody, 200, queue),
 			wire("PUT", queues+"/"+queueID+"?channelUserObjectId="+probe, "Set-CsCallQueue", updateBody, 204, nil)},
-		Want: contracttest.Expected{Status: 204},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		Want: testutil.Expected{Status: 204},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.CallQueues
 			values, _, err := s.List(ctx, &cq.ListOptions{First: ptr(int32(1)), Skip: ptr(int32(2)), ExcludeContent: ptr(true), NameFilter: ptr("a b"),
 				SortBy: ptr("Name"), Descending: ptr(true)})
@@ -220,7 +206,7 @@ func TestUnitCallQueueOptionalQueriesAndNormalization(t *testing.T) {
 				t.Fatal("create with channel owner failed")
 			}
 			value, response, err = s.UpdateByID(ctx, queueID, cq.Settings{Name: ptr("q"), NoAgentAction: ptr(cq.NoAgentForward), NoAgentActionCallPriority: ptr(int32(1))}, owner)
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
 }
 
@@ -258,18 +244,18 @@ func TestUnitCallQueueMalformedResponsesFailDecode(t *testing.T) {
 		if c.method == "POST" || c.method == "PUT" {
 			body = json.RawMessage(`{"Name":"q"}`)
 		}
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, body, c.status, []byte(c.body))},
-			Want: contracttest.Expected{Status: c.status, Error: client.ErrDecode},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, body, c.status, []byte(c.body))},
+			Want: testutil.Expected{Status: c.status, Error: client.ErrDecode},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				response, err := c.invoke(ctx, sdk.TeamsAdminAPI.CallQueues)
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
-	run(t, contracttest.Case{Name: "undeclared-status", Steps: []contracttest.Exchange{discovery(t), wire("DELETE", queues+"/x", "Remove-CsCallQueue", nil, 202, nil)},
-		Want: contracttest.Expected{Status: 202, Error: cq.ErrResponse},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "undeclared-status", Steps: []testutil.Exchange{discovery(t), wire("DELETE", queues+"/x", "Remove-CsCallQueue", nil, 202, nil)},
+		Want: testutil.Expected{Status: 202, Error: cq.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			response, err := sdk.TeamsAdminAPI.CallQueues.DeleteByID(ctx, "x")
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -307,9 +293,9 @@ func TestUnitCallQueueInvalidInputFailsBeforeIO(t *testing.T) {
 			return e
 		},
 	} {
-		run(t, contracttest.Case{Name: label, Scope: "local", Want: contracttest.Expected{Error: cq.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: call(ctx, sdk.TeamsAdminAPI.CallQueues)}
+		run(t, testutil.Case{Name: label, Want: testutil.Expected{Error: cq.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: call(ctx, sdk.TeamsAdminAPI.CallQueues)}
 			}})
 	}
 }

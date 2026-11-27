@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -17,7 +17,7 @@ import (
 )
 
 func TestUnitDirectoryReadReplaysOwnAadUserStringProperties(t *testing.T) {
-	raw, err := os.ReadFile("../../../docs/implementation/core/evidence/directory-user-read-source.json")
+	raw, err := os.ReadFile("testdata/directory_user_read_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -74,12 +74,10 @@ func TestUnitDirectoryReadReplaysOwnAadUserStringProperties(t *testing.T) {
 	}
 }
 
-func sourceReadCase(t *testing.T, c contracttest.Case) {
+func sourceReadCase(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "directory_user_resolution"
-	c.Scope = "service"
-	c.Source = "msteams/graph_api/directory_user/read_values_test.go"
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil || !result.Passed() {
 		t.Fatalf("authored source protocol: setup=%v differences=%+v", err, result.Differences())
 	}
@@ -104,16 +102,16 @@ func TestUnitDirectorySourceReadsResolveOpaqueAndScalarIDs(t *testing.T) {
 				mode = auth.Delegated
 				selector = ""
 			}
-			steps := []contracttest.Exchange{wire(auth.GraphAudience, path, 200, item.body)}
+			steps := []testutil.Exchange{wire(auth.GraphAudience, path, 200, item.body)}
 			if item.mail {
-				steps = []contracttest.Exchange{wire(auth.GraphAudience, path, 404, `{"error":{"code":"NotFound"}}`), wire(auth.GraphAudience, mailPath(selector), 200, item.body)}
+				steps = []testutil.Exchange{wire(auth.GraphAudience, path, 404, `{"error":{"code":"NotFound"}}`), wire(auth.GraphAudience, mailPath(selector), 200, item.body)}
 			}
-			sourceReadCase(t, contracttest.Case{Name: item.name, Mode: mode, Steps: steps, Want: contracttest.Expected{Status: 200, Body: []byte(item.body), JSON: json.RawMessage(fmt.Sprintf("%q", item.id))}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			sourceReadCase(t, testutil.Case{Name: item.name, Mode: mode, Steps: steps, Want: testutil.Expected{Status: 200, Body: []byte(item.body), JSON: json.RawMessage(fmt.Sprintf("%q", item.id))}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.GraphAPI.UserResolver.Resolve(ctx, selector, directoryuser.ResolveOptions{AllowCurrent: item.current})
 				if err == nil && (value.User == nil || value.User.ID != item.id || value.User.RawFields["id"] == nil) {
 					t.Fatal("resolved snapshot missing")
 				}
-				return contracttest.Observation{Value: value.ID, Response: response, Err: err}
+				return testutil.Observation{Value: value.ID, Response: response, Err: err}
 			}})
 		})
 	}
@@ -121,12 +119,12 @@ func TestUnitDirectorySourceReadsResolveOpaqueAndScalarIDs(t *testing.T) {
 
 func TestUnitDirectoryUnusableSnapshotsNeverResolveOrFallback(t *testing.T) {
 	for _, body := range []string{`{}`, `{"id":null}`, `{"id":""}`} {
-		sourceReadCase(t, contracttest.Case{Name: "unusable-id", Steps: []contracttest.Exchange{wire(auth.GraphAudience, directPath("fixture@example.invalid"), 200, body)}, Want: contracttest.Expected{Status: 200, Body: []byte(body), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		sourceReadCase(t, testutil.Case{Name: "unusable-id", Steps: []testutil.Exchange{wire(auth.GraphAudience, directPath("fixture@example.invalid"), 200, body)}, Want: testutil.Expected{Status: 200, Body: []byte(body), Error: client.ErrDecode}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, e := sdk.GraphAPI.UserResolver.Resolve(ctx, "fixture@example.invalid", directoryuser.ResolveOptions{})
 			if v.ID != "" || v.User == nil || v.Source != directoryuser.Direct {
 				t.Fatal("failed resolution lost snapshot or invented usable ID")
 			}
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}})
 	}
 }
@@ -134,53 +132,53 @@ func TestUnitDirectoryUnusableSnapshotsNeverResolveOrFallback(t *testing.T) {
 func TestUnitDirectoryOpaqueResolutionRetainsReceiptWhenReferenceGuardRejects(t *testing.T) {
 	body := `{"id":"opaque-user"}`
 	members := `{"value":[]}`
-	sourceReadCase(t, contracttest.Case{Name: "opaque-reference-guard", Steps: []contracttest.Exchange{
+	sourceReadCase(t, testutil.Case{Name: "opaque-reference-guard", Steps: []testutil.Exchange{
 		wire(auth.GraphAudience, directPath("fixture@example.invalid"), 200, body),
 		wire(auth.GraphAudience, "/v1.0/groups/"+userID+"/members?$select=id", 200, members),
-	}, Want: contracttest.Expected{Status: 200, Body: []byte(members), Error: client.ErrRequest}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Want: testutil.Expected{Status: 200, Body: []byte(members), Error: client.ErrRequest}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, e := sdk.GraphAPI.TeamUserManagement.Add(ctx, userID, "fixture@example.invalid", teamuser.ChangeOptions{})
 		if string(v.UserID) != "opaque-user" || len(v.Stages) != 3 || v.Stages[0].Response == nil || string(v.Stages[0].Response.Body()) != body || v.Stages[2].Response != nil {
 			t.Fatal("resolution or local rejection receipts changed")
 		}
-		return contracttest.Observation{Response: v.Response, Err: e}
+		return testutil.Observation{Response: v.Response, Err: e}
 	}})
 }
 
 func TestUnitDirectoryPrincipalNameMatchingRejectsUnrequestedOpaqueID(t *testing.T) {
 	body := `{"value":[{"id":"` + userID + `","userPrincipalName":37},{"id":"opaque-user"}]}`
-	sourceReadCase(t, contracttest.Case{Name: "opaque-principal-mismatch", Steps: []contracttest.Exchange{wire(auth.GraphAudience, namePath([]string{userID}), 200, body)}, Want: contracttest.Expected{Status: 200, Body: []byte(body), Error: client.ErrDecode, JSON: json.RawMessage(`{}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	sourceReadCase(t, testutil.Case{Name: "opaque-principal-mismatch", Steps: []testutil.Exchange{wire(auth.GraphAudience, namePath([]string{userID}), 200, body)}, Want: testutil.Expected{Status: 200, Body: []byte(body), Error: client.ErrDecode, JSON: json.RawMessage(`{}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.GraphAPI.UserResolver.LookupPrincipalNames(ctx, []string{userID}, directoryuser.PrincipalNamesOptions{})
-		return contracttest.Observation{Value: v, Response: r, Err: e}
+		return testutil.Observation{Value: v, Response: r, Err: e}
 	}})
 }
 
 func TestUnitDirectoryOpaqueMailIDsCannotEstablishFalseUniqueness(t *testing.T) {
 	body := `{"value":[{"id":"opaque-A"},{"id":"opaque-a"}]}`
-	sourceReadCase(t, contracttest.Case{Name: "opaque-mail-ambiguity", Steps: []contracttest.Exchange{wire(auth.GraphAudience, directPath("fixture@example.invalid"), 404, `{"error":{"code":"NotFound"}}`), wire(auth.GraphAudience, mailPath("fixture@example.invalid"), 200, body)}, Want: contracttest.Expected{Status: 200, Body: []byte(body), Error: directoryuser.ErrAmbiguous, JSON: json.RawMessage(`""`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	sourceReadCase(t, testutil.Case{Name: "opaque-mail-ambiguity", Steps: []testutil.Exchange{wire(auth.GraphAudience, directPath("fixture@example.invalid"), 404, `{"error":{"code":"NotFound"}}`), wire(auth.GraphAudience, mailPath("fixture@example.invalid"), 200, body)}, Want: testutil.Expected{Status: 200, Body: []byte(body), Error: directoryuser.ErrAmbiguous, JSON: json.RawMessage(`""`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.GraphAPI.UserResolver.Resolve(ctx, "fixture@example.invalid", directoryuser.ResolveOptions{})
-		return contracttest.Observation{Value: v.ID, Response: r, Err: e}
+		return testutil.Observation{Value: v.ID, Response: r, Err: e}
 	}})
 }
 
 func TestUnitDirectoryPrincipalNameProjectionUsesOwnStringReader(t *testing.T) {
 	body := `{"value":[{"id":"` + userID + `","userPrincipalName":9007199254740993}]}`
-	sourceReadCase(t, contracttest.Case{Name: "scalar-principal-name", Steps: []contracttest.Exchange{wire(auth.GraphAudience, namePath([]string{userID}), 200, body)}, Want: contracttest.Expected{Status: 200, Body: []byte(body), JSON: json.RawMessage(`{"` + userID + `":"9007199254740993"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	sourceReadCase(t, testutil.Case{Name: "scalar-principal-name", Steps: []testutil.Exchange{wire(auth.GraphAudience, namePath([]string{userID}), 200, body)}, Want: testutil.Expected{Status: 200, Body: []byte(body), JSON: json.RawMessage(`{"` + userID + `":"9007199254740993"}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.GraphAPI.UserResolver.LookupPrincipalNames(ctx, []string{userID}, directoryuser.PrincipalNamesOptions{})
-		return contracttest.Observation{Value: v, Response: r, Err: e}
+		return testutil.Observation{Value: v, Response: r, Err: e}
 	}})
 }
 
 func TestUnitDirectoryGUIDMailSpellingsRetainCaseInsensitiveDeduplication(t *testing.T) {
 	const id = "abcdefab-0123-4567-89ab-0123456789ab"
 	body := `{"value":[{"id":"` + id + `"},{"id":"ABCDEFAB-0123-4567-89AB-0123456789AB"}]}`
-	sourceReadCase(t, contracttest.Case{Name: "guid-mail-same-identity", Steps: []contracttest.Exchange{wire(auth.GraphAudience, directPath("fixture@example.invalid"), 404, `{"error":{"code":"NotFound"}}`), wire(auth.GraphAudience, mailPath("fixture@example.invalid"), 200, body)}, Want: contracttest.Expected{Status: 200, Body: []byte(body), JSON: json.RawMessage(`"` + id + `"`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	sourceReadCase(t, testutil.Case{Name: "guid-mail-same-identity", Steps: []testutil.Exchange{wire(auth.GraphAudience, directPath("fixture@example.invalid"), 404, `{"error":{"code":"NotFound"}}`), wire(auth.GraphAudience, mailPath("fixture@example.invalid"), 200, body)}, Want: testutil.Expected{Status: 200, Body: []byte(body), JSON: json.RawMessage(`"` + id + `"`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.GraphAPI.UserResolver.Resolve(ctx, "fixture@example.invalid", directoryuser.ResolveOptions{})
-		return contracttest.Observation{Value: v.ID, Response: r, Err: e}
+		return testutil.Observation{Value: v.ID, Response: r, Err: e}
 	}})
 }
 
 func TestUnitDirectoryReadPreservesSourcePropertyMatchingAndAssignmentOrder(t *testing.T) {
-	raw, err := os.ReadFile("../../../docs/implementation/core/evidence/directory-user-read-source.json")
+	raw, err := os.ReadFile("testdata/directory_user_read_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}

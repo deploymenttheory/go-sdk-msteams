@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -34,7 +34,7 @@ func TestUnitVoicemailCompiledProviderRequests(t *testing.T) {
 			body = json.RawMessage(f.Request.Body)
 		}
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: f.Request.CmdletName, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(f.Request.Method, strings.TrimPrefix(f.Request.Url, origin), f.Request.CmdletName, body, f.Status, f.Response)}}
+			c := testutil.Case{Name: f.Name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{wire(f.Request.Method, strings.TrimPrefix(f.Request.Url, origin), f.Request.CmdletName, body, f.Status, f.Response)}}
 			if f.Request.FailureType != nil {
 				c.Want.Error = client.ErrDecode
 				if f.Status == 403 {
@@ -44,20 +44,20 @@ func TestUnitVoicemailCompiledProviderRequests(t *testing.T) {
 				c.Want.JSON = json.RawMessage(f.Response)
 			}
 			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+				c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
-			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.OnlineVoicemailPolicies
 				switch f.Operation {
 				case "list":
 					v, r, e := s.List(ctx)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "create":
 					v, r, e := s.Create(ctx, resource.CreateRequest{Identity: scoped, Settings: settings(f.Duration)})
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "patch":
 					v, r, e := s.PatchByIdentity(ctx, scoped, resource.PatchRequest{Settings: settings(f.Duration), BodyIdentity: policy.Set("read-model-identity")})
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "delete":
 					controls := policy.Controls{}
 					if f.Force {
@@ -65,10 +65,10 @@ func TestUnitVoicemailCompiledProviderRequests(t *testing.T) {
 						controls.Force = &no
 					}
 					r, e := s.DeleteByIdentity(ctx, scoped, controls)
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				default:
 					v, r, e := s.GetByIdentity(ctx, scoped)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 			}
 			run(t, c)

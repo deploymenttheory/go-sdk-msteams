@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -21,26 +21,26 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/cloud_call_data/service_test.go"
-	route        = "/Teams.InternalSupport/CloudCallDataConnection"
-	getCommand   = "Get-CsCloudCallDataConnection"
-	newCommand   = "New-CsCloudCallDataConnection"
+
+	route      = "/Teams.InternalSupport/CloudCallDataConnection"
+	getCommand = "Get-CsCloudCallDataConnection"
+	newCommand = "New-CsCloudCallDataConnection"
 )
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
 // Expected request metadata follows the selected Modern helper. Existing 403
 // captures supply response bytes only; they do not prove a tenant request used
 // these corrected private headers or rejected them.
-func wire(method, command string, status int, reply []byte) contracttest.Exchange {
+func wire(method, command string, status int, reply []byte) testutil.Exchange {
 	switch command {
 	case getCommand:
 		command = "Get-CsCloudCallDataConnectionModern_Get"
@@ -48,30 +48,20 @@ func wire(method, command string, status int, reply []byte) contracttest.Exchang
 		command = "New-CsCloudCallDataConnectionModern_New"
 	}
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + route, Audience: auth.TeamsAdminAudience, Headers: h},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json; charset=utf-8"}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + route, Audience: auth.TeamsAdminAudience, Headers: h},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json; charset=utf-8"}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "cloud_call_data"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !result.Passed() {
 		t.Fatalf("cloud call data contract %s differed: %+v", c.Name, result.Differences())
 	}
-}
-
-func mapping(command string) []contracttest.Mapping {
-	return []contracttest.Mapping{{Command: command, ParameterSet: "__AllParameterSets"}}
 }
 
 type invocation func(context.Context, *ccd.Service) (*ccd.Connection, *resty.Response, error)
@@ -90,15 +80,15 @@ func TestUnitCloudCallDataGetDenialUsesAcceptanceResponse(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	run(t, contracttest.Case{Name: "captured-get-forbidden-reply-replay", Source: "msteams/teams_admin_api/cloud_call_data/testdata/get_403.json", Mappings: mapping(getCommand),
-		Steps: []contracttest.Exchange{discovery(t), wire("GET", getCommand, 403, denied)},
-		Want:  contracttest.Expected{Status: 403, Body: denied, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: []string{"Forbidden"}}},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "captured-get-forbidden-reply-replay",
+		Steps: []testutil.Exchange{discovery(t), wire("GET", getCommand, 403, denied)},
+		Want:  testutil.Expected{Status: 403, Body: denied, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: []string{"Forbidden"}}},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.CloudCallData.Get(ctx)
 			if !errors.Is(err, auth.ErrForbidden) {
 				t.Fatal("403 was not classified as forbidden")
 			}
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
 }
 
@@ -108,15 +98,15 @@ func TestUnitCloudCallDataCreateDenialUsesAcceptanceResponse(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	run(t, contracttest.Case{Name: "captured-create-forbidden-reply-replay", Source: "msteams/teams_admin_api/cloud_call_data/testdata/create_403.json", Mappings: mapping(newCommand),
-		Steps: []contracttest.Exchange{discovery(t), wire("POST", newCommand, 403, denied)},
-		Want:  contracttest.Expected{Status: 403, Body: denied, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: []string{"Forbidden"}}},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "captured-create-forbidden-reply-replay",
+		Steps: []testutil.Exchange{discovery(t), wire("POST", newCommand, 403, denied)},
+		Want:  testutil.Expected{Status: 403, Body: denied, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: []string{"Forbidden"}}},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.CloudCallData.Create(ctx)
 			if value != nil || !errors.Is(err, auth.ErrForbidden) {
 				t.Fatal("create 403 was not classified as forbidden")
 			}
-			return contracttest.Observation{Value: value, Response: response, Err: err}
+			return testutil.Observation{Value: value, Response: response, Err: err}
 		}})
 }
 
@@ -131,10 +121,10 @@ func TestUnitCloudCallDataReturnsTokenWithoutPrintingIt(t *testing.T) {
 		{"GET", getCommand, 200, get},
 		{"POST", newCommand, 200, create},
 	} {
-		run(t, contracttest.Case{Name: fmt.Sprintf("token-case-%d", index), Mappings: mapping(c.command),
-			Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.command, c.status, body)},
-			Want:  contracttest.Expected{Status: c.status, Body: body},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: fmt.Sprintf("token-case-%d", index),
+			Steps: []testutil.Exchange{discovery(t), wire(c.method, c.command, c.status, body)},
+			Want:  testutil.Expected{Status: c.status, Body: body},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.CloudCallData)
 				if err != nil || value.Token == nil || *value.Token != "synthetic-token-value" || value.RawFields["Future"] == nil {
 					t.Fatal("connection token or unknown field was lost")
@@ -142,19 +132,19 @@ func TestUnitCloudCallDataReturnsTokenWithoutPrintingIt(t *testing.T) {
 				if fmt.Sprintf("%v %+v %#v", *value, *value, *value) != "cloud call data connection (redacted) cloud call data connection (redacted) cloud call data connection (redacted)" {
 					t.Fatal("connection formatting exposed the token")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 	null := []byte(`[{"Token":null}]`)
-	run(t, contracttest.Case{Name: "null-token", Mappings: mapping(getCommand),
-		Steps: []contracttest.Exchange{discovery(t), wire("GET", getCommand, 200, null)},
-		Want:  contracttest.Expected{Status: 200, Body: null},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "null-token",
+		Steps: []testutil.Exchange{discovery(t), wire("GET", getCommand, 200, null)},
+		Want:  testutil.Expected{Status: 200, Body: null},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.CloudCallData.Get(ctx)
 			if err != nil || value.Token != nil {
 				t.Fatal("null token was not preserved as nil")
 			}
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 }
 
@@ -174,15 +164,15 @@ func TestUnitCloudCallDataFailuresStayTyped(t *testing.T) {
 		"create-201":   {"POST", newCommand, 201, `[]`, ccd.ErrResponse, create},
 		"create-202":   {"POST", newCommand, 202, `{}`, ccd.ErrResponse, create},
 	} {
-		run(t, contracttest.Case{Name: name, Mappings: mapping(c.command),
-			Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.command, c.status, []byte(c.body))},
-			Want:  contracttest.Expected{Status: c.status, Error: c.want},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name,
+			Steps: []testutil.Exchange{discovery(t), wire(c.method, c.command, c.status, []byte(c.body))},
+			Want:  testutil.Expected{Status: c.status, Error: c.want},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.CloudCallData)
 				if value != nil {
 					t.Fatal("failed response returned a value")
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -214,7 +204,7 @@ func TestUnitCloudCallDataListFollowsObservedModernArrayParser(t *testing.T) {
 		{"empty-array", `[]`, 0, false}, {"empty-text", ``, 0, true}, {"object-no-token", `[{}]`, 1, false}, {"null-token", `[{"Token":null}]`, 1, false}, {"empty-token", `[{"Token":""}]`, 1, false}, {"numeric-token", `[{"Token":7}]`, 1, false}, {"wrong-case-token", `[{"token":"not-the-typed-property"}]`, 1, false}, {"nonobject-entries", `[null,false,1,"text",[]]`, 5, false}, {"multiple", `[{"Token":"first"},{"Token":"second"}]`, 2, false},
 	} {
 		t.Run(c.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "array-" + c.name, Mappings: mapping(getCommand), Steps: []contracttest.Exchange{discovery(t), wire("GET", getCommand, 200, []byte(c.body))}, Want: contracttest.Expected{Status: 200}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "array-" + c.name, Steps: []testutil.Exchange{discovery(t), wire("GET", getCommand, 200, []byte(c.body))}, Want: testutil.Expected{Status: 200}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				values, response, e := sdk.TeamsAdminAPI.CloudCallData.List(ctx)
 				if e == nil {
 					if (values == nil) != c.nilArray || len(values) != c.count {
@@ -244,7 +234,7 @@ func TestUnitCloudCallDataListFollowsObservedModernArrayParser(t *testing.T) {
 						t.Fatal("native raw snapshot lost unprojected token value")
 					}
 				}
-				return contracttest.Observation{Response: response, Err: e}
+				return testutil.Observation{Response: response, Err: e}
 			}})
 		})
 	}
@@ -257,7 +247,7 @@ func TestUnitCloudCallDataCardinalityRetainsReadAndAcceptedActionOutcomes(t *tes
 			if action {
 				method, command, invoke = "POST", newCommand, create
 			}
-			run(t, contracttest.Case{Name: fmt.Sprintf("cardinality-%t-%d", action, len(body)), Mappings: mapping(command), Steps: []contracttest.Exchange{discovery(t), wire(method, command, 200, []byte(body))}, Want: contracttest.Expected{Status: 200, Error: ccd.ErrCardinality}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: fmt.Sprintf("cardinality-%t-%d", action, len(body)), Steps: []testutil.Exchange{discovery(t), wire(method, command, 200, []byte(body))}, Want: testutil.Expected{Status: 200, Error: ccd.ErrCardinality}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, e := invoke(ctx, sdk.TeamsAdminAPI.CloudCallData)
 				var cardinality *ccd.CardinalityError
 				if value != nil || !errors.Is(e, ccd.ErrCardinality) || !errors.As(e, &cardinality) || cardinality.Response != response || response == nil {
@@ -281,7 +271,7 @@ func TestUnitCloudCallDataCardinalityRetainsReadAndAcceptedActionOutcomes(t *tes
 						}
 					}
 				}
-				return contracttest.Observation{Response: response, Err: e}
+				return testutil.Observation{Response: response, Err: e}
 			}})
 		}
 	}
@@ -293,12 +283,12 @@ func TestUnitCloudCallDataCreateResultSeparatesHTTPReceiptFromSourceSuccess(t *t
 		if status == 201 {
 			want = ccd.ErrResponse
 		}
-		run(t, contracttest.Case{Name: fmt.Sprintf("action-receipt-%d", status), Mappings: mapping(newCommand), Steps: []contracttest.Exchange{discovery(t), wire("POST", newCommand, status, []byte(`[{"Token":"first"},{"Token":"second"}]`))}, Want: contracttest.Expected{Status: status, Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: fmt.Sprintf("action-receipt-%d", status), Steps: []testutil.Exchange{discovery(t), wire("POST", newCommand, status, []byte(`[{"Token":"first"},{"Token":"second"}]`))}, Want: testutil.Expected{Status: status, Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			result, response, e := sdk.TeamsAdminAPI.CloudCallData.CreateWithResult(ctx)
 			if result == nil || !result.CreateInvoked || !result.HTTPAccepted || result.Response != response || response == nil || (status == 200 && len(result.Returned) != 2) || (status == 201 && (result.Returned != nil || !errors.Is(e, ccd.ErrResponse))) {
 				t.Fatal("2xx receipt was confused with declared parsed source success")
 			}
-			return contracttest.Observation{Response: response, Err: e}
+			return testutil.Observation{Response: response, Err: e}
 		}})
 	}
 }

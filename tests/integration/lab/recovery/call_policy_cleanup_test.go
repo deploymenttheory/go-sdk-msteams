@@ -18,8 +18,8 @@ import (
 	teamsmeetingtemplatepermissionpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_meeting_template_permission_policy"
 	teamsmessagingpolicyacc "github.com/deploymenttheory/go-sdk-msteams/tests/integration/lab/teams_messaging_policy"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 )
@@ -70,7 +70,7 @@ func TestUnitCallPolicyCleanupRequiresIndependentAbsence(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			wire := func(method, path, command string, status int, body []byte) contracttest.Exchange {
+			wire := func(method, path, command string, status int, body []byte) testutil.Exchange {
 				headers := http.Header{"X-MS-CmdletName": {command}}
 				var input json.RawMessage
 				if tc.modern {
@@ -85,17 +85,17 @@ func TestUnitCallPolicyCleanupRequiresIndependentAbsence(t *testing.T) {
 						input = json.RawMessage(`{"Identity":"` + name + `"}`)
 					}
 				}
-				return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: "https://api.interfaces.records.teams.microsoft.com" + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: input}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+				return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: "https://api.interfaces.records.teams.microsoft.com" + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: input}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 			}
 			for _, scenario := range []string{"resolve-absence", "resolve-denied", "delete-denied"} {
 				t.Run(scenario, func(t *testing.T) {
-					steps := []contracttest.Exchange{}
+					steps := []testutil.Exchange{}
 					if tc.modern {
 						discovery, err := os.ReadFile(labkit.Root + "/msteams/teams_admin_api/internal/configapi/testdata/service_discovery.json")
 						if err != nil {
 							t.Fatal(err)
 						}
-						steps = append(steps, contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: discovery}})
+						steps = append(steps, testutil.Exchange{Request: testutil.WireRequest{Method: "GET", URL: "https://api.interfaces.records.teams.microsoft.com/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: discovery}})
 					}
 					entry := lab.Entry{Fixture: name}
 					if scenario == "delete-denied" {
@@ -112,16 +112,16 @@ func TestUnitCallPolicyCleanupRequiresIndependentAbsence(t *testing.T) {
 						status, body, want = 403, nil, auth.ErrForbidden
 					}
 					steps = append(steps, wire("GET", base+"/configuration/"+name, "Get-Cs"+tc.resource, status, body))
-					result, err := contracttest.Run(t.Context(), contracttest.Case{Name: scenario, Family: tc.kind, Scope: "service", Source: "tests/integration/lab/recovery/call_policy_cleanup_test.go", Steps: steps, Want: contracttest.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					result, err := testutil.Run(t.Context(), testutil.Case{Name: scenario, Steps: steps, Want: testutil.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 						handler := tc.handler(sdk)
 						if scenario == "delete-denied" {
-							return contracttest.Observation{Err: handler.Delete(ctx, entry)}
+							return testutil.Observation{Err: handler.Delete(ctx, entry)}
 						}
 						id, err := handler.Resolve(ctx, entry)
 						if id != "" {
 							t.Fatal("no matching owned policy may resolve to a resource ID")
 						}
-						return contracttest.Observation{Err: err}
+						return testutil.Observation{Err: err}
 					}})
 					if err != nil || !result.Passed() {
 						t.Fatalf("cleanup accepted an unverified observation: %v %+v", err, result.Differences())

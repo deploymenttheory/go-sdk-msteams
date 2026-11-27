@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 )
 
@@ -20,12 +20,12 @@ func TestUnitCallParkDiscoveryCannotEstablishAssignmentAcceptance(t *testing.T) 
 		if reply == "not-json" {
 			name += "-malformed"
 		}
-		run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: name, Steps: []testutil.Exchange{step}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, e := sdk.TeamsAdminAPI.TeamsCallParkPolicies.AssignToGroup(ctx, "fixture/group", "Fixture", nil)
 			if e == nil || v != nil && v.Accepted {
-				return contracttest.Observation{Err: errors.New("discovery response falsely reported assignment acceptance")}
+				return testutil.Observation{Err: errors.New("discovery response falsely reported assignment acceptance")}
 			}
-			return contracttest.Observation{Response: r}
+			return testutil.Observation{Response: r}
 		}})
 	}
 }

@@ -32,4 +32,4 @@ Tested permission: dedicated Teams Administrator application role. Primary sourc
 pinned Core TeamsSipDevicesConfiguration/Get/Set classes, BaseTpm/provider code and
 runtime metadata. Current [Microsoft reference](https://learn.microsoft.com/en-us/powershell/module/microsoftteams/get-csteamssipdevicesconfiguration?view=teams-ps)
 may show a narrower syntax than the pinned runtime. See the repository
-[qualification](../../../docs/implementation/policies/sip-template-lab-acceptance.md).
+[qualification](../../../docs/acceptance/sip-template-lab-acceptance.md).

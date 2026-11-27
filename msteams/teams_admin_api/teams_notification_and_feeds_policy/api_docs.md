@@ -40,4 +40,4 @@ and network roaming's service feed their unit tests, including real empty 201/20
 bodies and deleted404 responses. Effective feeds, delegated flows, locale-specific
 filter behavior and other clouds remain separate qualification scenarios.
 
-See [qualification](../../../docs/implementation/policies/network-notification-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/network-notification-lab-acceptance.md).

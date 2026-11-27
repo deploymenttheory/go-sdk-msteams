@@ -2,8 +2,9 @@ package policyrp
 
 import (
 	"encoding/json"
-	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"math"
+
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
 
 // ReadUint32 is the pinned nullable UInt32 received-JSON projection. Its own

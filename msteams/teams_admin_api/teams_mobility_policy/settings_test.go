@@ -5,10 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"os"
-	"strings"
+
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -17,47 +17,13 @@ import (
 
 func TestUnitAllPinnedSettingsBindValuesAndNull(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../contracts/powershell/8.1.0/runtime.json")
+	raw, err := os.ReadFile("testdata/settings_values.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	var baseline struct {
-		Commands []struct {
-			Name string
-			Sets []struct{ Parameters []struct{ Name, Type string } } `json:"parameter_sets"`
-		}
-	}
-	if json.Unmarshal(raw, &baseline) != nil {
-		t.Fatal("invalid baseline")
-	}
-	values := map[string]json.RawMessage{}
-	for _, cmd := range baseline.Commands {
-		if cmd.Name != "New-CsTeamsMobilityPolicy" {
-			continue
-		}
-		for _, param := range cmd.Sets[0].Parameters {
-			switch param.Name {
-			case "Identity", "Force", "Verbose", "Debug", "ErrorAction", "WarningAction", "InformationAction", "ProgressAction", "ErrorVariable", "WarningVariable", "InformationVariable", "OutVariable", "OutBuffer", "PipelineVariable", "WhatIf", "Confirm":
-				continue
-			}
-			value := `"future-value"`
-			switch {
-			case strings.Contains(param.Type, "System.Boolean"):
-				value = "false"
-			case strings.Contains(param.Type, "System.UInt32"):
-				value = "4294967295"
-			case strings.Contains(param.Type, "System.Int64"):
-				value = "9007199254740993"
-			}
-			switch param.Name {
-			case "RecordingAndTranscriptionCustomMessageIdentifier", "SyntheticMediaDetectionAppId", "PreMeetingConsentContentIdentifier":
-				value = `"00000000-0000-4000-8000-000000000001"`
-			}
-			values[param.Name] = json.RawMessage(value)
-		}
-	}
-	if len(values) == 0 {
-		t.Fatal("missing baseline settings")
+	var values map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &values); err != nil {
+		t.Fatal(err)
 	}
 	for _, nulls := range []bool{false, true} {
 		input := map[string]json.RawMessage{}
@@ -93,14 +59,14 @@ func TestUnitAllPinnedSettingsBindValuesAndNull(t *testing.T) {
 			if operation == "patch" {
 				method, command, path = "PATCH", "Set-CsTeamsMobilityPolicy", path+"/configuration/fixture-policy"
 			}
-			run(t, contracttest.Case{Name: operation + "-all-bound", Mappings: []contracttest.Mapping{{Command: command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire(method, path, command, body, 503, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: operation + "-all-bound", Steps: []testutil.Exchange{compiledWire(method, path, command, body, 503, "")}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 503}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				controls := policy.Controls{Force: new(false)}
 				if operation == "create" {
 					_, r, e := sdk.TeamsAdminAPI.TeamsMobilityPolicies.CreateByIdentity(ctx, "fixture-policy", resource.CreateRequest{Settings: settings, Controls: controls})
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				}
 				_, r, e := sdk.TeamsAdminAPI.TeamsMobilityPolicies.PatchByIdentity(ctx, "fixture-policy", resource.PatchRequest{Settings: settings, Controls: controls})
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		}
 	}

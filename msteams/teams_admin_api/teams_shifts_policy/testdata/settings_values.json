@@ -1,0 +1,8 @@
+{
+  "AccessGracePeriodMinutes": 9007199254740993,
+  "AccessType": "future-value",
+  "EnableScheduleOwnerPermissions": false,
+  "ShiftNoticeFrequency": "future-value",
+  "ShiftNoticeMessageCustom": "future-value",
+  "ShiftNoticeMessageType": "future-value"
+}

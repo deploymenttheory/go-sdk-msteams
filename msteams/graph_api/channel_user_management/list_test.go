@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -25,12 +25,12 @@ func usersPath(ids ...string) string {
 	return "/beta/users?" + url.Values{"$select": {"id,userPrincipalName"}, "$filter": {strings.Join(clauses, " or ")}}.Encode()
 }
 
-func listed(value management.ListResult, err error) contracttest.Observation {
+func listed(value management.ListResult, err error) testutil.Observation {
 	rows := []map[string]any{}
 	for _, v := range value.Items {
 		rows = append(rows, map[string]any{"id": v.MembershipID, "user_id": v.UserID, "user": v.User, "name": v.Name, "role": v.Role, "tenant": v.TenantID})
 	}
-	return contracttest.Observation{Value: map[string]any{"complete": value.Complete, "members": len(value.Members), "items": rows}, Response: value.Response, Err: err}
+	return testutil.Observation{Value: map[string]any{"complete": value.Complete, "members": len(value.Members), "items": rows}, Response: value.Response, Err: err}
 }
 
 func TestUnitListRoleOrderPresenceAndPagedEnrichment(t *testing.T) {
@@ -40,12 +40,12 @@ func TestUnitListRoleOrderPresenceAndPagedEnrichment(t *testing.T) {
 	query := usersPath(ownerID, userID, guestID)
 	members := `{"value":[{"id":"guest","userId":"` + guestID + `","roles":["guest"],"tenantId":"` + tenantID + `"},{"id":"member","userId":"` + userID + `","email":"old@fixture.invalid","roles":[]},{"id":"owner","userId":"` + ownerID + `","displayName":"Owner","roles":["owner"]},{"id":"future","userId":null,"email":"unknown@fixture.invalid","roles":["future"]}]}`
 
-	run(t, contracttest.Case{Name: "list-role-order-paged-upns", Mappings: []contracttest.Mapping{{Command: "Get-TeamChannelUser", ParameterSet: "__AllParameterSets"}},
-		Steps: []contracttest.Exchange{channelRead("standard"), wire("GET", membersPath(), "", 200, members, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta"), wire("GET", query, "", 200, `{"value":[{"id":"`+ownerID+`","userPrincipalName":"owner@fixture.invalid"},{"id":"`+userID+`","userPrincipalName":null}],"@odata.nextLink":"https://graph.microsoft.com/beta/users?$skiptoken=opaque%2Bvalue"}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta"), wire("GET", "/beta/users?$skiptoken=opaque%2Bvalue", "", 200, `{"value":[{"id":"`+guestID+`","userPrincipalName":"guest@external.invalid"}]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "list-role-order-paged-upns",
+		Steps: []testutil.Exchange{channelRead("standard"), wire("GET", membersPath(), "", 200, members), wire("GET", query, "", 200, `{"value":[{"id":"`+ownerID+`","userPrincipalName":"owner@fixture.invalid"},{"id":"`+userID+`","userPrincipalName":null}],"@odata.nextLink":"https://graph.microsoft.com/beta/users?$skiptoken=opaque%2Bvalue"}`), wire("GET", "/beta/users?$skiptoken=opaque%2Bvalue", "", 200, `{"value":[{"id":"`+guestID+`","userPrincipalName":"guest@external.invalid"}]}`)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			return listed(sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{}))
 		},
-		Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"complete":true,"members":4,"items":[` +
+		Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`{"complete":true,"members":4,"items":[` +
 			`{"id":"owner","user_id":"` + ownerID + `","user":"owner@fixture.invalid","name":"Owner","role":"owner","tenant":null},` +
 			`{"id":"member","user_id":"` + userID + `","user":null,"name":null,"role":"member","tenant":null},` +
 			`{"id":"future","user_id":null,"user":"unknown@fixture.invalid","name":null,"role":"member","tenant":null},` +
@@ -62,9 +62,9 @@ func TestUnitRoleFilterPrecedesEnrichment(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 
 			want := fmt.Sprintf(`{"complete":true,"members":3,"items":[{"id":%q,"user_id":%q,"user":null,"name":null,"role":%q,"tenant":null}]}`, tc.name, tc.id, tc.name)
-			run(t, contracttest.Case{Name: "role-" + tc.name, Steps: []contracttest.Exchange{channelRead("private"), wire("GET", membersPath(), "", 200, members, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta"), wire("GET", usersPath(tc.id), "", 200, `{"value":[{"id":"`+tc.id+`","userPrincipalName":null}]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "role-" + tc.name, Steps: []testutil.Exchange{channelRead("private"), wire("GET", membersPath(), "", 200, members), wire("GET", usersPath(tc.id), "", 200, `{"value":[{"id":"`+tc.id+`","userPrincipalName":null}]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return listed(sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{Role: management.Role(tc.role)}))
-			}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(want)}})
+			}, Want: testutil.Expected{Status: 200, JSON: json.RawMessage(want)}})
 		})
 	}
 }
@@ -78,18 +78,16 @@ func TestUnitEnrichmentChunksDistinctIDsAndStillRefreshesExistingUPNs(t *testing
 		rows[i] = fmt.Sprintf(`{"id":"membership-%d","userId":%q,"userPrincipalName":"existing@fixture.invalid","roles":[]}`, i, ids[i])
 	}
 	rows[11] = fmt.Sprintf(`{"id":"duplicate-user-membership","userId":%q,"userPrincipalName":"existing@fixture.invalid","roles":[]}`, ids[0])
-	run(t, contracttest.Case{Name: "enrich-eleven-distinct-twelve-members", Steps: []contracttest.Exchange{channelRead("shared"), wire("GET", membersPath(), "", 200, `{"value":[`+strings.Join(rows, ",")+`]}`, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-beta"), wire("GET", usersPath(ids[:10]...), "", 200, `{"value":[]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta"), wire("GET", usersPath(ids[10]), "", 200, `{"value":[]}`, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "enrich-eleven-distinct-twelve-members", Steps: []testutil.Exchange{channelRead("shared"), wire("GET", membersPath(), "", 200, `{"value":[`+strings.Join(rows, ",")+`]}`), wire("GET", usersPath(ids[:10]...), "", 200, `{"value":[]}`), wire("GET", usersPath(ids[10]), "", 200, `{"value":[]}`)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, err := sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{})
-		if err != nil && isRequestBoundary(ctx) {
-			return contracttest.Observation{Response: value.Response, Err: err}
-		}
+
 		for _, row := range value.Items {
 			if row.User == nil || *row.User != "existing@fixture.invalid" {
 				t.Error("missing host directory user did not retain initial UPN")
 			}
 		}
-		return contracttest.Observation{Value: map[string]any{"complete": value.Complete, "items": len(value.Items)}, Response: value.Response, Err: err}
-	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"complete":true,"items":12}`)}})
+		return testutil.Observation{Value: map[string]any{"complete": value.Complete, "items": len(value.Items)}, Response: value.Response, Err: err}
+	}, Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`{"complete":true,"items":12}`)}})
 }
 
 func TestUnitEnrichmentFailureNeverProducesACompleteList(t *testing.T) {
@@ -110,34 +108,32 @@ func TestUnitEnrichmentFailureNeverProducesACompleteList(t *testing.T) {
 		{"bounded-continuation", `{"value":[],"@odata.nextLink":"https://graph.microsoft.com/beta/users?$skiptoken=next"}`, 200, 1, client.ErrPageLimit},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "enrich-" + tc.name, Steps: []contracttest.Exchange{channelRead("private"), roster(), wire("GET", usersPath(userID), "", tc.status, tc.body, "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "enrich-" + tc.name, Steps: []testutil.Exchange{channelRead("private"), roster(), wire("GET", usersPath(userID), "", tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, err := sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{UserLookupMaxPages: tc.maxPages})
-				if err != nil && isRequestBoundary(ctx) {
-					return contracttest.Observation{Response: value.Response, Err: err}
-				}
+
 				if value.Complete || len(value.Members) != 1 || len(value.Stages) != 3 || value.Stages[2].State != management.Unconfirmed {
 					t.Error("failed enrichment lost native state or appeared complete")
 				}
-				return contracttest.Observation{Value: map[string]any{"complete": value.Complete, "members": len(value.Members)}, Response: value.Response, Err: err}
-			}, Want: contracttest.Expected{Status: tc.status, Error: tc.err, JSON: json.RawMessage(`{"complete":false,"members":1}`)}})
+				return testutil.Observation{Value: map[string]any{"complete": value.Complete, "members": len(value.Members)}, Response: value.Response, Err: err}
+			}, Want: testutil.Expected{Status: tc.status, Error: tc.err, JSON: json.RawMessage(`{"complete":false,"members":1}`)}})
 		})
 	}
 }
 
 func TestUnitEmptyFilteredListDoesNotQueryDirectoryAndInvalidOptionsAreLocal(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "empty-filter", Steps: []contracttest.Exchange{channelRead("private"), roster()}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "empty-filter", Steps: []testutil.Exchange{channelRead("private"), roster()}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		return listed(sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", management.ListOptions{Role: management.Owner}))
-	}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"complete":true,"members":1,"items":[]}`)}})
+	}, Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`{"complete":true,"members":1,"items":[]}`)}})
 	for i, options := range []management.ListOptions{{Role: "future"}, {UserLookupMaxPages: -1}, {Traversal: client.PagingOptions{MaxPages: -1}}} {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
 			expected := client.ErrRequest
 			if i == 2 {
 				expected = client.ErrPagination
 			}
-			run(t, contracttest.Case{Name: "invalid-list-" + strconv.Itoa(i), Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "invalid-list-" + strconv.Itoa(i), Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return listed(sdk.GraphAPI.ChannelUserManagement.List(ctx, teamID, "fixture", options))
-			}, Want: contracttest.Expected{Error: expected}})
+			}, Want: testutil.Expected{Error: expected}})
 		})
 	}
 }

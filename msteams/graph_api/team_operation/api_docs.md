@@ -51,4 +51,4 @@ helper's broad successful-status handling, and requires tenant qualification.
 
 See [unit tests](service_test.go),
 [unit tests](service_test.go) and
-[read-only lab procedure](../../../docs/implementation/core/team-operation-lab-acceptance.md).
+[read-only lab procedure](../../../docs/acceptance/team-operation-lab-acceptance.md).

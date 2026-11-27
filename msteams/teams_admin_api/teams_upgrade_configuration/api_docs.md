@@ -19,4 +19,4 @@ restoration. Bound recovery restores only Global DownloadTeams. Permanent actual
 response fixtures supply unit read, model, filter and sparse update replay; fault
 injection remains separate from live outcomes. Other field persistence, delegated
 flows and other clouds have not been qualified. Source notes are in
-`docs/implementation/policies/upgrade-contract-notes.md`.
+the [testing guide](../../../docs/guides/testing.md).

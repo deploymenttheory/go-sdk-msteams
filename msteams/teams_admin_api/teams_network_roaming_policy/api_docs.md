@@ -38,4 +38,4 @@ unit fixtures; read-back failures, replay safety, integer precision, invalid inp
 and context handling have separate contract checks. No Global configuration,
 network site, user/group assignment, license or role is changed.
 
-See [qualification](../../../docs/implementation/policies/network-notification-lab-acceptance.md).
+See [qualification](../../../docs/acceptance/network-notification-lab-acceptance.md).

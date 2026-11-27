@@ -65,7 +65,7 @@ elevation or completion guarantee. Runtime PowerShell PassThru/flight behavior i
 not inferred from isolated mapped function observations.
 
 See [unit tests](service_test.go)
-and [lab acceptance](../../../docs/implementation/policies/channels-policy-lab-acceptance.md).
+and [lab acceptance](../../../docs/acceptance/channels-policy-lab-acceptance.md).
 All five commands/eight sets have native mappings. Full command/tenant
 qualification and issue #111 remain open.
 

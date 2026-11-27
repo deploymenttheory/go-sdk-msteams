@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -19,16 +19,16 @@ import (
 const configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 const deploymentBase = "/Teams.FLWOrchestrator/orchestration/v1.0"
 
-func discover(t *testing.T) contracttest.Exchange {
+func discover(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: 200, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: "GET", URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: 200, Body: body}}
 }
 
-func batchWire(method, path string, body json.RawMessage, status int, text string) contracttest.Exchange {
+func batchWire(method, path string, body json.RawMessage, status int, text string) testutil.Exchange {
 	command := "Get-CsBatchTeamsDeploymentStatus"
 	if method == "POST" {
 		command = "New-CsBatchTeamsDeployment"
@@ -37,15 +37,12 @@ func batchWire(method, path string, body json.RawMessage, status int, text strin
 	if body != nil {
 		headers.Set("Content-Type", "application/json")
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + deploymentBase + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: body}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(text)}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + deploymentBase + path, Audience: auth.TeamsAdminAudience, Headers: headers, JSON: body}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(text)}}
 }
-func run(t *testing.T, c contracttest.Case) contracttest.Result {
+func run(t *testing.T, c testutil.Case) testutil.Result {
 	t.Helper()
-	c.Family, c.Source = "batch_deployment", "msteams/teams_admin_api/batch_deployment/service_test.go"
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	r, err := contracttest.Run(t.Context(), c)
+
+	r, err := testutil.Run(t.Context(), c)
 	if err != nil || !r.Passed() {
 		t.Fatalf("batch deployment %s differs: setup=%v differences=%+v", c.Name, err, r.Differences())
 	}
@@ -71,10 +68,10 @@ func createBody(t *testing.T, archive deployment.Archive) json.RawMessage {
 func TestUnitBatchSubmissionRequestAndDenial(t *testing.T) {
 	t.Parallel()
 	archive := testArchive(t)
-	run(t, contracttest.Case{Name: "submit-request", Mappings: []contracttest.Mapping{{Command: "New-CsBatchTeamsDeployment", ParameterSet: "__AllParameterSets"}}, Steps: []contracttest.Exchange{discover(t), batchWire("POST", "/batchflwdeployment", createBody(t, archive), 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "submit-request", Steps: []testutil.Exchange{discover(t), batchWire("POST", "/batchflwdeployment", createBody(t, archive), 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, err := sdk.TeamsAdminAPI.BatchDeployments.Create(ctx, deployment.CreateRequest{Archive: archive, UsersToNotify: "fixture@example.invalid"})
-		return contracttest.Observation{Value: v, Response: r, Err: err}
-	}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
+		return testutil.Observation{Value: v, Response: r, Err: err}
+	}, Want: testutil.Expected{Status: 403, Error: auth.ErrForbidden}})
 }
 
 func TestUnitBatchStatusIsOpaqueAndIdentityInputIsNotAURI(t *testing.T) {
@@ -85,22 +82,22 @@ func TestUnitBatchStatusIsOpaqueAndIdentityInputIsNotAURI(t *testing.T) {
 		if identity {
 			set = "GetViaIdentity"
 		}
-		run(t, contracttest.Case{Name: "status-" + strings.ToLower(set), Mappings: []contracttest.Mapping{{Command: "Get-CsBatchTeamsDeploymentStatus", ParameterSet: set}}, Steps: []contracttest.Exchange{discover(t), batchWire("GET", "/scenarios/"+url.PathEscape("fixture/instance"), nil, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "status-" + strings.ToLower(set), Steps: []testutil.Exchange{discover(t), batchWire("GET", "/scenarios/"+url.PathEscape("fixture/instance"), nil, 403, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			if identity {
 				v, r, err := sdk.TeamsAdminAPI.BatchDeployments.GetByIdentity(ctx, deployment.Identity{OrchestrationID: "fixture/instance"})
 				var value any
 				if v != nil {
 					value = v.Text
 				}
-				return contracttest.Observation{Value: value, Response: r, Err: err}
+				return testutil.Observation{Value: value, Response: r, Err: err}
 			}
 			v, r, err := sdk.TeamsAdminAPI.BatchDeployments.GetByID(ctx, "fixture/instance")
 			var value any
 			if v != nil {
 				value = v.Text
 			}
-			return contracttest.Observation{Value: value, Response: r, Err: err}
-		}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}})
+			return testutil.Observation{Value: value, Response: r, Err: err}
+		}, Want: testutil.Expected{Status: 403, Error: auth.ErrForbidden}})
 	}
 }
 
@@ -108,33 +105,33 @@ func TestUnitBatchErrorsRemainErrorsAndSubmissionIsNotReplayed(t *testing.T) {
 	t.Parallel()
 	archive := testArchive(t)
 	for _, status := range []int{400, 404, 429, 503} {
-		run(t, contracttest.Case{Name: "submit-failure", Steps: []contracttest.Exchange{discover(t), batchWire("POST", "/batchflwdeployment", createBody(t, archive), status, "private raw error")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "submit-failure", Steps: []testutil.Exchange{discover(t), batchWire("POST", "/batchflwdeployment", createBody(t, archive), status, "private raw error")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, err := sdk.TeamsAdminAPI.BatchDeployments.Create(ctx, deployment.CreateRequest{Archive: archive, UsersToNotify: "fixture@example.invalid"})
-			return contracttest.Observation{Value: v, Response: r, Err: err}
-		}, Want: contracttest.Expected{Status: status, Body: []byte("private raw error"), APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}})
+			return testutil.Observation{Value: v, Response: r, Err: err}
+		}, Want: testutil.Expected{Status: status, Body: []byte("private raw error"), APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}})
 	}
 	for _, status := range []int{400, 404} {
-		run(t, contracttest.Case{Name: "status-failure", Steps: []contracttest.Exchange{discover(t), batchWire("GET", "/scenarios/fixture", nil, status, "raw status failure")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "status-failure", Steps: []testutil.Exchange{discover(t), batchWire("GET", "/scenarios/fixture", nil, status, "raw status failure")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, err := sdk.TeamsAdminAPI.BatchDeployments.GetByID(ctx, "fixture")
-			return contracttest.Observation{Value: v, Response: r, Err: err}
-		}, Want: contracttest.Expected{Status: status, Body: []byte("raw status failure"), APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}})
+			return testutil.Observation{Value: v, Response: r, Err: err}
+		}, Want: testutil.Expected{Status: status, Body: []byte("raw status failure"), APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: status}}})
 	}
 }
 
 func TestUnitBatchRejectsInvalidInputBeforeDiscovery(t *testing.T) {
 	t.Parallel()
 	for _, input := range []deployment.CreateRequest{{}, {Archive: testArchive(t)}, {UsersToNotify: "fixture@example.invalid"}} {
-		run(t, contracttest.Case{Name: "invalid-submit", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "invalid-submit", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			v, r, err := sdk.TeamsAdminAPI.BatchDeployments.Create(ctx, input)
-			return contracttest.Observation{Value: v, Response: r, Err: err}
-		}, Want: contracttest.Expected{Error: deployment.ErrInput}})
+			return testutil.Observation{Value: v, Response: r, Err: err}
+		}, Want: testutil.Expected{Error: deployment.ErrInput}})
 	}
-	run(t, contracttest.Case{Name: "cancelled-status", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "cancelled-status", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		ctx, stop := context.WithCancel(ctx)
 		stop()
 		v, r, err := sdk.TeamsAdminAPI.BatchDeployments.GetByID(ctx, "fixture")
-		return contracttest.Observation{Value: v, Response: r, Err: err}
-	}, Want: contracttest.Expected{Error: context.Canceled}})
+		return testutil.Observation{Value: v, Response: r, Err: err}
+	}, Want: testutil.Expected{Error: context.Canceled}})
 }
 
 func TestUnitBatchSubmissionLocalModelKeepsOptionalIdentities(t *testing.T) {
@@ -159,18 +156,18 @@ func TestUnitBatchAcceptedSubmissionAndOpaqueStatus(t *testing.T) {
 		t.Fatal(buildErr)
 	}
 	accepted := batchWire("POST", "/batchflwdeployment", createBody(t, archive), 202, `{"instanceId":"offline/instance","executionId":"offline-execution","future":false}`)
-	accepted.Reply.ProtocolSources = []string{"https://www.powershellgallery.com/packages/MicrosoftTeams/8.1.0", "https://learn.microsoft.com/en-us/microsoft-365/frontline/deploy-teams-at-scale"}
+
 	for _, identity := range []bool{false, true} {
 		set := "Get"
 		if identity {
 			set = "GetViaIdentity"
 		}
 		status := batchWire("GET", "/scenarios/"+url.PathEscape("offline/instance"), nil, 200, "Completed\r\npartial result; not JSON")
-		status.Reply.ProtocolSources = accepted.Reply.ProtocolSources
-		run(t, contracttest.Case{Name: "accepted-then-" + strings.ToLower(set), Mappings: []contracttest.Mapping{{Command: "New-CsBatchTeamsDeployment", ParameterSet: "__AllParameterSets"}, {Command: "Get-CsBatchTeamsDeploymentStatus", ParameterSet: set}}, Steps: []contracttest.Exchange{discover(t), accepted, status}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+
+		run(t, testutil.Case{Name: "accepted-then-" + strings.ToLower(set), Steps: []testutil.Exchange{discover(t), accepted, status}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			submission, r, err := sdk.TeamsAdminAPI.BatchDeployments.Create(ctx, deployment.CreateRequest{Archive: archive, UsersToNotify: "fixture@example.invalid"})
 			if err != nil {
-				return contracttest.Observation{Response: r, Err: err}
+				return testutil.Observation{Response: r, Err: err}
 			}
 			if submission == nil || submission.InstanceID == nil || *submission.InstanceID != "offline/instance" || submission.ExecutionID == nil || *submission.ExecutionID != "offline-execution" || string(submission.RawFields["future"]) != "false" {
 				t.Fatal("accepted identities or raw metadata lost")
@@ -185,7 +182,7 @@ func TestUnitBatchAcceptedSubmissionAndOpaqueStatus(t *testing.T) {
 			if value != nil {
 				text = value.Text
 			}
-			return contracttest.Observation{Value: text, Response: r, Err: err}
-		}, Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`"Completed\r\npartial result; not JSON"`)}})
+			return testutil.Observation{Value: text, Response: r, Err: err}
+		}, Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`"Completed\r\npartial result; not JSON"`)}})
 	}
 }

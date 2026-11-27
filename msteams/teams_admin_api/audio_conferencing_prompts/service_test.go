@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -25,19 +25,19 @@ func TestUnitPromptsRejectedProviderRequests(t *testing.T) {
 			if x.Body != "" {
 				body = json.RawMessage(x.Body)
 			}
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: x.CmdletName, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{wire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
+			c := testutil.Case{Name: f.Name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{wire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
 			// These retained request vectors all use a controlled400. They do not
 			// assert typed success or malformed-success decoding.
-			c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
-			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+			c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts
 				if f.Operation == "read" {
 					v, r, e := s.GetByIdentity(ctx, scoped)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				if f.Operation == "list" {
 					v, r, e := s.List(ctx)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				var prompts []*resource.Prompt
 				var packages []*resource.PromptPackage
@@ -56,7 +56,7 @@ func TestUnitPromptsRejectedProviderRequests(t *testing.T) {
 					input.Force = new(f.ForceMode == 1)
 				}
 				v, r, e := s.PatchByIdentity(ctx, scoped, input)
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}
 			run(t, c)
 		}
@@ -68,13 +68,13 @@ func TestUnitPromptsRejectedFilterRequests(t *testing.T) {
 	// No successful list was observed for this service. Exercise only
 	// local filter validation/request construction against a controlled HTTP error.
 	for _, pattern := range []string{"*", "Global", "Fixture*"} {
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "request-only-filter", Family: "audio_conferencing_prompts", Scope: "service", Source: "msteams/teams_admin_api/audio_conferencing_prompts/testdata/get_global_400.json",
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "request-only-filter",
 			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/TeamsAudioConferencingCustomPromptsConfiguration", 400, nil),
-			Want:  contracttest.Expected{Status: 400, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			Want:  testutil.Expected{Status: 400, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.AudioConferencingCustomPrompts.ListFiltered(ctx, pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -51,7 +51,7 @@ func TestUnitFilesPolicySetRetainsPreparationOnFailure(t *testing.T) {
 		if c.Read != 200 {
 			body = nil
 		}
-		steps := []contracttest.Exchange{compiledWire("GET", item, setCommand, nil, c.Read, string(body))}
+		steps := []testutil.Exchange{compiledWire("GET", item, setCommand, nil, c.Read, string(body))}
 		if c.Patch != 0 {
 			payload, err := json.Marshal(map[string]json.RawMessage{"Identity": expectedIdentity, "NativeFileEntryPoints": json.RawMessage("null")})
 			if err != nil {
@@ -59,7 +59,7 @@ func TestUnitFilesPolicySetRetainsPreparationOnFailure(t *testing.T) {
 			}
 			steps = append(steps, compiledWire("PATCH", item, setCommand, payload, c.Patch, ""))
 		}
-		run(t, contracttest.Case{Name: "set-" + c.Name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "set-" + c.Name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			value, response, err := sdk.TeamsAdminAPI.TeamsFilesPolicies.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{NativeFileEntryPoints: policy.Null[string]()}})
 			if value == nil || value.ReadResponse == nil || value.PatchInvoked != (c.Patch != 0) || value.HTTPAccepted || err == nil {
 				t.Fatal("Set preparation/failure outcome changed")
@@ -73,7 +73,7 @@ func TestUnitFilesPolicySetRetainsPreparationOnFailure(t *testing.T) {
 					t.Fatal("failed patch lost typed status")
 				}
 			}
-			return contracttest.Observation{Response: response}
+			return testutil.Observation{Response: response}
 		}})
 	}
 }
@@ -85,9 +85,9 @@ func TestUnitFilesPolicyCompiledGrantRetainsExplicitZeroAndSignedRank(t *testing
 		if err != nil {
 			t.Fatal(err)
 		}
-		run(t, contracttest.Case{Name: fmt.Sprintf("group-rank-%d", rank), Steps: []contracttest.Exchange{compiledWire("POST", "/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsFilesPolicy", grantCommand, body, 400, "")}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: fmt.Sprintf("group-rank-%d", rank), Steps: []testutil.Exchange{compiledWire("POST", "/Skype.Policy/groupPolicyAssignments/group%2Ffixture/policyTypes/TeamsFilesPolicy", grantCommand, body, 400, "")}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			_, response, err := sdk.TeamsAdminAPI.TeamsFilesPolicies.AssignGroup(ctx, "group/fixture", new("Fixture"), rank)
-			return contracttest.Observation{Response: response, Err: err}
+			return testutil.Observation{Response: response, Err: err}
 		}})
 	}
 }

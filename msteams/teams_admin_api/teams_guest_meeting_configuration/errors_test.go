@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
@@ -33,9 +33,9 @@ func TestUnitAuthorizationFailureRetainsRealEnvelopeWithoutReplay(t *testing.T) 
 	if envelope.Code != "" {
 		codes = []string{envelope.Code}
 	}
-	c := contracttest.Case{Name: "denied", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json", Steps: []contracttest.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","AllowMeetNow":null}`), 403, string(raw))}, Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	c := testutil.Case{Name: "denied", Steps: []testutil.Exchange{compiledWire("PATCH", selected, set, json.RawMessage(`{"Identity":"Global","AllowMeetNow":null}`), 403, string(raw))}, Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: codes, ServiceErrorCodes: []int{envelope.ErrorCode}}}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, r, e := sdk.TeamsAdminAPI.TeamsGuestMeetingConfigurations.PatchByIdentity(ctx, "Global", resource.PatchRequest{Settings: resource.Settings{AllowMeetNow: policy.Null[bool]()}})
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}}
 	run(t, c)
 }

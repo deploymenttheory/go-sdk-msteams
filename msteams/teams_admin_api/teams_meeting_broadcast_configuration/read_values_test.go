@@ -3,12 +3,13 @@ package teamsmeetingbroadcastconfiguration_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 	"strconv"
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_configuration"
@@ -16,7 +17,7 @@ import (
 
 func TestUnitOwnGeneratedReadValuesKeepDynamicJSON(t *testing.T) {
 	t.Parallel()
-	raw, err := os.ReadFile("../../../docs/implementation/policies/evidence/pol91-broadcast-generated-read.json")
+	raw, err := os.ReadFile("testdata/dynamic_read_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +62,7 @@ func TestUnitOwnGeneratedReadValuesKeepDynamicJSON(t *testing.T) {
 func TestUnitDynamicReadUsesRootClientAndTypedViews(t *testing.T) {
 	t.Parallel()
 	body := `{"Identity":"Global","SupportURL":true,"AllowSdnProviderForBroadcastMeeting":"false","SdnAttendeeFallbackCount":"0","SdnName":"provider","SdnApiToken":{},"Future":[1,null]}`
-	run(t, contracttest.Case{Name: "dynamic-root-read", Steps: []contracttest.Exchange{compiledWire("GET", selected, get, nil, 200, body)}, Want: contracttest.Expected{JSON: json.RawMessage(body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "dynamic-root-read", Steps: []testutil.Exchange{compiledWire("GET", selected, get, nil, 200, body)}, Want: testutil.Expected{JSON: json.RawMessage(body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, err := sdk.TeamsAdminAPI.TeamsMeetingBroadcastConfigurations.GetByIdentity(ctx, "Global", resource.ReadOptions{})
 		if err == nil {
 			if v == nil || v.Identity == nil || *v.Identity != "Global" || v.SdnName == nil || *v.SdnName != "provider" {
@@ -74,7 +75,7 @@ func TestUnitDynamicReadUsesRootClientAndTypedViews(t *testing.T) {
 				t.Fatal("original dynamic values lost")
 			}
 		}
-		return contracttest.Observation{Value: v, Response: r, Err: err}
+		return testutil.Observation{Value: v, Response: r, Err: err}
 	}})
 }
 
@@ -93,7 +94,7 @@ func TestUnitReadSnapshotsOwnInputAndFailedDecodePreservesValue(t *testing.T) {
 	if string(value.RawJSON) != before || string(value.RawFields["SupportURL"]) != `{"future":true}` {
 		t.Fatal("input aliases owned read snapshots")
 	}
-	if err := json.Unmarshal([]byte(`{"Identity":"one","identity":"two"}`), &value); err != client.ErrDecode {
+	if err := json.Unmarshal([]byte(`{"Identity":"one","identity":"two"}`), &value); !errors.Is(err, client.ErrDecode) {
 		t.Fatal("case collision accepted", err)
 	}
 	if string(value.RawJSON) != before {

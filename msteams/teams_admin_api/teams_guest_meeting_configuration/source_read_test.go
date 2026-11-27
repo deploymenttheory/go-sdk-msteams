@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_meeting_configuration"
@@ -64,7 +64,7 @@ func TestUnitConfigurationOwnCompiledReadVectors(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = root.Close() }()
-	raw, err := root.ReadFile("docs/implementation/policies/evidence/pol91-last-compiled-read.json")
+	raw, err := root.ReadFile("msteams/teams_admin_api/teams_guest_meeting_configuration/testdata/read_model_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -87,8 +87,7 @@ func TestUnitConfigurationOwnCompiledReadVectors(t *testing.T) {
 		}
 		count++
 		t.Run(fmt.Sprintf("%s-%d", row.Kind, count), func(t *testing.T) {
-			var model any
-			model = new(resource.Configuration)
+			var model any = new(resource.Configuration)
 			err := json.Unmarshal([]byte(row.Input), model)
 			if row.Error != nil {
 				if !errors.Is(err, client.ErrDecode) {
@@ -117,7 +116,7 @@ func TestUnitConfigurationOwnCompiledReadVectors(t *testing.T) {
 func TestUnitConfigurationCoercedReadUsesRootClient(t *testing.T) {
 	t.Parallel()
 	const body = `{"Identity":37,"AllowIPVideo":"False","ScreenSharingMode":9007199254740993,"AllowMeetNow":1,"Future":{"keep":true}}`
-	run(t, contracttest.Case{Name: "own-coerced-root-read", Source: "msteams/teams_admin_api/teams_guest_meeting_configuration/source_read_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsTeamsGuestMeetingConfiguration", ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire("GET", collection+"/configuration/Global", "Get-CsTeamsGuestMeetingConfiguration", nil, 200, body)}, Want: contracttest.Expected{Status: 200, Body: []byte(body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "own-coerced-root-read", Steps: []testutil.Exchange{compiledWire("GET", collection+"/configuration/Global", "Get-CsTeamsGuestMeetingConfiguration", nil, 200, body)}, Want: testutil.Expected{Status: 200, Body: []byte(body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		value, response, err := sdk.TeamsAdminAPI.TeamsGuestMeetingConfigurations.GetByIdentity(ctx, "Global")
 		if err != nil || value == nil || response == nil || !bytes.Equal(response.Body(), []byte(body)) || !bytes.Equal(value.RawJSON, []byte(body)) {
 			t.Fatal("root read lost its model, receipt or raw snapshot")
@@ -125,6 +124,6 @@ func TestUnitConfigurationCoercedReadUsesRootClient(t *testing.T) {
 		if value.Identity == nil || *value.Identity != "37" || value.AllowIPVideo == nil || *value.AllowIPVideo || value.AllowMeetNow == nil || !*value.AllowMeetNow || value.ScreenSharingMode == nil || *value.ScreenSharingMode != "9007199254740993" || value.RawFields["Future"] == nil {
 			t.Fatal("source scalar projection lost exact values or future fields")
 		}
-		return contracttest.Observation{Response: response, Err: err}
+		return testutil.Observation{Response: response, Err: err}
 	}})
 }

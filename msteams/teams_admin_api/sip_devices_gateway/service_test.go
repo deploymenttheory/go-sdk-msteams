@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -21,18 +21,18 @@ import (
 const (
 	configOrigin = "https://api.interfaces.records.teams.microsoft.com"
 	targetForest = "https://admin.example.invalid/"
-	source       = "msteams/teams_admin_api/sip_devices_gateway/service_test.go"
-	root         = "/Teams.SipDevicesGatewayManagement"
-	probe        = "00000000-0000-4000-8000-000000000001"
-	tenant       = "00000000-0000-4000-8000-0000000000aa"
-	summaryCmd   = "Get-CsSdgBulkSignInRequestsSummary"
-	statusCmd    = "Get-CsSdgBulkSignInRequestStatus"
-	bulkCmd      = "New-CsSdgBulkSignInRequest"
-	taggingCmd   = "New-CsSdgDeviceTaggingRequest"
-	transferCmd  = "New-CsSdgDeviceTransferRequest"
-	region       = "msteams-sdk-invalid"
-	hardware     = "00-00-5E-00-53-01"
-	user         = "msteams-sdk-probe@example.invalid"
+
+	root        = "/Teams.SipDevicesGatewayManagement"
+	probe       = "00000000-0000-4000-8000-000000000001"
+	tenant      = "00000000-0000-4000-8000-0000000000aa"
+	summaryCmd  = "Get-CsSdgBulkSignInRequestsSummary"
+	statusCmd   = "Get-CsSdgBulkSignInRequestStatus"
+	bulkCmd     = "New-CsSdgBulkSignInRequest"
+	taggingCmd  = "New-CsSdgDeviceTaggingRequest"
+	transferCmd = "New-CsSdgDeviceTransferRequest"
+	region      = "msteams-sdk-invalid"
+	hardware    = "00-00-5E-00-53-01"
+	user        = "msteams-sdk-probe@example.invalid"
 )
 
 func readFile(t *testing.T, name string) []byte {
@@ -49,32 +49,26 @@ func readFile(t *testing.T, name string) []byte {
 	return body
 }
 
-func discovery(t *testing.T) contracttest.Exchange {
+func discovery(t *testing.T) testutil.Exchange {
 	t.Helper()
 	body, err := os.ReadFile("../internal/configapi/testdata/service_discovery.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
-		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: http.MethodGet, URL: configOrigin + "/Teams.Tenant/serviceDiscovery", Audience: auth.TeamsAdminAudience},
+		Reply: testutil.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
-func wire(method, path, command string, body json.RawMessage, status int, reply []byte) contracttest.Exchange {
+func wire(method, path, command string, body json.RawMessage, status int, reply []byte) testutil.Exchange {
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + root + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json; charset=utf-8"}}, Body: reply}}
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: configOrigin + root + path, Audience: auth.TeamsAdminAudience, Headers: h, JSON: body},
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json; charset=utf-8"}}, Body: reply}}
 }
 
-func run(t *testing.T, c contracttest.Case) {
+func run(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "sip_devices_gateway"
-	if c.Source == "" {
-		c.Source = source
-	}
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -83,39 +77,35 @@ func run(t *testing.T, c contracttest.Case) {
 	}
 }
 
-func mapping(command, set string) []contracttest.Mapping {
-	return []contracttest.Mapping{{Command: command, ParameterSet: set}}
-}
-
 func ptr[T any](v T) *T { return &v }
 
 type call struct {
-	name, method, path, command, set, fixture string
-	body                                      json.RawMessage
-	invoke                                    func(context.Context, *sdg.Service) (any, *resty.Response, error)
+	name, method, path, command, fixture string
+	body                                 json.RawMessage
+	invoke                               func(context.Context, *sdg.Service) (any, *resty.Response, error)
 }
 
 func calls() []call {
 	return []call{
-		{"summary", "GET", "/v1/batchsummaries", summaryCmd, "Get", "summary_403.json", nil,
+		{"summary", "GET", "/v1/batchsummaries", summaryCmd, "summary_403.json", nil,
 			func(ctx context.Context, s *sdg.Service) (any, *resty.Response, error) {
 				return s.ListBulkSignInRequests(ctx)
 			}},
-		{"status", "GET", "/v1/batchstatus?batchid=" + probe, statusCmd, "Get", "status_403.json", nil,
+		{"status", "GET", "/v1/batchstatus?batchid=" + probe, statusCmd, "status_403.json", nil,
 			func(ctx context.Context, s *sdg.Service) (any, *resty.Response, error) {
 				return s.GetBulkSignInRequestStatus(ctx, probe)
 			}},
-		{"bulk-sign-in", "POST", "/v1/createbatch?TargetRegion=" + region, bulkCmd, "__AllParameterSets", "bulk_sign_in_403.json",
+		{"bulk-sign-in", "POST", "/v1/createbatch?TargetRegion=" + region, bulkCmd, "bulk_sign_in_403.json",
 			json.RawMessage(`[{"userName":"` + user + `","hardwareId":"` + hardware + `"}]`),
 			func(ctx context.Context, s *sdg.Service) (any, *resty.Response, error) {
 				return s.CreateBulkSignInRequest(ctx, region, []sdg.BulkSignInItem{{UserName: ptr(user), HardwareID: ptr(hardware)}})
 			}},
-		{"tagging", "POST", "/devicetagging/tagnewdevice?TargetRegion=" + region, taggingCmd, "NewExpanded", "tagging_403.json",
+		{"tagging", "POST", "/devicetagging/tagnewdevice?TargetRegion=" + region, taggingCmd, "tagging_403.json",
 			json.RawMessage(`{"HardwareId":"` + hardware + `","TenantId":"` + tenant + `"}`),
 			func(ctx context.Context, s *sdg.Service) (any, *resty.Response, error) {
 				return s.CreateDeviceTaggingRequest(ctx, region, sdg.DeviceTaggingRequest{HardwareID: ptr(hardware), TenantID: ptr(tenant)})
 			}},
-		{"transfer", "POST", "/devicetransfer/transfer?SdhDeviceId=" + probe + "&SourceRegion=" + region + "&TargetRegion=" + region, transferCmd, "New", "transfer_403.json", nil,
+		{"transfer", "POST", "/devicetransfer/transfer?SdhDeviceId=" + probe + "&SourceRegion=" + region + "&TargetRegion=" + region, transferCmd, "transfer_403.json", nil,
 			func(ctx context.Context, s *sdg.Service) (any, *resty.Response, error) {
 				return s.CreateDeviceTransferRequest(ctx, sdg.DeviceTransferRequest{SdhDeviceID: probe, SourceRegion: region, TargetRegion: region})
 			}},
@@ -127,15 +117,15 @@ func TestUnitSIPDevicesGatewayDenialsUseAcceptanceResponses(t *testing.T) {
 	t.Parallel()
 	for _, c := range calls() {
 		denied := readFile(t, "testdata/"+c.fixture)
-		run(t, contracttest.Case{Name: "actual-" + c.name + "-forbidden", Source: "msteams/teams_admin_api/sip_devices_gateway/testdata/" + c.fixture, Mappings: mapping(c.command, c.set),
-			Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, c.body, 403, denied)},
-			Want:  contracttest.Expected{Status: 403, Body: denied, APIError: client.NewAPIError(client.TeamsAdmin, 403, nil, denied)},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: "actual-" + c.name + "-forbidden",
+			Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, c.body, 403, denied)},
+			Want:  testutil.Expected{Status: 403, Body: denied, APIError: client.NewAPIError(client.TeamsAdmin, 403, nil, denied)},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.SIPDevicesGateway)
 				if !errors.Is(err, auth.ErrForbidden) {
 					t.Fatal("403 was not classified as forbidden")
 				}
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			}})
 	}
 }
@@ -150,10 +140,10 @@ func TestUnitSIPDevicesGatewaySuccessShapesPreserveFields(t *testing.T) {
 	replies := map[string][]byte{"summary": summary, "status": status, "bulk-sign-in": created, "tagging": tagged, "transfer": moved}
 	for _, c := range calls() {
 		reply := replies[c.name]
-		run(t, contracttest.Case{Name: c.name + "-success", Mappings: mapping(c.command, c.set),
-			Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, c.body, 200, reply)},
-			Want:  contracttest.Expected{Status: 200, Body: reply},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		run(t, testutil.Case{Name: c.name + "-success",
+			Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, c.body, 200, reply)},
+			Want:  testutil.Expected{Status: 200, Body: reply},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.SIPDevicesGateway)
 				if err != nil {
 					t.Fatal(err)
@@ -185,7 +175,7 @@ func TestUnitSIPDevicesGatewaySuccessShapesPreserveFields(t *testing.T) {
 				default:
 					t.Fatalf("unexpected value %T", value)
 				}
-				return contracttest.Observation{Response: response, Err: err}
+				return testutil.Observation{Response: response, Err: err}
 			}})
 	}
 }
@@ -198,15 +188,15 @@ func TestUnitSIPDevicesGatewayMalformedAndUndeclaredResponsesFail(t *testing.T) 
 			body   string
 			want   error
 		}{"null": {200, `null`, client.ErrDecode}, "array": {200, `[]`, client.ErrDecode}, "accepted": {202, `{}`, sdg.ErrResponse}} {
-			run(t, contracttest.Case{Name: c.name + "-" + name, Mappings: mapping(c.command, c.set),
-				Steps: []contracttest.Exchange{discovery(t), wire(c.method, c.path, c.command, c.body, reply.status, []byte(reply.body))},
-				Want:  contracttest.Expected{Status: reply.status, Error: reply.want},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: c.name + "-" + name,
+				Steps: []testutil.Exchange{discovery(t), wire(c.method, c.path, c.command, c.body, reply.status, []byte(reply.body))},
+				Want:  testutil.Expected{Status: reply.status, Error: reply.want},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					value, response, err := c.invoke(ctx, sdk.TeamsAdminAPI.SIPDevicesGateway)
 					if !strings.HasPrefix(fmt.Sprintf("%v", value), "<nil>") {
 						t.Fatal("failed response returned a value")
 					}
-					return contracttest.Observation{Response: response, Err: err}
+					return testutil.Observation{Response: response, Err: err}
 				}})
 		}
 	}
@@ -244,9 +234,9 @@ func TestUnitSIPDevicesGatewayInvalidInputFailsBeforeIO(t *testing.T) {
 			return err
 		},
 	} {
-		run(t, contracttest.Case{Name: name, Scope: "local", Mappings: mapping(bulkCmd, "__AllParameterSets"), Want: contracttest.Expected{Error: sdg.ErrInput},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-				return contracttest.Observation{Err: invoke(ctx, sdk.TeamsAdminAPI.SIPDevicesGateway)}
+		run(t, testutil.Case{Name: name, Want: testutil.Expected{Error: sdg.ErrInput},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+				return testutil.Observation{Err: invoke(ctx, sdk.TeamsAdminAPI.SIPDevicesGateway)}
 			}})
 	}
 }

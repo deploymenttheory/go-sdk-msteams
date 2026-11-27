@@ -32,4 +32,4 @@ results with pinned PowerShell. User and group grants of `Enabled` to the dedica
 SDK fixtures were read back, compared with PowerShell and reversed through journaled
 restoration. GrantToTenant, delegated modes, other clouds and propagation are
 unqualified. See
-[qualification](../../../docs/implementation/policies/media-logging-lab-acceptance.md).
+[qualification](../../../docs/acceptance/media-logging-lab-acceptance.md).

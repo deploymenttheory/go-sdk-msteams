@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -32,11 +32,11 @@ func TestUnitPrivacyUpdatePreparationFailures(t *testing.T) {
 	}{"actual-read-denial", 403, 0, string(readResponseFixture(t, "get_global_403.json"))})
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{wire("GET", item, "Set-CsPrivacyConfiguration", nil, tc.read, tc.body)}
+			steps := []testutil.Exchange{wire("GET", item, "Set-CsPrivacyConfiguration", nil, tc.read, tc.body)}
 			if tc.patch != 0 {
 				steps = append(steps, wire("PATCH", item, "Set-CsPrivacyConfiguration", json.RawMessage(`{"Identity":"Global","EnablePrivacyMode":false}`), tc.patch, ""))
 			}
-			run(t, contracttest.Case{Name: tc.name, Source: "msteams/teams_admin_api/privacy_configuration/composition_test.go", Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{EnablePrivacyMode: policy.Set(false)}})
 				if e == nil || v == nil || v.ReadResponse == nil || v.PatchInvoked != (tc.patch != 0) || v.HTTPAccepted {
 					t.Error("failed update lost preparation state or invented acceptance")
@@ -51,7 +51,7 @@ func TestUnitPrivacyUpdatePreparationFailures(t *testing.T) {
 						t.Error("failure lost its HTTP status")
 					}
 				}
-				return contracttest.Observation{Response: r}
+				return testutil.Observation{Response: r}
 			}})
 		})
 	}
@@ -62,13 +62,13 @@ func TestUnitPrivacyRejectedFilterRequests(t *testing.T) {
 	// This retained fixture does not supply a successful list. These controlled
 	// errors prove request construction only, not current live capability.
 	for _, pattern := range []string{"*", "Global", "Fixture*"} {
-		result, err := contracttest.Run(t.Context(), contracttest.Case{
-			Name: "request-only-filter", Family: "privacy_configuration", Scope: "service", Source: "msteams/teams_admin_api/privacy_configuration/testdata/get_global_403.json",
+		result, err := testutil.Run(t.Context(), testutil.Case{
+			Name:  "request-only-filter",
 			Steps: responseFixtureSteps(t, "/Skype.Policy/configurations/PrivacyConfiguration", 400, nil),
-			Want:  contracttest.Expected{Status: 400, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
-			Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			Want:  testutil.Expected{Status: 400, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}},
+			Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				value, response, err := sdk.TeamsAdminAPI.PrivacyConfigurations.ListFiltered(ctx, pattern)
-				return contracttest.Observation{Value: value, Response: response, Err: err}
+				return testutil.Observation{Value: value, Response: response, Err: err}
 			},
 		})
 		if err != nil || !result.Passed() {
@@ -94,13 +94,10 @@ func TestUnitPrivacyAuthoredListAndLiteralFilterResponses(t *testing.T) {
 		{name: "missing", pattern: "__sdk_missing__"},
 		{name: "literal-whitespace", pattern: " "},
 	} {
-		set := "Filter"
-		if tc.list {
-			set = "Identity"
-		}
-		run(t, contracttest.Case{Name: "authored-" + tc.name, Source: "msteams/teams_admin_api/privacy_configuration/composition_test.go", Mappings: []contracttest.Mapping{{Command: "Get-CsPrivacyConfiguration", ParameterSet: set}}, Steps: []contracttest.Exchange{wire("GET", collection, "Get-CsPrivacyConfiguration", nil, 200, body)}, Want: contracttest.Expected{Body: []byte(body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+
+		run(t, testutil.Case{Name: "authored-" + tc.name, Steps: []testutil.Exchange{wire("GET", collection, "Get-CsPrivacyConfiguration", nil, 200, body)}, Want: testutil.Expected{Body: []byte(body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			var values []*resource.Configuration
-			var observed contracttest.Observation
+			var observed testutil.Observation
 			if tc.list {
 				values, observed.Response, observed.Err = sdk.TeamsAdminAPI.PrivacyConfigurations.List(ctx)
 			} else {
@@ -122,11 +119,11 @@ func TestUnitPrivacyAuthoredListAndLiteralFilterResponses(t *testing.T) {
 
 func TestUnitPrivacySparseInputStopsOnPreparationDenial(t *testing.T) {
 	t.Parallel()
-	run(t, contracttest.Case{Name: "preparation-denial", Source: "msteams/teams_admin_api/privacy_configuration/composition_test.go", Steps: []contracttest.Exchange{wire("GET", item, "Set-CsPrivacyConfiguration", nil, 403, "")}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	run(t, testutil.Case{Name: "preparation-denial", Steps: []testutil.Exchange{wire("GET", item, "Set-CsPrivacyConfiguration", nil, 403, "")}, Want: testutil.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		v, r, e := sdk.TeamsAdminAPI.PrivacyConfigurations.UpdateByIdentity(ctx, "Global", resource.UpdateRequest{Settings: resource.Settings{AutoInitiateContacts: policy.Set(false)}})
 		if v == nil || v.ReadResponse == nil || v.Before != nil || v.PatchInvoked || v.HTTPAccepted {
 			t.Error("failed preparation invented a snapshot, patch or acceptance")
 		}
-		return contracttest.Observation{Response: r, Err: e}
+		return testutil.Observation{Response: r, Err: e}
 	}})
 }

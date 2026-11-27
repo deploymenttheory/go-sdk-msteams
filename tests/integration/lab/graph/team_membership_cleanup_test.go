@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -22,18 +22,14 @@ const cleanupOtherID = "22222222-2222-4222-8222-222222222222"
 
 const cleanupFixture = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-membership"
 
-func cleanupExchange(method, path string, status int, body string) contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
+func cleanupExchange(method, path string, status int, body string) testutil.Exchange {
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method, URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
 }
 
-func runCleanupCase(t *testing.T, c contracttest.Case) {
+func runCleanupCase(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family = "membership_lab_cleanup"
-	c.Source = "tests/integration/lab/graph/team_membership_cleanup_test.go"
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -57,15 +53,15 @@ func TestUnitMembershipCleanupResolveRequiresCompleteUniquePositiveMatch(t *test
 		{"denied", `{"error":{"code":"Forbidden"}}`, "", 403, auth.ErrForbidden},
 		{"incomplete-cannot-resolve", `{"value":[{"id":"` + cleanupTeamID + `","displayName":"` + cleanupFixture + `"}],"@odata.nextLink":"https://foreign.invalid/private"}`, "", 200, client.ErrDestination},
 	} {
-		runCleanupCase(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{cleanupExchange("GET", "/v1.0/teams?"+query, tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		runCleanupCase(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{cleanupExchange("GET", "/v1.0/teams?"+query, tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			id, err := (membershipCleanup{sdk: sdk}).Resolve(ctx, lab.Entry{Fixture: cleanupFixture})
-			return contracttest.Observation{Value: id, Err: err}
-		}, Want: contracttest.Expected{Error: tc.want, JSON: json.RawMessage(`"` + tc.id + `"`)}})
+			return testutil.Observation{Value: id, Err: err}
+		}, Want: testutil.Expected{Error: tc.want, JSON: json.RawMessage(`"` + tc.id + `"`)}})
 	}
-	runCleanupCase(t, contracttest.Case{Name: "invalid-name-before-auth", Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	runCleanupCase(t, testutil.Case{Name: "invalid-name-before-auth", Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		_, err := (membershipCleanup{sdk: sdk}).Resolve(ctx, lab.Entry{Fixture: "unowned' or true"})
-		return contracttest.Observation{Err: err}
-	}, Want: contracttest.Expected{Error: lab.ErrUnresolved}})
+		return testutil.Observation{Err: err}
+	}, Want: testutil.Expected{Error: lab.ErrUnresolved}})
 }
 
 func TestUnitMembershipCleanupDeleteRequiresBothOwnedSnapshots(t *testing.T) {
@@ -102,7 +98,7 @@ func TestUnitMembershipCleanupDeleteRequiresBothOwnedSnapshots(t *testing.T) {
 		case "delete-denied":
 			want = auth.ErrForbidden
 		}
-		steps := []contracttest.Exchange{cleanupExchange("GET", "/v1.0/teams/"+cleanupTeamID, status, teamBody)}
+		steps := []testutil.Exchange{cleanupExchange("GET", "/v1.0/teams/"+cleanupTeamID, status, teamBody)}
 		if phase == "owned" || phase == "delete-denied" || phase == "group-other-name" || phase == "group-not-unified" || phase == "group-other-id" {
 			steps = append(steps, cleanupExchange("GET", "/v1.0/groups/"+cleanupTeamID+"?"+groupQuery, 200, groupBody))
 		}
@@ -117,22 +113,22 @@ func TestUnitMembershipCleanupDeleteRequiresBothOwnedSnapshots(t *testing.T) {
 		if phase == "owned" || phase == "team-missing" {
 			steps = append(steps, cleanupExchange("GET", "/v1.0/groups/"+cleanupTeamID, 404, ""), cleanupExchange("GET", "/v1.0/teams/"+cleanupTeamID, 404, ""))
 		}
-		expected := contracttest.Expected{Error: want}
-		runCleanupCase(t, contracttest.Case{Name: phase, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		expected := testutil.Expected{Error: want}
+		runCleanupCase(t, testutil.Case{Name: phase, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			err := (membershipCleanup{sdk: sdk}).Delete(ctx, lab.Entry{ResourceID: cleanupTeamID, Fixture: cleanupFixture})
-			return contracttest.Observation{Err: err}
+			return testutil.Observation{Err: err}
 		}, Want: expected})
 	}
 	for _, name := range []string{"bad-id", "bad-name"} {
-		runCleanupCase(t, contracttest.Case{Name: name, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		runCleanupCase(t, testutil.Case{Name: name, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			entry := lab.Entry{ResourceID: cleanupTeamID, Fixture: cleanupFixture}
 			if name == "bad-id" {
 				entry.ResourceID = "../private"
 			} else {
 				entry.Fixture = "unowned"
 			}
-			return contracttest.Observation{Err: (membershipCleanup{sdk: sdk}).Delete(ctx, entry)}
-		}, Want: contracttest.Expected{Error: lab.ErrUnresolved}})
+			return testutil.Observation{Err: (membershipCleanup{sdk: sdk}).Delete(ctx, entry)}
+		}, Want: testutil.Expected{Error: lab.ErrUnresolved}})
 	}
 }
 

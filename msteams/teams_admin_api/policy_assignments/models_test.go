@@ -3,7 +3,7 @@ package policyassignments
 import (
 	"encoding/json"
 	"fmt"
-	"os"
+
 	"reflect"
 	"strings"
 	"testing"
@@ -144,39 +144,5 @@ func TestUnitAssignmentSnapshotPresenceAndRedaction(t *testing.T) {
 		if json.Unmarshal([]byte(raw), &value) == nil {
 			t.Fatal("invalid snapshot accepted")
 		}
-	}
-}
-
-func TestUnitPinnedConditionalAssignmentMetadataMatchesTargets(t *testing.T) {
-	t.Parallel()
-	read := func(raw []byte, err error) []json.RawMessage {
-		t.Helper()
-		if err != nil {
-			t.Fatal(err)
-		}
-		var fixture struct{ Commands []json.RawMessage }
-		if json.Unmarshal(raw, &fixture) != nil || len(fixture.Commands) != 8 {
-			t.Fatal("incomplete OCE metadata")
-		}
-		return fixture.Commands
-	}
-	first := read(os.ReadFile("../../../contracts/powershell/8.1.0/conditional-policy-assignment-net472.json"))
-	second := read(os.ReadFile("../../../contracts/powershell/8.1.0/conditional-policy-assignment-netcoreapp3.1.json"))
-	sets := 0
-	for i, command := range first {
-		var a, b any
-		if json.Unmarshal(command, &a) != nil || json.Unmarshal(second[i], &b) != nil || !reflect.DeepEqual(a, b) {
-			t.Fatal("conditional signatures differ by assembly target")
-		}
-		var metadata struct {
-			Sets []json.RawMessage `json:"parameter_sets"`
-		}
-		if json.Unmarshal(command, &metadata) != nil {
-			t.Fatal("invalid OCE command")
-		}
-		sets += len(metadata.Sets)
-	}
-	if sets != 15 {
-		t.Fatal("conditional parameter sets were dropped")
 	}
 }

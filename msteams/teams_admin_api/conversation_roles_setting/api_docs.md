@@ -47,7 +47,7 @@ sequence is not atomic and provides no ETag or concurrent-edit guarantee.
 String/GoString redact all request, result and model data. No live Global update,
 new role/consent or license operation is configured.
 
-See [source notes](../../../docs/implementation/ext/conversation-role-contract-notes.md)
+See [unit tests](service_test.go)
 for assembly/reproducer hashes, the thirty-case helper matrix and full-pipeline
 observations. The issue and command qualification remain open.
 

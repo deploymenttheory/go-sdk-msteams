@@ -8,7 +8,7 @@ import (
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	resource "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_call_park_policy"
 )
@@ -163,7 +163,7 @@ func TestUnitCallParkNativeRequestsForTypedInputs(t *testing.T) {
 		},
 	}
 
-	var results []contracttest.Result
+	var results []testutil.Result
 	for _, f := range fixture.Cases {
 		if f.Failure != nil {
 			continue
@@ -192,14 +192,14 @@ func TestUnitCallParkNativeRequestsForTypedInputs(t *testing.T) {
 		if f.Command == newCommand {
 			method, path, status = "POST", collection, 400
 		}
-		results = append(results, run(t, contracttest.Case{Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: strings.ToLower(f.Command + "-" + f.Name), Source: modelSource, Mappings: []contracttest.Mapping{{Command: f.Command, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{discovery(t), wire(method, path, f.Command, f.Wire, status, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		results = append(results, run(t, testutil.Case{Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: strings.ToLower(f.Command + "-" + f.Name), Steps: []testutil.Exchange{discovery(t), wire(method, path, f.Command, f.Wire, status, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			s := sdk.TeamsAdminAPI.TeamsCallParkPolicies
 			if f.Command == newCommand {
 				r, e := s.CreateByIdentity(ctx, "Fixture", input)
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}
 			r, e := s.UpdateByIdentity(ctx, "Fixture", input)
-			return contracttest.Observation{Response: r, Err: e}
+			return testutil.Observation{Response: r, Err: e}
 		}}))
 	}
 	if len(results) != 16 {

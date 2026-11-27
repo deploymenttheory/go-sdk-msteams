@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -25,9 +25,9 @@ func TestUnitPrivateUPNFailurePreventsMembershipReadsAndWrites(t *testing.T) {
 		{"malformed", `{}`, 200, client.ErrDecode},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: "upn-" + tc.name, Steps: []contracttest.Exchange{channelRead("private"), wire("GET", "/v1.0/users/member@fixture.invalid?$select=id", "", tc.status, tc.body, "https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: "upn-" + tc.name, Steps: []testutil.Exchange{channelRead("private"), wire("GET", "/v1.0/users/member@fixture.invalid?$select=id", "", tc.status, tc.body)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return changed(sdk.GraphAPI.ChannelUserManagement.Add(ctx, teamID, "fixture", "member@fixture.invalid", management.ChangeOptions{Role: management.Owner}))
-			}, Want: contracttest.Expected{Status: tc.status, Error: tc.err}})
+			}, Want: testutil.Expected{Status: tc.status, Error: tc.err}})
 		})
 	}
 }
@@ -47,7 +47,7 @@ func TestUnitSharedNullEmailAndTenantSelectionUseReturnedMembership(t *testing.T
 		{name: "explicit-tenant", body: `{"value":[` + first + `,` + second + `]}`, tenant: stringPointer(tenantID), id: "second"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{channelRead("shared"), wire("GET", membersPath(), "", 200, tc.body, "https://learn.microsoft.com/en-us/graph/api/channel-list-members?view=graph-rest-1.0")}
+			steps := []testutil.Exchange{channelRead("shared"), wire("GET", membersPath(), "", 200, tc.body)}
 			status := 200
 			var want json.RawMessage
 			if tc.err == nil {
@@ -56,16 +56,14 @@ func TestUnitSharedNullEmailAndTenantSelectionUseReturnedMembership(t *testing.T
 					reply = second
 				}
 				reply = strings.Replace(reply, `"roles":[]`, `"roles":["owner"]`, 1)
-				steps = append(steps, wire("PATCH", membersPath()+"/"+tc.id, `{"roles":["owner"]}`, 200, reply, "https://learn.microsoft.com/en-us/graph/api/channel-update-members?view=graph-rest-1.0"))
+				steps = append(steps, wire("PATCH", membersPath()+"/"+tc.id, `{"roles":["owner"]}`, 200, reply))
 				want = json.RawMessage(`{"membership":"` + tc.id + `"}`)
 			}
-			run(t, contracttest.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Name: tc.name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				v, e := sdk.GraphAPI.ChannelUserManagement.Add(ctx, teamID, "fixture", userID, management.ChangeOptions{Role: management.Owner, TenantID: tc.tenant})
-				if e != nil && isRequestBoundary(ctx) {
-					return contracttest.Observation{Response: v.Response, Err: e}
-				}
-				return contracttest.Observation{Value: map[string]string{"membership": string(v.MembershipID)}, Response: v.Response, Err: e}
-			}, Want: contracttest.Expected{Status: status, JSON: want, Error: tc.err}})
+
+				return testutil.Observation{Value: map[string]string{"membership": string(v.MembershipID)}, Response: v.Response, Err: e}
+			}, Want: testutil.Expected{Status: status, JSON: want, Error: tc.err}})
 		})
 	}
 }

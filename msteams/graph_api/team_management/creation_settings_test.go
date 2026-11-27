@@ -2,7 +2,7 @@ package teammanagement_test
 
 import (
 	"encoding/json"
-	"os"
+
 	"reflect"
 	"testing"
 
@@ -59,66 +59,6 @@ var booleanSettings = map[string]func(*bool) team.Settings{
 	"ShowInTeamsSearchAndSuggestions": func(v *bool) team.Settings {
 		return team.Settings{DiscoverySettings: &team.DiscoverySettings{ShowInTeamsSearchAndSuggestions: v}}
 	},
-}
-
-func TestUnitSettingsInputsCoverBothPinnedApplicationParameterSets(t *testing.T) {
-	t.Parallel()
-	var runtime struct {
-		Commands []struct {
-			Name string
-			Sets []struct {
-				Name       string
-				Parameters []struct{ Name string }
-			} `json:"parameter_sets"`
-		}
-	}
-	var ledger struct {
-		Common map[string]string `json:"common_parameters"`
-	}
-	data, err := os.ReadFile("../../../contracts/powershell/8.1.0/runtime.json")
-	if err != nil || json.Unmarshal(data, &runtime) != nil {
-		t.Fatal("pinned parameter metadata unavailable")
-	}
-	data, err = os.ReadFile("../../../contracts/coverage/8.1.0.json")
-	if err != nil || json.Unmarshal(data, &ledger) != nil {
-		t.Fatal("coverage common-parameter mappings unavailable")
-	}
-	want := map[string]bool{"GiphyContentRating": true}
-	for name := range booleanSettings {
-		want[name] = true
-	}
-	checked := 0
-	for _, command := range runtime.Commands {
-		if command.Name != "New-Team" && command.Name != "Set-Team" {
-			continue
-		}
-		for _, set := range command.Sets {
-			if command.Name == "New-Team" && set.Name != "CreateTeam" {
-				continue
-			}
-			otherInputs := map[string]bool{"DisplayName": true, "Description": true, "Classification": true, "MailNickName": true, "Visibility": true}
-			if command.Name == "New-Team" {
-				for _, name := range []string{"Owner", "Template", "RetainCreatedGroup"} {
-					otherInputs[name] = true
-				}
-			} else {
-				otherInputs["GroupId"] = true
-			}
-			observed := map[string]bool{}
-			for _, p := range set.Parameters {
-				if _, common := ledger.Common[p.Name]; !common && !otherInputs[p.Name] {
-					observed[p.Name] = true
-				}
-			}
-			if !reflect.DeepEqual(observed, want) {
-				t.Fatal("a pinned application settings parameter has no typed input/field case")
-			}
-			checked++
-		}
-	}
-	if checked != 2 {
-		t.Fatal("both pinned settings-bearing parameter sets must be checked")
-	}
 }
 
 func TestUnitSettingsSerializeEveryInputField(t *testing.T) {

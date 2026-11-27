@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -17,10 +17,10 @@ func TestUnitExternalTenantCreationPreservesExplicitTenant(t *testing.T) {
 	path := "/beta/teams/" + teamID + "/channels/19:channel%2Fopaque@thread.tacv2/members"
 	body := `{"@odata.type":"#microsoft.graph.aadUserConversationMember","roles":[],"tenantId":"` + tenant + `","user@odata.bind":"https://graph.microsoft.com/beta/users('` + userID + `')"}`
 	raw := resourceJSON(`[]`)
-	nativeCase(t, contracttest.Case{Name: "external-tenant", Steps: []contracttest.Exchange{wire("POST", auth.GraphAudience, path, body, 201, "")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	nativeCase(t, testutil.Case{Name: "external-tenant", Steps: []testutil.Exchange{wire("POST", auth.GraphAudience, path, body, 201, raw)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, channelID, channelmember.CreateRequest{UserID: userID, TenantID: &tenant}))
-		}, Want: contracttest.Expected{Status: 201, JSON: expectedSnapshot(`[]`, raw)}})
+		}, Want: testutil.Expected{Status: 201, JSON: expectedSnapshot(`[]`, raw)}})
 }
 
 func TestUnitInvalidChannelAndTenantAreRejectedBeforeCredentials(t *testing.T) {
@@ -33,9 +33,9 @@ func TestUnitInvalidChannelAndTenantAreRejectedBeforeCredentials(t *testing.T) {
 		{"empty-tenant", channelID, ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			nativeCase(t, contracttest.Case{Name: tc.name, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			nativeCase(t, testutil.Case{Name: tc.name, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return snapshot(sdk.GraphAPI.ChannelMembers.Create(ctx, teamID, tc.channel, channelmember.CreateRequest{UserID: userID, TenantID: &tc.tenant}))
-			}, Want: contracttest.Expected{Error: client.ErrRequest}})
+			}, Want: testutil.Expected{Error: client.ErrRequest}})
 		})
 	}
 }

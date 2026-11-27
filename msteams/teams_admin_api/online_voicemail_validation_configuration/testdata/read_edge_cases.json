@@ -1,0 +1,84 @@
+{
+  "observations": [
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://n.invalid/\"}",
+      "projected_json": "\"https://n.invalid/\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\"}",
+      "projected_json": "\"https://abc/\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\n\"}",
+      "projected_json": "\"https://abc/\\n\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\r\\n\"}",
+      "projected_json": "\"https://abc/\\r\\n\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\\\\"}",
+      "projected_json": "\"https://abc/\\\\\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\\\n\"}",
+      "projected_json": "\"https://abc/\\\\n\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"https://abc/\\nrest\"}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"HTTPS://n.invalid/\"}",
+      "projected_json": "\"HTTPS://n.invalid/\"",
+      "error": null
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"\"}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    },
+    {
+      "command": "Get-CsOnlineVoicemailValidationConfiguration",
+      "field": "AudioFileValidationUri",
+      "kind": "uri-setter",
+      "input_json": "{\"AudioFileValidationUri\":\"http://n.invalid/\"}",
+      "projected_json": null,
+      "error": "XsdClassGenerator.PropertyArgumentException"
+    }
+  ]
+}

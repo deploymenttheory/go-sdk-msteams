@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	roles "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/conversation_role"
@@ -188,14 +188,14 @@ func TestUnitConversationRoleReceiptRecoversIndependentlyAfterSettingsDenial(t *
 		t.Fatal(e)
 	}
 	body := string(request.Projection().Body)
-	result, e := contracttest.Run(t.Context(), contracttest.Case{Name: "role-receipt-independent-recovery", Family: "ext_integration", Scope: "service", Source: "tests/integration/lab/ext_integration/conversation_projection_test.go", Steps: []contracttest.Exchange{
+	result, e := testutil.Run(t.Context(), testutil.Case{Name: "role-receipt-independent-recovery", Steps: []testutil.Exchange{
 		exchange(true, "POST", "/Skype.Policy/configurations/ConversationRole", "New-CsConversationRole", body, 201, conversationBefore),
 		exchange(true, "GET", "/Skype.Policy/configurations/ConversationRolesSetting/configuration/Global", "Set-CsConversationRolesSetting", "", 403, `{"code":"Forbidden"}`),
 		exchange(true, "DELETE", "/Skype.Policy/configurations/ConversationRole/configuration/Global/"+conversationID, "Remove-CsConversationRole", `{"Id":"`+conversationID+`"}`, 204, ""),
-	}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	}, Want: testutil.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		owned, _, e := sdk.TeamsAdminAPI.ConversationRoles.Create(ctx, *request)
 		if e != nil {
-			return contracttest.Observation{Err: e}
+			return testutil.Observation{Err: e}
 		}
 		if owned == nil || owned.ID == nil {
 			t.Fatal("owned role receipt missing")
@@ -207,7 +207,7 @@ func TestUnitConversationRoleReceiptRecoversIndependentlyAfterSettingsDenial(t *
 		if _, _, e = sdk.TeamsAdminAPI.ConversationRoles.DeleteByID(ctx, *owned.ID, policy.Controls{}); e != nil {
 			t.Fatal("independent owned receipt recovery failed")
 		}
-		return contracttest.Observation{Err: denied}
+		return testutil.Observation{Err: denied}
 	}})
 	if e != nil || !result.Passed() {
 		t.Fatalf("independent recovery vector differed: %v %+v", e, result.Differences())

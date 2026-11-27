@@ -62,7 +62,7 @@ responses. Live nonempty hidden lists, default-template changes, grants/clear,
 propagation, effective meeting behavior, delegated flows and other clouds remain
 unqualified; issue #132 remains open.
 
-See [qualification details](../../../docs/implementation/policies/meeting-template-policies-lab-acceptance.md).
+See [qualification details](../../../docs/acceptance/meeting-template-policies-lab-acceptance.md).
 
 ## Populated-list authorization comparison
 

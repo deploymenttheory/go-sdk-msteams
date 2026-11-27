@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -21,17 +21,13 @@ const (
 	otherID = "22222222-2222-4222-8222-222222222222"
 )
 
-func runCase(t *testing.T, c contracttest.Case) {
+func runCase(t *testing.T, c testutil.Case) {
 	t.Helper()
 	if c.Name == "" {
 		c.Name = "resolver-case"
 	}
-	c.Family = "directory_user_resolution"
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	c.Source = "msteams/graph_api/directory_user/resolver_test.go"
-	result, err := contracttest.Run(t.Context(), requestBoundary(t, c))
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,12 +36,12 @@ func runCase(t *testing.T, c contracttest.Case) {
 	}
 }
 
-func wire(origin, path string, status int, body string) contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: "GET", URL: origin + path, Audience: origin, Headers: http.Header{"Accept": {"application/json"}}}, Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
+func wire(origin, path string, status int, body string) testutil.Exchange {
+	return testutil.Exchange{Request: testutil.WireRequest{Method: "GET", URL: origin + path, Audience: origin, Headers: http.Header{"Accept": {"application/json"}}}, Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
 }
 
-func observed(value directoryuser.Resolution, response *resty.Response, err error) contracttest.Observation {
-	return contracttest.Observation{Value: map[string]any{"id": value.ID, "source": value.Source, "snapshot": value.User}, Response: response, Err: err}
+func observed(value directoryuser.Resolution, response *resty.Response, err error) testutil.Observation {
+	return testutil.Observation{Value: map[string]any{"id": value.ID, "source": value.Source, "snapshot": value.User}, Response: response, Err: err}
 }
 
 func directPath(selector string) string {
@@ -57,10 +53,10 @@ func mailPath(literal string) string {
 
 func TestUnitResolverExplicitUUIDIsUnverifiedAndCredentialFree(t *testing.T) {
 	t.Parallel()
-	runCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+	runCase(t, testutil.Case{Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 		return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, userID, directoryuser.ResolveOptions{}))
 	},
-		Want: contracttest.Expected{JSON: json.RawMessage(`{"id":"` + userID + `","source":"identifier","snapshot":null}`)}})
+		Want: testutil.Expected{JSON: json.RawMessage(`{"id":"` + userID + `","source":"identifier","snapshot":null}`)}})
 }
 
 func TestUnitResolverDirectAndCurrentReads(t *testing.T) {
@@ -76,11 +72,11 @@ func TestUnitResolverDirectAndCurrentReads(t *testing.T) {
 		{"current", "", "/v1.0/me?$select=id", "current", auth.Delegated, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			runCase(t, contracttest.Case{Mode: tc.mode, Steps: []contracttest.Exchange{wire(auth.GraphAudience, tc.path, 200, "")},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, testutil.Case{Mode: tc.mode, Steps: []testutil.Exchange{wire(auth.GraphAudience, tc.path, 200, `{"id":"`+userID+`"}`)},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, tc.selector, directoryuser.ResolveOptions{AllowCurrent: tc.current}))
 				},
-				Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + userID + `","source":"` + tc.source + `","snapshot":{"id":"` + userID + `"}}`)}})
+				Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + userID + `","source":"` + tc.source + `","snapshot":{"id":"` + userID + `"}}`)}})
 		})
 	}
 }
@@ -88,24 +84,21 @@ func TestUnitResolverDirectAndCurrentReads(t *testing.T) {
 func TestUnitResolverOnly404AllowsEscapedCanonicalMailFallback(t *testing.T) {
 	t.Parallel()
 	selector := "o'brien+tag#ext@example.invalid"
-	runCase(t, contracttest.Case{Steps: []contracttest.Exchange{
+	runCase(t, testutil.Case{Steps: []testutil.Exchange{
 		wire(auth.GraphAudience, directPath(selector), 404, `{"error":{"code":"Request_ResourceNotFound"}}`),
-		wire(auth.GraphAudience, mailPath("o''brien+tag#ext@example.invalid"), 200, "")},
-		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		wire(auth.GraphAudience, mailPath("o''brien+tag#ext@example.invalid"), 200, `{"value":[{"id":"`+userID+`"}]}`)},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, selector, directoryuser.ResolveOptions{}))
 		},
-		Want: contracttest.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + userID + `","source":"mail","snapshot":{"id":"` + userID + `"}}`)}})
+		Want: testutil.Expected{Status: 200, JSON: json.RawMessage(`{"id":"` + userID + `","source":"mail","snapshot":{"id":"` + userID + `"}}`)}})
 	for _, status := range []int{400, 401, 403} {
 		t.Run(strconv.Itoa(status), func(t *testing.T) {
-			runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire(auth.GraphAudience, directPath(selector), status, `{"error":{"code":"FixtureError","message":"private"}}`)},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, testutil.Case{Steps: []testutil.Exchange{wire(auth.GraphAudience, directPath(selector), status, `{"error":{"code":"FixtureError","message":"private"}}`)},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					_, response, err := sdk.GraphAPI.UserResolver.Resolve(ctx, selector, directoryuser.ResolveOptions{})
-					if err != nil && isRequestBoundary(ctx) {
-						return contracttest.Observation{Response: response, Err: err}
-					}
-					return contracttest.Observation{Response: response, Err: err}
+					return testutil.Observation{Response: response, Err: err}
 				},
-				Want: contracttest.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureError"}}}})
+				Want: testutil.Expected{Status: status, APIError: &client.APIError{Backend: client.Graph, StatusCode: status, Codes: []string{"FixtureError"}}}})
 		})
 	}
 }
@@ -132,18 +125,18 @@ func TestUnitResolverMailUniquenessRequiresCompleteTraversal(t *testing.T) {
 		{"foreign-next", `{"value":[{"id":"` + userID + `"}],"@odata.nextLink":"https://foreign.invalid/private"}`, "", false, 0, client.ErrDestination, "", ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			steps := []contracttest.Exchange{first, wire(auth.GraphAudience, mailPath(selector), 200, "")}
+			steps := []testutil.Exchange{first, wire(auth.GraphAudience, mailPath(selector), 200, tc.firstBody)}
 			if tc.second {
-				steps = append(steps, wire(auth.GraphAudience, "/v1.0/users?$skiptoken=opaque%2B%2F%3D", 200, ""))
+				steps = append(steps, wire(auth.GraphAudience, "/v1.0/users?$skiptoken=opaque%2B%2F%3D", 200, tc.lastBody))
 			}
 			snapshot := "null"
 			if tc.id != "" {
 				snapshot = `{"id":"` + tc.id + `"}`
 			}
-			runCase(t, contracttest.Case{Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, testutil.Case{Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				return observed(sdk.GraphAPI.UserResolver.Resolve(ctx, selector, directoryuser.ResolveOptions{MaxPages: tc.max}))
 			},
-				Want: contracttest.Expected{Status: 200, Error: tc.want, JSON: json.RawMessage(`{"id":"` + tc.id + `","source":"` + tc.source + `","snapshot":` + snapshot + `}`)}})
+				Want: testutil.Expected{Status: 200, Error: tc.want, JSON: json.RawMessage(`{"id":"` + tc.id + `","source":"` + tc.source + `","snapshot":` + snapshot + `}`)}})
 		})
 	}
 }
@@ -163,12 +156,12 @@ func TestUnitResolverPendingAndMalformedNeverFallBack(t *testing.T) {
 		{"unexpected-status", `{"id":"` + userID + `"}`, 201, directoryuser.ErrUnexpectedStatus},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			runCase(t, contracttest.Case{Steps: []contracttest.Exchange{wire(auth.GraphAudience, directPath("fixture@example.invalid"), tc.status, tc.body)},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			runCase(t, testutil.Case{Steps: []testutil.Exchange{wire(auth.GraphAudience, directPath("fixture@example.invalid"), tc.status, tc.body)},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					value, response, err := sdk.GraphAPI.UserResolver.Resolve(ctx, "fixture@example.invalid", directoryuser.ResolveOptions{})
-					return contracttest.Observation{Value: value.ID, Response: response, Err: err}
+					return testutil.Observation{Value: value.ID, Response: response, Err: err}
 				},
-				Want: contracttest.Expected{Status: tc.status, Error: tc.want, JSON: json.RawMessage(`""`)}})
+				Want: testutil.Expected{Status: tc.status, Error: tc.want, JSON: json.RawMessage(`""`)}})
 		})
 	}
 }
@@ -182,14 +175,11 @@ func TestUnitResolverConfiguredCloudRoutes(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				runCase(t, contracttest.Case{Cloud: cloud, Mode: mode, Steps: []contracttest.Exchange{wire(env.Endpoints.Graph, directPath("fixture@example.invalid"), 200, "")},
-					Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				runCase(t, testutil.Case{Cloud: cloud, Mode: mode, Steps: []testutil.Exchange{wire(env.Endpoints.Graph, directPath("fixture@example.invalid"), 200, `{"id":"`+userID+`"}`)},
+					Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 						_, response, err := sdk.GraphAPI.UserResolver.Resolve(ctx, "fixture@example.invalid", directoryuser.ResolveOptions{})
-						if err != nil && isRequestBoundary(ctx) {
-							return contracttest.Observation{Response: response, Err: err}
-						}
-						return contracttest.Observation{Response: response, Err: err}
-					}, Want: contracttest.Expected{Status: 200}})
+						return testutil.Observation{Response: response, Err: err}
+					}, Want: testutil.Expected{Status: 200}})
 			})
 		}
 	}
@@ -211,7 +201,7 @@ func TestUnitResolverValidationAndCurrentModeAreLocal(t *testing.T) {
 		case "wrong-backend":
 			want = client.ErrDestination
 		}
-		runCase(t, contracttest.Case{Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		runCase(t, testutil.Case{Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 			var err error
 			switch action {
 			case "missing":
@@ -234,7 +224,7 @@ func TestUnitResolverValidationAndCurrentModeAreLocal(t *testing.T) {
 				_, _, err = sdk.GraphAPI.UserResolver.Resolve(cancelled, userID, directoryuser.ResolveOptions{})
 			case "closed":
 				if e := sdk.Close(); e != nil {
-					return contracttest.Observation{Err: e}
+					return testutil.Observation{Err: e}
 				}
 				_, _, err = sdk.GraphAPI.UserResolver.Resolve(ctx, userID, directoryuser.ResolveOptions{})
 			case "wrong-backend":
@@ -245,7 +235,7 @@ func TestUnitResolverValidationAndCurrentModeAreLocal(t *testing.T) {
 			case "bad-select":
 				_, _, err = sdk.GraphAPI.UserResolver.Get(ctx, userID, directoryuser.ReadOptions{Select: []string{""}})
 			}
-			return contracttest.Observation{Err: err}
-		}, Want: contracttest.Expected{Error: want}})
+			return testutil.Observation{Err: err}
+		}, Want: testutil.Expected{Error: want}})
 	}
 }

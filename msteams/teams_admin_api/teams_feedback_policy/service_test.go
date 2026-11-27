@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -26,7 +26,7 @@ func TestUnitFeedbackPolicyTypedCompiledCRUD(t *testing.T) {
 			if x.Body != "" {
 				body = json.RawMessage(x.Body)
 			}
-			c := contracttest.Case{Name: f.Name + "-" + string(mode), Mode: mode, Mappings: []contracttest.Mapping{{Command: x.CmdletName, ParameterSet: "Identity"}}, Steps: []contracttest.Exchange{compiledWire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
+			c := testutil.Case{Name: f.Name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{compiledWire(x.Method, strings.TrimPrefix(x.Url, origin), x.CmdletName, body, f.Status, f.Response)}}
 			if x.FailureType != nil {
 				c.Want.Error = client.ErrDecode
 				if f.Status == 403 {
@@ -36,9 +36,9 @@ func TestUnitFeedbackPolicyTypedCompiledCRUD(t *testing.T) {
 				c.Want.JSON = json.RawMessage(f.Response)
 			}
 			if len(c.Steps) != 0 {
-				c.Want = contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
+				c.Want = testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}
 			}
-			c.Invoke = func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			c.Invoke = func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.TeamsFeedbackPolicies
 				controls := policy.Controls{}
 				if f.ForceMode >= 0 {
@@ -47,24 +47,24 @@ func TestUnitFeedbackPolicyTypedCompiledCRUD(t *testing.T) {
 				switch f.Operation {
 				case "read":
 					v, r, e := s.GetByIdentity(ctx, scoped)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "list":
 					v, r, e := s.List(ctx)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				case "delete":
 					v, r, e := s.DeleteByIdentity(ctx, scoped, controls)
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				var settings resource.Settings
 				if e := json.Unmarshal([]byte(f.Input), &settings); e != nil {
-					return contracttest.Observation{Err: e}
+					return testutil.Observation{Err: e}
 				}
 				if f.Operation == "create" {
 					v, r, e := s.CreateByIdentity(ctx, scoped, resource.CreateRequest{Settings: settings, Controls: controls})
-					return contracttest.Observation{Value: v, Response: r, Err: e}
+					return testutil.Observation{Value: v, Response: r, Err: e}
 				}
 				v, r, e := s.PatchByIdentity(ctx, scoped, resource.PatchRequest{Settings: settings, Controls: controls, BodyIdentity: policy.Set("read-model-identity")})
-				return contracttest.Observation{Value: v, Response: r, Err: e}
+				return testutil.Observation{Value: v, Response: r, Err: e}
 			}
 			run(t, c)
 		}
@@ -170,15 +170,9 @@ func TestUnitFeedbackPolicyTypedModernGrant(t *testing.T) {
 			}
 			parts[i] = url.PathEscape(v)
 		}
-		set := "Identity"
-		if f.Operation == "TenantGrantPolicy" {
-			set = "GrantToTenant"
-		}
-		if f.Operation == "GroupGrantPolicyAssignment" {
-			set = "GrantToGroup"
-		}
+
 		for _, mode := range []auth.Mode{auth.Application, auth.Delegated} {
-			run(t, contracttest.Case{Want: contracttest.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: f.Name + "-" + string(mode), Mode: mode, Source: grantSource, Mappings: []contracttest.Mapping{{Command: grantCommand, ParameterSet: set}}, Steps: []contracttest.Exchange{discovery(t), modernWire(f.Method, strings.Join(parts, "/"), f.Body, f.Status, f.Reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, testutil.Case{Want: testutil.Expected{APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 400}}, Name: f.Name + "-" + string(mode), Mode: mode, Steps: []testutil.Exchange{discovery(t), modernWire(f.Method, strings.Join(parts, "/"), f.Body, f.Status, f.Reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				s := sdk.TeamsAdminAPI.TeamsFeedbackPolicies
 				if f.Operation == "UserGrantPolicy" {
 					name := "Fixture"
@@ -186,11 +180,11 @@ func TestUnitFeedbackPolicyTypedModernGrant(t *testing.T) {
 						name = ""
 					}
 					r, e := s.AssignToUser(ctx, "fixture/user", name)
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				}
 				if f.Operation == "TenantGrantPolicy" {
 					r, e := s.AssignTenantDefault(ctx, "Fixture", false)
-					return contracttest.Observation{Response: r, Err: e}
+					return testutil.Observation{Response: r, Err: e}
 				}
 				name, priority := "Fixture", new(int32(2))
 				if f.Name == "group-assignment-zero-priority" {
@@ -203,7 +197,7 @@ func TestUnitFeedbackPolicyTypedModernGrant(t *testing.T) {
 				if e == nil && (v == nil || v.Accepted != (f.Status == 202)) {
 					e = errors.New("modern group acceptance changed")
 				}
-				return contracttest.Observation{Response: r, Err: e}
+				return testutil.Observation{Response: r, Err: e}
 			}})
 		}
 	}

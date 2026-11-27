@@ -13,8 +13,8 @@ import (
 	"testing/synctest"
 	"time"
 
-	"github.com/deploymenttheory/go-sdk-msteams/internal/contracttest"
 	"github.com/deploymenttheory/go-sdk-msteams/internal/lab"
+	"github.com/deploymenttheory/go-sdk-msteams/internal/testutil"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/auth"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
@@ -26,19 +26,16 @@ const lifecycleOtherID = "22222222-2222-4222-8222-222222222222"
 
 const lifecycleTestName = "msteams-sdk-aaaaaaaaaaaaaaaaaaaaaaaaaa-team"
 
-func lifecycleWire(method, path string, status int, body string) contracttest.Exchange {
-	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method,
+func lifecycleWire(method, path string, status int, body string) testutil.Exchange {
+	return testutil.Exchange{Request: testutil.WireRequest{Method: method,
 		URL: auth.GraphAudience + path, Audience: auth.GraphAudience, Headers: http.Header{"Accept": {"application/json"}}},
-		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
+		Reply: testutil.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json"}}, Body: []byte(body)}}
 }
 
-func lifecycleOffline(t *testing.T, c contracttest.Case) {
+func lifecycleOffline(t *testing.T, c testutil.Case) {
 	t.Helper()
-	c.Family, c.Source = "team_lifecycle_lab", "tests/integration/lab/graph/team_lifecycle_cleanup_test.go"
-	if c.Scope == "" {
-		c.Scope = "service"
-	}
-	result, err := contracttest.Run(t.Context(), c)
+
+	result, err := testutil.Run(t.Context(), c)
 	if err != nil || !result.Passed() {
 		t.Fatalf("lifecycle recovery contract differs: %+v", result.Differences())
 	}
@@ -62,11 +59,11 @@ func TestUnitLifecycleResolveRequiresCompleteUniquePositiveMatch(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			lifecycleOffline(t, contracttest.Case{Name: tc.name, Steps: []contracttest.Exchange{lifecycleWire("GET", "/v1.0/groups?"+query, tc.status, tc.body)},
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			lifecycleOffline(t, testutil.Case{Name: tc.name, Steps: []testutil.Exchange{lifecycleWire("GET", "/v1.0/groups?"+query, tc.status, tc.body)},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					id, err := (lifecycleCleanup{sdk: sdk}).Resolve(ctx, lab.Entry{Fixture: lifecycleTestName})
-					return contracttest.Observation{Value: id, Err: err}
-				}, Want: contracttest.Expected{Error: tc.want, JSON: json.RawMessage(`"` + tc.id + `"`)}})
+					return testutil.Observation{Value: id, Err: err}
+				}, Want: testutil.Expected{Error: tc.want, JSON: json.RawMessage(`"` + tc.id + `"`)}})
 		})
 	}
 }
@@ -90,7 +87,7 @@ func TestUnitLifecycleDeletionRequiresOwnedPairAndNeverReplays(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			steps := []contracttest.Exchange{lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, tc.status, tc.group)}
+			steps := []testutil.Exchange{lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, tc.status, tc.group)}
 			if tc.team != "" {
 				steps = append(steps, lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 200, tc.team))
 			}
@@ -100,23 +97,23 @@ func TestUnitLifecycleDeletionRequiresOwnedPairAndNeverReplays(t *testing.T) {
 			if tc.deleteStatus == 204 {
 				steps = append(steps, lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 404, ""), lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 404, ""))
 			}
-			lifecycleOffline(t, contracttest.Case{Name: tc.name, Steps: steps,
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
-					return contracttest.Observation{Err: (lifecycleCleanup{sdk: sdk}).Delete(ctx, lab.Entry{ResourceID: lifecycleTestID, Fixture: lifecycleTestName})}
-				}, Want: contracttest.Expected{Error: tc.want}})
+			lifecycleOffline(t, testutil.Case{Name: tc.name, Steps: steps,
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
+					return testutil.Observation{Err: (lifecycleCleanup{sdk: sdk}).Delete(ctx, lab.Entry{ResourceID: lifecycleTestID, Fixture: lifecycleTestName})}
+				}, Want: testutil.Expected{Error: tc.want}})
 		})
 	}
 	for _, name := range []string{"invalid-id", "invalid-fixture"} {
 		t.Run(name, func(t *testing.T) {
-			lifecycleOffline(t, contracttest.Case{Name: name, Scope: "local", Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			lifecycleOffline(t, testutil.Case{Name: name, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 				entry := lab.Entry{ResourceID: lifecycleTestID, Fixture: lifecycleTestName}
 				if name == "invalid-id" {
 					entry.ResourceID = "../unowned"
 				} else {
 					entry.Fixture = "unowned' or true"
 				}
-				return contracttest.Observation{Err: (lifecycleCleanup{sdk: sdk}).Delete(ctx, entry)}
-			}, Want: contracttest.Expected{Error: lab.ErrUnresolved}})
+				return testutil.Observation{Err: (lifecycleCleanup{sdk: sdk}).Delete(ctx, entry)}
+			}, Want: testutil.Expected{Error: lab.ErrUnresolved}})
 		})
 	}
 }
@@ -159,7 +156,7 @@ func TestUnitLifecycleDeletionObservationRequiresBoth404sAndRejectsDenial(t *tes
 		}
 		t.Run(name, func(t *testing.T) {
 			synctest.Test(t, func(t *testing.T) {
-				steps := []contracttest.Exchange{lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 200, `{"id":"`+lifecycleTestID+`"}`), lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 200, `{"id":"`+lifecycleTestID+`"}`), lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 404, "")}
+				steps := []testutil.Exchange{lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 200, `{"id":"`+lifecycleTestID+`"}`), lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 200, `{"id":"`+lifecycleTestID+`"}`), lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 404, "")}
 				status := 404
 				var want error
 				if denied {
@@ -167,11 +164,11 @@ func TestUnitLifecycleDeletionObservationRequiresBoth404sAndRejectsDenial(t *tes
 				}
 				steps = append(steps, lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, status, ""))
 				started := time.Now()
-				lifecycleOffline(t, contracttest.Case{Name: name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				lifecycleOffline(t, testutil.Case{Name: name, Steps: steps, Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 					defer cancel()
-					return contracttest.Observation{Err: lifecycleObserveAbsent(ctx, sdk, lifecycleTestID)}
-				}, Want: contracttest.Expected{Error: want}})
+					return testutil.Observation{Err: lifecycleObserveAbsent(ctx, sdk, lifecycleTestID)}
+				}, Want: testutil.Expected{Error: want}})
 				if time.Since(started) != 2*time.Second {
 					t.Fatal("observation did not use bounded read-only cadence")
 				}
@@ -208,7 +205,7 @@ func TestUnitCoreCleanupJournalRetainsUnverifiedDeletion(t *testing.T) {
 			}
 			groupBody := `{"id":"` + lifecycleTestID + `","displayName":"` + fixture + `","mailNickname":"` + fixture + `","groupTypes":["Unified"]}`
 			teamBody := `{"id":"` + lifecycleTestID + `","displayName":"` + fixture + `"}`
-			steps := []contracttest.Exchange{}
+			steps := []testutil.Exchange{}
 			if kind == "lifecycle" {
 				steps = append(steps,
 					lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 200, groupBody),
@@ -237,8 +234,8 @@ func TestUnitCoreCleanupJournalRetainsUnverifiedDeletion(t *testing.T) {
 				lifecycleWire("GET", "/v1.0/groups/"+lifecycleTestID, 404, ""),
 				lifecycleWire("GET", "/v1.0/teams/"+lifecycleTestID, 404, ""),
 			)
-			lifecycleOffline(t, contracttest.Case{Name: "journal-" + kind + "-absence", Steps: steps,
-				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			lifecycleOffline(t, testutil.Case{Name: "journal-" + kind + "-absence", Steps: steps,
+				Invoke: func(ctx context.Context, sdk *msteams.Client) testutil.Observation {
 					var handler lab.Handler = lifecycleCleanup{sdk: sdk}
 					if kind == "membership" {
 						handler = membershipCleanup{sdk: sdk}
@@ -256,7 +253,7 @@ func TestUnitCoreCleanupJournalRetainsUnverifiedDeletion(t *testing.T) {
 					if len(third) != 0 {
 						t.Error("verified cleanup was not persisted")
 					}
-					return contracttest.Observation{Err: err}
+					return testutil.Observation{Err: err}
 				},
 			})
 		})
