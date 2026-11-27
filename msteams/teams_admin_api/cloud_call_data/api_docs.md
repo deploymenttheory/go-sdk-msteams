@@ -45,3 +45,19 @@ The app-only dedicated lab historically returned 403 for both operations; the
 2026-11-23 irreversible-create authorization is preserved. Denials and authored
 array replies do not qualify successful creation, token usability, ownership or
 persistence. See [primary/source evidence](../../../docs/implementation/ext/cloud-call-data-contract-notes.md).
+
+
+The selected Modern helpers use `X-MS-CmdletName` values
+`Get-CsCloudCallDataConnectionModern_Get` and
+`New-CsCloudCallDataConnectionModern_New`. The native resource now follows that
+source metadata instead of the earlier public-name convention. The bounded
+[handoff proof](../../../docs/implementation/ext/evidence/cloud-call-data-header-handoff.json)
+independently traces Modern command resolution, default parameters, Sync/async
+processors, helper invocation properties and the shared header writer. There is
+no default hidden invocation override in that path. This does not prove the
+public session selected Modern or settle legacy request metadata.
+
+Historical 403 captures supply response bytes for controlled offline error replay;
+they do not prove that a tenant request with the corrected private headers was
+rejected. No new live request or creation follows from the source/replay checks.
+The existing serialized lab selection and historical authorization are unchanged.

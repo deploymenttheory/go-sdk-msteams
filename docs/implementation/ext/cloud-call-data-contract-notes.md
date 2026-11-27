@@ -93,3 +93,37 @@ inspectable accepted outcomes and unsupported 201 versus HTTP receipt. Actual la
 selection remains serialized and unchanged; its full-array, strict 200 handling keeps
 authorization denial distinct from a token-bearing source response. Existing live
 approval from 2026-11-23 is preserved; no new manual create was run for this audit.
+
+
+## Selected Modern header handoff correction
+
+Cloud-specific source review independently settles the invocation handoff rather
+than assuming the custom-app path applies. The
+[bounded packet](evidence/cloud-call-data-header-handoff.json) includes 34 complete
+resolved methods across 14 selected types, the four exact proxy definitions,
+two exact CmdletConfig entries and both helper property metadata records. Default
+cloud descriptors have no AutoRest parameters; null defaults normalize to an
+empty dictionary. Sync and async processors pass the selected Modern command
+and bound/default dictionary, then add only the execution-ID prepend step.
+Both private helpers' InvocationInformation properties are not parameters and
+cache their own MyInvocation before Module.CreatePipeline. Relevant reflection
+reads warning attributes; it does not inject a different invocation or normalize
+request headers. The complete private-assembly scan resolved 449,218 InlineMethod
+operands with zero unresolved references and no direct InvocationInformation
+setter caller; this negative scan supplements the explicit handoff bodies.
+
+The source-default selected Modern headers are
+`Get-CsCloudCallDataConnectionModern_Get` and
+`New-CsCloudCallDataConnectionModern_New`. Production now uses those names;
+public accepted command names remain the ledger/test mapping. Expected HTTP
+headers are source-authored. Existing 403 response captures are response-only
+replays, not proof of a tenant request using the corrected names. The shared
+header-writer/name-normalization proof is referenced by exact hash from the
+custom-app closure, with no duplicate assertion of live management capture.
+
+The portable `scripts/discovery/inspect-cloud-invocation-setters.ps1` reproduces
+the direct-call scan; `inspect-ext-il.ps1` can re-read each exact selected type and
+method from the verified package. No management lifecycle/authentication/HTTP ran.
+Cloud public flighting, explicit mocks/config overrides, legacy transport and live
+success remain outside this source-only selected-Modern proof. No cloud
+qualification flag or live selection is promoted or changed.

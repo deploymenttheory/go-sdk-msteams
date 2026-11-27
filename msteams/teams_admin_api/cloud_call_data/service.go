@@ -15,8 +15,8 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-const getCommand = "Get-CsCloudCallDataConnection"
-const newCommand = "New-CsCloudCallDataConnection"
+const getCommand = "Get-CsCloudCallDataConnectionModern_Get"
+const newCommand = "New-CsCloudCallDataConnectionModern_New"
 
 // Service composes the bound ConfigAPI backend with lazy forest discovery.
 type Service struct{ client client.Client }

@@ -37,7 +37,16 @@ func discovery(t *testing.T) contracttest.Exchange {
 		Reply: contracttest.Reply{Status: 200, Headers: http.Header{"Content-Type": {"application/json"}}, Body: body}}
 }
 
+// Expected request metadata follows the selected Modern helper. Existing 403
+// captures supply response bytes only; they do not prove a tenant request used
+// these corrected private headers or rejected them.
 func wire(method, command string, status int, reply []byte) contracttest.Exchange {
+	switch command {
+	case getCommand:
+		command = "Get-CsCloudCallDataConnectionModern_Get"
+	case newCommand:
+		command = "New-CsCloudCallDataConnectionModern_New"
+	}
 	h := http.Header{"Accept": {"application/json"}, "X-MS-CmdletName": {command}, "X-MS-Target-Uri": {targetForest}}
 	return contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: configOrigin + route, Audience: auth.TeamsAdminAudience, Headers: h},
 		Reply: contracttest.Reply{Status: status, Headers: http.Header{"Content-Type": {"application/json; charset=utf-8"}}, Body: reply}}
@@ -81,7 +90,7 @@ func TestUnitCloudCallDataGetDenialUsesAcceptanceResponse(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	run(t, contracttest.Case{Name: "actual-get-forbidden", Source: "msteams/teams_admin_api/cloud_call_data/testdata/get_403.json", Mappings: mapping(getCommand),
+	run(t, contracttest.Case{Name: "captured-get-forbidden-reply-replay", Source: "msteams/teams_admin_api/cloud_call_data/testdata/get_403.json", Mappings: mapping(getCommand),
 		Steps: []contracttest.Exchange{discovery(t), wire("GET", getCommand, 403, denied)},
 		Want:  contracttest.Expected{Status: 403, Body: denied, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: []string{"Forbidden"}}},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
@@ -99,7 +108,7 @@ func TestUnitCloudCallDataCreateDenialUsesAcceptanceResponse(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	run(t, contracttest.Case{Name: "actual-create-forbidden", Source: "msteams/teams_admin_api/cloud_call_data/testdata/create_403.json", Mappings: mapping(newCommand),
+	run(t, contracttest.Case{Name: "captured-create-forbidden-reply-replay", Source: "msteams/teams_admin_api/cloud_call_data/testdata/create_403.json", Mappings: mapping(newCommand),
 		Steps: []contracttest.Exchange{discovery(t), wire("POST", newCommand, 403, denied)},
 		Want:  contracttest.Expected{Status: 403, Body: denied, APIError: &client.APIError{Backend: client.TeamsAdmin, StatusCode: 403, Codes: []string{"Forbidden"}}},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
