@@ -14707,7 +14707,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -14721,8 +14721,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-gpa-custom.json#/commands/0"
+        ]
       },
       "live": {
         "status": "unavailable",
@@ -14880,7 +14882,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -14890,8 +14892,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-gpa-custom.json#/commands/1"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -14935,7 +14939,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -14945,8 +14949,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-gpa-custom.json#/commands/2"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -14998,7 +15004,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -15008,8 +15014,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-gpa-custom.json#/commands/3"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -21909,7 +21917,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -21919,8 +21927,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-gpa-custom.json#/commands/4"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -22386,7 +22396,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -22396,8 +22406,10 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
-        "evidence": []
+        "status": "passed",
+        "evidence": [
+          "contracts/coverage/evidence/pol90-gpa-custom.json#/commands/5"
+        ]
       },
       "live": {
         "status": "not-run",
