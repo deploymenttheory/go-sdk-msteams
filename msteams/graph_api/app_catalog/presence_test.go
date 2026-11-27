@@ -112,3 +112,41 @@ func TestUnitAppCatalogAcceptedNullableCreateAndEmptyUploads(t *testing.T) {
 		})
 	}
 }
+
+// Existing captured GET error bytes exercise write error propagation as
+// response-only replays. They do not observe tenant writes or establish mode support.
+func TestUnitAppCatalogWriteDenialsRetainReceiptsWithoutReplay(t *testing.T) {
+	denied := readFile(t, "testdata/list_403.json")
+	for _, command := range []string{"New-TeamsApp", "Set-TeamsApp", "Remove-TeamsApp"} {
+		t.Run(command, func(t *testing.T) {
+			method, target := http.MethodPost, route
+			if command == "Set-TeamsApp" {
+				method, target = http.MethodPut, route+"/"+appID
+			}
+			if command == "Remove-TeamsApp" {
+				method, target = http.MethodDelete, route+"/"+appID
+			}
+			exchange := upload(method, target, 403, denied)
+			if method == http.MethodDelete {
+				exchange = contracttest.Exchange{Request: contracttest.WireRequest{Method: method, URL: target, Audience: auth.GraphAudience, Headers: http.Header{"Accept": {"application/json"}}}, Reply: reply(403, denied)}
+			}
+			label := map[string]string{"New-TeamsApp": "source-create-denied", "Set-TeamsApp": "source-update-denied", "Remove-TeamsApp": "source-delete-denied"}[command]
+			run(t, contracttest.Case{Name: label, Mappings: mapping(command), Steps: []contracttest.Exchange{exchange}, Want: contracttest.Expected{Status: 403, Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				switch command {
+				case "New-TeamsApp":
+					app, response, err := sdk.GraphAPI.AppCatalog.Create(ctx, ac.CreateRequest{DistributionMethod: ac.OrganizationDistribution, Package: pkg})
+					if app != nil || response == nil {
+						t.Fatal("denied create lost receipt")
+					}
+					return contracttest.Observation{Response: response, Err: err}
+				case "Set-TeamsApp":
+					response, err := sdk.GraphAPI.AppCatalog.UpdateByID(ctx, appID, pkg)
+					return contracttest.Observation{Response: response, Err: err}
+				default:
+					response, err := sdk.GraphAPI.AppCatalog.DeleteByID(ctx, appID)
+					return contracttest.Observation{Response: response, Err: err}
+				}
+			}})
+		})
+	}
+}
