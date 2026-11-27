@@ -536,3 +536,27 @@ func TestUnitAIAgentSourceSuccessStatusesAreExact(t *testing.T) {
 		})
 	}
 }
+
+func TestUnitAIAgentRemoveNullResultsRetainReceiptAndNeverReplay(t *testing.T) {
+	for _, item := range []struct{ name, body string }{
+		{"empty", ""}, {"whitespace", " \t\r\n"}, {"array", "[]"},
+	} {
+		t.Run(item.name, func(t *testing.T) {
+			reply := []byte(item.body)
+			// Exactly one DELETE exchange: an empty/null generated outcome must
+			// preserve its accepted receipt without an automatic second attempt.
+			run(t, contracttest.Case{Name: "remove-null-result-" + item.name,
+				Mappings: mapping("__AllParameterSets", "Remove-CsAgent"),
+				Steps:    []contracttest.Exchange{discovery(t), wire("DELETE", agents+"/"+configuration, "Remove-CsAgent", nil, 200, reply)},
+				Want:     contracttest.Expected{Status: 200, Body: reply},
+				Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+					response, err := sdk.TeamsAdminAPI.AIAgents.DeleteByID(ctx, configuration)
+					if response == nil || response.StatusCode() != 200 || string(response.Body()) != item.body {
+						t.Fatal("accepted Remove receipt was lost")
+					}
+					return contracttest.Observation{Response: response, Err: err}
+				},
+			})
+		})
+	}
+}

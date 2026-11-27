@@ -45,6 +45,46 @@ func decodeGeneratedModel(model string, raw []byte) (any, error) {
 	return value, err
 }
 
+// These snapshots use the exact getter names and selected fields captured by
+// the inert pinned probes, not wire aliases or RawFields. Configuration-list
+// nil collections are normalized to public empty output by the wrapper.
+func generatedSnapshot(value any) any {
+	switch model := value.(type) {
+	case *Agent:
+		if model == nil {
+			return nil
+		}
+		return map[string]any{"AgentId": model.AgentID, "Name": model.Name, "AgentType": model.AgentType, "AgentTargetTagTemplateId": model.AgentTargetTagTemplateID, "ConfigurationId": model.ConfigurationID}
+	case *AgentList:
+		var agents []any
+		for _, item := range model.Agents {
+			agents = append(agents, generatedSnapshot(item))
+		}
+		return map[string]any{"AgentCount": model.AgentCount, "AiAgent": agents}
+	case *QueryResult:
+		var agents []any
+		if model.Agents != nil {
+			agents = make([]any, len(model.Agents))
+			for index, item := range model.Agents {
+				agents[index] = generatedSnapshot(item)
+			}
+		}
+		return map[string]any{"AgentCount": model.AgentCount, "ContinuationToken": model.ContinuationToken, "Agents": agents}
+	case *PlatformAgent:
+		if model == nil {
+			return nil
+		}
+		return map[string]any{"Channel": model.Channels, "IsTeamsIvrEnabled": model.IsTeamsIvrEnabled, "Cid": model.CID, "BotHandle": model.BotHandle, "Description": generatedSnapshot(model.Description)}
+	case *PlatformAgentDescription:
+		if model == nil {
+			return nil
+		}
+		return map[string]any{"AgentId": model.AgentID, "Description": model.Description, "IsTrusted": model.IsTrusted, "StarRating": model.StarRating, "AgentType": model.AgentType, "DisplayName": model.DisplayName}
+	default:
+		return nil
+	}
+}
+
 func TestUnitGeneratedExactDuplicateAndCaseOrdering(t *testing.T) {
 	var fixture struct {
 		Cases []struct {
@@ -72,28 +112,10 @@ func TestUnitGeneratedExactDuplicateAndCaseOrdering(t *testing.T) {
 			if err != nil {
 				t.Fatal("case-distinct source object rejected")
 			}
-			// Scalar projection is selected from exact names, independently of RawFields.
-			switch app := value.(type) {
-			case *Agent:
-				for key, got := range map[string]*string{"Name": app.Name, "AgentId": app.AgentID, "AgentType": app.AgentType, "AgentTargetTagTemplateId": app.AgentTargetTagTemplateID, "ConfigurationId": app.ConfigurationID} {
-					var want *string
-					if json.Unmarshal(item.Properties[key], &want) != nil {
-						t.Fatal("source scalar unavailable")
-					}
-					if (got == nil) != (want == nil) || got != nil && *got != *want {
-						t.Fatal("wrong-case property changed exact scalar")
-					}
-				}
-			case *PlatformAgent:
-				if raw, ok := item.Properties["IsTeamsIvrEnabled"]; ok {
-					var want *bool
-					if json.Unmarshal(raw, &want) != nil {
-						t.Fatal("source bool unavailable")
-					}
-					if (app.IsTeamsIvrEnabled == nil) != (want == nil) || want != nil && *app.IsTeamsIvrEnabled != *want {
-						t.Fatal("wrong-case bool changed projection")
-					}
-				}
+			got, marshalErr := json.Marshal(generatedSnapshot(value))
+			want, sourceErr := json.Marshal(item.Properties)
+			if marshalErr != nil || sourceErr != nil || string(got) != string(want) {
+				t.Fatalf("source getter projection differs for %s", item.Model)
 			}
 		})
 	}
