@@ -71,7 +71,7 @@ func (s *Service) Get(ctx context.Context) (*Settings, *resty.Response, error) {
 
 // Update replaces the settings document with one PUT. A nil AppSettingsList is
 // sent as an empty list, as the module does. It is never replayed
-// automatically. Declared successes are 204 and 200.
+// automatically. The source declares only 204 as successful.
 func (s *Service) Update(ctx context.Context, value UpdateRequest) (*resty.Response, error) {
 	if err := s.check(ctx); err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (s *Service) Update(ctx context.Context, value UpdateRequest) (*resty.Respo
 	if err != nil {
 		return response, err
 	}
-	if response == nil || (response.StatusCode() != http.StatusNoContent && response.StatusCode() != http.StatusOK) {
+	if response == nil || response.StatusCode() != http.StatusNoContent {
 		return response, ErrResponse
 	}
 	return response, nil

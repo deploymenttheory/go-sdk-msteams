@@ -38,7 +38,18 @@ type Settings struct {
 // SideloadedAppsInteractionEnabled is the Get-CsTeamsSettingsCustomApp
 // projection: the cmdlet reports a missing/null value as false.
 func (v *Settings) SideloadedAppsInteractionEnabled() bool {
-	return v != nil && v.IsSideloadedAppsInteractionEnabled != nil && *v.IsSideloadedAppsInteractionEnabled
+	if v == nil {
+		return false
+	}
+	if v.RawFields != nil {
+		raw, exists := v.RawFields["isSideloadedAppsInteractionEnabled"]
+		if !exists {
+			return false
+		}
+		var flag *bool
+		return json.Unmarshal(raw, &flag) == nil && flag != nil && *flag
+	}
+	return v.IsSideloadedAppsInteractionEnabled != nil && *v.IsSideloadedAppsInteractionEnabled
 }
 
 func (v *Settings) UnmarshalJSON(raw []byte) error {

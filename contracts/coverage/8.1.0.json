@@ -11292,7 +11292,10 @@
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-catalog-contract-notes.md",
+          "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json"
+        ]
       },
       "live": {
         "status": "not-run",
@@ -42236,7 +42239,10 @@
       },
       "contract": {
         "status": "metadata-only",
-        "evidence": []
+        "evidence": [
+          "docs/implementation/ext/app-catalog-contract-notes.md",
+          "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json"
+        ]
       },
       "live": {
         "status": "not-run",

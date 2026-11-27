@@ -99,7 +99,7 @@ func TestUnitCustomAppSettingsGetDecodesTheLabShape(t *testing.T) {
 
 func TestUnitCustomAppSettingsProjectionReportsNullAsFalse(t *testing.T) {
 	t.Parallel()
-	for name, body := range map[string]string{"null": `{"isSideloadedAppsInteractionEnabled":null}`, "absent": `{"isAppsEnabled":true}`, "false": `{"isSideloadedAppsInteractionEnabled":false}`} {
+	for name, body := range map[string]string{"null": `{"isSideloadedAppsInteractionEnabled":null}`, "absent": `{"isAppsEnabled":true}`, "false": `{"isSideloadedAppsInteractionEnabled":false}`, "wrong-case": `{"IsSideloadedAppsInteractionEnabled":true}`, "mixed-case": `{"isSideloadedAppsInteractionEnabled":false,"IsSideloadedAppsInteractionEnabled":true}`} {
 		run(t, contracttest.Case{Name: "projection-" + name, Mappings: mapping(getCommand),
 			Steps: []contracttest.Exchange{discovery(t), wire("GET", getCommand, nil, 200, []byte(body))},
 			Want:  contracttest.Expected{Status: 200, Body: []byte(body)},
@@ -148,8 +148,8 @@ func TestUnitCustomAppSettingsUpdateSendsTheGivenDocument(t *testing.T) {
 	yes, no, color, scope := true, false, "#FFFFFF", "GlobalApp"
 	put := json.RawMessage(`{"isAppsEnabled":true,"isTenantWideAutoInstallEnabled":false,"LobTextColor":"#FFFFFF","appSettingsList":[{"id":"00000000-0000-4000-8000-000000000101","isEnabled":false,"context":"GlobalApp"}]}`)
 	run(t, contracttest.Case{Name: "update-document", Mappings: mapping(setCommand),
-		Steps: []contracttest.Exchange{discovery(t), wire("PUT", setCommand, put, 200, nil)},
-		Want:  contracttest.Expected{Status: 200},
+		Steps: []contracttest.Exchange{discovery(t), wire("PUT", setCommand, put, 204, nil)},
+		Want:  contracttest.Expected{Status: 204},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			response, err := sdk.TeamsAdminAPI.CustomAppSettings.Update(ctx, cas.UpdateRequest{IsAppsEnabled: &yes, IsTenantWideAutoInstallEnabled: &no, LobTextColor: &color,
 				AppSettingsList: []cas.AppSettingUpdate{{ID: "00000000-0000-4000-8000-000000000101", IsEnabled: &no, Context: &scope}}})
@@ -207,6 +207,13 @@ func TestUnitCustomAppSettingsFailuresStayTyped(t *testing.T) {
 	run(t, contracttest.Case{Name: "update-undeclared-status", Mappings: mapping(setCommand),
 		Steps: []contracttest.Exchange{discovery(t), wire("PUT", setCommand, json.RawMessage(`{"appSettingsList":[]}`), 202, nil)},
 		Want:  contracttest.Expected{Status: 202, Error: cas.ErrResponse},
+		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			response, err := sdk.TeamsAdminAPI.CustomAppSettings.Update(ctx, cas.UpdateRequest{})
+			return contracttest.Observation{Response: response, Err: err}
+		}})
+	run(t, contracttest.Case{Name: "update-undeclared-200", Mappings: mapping(setCommand),
+		Steps: []contracttest.Exchange{discovery(t), wire("PUT", setCommand, json.RawMessage(`{"appSettingsList":[]}`), 200, nil)},
+		Want:  contracttest.Expected{Status: 200, Error: cas.ErrResponse},
 		Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 			response, err := sdk.TeamsAdminAPI.CustomAppSettings.Update(ctx, cas.UpdateRequest{})
 			return contracttest.Observation{Response: response, Err: err}

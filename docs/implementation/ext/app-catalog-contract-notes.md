@@ -123,3 +123,35 @@ Unqualified, because they need permissions the lab identity lacks:
 - Artifact discovery in real drives (`Sites.Read.All`, `Files.Read.All`).
 - Changing the sideloading flag to a different value. Same-value writes only,
   to avoid changing tenant behaviour.
+
+
+## Custom-app Get and status checkpoint (2026-11-27)
+
+The [pinned source observation](evidence/custom-app-settings-get-status-source.json)
+records the exact public/custom/internal script definitions and file/definition
+hashes, generated method identities and selected full status/parser IL bodies.
+Get is direct AutoRest, exported to TeamsGA/TeamsPreview/SelfHost, with one
+`__AllParameterSets` surface. It performs a no-body GET of
+`/Teams.MiddletierService/tenantWideAppsSettingsGlobal`, expects HTTP 200 and an
+object, and uses ConfigAPI resource `48ac35b8-9aa8-4d74-927d-1f4a14a0b239`.
+Unlike cloud-call-data's TRPS path, no legacy-flight branch is needed for this Get.
+The custom wrapper projects only the exact `isSideloadedAppsInteractionEnabled`
+property, replacing missing/null with false. The compatibility getter now uses
+that exact raw key, including uppercase-only and mixed-case regression cases.
+Native full-document branding, app list and raw retention are explicit extensions;
+Go typed JSON matching and stricter malformed-type errors are not described as
+byte-for-byte generated parser equivalence.
+
+Generated Set dispatch declares only HTTP 204. The prior authored 200 success
+vector is corrected to 204 and a separate 200 error case retains its receipt.
+The existing real same-value update observation was 204 and remains unchanged.
+This checkpoint changes no live selection, authorization or tenant configuration.
+
+Get's complete ordinary set/source, successful fixture, null/absent/false output,
+malformed shapes/statuses and typed failures are reviewed separately from Set.
+No implementation, contract or live ledger state is promoted without its own
+revision-backed execution evidence. Further source-confirmed Set differences
+remain open: nested unknown appAccessRequestConfig properties are dropped by the
+source and empty nested objects are suppressed; PascalCase Lob* response values
+are copied while camelCase branding is ignored. Those behaviors are not claimed
+fixed by this read/status checkpoint or by the existing enhanced native document.
