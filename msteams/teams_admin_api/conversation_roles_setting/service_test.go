@@ -282,3 +282,36 @@ func TestUnitConversationSettingsUnboundRejectsBeforeCredentialsAndEmptyFilterIs
 		return contracttest.Observation{Err: e}
 	}})
 }
+
+func TestUnitConversationSettingsReplacementMatchesActualCompiledBinding(t *testing.T) {
+	t.Parallel()
+	raw, e := os.ReadFile("testdata/pinned-binding-replacement.json")
+	if e != nil {
+		t.Fatal(e)
+	}
+	var fixture struct{ Body string }
+	if json.Unmarshal(raw, &fixture) != nil || fixture.Body == "" {
+		t.Fatal("invalid actual-binding capture")
+	}
+	value := newRole(t)
+	value.ID = ptr(firstID)
+	value.Identity = ptr("Global/" + firstID)
+	run(t, contracttest.Case{Name: "actual-bound-list-replacement", Steps: []contracttest.Exchange{
+		wire("GET", "/configuration/Global", "Set-CsConversationRolesSetting", "", 200, empty),
+		wire("PATCH", "/configuration/Global", "Set-CsConversationRolesSetting", fixture.Body, 204, ""),
+	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		service := sdk.TeamsAdminAPI.ConversationRoleSettings
+		request, _, e := service.PrepareUpdateByIdentity(ctx, "Global", settings.UpdateParameters{ConversationRoles: policy.Set(&settings.ListModifier{Replace: []*roles.Role{value}})})
+		if e != nil {
+			return contracttest.Observation{Err: e}
+		}
+		if len(request.Projection().OmittedPaths) != 2 {
+			t.Fatal("actual nested permission omission was hidden")
+		}
+		result, _, e := service.UpdateByIdentity(ctx, "Global", *request)
+		if e == nil && (result == nil || !result.HTTPAccepted) {
+			t.Fatal("binding-replay action receipt missing")
+		}
+		return contracttest.Observation{Err: e}
+	}})
+}

@@ -75,7 +75,7 @@ func projectCreate(identity, set string, input CreateParameters) (*CreateRequest
 	if !policyrp.ValidIdentity(identity) || input.Permissions == nil {
 		return nil, ErrInput
 	}
-	permission, omitted, e := projectPermissions(input.Permissions)
+	permission, omitted, e := projectPermissions(input.Permissions, set == IdentitySet)
 	if e != nil {
 		return nil, e
 	}
@@ -178,13 +178,13 @@ func projectUpdate(before *Role, identity, set string, input UpdateParameters) (
 	if e != nil {
 		return WriteProjection{}, e
 	}
-	var omitted []string
+	var omitted, changed []string
 	if input.Permissions.IsSet() {
 		value, _ := input.Permissions.Value()
 		if input.Permissions.IsNull() || value == nil {
 			return WriteProjection{}, ErrInput
 		}
-		body["Permissions"], omitted, e = projectPermissions(value)
+		body["Permissions"], omitted, e = projectPermissions(value, set == IdentitySet)
 		if e != nil {
 			return WriteProjection{}, e
 		}
@@ -202,24 +202,41 @@ func projectUpdate(before *Role, identity, set string, input UpdateParameters) (
 	if e = policyrp.Identity(body, identity, override, input.Controls); e != nil {
 		return WriteProjection{}, e
 	}
+	if set == RelativeIDSet {
+		// Actual binding keeps the selector only in Id. PrepareForScopeCheck adds
+		// required Identity metadata, but Set never merges that metadata into its body.
+		delete(body, "Identity")
+		omitted = append(omitted, "Identity")
+		if before.ID == nil || *before.ID != strings.TrimPrefix(identity, "Global/") {
+			changed = append(changed, "Id")
+		}
+	}
 	raw, e := json.Marshal(body)
 	if e != nil {
 		return WriteProjection{}, ErrInput
 	}
-	return WriteProjection{Command: "Set-CsConversationRole", ParameterSet: set, Body: raw, OmittedPaths: omitted}, nil
+	sort.Strings(omitted)
+	return WriteProjection{Command: "Set-CsConversationRole", ParameterSet: set, Body: raw, OmittedPaths: omitted, ChangedPaths: changed}, nil
 }
 
-func projectPermissions(v *Permissions) (json.RawMessage, []string, error) {
+func projectPermissions(v *Permissions, includeIdentity bool) (json.RawMessage, []string, error) {
 	if v == nil {
 		return json.RawMessage("null"), nil, nil
 	}
-	body, e := json.Marshal(struct {
-		Identity *string `json:"Identity"`
-	}{v.Identity})
+	body := json.RawMessage(`{}`)
+	var e error
+	if includeIdentity {
+		body, e = json.Marshal(struct {
+			Identity *string `json:"Identity"`
+		}{v.Identity})
+	}
 	if e != nil {
 		return nil, nil, ErrInput
 	}
 	omitted := []string{"Permissions.Chat", "Permissions.Calling"}
+	if !includeIdentity {
+		omitted = append(omitted, "Permissions.Identity")
+	}
 	for key := range v.RawFields {
 		if key != "Identity" && key != "Chat" && key != "Calling" {
 			omitted = append(omitted, "Permissions."+key)
@@ -239,7 +256,7 @@ func ProjectRoleValue(v *Role) (json.RawMessage, []string, error) {
 	if v.ID != nil && !validModelID(*v.ID) {
 		return nil, nil, ErrInput
 	}
-	permissions, omitted, e := projectPermissions(v.Permissions)
+	permissions, omitted, e := projectPermissions(v.Permissions, true)
 	if e != nil {
 		return nil, nil, e
 	}

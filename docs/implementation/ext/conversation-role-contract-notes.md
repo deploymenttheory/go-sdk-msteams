@@ -2,8 +2,8 @@
 
 Owner: EXT-90 (#191). Pinned baseline: MicrosoftTeams 8.1.0. These observations
 settle local declaration and request-building behavior, not successful server
-acceptance or permission persistence. No backend role command, sign-in or tenant
-operation was executed.
+acceptance or permission persistence. Management lifecycle observation is entirely
+intercepted as described below; no real sign-in, credential or tenant operation occurs.
 
 ## Declarations and scope
 
@@ -68,11 +68,15 @@ management invocation data. They pass through the actual
 `AddAdditionalBodyContent`, and (for creation only)
 `AddRequiredCmdletMetadata` methods.
 
-The resulting observed request bodies contain `Permissions: {"Identity":null}`,
+The earlier controlled dictionary bodies contain `Permissions: {"Identity":null}`,
 while the actual compiled local-builder output contained populated Chat/Calling flags.
 Additional-body handling does not replace an already present Permissions key.
 Thus this pinned pipeline observation demonstrates a local projection loss; it
 supplies no positive evidence that supplied flags persist on the server.
+
+These dictionary vectors are not actual parameter binding. The relative variants
+are superseded by the actual lifecycle captures below; their original bytes remain
+unchanged as historical controlled observations.
 
 The create selectors also differ. Full Identity projection omits unbound Id,
 then required metadata adds the derived Id. Binding the relative Id causes an
@@ -167,3 +171,79 @@ read/authentication, rather than the initially authored success/no-op outcome.
 Tenant/app configuration already rejected this case; focused Force-only tests
 keep all four resources aligned. Bound null ConversationRoles remains a selected
 list clear, and explicit false/null scalar projections remain supported.
+
+
+## Actual intercepted binding and lifecycle
+
+The [fourteen-case capture](evidence/conversation-actual-binding.json) covers all
+six management commands and twelve declared sets, plus omitted Identity collection
+read and denied Global comparison. This is actual `CmdletInfo` parameter binding
+and lifecycle execution against entirely synthetic replies, not a manually filled
+bound dictionary, a real session, successful server operation or export proof.
+The [fixed-scenario reproducer](../../../scripts/discovery/observe-conversation-bindings.ps1)
+and [fake types](../../../scripts/discovery/conversation-offline-fakes.cs) require
+a fresh `pwsh -NoProfile` process and a verified extracted 8.1.0 package. Run one
+fixed Scenario per process under a parent 30-second timeout. Every recorded scenario
+passed strict method/URI/body vectors, consumed its queued replies, made one fake
+token callback and had no error stream or unhandled invocation exception.
+
+Before any management object construction, the reproducer installs synthetic
+`ICmdletHostContract`, logger and telemetry, a terminal `HttpMessageHandler` with
+no inner network handler, and the nonempty module-version seam. It asserts the
+initial host/client are absent, OCE state is default, selfhost/Torus modes are false,
+then runs only six exact pinned compiled command types in an empty runspace.
+The terminal handler permits only `offline.example.invalid`, fixed queued vectors
+and finite callback budgets. Static seams are asserted afterward and restored in
+finally. Client timeout and parent process deadline bound failures. Actual local
+permission builders provide populated inputs for creation/list replacement.
+Authorization and random correlation headers are omitted from retained captures;
+request bytes and cmdlet metadata remain reviewable. Replies/output snapshots in
+that artifact are authored synthetic data, never captured tenant responses.
+
+The [source gate](evidence/conversation-binding-source-gate.json) records assembly
+hashes, 53 selected method identities and full IL bodies, plus the hashes of the
+complete session inspection (79 types / 429 bodies, zero unresolved metadata tokens).
+It covers constructor client creation, async Get/New/Set/Remove paths, host wrapper,
+transport, query/header/serialization callbacks and relevant concrete overrides.
+The real host/auth/session provider is never constructed or invoked. This is a
+controlled-input call-path observation, not a general-purpose sandbox guarantee.
+
+Actual binding corrects two earlier controlled-vector assumptions:
+
+- Relative New binds Id but not Identity. Its nested `Permissions` is `{}`;
+  `Permissions.Identity` is absent, unlike the Identity set's `{Identity:null}`.
+  The model Id remains null; creation-only required metadata appends full Identity.
+- Relative Set emits current-model Id and selected fields, without Identity.
+  The captured current-model Id deliberately differs from the selector, confirming
+  it is not silently copied. Its omission/change paths are explicit in frozen Go
+  projections. The missing-model-Id case remains a separate authored response
+  regression; it is not relabeled as an observed server result.
+- Real settings-list replacement confirms full role values retain Identity and
+  nested `Permissions:{Identity:null}` while Chat/Calling flags are omitted.
+
+Go tests consume separate actual-binding fixture files; the old dictionary/serializer
+captures remain unchanged. Identity creation, Name-null update, both Delete bodies,
+Get selectors and filters otherwise confirm existing projections. The complete
+Chat/Calling persistence contract is still unresolved; no invented full-flag JSON
+or stronger accepted-input rejection is added.
+
+### Optional Global comparison
+
+Actual New for a non-Global identity first GETs
+`/Skype.Policy/configurations/ConversationRole/configuration/Global` with
+`X-MS-CmdletName: New-CsConversationRole`, then POSTs the projected body. It uses
+Global data only for presentation comparison, never creation defaults.
+`BaseTpmNewCmdlet<T>.ProcessRecord` IL SHA-256
+`26df7cf63b09d579c7b040635b9dcf7efe7362c20b0883b5ac9bbcd2c72430ce`
+skips comparison for ordinal case-insensitive Identity=Global; offsets 219–278
+catch comparison exceptions and emit a warning before continuing. The intercepted
+403 case confirms one warning, no error stream and a successful synthetic POST.
+
+Native `Create` remains the direct primitive. `CreateWithGlobalComparison` makes
+this optional composition explicit with exact New metadata and separate comparison
+snapshot/response/error and action response/error. Successful creation stays
+successful when optional comparison failed; its diagnostic remains in the result.
+Cancellation after comparison prevents POST. The frozen request is checked before
+any read, no defaults are cloned, and invocation/2xx acceptance never imply parsed
+success, persistence or safe replay. Current offline request/model tests and live
+prerequisites stay separate; no role/Global live mutation is configured.

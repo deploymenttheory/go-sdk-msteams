@@ -2759,7 +2759,9 @@
           "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
           "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
           "docs/implementation/ext/evidence/conversation-role-presence.json",
-          "docs/implementation/ext/evidence/conversation-role-il.json"
+          "docs/implementation/ext/evidence/conversation-role-il.json",
+          "docs/implementation/ext/evidence/conversation-actual-binding.json",
+          "docs/implementation/ext/evidence/conversation-binding-source-gate.json"
         ]
       },
       "live": {
@@ -2842,7 +2844,9 @@
           "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
           "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
           "docs/implementation/ext/evidence/conversation-role-presence.json",
-          "docs/implementation/ext/evidence/conversation-role-il.json"
+          "docs/implementation/ext/evidence/conversation-role-il.json",
+          "docs/implementation/ext/evidence/conversation-actual-binding.json",
+          "docs/implementation/ext/evidence/conversation-binding-source-gate.json"
         ]
       },
       "live": {
@@ -24017,11 +24021,19 @@
             {
               "name": "Service.Create",
               "file": "msteams/teams_admin_api/conversation_role/service.go"
+            },
+            {
+              "name": "Service.CreateWithGlobalComparison",
+              "file": "msteams/teams_admin_api/conversation_role/create_comparison.go"
             }
           ],
           "contract_tests": [
             {
               "name": "TestUnitConversationCreateSetsUseInspectableFrozenObservedProjection",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationCreateGlobalComparisonRetainsIndependentReceipts",
               "file": "msteams/teams_admin_api/conversation_role/service_test.go"
             }
           ],
@@ -24038,12 +24050,28 @@
             {
               "name": "Service.Create",
               "file": "msteams/teams_admin_api/conversation_role/service.go"
+            },
+            {
+              "name": "Service.CreateWithGlobalComparison",
+              "file": "msteams/teams_admin_api/conversation_role/create_comparison.go"
             }
           ],
           "contract_tests": [
             {
               "name": "TestUnitConversationCreateSetsUseInspectableFrozenObservedProjection",
               "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationCreateGlobalComparisonRetainsIndependentReceipts",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationCreateComparisonSkipsGlobalAndRejectsUnprepared",
+              "file": "msteams/teams_admin_api/conversation_role/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationCancellationAfterComparisonPreventsCreate",
+              "file": "msteams/teams_admin_api/conversation_role/comparison_cancellation_test.go"
             }
           ],
           "live_tests": []
@@ -24064,6 +24092,10 @@
           {
             "name": "ProjectCreateByID",
             "file": "msteams/teams_admin_api/conversation_role/projection.go"
+          },
+          {
+            "name": "Service.CreateWithGlobalComparison",
+            "file": "msteams/teams_admin_api/conversation_role/create_comparison.go"
           }
         ]
       },
@@ -24075,7 +24107,9 @@
           "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
           "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
           "docs/implementation/ext/evidence/conversation-role-presence.json",
-          "docs/implementation/ext/evidence/conversation-role-il.json"
+          "docs/implementation/ext/evidence/conversation-role-il.json",
+          "docs/implementation/ext/evidence/conversation-actual-binding.json",
+          "docs/implementation/ext/evidence/conversation-binding-source-gate.json"
         ]
       },
       "live": {
@@ -30837,7 +30871,9 @@
           "docs/implementation/ext/evidence/conversation-role-list-serialization.json",
           "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
           "docs/implementation/ext/evidence/conversation-role-presence.json",
-          "docs/implementation/ext/evidence/conversation-role-il.json"
+          "docs/implementation/ext/evidence/conversation-role-il.json",
+          "docs/implementation/ext/evidence/conversation-actual-binding.json",
+          "docs/implementation/ext/evidence/conversation-binding-source-gate.json"
         ]
       },
       "live": {
@@ -36861,7 +36897,9 @@
           "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
           "docs/implementation/ext/evidence/conversation-role-presence.json",
           "docs/implementation/ext/evidence/conversation-role-il.json",
-          "docs/implementation/ext/evidence/conditional-set-selection.json"
+          "docs/implementation/ext/evidence/conditional-set-selection.json",
+          "docs/implementation/ext/evidence/conversation-actual-binding.json",
+          "docs/implementation/ext/evidence/conversation-binding-source-gate.json"
         ]
       },
       "live": {
@@ -36912,6 +36950,10 @@
             {
               "name": "TestUnitConversationSettingsUnboundRejectsBeforeCredentialsAndEmptyFilterIsLocal",
               "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
+            },
+            {
+              "name": "TestUnitConversationSettingsReplacementMatchesActualCompiledBinding",
+              "file": "msteams/teams_admin_api/conversation_roles_setting/service_test.go"
             }
           ],
           "live_tests": []
@@ -36944,7 +36986,9 @@
           "docs/implementation/ext/evidence/conversation-role-list-transitions.json",
           "docs/implementation/ext/evidence/conversation-role-presence.json",
           "docs/implementation/ext/evidence/conversation-role-il.json",
-          "docs/implementation/ext/evidence/conditional-set-selection.json"
+          "docs/implementation/ext/evidence/conditional-set-selection.json",
+          "docs/implementation/ext/evidence/conversation-actual-binding.json",
+          "docs/implementation/ext/evidence/conversation-binding-source-gate.json"
         ]
       },
       "live": {

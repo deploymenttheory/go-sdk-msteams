@@ -40,3 +40,16 @@ func ExampleService_UpdateByIdentity() {
 	}
 	_ = run
 }
+
+// Global comparison is optional source presentation data, never creation defaults.
+func ExampleService_CreateWithGlobalComparison() {
+	create := func(ctx context.Context, sdk *msteams.Client, request roles.CreateRequest) error {
+		result, _, err := sdk.TeamsAdminAPI.ConversationRoles.CreateWithGlobalComparison(ctx, request)
+		if result != nil {
+			_ = result.ComparisonErr  // Keep a warning/denial separately from action error.
+			_ = result.CreateResponse // Retain the action receipt for reconciliation.
+		}
+		return err
+	}
+	_ = create // Compiles without selecting credentials or creating a role.
+}

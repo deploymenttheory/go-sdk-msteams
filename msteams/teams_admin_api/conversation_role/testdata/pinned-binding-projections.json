@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "scenario": "relative-id-create",
+      "accepted": true,
+      "body": "{\n  \"Permissions\": {},\n  \"Id\": null,\n  \"CreatedAt\": \"2027-01-01T00:00:00\",\n  \"UpdatedAt\": \"2027-01-02T00:00:00Z\",\n  \"Identity\": \"Global/00000000-0000-4000-8000-000000000001\"\n}",
+      "source_artifact": "ext90-binding-reader-role-new-relative-revised.json",
+      "source_sha256": "4b9e4dfb3bd3cfe63062ae5d5e739a23f07ec743014ed6ee299d8555736f9389",
+      "observation": "Actual compiled CmdletInfo binding/lifecycle, fake host/token/logger and terminal no-inner HTTP handler. Synthetic response; no tenant access.",
+      "binding_ref": "docs/implementation/ext/evidence/conversation-actual-binding.json#/scenarios/5",
+      "body_sha256": "a6db0b7b7e1ea76a47c5f00ab0b9b674768b097dc3935bb3a3836d56510889fe"
+    },
+    {
+      "scenario": "relative-id-set",
+      "accepted": true,
+      "body": "{\n  \"Id\": \"00000000-0000-4000-8000-000000000009\",\n  \"Name\": null\n}",
+      "source_artifact": "ext90-binding-reader-role-set-relative-revised.json",
+      "source_sha256": "e293c4342382e0b3011c9c5d7e6630f1c733a18054b9b90dcc26550892a88f54",
+      "observation": "Actual compiled CmdletInfo binding/lifecycle, fake host/token/logger and terminal no-inner HTTP handler. Synthetic response; no tenant access.",
+      "binding_ref": "docs/implementation/ext/evidence/conversation-actual-binding.json#/scenarios/8",
+      "body_sha256": "d4ed7c1767d3c1dc0c65bea6357403a995dcf8b98be9cd7b6d65407e757ace75"
+    }
+  ]
+}

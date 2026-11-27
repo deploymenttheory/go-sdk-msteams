@@ -52,7 +52,11 @@ func run(t *testing.T, c contracttest.Case) {
 func ptr[T any](v T) *T { return &v }
 func captured(t *testing.T, name string) string {
 	t.Helper()
-	raw, e := os.ReadFile("testdata/pinned-projections.json")
+	file := "testdata/pinned-projections.json"
+	if name == "relative-id-create" || name == "relative-id-set" {
+		file = "testdata/pinned-binding-projections.json"
+	}
+	raw, e := os.ReadFile(file)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -157,7 +161,11 @@ func TestUnitConversationCreateSetsUseInspectableFrozenObservedProjection(t *tes
 				t.Fatal(e)
 			}
 			projection := request.Projection()
-			if len(projection.OmittedPaths) != 2 || request.ResourceIdentity() != identity || relative != (len(projection.ChangedPaths) == 1) {
+			wantOmitted := 2
+			if relative {
+				wantOmitted = 3
+			}
+			if len(projection.OmittedPaths) != wantOmitted || request.ResourceIdentity() != identity || relative != (len(projection.ChangedPaths) == 1) {
 				t.Fatal("source loss or selector difference was hidden")
 			}
 			projection.Body[0] = '['
@@ -183,8 +191,12 @@ func TestUnitConversationSetBothSelectorsPrepareThenApplyFrozenBody(t *testing.T
 		if relative {
 			name = "relative-id-set"
 		}
+		currentReply := reply
+		if relative {
+			currentReply = strings.Replace(reply, `"Id":"`+roleID+`"`, `"Id":"00000000-0000-4000-8000-000000000009"`, 1)
+		}
 		t.Run(name, func(t *testing.T) {
-			run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{wire("GET", "/configuration/"+identity, "Set-CsConversationRole", "", 200, reply), wire("PATCH", "/configuration/"+identity, "Set-CsConversationRole", captured(t, name), 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			run(t, contracttest.Case{Name: name, Steps: []contracttest.Exchange{wire("GET", "/configuration/"+identity, "Set-CsConversationRole", "", 200, currentReply), wire("PATCH", "/configuration/"+identity, "Set-CsConversationRole", captured(t, name), 204, "")}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 				service := sdk.TeamsAdminAPI.ConversationRoles
 				input := roles.UpdateParameters{Name: policy.Null[string]()}
 				var request *roles.UpdateRequest
@@ -203,6 +215,12 @@ func TestUnitConversationSetBothSelectorsPrepareThenApplyFrozenBody(t *testing.T
 				before := request.Before()
 				before.Identity = ptr("retarget")
 				projection := request.Projection()
+				if relative {
+					var body map[string]json.RawMessage
+					if json.Unmarshal(projection.Body, &body) != nil || body["Identity"] != nil || string(body["Id"]) != `"00000000-0000-4000-8000-000000000009"` || !reflect.DeepEqual(projection.OmittedPaths, []string{"Identity"}) || !reflect.DeepEqual(projection.ChangedPaths, []string{"Id"}) {
+						t.Fatal("relative binding omission/model-ID change was hidden")
+					}
+				}
 				projection.Body[0] = '['
 				var result *roles.UpdateResult
 				if relative {
@@ -341,7 +359,7 @@ func TestUnitConversationRelativeSetKeepsMissingModelIDNull(t *testing.T) {
 	missingID := strings.Replace(reply, `"Id":"`+roleID+`",`, "", 1)
 	run(t, contracttest.Case{Name: "relative-set-missing-model-id", Steps: []contracttest.Exchange{
 		wire("GET", "/configuration/"+identity, "Set-CsConversationRole", "", 200, missingID),
-		wire("PATCH", "/configuration/"+identity, "Set-CsConversationRole", captured(t, "relative-id-set-missing-model-id"), 204, ""),
+		wire("PATCH", "/configuration/"+identity, "Set-CsConversationRole", `{"Id":null,"Name":null}`, 204, ""),
 	}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
 		request, _, e := sdk.TeamsAdminAPI.ConversationRoles.PrepareUpdateByID(ctx, roleID, roles.UpdateParameters{Name: policy.Null[string]()})
 		if e != nil {
@@ -353,6 +371,95 @@ func TestUnitConversationRelativeSetKeepsMissingModelIDNull(t *testing.T) {
 		result, _, e := sdk.TeamsAdminAPI.ConversationRoles.UpdateByID(ctx, roleID, *request)
 		if e == nil && (result == nil || !result.HTTPAccepted) {
 			t.Fatal("source null model Id projection failed")
+		}
+		return contracttest.Observation{Err: e}
+	}})
+}
+
+func TestUnitConversationCreateGlobalComparisonRetainsIndependentReceipts(t *testing.T) {
+	t.Parallel()
+	for _, scenario := range []string{"comparison-success", "relative-comparison", "comparison-denied", "create-denied", "accepted-malformed"} {
+		t.Run(scenario, func(t *testing.T) {
+			comparisonStatus, comparisonReply := 200, strings.ReplaceAll(reply, identity, "Global")
+			actionStatus, actionReply := 201, reply
+			var want error
+			if scenario == "comparison-denied" {
+				comparisonStatus = 403
+				comparisonReply = `{"code":"Forbidden"}`
+			}
+			if scenario == "create-denied" {
+				actionStatus = 403
+				actionReply = `{"code":"Forbidden"}`
+				want = auth.ErrForbidden
+			}
+			if scenario == "accepted-malformed" {
+				actionReply = `[]`
+				want = client.ErrDecode
+			}
+			run(t, contracttest.Case{Name: scenario, Steps: []contracttest.Exchange{
+				wire("GET", "/configuration/Global", "New-CsConversationRole", "", comparisonStatus, comparisonReply),
+				wire("POST", "", "New-CsConversationRole", func() string {
+					if scenario == "relative-comparison" {
+						return captured(t, "relative-id-create")
+					}
+					return captured(t, "identity-create")
+				}(), actionStatus, actionReply),
+			}, Want: contracttest.Expected{Error: want}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				request, e := roles.ProjectCreateByIdentity(identity, parameters(t))
+				if scenario == "relative-comparison" {
+					request, e = roles.ProjectCreateByID(roleID, parameters(t))
+				}
+				if e != nil {
+					t.Fatal(e)
+				}
+				result, response, e := sdk.TeamsAdminAPI.ConversationRoles.CreateWithGlobalComparison(ctx, *request)
+				if result == nil || result.Identity != identity || !result.ComparisonInvoked || !result.CreateInvoked || result.ComparisonResponse == nil || result.ComparisonResponse.StatusCode() != comparisonStatus || result.CreateResponse != response || response == nil || response.StatusCode() != actionStatus || result.HTTPAccepted != (actionStatus < 300) {
+					t.Fatal("comparison/action receipts or acceptance were conflated")
+				}
+				if scenario == "comparison-denied" {
+					if e != nil || !errors.Is(result.ComparisonErr, auth.ErrForbidden) || result.Comparison != nil || result.After == nil {
+						t.Fatal("optional comparison denial suppressed a successful action")
+					}
+				} else if result.ComparisonErr != nil || result.Comparison == nil || result.Comparison.Identity == nil || *result.Comparison.Identity != "Global" {
+					t.Fatal("successful comparison snapshot was lost")
+				}
+				if scenario == "accepted-malformed" && (result.After != nil || !result.HTTPAccepted) {
+					t.Fatal("accepted malformed response was labeled parsed or lost its receipt")
+				}
+				if strings.Contains(fmt.Sprintf("%+v", result), identity) || strings.Contains(fmt.Sprintf("%#v", *result), identity) {
+					t.Fatal("comparison result formatting exposed identity")
+				}
+				return contracttest.Observation{Err: e}
+			}})
+		})
+	}
+}
+func TestUnitConversationCreateComparisonSkipsGlobalAndRejectsUnprepared(t *testing.T) {
+	t.Parallel()
+	request, e := roles.ProjectCreateByIdentity("Global", parameters(t))
+	if e != nil {
+		t.Fatal(e)
+	}
+	run(t, contracttest.Case{Name: "global-no-comparison", Steps: []contracttest.Exchange{wire("POST", "", "New-CsConversationRole", string(request.Projection().Body), 201, reply)}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, _, e := sdk.TeamsAdminAPI.ConversationRoles.CreateWithGlobalComparison(ctx, *request)
+		if e == nil && (result == nil || result.ComparisonInvoked || !result.CreateInvoked || result.ComparisonResponse != nil || result.ComparisonErr != nil) {
+			t.Fatal("Global action performed an invented comparison")
+		}
+		return contracttest.Observation{Err: e}
+	}})
+	run(t, contracttest.Case{Name: "zero-request-before-read", Scope: "local", Want: contracttest.Expected{Error: roles.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		result, _, e := sdk.TeamsAdminAPI.ConversationRoles.CreateWithGlobalComparison(ctx, roles.CreateRequest{})
+		if result != nil {
+			t.Fatal("invalid request entered comparison")
+		}
+		return contracttest.Observation{Err: e}
+	}})
+	run(t, contracttest.Case{Name: "canceled-before-comparison", Scope: "local", Want: contracttest.Expected{Error: context.Canceled}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+		canceled, cancel := context.WithCancel(ctx)
+		cancel()
+		result, _, e := sdk.TeamsAdminAPI.ConversationRoles.CreateWithGlobalComparison(canceled, *request)
+		if result != nil {
+			t.Fatal("canceled request entered comparison")
 		}
 		return contracttest.Observation{Err: e}
 	}})

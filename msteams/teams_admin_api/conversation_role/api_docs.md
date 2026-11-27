@@ -39,12 +39,13 @@ behavior with an assumed native JSON payload or reject accepted flag inputs.
    returns an opaque `CreateRequest`. Inspect `request.Projection()` first.
 2. `Create(ctx, request)` sends the frozen observed request. Full Identity creation
    adds derived Id metadata; relative Id creation retains the source's `Id:null`
-   representation. Source acceptance and actual persistence of either variant
+   representation and omits nested Permissions.Identity. Source acceptance and actual persistence of either variant
    still need live proof.
 3. `PrepareUpdateByIdentity`/`PrepareUpdateByID` performs only the Set-metadata GET
    and local projection. Inspect its Projection, Before and ReadResponse.
 4. `UpdateByIdentity`/`UpdateByID` applies that frozen PATCH without another GET or
-   projection. The service/client, exact selector and parameter set must match
+   projection. Relative Set omits root Identity and uses current-model Id, with
+   omissions/model-ID changes reported explicitly. The service/client, exact selector and parameter set must match
    preparation. Changing exposed snapshots, projection bytes or original input
    cannot retarget or modify the prepared request.
 
@@ -75,7 +76,15 @@ Writes use ReplayNever. A 2xx receipt does not prove stored/effective permission
 ambiguous writes need independent target reconciliation. Preparation plus apply
 is not atomic and has no invented ETag guarantee.
 
-Request vectors come from the pinned local pipeline; reply vectors are authored
+`CreateWithGlobalComparison(ctx, request)` optionally reproduces New's presentation
+GET of Global using New metadata, followed by the same frozen POST. It never clones
+Global defaults, skips comparison for Identity=Global, and retains independent
+Comparison/ComparisonResponse/ComparisonErr and After/CreateResponse stages.
+A failed optional comparison does not fail a successful action; inspect its diagnostic.
+Cancellation prevents the following POST. CreateInvoked records an attempted action,
+while HTTPAccepted records only a 2xx receipt. Direct Create still sends only POST.
+
+Request vectors include actual fully intercepted compiled binding; reply vectors are authored
 model cases. No new role or Global setting mutation is enabled in live CI. See
 [the full source notes](../../../docs/implementation/ext/conversation-role-contract-notes.md)
 for exact hashes, the twelve declared management sets and three additional

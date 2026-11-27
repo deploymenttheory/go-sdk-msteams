@@ -50,3 +50,10 @@ new role/consent or license operation is configured.
 See [source notes](../../../docs/implementation/ext/conversation-role-contract-notes.md)
 for assembly/reproducer hashes, the thirty-case helper matrix and full-pipeline
 observations. The issue and command qualification remain open.
+
+
+An actual fully intercepted compiled settings-list replacement now independently
+confirms this nested projection. The request fixture is separate from earlier
+controlled dictionary cases and is consumed by an offline test. Its HTTP replies
+are synthetic; no successful Global update or effective permission persistence is
+claimed. All twelve role/settings declaration sets have controlled binding captures.

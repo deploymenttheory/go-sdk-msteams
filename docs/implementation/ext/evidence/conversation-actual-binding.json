@@ -1,0 +1,473 @@
+{
+  "schema_version": 1,
+  "baseline_version": "8.1.0",
+  "scope": "Controlled request construction only. Actual compiled lifecycle and pure-builder binding; entirely synthetic host/auth/logger/telemetry/HTTP/replies. No real credentials, session, tenant traffic, persisted permissions or public-export qualification.",
+  "scenarios": [
+    {
+      "captures": [
+        {
+          "body": "",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole",
+          "cmdlet_header": "Get-CsConversationRole",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "method": "GET"
+        }
+      ],
+      "http_calls": 1,
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "output_json": [],
+      "scenario": "role-get-all",
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "warnings": [],
+      "outcome": "passed",
+      "invoke_exception": null,
+      "schema_version": 1,
+      "error_ids": [],
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "token_calls": 1,
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "telemetry_calls": 1,
+      "module_calls": 2,
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "remaining_replies": 0,
+      "output_count": 0
+    },
+    {
+      "telemetry_calls": 1,
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "warnings": [],
+      "http_calls": 1,
+      "invoke_exception": null,
+      "scenario": "role-get-identity",
+      "output_json": [
+        "null"
+      ],
+      "outcome": "passed",
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "module_calls": 2,
+      "error_ids": [],
+      "captures": [
+        {
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global/00000000-0000-4000-8000-000000000001",
+          "body": "",
+          "method": "GET",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "cmdlet_header": "Get-CsConversationRole"
+        }
+      ],
+      "output_count": 1,
+      "remaining_replies": 0,
+      "token_calls": 1,
+      "schema_version": 1,
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d"
+    },
+    {
+      "http_calls": 1,
+      "module_calls": 2,
+      "output_count": 1,
+      "schema_version": 1,
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "token_calls": 1,
+      "scenario": "role-get-relative",
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "remaining_replies": 0,
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "telemetry_calls": 1,
+      "warnings": [],
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "outcome": "passed",
+      "invoke_exception": null,
+      "error_ids": [],
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "output_json": [
+        "null"
+      ],
+      "captures": [
+        {
+          "cmdlet_header": "Get-CsConversationRole",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global/00000000-0000-4000-8000-000000000001",
+          "method": "GET",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "telemetry_calls": 1,
+      "schema_version": 1,
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "module_calls": 2,
+      "warnings": [],
+      "error_ids": [],
+      "scenario": "role-get-filter",
+      "http_calls": 1,
+      "outcome": "passed",
+      "output_count": 1,
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "captures": [
+        {
+          "body": "",
+          "cmdlet_header": "Get-CsConversationRole",
+          "method": "GET",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole"
+        }
+      ],
+      "invoke_exception": null,
+      "remaining_replies": 0,
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "token_calls": 1,
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "output_json": [
+        "null"
+      ]
+    },
+    {
+      "telemetry_calls": 4,
+      "error_ids": [],
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "module_calls": 6,
+      "output_json": [
+        "null"
+      ],
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "captures": [
+        {
+          "method": "GET",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global",
+          "cmdlet_header": "New-CsConversationRole",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole",
+          "cmdlet_header": "New-CsConversationRole",
+          "body_sha256": "f7e7d753af6abdf59892d5063d8e243bddff4efe6995a3f15f343f29405ea6c4",
+          "body": "{\n  \"Identity\": \"Global/00000000-0000-4000-8000-000000000001\",\n  \"Permissions\": {\n    \"Identity\": null\n  },\n  \"CreatedAt\": \"2027-01-01T00:00:00\",\n  \"UpdatedAt\": \"2027-01-02T00:00:00Z\",\n  \"Id\": \"00000000-0000-4000-8000-000000000001\"\n}"
+        }
+      ],
+      "schema_version": 1,
+      "invoke_exception": null,
+      "warnings": [],
+      "outcome": "passed",
+      "token_calls": 1,
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "scenario": "role-new-identity",
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "http_calls": 2,
+      "remaining_replies": 0,
+      "output_count": 1
+    },
+    {
+      "token_calls": 1,
+      "scenario": "role-new-relative",
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "output_count": 1,
+      "invoke_exception": null,
+      "captures": [
+        {
+          "method": "GET",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global",
+          "body": "",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "cmdlet_header": "New-CsConversationRole"
+        },
+        {
+          "method": "POST",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole",
+          "body": "{\n  \"Permissions\": {},\n  \"Id\": null,\n  \"CreatedAt\": \"2027-01-01T00:00:00\",\n  \"UpdatedAt\": \"2027-01-02T00:00:00Z\",\n  \"Identity\": \"Global/00000000-0000-4000-8000-000000000001\"\n}",
+          "body_sha256": "a6db0b7b7e1ea76a47c5f00ab0b9b674768b097dc3935bb3a3836d56510889fe",
+          "cmdlet_header": "New-CsConversationRole"
+        }
+      ],
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "schema_version": 1,
+      "http_calls": 2,
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "output_json": [
+        "null"
+      ],
+      "warnings": [],
+      "error_ids": [],
+      "remaining_replies": 0,
+      "telemetry_calls": 4,
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "module_calls": 6,
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "outcome": "passed"
+    },
+    {
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "error_ids": [],
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "outcome": "passed",
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "remaining_replies": 0,
+      "output_json": [
+        "null"
+      ],
+      "output_count": 1,
+      "http_calls": 2,
+      "module_calls": 6,
+      "token_calls": 1,
+      "captures": [
+        {
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global",
+          "body": "",
+          "cmdlet_header": "New-CsConversationRole",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "method": "GET"
+        },
+        {
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole",
+          "body": "{\n  \"Identity\": \"Global/00000000-0000-4000-8000-000000000001\",\n  \"Permissions\": {\n    \"Identity\": null\n  },\n  \"CreatedAt\": \"2027-01-01T00:00:00\",\n  \"UpdatedAt\": \"2027-01-02T00:00:00Z\",\n  \"Id\": \"00000000-0000-4000-8000-000000000001\"\n}",
+          "cmdlet_header": "New-CsConversationRole",
+          "body_sha256": "f7e7d753af6abdf59892d5063d8e243bddff4efe6995a3f15f343f29405ea6c4",
+          "method": "POST"
+        }
+      ],
+      "warnings": [
+        "Unable to retrieve the existing Global policy to compare against; showing specified values only."
+      ],
+      "schema_version": 1,
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "telemetry_calls": 4,
+      "invoke_exception": null,
+      "scenario": "role-new-comparison-denied"
+    },
+    {
+      "captures": [
+        {
+          "method": "GET",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body": "",
+          "cmdlet_header": "Set-CsConversationRole",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global/00000000-0000-4000-8000-000000000001"
+        },
+        {
+          "method": "PATCH",
+          "body_sha256": "bee45de9bee745b67ae65122cb22c4bcc4a6bcc6bc1af1b6cd6d5ff17c3d6ea2",
+          "body": "{\n  \"Identity\": \"Global/00000000-0000-4000-8000-000000000001\",\n  \"Name\": null\n}",
+          "cmdlet_header": "Set-CsConversationRole",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global/00000000-0000-4000-8000-000000000001"
+        }
+      ],
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "telemetry_calls": 4,
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "module_calls": 6,
+      "schema_version": 1,
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "invoke_exception": null,
+      "token_calls": 1,
+      "outcome": "passed",
+      "scenario": "role-set-identity",
+      "output_json": [],
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "output_count": 0,
+      "warnings": [],
+      "http_calls": 2,
+      "error_ids": [],
+      "remaining_replies": 0
+    },
+    {
+      "invoke_exception": null,
+      "output_count": 0,
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "token_calls": 1,
+      "http_calls": 2,
+      "captures": [
+        {
+          "cmdlet_header": "Set-CsConversationRole",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "method": "GET",
+          "body": "",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global/00000000-0000-4000-8000-000000000001"
+        },
+        {
+          "cmdlet_header": "Set-CsConversationRole",
+          "body_sha256": "d4ed7c1767d3c1dc0c65bea6357403a995dcf8b98be9cd7b6d65407e757ace75",
+          "method": "PATCH",
+          "body": "{\n  \"Id\": \"00000000-0000-4000-8000-000000000009\",\n  \"Name\": null\n}",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global/00000000-0000-4000-8000-000000000001"
+        }
+      ],
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "schema_version": 1,
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "warnings": [],
+      "output_json": [],
+      "outcome": "passed",
+      "scenario": "role-set-relative",
+      "telemetry_calls": 1,
+      "module_calls": 3,
+      "error_ids": [],
+      "remaining_replies": 0
+    },
+    {
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "token_calls": 1,
+      "scenario": "role-remove-identity",
+      "remaining_replies": 0,
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "output_count": 0,
+      "module_calls": 2,
+      "schema_version": 1,
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "http_calls": 1,
+      "outcome": "passed",
+      "invoke_exception": null,
+      "captures": [
+        {
+          "body": "{\n  \"Identity\": \"Global/00000000-0000-4000-8000-000000000001\",\n  \"Force\": \"False\"\n}",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global/00000000-0000-4000-8000-000000000001",
+          "cmdlet_header": "Remove-CsConversationRole",
+          "method": "DELETE",
+          "body_sha256": "8f42c9640f22e9a29fd1b8f55328eca52db7ba56b31a6e9095177e51f9c5f1cd"
+        }
+      ],
+      "error_ids": [],
+      "warnings": [],
+      "telemetry_calls": 1,
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "output_json": []
+    },
+    {
+      "outcome": "passed",
+      "telemetry_calls": 1,
+      "schema_version": 1,
+      "scenario": "role-remove-relative",
+      "invoke_exception": null,
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "token_calls": 1,
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "output_json": [],
+      "module_calls": 2,
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "remaining_replies": 0,
+      "http_calls": 1,
+      "error_ids": [],
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "captures": [
+        {
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRole/configuration/Global/00000000-0000-4000-8000-000000000001",
+          "cmdlet_header": "Remove-CsConversationRole",
+          "method": "DELETE",
+          "body": "{\n  \"Id\": \"00000000-0000-4000-8000-000000000001\",\n  \"Force\": \"False\"\n}",
+          "body_sha256": "6412534ce45269be009e03bb39a0c8719ad4e76f323e146dfd57c9e2d449b89c"
+        }
+      ],
+      "warnings": [],
+      "output_count": 0
+    },
+    {
+      "telemetry_calls": 1,
+      "captures": [
+        {
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRolesSetting/configuration/Global",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body": "",
+          "method": "GET",
+          "cmdlet_header": "Get-CsConversationRolesSetting"
+        }
+      ],
+      "warnings": [],
+      "token_calls": 1,
+      "invoke_exception": null,
+      "error_ids": [],
+      "output_json": [
+        "null"
+      ],
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "module_calls": 2,
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "outcome": "passed",
+      "output_count": 1,
+      "http_calls": 1,
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "scenario": "setting-get-identity",
+      "remaining_replies": 0,
+      "schema_version": 1,
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51"
+    },
+    {
+      "captures": [
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "cmdlet_header": "Get-CsConversationRolesSetting",
+          "body": "",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRolesSetting",
+          "method": "GET"
+        }
+      ],
+      "outcome": "passed",
+      "output_json": [
+        "null"
+      ],
+      "scenario": "setting-get-filter",
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "warnings": [],
+      "remaining_replies": 0,
+      "output_count": 1,
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "http_calls": 1,
+      "token_calls": 1,
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "telemetry_calls": 1,
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "module_calls": 2,
+      "error_ids": [],
+      "invoke_exception": null,
+      "schema_version": 1,
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3"
+    },
+    {
+      "remaining_replies": 0,
+      "error_ids": [],
+      "http_calls": 2,
+      "outcome": "passed",
+      "script_sha256": "4e8a23e00386e89b6af230f2e83963e4b1c313e08c44a65717d0e575048cb38d",
+      "output_json": [],
+      "fake_types_sha256": "90aa922b121fe272995b8e68e47fb1f1836fa662573e1d8bbd9e085ab9a1cfe3",
+      "module_calls": 6,
+      "telemetry_calls": 4,
+      "core_sha256": "68dbcb1f2392bc00d7f9f6ab457a6f49ef05dab387f448d39c23f455cf521e49",
+      "warnings": [],
+      "policyrp_sha256": "a5c8bc39cb6f43bd484bd6613549a6d0a2235f8d9b0b53b558828ab0aeb40e51",
+      "output_count": 0,
+      "token_calls": 1,
+      "captures": [
+        {
+          "body": "",
+          "method": "GET",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRolesSetting/configuration/Global",
+          "cmdlet_header": "Set-CsConversationRolesSetting",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "body": "{\n  \"Identity\": \"Global\",\n  \"ConversationRoles\": [\n    {\n      \"Identity\": \"Global/00000000-0000-4000-8000-000000000001\",\n      \"Permissions\": {\n        \"Identity\": null\n      },\n      \"Id\": \"00000000-0000-4000-8000-000000000001\",\n      \"Name\": \"Controlled role\",\n      \"IsAssignable\": null,\n      \"CreatedAt\": \"2027-01-01T00:00:00\",\n      \"UpdatedAt\": \"2027-01-02T00:00:00Z\"\n    }\n  ]\n}",
+          "method": "PATCH",
+          "url": "https://offline.example.invalid/Skype.Policy/configurations/ConversationRolesSetting/configuration/Global",
+          "cmdlet_header": "Set-CsConversationRolesSetting",
+          "body_sha256": "8aaebfa88ab46ea06236c3403fb8c250eb7a8ce786c896130930788f9c32792b"
+        }
+      ],
+      "observation": "Actual pinned compiled CmdletInfo binding/lifecycle with synthetic host/auth/logger/telemetry and terminal no-inner HTTP handler. Request construction only, not tenant/persistence/public-export proof. Synthetic replies are fixed in this reproducer; authorization/correlation headers omitted from capture.",
+      "invoke_exception": null,
+      "scenario": "setting-set-replace",
+      "schema_version": 1
+    }
+  ]
+}
