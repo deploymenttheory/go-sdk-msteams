@@ -167,7 +167,7 @@ Recorded live limitation: Client-secret lab run read the settings with pinned Po
 
 ### Get-TeamsApp
 
-Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-21`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
@@ -187,7 +187,7 @@ Recorded live limitation: Client-secret lab run confirmed the SharePoint site se
 
 ### New-TeamsApp
 
-Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-21`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
@@ -197,7 +197,7 @@ Recorded live limitation: Historical client-secret invalid/empty-archive probe r
 
 ### Remove-TeamsApp
 
-Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-21`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
@@ -217,7 +217,7 @@ Recorded live limitation: Client-secret lab run wrote the current sideloading fl
 
 ### Set-TeamsApp
 
-Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-21`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |

@@ -90,3 +90,15 @@ appDefinitions POST is a separate route and cannot prove the legacy PUT's curren
 auth requirements or server compatibility. Historical app-only 403 results are
 not operation success or a promise that granting write permissions would fix them.
 No role/consent or tenant operation is introduced by this documentation review.
+
+## Reviewed four-command decision
+
+Independent review approved exactly Get/New/Set/Remove-TeamsApp and their four
+accepted __AllParameterSets records against clean `b5b26e2` and the complete
+36-pass affected execution. The
+[reviewed decision](evidence/app-catalog-b5b26e2-contract.json) records metadata,
+source/model/control/auth/native boundaries and exact hashes. Implementation and
+offline contract states are promoted only for these four records; every one of
+the 745 live records is byte-equivalent before/after the decision. Current
+auth/legacy-PUT/backend limitations and historical evidence remain explicit.
+This is not a successful tenant lifecycle claim or completion of EXT-90.

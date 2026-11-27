@@ -16234,7 +16234,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -16248,13 +16248,9 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
+        "status": "passed",
         "evidence": [
-          "docs/implementation/ext/app-catalog-native-contract-notes.md",
-          "docs/implementation/ext/evidence/app-catalog-primary.json",
-          "docs/implementation/ext/evidence/app-catalog-get-supplement.json",
-          "docs/implementation/ext/evidence/app-catalog-new-input-binding.json",
-          "docs/implementation/ext/evidence/app-catalog-772483b-offline.json"
+          "docs/implementation/ext/evidence/app-catalog-b5b26e2-contract.json"
         ]
       },
       "live": {
@@ -30371,7 +30367,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -30381,13 +30377,9 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
+        "status": "passed",
         "evidence": [
-          "docs/implementation/ext/app-catalog-native-contract-notes.md",
-          "docs/implementation/ext/evidence/app-catalog-primary.json",
-          "docs/implementation/ext/evidence/app-catalog-get-supplement.json",
-          "docs/implementation/ext/evidence/app-catalog-new-input-binding.json",
-          "docs/implementation/ext/evidence/app-catalog-772483b-offline.json"
+          "docs/implementation/ext/evidence/app-catalog-b5b26e2-contract.json"
         ]
       },
       "live": {
@@ -36039,7 +36031,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -36049,13 +36041,9 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
+        "status": "passed",
         "evidence": [
-          "docs/implementation/ext/app-catalog-native-contract-notes.md",
-          "docs/implementation/ext/evidence/app-catalog-primary.json",
-          "docs/implementation/ext/evidence/app-catalog-get-supplement.json",
-          "docs/implementation/ext/evidence/app-catalog-new-input-binding.json",
-          "docs/implementation/ext/evidence/app-catalog-772483b-offline.json"
+          "docs/implementation/ext/evidence/app-catalog-b5b26e2-contract.json"
         ]
       },
       "live": {
@@ -44595,7 +44583,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -44605,13 +44593,9 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
+        "status": "passed",
         "evidence": [
-          "docs/implementation/ext/app-catalog-native-contract-notes.md",
-          "docs/implementation/ext/evidence/app-catalog-primary.json",
-          "docs/implementation/ext/evidence/app-catalog-get-supplement.json",
-          "docs/implementation/ext/evidence/app-catalog-new-input-binding.json",
-          "docs/implementation/ext/evidence/app-catalog-772483b-offline.json"
+          "docs/implementation/ext/evidence/app-catalog-b5b26e2-contract.json"
         ]
       },
       "live": {
