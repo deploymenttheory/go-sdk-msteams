@@ -1,28 +1,18 @@
-# Assignment migration lab acceptance
+# Assignment migration tenant tests
 
-MSTEAMS_LAB_READ_ONLY=1 and MSTEAMS_LAB_IDENTITY_FILE enable
-TestAccAssignmentMigrationReadOnly using the existing dedicated identity.
-MSTEAMS_LAB_AUTH_METHOD selects client-secret or certificate (default). The test
-lists status and reads returned job IDs. It never starts migrations or clears
-assignments. Both actual credential-mode attempts returned resource HTTP 403;
-read-by-ID and PowerShell comparison were not reached. No IDs/payloads are retained.
+The configured tenant currently returns HTTP 400 / PolicyRP 40003 for migration
+status. `TestAccAssignmentMigrationCapabilityUnavailable` checks the SDK's typed
+`auth.ErrTenantCapabilityUnavailable`, original HTTP diagnostics and the existing
+PowerShell observation. This access-outcome test passes; it is not a successful
+migration read or submission.
 
-Optional MSTEAMS_LAB_POWERSHELL_ORACLE=1 with the absolute pinned module directory
-enables certificate-authenticated Get-DirectToGroupAssignmentsMigrationStatus.
-The script checks version/assembly hashes and requested tenant binding, rejects
-ordinary output strings as errors, and projects job IDs/states. Go bounds/clears
-transient output and requires a complete tenant-bound shape. Numeric enum states
-render to pinned names; unknown states remain open. Sequential reads can differ
-while jobs change. This projection proves neither full response equality nor
-completion/effective assignments. Recommendation/conflict acceptance needs explicit
-tenant-bound EntityType/PolicyType/GroupID fixtures and remains unrun.
+Ordinary JSON-backed tests cover status, recommendations, conflicts, start/clear
+requests, UUID validation, response decoding, cancellation and error receipts.
+The SDK sends consequential submissions once and does not invent polling,
+rollback or a job-delete operation. See the [SDK reference](../../msteams/teams_admin_api/assignment_migration/api_docs.md).
 
-Start/Clear change effective assignments. Their future acceptance must require
-read-only + mutation + consequential opt-ins, a private tenant/identity-bound journal,
-an owned group with controlled members and non-default policies, explicit
-allow-non-empty decisions, assignment snapshots and a recovery plan. Record intent
-before submission; investigate ambiguous results instead of blindly resubmitting.
-Observe jobs and effective assignments separately with a bounded explicit wait.
-Verify cleanup preserves unrelated assignments and the group. No general rollback
-or job Delete is established. These mutation scenarios are not implemented or run;
-the qualification issue remains open.
+Successful migration scenarios require a tenant with the feature enabled and
+explicit tenant-bound policy/group fixtures. Start/clear also need consequential
+mutation opt-in, controlled membership, original assignment snapshots and a
+recovery plan. Observe job state and effective assignment separately. Never retry
+an ambiguous submission blindly or replace the current denial test with a skip.

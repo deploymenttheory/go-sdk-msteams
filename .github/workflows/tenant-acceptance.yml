@@ -124,6 +124,10 @@ jobs:
             ${{ runner.temp }}/acceptance-report/response-fixtures/teams_feedback_policy/integration_*.json
             ${{ runner.temp }}/acceptance-report/response-fixtures/call_templates/ext_integration_*.json
             ${{ runner.temp }}/acceptance-report/response-fixtures/ai_agents/ext_integration_*.json
+            ${{ runner.temp }}/acceptance-report/response-fixtures/recording_messages/*.json
+            ${{ runner.temp }}/acceptance-report/response-fixtures/recording_messages/*.body
+            ${{ runner.temp }}/acceptance-report/response-fixtures/teams_custom_banner_text/*.json
+            ${{ runner.temp }}/acceptance-report/response-fixtures/teams_custom_banner_text/*.body
           if-no-files-found: error
           retention-days: 14
 

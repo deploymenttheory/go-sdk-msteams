@@ -24,8 +24,7 @@ new credential-bearing destination.
 `GroupSettings` follows the generated DTO serializer: unbound and null values are
 omitted; bound empty policy names and zero/negative priorities remain present.
 The low-level native create/update methods can send an empty DTO. PowerShell's
-exported group creation additionally requires binding a policy name; complete
-binding/coercion qualification remains open. Go returns typed data and response
+exported group creation additionally requires binding a policy name; native validation rejects an unbound or exactly empty policy name. Go returns typed data and response
 metadata in place of the shell's optional PassThru display switch.
 
 `BatchCreateRequest` requires a supplied identity slice; `[]string{}` is an allowed
@@ -39,8 +38,7 @@ AdditionalParameters accepts JSON dictionary values and explicitly follows the
 pinned generated JSON dictionary projection: object null members are omitted at
 every depth, while a null inside an array becomes the string `"null"`. False, zero,
 empty strings/collections and raw numeric precision are retained. Malformed JSON
-fails before discovery or credential acquisition. PowerShell Hashtable coercion
-and non-JSON CLR inputs remain separate qualification work.
+fails before discovery or credential acquisition. Go callers supply JSON-compatible values through the typed request API.
 
 Create accepts 201/204, update and delete accept 202/204, and batch submission
 accepts 202. `OperationResult.HTTPAccepted` records a recognized success even when
@@ -106,11 +104,9 @@ source's False/True spelling. Path/query values are encoded separately rather th
 copying unsafe raw interpolation. Refresh and reprocessing are explicit consequential
 actions; no read or ordinary mutation invokes them or elevates eligibility.
 
-Issue #100 remains in-progress for full qualification. Native methods/tests map all
-fourteen commands and twenty-five sets. Successful tenant CRUD, OCE eligibility,
-complete shell binding/coercion and cloud behavior remain unqualified.
-[unit tests](service_test.go)
-records the captures, actual lab denials and remaining work.
+Batch and conditional OCE tenant scenarios remain pending on suitable job fixtures
+and contributor eligibility. The dedicated user/group scenarios below exercise
+ordinary assignments. See the [lab setup](../../../docs/acceptance/policy-assignments-lab-acceptance.md).
 
 ## Dedicated user assignment acceptance
 

@@ -71,8 +71,9 @@ raw responses and snapshots remain caller-owned sensitive data.
 Requests use the selected Teams audience/origin and the shared compiled-policy
 headers, with fresh UUID correlation and no generated forest or Graph lookup.
 Synthetic application/delegated modes establish routing, not successful tenant
-authorization. Exact role, cloud, write/read-back/cleanup, shell coercion and
-effective behavior qualification remain open under #103. See [unit tests](service_test.go)
+authorization. Owned ID/full-identity CRUD tests now verify read-back, omitted descriptions and
+independent cleanup; see the lab guide for execution requirements and results.
+Role/cloud availability and effective user behaviour remain environment-specific. See [unit tests](service_test.go)
 and the [lab acceptance plan](../../../docs/acceptance/recording-messages-lab-acceptance.md).
 
 The source null localization **modifier** clears the existing collection. Use

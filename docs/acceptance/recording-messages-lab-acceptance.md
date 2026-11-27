@@ -1,23 +1,24 @@
-# Recording messages lab acceptance
+# Recording message tenant tests
 
-MSTEAMS_LAB_READ_ONLY=1 and MSTEAMS_LAB_IDENTITY_FILE enable
-TestAccRecordingMessagesReadOnly with the existing private dedicated lab identity.
-MSTEAMS_LAB_AUTH_METHOD selects certificate (default) or client-secret. The test
-lists the resource, compares a locally filtered list and reads at most five
-returned full identities. Where a selected record has a canonical Id and matching
-Global identity, it also compares the relative-Id read. Known typed projections
-are compared. It performs no message, policy, assignment, directory
-permission or role write and retains no response payload.
+`recording_messages` runs bounded list/full-identity/relative-ID reads against the
+configured tenant. The current read scenario passes with the lab application
+identity; the earlier 403 observation no longer describes current access.
 
-On 2026-11-21, the collection read returned resource HTTP 403 with both actual
-credential modes. Selected identity reads and optional PowerShell comparison were
-not reached. No unsupported-mode, exact role or licensing cause is inferred.
+`TestAccRecordingMessagesCRUDByID` and `TestAccRecordingMessagesCRUDByIdentity`
+exercise an owned, unassigned message: create an `en-US` localization, read it
+back, replace its notice text while preserving the omitted description, verify
+its list entry, delete it and independently verify selected/list absence. Both
+states are compared with the existing PowerShell reader when enabled.
 
-Future write acceptance needs explicit mutation/consequential opt-ins, a private
-tenant/identity-bound journal, owned test records, original snapshots and an
-authorized cleanup/restore plan. Exercise all Identity/Id Create/Update/Delete
-forms, generated-ID retention, non-default text, explicit null/empty distinctions,
-list remove/add order and duplicates, persisted read-back and cleanup. Correlate
-ambiguous writes before deciding whether to retry or restore; no automatic replay
-or effective-policy guarantee is implied. Those scenarios remain unimplemented
-and unrun, and #103 stays open for full command/permission/cloud/tenant parity.
+Writes require mutation opt-in and a private recovery journal. The random journal
+fixture determines a UUID before submission; its exact description is an ownership
+marker. Recovery refuses a different UUID, changed marker, denied read or
+inconsistent absence. Intent is written before creation, and a fresh bounded
+context handles cleanup after cancellation. No policy is assigned and no existing
+record or Global setting is edited. Creating a record does not establish its
+rendering in meetings or effective user behaviour.
+
+CI exports only bounded, sanitized response JSON and empty HTTP receipts. Review
+new `crud_id_*` and `crud_identity_*` fixtures before committing them as ordinary
+unit regressions; do not infer a successful tenant run from an offline example.
+See [test setup](../../tools/acceptance/README.md) and [SDK methods](../../msteams/teams_admin_api/recording_messages/api_docs.md).

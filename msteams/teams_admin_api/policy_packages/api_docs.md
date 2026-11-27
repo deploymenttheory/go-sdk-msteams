@@ -22,7 +22,7 @@ header, never a new credential-bearing destination. No runtime PowerShell is nee
 
 Microsoft's separately dated [application-authentication guidance](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
 excludes PolicyPackage commands in the documented commercial/GCC/GCC High/DoD
-profiles. The service checks that catalog evidence before discovery/token acquisition
+profiles. The service enforces this mode restriction before discovery/token acquisition
 and returns client.ErrAuthenticationMode for those application sessions. This applies
 to client credentials, managed/workload identities and supplied tokens declared as
 application mode. Unknown documentation profiles remain unqualified, without a
@@ -70,8 +70,7 @@ Marshaling a received snapshot preserves its original object; use request types 
 change data. String/GoString redact identifiers, messages and token-related data.
 All methods propagate context and return Resty response metadata.
 
-Issue #101 remains in-progress for qualification. Tests map all nine commands and
-twelve sets, but full shell coercion, delegated live reads, mutation/read-back,
-effective assignment and cloud/mode deployment remain unqualified. See the
+Delegated tenant credentials are not configured in the automated lab. Live package
+reads, mutations and effective assignments therefore remain unexecuted there. See the
 [unit tests](service_test.go)
 and [lab plan](../../../docs/acceptance/policy-packages-lab-acceptance.md).
