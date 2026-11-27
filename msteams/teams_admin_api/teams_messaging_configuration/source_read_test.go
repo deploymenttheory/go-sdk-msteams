@@ -104,12 +104,15 @@ func TestUnitConfigurationPinnedScalarReadVectors(t *testing.T) {
 
 func TestUnitReceivedStorylineNumericNulDoesNotRelaxNamedValues(t *testing.T) {
 	t.Parallel()
-	for _, body := range []string{`{"Storyline":"1\u0000"}`, `{"Storyline":"37\u0000"}`} {
+	for _, tc := range []struct {
+		body string
+		want resource.Storyline
+	}{{`{"Storyline":"1\u0000"}`, 1}, {`{"Storyline":"37\u0000"}`, 37}} {
 		var value resource.Configuration
-		if e := json.Unmarshal([]byte(body), &value); e != nil || value.Storyline == nil {
+		if e := json.Unmarshal([]byte(tc.body), &value); e != nil || value.Storyline == nil {
 			t.Fatal("source numeric-string trailing NUL rejected")
 		}
-		if *value.Storyline != 1 && *value.Storyline != 37 {
+		if *value.Storyline != tc.want {
 			t.Fatal("numeric-string value changed")
 		}
 	}
