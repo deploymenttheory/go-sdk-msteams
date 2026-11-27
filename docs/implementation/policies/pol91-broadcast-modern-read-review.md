@@ -150,6 +150,13 @@ issues. The owned scratch directories were removed, and scoped source diff was
 zero after execution. This is an offline affected-package check, not a full
 module, race, tenant or command-qualification result.
 
+Final independent review passed the corrected a8acfb6 repair and execution
+record. The reader reran the final producer (session 23470, exit zero), matching
+all 132 parsed observations and producer hash, and independently verified all
+278 passing events, four package passes and the raw execution SHA256. Additional
+pure controls confirmed mixed-key ASCII/non-ASCII separation and typed exposure
+selection; no Go changes or tenant calls were made by that review.
+
 The modern Get helper forwards ConfigName only for a non-whitespace Identity,
 applies non-whitespace Filter locally with Identity/Tag wildcard matching, and
 adds the exposure query through its pipeline prepend. The Set helper inserts
