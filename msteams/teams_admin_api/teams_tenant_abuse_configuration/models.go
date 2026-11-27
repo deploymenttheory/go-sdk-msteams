@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policyrp"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 )
 
@@ -30,44 +31,49 @@ type Configuration struct {
 }
 
 func (v *Configuration) UnmarshalJSON(raw []byte) error {
-	value := Configuration{BlockedTenants: []*string{}}
-	fields, e := object(raw, func(key string, body json.RawMessage) error {
-		switch strings.ToLower(key) {
-		case "identity":
-			return json.Unmarshal(body, &value.Identity)
-		case "lowseatlimit":
-			return json.Unmarshal(body, &value.LowSeatLimit)
-		case "trialtenantvalidation":
-			return json.Unmarshal(body, &value.TrialTenantValidation)
-		case "skipvalidation":
-			return json.Unmarshal(body, &value.SkipValidation)
-		case "createthreadthresholdperseat":
-			return json.Unmarshal(body, &value.CreateThreadThresholdPerSeat)
-		case "addmemberthresholdperseat":
-			return json.Unmarshal(body, &value.AddMemberThresholdPerSeat)
-		case "sendmessagethresholdperseat":
-			return json.Unmarshal(body, &value.SendMessageThresholdPerSeat)
-		case "createthreadthresholdfortrialtenants":
-			return json.Unmarshal(body, &value.CreateThreadThresholdForTrialTenants)
-		case "addmemberthresholdfortrialtenants":
-			return json.Unmarshal(body, &value.AddMemberThresholdForTrialTenants)
-		case "sendmessagethresholdfortrialtenants":
-			return json.Unmarshal(body, &value.SendMessageThresholdForTrialTenants)
-		case "blockedtenants":
-			if !bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
-				var values []*string
-				if json.Unmarshal(body, &values) != nil {
-					return client.ErrDecode
-				}
-				value.BlockedTenants = append(value.BlockedTenants, values...)
+	var wire struct {
+		Identity                             policyrp.ReadString `json:"Identity"`
+		LowSeatLimit                         policyrp.ReadUint64 `json:"LowSeatLimit"`
+		TrialTenantValidation                policyrp.ReadString `json:"TrialTenantValidation"`
+		SkipValidation                       policyrp.ReadString `json:"SkipValidation"`
+		CreateThreadThresholdPerSeat         policyrp.ReadUint64 `json:"CreateThreadThresholdPerSeat"`
+		AddMemberThresholdPerSeat            policyrp.ReadUint64 `json:"AddMemberThresholdPerSeat"`
+		SendMessageThresholdPerSeat          policyrp.ReadUint64 `json:"SendMessageThresholdPerSeat"`
+		CreateThreadThresholdForTrialTenants policyrp.ReadUint64 `json:"CreateThreadThresholdForTrialTenants"`
+		AddMemberThresholdForTrialTenants    policyrp.ReadUint64 `json:"AddMemberThresholdForTrialTenants"`
+		SendMessageThresholdForTrialTenants  policyrp.ReadUint64 `json:"SendMessageThresholdForTrialTenants"`
+	}
+	if json.Unmarshal(raw, &wire) != nil {
+		return client.ErrDecode
+	}
+	value := Configuration{
+		Identity:                             wire.Identity.Value,
+		LowSeatLimit:                         wire.LowSeatLimit.Value,
+		TrialTenantValidation:                wire.TrialTenantValidation.Value,
+		SkipValidation:                       wire.SkipValidation.Value,
+		CreateThreadThresholdPerSeat:         wire.CreateThreadThresholdPerSeat.Value,
+		AddMemberThresholdPerSeat:            wire.AddMemberThresholdPerSeat.Value,
+		SendMessageThresholdPerSeat:          wire.SendMessageThresholdPerSeat.Value,
+		CreateThreadThresholdForTrialTenants: wire.CreateThreadThresholdForTrialTenants.Value,
+		AddMemberThresholdForTrialTenants:    wire.AddMemberThresholdForTrialTenants.Value,
+		SendMessageThresholdForTrialTenants:  wire.SendMessageThresholdForTrialTenants.Value,
+		BlockedTenants:                       []*string{},
+	}
+	fields, err := object(raw, func(key string, body json.RawMessage) error {
+		if strings.EqualFold(key, "BlockedTenants") && !bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
+			var items []policyrp.ReadString
+			if json.Unmarshal(body, &items) != nil {
+				return client.ErrDecode
+			}
+			for _, item := range items {
+				value.BlockedTenants = append(value.BlockedTenants, item.Value)
 			}
 		}
 		return nil
 	})
-	if e != nil {
+	if err != nil {
 		return client.ErrDecode
 	}
-
 	value.RawFields = fields
 	value.RawJSON = append(json.RawMessage(nil), raw...)
 	*v = value

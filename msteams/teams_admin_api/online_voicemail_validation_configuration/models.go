@@ -3,12 +3,11 @@
 package onlinevoicemailvalidationconfiguration
 
 import (
-	"bytes"
 	"encoding/json"
 	"regexp"
-	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
+	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/internal/policyrp"
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/policy"
 	"github.com/go-resty/resty/v2"
 )
@@ -26,35 +25,35 @@ type Configuration struct {
 	RawFields                  map[string]json.RawMessage `json:"-"`
 }
 
+type readURI struct{ Value *string }
+
+func (v *readURI) UnmarshalJSON(raw []byte) error {
+	var value policyrp.ReadString
+	if json.Unmarshal(raw, &value) != nil {
+		return client.ErrDecode
+	}
+	if value.Value != nil && !httpsPattern.MatchString(*value.Value) {
+		return client.ErrDecode
+	}
+	v.Value = value.Value
+	return nil
+}
 func (v *Configuration) UnmarshalJSON(raw []byte) error {
-	type snapshot Configuration
-	var value snapshot
-	if json.Unmarshal(raw, &value) != nil || json.Unmarshal(raw, &value.RawFields) != nil || value.RawFields == nil {
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(raw, &fields) != nil || fields == nil {
 		return client.ErrDecode
 	}
-	// Validate each setter occurrence, including case variants/duplicates, before
-	// a later value can hide an invalid earlier assignment in RawFields.
-	d := json.NewDecoder(bytes.NewReader(raw))
-	if _, err := d.Token(); err != nil {
+	// Each occurrence invokes its read profile before a later alias can hide an
+	// invalid setter assignment; no normalization of the raw snapshot occurs.
+	var wire struct {
+		Identity policyrp.ReadString `json:"Identity"`
+		Enabled  policyrp.ReadBool   `json:"AudioFileValidationEnabled"`
+		URI      readURI             `json:"AudioFileValidationUri"`
+	}
+	if json.Unmarshal(raw, &wire) != nil {
 		return client.ErrDecode
 	}
-	for d.More() {
-		key, err := d.Token()
-		if err != nil {
-			return client.ErrDecode
-		}
-		var encoded json.RawMessage
-		if d.Decode(&encoded) != nil {
-			return client.ErrDecode
-		}
-		if name, ok := key.(string); ok && strings.EqualFold(name, "AudioFileValidationUri") && !bytes.Equal(bytes.TrimSpace(encoded), []byte("null")) {
-			var uri string
-			if json.Unmarshal(encoded, &uri) != nil || !httpsPattern.MatchString(uri) {
-				return client.ErrDecode
-			}
-		}
-	}
-	*v = Configuration(value)
+	*v = Configuration{Identity: wire.Identity.Value, AudioFileValidationEnabled: wire.Enabled.Value, AudioFileValidationURI: wire.URI.Value, RawFields: fields}
 	return nil
 }
 func (v Configuration) MarshalJSON() ([]byte, error) {
