@@ -11289,7 +11289,7 @@
         }
       ],
       "implementation": {
-        "status": "in-progress",
+        "status": "implemented",
         "unsupported_stub": false,
         "symbols": [
           {
@@ -11303,11 +11303,9 @@
         ]
       },
       "contract": {
-        "status": "metadata-only",
+        "status": "passed",
         "evidence": [
-          "docs/implementation/ext/app-catalog-contract-notes.md",
-          "docs/implementation/ext/evidence/custom-app-settings-get-status-source.json",
-          "docs/implementation/ext/evidence/custom-app-get-scalar-projection.json"
+          "docs/implementation/ext/evidence/custom-app-get-4338e4b-contract.json"
         ]
       },
       "live": {

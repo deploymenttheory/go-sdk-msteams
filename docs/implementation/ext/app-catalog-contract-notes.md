@@ -175,3 +175,17 @@ their responses/errors rather than become successful disabled-setting observatio
 Enhanced Get remains unchanged. The new path is replayed against the existing
 actual sanitized read fixture as well as explicitly authored source vectors.
 Set body/persistence and live states remain separate from this ordinary Get review.
+
+
+### Ordinary Get decision at revision 4338e4b
+
+[The versioned contract result](evidence/custom-app-get-4338e4b-contract.json)
+records the full custom-app package TestUnit execution and example compilation at
+`4338e4b452341441d133d91a30d90f297eece0d2`, source/control/set review and file hashes.
+All required tests passed with no failures/skips. Its single ordinary set maps to
+`GetSideloadedAppsInteraction`; strict enhanced Get is recorded separately. Every
+source-accepted flag outcome under review can reach the raw public projection,
+including both malformed scalar observations, while errors remain errors.
+This independently reviewed Get is implemented/contract-passed in the ledger.
+Set and live states remain unchanged. A replayed real read body is evidence of
+this revision's parsing, not a newly executed tenant operation or authorization test.

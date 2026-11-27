@@ -10,7 +10,8 @@ Regenerate with `python3 tools/coverage/ext_report.py`; `--check` rejects stale 
 
 These are declared symbol/test mappings and recorded ledger states, not proof that a test ran
 or that every behavior is complete. Conditional commands with no observed parameter sets remain
-visible; a missing runtime signature is not an empty supported surface. No ledger state is promoted.
+visible; a missing runtime signature is not an empty supported surface. Individual passing
+contract states require their linked revision-backed review/execution evidence; live states stay separate.
 
 The [integrated suite](../../../tests/integration/lab/ext_integration/contracts_test.go) constrains
 generic/typed configuration identity and presence, independent recovery after typed authorization
@@ -156,7 +157,7 @@ Contract and live limitations: [app-catalog-contract-notes.md](app-catalog-contr
 
 ### Get-CsTeamsSettingsCustomApp
 
-Owner: `EXT-21`. Implementation: `in-progress`; contract: `metadata-only`; live: `not-run`.
+Owner: `EXT-21`. Implementation: `implemented`; contract: `passed`; live: `not-run`.
 
 | Parameter set | Go symbols | Contract test mappings | Live test mappings |
 | --- | --- | --- | --- |
