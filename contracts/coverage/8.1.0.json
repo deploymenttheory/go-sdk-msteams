@@ -9650,22 +9650,77 @@
         {
           "name": "Filter",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/130/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+              "name": "Service.ListFiltered"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/filter_test.go",
+              "name": "TestUnitFiltersUseAcceptanceResponses"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_connectivity_policy/media_connectivity_policy_read_test.go",
+              "name": "TestAccMediaConnectivityPolicyReadOnly"
+            }
+          ]
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/130/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+              "name": "Service.GetByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+              "name": "Service.List"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/response_test.go",
+              "name": "TestUnitGetGlobalResponseFixture"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/response_test.go",
+              "name": "TestUnitListResponseFixture"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_connectivity_policy/media_connectivity_policy_read_test.go",
+              "name": "TestAccMediaConnectivityPolicyReadOnly"
+            },
+            {
+              "file": "tests/integration/lab/teams_media_connectivity_policy/media_connectivity_policy_crud_test.go",
+              "name": "TestAccMediaConnectivityPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+            "name": "Service.ListFiltered"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+            "name": "Service.GetByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+            "name": "Service.List"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -9673,8 +9728,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DirectConnection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/media-connectivity-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -20052,36 +20109,105 @@
         {
           "name": "GrantToGroup",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/248/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+              "name": "Service.AssignGroup"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/failure_test.go",
+              "name": "TestUnitMediaConnectivityPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToTenant",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/248/parameter_sets/1",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+              "name": "Service.AssignTenantDefault"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/failure_test.go",
+              "name": "TestUnitMediaConnectivityPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "GrantToUser",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/248/parameter_sets/2",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+              "name": "Service.Assign"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+              "name": "Service.AssignUser"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/failure_test.go",
+              "name": "TestUnitMediaConnectivityPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
           "live_tests": []
         },
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/248/parameter_sets/3",
-          "symbols": [],
-          "contract_tests": [],
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+              "name": "Service.Assign"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/failure_test.go",
+              "name": "TestUnitMediaConnectivityPolicyGrantRequiresOneExplicitScope"
+            }
+          ],
           "live_tests": []
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+            "name": "Service.Assign"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+            "name": "Service.AssignGroup"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+            "name": "Service.AssignTenantDefault"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/assignment.go",
+            "name": "Service.AssignUser"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -20089,8 +20215,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DirectConnection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/media-connectivity-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -28491,15 +28619,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/364/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+              "name": "Service.CreateByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/settings_test.go",
+              "name": "TestUnitAllPinnedSettingsBindValuesAndNull"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_connectivity_policy/media_connectivity_policy_crud_test.go",
+              "name": "TestAccMediaConnectivityPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+            "name": "Service.CreateByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -28507,8 +28659,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DirectConnection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/media-connectivity-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -34500,15 +34654,39 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/474/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+              "name": "Service.DeleteByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/failure_test.go",
+              "name": "TestUnitMediaConnectivityPolicyMutationsKeepStatusAndNeverReplay"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_connectivity_policy/media_connectivity_policy_crud_test.go",
+              "name": "TestAccMediaConnectivityPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+            "name": "Service.DeleteByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -34516,8 +34694,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DirectConnection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/media-connectivity-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },
@@ -42149,15 +42329,47 @@
         {
           "name": "Identity",
           "metadata_ref": "contracts/powershell/8.1.0/runtime.json#/commands/603/parameter_sets/0",
-          "symbols": [],
-          "contract_tests": [],
-          "live_tests": []
+          "symbols": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+              "name": "Service.UpdateByIdentity"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+              "name": "Service.PatchByIdentity"
+            }
+          ],
+          "contract_tests": [
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service_crud_response_test.go",
+              "name": "TestUnitOwnedCRUDUsesAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/teams_media_connectivity_policy/settings_test.go",
+              "name": "TestUnitAllPinnedSettingsBindValuesAndNull"
+            }
+          ],
+          "live_tests": [
+            {
+              "file": "tests/integration/lab/teams_media_connectivity_policy/media_connectivity_policy_crud_test.go",
+              "name": "TestAccMediaConnectivityPolicyCRUD"
+            }
+          ]
         }
       ],
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "unsupported_stub": false,
-        "symbols": []
+        "symbols": [
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+            "name": "Service.UpdateByIdentity"
+          },
+          {
+            "file": "msteams/teams_admin_api/teams_media_connectivity_policy/service.go",
+            "name": "Service.PatchByIdentity"
+          }
+        ]
       },
       "contract": {
         "status": "metadata-only",
@@ -42165,8 +42377,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "Tenant qualification has not run.",
-        "evidence": []
+        "reason": "Global read/list/filter and unassigned owned CRUD (DirectConnection Disabled to Enabled) passed client-secret and certificate application modes with pinned PowerShell read parity and journaled cleanup. Grant scopes are contract-tested only; grant persistence and effective/delegated/cloud behavior remain separate.",
+        "evidence": [
+          "docs/implementation/policies/media-connectivity-policy-lab-acceptance.md"
+        ]
       },
       "exclusion": null
     },

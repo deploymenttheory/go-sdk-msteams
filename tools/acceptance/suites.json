@@ -811,6 +811,26 @@
         }
       ]
     },
+    "teams_media_connectivity_policy": {
+      "package": "./tests/integration/lab/teams_media_connectivity_policy",
+      "steps": [
+        {
+          "id": "reads",
+          "tests": [
+            "TestAccMediaConnectivityPolicyReadOnly"
+          ]
+        },
+        {
+          "id": "crud",
+          "mutation": true,
+          "proof": "owned-crud",
+          "journal_entries_per_test": 1,
+          "tests": [
+            "TestAccMediaConnectivityPolicyCRUD"
+          ]
+        }
+      ]
+    },
     "teams_meeting_policy": {
       "package": "./tests/integration/lab/teams_meeting_policy",
       "steps": [

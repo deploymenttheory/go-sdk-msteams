@@ -66,6 +66,7 @@ import (
 	teamsguestmeetingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_meeting_configuration"
 	teamsguestmessagingconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_guest_messaging_configuration"
 	teamsipphonepolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_ip_phone_policy"
+	teamsmediaconnectivitypolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_media_connectivity_policy"
 	teamsmedialoggingpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_media_logging_policy"
 	teamsmeetingbroadcastconfiguration "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_configuration"
 	teamsmeetingbroadcastpolicy "github.com/deploymenttheory/go-sdk-msteams/msteams/teams_admin_api/teams_meeting_broadcast_policy"
@@ -132,6 +133,7 @@ type Services struct {
 	TeamsPersonalAttendantPolicies             *teamspersonalattendantpolicy.Service
 	TeamsRecordingRollOutPolicies              *teamsrecordingrolloutpolicy.Service
 	TeamsShiftsPolicies                        *teamsshiftspolicy.Service
+	TeamsMediaConnectivityPolicies             *teamsmediaconnectivitypolicy.Service
 	TeamsShiftsAppPolicies                     *teamsshiftsapppolicy.Service
 	TeamsNetworkRoamingPolicies                *teamsnetworkroamingpolicy.Service
 	TeamsNotificationAndFeedsPolicies          *teamsnotificationandfeedspolicy.Service
@@ -265,6 +267,7 @@ func NewServices(session *client.Session) (*Services, error) {
 		TeamsPersonalAttendantPolicies:             teamspersonalattendantpolicy.NewService(scope),
 		TeamsRecordingRollOutPolicies:              teamsrecordingrolloutpolicy.NewService(scope),
 		TeamsShiftsPolicies:                        teamsshiftspolicy.NewService(scope),
+		TeamsMediaConnectivityPolicies:             teamsmediaconnectivitypolicy.NewService(scope),
 		TeamsShiftsAppPolicies:                     teamsshiftsapppolicy.NewService(backend),
 		TeamsNetworkRoamingPolicies:                teamsnetworkroamingpolicy.NewService(backend),
 		TeamsNotificationAndFeedsPolicies:          teamsnotificationandfeedspolicy.NewService(scope),

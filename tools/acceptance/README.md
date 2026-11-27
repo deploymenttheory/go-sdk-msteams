@@ -431,6 +431,12 @@ original (possibly null) Description with three pinned comparisons and one
 cleaned `first-party-template-config` restore entry. Template-list writes are
 not run live.
 
+Media connectivity policy runs Global read/list/filter as its `reads` step and
+owned CRUD as its `crud` step, using the dedicated `read-media-connectivity-policy.ps1`
+oracle. CRUD creates `DirectConnection=Disabled`, updates it to `Enabled`, requires
+every other returned field unchanged and makes two pinned comparisons. Its bound
+recovery kind is `media-connectivity-policy`; grants are not exercised live.
+
 SIP devices Global reads/update-restoration share the tenant lock. Its bound
 `sip-devices-configuration` handler restores only the original Enabled/Disabled
 BulkSignIn string on Global; CI requires three pinned comparisons and a cleaned
