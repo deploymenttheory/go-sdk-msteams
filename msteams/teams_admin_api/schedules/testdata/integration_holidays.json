@@ -1,0 +1,59 @@
+{
+  "HolidayVisualizationRecords": [
+    {
+      "Year": 2027,
+      "Name": "Fixture name",
+      "DateTimeRanges": [
+        {
+          "Start": "01/01/2027 00:00",
+          "End": "02/01/2027 00:00"
+        }
+      ],
+      "CallFlow": {
+        "Id": "00000000-0000-4000-8000-000000000006",
+        "Name": "Fixture name",
+        "Greetings": [
+          {
+            "ActiveType": "TextToSpeech",
+            "TextToSpeechPrompt": "SDK integration after hours",
+            "AudioFilePrompt": null
+          }
+        ],
+        "Menu": {
+          "Name": "Fixture name",
+          "Prompts": [],
+          "MenuOptions": [
+            {
+              "Action": "DisconnectCall",
+              "DtmfResponse": "Automatic",
+              "VoiceResponses": [],
+              "CallTarget": null,
+              "Prompt": null,
+              "Description": null,
+              "MainlineAttendantTarget": null,
+              "AgentTargetType": null,
+              "AgentTarget": null,
+              "AgentTargetTagTemplateId": null
+            }
+          ],
+          "DialByNameEnabled": false,
+          "DirectorySearchMethod": "None"
+        },
+        "ForceListenMenuEnabled": false,
+        "RingResourceAccountDelegates": false,
+        "TimeoutThreshold": null,
+        "TimeoutDisconnectPromptType": null,
+        "TimeoutDisconnectPromptCustomText": null,
+        "AiDisclaimerType": null,
+        "AiDisclaimerCustomText": null
+      }
+    }
+  ],
+  "ExportHolidaysResult": null,
+  "Diagnostics": [
+    {
+      "Level": "Warning",
+      "Message": "Fixture message"
+    }
+  ]
+}

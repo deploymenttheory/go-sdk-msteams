@@ -707,6 +707,10 @@
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -727,9 +731,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).",
+        "reason": "Run 45893578133 proves a nonempty export receipt on an owned populated-holiday attendant. Exact serialized CSV content, date rendering and full command qualification remain incomplete; no export bytes are retained.",
         "evidence": [
-          "docs/implementation/calls/schedules-contract-notes.md"
+          "docs/implementation/calls/schedules-contract-notes.md",
+          "docs/implementation/calls/evidence/schedule-attendant-00c34b.json"
         ]
       },
       "exclusion": null
@@ -1699,6 +1704,10 @@
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -1751,12 +1760,20 @@
             {
               "file": "msteams/teams_admin_api/schedules/service_test.go",
               "name": "TestUnitScheduleHolidaysUseAcceptanceAndModelResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/schedules/service_test.go",
+              "name": "TestUnitSchedulePopulatedHolidaysUseCapturedResponse"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -1777,9 +1794,10 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).",
+        "reason": "Run 45893578133 proves a scoped populated holiday visualization with exact day-first calendar boundaries on an owned attendant; its unchanged sanitized reply has a unit replay. Full command/parameter-set, delegated and cloud qualification remains incomplete.",
         "evidence": [
-          "docs/implementation/calls/schedules-contract-notes.md"
+          "docs/implementation/calls/schedules-contract-notes.md",
+          "docs/implementation/calls/evidence/schedule-attendant-00c34b.json"
         ]
       },
       "exclusion": null
@@ -2589,6 +2607,10 @@
             {
               "file": "msteams/teams_admin_api/call_queues/service_test.go",
               "name": "TestUnitCallQueueOptionalQueriesAndNormalization"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitQueueAccountAssociationRetainsPerEndpointFailure"
             }
           ],
           "live_tests": [
@@ -4415,6 +4437,10 @@
             {
               "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
               "name": "TestUnitResourceAccountSuccessShapesPreserveFields"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitQueueAccountAssociationRetainsPerEndpointFailure"
             }
           ],
           "live_tests": [
@@ -4636,6 +4662,10 @@
             {
               "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
               "name": "TestUnitAudioFileGetSendsDurationOnlyWhenSet"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitAudioIdentityFeedsAttendantAndQueue"
             }
           ],
           "live_tests": [
@@ -5398,12 +5428,20 @@
             {
               "file": "msteams/teams_admin_api/schedules/service_test.go",
               "name": "TestUnitScheduleListAndBodyOptions"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitScheduleIdentitySurvivesAttendantComposition"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -8081,6 +8119,10 @@
             {
               "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
               "name": "TestUnitComplianceRecordingApplicationRejections"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/schema_boundaries_test.go",
+              "name": "TestUnitApplicationSchemaPreservesScopedIdentityAndPresence"
             }
           ],
           "live_tests": [
@@ -22900,7 +22942,7 @@
       },
       "live": {
         "status": "not-run",
-        "reason": "The lab tenant has no auto attendant, so the route was proven only as HTTP 404 for a reserved ID; successful holiday bodies are modelled from the module serializers and remain unqualified (CALL-22).",
+        "reason": "The reserved-ID denial is observed; successful holiday import, persistence, replacement and complete per-holiday outcomes on an owned attendant remain unqualified. The separate successful read/export-receipt composition does not prove import.",
         "evidence": [
           "docs/implementation/calls/schedules-contract-notes.md"
         ]
@@ -24084,12 +24126,20 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitScheduleIdentitySurvivesAttendantComposition"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -24138,6 +24188,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24192,6 +24246,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24250,12 +24308,24 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitScheduleIdentitySurvivesAttendantComposition"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -24358,6 +24428,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24412,6 +24486,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantDraftsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24470,6 +24548,14 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitAudioIdentityFeedsAttendantAndQueue"
             }
           ],
           "live_tests": [
@@ -24496,6 +24582,10 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantServiceRejectionsUseAcceptanceResponses"
+            },
+            {
+              "file": "msteams/teams_admin_api/auto_attendants/draft_variants_test.go",
+              "name": "TestUnitDraftBuildersPreserveNonDefaultMembers"
             }
           ],
           "live_tests": [
@@ -24855,6 +24945,10 @@
             {
               "file": "msteams/teams_admin_api/call_queues/service_test.go",
               "name": "TestUnitCallQueueInvalidInputFailsBeforeIO"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitAudioIdentityFeedsAttendantAndQueue"
             }
           ],
           "live_tests": [
@@ -26063,6 +26157,10 @@
             {
               "file": "msteams/teams_admin_api/resource_accounts/service_test.go",
               "name": "TestUnitResourceAccountAssociationWritesUseAcceptanceResponses"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitQueueAccountAssociationRetainsPerEndpointFailure"
             }
           ],
           "live_tests": [
@@ -26369,6 +26467,10 @@
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         },
@@ -26408,6 +26510,10 @@
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -31850,6 +31956,10 @@
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantReads"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -32804,6 +32914,10 @@
             {
               "file": "msteams/teams_admin_api/audio_prompts/service_test.go",
               "name": "TestUnitAudioFileServiceFailuresStayTyped"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitQueueDenialDoesNotPreventIndependentAudioCleanup"
             }
           ],
           "live_tests": [
@@ -33120,6 +33234,10 @@
             {
               "file": "tests/integration/lab/schedules/schedules_test.go",
               "name": "TestAccScheduleLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -37934,12 +38052,20 @@
             {
               "file": "msteams/teams_admin_api/auto_attendants/service_test.go",
               "name": "TestUnitAutoAttendantOptionalQueriesAndNormalization"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitScheduleIdentitySurvivesAttendantComposition"
             }
           ],
           "live_tests": [
             {
               "file": "tests/integration/lab/auto_attendants/auto_attendants_test.go",
               "name": "TestAccAutoAttendantLifecycle"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/lifecycle_test.go",
+              "name": "TestAccScheduleAutoAttendantComposition"
             }
           ]
         }
@@ -38112,6 +38238,10 @@
             {
               "file": "msteams/teams_admin_api/call_queues/service_test.go",
               "name": "TestUnitCallQueueOptionalQueriesAndNormalization"
+            },
+            {
+              "file": "tests/integration/lab/call_integration/contracts_test.go",
+              "name": "TestUnitAudioIdentityFeedsAttendantAndQueue"
             }
           ],
           "live_tests": [
@@ -41292,6 +41422,10 @@
             {
               "file": "msteams/teams_admin_api/compliance_recording/service_test.go",
               "name": "TestUnitComplianceRecordingInvalidInputHasNoHTTP"
+            },
+            {
+              "file": "msteams/teams_admin_api/compliance_recording/schema_boundaries_test.go",
+              "name": "TestUnitApplicationSchemaPreservesScopedIdentityAndPresence"
             }
           ],
           "live_tests": []

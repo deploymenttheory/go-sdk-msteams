@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "outcome": "failed",
+  "source_head": "0ab716c70943d7b1e52b113a81531f404d45055b",
+  "revision": "4ab85ceb7a3e3b519a1b55399a3bca6590c33851",
+  "run_url": "https://github.com/deploymenttheory/go-sdk-msteams/actions/runs/45882556324",
+  "artifact": "tenant-acceptance-service-call_integration",
+  "test": "TestAccScheduleAutoAttendantComposition",
+  "http_status": 400,
+  "bounded_validation_category": "duplicate-reference",
+  "pinned_powershell_comparisons": 0,
+  "cleanup": {
+    "journal_entries": 3,
+    "cleaned_entries": 3,
+    "unresolved_entries": 0
+  },
+  "limitations": [
+    "This failed run does not qualify holiday composition.",
+    "The broader duplicate-reference category does not distinguish association, flow, schedule or menu duplication.",
+    "The older 0b92810 journal retains its original unresolved planned receipt; this run does not modify it."
+  ]
+}

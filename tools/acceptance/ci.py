@@ -15,6 +15,10 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
+FIXTURE_SPEC = importlib.util.spec_from_file_location('acceptance_response_fixtures', HERE / 'response_fixtures.py')
+response_fixtures = importlib.util.module_from_spec(FIXTURE_SPEC)
+FIXTURE_SPEC.loader.exec_module(response_fixtures)
+CALL_RESPONSE_FIXTURES = {'schedules': {'integration_holidays'}}
 PROOF_MARKERS = [
     'policy create/read-back: passed',
     'policy update/read-back and omission: passed',
@@ -115,6 +119,9 @@ PROOFS = {
     'ext-integration': (['integrated EXT generic-to-typed read: passed', 'integrated EXT typed-to-generic update: passed',
                          'integrated EXT generic replacement/read-back: passed', 'integrated EXT independent cleanup: passed'],
                         'PowerShell 8.1.0 / Go integrated EXT parity: passed', 3),
+    'call-integration': (['integrated CALL create: passed', 'integrated CALL identity read-back: passed',
+                          'integrated CALL update/read-back: passed', 'integrated CALL populated holiday read and nonempty export receipt: passed', 'integrated CALL cleanup: passed'],
+                         'PowerShell 8.1.0 / Go integrated CALL parity: passed', 2),
     'owned-crud': (PROOF_MARKERS, ORACLE_MARKER, 2),
     'owned-update-management-crud': (PROOF_MARKERS + ['update-management DateTime update/read-back: passed','update-management list edit/read-back: passed','update-management list clear/read-back: passed'], ORACLE_MARKER, 5),
     'owned-template-permission-populated-crud': (PROOF_MARKERS + ['policy hidden-list edit/read-back: passed','policy hidden-list clear/read-back: passed'], ORACLE_MARKER, 4),
@@ -142,6 +149,29 @@ PROOFS = {
 # Publish fixed assertion text only. HTTP payloads and dynamic fixture names
 # remain private even when a test fails.
 FAILURE_REASONS = (
+    'integrated holiday visualization category: response-error',
+    'integrated holiday visualization category: zero-records',
+    'integrated holiday visualization category: multiple-records',
+    'integrated holiday visualization category: missing-record',
+    'integrated holiday visualization category: zero-ranges',
+    'integrated holiday visualization category: multiple-ranges',
+    'integrated holiday visualization category: empty-date-values',
+    'integrated holiday visualization category: equivalent-iso-format',
+    'integrated holiday visualization category: different-iso-boundary',
+    'integrated holiday visualization category: offset-date-format',
+    'integrated holiday visualization category: day-first-date-format',
+    'integrated holiday visualization category: date-only-format',
+    'integrated holiday visualization category: unrecognized-date-format',
+    'integrated attendant validation category: duplicate-reference',
+    'integrated attendant validation category: duplicate-association',
+    'integrated attendant validation category: duplicate-flow',
+    'integrated attendant validation category: duplicate-schedule',
+    'integrated attendant validation category: schedule-type',
+    'integrated attendant validation category: association-priority',
+    'integrated attendant validation category: missing-flow',
+    'integrated attendant validation category: missing-schedule',
+    'integrated attendant validation category: other',
+    'integrated attendant validation category: unavailable',
     'read/list comparison: response fields missing',
     'read/list comparison: property sets differ',
     'read/list comparison: identity values differ',
@@ -241,7 +271,7 @@ def write_private(path, value):
 SERVICE_ROOT = 'msteams/teams_admin_api'
 # Partitions that are not teams_admin_api services: tenant/platform checks and
 # Microsoft Graph team resources.
-EXTRA_SERVICES = {'platform', 'graph', 'ext_integration'}
+EXTRA_SERVICES = {'platform', 'graph', 'ext_integration', 'call_integration'}
 SERVICE_AUTH_METHOD = 'client-secret'
 # Each service partition's tests live in their own Go package here.
 LAB_ROOT = Path('tests/integration/lab')
@@ -665,6 +695,10 @@ def changed_services(registry, files, base_registry, references=None):
                     path.startswith(prefix + dependency + '/')
                     for path in files for prefix in ('msteams/teams_admin_api/', 'tests/integration/lab/')
                     for dependency in ('configuration_diagnostics', 'teams_feedback_policy', 'ai_agents', 'call_templates')))
+                or (name == 'call_integration' and any(
+                    path.startswith(prefix + dependency + '/')
+                    for path in files for prefix in ('msteams/teams_admin_api/', 'tests/integration/lab/')
+                    for dependency in ('auto_attendants', 'schedules')))
                 or oracles & set(references.get(name, ()))):
             selected.append(name)
     return selected
@@ -839,7 +873,11 @@ def run(args):
         # Certificate support is proven once by the auth partition; services
         # do not repeat it for every resource.
         raise AcceptanceFailure('Service partitions run with client-secret authentication only.')
-    fixture_before = ext_fixture_state(ROOT) if service == 'ext_integration' else None
+    try:
+        fixture_before = (ext_fixture_state(ROOT) if service == 'ext_integration' else
+                          response_fixtures.state(ROOT, CALL_RESPONSE_FIXTURES) if service == 'call_integration' else None)
+    except response_fixtures.ExportError as error:
+        raise AcceptanceFailure(str(error)) from None
     reports = []
     blocked = False
     for unit in units:
@@ -860,6 +898,8 @@ def run(args):
         })
         if service == 'ext_integration':
             env['MSTEAMS_UPDATE_TESTDATA'] = '1'
+        if service == 'call_integration':
+            env['MSTEAMS_LAB_CAPTURE_HOLIDAY_FIXTURE'] = '1'
         if (private / 'shared-calling-fixture.json').is_file():
             env['MSTEAMS_LAB_SHARED_CALLING_FIXTURE_FILE'] = str(private / 'shared-calling-fixture.json')
         pattern = '^(' + '|'.join(re.escape(test) for test in active) + ')$'
@@ -913,7 +953,13 @@ def run(args):
                'skipped_tests': sum(test['outcome'] == 'skip' for report in reports for test in report['tests']),
                'suites': [{'name': r['suite'], 'outcome': r['outcome']} for r in reports], 'coverage_claim': False}
     if fixture_before is not None:
-        capture_ext_fixtures(ROOT, args.report_directory, fixture_before, revision)
+        if service == 'ext_integration':
+            capture_ext_fixtures(ROOT, args.report_directory, fixture_before, revision)
+        else:
+            try:
+                response_fixtures.capture(ROOT, args.report_directory, fixture_before, revision, CALL_RESPONSE_FIXTURES)
+            except response_fixtures.ExportError as error:
+                raise AcceptanceFailure(str(error)) from None
     write_json(args.report_directory / 'summary.json', summary)
     write_summary(reports)
     return 0 if summary['outcome'] in {'passed', 'skipped'} else 1

@@ -54,6 +54,30 @@ class AcceptanceGuardTests(unittest.TestCase):
                 self.assertEqual(ci.changed_services(fixture, [path], fixture), ['ext_integration'])
         self.assertEqual(ci.changed_services(fixture, ['README.md'], fixture), [])
 
+    def test_call_integration_requires_every_phase_and_two_oracle_comparisons(self):
+        test = 'TestAccScheduleAutoAttendantComposition'
+        markers, oracle, count = ci.PROOFS['call-integration']
+        events = [{'Test': test, 'Action': 'output', 'Output': marker}
+                  for marker in markers + [oracle] * count]
+        events.append({'Test': test, 'Action': 'pass'})
+        self.assertEqual(ci.evaluate(events, [test], 0, proof='call-integration')['outcome'], 'passed')
+        for omitted in markers + [oracle]:
+            incomplete = events.copy()
+            incomplete.remove(next(event for event in incomplete if event.get('Output') == omitted))
+            with self.subTest(omitted=omitted):
+                self.assertEqual(ci.evaluate(incomplete, [test], 0, proof='call-integration')['outcome'], 'failed')
+
+    def test_call_integration_tracks_both_composed_services(self):
+        fixture = registry({'id': 'reads', 'tests': ['TestAccRead']},
+                           service='call_integration', package='./tests/integration/lab/call_integration')
+        for path in ['msteams/teams_admin_api/auto_attendants/models.go',
+                     'msteams/teams_admin_api/schedules/service.go',
+                     'tests/integration/lab/auto_attendants/recovery.go',
+                     'tests/integration/lab/schedules/schedules_test.go']:
+            with self.subTest(path=path):
+                self.assertEqual(ci.changed_services(fixture, [path], fixture), ['call_integration'])
+        self.assertEqual(ci.changed_services(fixture, ['README.md'], fixture), [])
+
     def test_skip_selection_requires_exact_registered_names_and_public_reasons(self):
         suites = registry({'id': 'crud', 'tests': ['TestAccRead', 'TestAccPhone']})
         with tempfile.TemporaryDirectory() as directory:
@@ -328,6 +352,16 @@ class AcceptanceGuardTests(unittest.TestCase):
                     ci.print_report(report)
                 self.assertIn(name + ': ' + reason, output.getvalue())
                 self.assertNotIn('private-response', output.getvalue() + json.dumps(report))
+
+    def test_call_create_diagnostics_keep_bounded_category_only(self):
+        name = 'TestAccScheduleAutoAttendantComposition'
+        reason = 'integrated attendant validation category: association-priority'
+        report = ci.evaluate([
+            {'Test': name, 'Action': 'output', 'Output': reason + ' private-response'},
+            {'Test': name, 'Action': 'fail'},
+        ], [name], 1)
+        self.assertEqual(report['failure_reasons'][name], [reason])
+        self.assertNotIn('private-response', json.dumps(report))
 
     def test_failure_reason_keeps_fixed_assertion_only(self):
         name = 'TestAccACSFederationConfigurationReadOnly'

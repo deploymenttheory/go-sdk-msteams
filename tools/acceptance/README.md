@@ -61,6 +61,14 @@ files live under `response-fixtures/` in that service artifact. Other partitions
 never enable this writer. These files contain no plaintext journals or private
 lab directory contents and do not establish coverage beyond the run's assertions.
 
+The `call_integration` partition enables only an explicit holiday-response capture
+flag. The selected `schedules/integration_holidays` HTTP 200 response uses the
+existing sanitizer before assertions, without enabling other response writers.
+The bounded allowlisted export rejects unexpected files, symlinks, path escapes,
+credential fields and opaque serialized holiday content. Its digest manifest
+binds sanitized JSON to the CI revision. Export byte arrays, plaintext journals
+and private lab directories are never included.
+
 Selected tests and child cases must pass unless explicitly excluded as described
 below. The aggregate requires exactly one report per auth step (`all`) and per
 selected service step (`client-secret`). It rejects missing, duplicate or
@@ -563,3 +571,17 @@ The same partition's `agent-target-template` step creates an owned IVR tag
 template and an owned agent configuration referencing it, verifies the linkage
 after rename with two pinned comparisons, and requires two independently cleaned
 entries. No resource account or call flow is attached to the agent.
+## Integrated CALL acceptance
+
+The `call_integration` partition composes owned schedules and auto attendants.
+`TestAccScheduleAutoAttendantComposition` creates weekly and fixed holiday schedules, drafts an
+after-hours association, creates an unassigned attendant, verifies cross-service
+identities, replaces its greeting and verifies the preserved association. It
+checks populated holiday visualization/export, runs two pinned PowerShell comparisons
+and requires all three journal entries cleaned
+in reverse creation order. It assigns no account, telephone number, user, group
+or policy. Changes to either service select this integration partition as well.
+
+The CALL [coverage inventory](../../docs/implementation/calls/coverage-report.md)
+names every command/parameter-set mapping and separates those mappings from
+actual passing evidence and remaining live prerequisites.
