@@ -4,7 +4,6 @@ package teamsmeetingbroadcastconfiguration
 import (
 	"encoding/json"
 	"errors"
-	"strings"
 
 	"github.com/deploymenttheory/go-sdk-msteams/msteams/client"
 )
@@ -48,26 +47,26 @@ func (v *Configuration) UnmarshalJSON(raw []byte) error {
 		return client.ErrDecode
 	}
 	for name, token := range value.RawFields {
-		switch strings.ToLower(name) {
-		case "identity":
+		switch foldReadKey(name) {
+		case "IDENTITY":
 			value.Identity = readValue[string](token)
-		case "supporturl":
+		case "SUPPORTURL":
 			value.SupportURL = readValue[string](token)
-		case "allowsdnproviderforbroadcastmeeting":
+		case "ALLOWSDNPROVIDERFORBROADCASTMEETING":
 			value.AllowSdnProviderForBroadcastMeeting = readValue[bool](token)
-		case "sdnname":
+		case "SDNNAME":
 			value.SdnName = readValue[string](token)
-		case "sdnlicenseid":
+		case "SDNLICENSEID":
 			value.SdnLicenseID = readValue[string](token)
-		case "sdnazuresubscriptionid":
+		case "SDNAZURESUBSCRIPTIONID":
 			value.SdnAzureSubscriptionID = readValue[string](token)
-		case "sdnapitemplateurl":
+		case "SDNAPITEMPLATEURL":
 			value.SdnAPITemplateURL = readValue[string](token)
-		case "sdnapitoken":
+		case "SDNAPITOKEN":
 			value.SdnAPIToken = readValue[string](token)
-		case "sdnruntimeconfiguration":
+		case "SDNRUNTIMECONFIGURATION":
 			value.SdnRuntimeConfiguration = readValue[string](token)
-		case "sdnattendeefallbackcount":
+		case "SDNATTENDEEFALLBACKCOUNT":
 			value.SdnAttendeeFallbackCount = readValue[int64](token)
 		}
 	}

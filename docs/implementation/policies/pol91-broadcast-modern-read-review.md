@@ -115,6 +115,23 @@ Identity/identity collision and the unknown nested X/x collision. This separates
 earlier exact-key rejection from later case-collision rejection. It still invokes
 no HTTP response callback, cmdlet lifecycle or tenant operation.
 
+Review of the first repair found a real key-comparison difference despite its
+270 passing test/subtest events: Go EqualFold conflates K/K and S/ſ, while the
+actual source conversion accepts those distinct keys. The final producer adds
+seven own Unicode controls, giving 132 outcomes (126 normal parser returns,
+four ParserExceptions, two exact-duplicate ArgumentExceptions). Four parsed
+objects fail the later conversion: the prior two case collisions plus Σ/ς and
+é/É. K/K, S/ſ, I/ı and i/İ remain distinct. SdnApiToKen is an unknown property,
+not the ASCII SdnApiToken property.
+
+The corrected decoder uses ordinal-style uppercase key normalization with a
+per-rune ASCII/non-ASCII boundary for both collision detection and known-field
+lookup. It no longer uses EqualFold or ToLower for these decisions. The native
+typed fields still have the documented Go JSON-kind mapping; they do not turn
+unknown Unicode property names into known ASCII fields. Unicode runtime-table
+version and host presentation remain explicit portability boundaries; these
+observations do not establish every possible string-comparison behavior.
+
 The native object decoder now retains every dynamic value in the owned raw view
 and exposes typed convenience pointers only for matching JSON kinds. This is an
 explicit native typed-view mapping, not a claim that PowerShell supplies typed

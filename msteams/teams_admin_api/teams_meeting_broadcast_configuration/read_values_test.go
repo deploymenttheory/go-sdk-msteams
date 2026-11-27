@@ -27,7 +27,7 @@ func TestUnitOwnGeneratedReadValuesKeepDynamicJSON(t *testing.T) {
 			ConversionError *string `json:"conversion_error"`
 		} `json:"observations"`
 	}
-	if err := json.Unmarshal(raw, &evidence); err != nil || len(evidence.Observations) != 125 {
+	if err := json.Unmarshal(raw, &evidence); err != nil || len(evidence.Observations) != 132 {
 		t.Fatal("own generated source observations unavailable", err)
 	}
 	for i, row := range evidence.Observations {
@@ -98,5 +98,16 @@ func TestUnitReadSnapshotsOwnInputAndFailedDecodePreservesValue(t *testing.T) {
 	}
 	if string(value.RawJSON) != before {
 		t.Fatal("failed decode replaced previous snapshot")
+	}
+}
+
+func TestUnitUnicodeReadKeysDoNotBecomeASCIIFields(t *testing.T) {
+	t.Parallel()
+	var value resource.Configuration
+	if err := json.Unmarshal([]byte(`{"SdnApiTo\u212aen":"foreign-key","sdnapitoken":"known-key"}`), &value); err != nil {
+		t.Fatal("source-distinct Unicode key rejected", err)
+	}
+	if value.SdnAPIToken == nil || *value.SdnAPIToken != "known-key" || string(value.RawFields["SdnApiToKen"]) != `"foreign-key"` {
+		t.Fatal("foreign Unicode key replaced ASCII typed view")
 	}
 }

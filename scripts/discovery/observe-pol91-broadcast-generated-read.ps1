@@ -10,6 +10,10 @@ $before=$type.GetProperty('BeforeJson')
 $inputEvidence=Join-Path $PSScriptRoot '../../docs/implementation/policies/evidence/pol91-broadcast-modern-read.json'
 $inputs=@((Get-Content $inputEvidence -Raw | ConvertFrom-Json).observations.input_json | Select-Object -Unique)
 $inputs+=@('', ' ', '{"Future":{"x":1,"x":2}}', '{"Future":{"X":1,"x":2}}')
+$inputs+=@('{"Future":{"K":1,"\u212a":2}}', '{"Future":{"S":1,"\u017f":2}}',
+    '{"Future":{"I":1,"\u0131":2}}', '{"Future":{"i":1,"\u0130":2}}',
+    '{"Future":{"\u03a3":1,"\u03c2":2}}', '{"Future":{"\u00e9":1,"\u00c9":2}}',
+    '{"SdnApiTo\u212aen":"foreign-key"}')
 $rows=foreach($raw in $inputs) {
     $failure=$null; $model=$null; $original=$null; $identity=$null; $conversionFailure=$null
     try {

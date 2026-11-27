@@ -2,7 +2,7 @@
   "scope": "Actual generated XdsConfiguration.FromJsonString and BeforeJson/Identity data getters, followed by the pure ConvertFrom-Json conversion only. No response callback, cmdlet lifecycle, flight, legacy, authentication or HTTP.",
   "assembly_sha256": "8b7ccef9361ee1ffeaf05b79a2638f6a6b8ace39bba034edc630e0415e95ccb6",
   "powershell_version": "7.6.6",
-  "reproducer_sha256": "e807a51decc6b2012cfb00431d8b667e019e61b2b24196d4921a1356ff3f35cc",
+  "reproducer_sha256": "0f59d880d4d64e0cf819b2e97695ab6107281724f8192c7755cdc9f124c74efd",
   "input_evidence_sha256": "3e9a971acb9720717706a99090d3e308030bf6b161e2ab051b5b54366c990624",
   "observations": [
     {
@@ -1004,6 +1004,62 @@
       "typed_identity": null,
       "error": null,
       "conversion_error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"Future\":{\"K\":1,\"\\u212a\":2}}",
+      "model_present": true,
+      "before_json": "{\n  \"Future\": {\n    \"K\": 1,\n    \"K\": 2\n  }\n}",
+      "typed_identity": null,
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"S\":1,\"\\u017f\":2}}",
+      "model_present": true,
+      "before_json": "{\n  \"Future\": {\n    \"S\": 1,\n    \"ſ\": 2\n  }\n}",
+      "typed_identity": null,
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"I\":1,\"\\u0131\":2}}",
+      "model_present": true,
+      "before_json": "{\n  \"Future\": {\n    \"I\": 1,\n    \"ı\": 2\n  }\n}",
+      "typed_identity": null,
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"i\":1,\"\\u0130\":2}}",
+      "model_present": true,
+      "before_json": "{\n  \"Future\": {\n    \"i\": 1,\n    \"İ\": 2\n  }\n}",
+      "typed_identity": null,
+      "error": null,
+      "conversion_error": null
+    },
+    {
+      "input_json": "{\"Future\":{\"\\u03a3\":1,\"\\u03c2\":2}}",
+      "model_present": true,
+      "before_json": "{\n  \"Future\": {\n    \"Σ\": 1,\n    \"ς\": 2\n  }\n}",
+      "typed_identity": null,
+      "error": null,
+      "conversion_error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"Future\":{\"\\u00e9\":1,\"\\u00c9\":2}}",
+      "model_present": true,
+      "before_json": "{\n  \"Future\": {\n    \"é\": 1,\n    \"É\": 2\n  }\n}",
+      "typed_identity": null,
+      "error": null,
+      "conversion_error": "System.InvalidOperationException"
+    },
+    {
+      "input_json": "{\"SdnApiTo\\u212aen\":\"foreign-key\"}",
+      "model_present": true,
+      "before_json": "{\n  \"SdnApiToKen\": \"foreign-key\"\n}",
+      "typed_identity": null,
+      "error": null,
+      "conversion_error": null
     }
   ],
   "management_lifecycle_invoked": false,
