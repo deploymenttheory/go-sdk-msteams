@@ -179,7 +179,7 @@ func (s *Service) customWrite(ctx context.Context, method, command string, input
 	if err := s.ready(ctx); err != nil {
 		return nil, nil, err
 	}
-	if input.Name == nil || !policyrp.ValidIdentity(*input.Name) || input.Policies == nil {
+	if input.Name == nil || *input.Name == "" || input.Policies == nil {
 		return nil, nil, ErrInput
 	}
 	body, err := json.Marshal(input)

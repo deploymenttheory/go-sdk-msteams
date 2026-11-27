@@ -332,3 +332,41 @@ func TestUnitPackageGroupBodyPreservesBoundWhitespace(t *testing.T) {
 		return contracttest.Observation{Value: value, Response: response, Err: err}
 	}})
 }
+
+// Both custom wrapper Identity values forward unchanged into a body PackageName,
+// not a URL segment. Private New/Update setters forward at IL7 and concrete
+// request setters only store the value at IL2. Get/Remove path guards are separate.
+func TestUnitPackageCustomBodyNameBinding(t *testing.T) {
+	t.Parallel()
+	for _, update := range []bool{false, true} {
+		name, method, command := "create", "POST", "New-CsCustomPolicyPackage"
+		if update {
+			name, method, command = "update", "PUT", "Update-CsCustomPolicyPackage"
+		}
+		for _, missing := range []*string{nil, new("")} {
+			run(t, contracttest.Case{Name: name + "-missing-body-name", Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mapping(name), Want: contracttest.Expected{Error: resource.ErrInput}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+				input := customInput()
+				input.Name = missing
+				var observed contracttest.Observation
+				if update {
+					observed.Value, observed.Response, observed.Err = sdk.TeamsAdminAPI.PolicyPackages.Update(ctx, input)
+				} else {
+					observed.Value, observed.Response, observed.Err = sdk.TeamsAdminAPI.PolicyPackages.Create(ctx, input)
+				}
+				return observed
+			}})
+		}
+		f := requestCase{Method: method, URL: origin + "/Teams.VerticalPackaging/package/custompackage", Body: json.RawMessage(`{"PackageName":" ","PolicyList":[{"PolicyType":"TeamsMeetingPolicy","PolicyName":"FixtureMeeting"}]}`), Status: 403}
+		run(t, contracttest.Case{Name: name + "-bound-body-whitespace", Source: "msteams/teams_admin_api/policy_packages/service_protocol_test.go", Mappings: mapping(name), Steps: []contracttest.Exchange{discovery(t), wire(f, command)}, Want: contracttest.Expected{Error: auth.ErrForbidden}, Invoke: func(ctx context.Context, sdk *msteams.Client) contracttest.Observation {
+			input := customInput()
+			input.Name, input.Description = new(" "), nil
+			var observed contracttest.Observation
+			if update {
+				observed.Value, observed.Response, observed.Err = sdk.TeamsAdminAPI.PolicyPackages.Update(ctx, input)
+			} else {
+				observed.Value, observed.Response, observed.Err = sdk.TeamsAdminAPI.PolicyPackages.Create(ctx, input)
+			}
+			return observed
+		}})
+	}
+}

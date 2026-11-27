@@ -29,7 +29,9 @@ application mode. Unknown documentation profiles remain unqualified, without a
 support claim or an inferred restriction. Delegated eligibility still needs tenant
 qualification; acquiring a token does not grant service access.
 
-Custom create/update requests require a bound valid Name and non-nil policy list.
+Custom create/update requests require a bound exactly nonempty Name and non-nil policy list.
+Body PackageName preserves literal whitespace; Get/Remove still enforce their
+independent path-name safety checks. No body value is claimed server-valid.
 An explicit empty typed list remains `[]` as a lower-level generated DTO capability.
 The exported PowerShell New/Update wrappers require a nonempty PolicyList; use
 ParsePolicyList to validate/build that public string-list boundary before Create or
